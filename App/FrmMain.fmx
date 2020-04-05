@@ -1,0 +1,16 @@
+object FormMain: TFormMain
+  Left = 90
+  Top = 60
+  Caption = 'RG38'
+  ClientHeight = 480
+  ClientWidth = 640
+  Position = Designed
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  Left = 90
+  Top = 60
+  DesignerMasterStyle = 0
+end
