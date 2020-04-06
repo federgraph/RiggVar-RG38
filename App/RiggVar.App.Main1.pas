@@ -625,6 +625,7 @@ begin
   Logger.Info('SetTrimm: ' + IntToStr(Value));
   FTrimm := Value;
   RggMain.LoadTrimm(CurrentTrimm);
+  FormMain.UpdateReport;
 end;
 
 function TMain1.GetIsRggParam: Boolean;
@@ -802,6 +803,11 @@ begin
 //    faToggleDataText: result := Main.FederText.DataVisible;
 //    faToggleDiffText: result := Main.FederText.DiffVisible;
 //    faToggleTrimmText: result := Main.FederText.TrimmVisible;
+
+    faSofortBtn: result := RggMain.SofortBerechnen;
+    faGrauBtn: result := RggMain.BtnGrauDown;
+    faBlauBtn: result := RggMain.BtnBlauDown;
+    faMemoryBtn: result := False;
 
     else
       result := inherited;

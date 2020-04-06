@@ -238,7 +238,7 @@ faMemeToggleReport = 158;
 faButtonFrameReport = 159;
 faToggleFontColor = 160;
 faToggleSandboxed = 161;
-faToggleAllXmlTags = 162;
+faToggleAllTags = 162;
 
 faTL01 = 163;
 faTL02 = 164;

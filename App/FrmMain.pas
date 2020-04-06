@@ -110,7 +110,8 @@ type
     P10Btn: TSpeedButton;
 
     SandboxedBtn: TSpeedButton;
-    WantAllBtn: TSpeedButton;
+    AllPropsBtn: TSpeedButton;
+    AllTagsBtn: TSpeedButton;
 
     procedure ReportListboxClick(Sender: TObject);
     procedure TrimmComboChange(Sender: TObject);
@@ -120,6 +121,7 @@ type
     procedure P1BtnClick(Sender: TObject);
     procedure P10BtnClick(Sender: TObject);
     procedure SandboxedBtnClick(Sender: TObject);
+    procedure AllTagsBtnClick(Sender: TObject);
     procedure CopyAndPasteBtnClick(Sender: TObject);
     procedure CopyTrimmFileBtnClick(Sender: TObject);
     procedure CopyTrimmItemBtnClick(Sender: TObject);
@@ -127,7 +129,7 @@ type
     procedure PasteTrimmItemBtnClick(Sender: TObject);
     procedure ReadTrimmFileBtnClick(Sender: TObject);
     procedure SaveTrimmFileBtnClick(Sender: TObject);
-  protected
+  private
     Raster: Integer;
     Margin: Integer;
     BtnTop: Integer;
@@ -158,13 +160,20 @@ type
   public
     function GetActionFromKey(Key: Word): Integer;
     function GetActionFromKeyChar(KeyChar: char): Integer;
+    function GetChecked(fa: Integer): Boolean;
     procedure HandleAction(fa: Integer);
     procedure HA(fa: Integer);
+    procedure UpdateSpeedPanel;
   public
     Rigg: TRigg;
     ReportManager: TRggReportManager;
     function GetIsUp: Boolean;
     property IsUp: Boolean read GetIsUp;
+  protected
+    procedure DestroyForms;
+    procedure MemoBtnClick(Sender: TObject);
+    procedure ActiBtnClick(Sender: TObject);
+    procedure CheckFormBounds(AForm: TForm);
   end;
 
 var
@@ -175,6 +184,8 @@ implementation
 {$R *.fmx}
 
 uses
+  FrmMemo,
+  FrmAction,
   RiggVar.RG.Main,
   RiggVar.App.Main,
   RiggVar.FB.ActionConst,
@@ -272,14 +283,14 @@ begin
 
   TrimmCombo.ItemIndex := 0;
   ParamCombo.ItemIndex := 0;
-  ReportListbox.ItemIndex := 0;
+  ReportListbox.ItemIndex := 4;
 
   Main.Trimm := 1;
   MT0BtnClick(nil);
   Main.FederText.UpdateText;
   ShowTrimm;
 
-  ReportLabel.TextSettings.FontColor := claDodgerblue;
+  ReportLabel.TextSettings.FontColor := claOrange;
 
   Reset;
 
@@ -308,11 +319,14 @@ begin
 
   Application.OnHint := HandleShowHint;
   SetupListboxItems(ReportListbox, claDodgerblue);
-  Self.OnResize := FormResize;
+
+  UpdateSpeedPanel;
 end;
 
 procedure TFormMain.FormDestroy(Sender: TObject);
 begin
+  DestroyForms;
+
   SL.Free;
   ReportManager.Free;
   Main.Free;
@@ -339,6 +353,8 @@ end;
 procedure TFormMain.UpdateReport;
 begin
   if not ReportMemo.Visible then
+    Exit;
+  if ReportManager = nil then
     Exit;
 
   SL.Clear;
@@ -554,7 +570,16 @@ begin
       UpdateReport;
     end;
 
+    faToggleAllTags:
+    begin
+      ReportManager.XmlAllTags := not ReportManager.XmlAllTags;
+      UpdateSpeedPanel;
+    end;
+
     faToggleFontColor: ToggleFontColor;
+
+    faShowActi: ActiBtnClick(nil);
+    faShowMemo: MemoBtnClick(nil);
 
     else
     begin
@@ -852,7 +877,7 @@ begin
   sb.OnClick := CopyAndPasteBtnClick;
   InitSpeedButton(sb);
 
-  { Param Value Button }
+  { Param Value Buttons }
 
   BtnColor := claBlue;
 
@@ -905,12 +930,21 @@ begin
   sb.OnClick := SandboxedBtnClick;
   InitSpeedButton(sb);
 
-  sb := AddSpeedBtn('WantAllBtn');
-  WantAllBtn := sb;
-  sb.Text := 'WA';
-  sb.Hint := 'Want All Xml Items';
+  sb := AddSpeedBtn('AllPropsBtn');
+  AllPropsBtn := sb;
+  sb.Text := 'AP';
+  sb.Hint := 'All Trimm Props';
   sb.StaysPressed := True;
   sb.IsPressed := False;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('AllTagsBtn');
+  AllTagsBtn := sb;
+  sb.Text := 'AT';
+  sb.Hint := 'All Xml Tags';
+  sb.StaysPressed := True;
+  sb.IsPressed := False;
+  sb.OnClick := AllTagsBtnClick;
   InitSpeedButton(sb);
 end;
 
@@ -960,6 +994,12 @@ end;
 procedure TFormMain.SandboxedBtnClick(Sender: TObject);
 begin
   IsSandboxed := SandboxedBtn.IsPressed;
+end;
+
+procedure TFormMain.AllTagsBtnClick(Sender: TObject);
+begin
+  ReportManager.XmlAllTags := AllTagsBtn.IsPressed;
+  UpdateReport;
 end;
 
 procedure TFormMain.M10BtnClick(Sender: TObject);
@@ -1074,7 +1114,7 @@ begin
 
       //Main.CurrentTrimm.SaveTrimmFile(ML);
 
-      Main.CurrentTrimm.WantAll := WantAllBtn.IsPressed;
+      Main.CurrentTrimm.WantAll := AllPropsBtn.IsPressed;
       Main.CurrentTrimm.SaveTrimmItem(RL);
       Main.CurrentTrimm.WantAll := False;
 
@@ -1202,11 +1242,11 @@ begin
   SpeedPanel.Anchors := SpeedPanel.Anchors + [TAnchorKind.akRight];
 
   HintText.Position.X := 2 * Raster + 30;
-  HintText.Position.Y := Raster + SpeedPanelHeight + Margin;
+  HintText.Position.Y := Raster + SpeedPanelHeight + Margin + 4;
   HintText.Height := 30;
 
-  ReportLabel.Position.X := 400;
-  ReportLabel.Position.Y := Raster + SpeedPanelHeight + Margin;
+  ReportLabel.Position.X := 600;
+  ReportLabel.Position.Y := Raster + SpeedPanelHeight + Margin + 4;
   ReportLabel.Height := 30;
 
   TrimmMemo.Position.X := Raster + Margin;
@@ -1312,6 +1352,111 @@ begin
       Result := FindStyleByName(AObj, AName);
     if Assigned(result) then
       break;
+  end;
+end;
+
+procedure TFormMain.UpdateSpeedPanel;
+begin
+  SandboxedBtn.IsPressed := IsSandboxed;
+  AllTagsBtn.IsPressed := ReportManager.XMLAllTags;
+end;
+
+function TFormMain.GetChecked(fa: TFederAction): Boolean;
+begin
+  result := false;
+  if not IsUp then
+    Exit;
+
+  case fa of
+    faToggleSandboxed: result := IsSandboxed;
+    faToggleAllTags: result := ReportManager.XmlAllTags;
+
+//    faMemeToggleHelp: result := HelpText.Visible;
+//    faMemeToggleReport: result := ReportText.Visible;
+    faButtonFrameReport: result := WantButtonFrameReport;
+//    faChartRect..faChartReset: result := ChartGraph.GetChecked(fa);
+    faReportNone..faReportReadme: result := ReportManager.GetChecked(fa);
+//    faToggleSegmentF..faToggleSegmentA: result := RotaForm.RaumGraph.GetChecked(fa);
+
+//    faToggleLineColor: result := DL.WantLineColors;
+//    faToggleShowLegend: result := RotaForm.LegendItemChecked;
+
+//    faViewpointS: result := RotaForm.ViewPoint = vpSeite;
+//    faViewpointA: result := RotaForm.ViewPoint = vpAchtern;
+//    faViewpointT: result := RotaForm.ViewPoint = vpTop;
+//    faViewpoint3: result := RotaForm.ViewPoint = vp3D;
+
+//    ZoomInBtn: result := False;
+//    ZoomOutBtn: result := False;
+
+//    faToggleUseDisplayList: result := RotaForm.UseDisplayList;
+//    faToggleUseQuickSort: result := RotaForm.RaumGraph.DL.UseQuickSort;
+//    faRggBogen: result := RotaForm.Bogen;
+
+    faSofortBtn: result := Main.RggMain.SofortBerechnen;
+    faGrauBtn: result := Main.RggMain.BtnGrauDown;
+    faBlauBtn: result := Main.RggMain.BtnBlauDown;
+    faMemoryBtn: result := False;
+//    faMultiBtn: result := RotaForm.WantOverlayedRiggs;
+//    faKoppelBtn: result := RotaForm.RaumGraph.Koppel;
+
+//    faToggleChartGraph: result := ChartImage.IsVisible;
+//    faToggleSalingGraph: result := SalingImage.IsVisible;
+//    faToggleControllerGraph: result := ControllerImage.IsVisible;
+//    faToggleMatrixText: result := RotaForm.MatrixItemChecked;
+  end;
+
+end;
+
+procedure TFormMain.CheckFormBounds(AForm: TForm);
+begin
+  if Screen.Height <= 768 then
+    AForm.Top := 0;
+  if Screen.Width <= 768 then
+    AForm.Left := 0;
+  if AForm.Left + AForm.Width > Screen.Width then
+    AForm.Width := Screen.Width - AForm.Left - 20;
+  if AForm.Top + AForm.Height > Screen.Height then
+    AForm.Height := Screen.Width - AForm.Top - 20;
+end;
+
+procedure TFormMain.MemoBtnClick(Sender: TObject);
+begin
+  if not Assigned(FormMemo) then
+  begin
+    FormMemo := TFormMemo.Create(nil);
+    FormMemo.Parent := self; //needed for Alt-Tab
+    FormMemo.Memo.Lines.Clear;
+    //Main.WriteVersion1Diff(FormMemo.Memo.Lines);
+    CheckFormBounds(FormMemo);
+  end;
+  FormMemo.Visible := True;
+  FormMemo.Show; //needed on Mac
+end;
+
+procedure TFormMain.ActiBtnClick(Sender: TObject);
+begin
+  if not Assigned(FormAction) then
+  begin
+    FormAction := TFormAction.Create(nil);
+    FormAction.Parent := self;
+    CheckFormBounds(FormAction);
+  end;
+  FormAction.Visible := True;
+  FormAction.Show;
+end;
+
+procedure TFormMain.DestroyForms;
+begin
+  if FormAction <> nil then
+  begin
+    FormAction.DisposeOf;
+    FormAction := nil;
+  end;
+  if FormMemo <> nil then
+  begin
+    FormMemo.DisposeOf;
+    FormMemo := nil;
   end;
 end;
 

@@ -72,7 +72,7 @@ const
   claSample = claCyan;
   claOption = claBeige;
 
-  PageCountRG = 8;
+  PageCountRG = 6;
 
 constructor TActionMapTablet.Create;
 begin
@@ -203,8 +203,8 @@ begin
       cl := BottomLeft;
       cla := claWhite;
       InitAC(cl, 1, faParamValuePlus10, cla);
-      InitAC(cl, 2, faNoop, claForm); // faShowActi
-      InitAC(cl, 3, faNoop, claForm); // faShowMemo
+      InitAC(cl, 2, faShowActi, claForm);
+      InitAC(cl, 3, faShowMemo, claForm);
       InitAC(cl, 4, faNoop, cla); // faToggleDropTarget
       InitAC(cl, 5, faHull, claOption);
       InitAC(cl, 6, faParamValuePlus1, cla);
@@ -408,7 +408,7 @@ begin
       InitAC(cl, 4, faNoop, cla);
       //InitAC(cl, 5, faActionPageP, claYellow);
       InitAC(cl, 6, faReportXml, cla);
-      InitAC(cl, 7, faToggleAllXmlTags, cla);
+      InitAC(cl, 7, faToggleAllTags, cla);
       InitAC(cl, 8, faNoop, cla);
 
       cl := BottomLeft;
@@ -431,46 +431,6 @@ begin
     end;
 
     7:
-    begin
-      cla := claWhite;
-      cl := TopLeft;
-      //InitAC(cl, 1, faActionPageM, claYellow);
-      InitAC(cl, 2, faChartRect, claPlum);
-      InitAC(cl, 3, faChartTextRect, claPlum);
-      InitAC(cl, 4, faChartLegend, claPlum);
-      InitAC(cl, 5, faNoop, claPlum);
-      InitAC(cl, 6, faChartReset, cla);
-
-      cl := TopRight;
-      InitAC(cl, 1, faXComboMinus, cla);
-      InitAC(cl, 2, faXComboPlus, claWhite);
-      InitAC(cl, 3, faYComboMinus, cla);
-      InitAC(cl, 4, faYComboPlus, cla);
-      //InitAC(cl, 5, faActionPageP, claYellow);
-      InitAC(cl, 6, faPComboPlus, cla);
-      InitAC(cl, 7, faPComboMinus, cla);
-      InitAC(cl, 8, faNoop, cla);
-
-      cl := BottomLeft;
-      InitAC(cl, 1, faChartAP, cla);
-      InitAC(cl, 2, faChartBP, cla);
-      InitAC(cl, 3, faChartGroup, cla);
-      InitAC(cl, 4, faParamCountMinus, cla);
-      InitAC(cl, 5, faParamCountPlus, cla);
-      InitAC(cl, 6, faNoop, cla);
-      InitAC(cl, 7, faNoop, cla);
-      InitAC(cl, 8, faNoop, cla);
-
-      cl := BottomRight;
-      InitAC(cl, 1, faCycleColorSchemeM, cla);
-      InitAC(cl, 2, faCycleColorSchemeP, cla);
-      InitAC(cl, 3, faNoop, cla);
-      InitAC(cl, 4, faNoop, cla);
-      InitAC(cl, 5, faNoop, cla);
-      InitAC(cl, 6, faNoop, cla);
-    end;
-
-    8:
     begin
       cla := claWhite;
       cl := TopLeft;
@@ -508,6 +468,89 @@ begin
       InitAC(cl, 4, faBR04, cla);
       InitAC(cl, 5, faBR05, cla);
       InitAC(cl, 6, faBR06, cla);
+    end;
+
+    8:
+    begin
+      cl := TopLeft;
+      cla := claWhite;
+      //InitAC(cl, 1, faActionPageM, claYellow);
+      InitAC(cl, 2, faToggleUseDisplayList, claPlum);
+      InitAC(cl, 3, faToggleUseQuickSort, claPlum);
+      InitAC(cl, 4, faNoop, cla);
+      InitAC(cl, 5, faNoop, cla);
+      InitAC(cl, 6, faToggleShowLegend, claPlum);
+
+      cl := TopRight;
+      cla := claCornflowerblue;
+      InitAC(cl, 1, faToggleSalingGraph, cla);
+      InitAC(cl, 2, faToggleControllerGraph, cla);
+      InitAC(cl, 3, faToggleChartGraph, cla);
+      InitAC(cl, 4, faToggleMatrixText, cla);
+      //InitAC(cl, 5, faActionPageP, claYellow);
+      InitAC(cl, 6, faNoop, cla);
+      InitAC(cl, 7, faRggZoomIn, claBeige);
+      InitAC(cl, 8, faRggZoomOut, claBeige);
+
+      cl := BottomLeft;
+      cla := claAqua;
+      InitAC(cl, 1, faToggleSegmentF, cla);
+      InitAC(cl, 2, faToggleSegmentR, cla);
+      InitAC(cl, 3, faToggleSegmentS, cla);
+      InitAC(cl, 4, faToggleSegmentM, cla);
+      InitAC(cl, 5, faToggleSegmentV, cla);
+      InitAC(cl, 6, faToggleSegmentW, cla);
+      InitAC(cl, 7, faToggleSegmentC, cla);
+      InitAC(cl, 8, faToggleSegmentA, cla);
+
+      cl := BottomRight;
+      cla := claWhite;
+      InitAC(cl, 1, faSofortBtn, cla);
+      InitAC(cl, 2, faGrauBtn, cla);
+      InitAC(cl, 3, faBlauBtn, cla);
+      InitAC(cl, 4, faMultiBtn, cla);
+      InitAC(cl, 5, faKoppelBtn, cla);
+      InitAC(cl, 6, faMemoryBtn, claBeige);
+    end;
+
+    9:
+    begin
+      cla := claWhite;
+      cl := TopLeft;
+      //InitAC(cl, 1, faActionPageM, claYellow);
+      InitAC(cl, 2, faChartRect, claPlum);
+      InitAC(cl, 3, faChartTextRect, claPlum);
+      InitAC(cl, 4, faChartLegend, claPlum);
+      InitAC(cl, 5, faNoop, claPlum);
+      InitAC(cl, 6, faChartReset, cla);
+
+      cl := TopRight;
+      InitAC(cl, 1, faXComboMinus, cla);
+      InitAC(cl, 2, faXComboPlus, claWhite);
+      InitAC(cl, 3, faYComboMinus, cla);
+      InitAC(cl, 4, faYComboPlus, cla);
+      //InitAC(cl, 5, faActionPageP, claYellow);
+      InitAC(cl, 6, faPComboPlus, cla);
+      InitAC(cl, 7, faPComboMinus, cla);
+      InitAC(cl, 8, faNoop, cla);
+
+      cl := BottomLeft;
+      InitAC(cl, 1, faChartAP, cla);
+      InitAC(cl, 2, faChartBP, cla);
+      InitAC(cl, 3, faChartGroup, cla);
+      InitAC(cl, 4, faParamCountMinus, cla);
+      InitAC(cl, 5, faParamCountPlus, cla);
+      InitAC(cl, 6, faNoop, cla);
+      InitAC(cl, 7, faNoop, cla);
+      InitAC(cl, 8, faNoop, cla);
+
+      cl := BottomRight;
+      InitAC(cl, 1, faCycleColorSchemeM, cla);
+      InitAC(cl, 2, faCycleColorSchemeP, cla);
+      InitAC(cl, 3, faNoop, cla);
+      InitAC(cl, 4, faNoop, cla);
+      InitAC(cl, 5, faNoop, cla);
+      InitAC(cl, 6, faNoop, cla);
     end;
 
   end;

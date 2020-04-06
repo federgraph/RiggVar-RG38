@@ -196,7 +196,7 @@ begin
     faReportReadme: result := '~R';
 
     faToggleSandboxed: result := 'SB';
-    faToggleAllXmlTags: result := 'AXT';
+    faToggleAllTags: result := 'AXT';
 
     faToggleLineColor: result := 'LC';
 

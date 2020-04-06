@@ -1,4 +1,4 @@
-program RG38;
+﻿program RG38;
 
 uses
   System.StartUpCopy,
@@ -41,7 +41,17 @@ uses
   RiggVar.FederModel.Touch in 'Model\RiggVar.FederModel.Touch.pas',
   RiggVar.FederModel.TouchBase in 'Model\RiggVar.FederModel.TouchBase.pas',
   RiggVar.FederModel.TouchPhone in 'Model\RiggVar.FederModel.TouchPhone.pas',
-  RiggVar.RG.Report in 'RG\RiggVar.RG.Report.pas';
+  RiggVar.RG.Report in 'RG\RiggVar.RG.Report.pas',
+  RiggVar.FB.ActionGroup in 'FB\RiggVar.FB.ActionGroup.pas',
+  RiggVar.FB.ActionGroups in 'FB\RiggVar.FB.ActionGroups.pas',
+  RiggVar.FB.ActionKeys in 'FB\RiggVar.FB.ActionKeys.pas',
+  RiggVar.FB.ActionTable in 'FB\RiggVar.FB.ActionTable.pas',
+  RiggVar.FB.ActionName in 'FB\RiggVar.FB.ActionName.pas',
+  RiggVar.FB.ActionTest in 'FB\RiggVar.FB.ActionTest.pas',
+  RiggVar.FederModel.Binding in 'Model\RiggVar.FederModel.Binding.pas',
+  RiggVar.FederModel.Keyboard01 in 'Model\RiggVar.FederModel.Keyboard01.pas',
+  FrmAction in 'App\FrmAction.pas' {FormAction},
+  FrmMemo in 'App\FrmMemo.pas' {FormMemo};
 
 {$R *.res}
 

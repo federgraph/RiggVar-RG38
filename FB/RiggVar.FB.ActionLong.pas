@@ -194,7 +194,7 @@ begin
     faReportReadme: result := 'Readme Report';
 
     faToggleSandboxed: result := 'Toggle Sandboxed';
-    faToggleAllXmlTags: result := 'Toggle All XML Tags';
+    faToggleAllTags: result := 'Toggle All Xml Tags';
 
     faToggleLineColor: result := 'Toggle Line Color Scheme';
 

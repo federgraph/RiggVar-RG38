@@ -26,9 +26,14 @@ uses
   FMX.Layouts,
   RiggVar.FB.Action,
   RiggVar.FB.ActionConst,
+  RiggVar.FB.ActionGroups,
+  RiggVar.FB.ActionTable,
+  RiggVar.FB.ActionKeys,
   RiggVar.FB.ActionMap,
+  RiggVar.FB.ActionTest,
   RiggVar.FB.TextBase,
   RiggVar.FederModel.Action,
+  RiggVar.FederModel.Binding,
   RiggVar.FederModel.TouchBase,
   RiggVar.FederModel.Touch,
   RiggVar.FederModel.TouchPhone,
@@ -47,6 +52,7 @@ type
     function GetIsPhone: Boolean;
     procedure SetTouch(const Value: Integer);
     function GetFederText: TFederTouchBase;
+    function GetFLText: string;
   protected
     FL: TStringList;
     procedure CopyText;
@@ -54,6 +60,7 @@ type
     ActionMap1: TActionMap;
     ActionMap2: TActionMap;
     ActionHandler: IFederActionHandler;
+    ActionHelper: TActionHelper;
 
     IsUp: Boolean;
     IsOrthoProjection: Boolean;
@@ -63,9 +70,14 @@ type
     FederText1: TFederTouch;
     FederText2: TFederTouchPhone;
 
+    FederKeyboard: TFederKeyboard;
     BackgroundLock: Boolean;
 
     Logger: TLogger;
+
+    ActionGroupList: TActionGroupList;
+    ActionTest: TActionTest;
+    FederBinding: TFederBinding;
 
     constructor Create;
     destructor Destroy; override;
@@ -107,7 +119,9 @@ type
     property ActionMapTablet: TActionMap read ActionMap1;
     property ActionMapPhone: TActionMap read ActionMap2;
 
+    property Keyboard: TFederKeyboard read FederKeyboard;
     property FederText: TFederTouchBase read GetFederText;
+    property FLText: string read GetFLText;
   end;
 
 implementation
@@ -119,6 +133,7 @@ uses
   RiggVar.RG.Def,
   RiggVar.FB.ActionShort,
   RiggVar.FB.ActionLong,
+  RiggVar.FederModel.Keyboard01,
   RiggVar.FederModel.ActionMapPhone,
   RiggVar.FederModel.ActionMapTablet;
 
@@ -129,6 +144,9 @@ begin
   FL := TStringList.Create;
   Logger := TLogger.Create;
 
+  ActionGroupList := TActionGroupList.Create;
+  ActionTest := TActionTest.Create;
+
   ActionMap1 := TActionMapTablet.Create;
   ActionMap2 := TActionMapPhone.Create;
 
@@ -137,21 +155,31 @@ begin
   TTouchBtn.WantHint := True;
   FederText1 := TFederTouch.Create(nil);
   FederText2 := TFederTouchPhone.Create(nil);
+  FederKeyboard := TFederKeyboard01.Create;
+  FederBinding := TFederBinding.Create;
 
   ActionHandler := TFederActionHandler.Create;
   ActionHandler.CheckForDuplicates(FL);
+  ActionHelper := TActionHelper.Create(ActionHandler);
 end;
 
 destructor TMain0.Destroy;
 begin
+  ActionHelper.Free;
   ActionMap1.Free;
   ActionMap2.Free;
 
+  FederKeyboard.Free;
   FederText1.Free;
   FederText2.Free;
 
-  FL.Free;
   Logger.Free;
+  FL.Free;
+
+  ActionGroupList.Free;
+  ActionTest.Free;
+  FederBinding.Free;
+
   inherited;
 end;
 
@@ -365,6 +393,11 @@ begin
   end;
 end;
 
+function TMain0.GetFLText: string;
+begin
+  result := FL.Text;
+end;
+
 procedure TMain0.ExecuteAction(fa: Integer);
 begin
   if IsUp then
@@ -396,7 +429,9 @@ begin
 //    faMemeToggleReport: result := F.ReportText.Visible;
     faButtonFrameReport: result := F.WantButtonFrameReport;
 //    faChartRect..faChartReset: result := F.ChartGraph.GetChecked(fa);
-    faReportNone..faReportReadme: F.ReportManager.GetChecked(fa);
+    faReportNone..faReportReadme: result := F.ReportManager.GetChecked(fa);
+    else
+      result := F.GetChecked(fa);
 end;
 
 end;

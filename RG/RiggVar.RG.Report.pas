@@ -199,16 +199,16 @@ begin
       rgNone: ;
       rgReadme:
       begin
-        ML.Add('Use the Scroll Wheel of the Mouse!');
+        ML.Add('On the desktop - use the scroll wheel of the mouse!');
         ML.Add('');
-        ML.Add('Scroll Wheel will scroll the text if text is long.');
-        ML.Add('Shift Wheel will change current param value (small step)');
-        ML.Add('Ctrl Wheel will change current param value (big step)');
-        ML.Add('The "mouse" must be over this window (Form Text).');
-        ML.Add('');
-        ML.Add('- Form Text was added on top of the "old" application.');
-        ML.Add('- In Xml Report current text scroll position is maintained.');
-        ML.Add('- Try out AutoCalc mode (On) while using shift wheel.');
+        ML.Add('Wheel by itself will scroll the text if too long.');
+        ML.Add('Shift-wheel will change current param value (small step)');
+        ML.Add('Ctrl- Wheel will change current param value (big step)');
+//        ML.Add('The "mouse" must be over this window (Form Text).');
+//        ML.Add('');
+//        ML.Add('- Form Text was added on top of the "old" application.');
+//        ML.Add('- In Xml Report current text scroll position is maintained.');
+//        ML.Add('- Try out AutoCalc mode (On) while using shift wheel.');
       end;
       rgLog: ML.Text := Main.Logger.TL.Text;
       rgJson: Main.RggData.WriteJSon(ML);

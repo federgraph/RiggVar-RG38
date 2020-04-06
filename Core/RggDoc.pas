@@ -1,5 +1,21 @@
 ﻿unit RggDoc;
 
+(*
+-
+-     F
+-    * * *
+-   *   *   G
+-  *     * *   *
+- E - - - H - - - I
+-  *     * *         *
+-   *   *   *           *
+-    * *     *             *
+-     D-------A---------------B
+-              *
+-              (C) federgraph.de
+-
+*)
+
 {
   Als primäre Daten werden die Rumpfkoordinaten und die RiggLängen betrachtet.
   Der Vollständigkeit halber werden aber auch die Riggkoordinaten gespeichert.
