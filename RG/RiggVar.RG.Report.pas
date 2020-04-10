@@ -35,6 +35,7 @@ type
     ML: TStrings;
     RiggReport: TRiggReport;
     RD: TDictionary<Integer, TRggReport>;
+    RDI: TDictionary<TRggReport, Integer>;
     rs: set of TRggReport;
     FCurrentIndex: Integer;
     FCurrentReport: TRggReport;
@@ -50,6 +51,7 @@ type
     procedure HA(fa: Integer);
     function GetChecked(fa: Integer): Boolean;
     procedure ShowCurrentReport;
+    function GetItemIndexOfReport(const Value: TRggReport): Integer;
     function GetReportCaption(r: TRggReport): string;
     function GetCurrentCaption: string;
     property CurrentIndex: Integer read FCurrentIndex write SetCurrentIndex;
@@ -70,6 +72,7 @@ begin
   ML := MemoLines;
   RiggReport := TRiggReport.Create;
   RD := TDictionary<Integer, TRggReport>.Create;
+  RDI := TDictionary<TRggReport, Integer>.Create;
   InitRD;
 end;
 
@@ -77,6 +80,7 @@ destructor TRggReportManager.Destroy;
 begin
   ML := nil; // not owned
   RD.Free;
+  RDI.Free;
   RiggReport.Free;
   inherited;
 end;
@@ -90,8 +94,8 @@ function TRggReportManager.GetReportCaption(r: TRggReport): string;
 begin
   case r of
     rgLog: result := 'Log';
-    rgJson: result := 'WriteJson'; // 'Main.RggData.WriteJson'
-    rgData: result := 'WriteReport'; // 'Main.RggData.WriteReport'
+    rgJson: result := 'RggData.WriteJson';
+    rgData: result := 'RggData.WriteReport';
     rgTrimmText: result := 'Trimm Text';
     rgDataText: result := 'Data Text';
     rgDiffText: result := 'Diff Text';
@@ -165,6 +169,14 @@ begin
   end;
 end;
 
+function TRggReportManager.GetItemIndexOfReport(const Value: TRggReport): Integer;
+begin
+  if not RDI.TryGetValue(Value, result) then
+  begin
+    result := -1;
+  end;
+end;
+
 procedure TRggReportManager.SetCurrentIndex(const Value: Integer);
 var
   r: TRggReport;
@@ -202,13 +214,8 @@ begin
         ML.Add('On the desktop - use the scroll wheel of the mouse!');
         ML.Add('');
         ML.Add('Wheel by itself will scroll the text if too long.');
-        ML.Add('Shift-wheel will change current param value (small step)');
-        ML.Add('Ctrl- Wheel will change current param value (big step)');
-//        ML.Add('The "mouse" must be over this window (Form Text).');
-//        ML.Add('');
-//        ML.Add('- Form Text was added on top of the "old" application.');
-//        ML.Add('- In Xml Report current text scroll position is maintained.');
-//        ML.Add('- Try out AutoCalc mode (On) while using shift wheel.');
+        ML.Add('Shift-Wheel will change current param value (small step)');
+        ML.Add('Ctrl-Wheel will change current param value (big step)');
       end;
       rgLog: ML.Text := Main.Logger.TL.Text;
       rgJson: Main.RggData.WriteJSon(ML);
@@ -280,10 +287,16 @@ begin
   for r := Low(TRggReport) to High(TRggReport) do
     Include(rs, r);
 
+  Exclude(rs, rgJson);
+  Exclude(rs, rgData);
+
   Exclude(rs, rgTrimmText);
   Exclude(rs, rgAusgabeDiffL);
   Exclude(rs, rgAusgabeDiffP);
   Exclude(rs, rgDebugReport);
+
+  Exclude(rs, rgAusgabeRLE);
+  Exclude(rs, rgAusgabeRPE);
 
 //    rgLog,
 //    rgJson,
@@ -304,6 +317,7 @@ begin
   for r in rs do
   begin
     RD.Add(i, r);
+    RDI.Add(r, i);
     Inc(i);
   end;
 end;

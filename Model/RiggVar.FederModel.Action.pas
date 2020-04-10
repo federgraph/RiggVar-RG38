@@ -37,9 +37,18 @@ uses
   RiggVar.App.Main;
 
 procedure TFederActionHandler.Execute(fa: TFederAction);
+var
+  M: TMain;
 begin
-  if Main <> nil then
-    Main.ExecuteAction(fa);
+  M := Main;
+
+  if not Assigned(M) then
+    Exit;
+  if not M.IsUp then
+    Exit;
+
+  Main.ExecuteAction(fa);
+  Main.FederText.CheckState;
 end;
 
 function TFederActionHandler.GetChecked(fa: TFederAction): Boolean;

@@ -392,24 +392,24 @@ begin
 
     6:
     begin
-      cla := claWhite;
+      cla := claGoldenrod;
       cl := TopLeft;
       //InitAC(cl, 1, faActionPageM, claYellow);
-      InitAC(cl, 2, faReportLog, claPlum);
-      InitAC(cl, 3, faReportJson, claPlum);
-      InitAC(cl, 4, faReportData, claPlum);
-      InitAC(cl, 5, faReportNone, claPlum);
+      InitAC(cl, 2, faReportLog, cla);
+      InitAC(cl, 3, faReportJson, cla);
+      InitAC(cl, 4, faReportData, cla);
+      InitAC(cl, 5, faNoop, claWhite);
       InitAC(cl, 6, faReportNone, cla);
 
       cl := TopRight;
       InitAC(cl, 1, faReportTrimmText, cla);
-      InitAC(cl, 2, faReportDataText, claWhite);
+      InitAC(cl, 2, faReportDataText, cla);
       InitAC(cl, 3, faReportDiffText, cla);
-      InitAC(cl, 4, faNoop, cla);
+      InitAC(cl, 4, faNoop, claWhite);
       //InitAC(cl, 5, faActionPageP, claYellow);
       InitAC(cl, 6, faReportXml, cla);
-      InitAC(cl, 7, faToggleAllTags, cla);
-      InitAC(cl, 8, faNoop, cla);
+      InitAC(cl, 7, faToggleAllTags, claPlum);
+      InitAC(cl, 8, faNoop, claWhite);
 
       cl := BottomLeft;
       InitAC(cl, 1, faReportAusgabeRL, cla);
@@ -418,15 +418,16 @@ begin
       InitAC(cl, 4, faReportAusgabeRPE, cla);
       InitAC(cl, 5, faReportAusgabeDiffL, cla);
       InitAC(cl, 6, faReportAusgabeDiffP, cla);
-      InitAC(cl, 7, faNoop, cla);
-      InitAC(cl, 8, faNoop, cla);
+      InitAC(cl, 7, faNoop, claWhite);
+      InitAC(cl, 8, faNoop, claWhite);
 
+      cla := claWhite;
       cl := BottomRight;
       InitAC(cl, 1, faCycleColorSchemeM, cla);
       InitAC(cl, 2, faCycleColorSchemeP, cla);
       InitAC(cl, 3, faNoop, cla);
-      InitAC(cl, 4, faReportDebugReport, cla);
-      InitAC(cl, 5, faReportReadme, cla);
+      InitAC(cl, 4, faReportDebugReport, claGoldenrod);
+      InitAC(cl, 5, faReportReadme, claGoldenrod);
       InitAC(cl, 6, faNoop, cla);
     end;
 

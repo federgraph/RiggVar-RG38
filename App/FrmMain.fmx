@@ -1,9 +1,9 @@
-﻿object FormMain: TFormMain
+object FormMain: TFormMain
   Left = 90
   Top = 60
   Caption = 'RG38'
-  ClientHeight = 480
-  ClientWidth = 640
+  ClientHeight = 750
+  ClientWidth = 1000
   Position = Designed
   FormFactor.Width = 320
   FormFactor.Height = 480

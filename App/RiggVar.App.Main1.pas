@@ -739,6 +739,16 @@ begin
     else
       FormMain.HandleAction(fa);
   end;
+
+  if IsUp then
+  begin
+    if (fa in ParamsRange) then
+      FormMain.UpdateItemIndexParams
+    else if (fa in ReportsRange) then
+      FormMain.UpdateItemIndexReports
+    else if (fa in TrimmsRange) then
+      FormMain.UpdateItemIndexTrimms;
+  end;
 end;
 
 function TMain1.GetChecked(fa: TFederAction): Boolean;

@@ -283,6 +283,10 @@ faMB08 = 198;
 
 faMax = 199;
 
+ParamsRange = [faController .. faMastfussD0X];
+ReportsRange = [faReportNone .. faReportReadme];
+TrimmsRange = [faTrimm0 .. faLogo];
+
 implementation
 
 end.
