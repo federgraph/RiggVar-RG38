@@ -129,12 +129,13 @@ type
     procedure AllTagsBtnClick(Sender: TObject);
   public
     HintText: TText;
+    HelpText: TText;
+    ReportText: TText;
     SpeedPanel: TPanel;
     TrimmMemo: TMemo;
     ParamListbox: TListBox;
     ReportListbox: TListBox;
     ReportLabel: TText;
-    ReportMemo: TMemo;
 
     TrimmCombo: TComboBox;
     ParamCombo: TComboBox;
@@ -189,6 +190,9 @@ type
     function GetIsUp: Boolean;
     property IsUp: Boolean read GetIsUp;
   protected
+    Bitmap: TBitmap;
+    Image: TImage;
+  protected
     procedure DestroyForms;
     procedure MemoBtnClick(Sender: TObject);
     procedure ActiBtnClick(Sender: TObject);
@@ -241,7 +245,7 @@ begin
   FormMain := self;
   Caption := 'RG38';
   Top := 20;
-  Width := 1200;
+  Width := 1600;
   Height := 1000;
   Margin := 10;
   Raster := MainVar.Raster;
@@ -258,9 +262,7 @@ begin
   SetupComboBox(TrimmCombo);
   SetupComboBox(ParamCombo);
   SetupComboBox(ReportCombo);
-  SetupMemo(ReportMemo);
   SetupText(HintText);
-  SetupText(ReportLabel);
   SetupListbox(ReportListbox);
 
   Rigg := TRigg.Create;
@@ -312,12 +314,11 @@ begin
     ReportCombo.OnChange := ReportComboChange;
     ReportManager.InitLB(ReportListbox.Items);
   end;
-  ReportMemo.OnMouseWheel := FormMouseWheel;
 
   if TrimmCombo <> nil then
   begin
-  InitTrimmCombo;
-  TrimmCombo.ItemIndex := 0;
+    InitTrimmCombo;
+    TrimmCombo.ItemIndex := 0;
     TrimmCombo.OnChange := TrimmComboChange;
   end;
 
@@ -325,12 +326,18 @@ begin
   MT0BtnClick(nil);
   ShowTrimm;
 
-  ReportLabel.TextSettings.FontColor := claOrange;
-
   Reset;
 
   HintText.BringToFront;
   HintText.TextSettings.FontColor := claYellow;
+
+  HelpText.BringToFront;
+  HelpText.TextSettings.FontColor := claWhite;
+  HelpText.Visible := False;
+
+  ReportText.BringToFront;
+  ReportText.TextSettings.FontColor := claWhite;
+  ReportText.Visible := True;
 
   InitHelpText;
 
@@ -366,6 +373,9 @@ begin
   ReportManager.Free;
   Main.Free;
   Main := nil;
+
+  Image.Free;
+  Bitmap.Free;
 end;
 
 procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
@@ -388,7 +398,7 @@ end;
 
 procedure TFormMain.UpdateReport;
 begin
-  if not ReportMemo.Visible then
+  if not ReportText.Visible then
     Exit;
   if ReportManager = nil then
     Exit;
@@ -404,7 +414,7 @@ begin
     ReportManager.ShowCurrentReport;
   end;
 
-  ReportMemo.Text := RL.Text;
+  ReportText.Text := RL.Text;
 end;
 
 procedure TFormMain.UpdateFormat(w, h: Integer);
@@ -531,14 +541,14 @@ begin
   if HintText.TextSettings.FontColor = claYellow then
   begin
     HintText.TextSettings.FontColor := claNavy;
-//    ReportText.TextSettings.FontColor := claBlack;
-//    HelpText.TextSettings.FontColor := claBlack;
+    ReportText.TextSettings.FontColor := claBlack;
+    HelpText.TextSettings.FontColor := claBlack;
   end
   else
   begin
     HintText.TextSettings.FontColor := claYellow;
-//    ReportText.TextSettings.FontColor := claWhite;
-//    HelpText.TextSettings.FontColor := claWhite;
+    ReportText.TextSettings.FontColor := claWhite;
+    HelpText.TextSettings.FontColor := claWhite;
   end;
 end;
 
@@ -645,8 +655,8 @@ begin
   case fa of
     faMemeToggleHelp:
     begin
-//      HelpText.Visible := not HelpText.Visible;
-//      ReportText.Visible := False;
+      HelpText.Visible := not HelpText.Visible;
+      ReportText.Visible := False;
     end;
 
     faMemeGotoLandscape: GotoLandscape;
@@ -656,8 +666,8 @@ begin
     faMemeToggleReport:
     begin
       Flash(HelpCaptionText);
-//      HelpText.Visible := False;
-//      ReportText.Visible := not ReportText.Visible;
+      HelpText.Visible := False;
+      ReportText.Visible := not ReportText.Visible;
       UpdateReport;
     end;
 
@@ -815,7 +825,7 @@ begin
   HL.Add(Format('  Client-W-H = (%d, %d)', [ClientWidth, ClientHeight]));
   HL.Add(Format('  Handle.Scale = %.1f', [Handle.Scale]));
 
-//  HelpText.Text := HL.Text;
+  HelpText.Text := HL.Text;
 
   HL.Free;
 end;
@@ -923,35 +933,36 @@ begin
 
   HintText := TText.Create(Self);
   HintText.Parent := Self;
-//  HintText.WordWrap := False;
-//  HintText.AutoSize := True;
-//  HintText.HorzTextAlign := TTextAlign.Leading;
-//  HintText.Font.Family := 'Consolas';
-//  HintText.Font.Size := 18;
+  HintText.WordWrap := False;
+  HintText.HorzTextAlign := TTextAlign.Leading;
+  HintText.Font.Family := 'Consolas';
+  HintText.Font.Size := 18;
+  HintText.AutoSize := True;
 
-  ReportLabel := TText.Create(Self);
-  ReportLabel.Parent := Self;
+  HelpText := TText.Create(Self);
+  HelpText.Parent := Self;
+  HelpText.WordWrap := False;
+  HelpText.HorzTextAlign := TTextAlign.Leading;
+  HelpText.Font.Family := 'Courier New';
+  HelpText.Font.Size := 16;
+  HelpText.AutoSize := True;
 
-//  HelpText := TText.Create(Self);
-//  HelpText.Parent := Self;
-//  HelpText.WordWrap := False;
-//  HelpText.HorzTextAlign := TTextAlign.Leading;
-//  HelpText.Font.Family := 'Courier New';
-//  HelpText.Font.Size := 16;
-//  HelpText.AutoSize := True;
-//
-//  ReportText := TText.Create(Self);
-//  ReportText.Parent := Self;
-//  ReportText.WordWrap := False;
-//  ReportText.HorzTextAlign := TTextAlign.Leading;
-//  ReportText.Font.Family := 'Courier New';
-//  ReportText.Font.Size := 16;
-//  ReportText.AutoSize := True;
+  ReportText := TText.Create(Self);
+  ReportText.Parent := Self;
+  ReportText.WordWrap := False;
+  ReportText.HorzTextAlign := TTextAlign.Leading;
+  ReportText.Font.Family := 'Courier New';
+  ReportText.Font.Size := 16;
+  ReportText.AutoSize := True;
 
   SpeedPanel := TPanel.Create(Self);
   SpeedPanel.Parent := Self;
   SpeedPanel.ShowHint := True;
   SpeedPanel.Opacity := OpacityValue;
+
+  ParamListbox := TListbox.Create(Self);
+  ParamListbox.Parent := Self;
+  ParamListbox.Opacity := OpacityValue;
 
   TrimmMemo := TMemo.Create(Self);
   TrimmMemo.Parent := Self;
@@ -962,25 +973,22 @@ begin
   TrimmCombo := TComboBox.Create(Self);
   TrimmCombo.Parent := Self;
 
-  ParamCombo := TComboBox.Create(Self);
-  ParamCombo.Parent := Self;
+//  ParamCombo := TComboBox.Create(Self);
+//  ParamCombo.Parent := Self;
+
+//  ReportCombo := TComboBox.Create(Self);
+//  ReportCombo.Parent := Self;
 
   ReportListbox := TListbox.Create(Self);
   ReportListbox.Parent := Self;
   ReportListbox.Opacity := OpacityValue;
 
-  ReportMemo := TMemo.Create(Self);
-  ReportMemo.Parent := Self;
-  ReportMemo.ReadOnly := True;
-  ReportMemo.CanFocus := False;
-  ReportMemo.Opacity := OpacityValue;
+  Bitmap := TBitmap.Create(1024, 768);
 
-//  Bitmap := TBitmap.Create(1024, 768);
-
-//  Image := TImage.Create(Self);
-//  Image.Parent := Self;
-//  Image.Bitmap := Bitmap;
-//  Image.WrapMode := TImageWrapMode.Original;
+  Image := TImage.Create(Self);
+  Image.Parent := Self;
+  Image.Bitmap := Bitmap;
+  Image.WrapMode := TImageWrapMode.Original;
 end;
 
 procedure TFormMain.LayoutComponents;
@@ -990,49 +998,54 @@ begin
   { So that computed values for Height and Width are > 0 }
   SpeedPanel.Position.X := 2 * Raster + Margin;
   SpeedPanel.Position.Y := Raster + Margin;
-  SpeedPanel.Width := ClientWidth - SpeedPanel.Position.X - Raster - Margin;
+  SpeedPanel.Width := ClientWidth - 3 * Raster - 2 * Margin;
   SpeedPanel.Height := SpeedPanelHeight;
-  SpeedPanel.Anchors := SpeedPanel.Anchors + [TAnchorKind.akRight];
+  SpeedPanel.Anchors := Image.Anchors + [TAnchorKind.akRight];
 
-  HintText.Position.X := 2 * Raster + 30;
-  HintText.Position.Y := Raster + SpeedPanelHeight + Margin + 4;
-  HintText.Height := 30;
-
-  ReportLabel.Position.X := 600;
-  ReportLabel.Position.Y := Raster + SpeedPanelHeight + Margin + 4;
-  ReportLabel.Height := 30;
-
+  TrimmMemo.Position.Y := 2 * Raster + Margin;
   TrimmMemo.Position.X := Raster + Margin;
-  TrimmMemo.Position.Y := Raster + SpeedPanel.Height + HintText.Height + Margin;
-  TrimmMemo.Height := 185;
   TrimmMemo.Width := 200;
+  TrimmMemo.Height := 150;
 
   TrimmCombo.Position.X := TrimmMemo.Position.X;
-  ParamCombo.Position.X := TrimmCombo.Position.X;
-
-  TrimmCombo.Width := TrimmMemo.Width;
-  ParamCombo.Width := TrimmCombo.Width;
-
   TrimmCombo.Position.Y := TrimmMemo.Position.Y + TrimmMemo.Height + Margin;
-  ParamCombo.Position.Y := TrimmCombo.Position.Y + TrimmCombo.Height + Margin;
+  TrimmCombo.Width := TrimmMemo.Width;
 
-  ReportListbox.Position.X := TrimmMemo.Position.X;
-  ReportListbox.Position.Y := ParamCombo.Position.Y + ParamCombo.Height + Margin;
-  ReportListbox.Width := TrimmMemo.Width;
+//  ParamCombo.Position.X := TrimmCombo.Position.X;
+//  ParamCombo.Position.Y := TrimmCombo.Position.Y + TrimmCombo.Height + Margin;
+//  ParamCombo.Width := TrimmMemo.Width;
+
+//  ReportCombo.Position.X := ParamCombo.Position.X;
+//  ReportCombo.Position.Y := ParamCombo.Position.Y + ParamCombo.Height + Margin;
+//  ReportCombo.Width := TrimmMemo.Width;
+
+  ParamListbox.Position.X := TrimmMemo.Position.X;
+  ParamListbox.Position.Y := TrimmCombo.Position.Y + TrimmCombo.Height + Margin;
+  ParamListbox.Width := TrimmMemo.Width;
+  ParamListbox.Height := 270;
+//  ParamListbox.Height := ClientHeight - ParamListbox.Position.Y - Margin - Raster;
+//  ParamListbox.Anchors := ParamListbox.Anchors + [TAnchorKind.akBottom];
+
+  ReportListbox.Position.X := ParamListbox.Position.X;
+  ReportListbox.Position.Y := ParamListbox.Position.Y + ParamListbox.Height + Margin;
+  ReportListbox.Width := ParamListbox.Width;
   ReportListbox.Height := ClientHeight - ReportListbox.Position.Y - Raster - Margin;
   ReportListbox.Anchors := ReportListbox.Anchors + [TAnchorKind.akBottom];
 
-  ReportMemo.Position.X := ReportListbox.Position.X + ReportListbox.Width + Margin;
-  ReportMemo.Position.Y := TrimmMemo.Position.Y;
-  ReportMemo.Width := ClientWidth - ReportMemo.Position.X - Raster - Margin;
-  ReportMemo.Height := ClientHeight - ReportMemo.Position.Y - Raster - Margin;
-  ReportMemo.Anchors := ReportMemo.Anchors + [TAnchorKind.akRight, TAnchorKind.akBottom];
+  Image.Position.Y := TrimmMemo.Position.Y;
+  Image.Position.X := TrimmMemo.Position.X + TrimmMemo.Width + Margin;
+  Image.Width := ClientWidth - Image.Position.X - Raster - Margin;
+  Image.Height := ClientHeight - Image.Position.Y - Raster - Margin;
+  Image.Anchors := Image.Anchors + [TAnchorKind.akRight, TAnchorKind.akBottom];
 
-//  Image.Position.X := ReportMemo.Position.X + ReportMemo.Width + Margin;
-//  Image.Position.Y := SpeedPanel.Position.Y + SpeedPanel.Height + Margin;
-//  Image.Width := ClientWidth - Image.Position.X - Margin;
-//  Image.Height := ClientHeight - Image.Position.Y - Margin;
-//  Image.Anchors := Image.Anchors + [TAnchorKind.akRight, TAnchorKind.akBottom];
+  HintText.Position.X := Image.Position.X + 150;
+  HintText.Position.Y := Image.Position.Y;
+
+  HelpText.Position.X := Image.Position.X + 150;
+  HelpText.Position.Y := Image.Position.Y + HintText.Height + Margin;
+
+  ReportText.Position.X := HelpText.Position.X;
+  ReportText.Position.Y := HelpText.Position.Y;
 end;
 
 function TFormMain.AddSpeedBtn(N: string; AGroupSpace: Integer): TSpeedButton;
@@ -1374,7 +1387,7 @@ var
 begin
   s := Main.RggMain.Param2Text(fp);
   if ParamCombo <> nil then
-  ParamCombo.Items.AddObject(s, TObject(fp));
+    ParamCombo.Items.AddObject(s, TObject(fp));
 end;
 
 procedure TFormMain.InitParamCombo;
@@ -1438,30 +1451,34 @@ begin
     t := Integer(TrimmCombo.Items.Objects[ii]);
     Main.Trimm := t;
     Main.FederText.CheckState;
-//    if ReportText.Visible then
-//    begin
+    if ReportText.Visible then
+    begin
       ShowTrimmData;
-//      ReportText.Text := RL.Text;
-//    end;
+      ReportText.Text := RL.Text;
+    end;
   end;
 end;
 
 procedure TFormMain.ShowTrimmData;
 begin
-  RL.Clear;
-  //Main.CurrentTrimm.SaveTrimmFile(ML);
+  RL.BeginUpdate;
+  try
+    RL.Clear;
+    //Main.CurrentTrimm.SaveTrimmFile(ML);
 
-  Main.CurrentTrimm.WantAll := AllProps;
-  Main.CurrentTrimm.SaveTrimmItem(RL);
-  Main.CurrentTrimm.WantAll := False;
+    Main.CurrentTrimm.WantAll := AllProps;
+    Main.CurrentTrimm.SaveTrimmItem(RL);
+    Main.CurrentTrimm.WantAll := False;
 
-  //Main.CurrentTrimm.WriteReport(ML);
+    //Main.CurrentTrimm.WriteReport(ML);
 
-  if ReportLabel <> nil then
-  begin
-    ReportLabel.Text := 'Trimm' + IntToStr(Main.Trimm);
+    if ReportLabel <> nil then
+    begin
+      ReportLabel.Text := 'Trimm' + IntToStr(Main.Trimm);
+    end;
+  finally
+    RL.EndUpdate;
   end;
-  ReportMemo.Text := RL.Text;
 end;
 
 procedure TFormMain.ShowTrimm;
