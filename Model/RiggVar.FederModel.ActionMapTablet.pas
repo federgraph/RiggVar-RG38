@@ -403,9 +403,9 @@ begin
 
       cl := TopRight;
       InitAC(cl, 1, faReportTrimmText, cla);
-      InitAC(cl, 2, faReportDataText, cla);
-      InitAC(cl, 3, faReportDiffText, cla);
-      InitAC(cl, 4, faNoop, claWhite);
+      InitAC(cl, 2, faReportJsonText, cla);
+      InitAC(cl, 3, faReportDataText, cla);
+      InitAC(cl, 4, faReportDiffText, cla);
       //InitAC(cl, 5, faActionPageP, claYellow);
       InitAC(cl, 6, faReportXml, cla);
       InitAC(cl, 7, faToggleAllTags, claPlum);

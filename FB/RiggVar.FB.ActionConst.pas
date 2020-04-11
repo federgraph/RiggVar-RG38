@@ -21,11 +21,11 @@ interface
 type
   TFederAction = Integer;
 
-const
 // --- generated code snippet ---
 // Note that some of the defined actions
 //   may not be implemented in this version of the app.
 
+const
 
 { EmptyAction }
 faNoop = 0;
@@ -146,142 +146,142 @@ faReportLog = 82;
 faReportJson = 83;
 faReportData = 84;
 faReportTrimmText = 85;
-faReportDataText = 86;
-faReportDiffText = 87;
-faReportAusgabeRL = 88;
-faReportAusgabeRP = 89;
-faReportAusgabeRLE = 90;
-faReportAusgabeRPE = 91;
-faReportAusgabeDiffL = 92;
-faReportAusgabeDiffP = 93;
-faReportXML = 94;
-faReportDebugReport = 95;
-faReportReadme = 96;
+faReportJsonText = 86;
+faReportDataText = 87;
+faReportDiffText = 88;
+faReportAusgabeRL = 89;
+faReportAusgabeRP = 90;
+faReportAusgabeRLE = 91;
+faReportAusgabeRPE = 92;
+faReportAusgabeDiffL = 93;
+faReportAusgabeDiffP = 94;
+faReportXML = 95;
+faReportDebugReport = 96;
+faReportReadme = 97;
 
 { RggChart }
-faChartRect = 97;
-faChartTextRect = 98;
-faChartLegend = 99;
-faChartAP = 100;
-faChartBP = 101;
-faChartGroup = 102;
-faParamCountPlus = 103;
-faParamCountMinus = 104;
-faPComboPlus = 105;
-faPComboMinus = 106;
-faXComboPlus = 107;
-faXComboMinus = 108;
-faYComboPlus = 109;
-faYComboMinus = 110;
-faChartReset = 111;
+faChartRect = 98;
+faChartTextRect = 99;
+faChartLegend = 100;
+faChartAP = 101;
+faChartBP = 102;
+faChartGroup = 103;
+faParamCountPlus = 104;
+faParamCountMinus = 105;
+faPComboPlus = 106;
+faPComboMinus = 107;
+faXComboPlus = 108;
+faXComboMinus = 109;
+faYComboPlus = 110;
+faYComboMinus = 111;
+faChartReset = 112;
 
 { RggGraph }
-faToggleLineColor = 112;
-faToggleUseDisplayList = 113;
-faToggleUseQuickSort = 114;
-faToggleShowLegend = 115;
-faRggBogen = 116;
-faRggZoomIn = 117;
-faRggZoomOut = 118;
-faToggleSalingGraph = 119;
-faToggleControllerGraph = 120;
-faToggleChartGraph = 121;
-faToggleMatrixText = 122;
+faToggleLineColor = 113;
+faToggleUseDisplayList = 114;
+faToggleUseQuickSort = 115;
+faToggleShowLegend = 116;
+faRggBogen = 117;
+faRggZoomIn = 118;
+faRggZoomOut = 119;
+faToggleSalingGraph = 120;
+faToggleControllerGraph = 121;
+faToggleChartGraph = 122;
+faToggleMatrixText = 123;
 
 { RggSegment }
-faToggleSegmentF = 123;
-faToggleSegmentR = 124;
-faToggleSegmentS = 125;
-faToggleSegmentM = 126;
-faToggleSegmentV = 127;
-faToggleSegmentW = 128;
-faToggleSegmentC = 129;
-faToggleSegmentA = 130;
+faToggleSegmentF = 124;
+faToggleSegmentR = 125;
+faToggleSegmentS = 126;
+faToggleSegmentM = 127;
+faToggleSegmentV = 128;
+faToggleSegmentW = 129;
+faToggleSegmentC = 130;
+faToggleSegmentA = 131;
 
 { RggRenderOptions }
-faWantRenderH = 131;
-faWantRenderP = 132;
-faWantRenderF = 133;
-faWantRenderE = 134;
-faWantRenderS = 135;
+faWantRenderH = 132;
+faWantRenderP = 133;
+faWantRenderF = 134;
+faWantRenderE = 135;
+faWantRenderS = 136;
 
 { RggTrimms }
-faTrimm0 = 136;
-faTrimm1 = 137;
-faTrimm2 = 138;
-faTrimm3 = 139;
-faTrimm4 = 140;
-faTrimm5 = 141;
-faTrimm6 = 142;
-fa420 = 143;
-faLogo = 144;
+faTrimm0 = 137;
+faTrimm1 = 138;
+faTrimm2 = 139;
+faTrimm3 = 140;
+faTrimm4 = 141;
+faTrimm5 = 142;
+faTrimm6 = 143;
+fa420 = 144;
+faLogo = 145;
 
 { RggTrimmFile }
-faCopyTrimmItem = 145;
-faPasteTrimmItem = 146;
-faCopyAndPaste = 147;
-faUpdateTrimm0 = 148;
-faReadTrimmFile = 149;
-faSaveTrimmFile = 150;
-faCopyTrimmFile = 151;
+faCopyTrimmItem = 146;
+faPasteTrimmItem = 147;
+faCopyAndPaste = 148;
+faUpdateTrimm0 = 149;
+faReadTrimmFile = 150;
+faSaveTrimmFile = 151;
+faCopyTrimmFile = 152;
 
 { RggTrimmText }
-faToggleTrimmText = 152;
-faToggleDiffText = 153;
-faToggleDataText = 154;
-faToggleDebugText = 155;
-faUpdateReportText = 156;
+faToggleTrimmText = 153;
+faToggleDiffText = 154;
+faToggleDataText = 155;
+faToggleDebugText = 156;
+faUpdateReportText = 157;
 
 { RggSonstiges }
-faMemeToggleHelp = 157;
-faMemeToggleReport = 158;
-faButtonFrameReport = 159;
-faToggleFontColor = 160;
-faToggleSandboxed = 161;
-faToggleAllTags = 162;
+faMemeToggleHelp = 158;
+faMemeToggleReport = 159;
+faButtonFrameReport = 160;
+faToggleFontColor = 161;
+faToggleSandboxed = 162;
+faToggleAllTags = 163;
 
-faTL01 = 163;
-faTL02 = 164;
-faTL03 = 165;
-faTL04 = 166;
-faTL05 = 167;
-faTL06 = 168;
+{ BtnLegendTablet }
+faTL01 = 164;
+faTL02 = 165;
+faTL03 = 166;
+faTL04 = 167;
+faTL05 = 168;
+faTL06 = 169;
+faTR01 = 170;
+faTR02 = 171;
+faTR03 = 172;
+faTR04 = 173;
+faTR05 = 174;
+faTR06 = 175;
+faTR07 = 176;
+faTR08 = 177;
+faBL01 = 178;
+faBL02 = 179;
+faBL03 = 180;
+faBL04 = 181;
+faBL05 = 182;
+faBL06 = 183;
+faBL07 = 184;
+faBL08 = 185;
+faBR01 = 186;
+faBR02 = 187;
+faBR03 = 188;
+faBR04 = 189;
+faBR05 = 190;
+faBR06 = 191;
 
-faTR01 = 169;
-faTR02 = 170;
-faTR03 = 171;
-faTR04 = 172;
-faTR05 = 173;
-faTR06 = 174;
-faTR07 = 175;
-faTR08 = 176;
+{ BtnLegendPhone }
+faMB01 = 192;
+faMB02 = 193;
+faMB03 = 194;
+faMB04 = 195;
+faMB05 = 196;
+faMB06 = 197;
+faMB07 = 198;
+faMB08 = 199;
 
-faBL01 = 177;
-faBL02 = 178;
-faBL03 = 179;
-faBL04 = 180;
-faBL05 = 181;
-faBL06 = 182;
-faBL07 = 183;
-faBL08 = 184;
-
-faBR01 = 185;
-faBR02 = 186;
-faBR03 = 187;
-faBR04 = 188;
-faBR05 = 189;
-faBR06 = 190;
-
-faMB01 = 191;
-faMB02 = 192;
-faMB03 = 193;
-faMB04 = 194;
-faMB05 = 195;
-faMB06 = 196;
-faMB07 = 197;
-faMB08 = 198;
-
-faMax = 199;
+faMax = 200;
 
 ParamsRange = [faController .. faMastfussD0X];
 ReportsRange = [faReportNone .. faReportReadme];

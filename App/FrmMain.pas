@@ -74,7 +74,6 @@ type
     procedure InitTrimmCombo;
     procedure InitParamCombo;
     procedure InitReportCombo;
-    procedure ACI(fp: TFederParam);
   public
     AllProps: Boolean;
     procedure ShowTrimm;
@@ -141,12 +140,12 @@ type
     ParamCombo: TComboBox;
     ReportCombo: TComboBox;
 
+    function FindItemIndexOfParam(ML: TStrings): Integer;
     procedure UpdateItemIndexParams;
     procedure UpdateItemIndexParamsLB;
     procedure UpdateItemIndexParamsCB;
     procedure UpdateItemIndexReports;
     procedure UpdateItemIndexTrimms;
-
     procedure ParamListboxChange(Sender: TObject);
     procedure ReportListboxChange(Sender: TObject);
     procedure TrimmComboChange(Sender: TObject);
@@ -361,6 +360,8 @@ begin
   SetupListboxItems(ParamListbox, claDodgerblue);
   SetupListboxItems(ReportListbox, claDodgerblue);
 
+  Main.RggMain.Draw;
+
   Main.FederText.CheckState;
   UpdateSpeedPanel;
 end;
@@ -433,16 +434,16 @@ end;
 procedure TFormMain.UpdateItemIndexParamsLB;
 var
   ii: Integer;
-  ij: Integer;
+  ik: Integer;
 begin
   if ParamListbox = nil then
     Exit;
   ii := ParamListbox.ItemIndex;
-  ij := Integer(Main.RggMain.Param);
-  if ii <> ij then
+  ik := FindItemIndexOfParam(ParamListbox.Items);
+  if ii <> ik then
   begin
     ParamListbox.OnChange := nil;
-    ParamListbox.ItemIndex := ij;
+    ParamListbox.ItemIndex := ik;
     ParamListbox.OnChange := ParamListboxChange;
   end;
 end;
@@ -450,31 +451,34 @@ end;
 procedure TFormMain.UpdateItemIndexParamsCB;
 var
   ii: Integer;
-  fp: TFederParam;
   ik: Integer;
-  i: Integer;
 begin
   if ParamCombo = nil then
     Exit;
-
   ii := ParamCombo.ItemIndex;
-  fp := Main.RggMain.Param;
-
-  ik := -1;
-  for i := 0 to ParamCombo.Items.Count-1 do
-  begin
-    if TFederParam(ParamCombo.Items.Objects[i]) = fp then
-    begin
-      ik := i;
-      break;
-    end;
-  end;
-
+  ik := FindItemIndexOfParam(ParamCombo.Items);
   if ii <> ik then
   begin
     ParamCombo.OnChange := nil;
     ParamCombo.ItemIndex := ik;
     ParamCombo.OnChange := ParamComboChange;
+  end;
+end;
+
+function TFormMain.FindItemIndexOfParam(ML: TStrings): Integer;
+var
+  fp: TFederParam;
+  i: Integer;
+begin
+  fp := Main.RggMain.Param;
+  result := -1;
+  for i := 0 to ML.Count-1 do
+  begin
+    if TFederParam(ML.Objects[i]) = fp then
+    begin
+      result := i;
+      break;
+    end;
   end;
 end;
 
@@ -1356,56 +1360,63 @@ end;
 
 procedure TFormMain.InitParamListbox;
 var
+  rm: TRggMain;
   LI: TStrings;
   fp: TFederParam;
   s: string;
+
+  procedure Add(fp: TFederParam);
+  begin
+    LI.AddObject(rm.Param2Text(fp), TObject(fp));
+  end;
 begin
+  rm := Main.RggMain;
   LI := ParamListbox.Items;
   LI.Clear;
-  LI.Add(Main.RggMain.Param2Text(fpController));
-  LI.Add(Main.RggMain.Param2Text(fpWinkel));
-  LI.Add(Main.RggMain.Param2Text(fpVorstag));
-  LI.Add(Main.RggMain.Param2Text(fpWante));
-  LI.Add(Main.RggMain.Param2Text(fpWoben));
-  LI.Add(Main.RggMain.Param2Text(fpSalingH));
-  LI.Add(Main.RggMain.Param2Text(fpSalingA));
-  LI.Add(Main.RggMain.Param2Text(fpSalingL));
-  LI.Add(Main.RggMain.Param2Text(fpSalingW));
-  LI.Add(Main.RggMain.Param2Text(fpMastfallF0C));
-  LI.Add(Main.RggMain.Param2Text(fpMastfallF0F));
-  LI.Add(Main.RggMain.Param2Text(fpBiegung));
-  LI.Add(Main.RggMain.Param2Text(fpD0X));
 
-  fp := Main.RggMain.Param;
-  s := Main.RggMain.Param2Text(fp);
-  ParamListbox.ItemIndex := ParamListbox.Items.IndexOf(s);
-end;
+  { Add a subset of available Params }
+//  Add(fpController);
+//  Add(fpWinkel);
+  Add(fpVorstag);
+  Add(fpWante);
+  Add(fpWoben);
+  Add(fpSalingH);
+  Add(fpSalingA);
+//  Add(fpSalingL);
+//  Add(fpSalingW);
+//  Add(fpMastfallF0C);
+  Add(fpMastfallF0F);
+  Add(fpBiegung);
+//  Add(fpD0X);
 
-procedure TFormMain.ACI(fp: TFederParam);
-var
-  s: string;
-begin
-  s := Main.RggMain.Param2Text(fp);
-  if ParamCombo <> nil then
-    ParamCombo.Items.AddObject(s, TObject(fp));
+  { Init ItemIndex }
+  fp := rm.Param;
+  s := rm.Param2Text(fp);
+  ParamListbox.ItemIndex := LI.IndexOf(s);
 end;
 
 procedure TFormMain.InitParamCombo;
+  procedure Add(fp: TFederParam);
+  begin
+    ParamCombo.Items.AddObject(Main.RggMain.Param2Text(fp), TObject(fp));
+  end;
 begin
-  ACI(fpVorstag);
-  ACI(fpWinkel);
-  ACI(fpController);
-  ACI(fpWante);
-  ACI(fpWoben);
-  ACI(fpSalingH);
-  ACI(fpSalingA);
-  ACI(fpSalingL);
-  ACI(fpSalingW);
-  ACI(fpMastfallF0C);
-  ACI(fpMastfallF0F);
-  ACI(fpMastfallVorlauf);
-  ACI(fpBiegung);
-  ACI(fpD0X);
+  if ParamCombo <> nil then
+    Exit;
+  Add(fpVorstag);
+  Add(fpWinkel);
+  Add(fpController);
+  Add(fpWante);
+  Add(fpWoben);
+  Add(fpSalingH);
+  Add(fpSalingA);
+  Add(fpSalingL);
+  Add(fpSalingW);
+  Add(fpMastfallF0C);
+  Add(fpMastfallF0F);
+  Add(fpMastfallVorlauf);
+  Add(fpBiegung);
+  Add(fpD0X);
 end;
 
 procedure TFormMain.ParamComboChange(Sender: TObject);

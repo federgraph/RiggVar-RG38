@@ -181,6 +181,7 @@ begin
     faReportJson: result := 'Json Report';
     faReportData: result := 'Data Report';
     faReportTrimmText: result := 'Trimm Text Report';
+    faReportJsonText: result := 'Json Text Report';
     faReportDataText: result := 'Data Text Report';
     faReportDiffText: result := 'Diff Text Report';
     faReportAusgabeRL: result := 'Ausgabe Rigg Längen';

@@ -75,7 +75,9 @@ type
     procedure DoSmallWheel(Delta: single);
 
     function GetTrimmItem(i: Integer): TRggData;
-    function GetTrimmItemReport: string;
+    function GetTrimmItemReport(WantJson: Boolean): string;
+    function GetTrimmItemReportData: string;
+    function GetTrimmItemReportJson: string;
 
     procedure WriteTrimmItem;
     procedure WriteTrimmFile;
@@ -103,7 +105,8 @@ type
     property TrimmNoChange: Integer read FTrimm write SetTrimmNoChange;
     property Trimm: Integer read FTrimm write SetTrimm;
     property CurrentTrimm: TRggData read GetCurrentTrimm;
-    property TrimmData: string read GetTrimmItemReport;
+    property TrimmData: string read GetTrimmItemReportData;
+    property TrimmJson: string read GetTrimmItemReportJson;
 
     property ShowTrimmText: Boolean read GetShowTrimmText write SetShowTrimmText;
     property ShowDiffText: Boolean read GetShowDiffText write SetShowDiffText;
@@ -211,16 +214,29 @@ begin
 //  result := FederText.DataVisible;
 end;
 
-function TMain1.GetTrimmItemReport: string;
+function TMain1.GetTrimmItemReport(WantJson: Boolean): string;
 begin
   if Assigned(RggMain) and Assigned(RggMain.Rigg) and Assigned(RggData) and Assigned(FL) then
   begin
     RggMain.Rigg.SaveToFederData(RggData);
     FL.Clear;
-    RggData.WriteReport(FL);
+    if WantJson then
+      RggData.WriteJSon(FL)
+    else
+      RggData.WriteReport(FL);
     result := FL.Text;
     FL.Clear;
   end;
+end;
+
+function TMain1.GetTrimmItemReportJson: string;
+begin
+  result := GetTrimmItemReport(True);
+end;
+
+function TMain1.GetTrimmItemReportData: string;
+begin
+  result := GetTrimmItemReport(False);
 end;
 
 procedure TMain1.WriteTrimmItem;
@@ -593,6 +609,7 @@ procedure TMain1.UpdateTrimm0;
 begin
   Logger.Info('in UpdateTrimm0');
   RggMain.SaveTrimm(Trimm0);
+  FormMain.UpdateReport;
 end;
 
 function TMain1.GetTrimmItem(i: Integer): TRggData;

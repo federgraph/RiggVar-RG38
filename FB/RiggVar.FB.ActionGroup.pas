@@ -188,6 +188,7 @@ ActionGroupRggReport: TActionGroup = [
   faReportJson,
   faReportData,
   faReportTrimmText,
+  faReportJsonText,
   faReportDataText,
   faReportDiffText,
   faReportAusgabeRL,

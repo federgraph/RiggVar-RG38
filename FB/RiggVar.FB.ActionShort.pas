@@ -183,6 +183,7 @@ begin
     faReportJson: result := '~J';
     faReportData: result := '~D';
     faReportTrimmText: result := '~TT';
+    faReportJsonText: result := '~JT';
     faReportDataText: result := '~DT';
     faReportDiffText: result := '~dt';
     faReportAusgabeRL: result := 'RL';

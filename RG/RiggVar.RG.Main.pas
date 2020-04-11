@@ -158,6 +158,7 @@ type
     procedure UpdateColumnC(ML: TStrings);
     procedure UpdateColumnD(ML: TStrings);
     procedure UpdateTrimmText(ML: TStrings);
+    procedure UpdateJsonText(ML: TStrings);
     procedure UpdateDataText(ML: TStrings);
     procedure UpdateDiffText(ML: TStrings);
     procedure UpdateFactArrayFromRigg;
@@ -1613,14 +1614,50 @@ begin
 //  ML.Add('CounterT = ' + IntToStr(UpdateTextCounter));
 end;
 
+procedure TRggMain.UpdateJsonText(ML: TStrings);
+begin
+  ML.Text := Main.TrimmJson;
+end;
+
 procedure TRggMain.UpdateDataText(ML: TStrings);
 begin
   ML.Text := Main.TrimmData;
 end;
 
 procedure TRggMain.UpdateGetriebe;
+var
+  temp: Boolean;
 begin
+  GrauZeichnen := False;
+  RiggLED := False;
+  StatusText := '';
+
    Rigg.UpdateGetriebe;
+
+  temp := (SofortBerechnen and Rigg.GetriebeOK and Rigg.MastOK);
+
+  if temp then
+  begin
+    { continue to do Rigg }
+    Rigg.UpdateRigg;
+
+    RiggLED := Rigg.RiggOK;
+    StatusText := Rigg.RiggStatusText;
+    Grauzeichnen := RiggLED;
+  end
+  else
+  begin
+    { be done with Getriebe only }
+    RiggLED := Rigg.GetriebeOK;
+    StatusText := Rigg.GetriebeStatusText;
+    if Rigg.GetriebeOK and not Rigg.MastOK then
+    begin
+      RiggLED := False;
+      StatusText := Rigg.MastStatusText;
+    end;
+  end;
+
+  Draw;
 end;
 
 end.

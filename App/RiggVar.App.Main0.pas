@@ -425,15 +425,14 @@ begin
     Exit;
 
   case fa of
-//    faMemeToggleHelp: result := F.HelpText.Visible;
-//    faMemeToggleReport: result := F.ReportText.Visible;
+    faMemeToggleHelp: result := F.HelpText.Visible;
+    faMemeToggleReport: result := F.ReportText.Visible;
     faButtonFrameReport: result := F.WantButtonFrameReport;
 //    faChartRect..faChartReset: result := F.ChartGraph.GetChecked(fa);
     faReportNone..faReportReadme: result := F.ReportManager.GetChecked(fa);
     else
       result := F.GetChecked(fa);
-end;
-
+  end;
 end;
 
 procedure TMain0.DoTouchbarLeft(Delta: single);

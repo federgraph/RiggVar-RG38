@@ -15,6 +15,7 @@ type
     rgJson,
     rgData,
     rgTrimmText,
+    rgJsonText,
     rgDataText,
     rgDiffText,
     rgAusgabeRL,
@@ -97,6 +98,7 @@ begin
     rgJson: result := 'RggData.WriteJson';
     rgData: result := 'RggData.WriteReport';
     rgTrimmText: result := 'Trimm Text';
+    rgJsonText: result := 'Json Text';
     rgDataText: result := 'Data Text';
     rgDiffText: result := 'Diff Text';
     rgAusgabeRL: result := 'Ausgabe rL';
@@ -124,6 +126,7 @@ begin
     faReportJson: rg := rgJson;
     faReportData: rg := rgData;
     faReportTrimmText: rg := rgTrimmText;
+    faReportJsonText: rg := rgJsonText;
     faReportDataText: rg := rgDataText;
     faReportDiffText: rg := rgDiffText;
     faReportAusgabeRL: rg := rgAusgabeRL;
@@ -153,6 +156,7 @@ begin
     faReportJson: result := CurrentReport = rgJson;
     faReportData: result := CurrentReport = rgData;
     faReportTrimmText: result := CurrentReport = rgTrimmText;
+    faReportJsonText: result := CurrentReport = rgJsonText;
     faReportDataText: result := CurrentReport = rgDataText;
     faReportDiffText: result := CurrentReport = rgDiffText;
     faReportAusgabeRL: result := CurrentReport = rgAusgabeRL;
@@ -264,6 +268,7 @@ begin
       end;
 {$endif}
       rgDiffText: Main.RggMain.UpdateDiffText(ML);
+      rgJsonText: Main.RggMain.UpdateJsonText(ML);
       rgDataText: Main.RggMain.UpdateDataText(ML);
       rgTrimmText: Main.RggMain.UpdateTrimmText(ML);
       rgDebugReport:
