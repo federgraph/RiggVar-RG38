@@ -316,28 +316,28 @@ begin
   F0Z := 300;
 
   { Rigglängen }
-  MU := 2600; //Mast Unten  (D0D)
-  MO := 2000; //Mast Oben (DC)
-  ML := 6115; //Mast Länge (D0F)
-  MV := 5000; //Mastfallvorlauf
-  CA := 50;
+  MU := 2600; // Mast Unten  (D0D), or lower part of the mast
+  MO := 2000; // Mast Oben (DC), or uppe part of the mast
+  ML := 6115; // Mast Länge (D0F), or mast length
+  MV := 5000; // Mastfallvorlauf
+  CA := 50; // Controller Anschlag
 
-  //Controller Position (E0E )
+  { Controller Position (E0E ) }
   CPMin := 50;
   CPPos := 100;
   CPMax := 200;
 
-  //Saling Abstand (AB)
+  { Saling Abstand (AB) }
   SAMin := 780;
   SAPos := 850;
   SAMax := 1000;
 
-  //Saling Höhe (PD)
+  { Saling Höhe (PD), or spreader height }
   SHMin := 140;
   SHPos := 220;
   SHMax := 300;
 
-  //Saling Länge (AB)
+  { Saling Länge (AB), or spreader length }
   SLMin := 450;
   SLPos := Round(Sqrt(Sqr(SHPos) + Sqr(SAPos / 2)));
   SLMax := 600;
@@ -346,30 +346,31 @@ begin
   SWPos := Round(ArcTan2(SHPos, SAPos / 2) * 180 / Pi);
   SWMax := 89;
 
-  //Vorstag (C0C)
+  { Vorstag (C0C), or forestay, headstay }
   VOMin := 4400;
   VOPos := 4500;
   VOMax := 4600;
 
-  //Winkel
+  { Winkel, or Angle of D0D }
   WIMin := 85;
   WIPos := 95;
   WIMax := 105;
 
-  //Wante Länge (A0A+AC und B0B+BC)
+  { Wante Länge (A0A+AC und B0B+BC), or shroud length }
   WLMin := 4050;
   WLPos := 4120;
   WLMax := 4200;
 
-  //Wante Oben (AC und BC)
+  { Wante Oben (AC und BC), or upper part of shroud }
   WOMin := 2000;
   WOPos := 2020;
   WOMax := 2070;
 
+  { for viewing the model }
   AngleX := 0;
   AngleY := 0;
   AngleZ := 0;
-  PosZ := 0;
+  PosZ := 0; // camera position
 
   h0 := 56;
   l2 := 100;
@@ -1062,7 +1063,7 @@ begin
       { remove comments }
       if Pos('//', s) > 0 then
       begin
-        //allow for namespace schema http://
+        { allow for namespace schema http:// }
         if not s.Contains('://') then
         begin
           j := s.IndexOf('//');
@@ -1086,7 +1087,7 @@ begin
         { process old trimm }
         if c = 1 then
         begin
-          //Trimm 0
+          { Trimm 0 }
           fd := Main.RggData;
           fd.Reset;
           fd.LoadTrimmItem(SL);
@@ -1094,7 +1095,7 @@ begin
         end
         else if c > 1 then
         begin
-          //Trimm 1 - 6
+          { Trimm 1 - 6 }
           fd := Main.GetTrimmItem(c-1);
           fd.Reset;
           fd.Assign(Main.Trimm0);
@@ -1102,11 +1103,11 @@ begin
         end;
         SL.Clear;
 
-        SL.Add(s); //line with name for new trimm
+        SL.Add(s); // line with name for new trimm
       end
       else
       begin
-        SL.Add(s); //normal lines with data (after line with name)
+        SL.Add(s); // normal lines with data (after line with name)
       end;
     end;
 

@@ -169,7 +169,7 @@ type
     procedure CreateComponents;
     procedure InitLayoutProps;
     procedure LayoutComponents;
-    procedure InitSpeedButtonsRG38;
+    procedure InitSpeedButtons;
     procedure UpdateSpeedPanel;
     function FindStyleByName(AParent: TFMXObject; AName: string): TFMXObject;
     procedure InitSpeedButton(SB: TSpeedButton);
@@ -243,7 +243,7 @@ begin
   Application.OnException := ApplicationEventsException;
 
   FormMain := self;
-  Caption := 'RG38';
+  Caption := ApplicationTitleText;
   Top := 20;
   Width := 1600;
   Height := 1000;
@@ -281,7 +281,7 @@ begin
   Main.InitText;
   Main.IsUp := True;
 
-  InitSpeedButtonsRG38;
+  InitSpeedButtons;
 
   { Params }
   Main.RggMain.Param := fpVorstag;
@@ -1083,7 +1083,7 @@ begin
   Inc(BtnCounter);
 end;
 
-procedure TFormMain.InitSpeedButtonsRG38;
+procedure TFormMain.InitSpeedButtons;
 var
   sb: TSpeedButton;
 begin
@@ -1147,7 +1147,7 @@ begin
 
   sb := AddSpeedBtn('CopyAndPasteBtn');
   CopyAndPasteBtn := sb;
-  sb.Text := 'M';
+  sb.Text := 'cap';
   sb.Hint := 'Copy And Paste';
   sb.StaysPressed := False;
   sb.OnClick := CopyAndPasteBtnClick;
@@ -1464,14 +1464,9 @@ begin
   RL.BeginUpdate;
   try
     RL.Clear;
-    //Main.CurrentTrimm.SaveTrimmFile(ML);
-
     Main.CurrentTrimm.WantAll := AllProps;
     Main.CurrentTrimm.SaveTrimmItem(RL);
     Main.CurrentTrimm.WantAll := False;
-
-    //Main.CurrentTrimm.WriteReport(ML);
-
     if ReportLabel <> nil then
     begin
       ReportLabel.Text := 'Trimm' + IntToStr(Main.Trimm);
