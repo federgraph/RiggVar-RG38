@@ -122,7 +122,7 @@ type
 
     Demo: Boolean;
 
-    StrokeRigg: TDummyStrokeRigg;
+    StrokeRigg: IStrokeRigg;
 
     RiggLED: Boolean;
     StatusText: string;
@@ -221,7 +221,7 @@ end;
 
 destructor TRggMain.Destroy;
 begin
-  StrokeRigg.Free;
+  StrokeRigg := nil;
   Rigg.Free;
   inherited;
 end;
