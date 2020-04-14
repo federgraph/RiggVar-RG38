@@ -126,6 +126,7 @@ type
     procedure SandboxedBtnClick(Sender: TObject);
     procedure AllPropsBtnClick(Sender: TObject);
     procedure AllTagsBtnClick(Sender: TObject);
+    procedure SpeedButtonClick(Sender: TObject);
   public
     HintText: TText;
     HelpText: TText;
@@ -135,11 +136,9 @@ type
     ParamListbox: TListBox;
     ReportListbox: TListBox;
     ReportLabel: TText;
-
     TrimmCombo: TComboBox;
     ParamCombo: TComboBox;
     ReportCombo: TComboBox;
-
     function FindItemIndexOfParam(ML: TStrings): Integer;
     procedure UpdateItemIndexParams;
     procedure UpdateItemIndexParamsLB;
@@ -169,7 +168,10 @@ type
     procedure InitLayoutProps;
     procedure LayoutComponents;
     procedure InitSpeedButtons;
-    procedure UpdateSpeedPanel;
+    procedure UpdateSpeedButtonDown;
+    procedure UpdateSpeedButtonDown1;
+    procedure UpdateSpeedButtonDown2;
+    procedure UpdateSpeedButtonEnabled;
     function FindStyleByName(AParent: TFMXObject; AName: string): TFMXObject;
     procedure InitSpeedButton(SB: TSpeedButton);
     procedure SetupMemo(MM: TMemo);
@@ -177,6 +179,13 @@ type
     procedure SetupComboBox(CB: TComboBox);
     procedure SetupListbox(LB: TListBox);
     procedure SetupListboxItems(LB: TListbox; cla: TAlphaColor);
+  public
+    procedure SofortBtnClick(Sender: TObject);
+    procedure GrauBtnClick(Sender: TObject);
+    procedure BlauBtnClick(Sender: TObject);
+    procedure MemoryBtnClick(Sender: TObject);
+    procedure MultiBtnClick(Sender: TObject);
+    procedure KoppelBtnClick(Sender: TObject);
   public
     function GetActionFromKey(Key: Word): Integer;
     function GetActionFromKeyChar(KeyChar: char): Integer;
@@ -322,7 +331,7 @@ begin
   end;
 
   TL := TrimmMemo.Lines;
-  MT0BtnClick(nil);
+  Main.UpdateTrimm0;
   ShowTrimm;
 
   Reset;
@@ -363,7 +372,7 @@ begin
   Main.RggMain.Draw;
 
   Main.FederText.CheckState;
-  UpdateSpeedPanel;
+  UpdateSpeedButtonDown;
 end;
 
 procedure TFormMain.FormDestroy(Sender: TObject);
@@ -707,22 +716,21 @@ begin
       UpdateReport;
     end;
 
-    faToggleAllTags:
-    begin
-      ReportManager.XmlAllTags := not ReportManager.XmlAllTags;
-      UpdateSpeedPanel;
-    end;
+    faSofortBtn: SofortBtnClick(nil);
+    faGrauBtn: GrauBtnClick(nil);
+    faBlauBtn: BlauBtnClick(nil);
+    faMultiBtn: MultiBtnClick(nil);
+    faKoppelBtn: KoppelBtnClick(nil);
+    faMemoryBtn: MemoryBtnClick(nil);
 
     faToggleFontColor: ToggleFontColor;
 
     faShowActi: ActiBtnClick(nil);
     faShowMemo: MemoBtnClick(nil);
 
-    faToggleSandboxed:
-    begin
-      IsSandboxed := not IsSandboxed;
-      UpdateSpeedPanel;
-    end;
+    faToggleSandboxed: IsSandboxed := not IsSandboxed;
+    faToggleAllProps: AllProps := not AllProps;
+    faToggleAllTags: ReportManager.XmlAllTags := not ReportManager.XmlAllTags;
 
     else
     begin
@@ -730,6 +738,7 @@ begin
     end;
 
   end;
+  UpdateSpeedButtonDown;
 end;
 
 function TFormMain.GetActionFromKey(Key: Word): Integer;
@@ -1097,64 +1106,43 @@ begin
 
   sb := AddSpeedBtn('MT0Btn', BtnGroupSpace);
   MT0Btn := sb;
-  sb.Text := 'MT0';
-  sb.Hint := 'Memory Btn';
-  sb.StaysPressed := False;
-  sb.OnClick := MT0BtnClick;
+  sb.Text := 'ct0';
   sb.Tag := faUpdateTrimm0;
   InitSpeedButton(sb);
 
   sb := AddSpeedBtn('ReadTrimmFileBtn');
   ReadTrimmFileBtn := sb;
   sb.Text := 'rtf';
-  sb.Hint := 'Read Trimm File';
-  sb.StaysPressed := False;
-  sb.OnClick := ReadTrimmFileBtnClick;
   sb.Tag := faReadTrimmFile;
   InitSpeedButton(sb);
 
   sb := AddSpeedBtn('SaveTrimmFileBtn');
   SaveTrimmFileBtn := sb;
   sb.Text := 'stf';
-  sb.Hint := 'Save Trimm File';
-  sb.StaysPressed := False;
-  sb.OnClick := SaveTrimmFileBtnClick;
   sb.Tag := faSaveTrimmFile;
   InitSpeedButton(sb);
 
   sb := AddSpeedBtn('CopyTrimmFileBtn');
   CopyTrimmFileBtn := sb;
   sb.Text := 'ctf';
-  sb.Hint := 'Copy Trimm File';
-  sb.StaysPressed := False;
-  sb.OnClick := CopyTrimmFileBtnClick;
   sb.Tag := faCopyTrimmFile;
   InitSpeedButton(sb);
 
   sb := AddSpeedBtn('CopyTrimmItemBtn');
   CopyTrimmItemBtn := sb;
   sb.Text := 'cti';
-  sb.Hint := 'Copy Trimm Item';
-  sb.StaysPressed := False;
-  sb.OnClick := CopyTrimmItemBtnClick;
   sb.Tag := faCopyTrimmItem;
   InitSpeedButton(sb);
 
   sb := AddSpeedBtn('PasteTrimmItemBtn');
   PasteTrimmItemBtn := sb;
   sb.Text := 'pti';
-  sb.Hint := 'Paste Trimm Item';
-  sb.StaysPressed := False;
-  sb.OnClick := PasteTrimmItemBtnClick;
   sb.Tag := faPasteTrimmItem;
   InitSpeedButton(sb);
 
   sb := AddSpeedBtn('CopyAndPasteBtn');
   CopyAndPasteBtn := sb;
   sb.Text := 'cap';
-  sb.Hint := 'Copy And Paste';
-  sb.StaysPressed := False;
-  sb.OnClick := CopyAndPasteBtnClick;
   sb.Tag := faCopyAndPaste;
   InitSpeedButton(sb);
 
@@ -1165,38 +1153,24 @@ begin
   sb := AddSpeedBtn('M10Btn', BtnGroupSpace);
   M10Btn := sb;
   sb.Text := '-10';
-  sb.Hint := 'Param Value Minus 10';
-  sb.StaysPressed := False;
-  sb.OnClick := M10BtnClick;
   sb.Tag := faParamValueMinus10;
   InitSpeedButton(sb);
 
   sb := AddSpeedBtn('M1Btn');
   M1Btn := sb;
   sb.Text := '-1';
-  sb.Hint := 'Param Value Minus 1';
-  sb.StaysPressed := False;
-  sb.OnClick := M1BtnClick;
   sb.Tag := faParamValueMinus1;
   InitSpeedButton(sb);
 
   sb := AddSpeedBtn('P1Btn');
   P1Btn := sb;
   sb.Text := '+1';
-  sb.Hint := 'Param Value Plus 1';
-  sb.StaysPressed := False;
-  sb.IsPressed := False;
-  sb.OnClick := P1BtnClick;
   sb.Tag := faParamValuePlus1;
   InitSpeedButton(sb);
 
   sb := AddSpeedBtn('P10Btn');
   P10Btn := sb;
   sb.Text := '+10';
-  sb.Hint := 'Param Value Plus 10';
-  sb.StaysPressed := False;
-  sb.IsPressed := False;
-  sb.OnClick := P10BtnClick;
   sb.Tag := faParamValuePlus10;
   InitSpeedButton(sb);
 
@@ -1207,31 +1181,22 @@ begin
   sb := AddSpeedBtn('SandboxedBtn', BtnGroupSpace);
   SandboxedBtn := sb;
   sb.Text := 'SB';
-  sb.Hint := 'Sandboxed';
   sb.StaysPressed := True;
-  sb.IsPressed := False;
-  sb.OnClick := SandboxedBtnClick;
   sb.Tag := faToggleSandboxed;
   InitSpeedButton(sb);
 
   sb := AddSpeedBtn('AllPropsBtn');
   AllPropsBtn := sb;
   sb.Text := 'ATP';
-  sb.Hint := 'All Trimm Props';
   sb.StaysPressed := True;
-  sb.IsPressed := False;
-  sb.OnClick := AllPropsBtnClick;
-//  sb.Tag := faToggleAllProps;
+  sb.Tag := faToggleAllProps;
   InitSpeedButton(sb);
 
   sb := AddSpeedBtn('AllTagsBtn');
   AllTagsBtn := sb;
   sb.Text := 'AXT';
-  sb.Hint := 'All Xml Tags';
   sb.StaysPressed := True;
-  sb.IsPressed := False;
   sb.Tag := faToggleAllTags;
-  sb.OnClick := AllTagsBtnClick;
   InitSpeedButton(sb);
 end;
 
@@ -1286,7 +1251,6 @@ procedure TFormMain.AllPropsBtnClick(Sender: TObject);
 begin
 //  Main.ActionHandler.Execute(faToggleAllProps);
   AllProps := not AllProps;
-  UpdateSpeedPanel;
 end;
 
 procedure TFormMain.AllTagsBtnClick(Sender: TObject);
@@ -1537,7 +1501,13 @@ begin
   cr.NormalColor := BtnColor;
   cr.PressedColor := BtnColor;
   cr.Font.Family := 'Consolas';
-  cr.Font.Size := 16;
+  cr.Font.Size := 17;
+  if SB.Tag <> faNoop then
+  begin
+    sb.Text := Main.ActionHandler.GetShortCaption(SB.Tag);
+    sb.Hint := Main.ActionHandler.GetCaption(SB.Tag);
+    sb.OnClick := SpeedButtonClick;
+  end;
 end;
 
 function TFormMain.FindStyleByName(AParent: TFMXObject; AName: string): TFMXObject;
@@ -1558,7 +1528,48 @@ begin
   end;
 end;
 
-procedure TFormMain.UpdateSpeedPanel;
+procedure TFormMain.SofortBtnClick(Sender: TObject);
+begin
+  Main.RggMain.SofortBerechnen := not Main.RggMain.SofortBerechnen;
+end;
+
+procedure TFormMain.GrauBtnClick(Sender: TObject);
+begin
+  Main.RggMain.BtnGrauDown := not Main.RggMain.BtnGrauDown;
+end;
+
+procedure TFormMain.BlauBtnClick(Sender: TObject);
+begin
+  Main.RggMain.BtnBlauDown := not Main.RggMain.BtnBlauDown;
+end;
+
+procedure TFormMain.MemoryBtnClick(Sender: TObject);
+begin
+  Main.RggMain.StrokeRigg.KoordinatenR := Main.RggMain.Rigg.rP;
+  Main.RggMain.Draw;
+end;
+
+procedure TFormMain.MultiBtnClick(Sender: TObject);
+begin
+//  RotaForm.WantOverlayedRiggs := not RotaForm.WantOverlayedRiggs;
+//  Main.RggMain.Draw;
+end;
+
+procedure TFormMain.KoppelBtnClick(Sender: TObject);
+begin
+//  RotaForm.KoppelBtnClick(Sender);
+end;
+
+procedure TFormMain.UpdateSpeedButtonDown;
+begin
+  UpdateSpeedButtonDown2;
+end;
+
+procedure TFormMain.UpdateSpeedButtonDown1;
+begin
+end;
+
+procedure TFormMain.UpdateSpeedButtonDown2;
 begin
   SandboxedBtn.IsPressed := IsSandboxed;
   AllPropsBtn.IsPressed := AllProps;
@@ -1573,6 +1584,7 @@ begin
 
   case fa of
     faToggleSandboxed: result := IsSandboxed;
+    faToggleAllProps: result := AllProps;
     faToggleAllTags: result := ReportManager.XmlAllTags;
 
 //    faMemeToggleHelp: result := HelpText.Visible;
@@ -1609,7 +1621,6 @@ begin
 //    faToggleControllerGraph: result := ControllerImage.IsVisible;
 //    faToggleMatrixText: result := RotaForm.MatrixItemChecked;
   end;
-
 end;
 
 procedure TFormMain.CheckFormBounds(AForm: TForm);
@@ -1662,6 +1673,50 @@ begin
     FormMemo.DisposeOf;
     FormMemo := nil;
   end;
+end;
+
+procedure TFormMain.SpeedButtonClick(Sender: TObject);
+var
+  fa: Integer;
+begin
+  fa := (Sender as TControl).Tag;
+  case fa of
+    faUpdateTrimm0: MT0BtnClick(Sender);
+    faReadTrimmFile: ReadTrimmFileBtnClick(Sender);
+    faSaveTrimmFile: SaveTrimmFileBtnClick(Sender);
+    faCopyTrimmFile: CopyTrimmFileBtnClick(Sender);
+    faCopyTrimmItem: CopyTrimmItemBtnClick(Sender);
+    faPasteTrimmItem: PasteTrimmItemBtnClick(Sender);
+    faCopyAndPaste: CopyAndPasteBtnClick(Sender);
+
+    faParamValueMinus10: M10BtnClick(Sender);
+    faParamValueMinus1: M1BtnClick(Sender);
+    faParamValuePlus1: P1BtnClick(Sender);
+    faParamValuePlus10: P10BtnClick(Sender);
+
+    faToggleSandboxed: SandboxedBtnClick(Sender);
+    faToggleAllProps: AllPropsBtnClick(Sender);
+    faToggleAllTags: AllTagsBtnClick(Sender);
+
+    faSofortBtn: SofortBtnClick(Sender);
+    faGrauBtn: GrauBtnClick(Sender);
+    faBlauBtn: BlauBtnClick(Sender);
+    faMemoryBtn: MemoryBtnClick(Sender);
+    faMultiBtn: MultiBtnClick(Sender);
+    faKoppelBtn: KoppelBtnClick(Sender);
+  end;
+
+  { When not called via Action }
+  if Sender <> nil then
+  begin
+    UpdateSpeedButtonEnabled;
+    Main.FederText.CheckState;
+    UpdateSpeedButtonDown;
+  end;
+end;
+
+procedure TFormMain.UpdateSpeedButtonEnabled;
+begin
 end;
 
 end.

@@ -343,6 +343,7 @@ faReportDebugReport: result := 'faReportDebugReport';
 faReportReadme: result := 'faReportReadme';
 
 faToggleSandboxed: result := 'faToggleSandboxed';
+faToggleAllProps: result := 'faToggleAllProps';
 faToggleAllTags: result := 'faToggleAllTags';
 
 faToggleLineColor: result := 'faToggleLineColor';
@@ -421,6 +422,23 @@ faMB05: result := 'faMB05';
 faMB06: result := 'faMB06';
 faMB07: result := 'faMB07';
 faMB08: result := 'faMB08';
+
+faCirclesSelectC0: result := 'faCirclesSelectC0';
+faCirclesSelectC1: result := 'faCirclesSelectC1';
+faCirclesSelectC2: result := 'faCirclesSelectC2';
+faCircleParamR1: result := 'faCircleParamR1';
+faCircleParamR2: result := 'faCircleParamR2';
+faCircleParamM1X: result := 'faCircleParamM1X';
+faCircleParamM1Y: result := 'faCircleParamM1Y';
+faCircleParamM2X: result := 'faCircleParamM2X';
+faCircleParamM2Y: result := 'faCircleParamM2Y';
+faLineParamA1: result := 'faLineParamA1';
+faLineParamA2: result := 'faLineParamA2';
+faLineParamE1: result := 'faLineParamE1';
+faLineParamE2: result := 'faLineParamE2';
+faCircleParamM1Z: result := 'faCircleParamM1Z';
+faCircleParamM2Z: result := 'faCircleParamM2Z';
+faCirclesReset: result := 'faCirclesReset';
 
     else
       result := '??';

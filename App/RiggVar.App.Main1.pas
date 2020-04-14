@@ -48,16 +48,22 @@ type
     procedure InitTrimmData;
     procedure PasteTrimm;
   public
-    RggData: TRggData;
-    RggMain: TRggMain;
+    RggMain: TRggMain; // RggMain.Rigg is the model of the app
 
+    RggData: TRggData; // temp object for data transfer
+
+    { slot used as reference for diffing }
     Trimm0: TRggData;
-    Trimm1: TRggData;
-    Trimm2: TRggData;
+
+    { user data slots }
+    Trimm1: TRggData; // selected with button T1
+    Trimm2: TRggData; // selected with button T2
     Trimm3: TRggData;
     Trimm4: TRggData;
     Trimm5: TRggData;
     Trimm6: TRggData;
+
+    { example data slots }
     Trimm7: TRggData; // 420
     Trimm8: TRggData; // Logo
 

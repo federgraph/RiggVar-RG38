@@ -120,6 +120,9 @@ begin
   { TouchFrame Buttons }
   AddSpecial(ActionGroupBtnLegendTablet, 'BtnLegendTablet');
   AddSpecial(ActionGroupBtnLegendPhone, 'BtnLegendPhone');
+
+  { SK }
+  AddSpecial(ActionGroupCircles, 'Circles');
 end;
 
 function TActionGroupList.GetGroup(fa: Integer): Integer;

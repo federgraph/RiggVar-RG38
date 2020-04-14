@@ -195,6 +195,7 @@ begin
     faReportReadme: result := 'Readme Report';
 
     faToggleSandboxed: result := 'Toggle Sandboxed';
+    faToggleAllProps: result := 'Toggle All Trimm Props';
     faToggleAllTags: result := 'Toggle All Xml Tags';
 
     faToggleLineColor: result := 'Toggle Line Color Scheme';
@@ -274,6 +275,22 @@ begin
     faMB07: result := 'Mobile Btn 7';
     faMB08: result := 'Mobile Btn 8';
 
+    faCirclesReset: result := 'Reset Circle';
+    faCirclesSelectC0: result := 'Unselect Circle';
+    faCirclesSelectC1: result := 'Select Circle 1';
+    faCirclesSelectC2: result := 'Select Circle 2';
+    faCircleParamR1: result := 'Radius 1';
+    faCircleParamR2: result := 'Radius 2';
+    faCircleParamM1X: result := 'Mittelpunkt C1.X';
+    faCircleParamM1Y: result := 'Mittelpunkt C1.Y';
+    faCircleParamM2X: result := 'Mittelpunkt C2.X';
+    faCircleParamM2Y: result := 'Mittelpunkt C2.Y';
+    faLineParamA1: result := 'Line Segment 1 Angle';
+    faLineParamA2: result := 'Line Segment 2 Angle';
+    faLineParamE1: result := 'Line Segment 1 Elevation';
+    faLineParamE2: result := 'Line Segment 2 Elevation';
+    faCircleParamM1Z: result := 'Mittelpunkt C1.Z';
+    faCircleParamM2Z: result := 'Mittelpunkt C2.Z';
   end;
 end;
 

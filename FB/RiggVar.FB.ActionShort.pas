@@ -78,7 +78,7 @@ begin
     faHull: result := 'hull';
     faDemo: result := 'mod';
 
-    faUpdateTrimm0: result := 'MT0';
+    faUpdateTrimm0: result := 'ct0';
     faCopyAndPaste: result := 'cap';
     faCopyTrimmItem: result := 'cti';
     faPasteTrimmItem: result := 'pti';
@@ -197,6 +197,7 @@ begin
     faReportReadme: result := '~R';
 
     faToggleSandboxed: result := 'SB';
+    faToggleAllProps: result := 'ATP';
     faToggleAllTags: result := 'AXT';
 
     faToggleLineColor: result := 'LC';
@@ -210,8 +211,8 @@ begin
     faToggleSegmentC: result := '-C';
     faToggleSegmentA: result := '-A';
 
-    faRggZoomIn: result := 'Z-';
-    faRggZoomOut: result := 'Z+';
+    faRggZoomIn: result := 'Z+';
+    faRggZoomOut: result := 'Z-';
 
     faToggleUseDisplayList: result := 'DL';
     faToggleUseQuickSort: result := 'QS';
@@ -279,6 +280,22 @@ begin
     faMB07: result := '_7';
     faMB08: result := '_8';
 
+    faCirclesReset: result := 'R';
+    faCirclesSelectC0: result := 'C0';
+    faCirclesSelectC1: result := 'C1';
+    faCirclesSelectC2: result := 'C2';
+    faCircleParamR1: result := 'R1';
+    faCircleParamR2: result := 'R2';
+    faCircleParamM1X: result := '1.X';
+    faCircleParamM1Y: result := '1.Y';
+    faCircleParamM2X: result := '2.X';
+    faCircleParamM2Y: result := '2.Y';
+    faLineParamA1: result := 'A1';
+    faLineParamA2: result := 'A2';
+    faLineParamE1: result := 'E1';
+    faLineParamE2: result := 'E2';
+    faCircleParamM1Z: result := '1.Z';
+    faCircleParamM2Z: result := '2.Z';
   end;
 end;
 

@@ -247,6 +247,7 @@ ActionGroupRggSonstiges: TActionGroup = [
   faButtonFrameReport,
   faToggleFontColor,
   faToggleSandboxed,
+  faToggleAllProps,
   faToggleAllTags];
 
 ActionGroupBtnLegendTablet: TActionGroup = [
@@ -291,6 +292,24 @@ faMB05,
 faMB06,
 faMB07,
 faMB08];
+
+ActionGroupCircles: TActionGroup = [
+  faCirclesSelectC0,
+  faCirclesSelectC1,
+  faCirclesSelectC2,
+  faCircleParamR1,
+  faCircleParamR2,
+  faCircleParamM1X,
+  faCircleParamM1Y,
+  faCircleParamM2X,
+  faCircleParamM2Y,
+  faLineParamA1,
+  faLineParamA2,
+  faLineParamE1,
+  faLineParamE2,
+  faCircleParamM1Z,
+  faCircleParamM2Z,
+  faCirclesReset];
 
 implementation
 

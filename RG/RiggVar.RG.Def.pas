@@ -8,6 +8,26 @@ uses
   FMX.Graphics;
 
 type
+  TSelectedCircle = (
+    scC1,
+    scC2
+  );
+
+  TCircleParam = (
+    fpR1,
+    fpR2,
+    fpM1X,
+    fpM1Y,
+    fpM1Z,
+    fpM2X,
+    fpM2Y,
+    fpM2Z,
+    fpA1,
+    fpA2,
+    fpE1,
+    fpE2
+  );
+
   TFederParam = (
     fpController,
     fpWinkel,

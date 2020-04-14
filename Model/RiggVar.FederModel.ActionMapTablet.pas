@@ -409,7 +409,7 @@ begin
       //InitAC(cl, 5, faActionPageP, claYellow);
       InitAC(cl, 6, faReportXml, cla);
       InitAC(cl, 7, faToggleAllTags, claPlum);
-      InitAC(cl, 8, faNoop, claWhite);
+      InitAC(cl, 8, faToggleAllProps, claPlum);
 
       cl := BottomLeft;
       InitAC(cl, 1, faReportAusgabeRL, cla);
