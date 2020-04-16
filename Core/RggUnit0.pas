@@ -41,6 +41,7 @@ type
     function GetSalingDaten: TSalingDaten;
     procedure GetLogoData;
     procedure GetDefaultData;
+    procedure SetFrWinkel(const Value: double);
   protected
     FTrimm: TTrimm;
     FGetriebeOK: Boolean;
@@ -51,7 +52,7 @@ type
     FrPuettingA: double;
     FrBasis: double;
     FrController: double;
-    FrWinkel: double;
+    _FrWinkel: double;
     FrVorstag: double;
     FrWunten2d: double;
     FrWunten3d: double;
@@ -138,6 +139,8 @@ type
     property SalingDaten: TSalingDaten read GetSalingDaten;
     property Glieder: TTrimmControls read GetGlieder write SetGlieder;
     property RealGlied[Index: TsbName]: double read GetRealGlied write SetRealGlied;
+
+    property FrWinkel: double read _FrWinkel write SetFrWinkel;
   end;
 
 implementation
@@ -224,6 +227,20 @@ begin
   result := Trimm;
 end;
 
+procedure TGetriebe.SetFrWinkel(const Value: double);
+begin
+  _FrWinkel := Value;
+
+  if _FrWinkel > 2 * PI then
+    _FrWinkel := _FrWinkel - (2 * PI);
+
+//  while _FrWinkel > 2 * PI do
+//    _FrWinkel := _FrWinkel - (2 * PI);
+
+//  if _FrWinkel < -(2 * PI) then
+//    _FrWinkel := _FrWinkel + 2 * PI;
+end;
+
 procedure TGetriebe.SetGlieder(Values: TTrimmControls);
 begin
   with Values do
@@ -246,14 +263,7 @@ begin
   result := 0;
   case Index of
     fpController: result := FrController;
-    fpWinkel:
-    begin
-      result := FrWinkel;
-      if result > 2 * PI then
-        result := result - 2 * PI;
-      if result < 0 then
-        result := result + 2 * PI;
-    end;
+    fpWinkel: result := FrWinkel;
     fpVorstag: result := FrVorstag;
     fpWante: result := FrWunten3d + FrWoben3d;
     fpWoben: result := FrWoben3d;

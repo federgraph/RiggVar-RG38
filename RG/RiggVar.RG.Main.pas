@@ -295,8 +295,6 @@ begin
     faMastfallVorlauf: Param := fpMastfallVorlauf;
     faBiegung: Param := fpBiegung;
     faMastfussD0X: Param := fpD0X;
-    faParamT1: Param := fpT1;
-    faParamT2: Param := fpT2;
   end;
 end;
 

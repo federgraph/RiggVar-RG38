@@ -51,7 +51,9 @@ uses
   RiggVar.FederModel.Binding in 'Model\RiggVar.FederModel.Binding.pas',
   RiggVar.FederModel.Keyboard01 in 'Model\RiggVar.FederModel.Keyboard01.pas',
   FrmAction in 'App\FrmAction.pas' {FormAction},
-  FrmMemo in 'App\FrmMemo.pas' {FormMemo};
+  FrmMemo in 'App\FrmMemo.pas' {FormMemo},
+  RiggVar.FB.SpeedBar in 'FB\RiggVar.FB.SpeedBar.pas',
+  RiggVar.RG.Speed01 in 'RG\RiggVar.RG.Speed01.pas';
 
 {$R *.res}
 

@@ -155,8 +155,8 @@ begin
       IAC(6, faNoop, cla);
 
       cla := claCornflowerBlue;
-      IAC(7, faParamT1, cla);
-      IAC(8, faParamT2, cla);
+      IAC(7, faNoop, cla);
+      IAC(8, faNoop, cla);
     end;
 
     6:

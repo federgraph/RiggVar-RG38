@@ -86,20 +86,13 @@ begin
   AddSpecial(ActionGroupForms, 'Forms');
   AddSpecial(ActionGroupTouchLayout, 'TouchLayout');
 
-  { Format }
-  AddSpecial(ActionGroupMemeFormat, 'Format');
-
   { UI }
   AddSpecial(ActionGroupWheel, 'Wheel');
   AddSpecial(ActionGroupColorScheme, 'ColorScheme');
 
   { View }
+  AddSpecial(ActionGroupFederText, 'FederText');
   AddSpecial(ActionGroupViewParams, 'ViewParams');
-  AddSpecial(ActionGroupViewFlags, 'ViewFlags');
-  AddSpecial(ActionGroupViewType, 'ViewType');
-
-  { Texture }
-  AddSpecial(ActionGroupParamT, 'Texture Param');
 
   { RG }
   AddSpecial(ActionGroupRggControls, 'RggControls');
@@ -123,6 +116,29 @@ begin
 
   { SK }
   AddSpecial(ActionGroupCircles, 'Circles');
+
+  {Meme }
+  AddSpecial(ActionGroupMemeFormat, 'Format');
+
+  { Rgg3D }
+(*
+  AddSpecial(ActionGroupViewType, 'ViewType');
+  AddSpecial(ActionGroupViewFlags, 'ViewFlags');
+  AddSpecial(ActionGroupParamT, 'Texture Param');
+  AddSpecial(ActionGroupEmptyLastLine, 'LastLine');
+  AddSpecial(ActionGroupHelp, 'Help');
+  AddSpecial(ActionGroupFormat, 'Format');
+  AddSpecial(ActionGroupIconSize, 'IconSize');
+  AddSpecial(ActionGroupViewOptions, 'ViewOptions');
+  AddSpecial(ActionGroupReset, 'Reset');
+  AddSpecial(ActionGroupBitmapCycle, 'BitmapCycle');
+  AddSpecial(ActionGroupCopyPaste, 'CopyPaste');
+  AddSpecial(ActionGroupCopyImage, 'CopyImage');
+  AddSpecial(ActionGroupCopyOptions, 'CopyOptions');
+  AddSpecial(ActionGroupInput, 'Input');
+  AddSpecial(ActionGroupRggHullMesh, 'RggHullMesh');
+*)
+
 end;
 
 function TActionGroupList.GetGroup(fa: Integer): Integer;

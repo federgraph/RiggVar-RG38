@@ -113,15 +113,21 @@ begin
 
     faActionPageM: result := 'P-';
     faActionPageP: result := 'P+';
+    faActionPage1: result := 'HP';
+    faActionPage2: result := 'ap2';
+    faActionPage3: result := 'ap3';
+    faActionPage4: result := 'ap4';
+    faActionPage5: result := 'ap5';
+    faActionPage6: result := 'ap6';
+    faActionPageE: result := 'PE';
+    faActionPageS: result := 'PS';
+    faActionPageX: result := 'LP';
 
     faToggleAllText: result := 'tat';
     faToggleTouchFrame: result := 'fra';
 
     faCycleColorSchemeM: result := 'c-';
     faCycleColorSchemeP: result := 'c+';
-
-//    faPlusOne: result := 'one';
-//    faPlusTen: result := 'ten';
 
     faParamValuePlus1: result := '+1';
     faParamValueMinus1: result := '-1';
@@ -133,8 +139,6 @@ begin
     faTouchDesk: result := 'dsk';
 
     faButtonFrameReport: result := 'bfr';
-
-    // --- Meme ---
 
     faMemeToggleHelp: result := 'h';
     faMemeToggleReport: result := 'r';
@@ -154,7 +158,6 @@ begin
     faMemeFormat8: result := '[8]';
     faMemeFormat9: result := '[9]';
 
-    // --- Chart ---
     faChartRect: result := 'c[]';
     faChartTextRect: result := 'cT';
     faChartLegend: result := 'cL';
@@ -182,6 +185,8 @@ begin
     faReportLog: result := '~L';
     faReportJson: result := '~J';
     faReportData: result := '~D';
+    faReportShort: result := '~SI';
+    faReportLong: result := '~LI';
     faReportTrimmText: result := '~TT';
     faReportJsonText: result := '~JT';
     faReportDataText: result := '~DT';
@@ -233,11 +238,6 @@ begin
 
     faVorstagOS: result := 'vos';
     faWPowerOS: result := 'wos';
-
-    faParamT1: result := '.t1';
-    faParamT2: result := '.t2';
-    faToggleViewType: result := 'tvt';
-    faPan: result := 'pan';
 
     faTL01: result := '#1';
     faTL02: result := '#2';
@@ -296,6 +296,25 @@ begin
     faLineParamE2: result := 'E2';
     faCircleParamM1Z: result := '1.Z';
     faCircleParamM2Z: result := '2.Z';
+
+    faPan: result := 'pan';
+
+    faPlusOne: result := 'one';
+    faPlusTen: result := 'ten';
+
+    faParamORX: result := 'orx';
+    faParamORY: result := 'ory';
+    faParamORZ: result := 'orz';
+
+    faParamRX: result := 'rx';
+    faParamRY: result := 'ry';
+    faParamRZ: result := 'rz';
+    faParamCZ: result := 'cz';
+
+    faBlackText: result := 'btx';
+    faGrayText: result := 'gtx';
+    faWhiteText: result := 'wtx';
+
   end;
 end;
 

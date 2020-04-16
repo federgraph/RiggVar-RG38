@@ -398,8 +398,8 @@ begin
       InitAC(cl, 2, faReportLog, cla);
       InitAC(cl, 3, faReportJson, cla);
       InitAC(cl, 4, faReportData, cla);
-      InitAC(cl, 5, faNoop, claWhite);
-      InitAC(cl, 6, faReportNone, cla);
+      InitAC(cl, 5, faReportShort, cla);
+      InitAC(cl, 6, faReportLong, cla);
 
       cl := TopRight;
       InitAC(cl, 1, faReportTrimmText, cla);
@@ -428,7 +428,7 @@ begin
       InitAC(cl, 3, faNoop, cla);
       InitAC(cl, 4, faReportDebugReport, claGoldenrod);
       InitAC(cl, 5, faReportReadme, claGoldenrod);
-      InitAC(cl, 6, faNoop, cla);
+      InitAC(cl, 6, faReportNone, claGoldenrod);
     end;
 
     7:

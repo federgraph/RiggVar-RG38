@@ -14,6 +14,8 @@ type
     rgLog,
     rgJson,
     rgData,
+    rgShort,
+    rgLong,
     rgTrimmText,
     rgJsonText,
     rgDataText,
@@ -97,6 +99,8 @@ begin
     rgLog: result := 'Log';
     rgJson: result := 'RggData.WriteJson';
     rgData: result := 'RggData.WriteReport';
+    rgShort: result := 'Trimm-Item Short';
+    rgLong: result := 'Trimm-Item Long';
     rgTrimmText: result := 'Trimm Text';
     rgJsonText: result := 'Json Text';
     rgDataText: result := 'Data Text';
@@ -125,6 +129,8 @@ begin
     faReportLog: rg := rgLog;
     faReportJson: rg := rgJson;
     faReportData: rg := rgData;
+    faReportShort: rg := rgShort;
+    faReportLong: rg := rgLong;
     faReportTrimmText: rg := rgTrimmText;
     faReportJsonText: rg := rgJsonText;
     faReportDataText: rg := rgDataText;
@@ -155,6 +161,8 @@ begin
     faReportLog: result := CurrentReport = rgLog;
     faReportJson: result := CurrentReport = rgJson;
     faReportData: result := CurrentReport = rgData;
+    faReportShort: result := CurrentReport = rgShort;
+    faReportLong: result := CurrentReport = rgLong;
     faReportTrimmText: result := CurrentReport = rgTrimmText;
     faReportJsonText: result := CurrentReport = rgJsonText;
     faReportDataText: result := CurrentReport = rgDataText;
@@ -267,6 +275,8 @@ begin
 //        SendMessage(FMemo.Handle, EM_LINESCROLL, 0, MemoPosY);
       end;
 {$endif}
+      rgShort: ML.Text := Main.TrimmShort;
+      rgLong: ML.Text := Main.TrimmLong;
       rgDiffText: Main.RggMain.UpdateDiffText(ML);
       rgJsonText: Main.RggMain.UpdateJsonText(ML);
       rgDataText: Main.RggMain.UpdateDataText(ML);
@@ -294,6 +304,7 @@ begin
 
   Exclude(rs, rgJson);
   Exclude(rs, rgData);
+  Exclude(rs, rgLong);
 
   Exclude(rs, rgTrimmText);
   Exclude(rs, rgAusgabeDiffL);
@@ -306,8 +317,10 @@ begin
 //    rgLog,
 //    rgJson,
 //    rgData,
+//    rgShort,
+//    rgLong,
 //    rgTrimmText,
-//....rgJsonText,
+//    rgJsonText,
 //    rgDataText,
 //    rgDiffText,
 //    rgAusgabeRL,

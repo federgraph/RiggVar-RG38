@@ -81,9 +81,11 @@ type
     procedure DoSmallWheel(Delta: single);
 
     function GetTrimmItem(i: Integer): TRggData;
-    function GetTrimmItemReport(WantJson: Boolean): string;
+    function GetTrimmItemReport(ReportID: Integer): string;
     function GetTrimmItemReportData: string;
     function GetTrimmItemReportJson: string;
+    function GetTrimmItemReportShort: string;
+    function GetTrimmItemReportLong: string;
 
     procedure WriteTrimmItem;
     procedure WriteTrimmFile;
@@ -113,6 +115,8 @@ type
     property CurrentTrimm: TRggData read GetCurrentTrimm;
     property TrimmData: string read GetTrimmItemReportData;
     property TrimmJson: string read GetTrimmItemReportJson;
+    property TrimmShort: string read GetTrimmItemReportShort;
+    property TrimmLong: string read GetTrimmItemReportLong;
 
     property ShowTrimmText: Boolean read GetShowTrimmText write SetShowTrimmText;
     property ShowDiffText: Boolean read GetShowDiffText write SetShowDiffText;
@@ -220,29 +224,52 @@ begin
 //  result := FederText.DataVisible;
 end;
 
-function TMain1.GetTrimmItemReport(WantJson: Boolean): string;
+function TMain1.GetTrimmItemReport(ReportID: Integer): string;
 begin
   if Assigned(RggMain) and Assigned(RggMain.Rigg) and Assigned(RggData) and Assigned(FL) then
   begin
     RggMain.Rigg.SaveToFederData(RggData);
     FL.Clear;
-    if WantJson then
-      RggData.WriteJSon(FL)
-    else
-      RggData.WriteReport(FL);
+    case ReportID of
+      0: RggData.WriteReport(FL);
+      1: RggData.WriteJSon(FL);
+      2:
+      begin
+        RggData.WantAll := False;
+        RggData.SaveTrimmItem(FL);
+      end;
+      3:
+      begin
+        RggData.WantAll := True;
+        RggData.SaveTrimmItem(FL);
+      end;
+
+      else
+        RggData.WriteReport(FL);
+    end;
     result := FL.Text;
     FL.Clear;
   end;
 end;
 
+function TMain1.GetTrimmItemReportLong: string;
+begin
+  result := GetTrimmItemReport(3);
+end;
+
+function TMain1.GetTrimmItemReportShort: string;
+begin
+  result := GetTrimmItemReport(2);
+end;
+
 function TMain1.GetTrimmItemReportJson: string;
 begin
-  result := GetTrimmItemReport(True);
+  result := GetTrimmItemReport(1);
 end;
 
 function TMain1.GetTrimmItemReportData: string;
 begin
-  result := GetTrimmItemReport(False);
+  result := GetTrimmItemReport(0);
 end;
 
 procedure TMain1.WriteTrimmItem;
@@ -697,8 +724,6 @@ begin
     faMastfallVorlauf: RggMain.SetParameter(faMastfallVorlauf);
     faBiegung: RggMain.SetParameter(faBiegung);
     faMastfussD0X: RggMain.SetParameter(faMastfussD0X);
-    faParamT1: RggMain.SetParameter(faParamT1);
-    faParamT2: RggMain.SetParameter(faParamT2);
 
     faFixpointA0: RggMain.FixPoint := ooA0;
     faFixpointA: RggMain.FixPoint := ooA;
@@ -739,8 +764,17 @@ begin
     faTrimm4: Trimm := 4;
     faTrimm5: Trimm := 5;
     faTrimm6: Trimm := 6;
-    fa420: RggMain.Init420;
-    faLogo: RggMain.InitLogo;
+    fa420:
+    begin
+      RggMain.Init420;
+      FormMain.UpdateReport;
+    end;
+
+    faLogo:
+    begin
+      RggMain.InitLogo;
+      FormMain.UpdateReport;
+    end;
 
     faUpdateTrimm0: UpdateTrimm0;
     faCopyAndPaste: CopyAndPaste;
@@ -758,8 +792,6 @@ begin
       MainVar.ShowDebugData := False;
       ShowDataText := not ShowDataText;
     end;
-
-    faToggleViewType: IsOrthoProjection := not IsOrthoProjection;
 
     else
       FormMain.HandleAction(fa);
@@ -793,8 +825,6 @@ begin
     faMastfallVorlauf: result := RggMain.Param = fpMastfallVorlauf;
     faBiegung: result := RggMain.Param = fpBiegung;
     faMastfussD0X: result := RggMain.Param = fpD0X;
-    faParamT1: result := RggMain.Param = fpT1;
-    faParamT2: result := RggMain.Param = fpT2;
 
     faFixpointA0: result := RggMain.FixPoint = ooA0;
     faFixpointA: result := RggMain.FixPoint = ooA;

@@ -21,6 +21,7 @@ interface
 uses
   RiggVar.RG.Def,
   RiggVar.RG.Report,
+  RiggVar.FB.SpeedBar,
   RggTypes,
   RggUnit4,
   System.SysUtils,
@@ -38,9 +39,7 @@ uses
   FMX.ScrollBox,
   FMX.Memo,
   FMX.Listbox,
-  FMX.Dialogs,
-  FMX.Styles.Objects,
-  FMX.Controls.Presentation;
+  FMX.Dialogs;
 
 {$define FMX}
 
@@ -88,50 +87,10 @@ type
     SaveDialog: TSaveDialog;
     function GetOpenFileName(dn, fn: string): string;
     function GetSaveFileName(dn, fn: string): string;
-  private
-    MT0Btn: TSpeedButton;
-
-    ReadTrimmFileBtn: TSpeedButton;
-    SaveTrimmFileBtn: TSpeedButton;
-    CopyTrimmFileBtn: TSpeedButton;
-
-    CopyTrimmItemBtn: TSpeedButton;
-    PasteTrimmItemBtn: TSpeedButton;
-    CopyAndPasteBtn: TSpeedButton;
-
-    M1Btn: TSpeedButton;
-    M10Btn: TSpeedButton;
-    P1Btn: TSpeedButton;
-    P10Btn: TSpeedButton;
-
-    SandboxedBtn: TSpeedButton;
-    AllPropsBtn: TSpeedButton;
-    AllTagsBtn: TSpeedButton;
-
-    procedure MT0BtnClick(Sender: TObject);
-
-    procedure ReadTrimmFileBtnClick(Sender: TObject);
-    procedure SaveTrimmFileBtnClick(Sender: TObject);
-    procedure CopyTrimmFileBtnClick(Sender: TObject);
-
-    procedure CopyTrimmItemBtnClick(Sender: TObject);
-    procedure PasteTrimmItemBtnClick(Sender: TObject);
-    procedure CopyAndPasteBtnClick(Sender: TObject);
-
-    procedure M10BtnClick(Sender: TObject);
-    procedure M1BtnClick(Sender: TObject);
-    procedure P1BtnClick(Sender: TObject);
-    procedure P10BtnClick(Sender: TObject);
-
-    procedure SandboxedBtnClick(Sender: TObject);
-    procedure AllPropsBtnClick(Sender: TObject);
-    procedure AllTagsBtnClick(Sender: TObject);
-    procedure SpeedButtonClick(Sender: TObject);
   public
     HintText: TText;
     HelpText: TText;
     ReportText: TText;
-    SpeedPanel: TPanel;
     TrimmMemo: TMemo;
     ParamListbox: TListBox;
     ReportListbox: TListBox;
@@ -151,35 +110,23 @@ type
     procedure ParamComboChange(Sender: TObject);
     procedure ReportComboChange(Sender: TObject);
   protected
-    Raster: Integer;
-    Margin: Integer;
-    BtnTop: Integer;
-    BtnLeft: Integer;
-    BtnWidth: Integer;
-    BtnHeight: Integer;
-    BtnCounter: Integer;
-    BtnSpace: Integer;
-    BtnGroupSpace: Integer;
-    SpeedPanelHeight: Integer;
-    BtnColor: TAlphaColor;
-    function AddSpeedBtn(N: string; AGroupSpace: Integer = 0): TSpeedButton;
-    function RefSpeedBtn(B: TSpeedButton; AGroupSpace: Integer = 0): TSpeedButton;
     procedure CreateComponents;
-    procedure InitLayoutProps;
     procedure LayoutComponents;
-    procedure InitSpeedButtons;
-    procedure UpdateSpeedButtonDown;
-    procedure UpdateSpeedButtonDown1;
-    procedure UpdateSpeedButtonDown2;
-    procedure UpdateSpeedButtonEnabled;
-    function FindStyleByName(AParent: TFMXObject; AName: string): TFMXObject;
-    procedure InitSpeedButton(SB: TSpeedButton);
     procedure SetupMemo(MM: TMemo);
     procedure SetupText(T: TText);
     procedure SetupComboBox(CB: TComboBox);
     procedure SetupListbox(LB: TListBox);
     procedure SetupListboxItems(LB: TListbox; cla: TAlphaColor);
+  private
+    Raster: Integer;
+    Margin: Integer;
+    SpeedPanelHeight: Integer;
+    SpeedPanel: TActionSpeedBar;
+    procedure InitSpeedButtons;
+    procedure UpdateSpeedButtonDown;
+    procedure UpdateSpeedButtonEnabled;
   public
+    procedure SpeedButtonClick(Sender: TObject);
     procedure SofortBtnClick(Sender: TObject);
     procedure GrauBtnClick(Sender: TObject);
     procedure BlauBtnClick(Sender: TObject);
@@ -218,6 +165,8 @@ uses
   FrmMemo,
   FrmAction,
   RiggVar.RG.Main,
+  RiggVar.RG.Speed01,
+//  RiggVar.RG.Speed02,
   RiggVar.App.Main,
   RiggVar.FB.ActionConst,
   RiggVar.FB.Classes;
@@ -257,12 +206,12 @@ begin
   Height := 1000;
   Margin := 10;
   Raster := MainVar.Raster;
+  SpeedPanelHeight := Raster;
 
   { RSP-20787 when TFormPosition.ScreenCenter}
 //  Self.Position := TFormPosition.ScreenCenter;
 
   CreateComponents;
-  InitLayoutProps;
   LayoutComponents;
 
   SetupListbox(ParamListbox);
@@ -288,8 +237,6 @@ begin
 
   Main.InitText;
   Main.IsUp := True;
-
-  InitSpeedButtons;
 
   { Params }
   Main.RggMain.Param := fpVorstag;
@@ -372,7 +319,10 @@ begin
   Main.RggMain.Draw;
 
   Main.FederText.CheckState;
+
+  InitSpeedButtons;
   UpdateSpeedButtonDown;
+  UpdateSpeedButtonEnabled;
 end;
 
 procedure TFormMain.FormDestroy(Sender: TObject);
@@ -411,6 +361,10 @@ begin
   if not ReportText.Visible then
     Exit;
   if ReportManager = nil then
+    Exit;
+  if RL = nil then
+    Exit;
+  if not IsUp then
     Exit;
 
   RL.Clear;
@@ -968,7 +922,7 @@ begin
   ReportText.Font.Size := 16;
   ReportText.AutoSize := True;
 
-  SpeedPanel := TPanel.Create(Self);
+  SpeedPanel := TActionSpeedBarRG01.Create(Self);
   SpeedPanel.Parent := Self;
   SpeedPanel.ShowHint := True;
   SpeedPanel.Opacity := OpacityValue;
@@ -1059,227 +1013,6 @@ begin
 
   ReportText.Position.X := HelpText.Position.X;
   ReportText.Position.Y := HelpText.Position.Y;
-end;
-
-function TFormMain.AddSpeedBtn(N: string; AGroupSpace: Integer): TSpeedButton;
-begin
-  result := TSpeedButton.Create(SpeedPanel);
-  result.Parent := SpeedPanel;
-  result.Name := N;
-  RefSpeedBtn(result, AGroupSpace);
-end;
-
-function TFormMain.RefSpeedBtn(B: TSpeedButton; AGroupSpace: Integer): TSpeedButton;
-begin
-  result := B;
-  BtnLeft := BtnLeft + AGroupSpace;
-{$ifdef Vcl}
-  B.Left := BtnLeft + BtnCounter * BtnWidth + BtnSpace;
-  B.Top := BtnTop;
-{$endif}
-{$ifdef FMX}
-  B.Position.X := BtnLeft + BtnCounter * (BtnWidth + BtnSpace);
-  B.Position.Y := BtnTop;
-{$endif}
-  B.Width := BtnWidth;
-  B.Height := BtnHeight;
-{$ifdef FMX}
-  { Does not work.
-    Because B not assigned yet to actual SpeedButton instance ? }
-//  InitSpeedButton(B);
-{$endif}
-{$ifdef Vcl}
-  B.Font.Name := 'Consolas';
-  B.Font.Size := 12;
-  B.Font.Color := BtnColor;
-{$endif}
-  Inc(BtnCounter);
-end;
-
-procedure TFormMain.InitSpeedButtons;
-var
-  sb: TSpeedButton;
-begin
-  { Data Buttons }
-
-  BtnColor := claTeal;
-
-  sb := AddSpeedBtn('MT0Btn', BtnGroupSpace);
-  MT0Btn := sb;
-  sb.Text := 'ct0';
-  sb.Tag := faUpdateTrimm0;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('ReadTrimmFileBtn');
-  ReadTrimmFileBtn := sb;
-  sb.Text := 'rtf';
-  sb.Tag := faReadTrimmFile;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('SaveTrimmFileBtn');
-  SaveTrimmFileBtn := sb;
-  sb.Text := 'stf';
-  sb.Tag := faSaveTrimmFile;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('CopyTrimmFileBtn');
-  CopyTrimmFileBtn := sb;
-  sb.Text := 'ctf';
-  sb.Tag := faCopyTrimmFile;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('CopyTrimmItemBtn');
-  CopyTrimmItemBtn := sb;
-  sb.Text := 'cti';
-  sb.Tag := faCopyTrimmItem;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('PasteTrimmItemBtn');
-  PasteTrimmItemBtn := sb;
-  sb.Text := 'pti';
-  sb.Tag := faPasteTrimmItem;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('CopyAndPasteBtn');
-  CopyAndPasteBtn := sb;
-  sb.Text := 'cap';
-  sb.Tag := faCopyAndPaste;
-  InitSpeedButton(sb);
-
-  { Param Value Buttons }
-
-  BtnColor := claBlue;
-
-  sb := AddSpeedBtn('M10Btn', BtnGroupSpace);
-  M10Btn := sb;
-  sb.Text := '-10';
-  sb.Tag := faParamValueMinus10;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('M1Btn');
-  M1Btn := sb;
-  sb.Text := '-1';
-  sb.Tag := faParamValueMinus1;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('P1Btn');
-  P1Btn := sb;
-  sb.Text := '+1';
-  sb.Tag := faParamValuePlus1;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('P10Btn');
-  P10Btn := sb;
-  sb.Text := '+10';
-  sb.Tag := faParamValuePlus10;
-  InitSpeedButton(sb);
-
-  { Check Box Buttons }
-
-  BtnColor := claPurple;
-
-  sb := AddSpeedBtn('SandboxedBtn', BtnGroupSpace);
-  SandboxedBtn := sb;
-  sb.Text := 'SB';
-  sb.StaysPressed := True;
-  sb.Tag := faToggleSandboxed;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('AllPropsBtn');
-  AllPropsBtn := sb;
-  sb.Text := 'ATP';
-  sb.StaysPressed := True;
-  sb.Tag := faToggleAllProps;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('AllTagsBtn');
-  AllTagsBtn := sb;
-  sb.Text := 'AXT';
-  sb.StaysPressed := True;
-  sb.Tag := faToggleAllTags;
-  InitSpeedButton(sb);
-end;
-
-procedure TFormMain.CopyTrimmItemBtnClick(Sender: TObject);
-begin
-  Main.CopyTrimmItem;
-  ShowTrimm;
-end;
-
-procedure TFormMain.PasteTrimmItemBtnClick(Sender: TObject);
-begin
-  Main.PasteTrimmItem;
-  ShowTrimm;
-end;
-
-procedure TFormMain.CopyAndPasteBtnClick(Sender: TObject);
-begin
-  Main.CopyAndPaste;
-  ShowTrimm;
-end;
-
-procedure TFormMain.CopyTrimmFileBtnClick(Sender: TObject);
-begin
-  Main.CopyTrimmFile;
-  ShowTrimm;
-end;
-
-procedure TFormMain.ReadTrimmFileBtnClick(Sender: TObject);
-begin
-  Main.ReadTrimmFile;
-  ShowTrimm;
-end;
-
-procedure TFormMain.SaveTrimmFileBtnClick(Sender: TObject);
-begin
-  Main.SaveTrimmFile;
-  ShowTrimm;
-end;
-
-procedure TFormMain.MT0BtnClick(Sender: TObject);
-begin
-  Main.UpdateTrimm0;
-  ShowTrimm;
-end;
-
-procedure TFormMain.SandboxedBtnClick(Sender: TObject);
-begin
-  Main.ActionHandler.Execute(faToggleSandboxed);
-end;
-
-procedure TFormMain.AllPropsBtnClick(Sender: TObject);
-begin
-//  Main.ActionHandler.Execute(faToggleAllProps);
-  AllProps := not AllProps;
-end;
-
-procedure TFormMain.AllTagsBtnClick(Sender: TObject);
-begin
-  Main.ActionHandler.Execute(faToggleAllTags);
-end;
-
-procedure TFormMain.M10BtnClick(Sender: TObject);
-begin
-  Main.HandleAction(faParamValueMinus10);
-  ShowTrimm;
-end;
-
-procedure TFormMain.M1BtnClick(Sender: TObject);
-begin
-  Main.HandleAction(faParamValueMinus1);
-  ShowTrimm;
-end;
-
-procedure TFormMain.P10BtnClick(Sender: TObject);
-begin
-  Main.HandleAction(faParamValuePlus10);
-  ShowTrimm;
-end;
-
-procedure TFormMain.P1BtnClick(Sender: TObject);
-begin
-  Main.HandleAction(faParamValuePlus1);
-  ShowTrimm;
 end;
 
 procedure TFormMain.ReportListboxChange(Sender: TObject);
@@ -1458,19 +1191,6 @@ begin
   UpdateReport;
 end;
 
-procedure TFormMain.InitLayoutProps;
-begin
-  BtnCounter := 0;
-  BtnLeft := 0;
-  BtnTop := 3;
-  BtnSpace := 2;
-  BtnGroupSpace := 16;
-  BtnWidth := 35;
-  BtnHeight := 30;
-  BtnColor := claBlue;
-  SpeedPanelHeight := BtnHeight + 2 * BtnTop;
-end;
-
 procedure TFormMain.SetupListboxItems(LB: TListbox; cla: TAlphaColor);
 var
   i: Integer;
@@ -1490,41 +1210,6 @@ begin
       T.Font.Size := 14;
       T.TextSettings.FontColor := cla;
     end;
-  end;
-end;
-
-procedure TFormMain.InitSpeedButton(SB: TSpeedButton);
-var
-  cr: TButtonStyleTextObject;
-begin
-  cr := FindStyleByName(SB, 'text') as TButtonStyleTextObject;
-  cr.NormalColor := BtnColor;
-  cr.PressedColor := BtnColor;
-  cr.Font.Family := 'Consolas';
-  cr.Font.Size := 17;
-  if SB.Tag <> faNoop then
-  begin
-    sb.Text := Main.ActionHandler.GetShortCaption(SB.Tag);
-    sb.Hint := Main.ActionHandler.GetCaption(SB.Tag);
-    sb.OnClick := SpeedButtonClick;
-  end;
-end;
-
-function TFormMain.FindStyleByName(AParent: TFMXObject; AName: string): TFMXObject;
-var
-  i: Integer;
-  AObj: TFMXObject;
-begin
-  result := nil;
-  for i := 0 to AParent.ChildrenCount - 1 do
-  begin
-    AObj := AParent.Children[i];
-    if AObj.StyleName = AName then
-      Result := AObj
-    else
-      Result := FindStyleByName(AObj, AName);
-    if Assigned(result) then
-      break;
   end;
 end;
 
@@ -1558,22 +1243,6 @@ end;
 procedure TFormMain.KoppelBtnClick(Sender: TObject);
 begin
 //  RotaForm.KoppelBtnClick(Sender);
-end;
-
-procedure TFormMain.UpdateSpeedButtonDown;
-begin
-  UpdateSpeedButtonDown2;
-end;
-
-procedure TFormMain.UpdateSpeedButtonDown1;
-begin
-end;
-
-procedure TFormMain.UpdateSpeedButtonDown2;
-begin
-  SandboxedBtn.IsPressed := IsSandboxed;
-  AllPropsBtn.IsPressed := AllProps;
-  AllTagsBtn.IsPressed := ReportManager.XMLAllTags;
 end;
 
 function TFormMain.GetChecked(fa: TFederAction): Boolean;
@@ -1681,22 +1350,22 @@ var
 begin
   fa := (Sender as TControl).Tag;
   case fa of
-    faUpdateTrimm0: MT0BtnClick(Sender);
-    faReadTrimmFile: ReadTrimmFileBtnClick(Sender);
-    faSaveTrimmFile: SaveTrimmFileBtnClick(Sender);
-    faCopyTrimmFile: CopyTrimmFileBtnClick(Sender);
-    faCopyTrimmItem: CopyTrimmItemBtnClick(Sender);
-    faPasteTrimmItem: PasteTrimmItemBtnClick(Sender);
-    faCopyAndPaste: CopyAndPasteBtnClick(Sender);
-
-    faParamValueMinus10: M10BtnClick(Sender);
-    faParamValueMinus1: M1BtnClick(Sender);
-    faParamValuePlus1: P1BtnClick(Sender);
-    faParamValuePlus10: P10BtnClick(Sender);
-
-    faToggleSandboxed: SandboxedBtnClick(Sender);
-    faToggleAllProps: AllPropsBtnClick(Sender);
-    faToggleAllTags: AllTagsBtnClick(Sender);
+//    faUpdateTrimm0: MT0BtnClick(Sender);
+//    faReadTrimmFile: ReadTrimmFileBtnClick(Sender);
+//    faSaveTrimmFile: SaveTrimmFileBtnClick(Sender);
+//    faCopyTrimmFile: CopyTrimmFileBtnClick(Sender);
+//    faCopyTrimmItem: CopyTrimmItemBtnClick(Sender);
+//    faPasteTrimmItem: PasteTrimmItemBtnClick(Sender);
+//    faCopyAndPaste: CopyAndPasteBtnClick(Sender);
+//
+//    faParamValueMinus10: M10BtnClick(Sender);
+//    faParamValueMinus1: M1BtnClick(Sender);
+//    faParamValuePlus1: P1BtnClick(Sender);
+//    faParamValuePlus10: P10BtnClick(Sender);
+//
+//    faToggleSandboxed: SandboxedBtnClick(Sender);
+//    faToggleAllProps: AllPropsBtnClick(Sender);
+//    faToggleAllTags: AllTagsBtnClick(Sender);
 
     faSofortBtn: SofortBtnClick(Sender);
     faGrauBtn: GrauBtnClick(Sender);
@@ -1715,8 +1384,22 @@ begin
   end;
 end;
 
+procedure TFormMain.InitSpeedButtons;
+begin
+  if SpeedPanel <> nil then
+    SpeedPanel.InitSpeedButtons;
+end;
+
+procedure TFormMain.UpdateSpeedButtonDown;
+begin
+  if SpeedPanel <> nil then
+    SpeedPanel.UpdateSpeedButtonDown;
+end;
+
 procedure TFormMain.UpdateSpeedButtonEnabled;
 begin
+  if SpeedPanel <> nil then
+    SpeedPanel.UpdateSpeedButtonEnabled;
 end;
 
 end.

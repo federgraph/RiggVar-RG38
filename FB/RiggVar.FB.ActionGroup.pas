@@ -36,22 +36,35 @@ faTouchDesk];
 
 ActionGroupPages: TActionGroup = [
 faActionPageM,
-faActionPageP];
+faActionPageP,
+faActionPageE,
+faActionPageS,
+faActionPageX,
+faActionPage1,
+faActionPage2,
+faActionPage3,
+faActionPage4,
+faActionPage5,
+faActionPage6];
 
 ActionGroupColorScheme: TActionGroup = [
 faCycleColorSchemeM,
-faCycleColorSchemeP];
+faCycleColorSchemeP,
+faBlackText,
+faGrayText,
+faWhiteText];
 
 ActionGroupWheel: TActionGroup = [
+faPlusOne,
+faPlusTen,
 faWheelLeft,
 faWheelRight,
 faWheelDown,
 faWheelUp,
-
-faParamValuePlus1, //alias faWheelUp, faPlusOne
-faParamValueMinus1, //alias faWheelDown, faPlusTen
-faParamValuePlus10, //alias faWheelRight
-faParamValueMinus10 //alias faWheelLeft
+faParamValuePlus1,
+faParamValueMinus1,
+faParamValuePlus10,
+faParamValueMinus10
 ];
 
 ActionGroupForms: TActionGroup = [
@@ -59,18 +72,18 @@ faShowActi,
 faShowMemo];
 
 ActionGroupViewParams: TActionGroup = [
-faPan];
+faPan,
+faParamORX,
+faParamORY,
+faParamORZ,
+faParamRX,
+faParamRY,
+faParamRZ,
+faParamCZ];
 
-ActionGroupViewFlags: TActionGroup = [
+ActionGroupFederText: TActionGroup = [
 faToggleAllText,
 faToggleTouchFrame];
-
-ActionGroupViewType: TActionGroup = [
-faToggleViewType];
-
-ActionGroupParamT: TActionGroup = [
-faParamT1,
-faParamT2];
 
 ActionGroupRggControls: TActionGroup = [
 faController,
@@ -187,6 +200,8 @@ ActionGroupRggReport: TActionGroup = [
   faReportLog,
   faReportJson,
   faReportData,
+  faReportShort,
+  faReportLong,
   faReportTrimmText,
   faReportJsonText,
   faReportDataText,
@@ -310,6 +325,125 @@ ActionGroupCircles: TActionGroup = [
   faCircleParamM1Z,
   faCircleParamM2Z,
   faCirclesReset];
+
+(*
+ActionGroupViewOptions: TActionGroup = [
+faToggleMoveMode,
+faLinearMove,
+faExpoMove];
+
+ActionGroupViewType: TActionGroup = [
+faToggleViewType,
+faViewTypeOrtho,
+faViewTypePerspective];
+
+ActionGroupParamT: TActionGroup = [
+faParamT1,
+faParamT2,
+faParamT3,
+faParamT4];
+
+ActionGroupRggHullMesh: TActionGroup = [
+faHullMesh,
+faHullMeshOn,
+faHullMeshOff];
+
+ActionGroupEmptyLastLine: TActionGroup = [
+faELLOn,
+faELLOff
+];
+
+ActionGroupHelp: TActionGroup = [
+faCycleHelpM,
+faCycleHelpP,
+faHelpCycle,
+faHelpList,
+faHelpHome,
+faToggleLanguage];
+
+ActionGroupCopyPaste: TActionGroup = [
+faSave,
+faLoad,
+faOpen,
+faCopy,
+faPaste,
+faShare];
+
+ActionGroupCopyImage: TActionGroup = [
+
+faCopyScreenshot,
+faCopyBitmap,
+faCopyBitmap3D];
+
+ActionGroupTextureImport: TActionGroup = [
+faToggleDropTarget];
+
+ActionGroupInput: TActionGroup = [
+faToggleDropTarget];
+
+ActionGroupBitmapCycle: TActionGroup = [
+faCycleBitmapM,
+faCycleBitmapP,
+faRandom,
+faRandomWhite,
+faRandomBlack,
+faBitmapEscape,
+faToggleContour];
+
+ActionGroupViewFlags: TActionGroup = [
+faToggleBMap,
+faToggleZoom,
+faToggleMapK,
+faMapKOn,
+faMapKOff,
+faToggleTouchMenu,
+faToggleEquationText,
+faTogglePrimeText,
+faToggleSecondText,
+faToggleLabelText,
+faLabelBatchM,
+faLabelBatchP,
+faLabelTextP,
+faLabelTextM];
+
+ActionGroupFormat: TActionGroup = [
+faFormatLandscape,
+faFormatPortrait,
+faFormatIPhoneLandscape,
+faFormatIPhonePortrait];
+
+ActionGroupIconSize: TActionGroup = [
+faIconSize016,
+faIconSize032,
+faIconSize048,
+faIconSize064,
+faIconSize096,
+faIconSize128,
+faIconSize256,
+faIconSize512,
+faIconSize640,
+faIconSize960,
+faIconSize01K];
+
+ActionGroupReset: TActionGroup = [
+faReset,
+faResetPosition,
+faResetRotation,
+faResetZoom];
+
+ActionGroupCopyOptions: TActionGroup = [
+faToggleHardCopy,
+faHardCopyOn,
+faHardCopyOff,
+
+faTogglePngCopy,
+faPngCopyOn,
+faPngCopyOff,
+
+faToggleNoCopy,
+faNoCopyOn,
+faNoCopyOff];
+*)
 
 implementation
 

@@ -115,6 +115,15 @@ begin
 
     faActionPageM: result := 'Action Page Minus';
     faActionPageP: result := 'Action Page Plus';
+    faActionPage1: result := 'Action Page 1';
+    faActionPage2: result := 'Action Page 2';
+    faActionPage3: result := 'Action Page 3';
+    faActionPage4: result := 'Action Page 4';
+    faActionPage5: result := 'Action Page 5';
+    faActionPage6: result := 'Action Page 6';
+    faActionPageE: result := 'Action Page E';
+    faActionPageS: result := 'Action Page S';
+    faActionPageX: result := 'Action Page X';
 
     faToggleAllText: result := 'Toggle all text';
     faToggleTouchFrame: result := 'Touch frame';
@@ -122,9 +131,9 @@ begin
     faCycleColorSchemeM: result := 'cycle 3D color scheme -';
     faCycleColorSchemeP: result := 'cycle 3D color scheme +';
 
+    faTouchDesk: result := 'Touch Desk';
     faTouchTablet: result := 'Touch Tablet';
     faTouchPhone: result := 'Touch Phone';
-    faTouchDesk: result := 'Touch Desk';
 
     faButtonFrameReport: result := 'Button Frame Report';
 
@@ -133,7 +142,6 @@ begin
     faParamValuePlus10: result := 'Param Value + 10';
     faParamValueMinus10: result := 'Param Value - 10';
 
-    // --- Meme ---
     faMemeToggleHelp: result := 'Toggle Help Text';
     faMemeToggleReport: result := 'Toggle Report';
 
@@ -152,7 +160,6 @@ begin
     faMemeFormat8: result := 'Format 8';
     faMemeFormat9: result := 'Format 9';
 
-    // --- Chart ---
     faChartRect: result := 'Chart Show Rectangles';
     faChartTextRect: result := 'Chart Show Text border';
     faChartLegend: result := 'Chart Show Legend';
@@ -180,6 +187,8 @@ begin
     faReportLog: result := 'Log Report';
     faReportJson: result := 'Json Report';
     faReportData: result := 'Data Report';
+    faReportShort: result := 'Short Report';
+    faReportLong: result := 'Long Report';
     faReportTrimmText: result := 'Trimm Text Report';
     faReportJsonText: result := 'Json Text Report';
     faReportDataText: result := 'Data Text Report';
@@ -228,11 +237,6 @@ begin
     faMultiBtn: result := 'Multi Btn';
     faMemoryBtn: result := 'Memory Btn';
     faKoppelBtn: result := 'Koppel Btn';
-
-    faParamT1: result := 'Texture Param T1';
-    faParamT2: result := 'Texture Param T2';
-    faToggleViewType: result := 'Toggle View Type';
-    faPan: result := 'Pan';
 
     faTL01: result := 'Top Left 1';
     faTL02: result := 'Top Left 2';
@@ -291,6 +295,24 @@ begin
     faLineParamE2: result := 'Line Segment 2 Elevation';
     faCircleParamM1Z: result := 'Mittelpunkt C1.Z';
     faCircleParamM2Z: result := 'Mittelpunkt C2.Z';
+
+    faPlusOne: result := 'Plus One';
+    faPlusTen: result := 'Plus Ten';
+
+    faBlackText: result := 'Black Text';
+    faGrayText: result := 'Gray Text';
+    faWhiteText: result := 'White Text';
+
+    faPan: result := 'Pan';
+
+    faParamORX: result := 'Param OrthoRot X';
+    faParamORY: result := 'Param OrthoRot Y';
+    faParamORZ: result := 'Param OrthoRot Z';
+    faParamRX: result := 'Model Rotation X';
+    faParamRY: result := 'Model Rotation Y';
+    faParamRZ: result := 'Model Rotation Z';
+    faParamCZ: result := 'Camera Position Z';
+
   end;
 end;
 
