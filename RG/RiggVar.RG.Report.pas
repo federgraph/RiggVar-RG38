@@ -16,16 +16,19 @@ type
     rgData,
     rgShort,
     rgLong,
+
     rgTrimmText,
     rgJsonText,
     rgDataText,
     rgDiffText,
+
     rgAusgabeRL,
     rgAusgabeRP,
     rgAusgabeRLE,
     rgAusgabeRPE,
     rgAusgabeDiffL,
     rgAusgabeDiffP,
+
     rgXML,
     rgDebugReport,
     rgReadme,
@@ -223,11 +226,11 @@ begin
       rgNone: ;
       rgReadme:
       begin
-        ML.Add('On the desktop - use the scroll wheel of the mouse!');
+        ML.Add('On the desktop - use scroll Wheel of the mouse!');
         ML.Add('');
-        ML.Add('Wheel by itself will scroll the text if too long.');
-        ML.Add('Shift-Wheel will change current param value (small step)');
-        ML.Add('Ctrl-Wheel will change current param value (big step)');
+        ML.Add('Wheel by itself will scroll Text in Controls.');
+        ML.Add('Shift-Wheel changes current param value (small step)');
+        ML.Add('Ctrl-Wheel changes current param value (big step)');
       end;
       rgLog: ML.Text := Main.Logger.TL.Text;
       rgJson: Main.RggData.WriteJSon(ML);
@@ -299,38 +302,30 @@ var
   i: Integer;
   r: TRggReport;
 begin
-  for r := Low(TRggReport) to High(TRggReport) do
-    Include(rs, r);
+  rs := [];
 
-  Exclude(rs, rgJson);
-  Exclude(rs, rgData);
-  Exclude(rs, rgLong);
+  Include(rs, rgLog);
+//  Include(rs, rgJson);
+//  Include(rs, rgData);
+  Include(rs, rgShort);
+//  Include(rs, rgLong);
 
-  Exclude(rs, rgTrimmText);
-  Exclude(rs, rgAusgabeDiffL);
-  Exclude(rs, rgAusgabeDiffP);
-  Exclude(rs, rgDebugReport);
+  Include(rs, rgTrimmText);
+  Include(rs, rgJsonText);
+  Include(rs, rgDataText);
+  Include(rs, rgDiffText);
 
-  Exclude(rs, rgAusgabeRLE);
-  Exclude(rs, rgAusgabeRPE);
+  Include(rs, rgAusgabeRL);
+  Include(rs, rgAusgabeRP);
+//  Include(rs, rgAusgabeRLE);
+//  Include(rs, rgAusgabeRPE);
+  Include(rs, rgAusgabeDiffL);
+//  Include(rs, rgAusgabeDiffP);
 
-//    rgLog,
-//    rgJson,
-//    rgData,
-//    rgShort,
-//    rgLong,
-//    rgTrimmText,
-//    rgJsonText,
-//    rgDataText,
-//    rgDiffText,
-//    rgAusgabeRL,
-//    rgAusgabeRP,
-//    rgAusgabeRLE,
-//    rgAusgabeRPE,
-//    rgAusgabeDiffL,
-//    rgAusgabeDiffP,
-//    rgXML,
-//    rgDebugReport
+  Include(rs, rgXML);
+  Include(rs, rgDebugReport);
+  Include(rs, rgReadme);
+  Include(rs, rgNone);
 
   i := 0;
   for r in rs do

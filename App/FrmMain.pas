@@ -48,6 +48,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
     procedure FormMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; var Handled: Boolean);
   private
@@ -60,6 +61,7 @@ type
     FScale: single;
     FWantResizeNormalizing: Boolean;
     DefaultCaption: string;
+    FormShown: Boolean;
     procedure ApplicationEventsException(Sender: TObject; E: Exception);
     procedure HandleShowHint(Sender: TObject);
     procedure ToggleFontColor;
@@ -110,6 +112,7 @@ type
     procedure ParamComboChange(Sender: TObject);
     procedure ReportComboChange(Sender: TObject);
   public
+    procedure ShowReport(const Value: TRggReport);
     function GetShowDataText: Boolean;
     function GetShowDiffText: Boolean;
     function GetShowTrimmText: Boolean;
@@ -122,6 +125,8 @@ type
   protected
     procedure CreateComponents;
     procedure LayoutComponents;
+    procedure CheckSpaceForImages;
+    procedure CheckSpaceForMemo;
     procedure SetupMemo(MM: TMemo);
     procedure SetupText(T: TText);
     procedure SetupComboBox(CB: TComboBox);
@@ -157,6 +162,10 @@ type
   protected
     Bitmap: TBitmap;
     Image: TImage;
+    ImagePositionX: single;
+    ImagePositionY: single;
+    TextPositionX: single;
+    TextPositionY: single;
   protected
     procedure DestroyForms;
     procedure MemoBtnClick(Sender: TObject);
@@ -222,7 +231,6 @@ begin
 //  Self.Position := TFormPosition.ScreenCenter;
 
   CreateComponents;
-  LayoutComponents;
 
   SetupListbox(ParamListbox);
   SetupMemo(TrimmMemo);
@@ -271,7 +279,8 @@ begin
   begin
     ReportManager.InitLB(ReportListbox.Items);
     ReportListbox.OnChange := ReportListboxChange;
-    ReportListbox.ItemIndex := ReportListbox.Items.IndexOf('Diff Text');
+    ReportListbox.ItemIndex := ReportListbox.Items.IndexOf(
+      ReportManager.GetReportCaption(TRggReport.rgDiffText));
   end;
   if ReportCombo <> nil then
   begin
@@ -500,6 +509,18 @@ begin
   end;
 end;
 
+procedure TFormMain.FormShow(Sender: TObject);
+begin
+  if not FormShown then
+  begin
+    FormShown := True;
+    { Prove that ClientHeigt is available when FormShow is called: }
+//    Caption := IntToStr(ClientHeight);
+    LayoutComponents;
+//    LayoutImages;
+  end;
+end;
+
 procedure TFormMain.FormResize(Sender: TObject);
 begin
   MainVar.ClientWidth := ClientWidth;
@@ -511,6 +532,78 @@ begin
     Main.UpdateText;
   end;
   UpdateReport;
+  CheckSpaceForImages;
+  CheckSpaceForMemo;
+end;
+
+procedure TFormMain.CheckSpaceForMemo;
+begin
+  if not FormShown then
+    Exit;
+
+  if (ClientWidth < 1100) or (ClientHeight < 800) then
+  begin
+    SpeedPanel.Visible := False;
+    TrimmMemo.Visible := False;
+    TrimmCombo.Visible := False;
+    ParamListbox.Visible := False;
+    ReportListbox.Visible := False;
+    Image.Position.X := 0;
+    Image.Position.Y := 0;
+    Image.Width := Bitmap.Width;
+    Image.Height := Bitmap.Height;
+    Image.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop];
+    HelpText.Position.X := Raster + 30;
+    ReportText.Position.X := Raster + 30;
+  end
+  else
+  begin
+    SpeedPanel.Visible := True;
+    TrimmMemo.Visible := True;
+    TrimmCombo.Visible := True;
+    ParamListbox.Visible := True;
+    ReportListbox.Visible := True;
+    Image.Position.X := ImagePositionX;
+    Image.Position.Y := ImagePositionY;
+    Image.Width := ClientWidth - Image.Position.X - Raster - Margin;
+    Image.Height := ClientHeight - Image.Position.Y - Raster - Margin;
+    Image.Anchors := Image.Anchors + [TAnchorKind.akRight, TAnchorKind.akBottom];
+    HelpText.Position.X := TextPositionX;
+    ReportText.Position.X := TextPositionX;
+  end;
+end;
+
+procedure TFormMain.CheckSpaceForImages;
+begin
+  { At aplication start up FormResize is called serveral times,
+    but always before FormShow always called. }
+
+  { ClientWidth and ClientHeight are not yet available when starting up.
+    ClientHeigt is available when FormShow is called.
+   }
+//  if FormShown then
+//  begin
+//    { when FormResize is called after FormShow }
+//    if (ClientWidth < 1200) or (ClientHeight < 600) then
+//      ChartImage.Visible := False;
+//    if (ClientWidth < 1500) or (ClientHeight < 655) then
+//      ControllerImage.Visible := False;
+//    if (ClientWidth < 1500) or (ClientHeight < 875) then
+//      SalingImage.Visible := False;
+//  end
+//  else
+//  begin
+//    { when FormResize is called before FormShow }
+//    if (Width < 1200) or (Height < 600) then
+//      ChartImage.Visible := False;
+//    if (Width < 1500) or (Height < 655) then
+//      ControllerImage.Visible := False;
+//    if (Width < 1500) or (Height < 875) then
+//      SalingImage.Visible := False;
+//  end;
+//
+//  Main.FederText.CheckState;
+//  UpdateSpeedButtonDown;
 end;
 
 procedure TFormMain.ToggleFontColor;
@@ -863,14 +956,20 @@ begin
   result := ReportText.Visible and (ReportManager.CurrentReport = TRggReport.rgTrimmText);
 end;
 
+procedure TFormMain.ShowReport(const Value: TRggReport);
+begin
+  HelpText.Visible := False;
+  ReportText.Visible := True;
+  ReportManager.CurrentReport := Value;
+  UpdateReport;
+  UpdateItemIndexReports;
+end;
+
 procedure TFormMain.SetShowDataText(const Value: Boolean);
 begin
   if Value then
   begin
-    ReportText.Visible := True;
-    ReportManager.CurrentReport := TRggReport.rgDataText;
-    UpdateReport;
-    UpdateItemIndexReports;
+    ShowReport(TRggReport.rgDataText);
   end
   else
   begin
@@ -882,10 +981,7 @@ procedure TFormMain.SetShowDiffText(const Value: Boolean);
 begin
   if Value then
   begin
-    ReportText.Visible := True;
-    ReportManager.CurrentReport := TRggReport.rgDiffText;
-    UpdateReport;
-    UpdateItemIndexReports;
+    ShowReport(TRggReport.rgDiffText);
   end
   else
   begin
@@ -897,10 +993,7 @@ procedure TFormMain.SetShowTrimmText(const Value: Boolean);
 begin
   if Value then
   begin
-    ReportText.Visible := True;
-    ReportManager.CurrentReport := TRggReport.rgTrimmText;
-    UpdateReport;
-    UpdateItemIndexReports;
+    ShowReport(TRggReport.rgTrimmText);
   end
   else
   begin
@@ -975,6 +1068,7 @@ begin
   HintText.Font.Family := 'Consolas';
   HintText.Font.Size := 18;
   HintText.AutoSize := True;
+  HintText.HitTest := False;
 
   HelpText := TText.Create(Self);
   HelpText.Parent := Self;
@@ -983,6 +1077,7 @@ begin
   HelpText.Font.Family := 'Courier New';
   HelpText.Font.Size := 16;
   HelpText.AutoSize := True;
+  HelpText.HitTest := False;
 
   ReportText := TText.Create(Self);
   ReportText.Parent := Self;
@@ -991,6 +1086,7 @@ begin
   ReportText.Font.Family := 'Courier New';
   ReportText.Font.Size := 16;
   ReportText.AutoSize := True;
+  ReportText.HitTest := False;
 
   SpeedPanel := TActionSpeedBarRG01.Create(Self);
   SpeedPanel.Parent := Self;
@@ -1074,6 +1170,8 @@ begin
   Image.Width := ClientWidth - Image.Position.X - Raster - Margin;
   Image.Height := ClientHeight - Image.Position.Y - Raster - Margin;
   Image.Anchors := Image.Anchors + [TAnchorKind.akRight, TAnchorKind.akBottom];
+  ImagePositionX := Image.Position.X;
+  ImagePositionY := Image.Position.Y;
 
   HintText.Position.X := Image.Position.X + 150;
   HintText.Position.Y := Image.Position.Y;
@@ -1083,6 +1181,8 @@ begin
 
   ReportText.Position.X := HelpText.Position.X;
   ReportText.Position.Y := HelpText.Position.Y;
+  TextPositionX := ReportText.Position.X;
+  TextPositionY := ReportText.Position.Y;
 end;
 
 procedure TFormMain.ReportListboxChange(Sender: TObject);
@@ -1093,6 +1193,8 @@ begin
   ii := ReportListbox.ItemIndex;
   if (ii >= 0) and (ii <= Integer(High(TRggReport)))then
   begin
+    HelpText.Visible := False;
+    ReportText.Visible := True;
     ReportManager.CurrentIndex := ii;
     UpdateReport;
     Main.FederText.CheckState;
@@ -1149,12 +1251,12 @@ begin
   Add(fpWoben);
   Add(fpSalingH);
   Add(fpSalingA);
-//  Add(fpSalingL);
-//  Add(fpSalingW);
-//  Add(fpMastfallF0C);
+  Add(fpSalingL);
+  Add(fpSalingW);
+  Add(fpMastfallF0C);
   Add(fpMastfallF0F);
   Add(fpBiegung);
-//  Add(fpD0X);
+  Add(fpD0X);
 
   { Init ItemIndex }
   fp := rm.Param;

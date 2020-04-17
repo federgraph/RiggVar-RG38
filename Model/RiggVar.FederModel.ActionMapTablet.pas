@@ -191,10 +191,10 @@ begin
 
       cl := TopRight;
       cla := claWhite;
-      InitAC(cl, 1, faViewpoint3, cla);
-      InitAC(cl, 2, faViewpointS, cla);
-      InitAC(cl, 3, faViewpointA, cla);
-      InitAC(cl, 4, faViewpointT, cla);
+      InitAC(cl, 1, faViewpointS, cla);
+      InitAC(cl, 2, faViewpointA, cla);
+      InitAC(cl, 3, faViewpointT, cla);
+      InitAC(cl, 4, faViewpoint3, cla);
       InitAC(cl, 5, faActionPageP, claYellow);
       InitAC(cl, 6, faToggleDataText, cla);
       InitAC(cl, 7, faToggleDiffText, cla);
