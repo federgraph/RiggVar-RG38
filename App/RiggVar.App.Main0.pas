@@ -430,6 +430,11 @@ begin
     faButtonFrameReport: result := F.WantButtonFrameReport;
 //    faChartRect..faChartReset: result := F.ChartGraph.GetChecked(fa);
     faReportNone..faReportReadme: result := F.ReportManager.GetChecked(fa);
+
+    faToggleDataText: result := F.ShowDataText;
+    faToggleDiffText: result := F.ShowDiffText;
+    faToggleTrimmText: result := F.ShowTrimmText;
+
     else
       result := F.GetChecked(fa);
   end;

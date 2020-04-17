@@ -109,6 +109,16 @@ type
     procedure TrimmComboChange(Sender: TObject);
     procedure ParamComboChange(Sender: TObject);
     procedure ReportComboChange(Sender: TObject);
+  public
+    function GetShowDataText: Boolean;
+    function GetShowDiffText: Boolean;
+    function GetShowTrimmText: Boolean;
+    procedure SetShowDataText(const Value: Boolean);
+    procedure SetShowDiffText(const Value: Boolean);
+    procedure SetShowTrimmText(const Value: Boolean);
+    property ShowTrimmText: Boolean read GetShowTrimmText write SetShowTrimmText;
+    property ShowDiffText: Boolean read GetShowDiffText write SetShowDiffText;
+    property ShowDataText: Boolean read GetShowDataText write SetShowDataText;
   protected
     procedure CreateComponents;
     procedure LayoutComponents;
@@ -838,6 +848,66 @@ begin
     result := '';
 end;
 
+function TFormMain.GetShowDataText: Boolean;
+begin
+  result := ReportText.Visible and (ReportManager.CurrentReport = TRggReport.rgDataText);
+end;
+
+function TFormMain.GetShowDiffText: Boolean;
+begin
+  result := ReportText.Visible and (ReportManager.CurrentReport = TRggReport.rgDiffText);
+end;
+
+function TFormMain.GetShowTrimmText: Boolean;
+begin
+  result := ReportText.Visible and (ReportManager.CurrentReport = TRggReport.rgTrimmText);
+end;
+
+procedure TFormMain.SetShowDataText(const Value: Boolean);
+begin
+  if Value then
+  begin
+    ReportText.Visible := True;
+    ReportManager.CurrentReport := TRggReport.rgDataText;
+    UpdateReport;
+    UpdateItemIndexReports;
+  end
+  else
+  begin
+    ReportText.Visible := False;
+  end;
+end;
+
+procedure TFormMain.SetShowDiffText(const Value: Boolean);
+begin
+  if Value then
+  begin
+    ReportText.Visible := True;
+    ReportManager.CurrentReport := TRggReport.rgDiffText;
+    UpdateReport;
+    UpdateItemIndexReports;
+  end
+  else
+  begin
+    ReportText.Visible := False;
+  end;
+end;
+
+procedure TFormMain.SetShowTrimmText(const Value: Boolean);
+begin
+  if Value then
+  begin
+    ReportText.Visible := True;
+    ReportManager.CurrentReport := TRggReport.rgTrimmText;
+    UpdateReport;
+    UpdateItemIndexReports;
+  end
+  else
+  begin
+    ReportText.Visible := False;
+  end;
+end;
+
 procedure TFormMain.SetupText(T: TText);
 begin
   T.WordWrap := False;
@@ -1350,23 +1420,6 @@ var
 begin
   fa := (Sender as TControl).Tag;
   case fa of
-//    faUpdateTrimm0: MT0BtnClick(Sender);
-//    faReadTrimmFile: ReadTrimmFileBtnClick(Sender);
-//    faSaveTrimmFile: SaveTrimmFileBtnClick(Sender);
-//    faCopyTrimmFile: CopyTrimmFileBtnClick(Sender);
-//    faCopyTrimmItem: CopyTrimmItemBtnClick(Sender);
-//    faPasteTrimmItem: PasteTrimmItemBtnClick(Sender);
-//    faCopyAndPaste: CopyAndPasteBtnClick(Sender);
-//
-//    faParamValueMinus10: M10BtnClick(Sender);
-//    faParamValueMinus1: M1BtnClick(Sender);
-//    faParamValuePlus1: P1BtnClick(Sender);
-//    faParamValuePlus10: P10BtnClick(Sender);
-//
-//    faToggleSandboxed: SandboxedBtnClick(Sender);
-//    faToggleAllProps: AllPropsBtnClick(Sender);
-//    faToggleAllTags: AllTagsBtnClick(Sender);
-
     faSofortBtn: SofortBtnClick(Sender);
     faGrauBtn: GrauBtnClick(Sender);
     faBlauBtn: BlauBtnClick(Sender);
