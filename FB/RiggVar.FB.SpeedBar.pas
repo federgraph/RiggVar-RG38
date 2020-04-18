@@ -8,6 +8,7 @@ uses
   System.UIConsts,
   FMX.Graphics,
   FMX.Types,
+  FMX.Layouts,
   FMX.StdCtrls,
   FMX.Styles.Objects,
   FMX.Controls.Presentation;
@@ -15,7 +16,7 @@ uses
 {$define FMX}
 
 type
-  TActionSpeedBar = class(TPanel)
+  TActionSpeedBar = class(TLayout)
   private
     function FindStyleByName(AParent: TFMXObject; AName: string): TFMXObject;
     procedure InitLayoutProps;
@@ -151,10 +152,6 @@ procedure TActionSpeedBar.InitSpeedButton(SB: TSpeedButton);
 var
   cr: TButtonStyleTextObject;
 begin
-  { has no effect, not needed }
-//  SB.StyledSettings := SB.StyledSettings - [TStyledSetting.Size];
-//  SB.StyledSettings := SB.StyledSettings - [TStyledSetting.Family, TStyledSetting.Size];
-
   if SB.Tag <> faNoop then
   begin
     sb.Text := Main.ActionHandler.GetShortCaption(SB.Tag);
@@ -162,7 +159,7 @@ begin
     sb.OnClick := SpeedButtonClick;
   end;
 
-  { Text, see above, must be set before changing Font.Size! }
+  { Text must be set before changing Font.Size }
 
   cr := FindStyleByName(SB, 'text') as TButtonStyleTextObject;
   if cr <> nil then
@@ -170,13 +167,7 @@ begin
     cr.HotColor := claBeige;
     cr.NormalColor := BtnColor;
     cr.PressedColor := BtnColor;
-//    cr.TextSettings.Font.Family := 'Deutsche Schrift';
-//    cr.TextSettings.Font.Family := 'Comic Sans MS';
-//    cr.TextSettings.Font.Family := 'Consolas';
-
-    { either way}
     cr.Font.Size := 24;
-//    cr.TextSettings.Font.Size := 32;
   end;
 end;
 
@@ -263,7 +254,7 @@ begin
   sb.StaysPressed := True;
   sb.IsPressed := False;
   sb.OnClick := TestBtnClick;
-  sb.Tag := 0; // faTest;
+  sb.Tag := faNoop;
   InitSpeedButton(sb);
 end;
 

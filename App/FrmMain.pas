@@ -93,7 +93,7 @@ type
     HintText: TText;
     HelpText: TText;
     ReportText: TText;
-    TrimmMemo: TMemo;
+    TrimmText: TText;
     ParamListbox: TListBox;
     ReportListbox: TListBox;
     ReportLabel: TText;
@@ -127,6 +127,7 @@ type
     procedure LayoutComponents;
     procedure CheckSpaceForImages;
     procedure CheckSpaceForMemo;
+    procedure CheckSpaceForListbox;
     procedure SetupMemo(MM: TMemo);
     procedure SetupText(T: TText);
     procedure SetupComboBox(CB: TComboBox);
@@ -135,6 +136,7 @@ type
   private
     Raster: Integer;
     Margin: Integer;
+    ListboxWidth: Integer;
     SpeedPanelHeight: Integer;
     SpeedPanel: TActionSpeedBar;
     procedure InitSpeedButtons;
@@ -226,6 +228,7 @@ begin
   Margin := 10;
   Raster := MainVar.Raster;
   SpeedPanelHeight := Raster;
+  ListboxWidth := 200;
 
   { RSP-20787 when TFormPosition.ScreenCenter}
 //  Self.Position := TFormPosition.ScreenCenter;
@@ -233,12 +236,10 @@ begin
   CreateComponents;
 
   SetupListbox(ParamListbox);
-  SetupMemo(TrimmMemo);
+  SetupListbox(ReportListbox);
   SetupComboBox(TrimmCombo);
   SetupComboBox(ParamCombo);
   SetupComboBox(ReportCombo);
-  SetupText(HintText);
-  SetupListbox(ReportListbox);
 
   Rigg := TRigg.Create;
   Rigg.ControllerTyp := ctOhne;
@@ -296,7 +297,7 @@ begin
     TrimmCombo.OnChange := TrimmComboChange;
   end;
 
-  TL := TrimmMemo.Lines;
+  TL := TStringList.Create;
   Main.UpdateTrimm0;
   ShowTrimm;
 
@@ -310,8 +311,12 @@ begin
   HelpText.Visible := False;
 
   ReportText.BringToFront;
-  ReportText.TextSettings.FontColor := claWhite;
-  ReportText.Visible := True;
+  ReportText.TextSettings.FontColor := claAntiquewhite;
+  ReportText.Visible := False;
+
+  TrimmText.BringToFront;
+  TrimmText.TextSettings.FontColor := claBeige;
+  TrimmText.Visible := True;
 
   InitHelpText;
 
@@ -332,8 +337,8 @@ begin
 {$endif}
 
   Application.OnHint := HandleShowHint;
-  SetupListboxItems(ParamListbox, claDodgerblue);
-  SetupListboxItems(ReportListbox, claDodgerblue);
+  SetupListboxItems(ParamListbox, claAqua);
+  SetupListboxItems(ReportListbox, claAquamarine);
 
   Main.RggMain.Draw;
 
@@ -348,6 +353,7 @@ procedure TFormMain.FormDestroy(Sender: TObject);
 begin
   DestroyForms;
 
+  TL.Free;
   RL.Free;
   ReportManager.Free;
   Main.Free;
@@ -532,8 +538,24 @@ begin
     Main.UpdateText;
   end;
   UpdateReport;
-  CheckSpaceForImages;
+  CheckSpaceForListbox;
   CheckSpaceForMemo;
+  CheckSpaceForImages;
+end;
+
+procedure TFormMain.CheckSpaceForListbox;
+begin
+  if not FormShown then
+    Exit;
+
+  if (ClientHeight < 940) then
+  begin
+    ReportListbox.Visible := False;
+  end
+  else
+  begin
+    ReportListbox.Visible := True;
+  end;
 end;
 
 procedure TFormMain.CheckSpaceForMemo;
@@ -544,8 +566,9 @@ begin
   if (ClientWidth < 1100) or (ClientHeight < 800) then
   begin
     SpeedPanel.Visible := False;
-    TrimmMemo.Visible := False;
-    TrimmCombo.Visible := False;
+    TrimmText.Visible := False;
+    if TrimmCombo <> nil then
+      TrimmCombo.Visible := False;
     ParamListbox.Visible := False;
     ReportListbox.Visible := False;
     Image.Position.X := 0;
@@ -559,10 +582,11 @@ begin
   else
   begin
     SpeedPanel.Visible := True;
-    TrimmMemo.Visible := True;
-    TrimmCombo.Visible := True;
+    TrimmText.Visible := True;
+    if TrimmCombo <> nil then
+      TrimmCombo.Visible := True;
     ParamListbox.Visible := True;
-    ReportListbox.Visible := True;
+//    ReportListbox.Visible := True; // no, dealt with only by CheckSpaceForListbox
     Image.Position.X := ImagePositionX;
     Image.Position.Y := ImagePositionY;
     Image.Width := ClientWidth - Image.Position.X - Raster - Margin;
@@ -1003,17 +1027,23 @@ end;
 
 procedure TFormMain.SetupText(T: TText);
 begin
+  T.Parent := Self;
   T.WordWrap := False;
   T.HorzTextAlign := TTextAlign.Leading;
   T.Font.Family := 'Consolas';
-  T.Font.Size := 18;
+  T.Font.Size := 16;
   T.AutoSize := True;
+  T.HitTest := False;
 end;
 
 procedure TFormMain.SetupComboBox(CB: TComboBox);
 begin
   if CB = nil then
     Exit;
+
+{$ifdef FMX}
+  CB.StyleLookup := 'comboboxstyle';
+{$endif}
 
 {$ifdef Vcl}
   CB.Style := csDropDownList;
@@ -1028,6 +1058,12 @@ procedure TFormMain.SetupListBox(LB: TListBox);
 begin
   if LB = nil then
     Exit;
+
+{$ifdef FMX}
+  LB.ShowScrollBars := False;
+  LB.StyleLookup := 'transparentlistboxstyle';
+//  LB.StyleLookup := 'listboxstyle';
+{$endif}
 
 {$ifdef Vcl}
   LB.Font.Name := 'Consolas';
@@ -1062,31 +1098,20 @@ begin
   OpacityValue := 1.0;
 
   HintText := TText.Create(Self);
-  HintText.Parent := Self;
-  HintText.WordWrap := False;
-  HintText.HorzTextAlign := TTextAlign.Leading;
+  SetupText(HintText);
   HintText.Font.Family := 'Consolas';
-  HintText.Font.Size := 18;
-  HintText.AutoSize := True;
-  HintText.HitTest := False;
+//  HintText.Font.Size := 18;
 
   HelpText := TText.Create(Self);
-  HelpText.Parent := Self;
-  HelpText.WordWrap := False;
-  HelpText.HorzTextAlign := TTextAlign.Leading;
+  SetupText(HelpText);
   HelpText.Font.Family := 'Courier New';
-  HelpText.Font.Size := 16;
-  HelpText.AutoSize := True;
-  HelpText.HitTest := False;
 
   ReportText := TText.Create(Self);
-  ReportText.Parent := Self;
-  ReportText.WordWrap := False;
-  ReportText.HorzTextAlign := TTextAlign.Leading;
+  SetupText(ReportText);
   ReportText.Font.Family := 'Courier New';
-  ReportText.Font.Size := 16;
-  ReportText.AutoSize := True;
-  ReportText.HitTest := False;
+
+  TrimmText := TText.Create(Self);
+  SetupText(TrimmText);
 
   SpeedPanel := TActionSpeedBarRG01.Create(Self);
   SpeedPanel.Parent := Self;
@@ -1096,12 +1121,6 @@ begin
   ParamListbox := TListbox.Create(Self);
   ParamListbox.Parent := Self;
   ParamListbox.Opacity := OpacityValue;
-
-  TrimmMemo := TMemo.Create(Self);
-  TrimmMemo.Parent := Self;
-  TrimmMemo.ReadOnly := True;
-  TrimmMemo.CanFocus := False;
-  TrimmMemo.Opacity := OpacityValue;
 
   TrimmCombo := TComboBox.Create(Self);
   TrimmCombo.Parent := Self;
@@ -1135,14 +1154,14 @@ begin
   SpeedPanel.Height := SpeedPanelHeight;
   SpeedPanel.Anchors := Image.Anchors + [TAnchorKind.akRight];
 
-  TrimmMemo.Position.Y := 2 * Raster + Margin;
-  TrimmMemo.Position.X := Raster + Margin;
-  TrimmMemo.Width := 200;
-  TrimmMemo.Height := 150;
+  TrimmText.Position.Y := 2 * Raster + Margin;
+  TrimmText.Position.X := Raster + Margin;
+  TrimmText.Width := ListboxWidth;
+  TrimmText.Height := 150;
 
-  TrimmCombo.Position.X := TrimmMemo.Position.X;
-  TrimmCombo.Position.Y := TrimmMemo.Position.Y + TrimmMemo.Height + Margin;
-  TrimmCombo.Width := TrimmMemo.Width;
+  TrimmCombo.Position.X := TrimmText.Position.X;
+  TrimmCombo.Position.Y := TrimmText.Position.Y + TrimmText.Height + Margin;
+  TrimmCombo.Width := ListboxWidth;
 
 //  ParamCombo.Position.X := TrimmCombo.Position.X;
 //  ParamCombo.Position.Y := TrimmCombo.Position.Y + TrimmCombo.Height + Margin;
@@ -1152,10 +1171,10 @@ begin
 //  ReportCombo.Position.Y := ParamCombo.Position.Y + ParamCombo.Height + Margin;
 //  ReportCombo.Width := TrimmMemo.Width;
 
-  ParamListbox.Position.X := TrimmMemo.Position.X;
+  ParamListbox.Position.X := TrimmText.Position.X;
   ParamListbox.Position.Y := TrimmCombo.Position.Y + TrimmCombo.Height + Margin;
-  ParamListbox.Width := TrimmMemo.Width;
-  ParamListbox.Height := 270;
+  ParamListbox.Width := ListboxWidth;
+  ParamListbox.Height := 240;
 //  ParamListbox.Height := ClientHeight - ParamListbox.Position.Y - Margin - Raster;
 //  ParamListbox.Anchors := ParamListbox.Anchors + [TAnchorKind.akBottom];
 
@@ -1163,10 +1182,10 @@ begin
   ReportListbox.Position.Y := ParamListbox.Position.Y + ParamListbox.Height + Margin;
   ReportListbox.Width := ParamListbox.Width;
   ReportListbox.Height := ClientHeight - ReportListbox.Position.Y - Raster - Margin;
-  ReportListbox.Anchors := ReportListbox.Anchors + [TAnchorKind.akBottom];
+//  ReportListbox.Anchors := ReportListbox.Anchors + [TAnchorKind.akBottom];
 
-  Image.Position.Y := TrimmMemo.Position.Y;
-  Image.Position.X := TrimmMemo.Position.X + TrimmMemo.Width + Margin;
+  Image.Position.Y := TrimmText.Position.Y;
+  Image.Position.X := TrimmText.Position.X + ListboxWidth + Margin;
   Image.Width := ClientWidth - Image.Position.X - Raster - Margin;
   Image.Height := ClientHeight - Image.Position.Y - Raster - Margin;
   Image.Anchors := Image.Anchors + [TAnchorKind.akRight, TAnchorKind.akBottom];
@@ -1181,6 +1200,7 @@ begin
 
   ReportText.Position.X := HelpText.Position.X;
   ReportText.Position.Y := HelpText.Position.Y;
+
   TextPositionX := ReportText.Position.X;
   TextPositionY := ReportText.Position.Y;
 end;
@@ -1359,7 +1379,10 @@ end;
 procedure TFormMain.ShowTrimm;
 begin
   if TL <> nil then
+  begin
     Main.RggMain.UpdateTrimmText(TL);
+    TrimmText.Text := TL.Text;
+  end;
   UpdateReport;
 end;
 
@@ -1375,6 +1398,7 @@ begin
   for i := 0 to LB.Items.Count - 1 do
   begin
     cr := LB.ItemByIndex(i);
+//    cr.StyledSettings := cr.StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Size];
     T := cr.FindStyleResource('text') as TText;
     if Assigned(T) then
     begin
