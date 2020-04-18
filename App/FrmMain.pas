@@ -133,6 +133,7 @@ type
     procedure SetupComboBox(CB: TComboBox);
     procedure SetupListbox(LB: TListBox);
     procedure SetupListboxItems(LB: TListbox; cla: TAlphaColor);
+    procedure ListboxItemStyleLookup(Sender: TObject);
   private
     Raster: Integer;
     Margin: Integer;
@@ -337,8 +338,6 @@ begin
 {$endif}
 
   Application.OnHint := HandleShowHint;
-  SetupListboxItems(ParamListbox, claAqua);
-  SetupListboxItems(ReportListbox, claAquamarine);
 
   Main.RggMain.Draw;
 
@@ -520,10 +519,11 @@ begin
   if not FormShown then
   begin
     FormShown := True;
-    { Prove that ClientHeigt is available when FormShow is called: }
-//    Caption := IntToStr(ClientHeight);
+    { ClientHeigt is now available }
     LayoutComponents;
 //    LayoutImages;
+    SetupListboxItems(ParamListbox, claAqua);
+    SetupListboxItems(ReportListbox, claAquamarine);
   end;
 end;
 
@@ -538,7 +538,7 @@ begin
     Main.UpdateText;
   end;
   UpdateReport;
-  CheckSpaceForListbox;
+//  CheckSpaceForListbox;
   CheckSpaceForMemo;
   CheckSpaceForImages;
 end;
@@ -547,15 +547,7 @@ procedure TFormMain.CheckSpaceForListbox;
 begin
   if not FormShown then
     Exit;
-
-  if (ClientHeight < 940) then
-  begin
-    ReportListbox.Visible := False;
-  end
-  else
-  begin
-    ReportListbox.Visible := True;
-  end;
+  ReportListbox.Visible := ClientHeight > 940;
 end;
 
 procedure TFormMain.CheckSpaceForMemo;
@@ -586,7 +578,7 @@ begin
     if TrimmCombo <> nil then
       TrimmCombo.Visible := True;
     ParamListbox.Visible := True;
-//    ReportListbox.Visible := True; // no, dealt with only by CheckSpaceForListbox
+    ReportListbox.Visible := True;
     Image.Position.X := ImagePositionX;
     Image.Position.Y := ImagePositionY;
     Image.Width := ClientWidth - Image.Position.X - Raster - Margin;
@@ -1182,7 +1174,7 @@ begin
   ReportListbox.Position.Y := ParamListbox.Position.Y + ParamListbox.Height + Margin;
   ReportListbox.Width := ParamListbox.Width;
   ReportListbox.Height := ClientHeight - ReportListbox.Position.Y - Raster - Margin;
-//  ReportListbox.Anchors := ReportListbox.Anchors + [TAnchorKind.akBottom];
+  ReportListbox.Anchors := ReportListbox.Anchors + [TAnchorKind.akBottom];
 
   Image.Position.Y := TrimmText.Position.Y;
   Image.Position.X := TrimmText.Position.X + ListboxWidth + Margin;
@@ -1390,22 +1382,34 @@ procedure TFormMain.SetupListboxItems(LB: TListbox; cla: TAlphaColor);
 var
   i: Integer;
   cr: TListBoxItem;
-  T: TText;
 begin
   if LB = nil then
     Exit;
+
   if LB.Items.Count > 0 then
   for i := 0 to LB.Items.Count - 1 do
   begin
     cr := LB.ItemByIndex(i);
-//    cr.StyledSettings := cr.StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Size];
+    cr.Tag := cla;
+    cr.StyledSettings := cr.StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Size];
+    cr.OnApplyStyleLookup := ListboxItemStyleLookup;
+
+    ListboxItemStyleLookup(cr);
+  end;
+end;
+
+procedure TFormMain.ListboxItemStyleLookup(Sender: TObject);
+var
+  cr: TListBoxItem;
+  T: TText;
+begin
+  cr := Sender as TListboxItem;
     T := cr.FindStyleResource('text') as TText;
     if Assigned(T) then
     begin
-      T.Font.Family := 'Consolas';
+//    T.Font.Family := 'Consolas';
       T.Font.Size := 14;
-      T.TextSettings.FontColor := cla;
-    end;
+    T.TextSettings.FontColor := cr.Tag;
   end;
 end;
 
