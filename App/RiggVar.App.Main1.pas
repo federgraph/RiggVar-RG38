@@ -73,8 +73,7 @@ type
     constructor Create(rggm: TRggMain);
     destructor Destroy; override;
 
-    procedure ExecuteAction(fa: Integer); override;
-    procedure HandleAction(fa: TFederAction);
+    procedure HandleAction(fa: TFederAction); override;
     function GetChecked(fa: TFederAction): Boolean; override;
 
     procedure DoBigWheel(Delta: single);
@@ -166,6 +165,7 @@ begin
 
   RggMain := rggm; //TRggMain.Create;
 
+  { this should be done after or when calling RggMain.Init }
 //  RggMain.InitLogo; // sets WantLogoData to true
 //  RggMain.Init420; // resets WantLogo to false
 //  WantLogoData := False;
@@ -211,21 +211,18 @@ end;
 
 function TMain1.GetShowTrimmText: Boolean;
 begin
-//  result := False;
 //  result := FederText.TrimmVisible;
   result := FormMain.ShowTrimmText;
 end;
 
 function TMain1.GetShowDiffText: Boolean;
 begin
-//  result := False;
 //  result := FederText.DiffVisible;
   result := FormMain.ShowDiffText;
 end;
 
 function TMain1.GetShowDataText: Boolean;
 begin
-//  result := True;
 //  result := FederText.DataVisible;
   result := FormMain.ShowDataText;
 end;
@@ -691,23 +688,10 @@ begin
   result := True;
 end;
 
-procedure TMain1.ExecuteAction(fa: Integer);
-begin
-  HandleAction(fa);
-end;
-
 procedure TMain1.HandleAction(fa: TFederAction);
 begin
   if IsUp then
   case fa of
-    faToggleTouchFrame: FederText.ToggleTouchFrame;
-
-    faActionPageM: CycleToolSet(-1);
-    faActionPageP: CycleToolSet(1);
-
-    faCycleColorSchemeM: CycleColorSchemeM;
-    faCycleColorSchemeP: CycleColorSchemeP;
-
     faUpdateReportText: DoCleanReport;
     faToggleDebugText: ShowDebugData;
 
@@ -800,7 +784,7 @@ begin
     end;
 
     else
-      FormMain.HandleAction(fa);
+      inherited HandleAction(fa);
   end;
 
   if IsUp then
@@ -913,6 +897,8 @@ begin
 
   ML.Add('Report:');
   ML.Add('  ReportCounter = ' + IntToStr(ReportCounter));
+//  ML.Add('  Scale = ' + FloatToStr(RetinaScale));
+//  ML.Add('  Retina = ' + BoolStr[IsRetina]);
   ML.Add('  Sandboxed = ' + BoolStr[IsSandboxed]);
   ML.Add('  WantOnResize = ' + BoolStr[MainVar.WantOnResize]);
   ML.Add('  ResizeCounter = ' + IntToStr(ResizeCounter));

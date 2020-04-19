@@ -156,7 +156,6 @@ type
     function GetActionFromKeyChar(KeyChar: char): Integer;
     function GetChecked(fa: Integer): Boolean;
     procedure HandleAction(fa: Integer);
-    procedure HA(fa: Integer);
   public
     Rigg: TRigg;
     ReportManager: TRggReportManager;
@@ -282,7 +281,7 @@ begin
     ReportManager.InitLB(ReportListbox.Items);
     ReportListbox.OnChange := ReportListboxChange;
     ReportListbox.ItemIndex := ReportListbox.Items.IndexOf(
-      ReportManager.GetReportCaption(TRggReport.rgDiffText));
+    ReportManager.GetReportCaption(TRggReport.rgDiffText));
   end;
   if ReportCombo <> nil then
   begin
@@ -313,7 +312,7 @@ begin
 
   ReportText.BringToFront;
   ReportText.TextSettings.FontColor := claAntiquewhite;
-  ReportText.Visible := False;
+  ReportText.Visible := True;
 
   TrimmText.BringToFront;
   TrimmText.TextSettings.FontColor := claBeige;
@@ -373,11 +372,10 @@ begin
 
   if fa <> faNoop then
   begin
-    HA(fa);
-    Main.FederText.CheckState;
+    Main.ActionHandler.Execute(fa);
   end;
 
-  UpdateReport;
+  ShowTrimm;
 end;
 
 procedure TFormMain.UpdateReport;
@@ -733,11 +731,6 @@ end;
 
 procedure TFormMain.HandleAction(fa: Integer);
 begin
-  HA(fa);
-end;
-
-procedure TFormMain.HA(fa: Integer);
-begin
   case fa of
     faMemeToggleHelp:
     begin
@@ -830,51 +823,92 @@ var
 begin
   fa := faNoop;
   case KeyChar of
-    'a': ;
-    'A': ;
+    'a': fa := faSalingA;
+    'A': fa := faFixpointA0;
 
-    'b': ;
-    'B': ;
+    'b': fa := faFixpointB;
+    'B': fa := faFixpointB0;
+
+    'c': fa := faCycleColorSchemeP;
+    'C': fa := faCycleColorSchemeM;
+
+    'd': fa := faFixpointD;
+    'D': fa := faFixpointD0;
+
+    'e': fa := faFixpointE;
+    'E': fa := faFixpointE0;
+
+    'f': fa := faWheelLeft; // fa := faFixpointF;
+    'F': fa := faFixpointF0;
+
+    'g': fa := faWheelDown;
+    'G': ;
 
     'h': fa := faMemeToggleHelp;
+    'H': fa := faSalingH;
 
-    'i': ;
-    'I': ;
+    'i': fa := faToggleLineColor;
+    'I': fa := faToggleUseDisplayList;
 
-    'j': ;
+    'j': fa := faWheelRight;
     'J': ;
 
-    'k': ;
-    'K': ;
+    'k': fa := faWheelUp;
+    'K': fa := faKoppelBtn;
 
     'l': fa := faMemeGotoLandscape;
+    'L': fa := faToggleShowLegend;
+
+    'm': fa := faMemoryBtn;
+    'M': fa := faCopyAndPaste;
+
+    'n': ;
+    'N': ;
 
     'r': fa := faMemeToggleReport;
-    'R': ;
+    'R': fa := faReadTrimmFile;
+
+    'o': fa := faWoben;
 
     'p': fa := faMemeGotoPortrait;
+
+    'Q': fa := faToggleUseQuickSort;
+
     's': fa := faMemeGotoSquare;
 
     't': fa := faToggleFontColor;
+    'T': ;
 
-    'v': ;
+    'u': fa := faToggleDataText;
+    'U': fa := faToggleDiffText;
 
-    '0': fa := faMemeFormat0;
-    '1': fa := faMemeFormat1;
-    '2': fa := faMemeFormat2;
-    '3': fa := faMemeFormat3;
-    '4': fa := faMemeFormat4;
-    '5': fa := faMemeFormat5;
-    '6': fa := faMemeFormat6;
-    '7': fa := faMemeFormat7;
-    '8': fa := faMemeFormat8;
-    '9': fa := faMemeFormat9;
+    'v': fa := faVorstag;
+    'w': fa := faWante;
+
+    'z': ;
+    'Z': fa := faUpdateTrimm0;
+
+    '0': fa := faTrimm0;
+    '1': fa := faTrimm1;
+    '2': fa := faTrimm2;
+    '3': fa := faTrimm3;
+    '4': fa := faTrimm4;
+    '5': fa := faTrimm5;
+    '6': fa := faTrimm6;
+    '7': fa := fa420;
+    '8': fa := faLogo;
+    '9': ;
+
+    '!': ;
+    '"': ;
+
+    '=': ;
+    '?': ;
 
     '+': fa := faActionPageP;
     '*': fa := faActionPageM;
 
-    'c': fa := faCycleColorSchemeP;
-    'C': fa := faCycleColorSchemeM;
+    '#': ;
 
     else fa := faNoop;
 

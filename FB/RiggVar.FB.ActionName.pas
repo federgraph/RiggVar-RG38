@@ -320,6 +320,10 @@ faMemeFormat8: result := 'faMemeFormat8';
 faMemeFormat9: result := 'faMemeFormat9';
 
 (*
+{ ViewType }
+faToggleViewType: result := 'faToggleViewType';
+faViewTypeOrtho: result := 'faViewTypeOrtho';
+faViewTypePerspective: result := 'faViewTypePerspective';
 
 { ViewFlags }
 faToggleBMap: result := 'faToggleBMap';

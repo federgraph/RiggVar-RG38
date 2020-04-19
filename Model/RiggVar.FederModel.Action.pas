@@ -47,14 +47,21 @@ begin
   if not M.IsUp then
     Exit;
 
-  Main.ExecuteAction(fa);
-  Main.FederText.CheckState;
+  M.HandleAction(fa);
+  M.FederText.CheckState;
 end;
 
 function TFederActionHandler.GetChecked(fa: TFederAction): Boolean;
+var
+  M: TMain;
 begin
+  M := Main;
   result := false;
-  if Main <> nil then
+  if not Assigned(M) then
+    Exit;
+  if not M.IsUp then
+    Exit;
+
     result := Main.GetChecked(fa);
 end;
 

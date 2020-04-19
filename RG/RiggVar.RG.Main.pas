@@ -53,7 +53,6 @@ type
     procedure TestStream;
 
     procedure UpdateText(ClearFlash: Boolean = False);
-    procedure HandleKey(KeyChar: Char);
 
     procedure DoWheel(Delta: single);
     procedure DoZoom(Delta: single);
@@ -240,7 +239,6 @@ begin
   FixPoint := InitialFixPoint;
 
   InitStrokeRigg;
-//  Draw;
 end;
 
 procedure TRggMain.InitStrokeRigg;
@@ -1292,13 +1290,11 @@ end;
 
 procedure TRggMain0.DoRotation(Delta: single);
 begin
-  // ...
   UpdateText;
 end;
 
 procedure TRggMain0.DoZoom(Delta: single);
 begin
-  // ...
   UpdateText;
 end;
 
@@ -1332,129 +1328,6 @@ begin
 //      Main.FederText.ClearFlash;
 //    Main.FederText.UpdateText;
 //  end;
-end;
-
-procedure TRggMain0.HandleKey(KeyChar: Char);
-//var
-//  ah: TFederActionHandlerBase;
-//  fa: TFederAction;
-//  Key: Word;
-begin
-//  fa := Main.Keyboard.KeyUpAction(Key, KeyChar, []);
-//  Key := 0;
-//  ah := Main.ActionHandler;
-
-//  if fa <> faNoop then
-//    ah.Execute(fa);
-
-//  if KeyChar = 'v' then
-//    ah.Execute(faVorstag)
-//
-//  else if KeyChar = 'w' then
-//    ah.Execute(faWante)
-//
-//  else if KeyChar = 'o' then
-//    ah.Execute(faWoben)
-//
-//  else if KeyChar = 'h' then
-//    ah.Execute(faSalingH)
-//
-//  else if KeyChar = 'a' then
-//    ah.Execute(faSalingA)
-//
-//  else if KeyChar = 'b' then
-//    ah.Execute(faCycleBitmapP)
-//  else if KeyChar = 'B' then
-//    ah.Execute(faCycleBitmapM)
-//
-//  else if KeyChar = 'c' then
-//    ah.Execute(faCycleColorSchemeP)
-//  else if KeyChar = 'C' then
-//    ah.Execute(faCycleColorSchemeM)
-//
-//  else if KeyChar = 'd' then
-//    ah.Execute(faFixpointD)
-//  else if KeyChar = 'D' then
-//    ah.Execute(faFixpointD0)
-//
-//  else if KeyChar = 'e' then
-//    ah.Execute(faFixpointE)
-//  else if KeyChar = 'E' then
-//    ah.Execute(faFixpointE0)
-//
-//  else if KeyChar = 'f' then
-//    ah.Execute(faFixpointF)
-//  else if KeyChar = 'F' then
-//    ah.Execute(faFixpointF0)
-//
-//  else if KeyChar = 'H' then
-//    ah.Execute(faHull)
-//
-//  else if KeyChar = 'p' then
-//    ah.Execute(faResetPosition)
-//
-//  else if KeyChar = 'R' then
-//    ah.Execute(faReadTrimmFile)
-//
-//  else if KeyChar = 'M' then
-//    ah.Execute(faUpdateTrimm0)
-//
-//  else if KeyChar = 'n' then
-//    ah.Execute(faRandomBlack)
-//  else if KeyChar = 'N' then
-//    ah.Execute(faRandomWhite)
-//
-//  else if KeyChar = 't' then
-//    ah.Execute(faParamT1)
-//  else if KeyChar = 'T' then
-//    ah.Execute(faParamT2)
-//
-//  else if KeyChar = 'u' then
-//    ah.Execute(faToggleDataText)
-//  else if KeyChar = 'U' then
-//    ah.Execute(faToggleDiffText)
-//
-//  else if KeyChar = 'z' then
-//    ah.Execute(faResetZoom)
-//  else if KeyChar = 'Z' then
-//    ah.Execute(faUpdateTrimm0)
-//
-//  else if KeyChar = '0' then
-//    ah.Execute(faTrimm0)
-//  else if KeyChar = '1' then
-//    ah.Execute(faTrimm1)
-//  else if KeyChar = '2' then
-//    ah.Execute(faTrimm2)
-//  else if KeyChar = '3' then
-//    ah.Execute(faTrimm3)
-//  else if KeyChar = '4' then
-//    ah.Execute(faTrimm4)
-//  else if KeyChar = '5' then
-//    ah.Execute(faTrimm5)
-//  else if KeyChar = '6' then
-//    ah.Execute(faTrimm6)
-//  else if KeyChar = '7' then
-//    ah.Execute(fa420)
-//  else if KeyChar = '8' then
-//    ah.Execute(faLogo)
-//
-//  else if KeyChar = '!' then
-//    ah.Execute(faParamT1)
-//  else if KeyChar = '"' then
-//    ah.Execute(faParamT2)
-//
-//  else if KeyChar = '=' then
-//    ah.Execute(faActionPageE)
-//  else if KeyChar = '?' then
-//    //ah.Execute(faActionPageX)
-//  else if KeyChar = '*' then
-//    ah.Execute(faActionPageM)
-//  else if KeyChar = '+' then
-//    ah.Execute(faActionPageP)
-//  else if KeyChar = '#' then
-//    ah.Execute(faBitmapEscape)
-//
-//  ;
 end;
 
 procedure TRggMain0.TestStream;

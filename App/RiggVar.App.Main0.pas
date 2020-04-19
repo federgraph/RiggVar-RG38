@@ -82,7 +82,7 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    procedure ExecuteAction(fa: Integer); virtual;
+    procedure HandleAction(fa: Integer); virtual;
     function GetChecked(fa: TFederAction): Boolean; virtual;
 
     procedure InitText;
@@ -159,7 +159,6 @@ begin
   FederBinding := TFederBinding.Create;
 
   ActionHandler := TFederActionHandler.Create;
-  ActionHandler.CheckForDuplicates(FL);
   ActionHelper := TActionHelper.Create(ActionHandler);
 end;
 
@@ -398,7 +397,7 @@ begin
   result := FL.Text;
 end;
 
-procedure TMain0.ExecuteAction(fa: Integer);
+procedure TMain0.HandleAction(fa: Integer);
 begin
   if IsUp then
   case fa of
