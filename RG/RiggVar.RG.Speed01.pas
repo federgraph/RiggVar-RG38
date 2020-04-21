@@ -1,4 +1,4 @@
-unit RiggVar.RG.Speed01;
+﻿unit RiggVar.RG.Speed01;
 
 interface
 
@@ -62,6 +62,40 @@ procedure TActionSpeedBarRG01.InitSpeedButtons;
 var
   sb: TSpeedButton;
 begin
+  { Check Box Buttons }
+
+  BtnColor := claCrimson;
+
+  sb := AddSpeedBtn('SandboxedBtn', BtnGroupSpace);
+  SandboxedBtn := sb;
+  sb.Text := 'SB';
+  sb.Hint := 'Sandboxed';
+  sb.StaysPressed := True;
+  sb.IsPressed := False;
+  sb.OnClick := SandboxedBtnClick;
+  sb.Tag := faToggleSandboxed;
+  InitSpeedButton(sb);
+
+  BtnColor := claGoldenrod;
+
+  sb := AddSpeedBtn('AllPropsBtn');
+  AllPropsBtn := sb;
+  sb.Text := 'ATP';
+  sb.Hint := 'All Trimm Props';
+  sb.StaysPressed := True;
+  sb.IsPressed := False;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('AllTagsBtn');
+  AllTagsBtn := sb;
+  sb.Text := 'AXT';
+  sb.Hint := 'All Xml Tags';
+  sb.StaysPressed := True;
+  sb.IsPressed := False;
+  sb.Tag := faToggleAllTags;
+  sb.OnClick := AllTagsBtnClick;
+  InitSpeedButton(sb);
+
   { Data Buttons }
 
   BtnColor := claChartreuse;
@@ -69,7 +103,7 @@ begin
   sb := AddSpeedBtn('MT0Btn', BtnGroupSpace);
   MT0Btn := sb;
   sb.Text := 'MT0';
-  sb.Hint := 'Memory Btn';
+  sb.Hint := 'Update Trimm 0';
   sb.StaysPressed := False;
   sb.IsPressed := False;
   sb.OnClick := MT0BtnClick;
@@ -178,40 +212,6 @@ begin
   sb.IsPressed := False;
   sb.OnClick := P10BtnClick;
   sb.Tag := faParamValuePlus10;
-  InitSpeedButton(sb);
-
-  { Check Box Buttons }
-
-  BtnColor := claCrimson;
-
-  sb := AddSpeedBtn('SandboxedBtn', BtnGroupSpace);
-  SandboxedBtn := sb;
-  sb.Text := 'SB';
-  sb.Hint := 'Sandboxed';
-  sb.StaysPressed := True;
-  sb.IsPressed := False;
-  sb.OnClick := SandboxedBtnClick;
-  sb.Tag := faToggleSandboxed;
-  InitSpeedButton(sb);
-
-  BtnColor := claGoldenrod;
-
-  sb := AddSpeedBtn('AllPropsBtn');
-  AllPropsBtn := sb;
-  sb.Text := 'ATP';
-  sb.Hint := 'All Trimm Props';
-  sb.StaysPressed := True;
-  sb.IsPressed := False;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('AllTagsBtn');
-  AllTagsBtn := sb;
-  sb.Text := 'AXT';
-  sb.Hint := 'All Xml Tags';
-  sb.StaysPressed := True;
-  sb.IsPressed := False;
-  sb.Tag := faToggleAllTags;
-  sb.OnClick := AllTagsBtnClick;
   InitSpeedButton(sb);
 end;
 

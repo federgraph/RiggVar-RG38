@@ -134,11 +134,12 @@ faSalingTypOhneStarr: result := 'faSalingTypOhneStarr';
 
 { RggAppMode }
 faDemo: result := 'faDemo';
+faMemoryBtn: result := 'faMemoryBtn';
+faMemoryRecallBtn: result := 'faMemoryRecallBtn';
 faSofortBtn: result := 'faSofortBtn';
 faGrauBtn: result := 'faGrauBtn';
 faBlauBtn: result := 'faBlauBtn';
 faMultiBtn: result := 'faMultiBtn';
-faMemoryBtn: result := 'faMemoryBtn';
 faKoppelBtn: result := 'faKoppelBtn';
 faHull: result := 'faHull';
 

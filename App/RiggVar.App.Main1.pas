@@ -282,10 +282,8 @@ begin
   FL.Clear;
   fd := RggData;
   RggMain.SaveTrimm(fd);
-//    fd.WriteJSon(FL);
   fd.WantAll := True;
   fd.SaveTrimmItem(FL);
-//  FederText.FlashCaption := 'RggCopy';
 end;
 
 procedure TMain1.CopyTrimmItem;
@@ -754,6 +752,7 @@ begin
     faTrimm4: Trimm := 4;
     faTrimm5: Trimm := 5;
     faTrimm6: Trimm := 6;
+
     fa420:
     begin
       RggMain.Init420;

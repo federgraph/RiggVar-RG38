@@ -229,11 +229,13 @@ begin
     faToggleChartGraph: result := 'DG';
     faToggleMatrixText: result := 'MT';
 
+    faMemoryBtn: result := 'M';
+    faMemoryRecallBtn: result := 'MR';
+
     faSofortBtn: result := 'SF';
     faGrauBtn: result := 'GB';
     faBlauBtn: result := 'BB';
     faMultiBtn: result := 'MB';
-    faMemoryBtn: result := 'M';
     faKoppelBtn: result := 'KB';
 
     faVorstagOS: result := 'vos';

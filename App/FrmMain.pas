@@ -144,11 +144,12 @@ type
     procedure UpdateSpeedButtonDown;
     procedure UpdateSpeedButtonEnabled;
   public
-    procedure SpeedButtonClick(Sender: TObject);
+    procedure MemoryBtnClick(Sender: TObject);
+    procedure MemoryRecallBtnClick(Sender: TObject);
+
     procedure SofortBtnClick(Sender: TObject);
     procedure GrauBtnClick(Sender: TObject);
     procedure BlauBtnClick(Sender: TObject);
-    procedure MemoryBtnClick(Sender: TObject);
     procedure MultiBtnClick(Sender: TObject);
     procedure KoppelBtnClick(Sender: TObject);
   public
@@ -159,8 +160,9 @@ type
   public
     Rigg: TRigg;
     ReportManager: TRggReportManager;
+    procedure SetIsUp(const Value: Boolean);
     function GetIsUp: Boolean;
-    property IsUp: Boolean read GetIsUp;
+    property IsUp: Boolean read GetIsUp write SetIsUp;
   protected
     Bitmap: TBitmap;
     Image: TImage;
@@ -196,8 +198,12 @@ const
   HelpCaptionText = 'press h for help';
   ApplicationTitleText = 'RG38';
 
+{ TFormMain }
+
 procedure TFormMain.ApplicationEventsException(Sender: TObject; E: Exception);
 begin
+  if (Main <> nil) and (Main.Logger <> nil) then
+    Main.Logger.Info(E.Message);
 end;
 
 procedure TFormMain.FormCreate(Sender: TObject);
@@ -249,10 +255,8 @@ begin
   Main.Logger.Verbose := True;
   rggm.InitLogo; // sets WantLogoData to true
   rggm.Init420; // resets WantLogoData to false
-  WantLogoData := False;
 
   Main.Trimm := 1;
-  Main.Logger.Verbose := True;
 
   Main.InitText;
   Main.IsUp := True;
@@ -297,12 +301,6 @@ begin
     TrimmCombo.OnChange := TrimmComboChange;
   end;
 
-  TL := TStringList.Create;
-  Main.UpdateTrimm0;
-  ShowTrimm;
-
-  Reset;
-
   HintText.BringToFront;
   HintText.TextSettings.FontColor := claYellow;
 
@@ -320,6 +318,13 @@ begin
 
   InitHelpText;
 
+  TL := TStringList.Create;
+  Main.UpdateTrimm0;
+  ShowTrimm;
+
+  Reset;
+
+  { Background }
   if MainVar.ColorScheme.claBackground <> claSlateBlue then
   begin
     Fill.Kind := TBrushKind.Solid; // because is still TBrushKind.None
@@ -336,12 +341,11 @@ begin
   OnKeyDown := FormKeyUp;
 {$endif}
 
-  Application.OnHint := HandleShowHint;
-
   Main.RggMain.Draw;
-
+  Main.RggMain.MemoryBtnClick;
   Main.FederText.CheckState;
 
+  Application.OnHint := HandleShowHint;
   InitSpeedButtons;
   UpdateSpeedButtonDown;
   UpdateSpeedButtonEnabled;
@@ -782,12 +786,14 @@ begin
       UpdateReport;
     end;
 
+    faMemoryBtn: MemoryBtnClick(nil);
+    faMemoryRecallBtn: MemoryRecallBtnClick(nil);
+
     faSofortBtn: SofortBtnClick(nil);
     faGrauBtn: GrauBtnClick(nil);
     faBlauBtn: BlauBtnClick(nil);
     faMultiBtn: MultiBtnClick(nil);
     faKoppelBtn: KoppelBtnClick(nil);
-    faMemoryBtn: MemoryBtnClick(nil);
 
     faToggleFontColor: ToggleFontColor;
 
@@ -919,6 +925,11 @@ end;
 function TFormMain.GetIsUp: Boolean;
 begin
   result := (Main <> nil) and Main.IsUp;
+end;
+
+procedure TFormMain.SetIsUp(const Value: Boolean);
+begin
+  Main.IsUp := Value;
 end;
 
 procedure TFormMain.InitHelpText;
@@ -1100,6 +1111,9 @@ end;
 
 procedure TFormMain.SetupMemo(MM: TMemo);
 begin
+  if MM = nil then
+    Exit;
+
 {$ifdef FMX}
   MM.ControlType := TControlType.Styled;
   MM.StyledSettings := [];
@@ -1464,8 +1478,14 @@ end;
 
 procedure TFormMain.MemoryBtnClick(Sender: TObject);
 begin
-  Main.RggMain.StrokeRigg.KoordinatenR := Main.RggMain.Rigg.rP;
-  Main.RggMain.Draw;
+  Main.RggMain.MemoryBtnClick;
+  UpdateReport;
+end;
+
+procedure TFormMain.MemoryRecallBtnClick(Sender: TObject);
+begin
+  Main.RggMain.MemoryRecallBtnClick;
+  ShowTrimm;
 end;
 
 procedure TFormMain.MultiBtnClick(Sender: TObject);
@@ -1575,29 +1595,6 @@ begin
   begin
     FormMemo.DisposeOf;
     FormMemo := nil;
-  end;
-end;
-
-procedure TFormMain.SpeedButtonClick(Sender: TObject);
-var
-  fa: Integer;
-begin
-  fa := (Sender as TControl).Tag;
-  case fa of
-    faSofortBtn: SofortBtnClick(Sender);
-    faGrauBtn: GrauBtnClick(Sender);
-    faBlauBtn: BlauBtnClick(Sender);
-    faMemoryBtn: MemoryBtnClick(Sender);
-    faMultiBtn: MultiBtnClick(Sender);
-    faKoppelBtn: KoppelBtnClick(Sender);
-  end;
-
-  { When not called via Action }
-  if Sender <> nil then
-  begin
-    UpdateSpeedButtonEnabled;
-    Main.FederText.CheckState;
-    UpdateSpeedButtonDown;
   end;
 end;
 

@@ -118,6 +118,7 @@ type
 
     Rigg: TRigg; // owned, passed in via constructor
     FactArray: TRggFA; // not owned, cached from Rigg
+    RefCtrl: TTrimmControls;
 
     Demo: Boolean;
 
@@ -148,6 +149,9 @@ type
     procedure Init420;
     procedure InitLogo;
     procedure InitSalingTyp(fa: Integer);
+
+    procedure MemoryBtnClick;
+    procedure MemoryRecallBtnClick;
 
     procedure Draw;
 
@@ -208,6 +212,7 @@ begin
 
   Demo := False;
 
+  FParam := fpVorstag;
   FSofortBerechnen := False;
   FBtnGrauDown := True;
   FBtnBlauDown := False;
@@ -1322,12 +1327,6 @@ end;
 
 procedure TRggMain0.UpdateText(ClearFlash: Boolean);
 begin
-//  if Main.IsUp and Assigned(Main.FederText) then
-//  begin
-//    if ClearFlash then
-//      Main.FederText.ClearFlash;
-//    Main.FederText.UpdateText;
-//  end;
 end;
 
 procedure TRggMain0.TestStream;
@@ -1529,6 +1528,21 @@ begin
   end;
 
   Draw;
+end;
+
+procedure TRggMain.MemoryBtnClick;
+begin
+  Main.Logger.Info('in MemoryBtnClick');
+  RefCtrl := Rigg.Glieder;
+  StrokeRigg.KoordinatenR := Rigg.rP;
+  Draw;
+end;
+
+procedure TRggMain.MemoryRecallBtnClick;
+begin
+  Main.Logger.Info('in MemoryRecallBtnClick');
+  Rigg.Glieder := RefCtrl;
+  UpdateGetriebe;
 end;
 
 end.

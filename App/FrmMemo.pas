@@ -253,9 +253,8 @@ begin
 
 {$ifdef MSWINDOWS}
   MemoActionList.AddMemoAction('Help Text for IO', HelpTextForIO);
-  MemoActionList.AddMemoAction('Help Text', HelpText);
   MemoActionList.AddMemoAction('Write Shortcuts', WriteShortcuts);
-  MemoActionList.AddMemoAction('Device Report', DeviceReportBtnClick);
+//  MemoActionList.AddMemoAction('Device Report', DeviceReportBtnClick);
 
   MemoActionList.AddMemoAction('Action Test', ActionTestBtnClick);
   MemoActionList.AddMemoAction('Write Action Const', WriteActionConstBtnClick);

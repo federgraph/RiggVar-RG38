@@ -72,6 +72,8 @@ uses
 //  Winapi.Messages,
   RiggVar.App.Main;
 
+{ TRggReportManager }
+
 constructor TRggReportManager.Create(MemoLines: TStrings);
 begin
   FMemo := MemoLines;

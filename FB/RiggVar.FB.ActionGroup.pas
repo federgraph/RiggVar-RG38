@@ -136,11 +136,12 @@ faSalingTypOhneStarr];
 
 ActionGroupRggAppMode: TActionGroup = [
 faDemo,
+faMemoryBtn,
+faMemoryRecallBtn,
 faSofortBtn,
 faGrauBtn,
 faBlauBtn,
 faMultiBtn,
-faMemoryBtn,
 faKoppelBtn,
 faHull];
 

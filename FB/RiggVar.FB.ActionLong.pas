@@ -231,11 +231,13 @@ begin
     faToggleChartGraph: result := 'Toggle Chart Graph';
     faToggleMatrixText: result := 'Toggle Matrix Text';
 
+    faMemoryBtn: result := 'Memory Btn';
+    faMemoryRecallBtn: result := 'Memory Recall Btn';
+
     faSofortBtn: result := 'Sofort Btn';
     faGrauBtn: result := 'Grau Btn';
     faBlauBtn: result := 'Blau Btn';
     faMultiBtn: result := 'Multi Btn';
-    faMemoryBtn: result := 'Memory Btn';
     faKoppelBtn: result := 'Koppel Btn';
 
     faTL01: result := 'Top Left 1';

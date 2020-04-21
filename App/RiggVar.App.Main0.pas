@@ -401,6 +401,7 @@ procedure TMain0.HandleAction(fa: Integer);
 begin
   if IsUp then
   case fa of
+    faNoop: ;
     faToggleTouchFrame: FederText.ToggleTouchFrame;
 
     faActionPageM: CycleToolSet(-1);

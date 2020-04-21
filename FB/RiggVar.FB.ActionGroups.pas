@@ -118,7 +118,7 @@ begin
   AddSpecial(ActionGroupCircles, 'Circles');
 
   {Meme }
-  AddSpecial(ActionGroupMemeFormat, 'Format');
+  AddSpecial(ActionGroupMemeFormat, 'MemeFormat');
 
   { Rgg3D }
 (*

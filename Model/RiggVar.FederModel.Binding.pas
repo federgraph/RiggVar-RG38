@@ -81,11 +81,13 @@ end;
 
 function TFederBinding.InitInfoText(SL: TStrings): string;
 begin
-  SL.Add('Info about Trimm 420');
+  SL.Add('Info about Trimm 420 App');
   SL.Add('');
   SL.Add('see www.federgraph.de');
+  SL.Add('project source has GPL 3.0 license');
+  SL.Add('see federgraph''s GitHub repository: RiggVar-RG38');
   SL.Add('');
-  SL.Add('(Wanted: Hull data and sample "TrimmFile" for similarly rigged boats.)');
+  SL.Add('( Wanted: Hull data and sample "TrimmFile" for similarly rigged boats. )');
 
 {$ifdef MSWINDOWS}
   SL.Add('');
@@ -109,8 +111,10 @@ function TFederBinding.InitHelpText(SL: TStrings): string;
 begin
   SL.Add('Help Text');
   SL.Add('=========');
-  SL.Add('');
-  SL.Add('--- manually written key binding report ---');
+  SL.Add('Tip: Use space bar instead of Enter in left List.');
+SL.Add('');
+  SL.Add('ToDo: Update manually written shortcut list.');
+  SL.Add('--- old manually written key binding report below ---');
   SL.Add('');
   InitNormalKeys(SL);
   SL.Add('');

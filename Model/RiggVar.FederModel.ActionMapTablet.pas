@@ -217,8 +217,8 @@ begin
       InitAC(cl, 2, faCycleColorSchemeP, claWhite);
       InitAC(cl, 3, faNoop, cla);
       InitAC(cl, 4, faToggleSandboxed, cla);
-      InitAC(cl, 5, faNoop, cla); // faParamT1
-      InitAC(cl, 6, faNoop, cla); // faParamT2
+      InitAC(cl, 5, faMemoryRecallBtn, cla);
+      InitAC(cl, 6, faMemoryBtn, cla);
     end;
 
     2:
@@ -511,7 +511,7 @@ begin
       InitAC(cl, 3, faBlauBtn, cla);
       InitAC(cl, 4, faMultiBtn, cla);
       InitAC(cl, 5, faKoppelBtn, cla);
-      InitAC(cl, 6, faMemoryBtn, claBeige);
+      InitAC(cl, 6, faNoop, cla);
     end;
 
     9:

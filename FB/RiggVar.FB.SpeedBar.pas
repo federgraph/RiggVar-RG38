@@ -72,6 +72,7 @@ end;
 
 procedure TActionSpeedBar.InitLayoutProps;
 begin
+  BtnColor := claBlue;
   BtnCounter := 0;
   BtnLeft := 0;
   BtnTop := 3;
@@ -79,7 +80,6 @@ begin
   BtnGroupSpace := 16;
   BtnWidth := 50;
   BtnHeight := 50;
-  BtnColor := claBlue;
   SpeedPanelHeight := BtnHeight + 2 * BtnTop;
 end;
 

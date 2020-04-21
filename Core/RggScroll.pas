@@ -61,6 +61,8 @@ type
 
   TRggFA = class
   public
+    Dummy: TRggSB;
+
     Controller: TRggSB;
     Winkel: TRggSB;
     Vorstag: TRggSB;
@@ -155,6 +157,7 @@ end;
 
 constructor TRggFA.Create;
 begin
+  Dummy := TRggSB.Create;
   Controller := TRggSB.Create;
   Winkel := TRggSB.Create;
   Vorstag := TRggSB.Create;
@@ -178,6 +181,7 @@ end;
 
 destructor TRggFA.Destroy;
 begin
+  Dummy.Free;
   Controller.Free;
   Winkel.Free;
   Vorstag.Free;
@@ -278,7 +282,6 @@ end;
 
 function TRggFA.Find(Value: TFederParam): TRggSB;
 begin
-  result := nil;
   case Value of
     TFederParam.fpController: result := Controller;
     TFederParam.fpWinkel: result := Winkel;
@@ -298,6 +301,8 @@ begin
     TFederParam.fpT2: result := T2;
     TFederParam.fpVorstagOS: result := VorstagOS;
     TFederParam.fpWPowerOS: result := WPowerOS;
+    else
+      result := Dummy;
   end;
 end;
 
