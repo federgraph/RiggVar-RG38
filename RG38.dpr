@@ -53,7 +53,8 @@ uses
   FrmAction in 'App\FrmAction.pas' {FormAction},
   FrmMemo in 'App\FrmMemo.pas' {FormMemo},
   RiggVar.FB.SpeedBar in 'FB\RiggVar.FB.SpeedBar.pas',
-  RiggVar.RG.Speed01 in 'RG\RiggVar.RG.Speed01.pas';
+  RiggVar.RG.Speed01 in 'RG\RiggVar.RG.Speed01.pas',
+  RiggVar.FB.SpeedColor in 'FB\RiggVar.FB.SpeedColor.pas';
 
 {$R *.res}
 

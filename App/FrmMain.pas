@@ -123,8 +123,8 @@ type
     property ShowDiffText: Boolean read GetShowDiffText write SetShowDiffText;
     property ShowDataText: Boolean read GetShowDataText write SetShowDataText;
   protected
+    ComponentsCreated: Boolean;
     procedure CreateComponents;
-    procedure LayoutComponents;
     procedure CheckSpaceForImages;
     procedure CheckSpaceForMemo;
     procedure CheckSpaceForListbox;
@@ -153,6 +153,8 @@ type
     procedure MultiBtnClick(Sender: TObject);
     procedure KoppelBtnClick(Sender: TObject);
   public
+    procedure UpdateColorScheme;
+    procedure LayoutComponents;
     function GetActionFromKey(Key: Word): Integer;
     function GetActionFromKeyChar(KeyChar: char): Integer;
     function GetChecked(fa: Integer): Boolean;
@@ -384,6 +386,8 @@ end;
 
 procedure TFormMain.UpdateReport;
 begin
+  if ReportText = nil then
+    Exit;
   if not ReportText.Visible then
     Exit;
   if ReportManager = nil then
@@ -556,6 +560,8 @@ procedure TFormMain.CheckSpaceForMemo;
 begin
   if not FormShown then
     Exit;
+  if not ComponentsCreated then
+    Exit;
 
   if (ClientWidth < 1100) or (ClientHeight < 800) then
   begin
@@ -593,6 +599,9 @@ end;
 
 procedure TFormMain.CheckSpaceForImages;
 begin
+  if not ComponentsCreated then
+    Exit;
+
   { At aplication start up FormResize is called serveral times,
     but always before FormShow always called. }
 
@@ -924,7 +933,10 @@ end;
 
 function TFormMain.GetIsUp: Boolean;
 begin
-  result := (Main <> nil) and Main.IsUp;
+  if not MainVar.AppIsClosing and Assigned(Main) then
+    result := Main.IsUp
+  else
+    result := False;
 end;
 
 procedure TFormMain.SetIsUp(const Value: Boolean);
@@ -1181,10 +1193,15 @@ begin
   Image.Parent := Self;
   Image.Bitmap := Bitmap;
   Image.WrapMode := TImageWrapMode.Original;
+
+  ComponentsCreated := True;
 end;
 
 procedure TFormMain.LayoutComponents;
 begin
+  if not ComponentsCreated then
+    Exit;
+
   { Problem: ClientWidht and ClientHeight are still at DesignTime Values.}
   { It only 'works' if these are big enough, }
   { So that computed values for Height and Width are > 0 }
@@ -1192,10 +1209,10 @@ begin
   SpeedPanel.Position.Y := Raster + Margin;
   SpeedPanel.Width := ClientWidth - 3 * Raster - 2 * Margin;
   SpeedPanel.Height := SpeedPanelHeight;
-  SpeedPanel.Anchors := Image.Anchors + [TAnchorKind.akRight];
+  SpeedPanel.Anchors := SpeedPanel.Anchors + [TAnchorKind.akRight];
 
-  TrimmText.Position.Y := 2 * Raster + Margin;
   TrimmText.Position.X := Raster + Margin;
+  TrimmText.Position.Y := 2 * Raster + Margin;
   TrimmText.Width := ListboxWidth;
   TrimmText.Height := 150;
 
@@ -1236,7 +1253,7 @@ begin
   HintText.Position.Y := Image.Position.Y;
 
   HelpText.Position.X := Image.Position.X + 150;
-  HelpText.Position.Y := Image.Position.Y + HintText.Height + Margin;
+  HelpText.Position.Y := Image.Position.Y + 30 + Margin;
 
   ReportText.Position.X := HelpText.Position.X;
   ReportText.Position.Y := HelpText.Position.Y;
@@ -1614,6 +1631,23 @@ procedure TFormMain.UpdateSpeedButtonEnabled;
 begin
   if SpeedPanel <> nil then
     SpeedPanel.UpdateSpeedButtonEnabled;
+end;
+
+procedure TFormMain.UpdateColorScheme;
+begin
+  if not ComponentsCreated then
+    Exit;
+
+  UpdateBackgroundColor(SpeedPanel.SpeedColorScheme.claBack);
+
+  if ReportLabel <> nil then
+    ReportLabel.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claReport;
+
+  HintText.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claHintText;
+  TrimmText.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claTrimmText;
+  ReportText.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claReportText;
+  HelpText.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claHelpText;
+
 end;
 
 end.
