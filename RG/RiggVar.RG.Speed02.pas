@@ -1,0 +1,464 @@
+﻿unit RiggVar.RG.Speed02;
+
+interface
+
+uses
+  RiggVar.FB.SpeedBar,
+  RiggVar.FB.SpeedColor,
+  System.UIConsts,
+  System.Classes,
+  FMX.StdCtrls;
+
+{.$define SegmentButtons}
+
+type
+  TActionSpeedBarRG02 = class(TActionSpeedBar)
+  private
+    UseDisplayListBtn: TSpeedButton;
+    UseQuickSortBtn: TSpeedButton;
+    LegendBtn: TSpeedButton;
+    LineColorBtn: TSpeedButton;
+{$ifdef SegmentButtons}
+    FixpunktBtn: TSpeedButton;
+    RumpfBtn: TSpeedButton;
+    SalingBtn: TSpeedButton;
+    WanteBtn: TSpeedButton;
+    MastBtn: TSpeedButton;
+    VorstagBtn: TSpeedButton;
+    ControllerBtn: TSpeedButton;
+    AchsenBtn: TSpeedButton;
+{$endif}
+    SeiteBtn: TSpeedButton;
+    TopBtn: TSpeedButton;
+    AchternBtn: TSpeedButton;
+    NullBtn: TSpeedButton;
+
+    ZoomInBtn: TSpeedButton;
+    ZoomOutBtn: TSpeedButton;
+
+    BogenBtn: TSpeedButton;
+
+    MemoryBtn: TSpeedButton;
+    MemoryRecallBtn: TSpeedButton;
+
+    SofortBtn: TSpeedButton;
+    GrauBtn: TSpeedButton;
+    BlauBtn: TSpeedButton;
+    MultiBtn: TSpeedButton;
+    KoppelBtn: TSpeedButton;
+
+    MatrixBtn: TSpeedButton;
+    ChartImageBtn: TSpeedButton;
+    SalingImageBtn: TSpeedButton;
+    ControllerImageBtn: TSpeedButton;
+
+    ColorModeBtn: TSpeedButton;
+    FontSizeBtn: TSpeedButton;
+
+    procedure ToggleColorModeBtnClick(Sender: TObject);
+    procedure ToggleFontSizeBtnClick(Sender: TObject);
+  protected
+    procedure SpeedButtonClick(Sender: TObject); override;
+  public
+    procedure InitSpeedButtons; override;
+    procedure UpdateSpeedButtonDown; override;
+    procedure UpdateSpeedButtonEnabled; override;
+  end;
+
+implementation
+
+uses
+  FrmMain,
+  RiggVar.App.Main,
+  RggTypes,
+  RggRaumGraph,
+  RiggVar.FB.ActionConst;
+
+{ TActionSpeedBarRG02 }
+
+procedure TActionSpeedBarRG02.SpeedButtonClick(Sender: TObject);
+var
+  fa: Integer;
+begin
+  fa := (Sender as TComponent).Tag;
+  case fa of
+    faToggleUseDisplayList:
+    begin
+      FormMain.RotaForm.UseDisplayListBtnClick(Sender);
+      UpdateSpeedButtonEnabled;
+    end;
+
+    faToggleUseQuickSort: FormMain.RotaForm.UseQuickSortBtnClick(Sender);
+    faToggleLineColor: FormMain.LineColorBtnClick(Sender);
+    faToggleShowLegend: FormMain.RotaForm.LegendBtnClick(Sender);
+
+    faToggleSegmentF .. faToggleSegmentA: FormMain.HandleSegment(fa);
+
+    faViewpointS: FormMain.SeiteBtnClick(Sender);
+    faViewpointA: FormMain.AchternBtnClick(Sender);
+    faViewpointT: FormMain.TopBtnClick(Sender);
+    faViewpoint3: FormMain.NullBtnClick(Sender);
+
+    faRggZoomIn: FormMain.RotaForm.ZoomInBtnClick(Sender);
+    faRggZoomOut: FormMain.RotaForm.ZoomOutBtnClick(Sender);
+
+    faRggBogen: FormMain.RotaForm.BogenBtnClick(Sender);
+
+    faToggleChartGraph: FormMain.ChartImageBtnClick(Sender);
+    faToggleSalingGraph: FormMain.SalingImageBtnClick(Sender);
+    faToggleControllerGraph: FormMain.ControllerImageBtnClick(Sender);
+    faToggleMatrixText: FormMain.RotaForm.MatrixItemClick(Sender);
+
+    faMemoryBtn: FormMain.MemoryBtnClick(Sender);
+    faMemoryRecallBtn: FormMain.MemoryRecallBtnClick(Sender);
+
+    faSofortBtn: FormMain.SofortBtnClick(Sender);
+    faGrauBtn: FormMain.GrauBtnClick(Sender);
+    faBlauBtn: FormMain.BlauBtnClick(Sender);
+    faMultiBtn:
+    begin
+      FormMain.MultiBtnClick(Sender);
+      UpdateSpeedButtonEnabled;
+    end;
+    faKoppelBtn: FormMain.KoppelBtnClick(Sender);
+  end;
+end;
+
+procedure TActionSpeedBarRG02.UpdateSpeedButtonDown;
+begin
+  UseDisplayListBtn.IsPressed := FormMain.RotaForm.UseDisplayList;
+
+  UseQuickSortBtn.IsPressed := FormMain.RotaForm.RaumGraph.DL.UseQuickSort;
+  LegendBtn.IsPressed := FormMain.RotaForm.LegendItemChecked;
+  LineColorBtn.IsPressed := Main.GetChecked(faToggleLineColor);
+
+{$ifdef SegmentButtons}
+  FixpunktBtn.IsPressed := Main.GetChecked(faToggleSegmentF);
+  RumpfBtn.IsPressed := Main.GetChecked(faToggleSegmentR);
+  SalingBtn.IsPressed := Main.GetChecked(faToggleSegmentS);
+  WanteBtn.IsPressed := Main.GetChecked(faToggleSegmentW);
+  MastBtn.IsPressed := Main.GetChecked(faToggleSegmentM);
+  VorstagBtn.IsPressed := Main.GetChecked(faToggleSegmentV);
+  ControllerBtn.IsPressed := Main.GetChecked(faToggleSegmentC);
+  AchsenBtn.IsPressed := Main.GetChecked(faToggleSegmentA);
+{$endif}
+
+  SeiteBtn.IsPressed := False;
+  TopBtn.IsPressed := False;
+  AchternBtn.IsPressed := False;
+  NullBtn.IsPressed := False;
+
+  ZoomInBtn.IsPressed := False;
+  ZoomOutBtn.IsPressed := False;
+
+  BogenBtn.IsPressed := FormMain.RotaForm.Bogen;
+
+  ChartImageBtn.IsPressed := FormMain.ChartImage.IsVisible;
+  SalingImageBtn.IsPressed := FormMain.SalingImage.IsVisible;
+  ControllerImageBtn.IsPressed := FormMain.ControllerImage.IsVisible;
+  MatrixBtn.IsPressed := FormMain.RotaForm.MatrixItemChecked;
+
+  MemoryBtn.IsPressed := False;
+  MemoryRecallBtn.IsPressed := False;
+
+  SofortBtn.IsPressed := Main.GetChecked(faSofortBtn);
+  MultiBtn.IsPressed := Main.GetChecked(faMultiBtn);
+  GrauBtn.IsPressed := Main.GetChecked(faGrauBtn);
+  BlauBtn.IsPressed := Main.GetChecked(faBlauBtn);
+  KoppelBtn.IsPressed := Main.GetChecked(faKoppelBtn);
+end;
+
+procedure TActionSpeedBarRG02.UpdateSpeedButtonEnabled;
+var
+  b1, b2: Boolean;
+  b: Boolean;
+begin
+  b1 := FormMain.RotaForm.UseDisplayList;
+  b2 := FormMain.RotaForm.WantOverlayedRiggs;
+
+  b := b1;
+
+  UseQuickSortBtn.Enabled := b;
+  LegendBtn.Enabled := b;
+  LineColorBtn.Enabled := b;
+
+  b := not b1;
+
+  MultiBtn.Enabled := b;
+  KoppelBtn.Enabled := b;
+
+  b := (not b1) and b2;
+
+  GrauBtn.Enabled := b;
+  BlauBtn.Enabled := b;
+end;
+
+procedure TActionSpeedBarRG02.InitSpeedButtons;
+var
+  sb: TSpeedBtn;
+begin
+  { SpeedPanel Update Buttons }
+
+  BtnColor := claOrange;
+  BtnColor := SpeedColorScheme.claScheme;
+  BtnColorValue := clvScheme;
+
+  sb := AddSpeedBtn('ColorModeBtn', BtnGroupSpace);
+  ColorModeBtn := sb;
+  sb.Text := 'CM';
+  sb.Hint := 'Toggle ColorMode';
+  sb.OnClick := ToggleColorModeBtnClick;
+  sb.Tag := faNoop;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('FontSizeBtn');
+  FontSizeBtn := sb;
+  sb.Text := 'FS';
+  sb.Hint := 'Toggle FontSize';
+  sb.OnClick := ToggleFontSizeBtnClick;
+  sb.Tag := faNoop;
+  InitSpeedButton(sb);
+
+  { DisplayList Graph Toggle }
+
+  BtnColor := claCoral;
+  BtnColor := SpeedColorScheme.claGraph;
+  BtnColorValue := clvGraph;
+
+  sb := AddSpeedBtn('UseDisplayListBtn', BtnGroupSpace);
+  UseDisplayListBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faToggleUseDisplayList;
+  InitSpeedButton(sb);
+
+  { DisplayList Graph Options }
+
+  BtnColor := claYellow;
+  BtnColor := SpeedColorScheme.claOption;
+  BtnColorValue := clvOption;
+
+  sb := AddSpeedBtn('UseQuickSortBtn', BtnGroupSpace);
+  UseQuickSortBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faToggleUseQuickSort;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('LegendBtn', 0);
+  LegendBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faToggleShowLegend;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('LineColorBtn');
+  LineColorBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faToggleLineColor;
+  InitSpeedButton(sb);
+
+{$ifdef SegmentButtons}
+
+  { DisplayList Graph Segments }
+
+  BtnColor := claCrimson;
+  BtnColor := SpeedColorScheme.claSegment;
+  BtnColorValue := clvSegment;
+
+  sb := AddSpeedBtn('FixpunktBtn', BtnGroupSpace);
+  FixpunktBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faToggleSegmentF;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('RumpftBtn', 0);
+  RumpfBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faToggleSegmentR;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('SalingBtn', 0);
+  SalingBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faToggleSegmentS;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('MastBtn', 0);
+  MastBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faToggleSegmentM;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('VorstagBtn', 0);
+  VorstagBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faToggleSegmentV;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('WanteBtn', 0);
+  WanteBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faToggleSegmentW;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('ControllerBtn', 0);
+  ControllerBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faToggleSegmentC;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('AchsenBtn', 0);
+  AchsenBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faToggleSegmentA;
+  InitSpeedButton(sb);
+{$endif}
+
+  { Bogen }
+
+  BtnColor := claDodgerblue;
+  BtnColor := SpeedColorScheme.claBogen;
+  BtnColorValue := clvBogen;
+
+  sb := AddSpeedBtn('BogenBtn', BtnGroupSpace);
+  BogenBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faRggBogen;
+  InitSpeedButton(sb);
+
+  { Image Elements, and Matrix Text }
+
+  BtnColor := claGoldenrod;
+  BtnColor := SpeedColorScheme.claImage;
+  BtnColorValue := clvImage;
+
+  sb := AddSpeedBtn('ChartImageBtn', BtnGroupSpace);
+  ChartImageBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faToggleChartGraph;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('SalingImageBtn', 0);
+  SalingImageBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faToggleSalingGraph;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('ControllerImageBtn', 0);
+  ControllerImageBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faToggleControllerGraph;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('MatrixBtn', 0);
+  MatrixBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faToggleMatrixText;
+  InitSpeedButton(sb);
+
+  { Original Rigg Toolbar Buttons }
+
+  BtnColor := claBeige;
+  BtnColor := SpeedColorScheme.claMemory;
+  BtnColorValue := clvMemory;
+
+  sb := AddSpeedBtn('MemoryBtn', BtnGroupSpace);
+  MemoryBtn := sb;
+  sb.StaysPressed := False;
+  sb.Tag := faMemoryBtn;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('MemoryRecallBtn', 0);
+  MemoryRecallBtn := sb;
+  sb.StaysPressed := False;
+  sb.Tag := faMemoryRecallBtn;
+  InitSpeedButton(sb);
+
+  BtnColor := claAquamarine;
+  BtnColor := SpeedColorScheme.claRigg;
+  BtnColorValue := clvRigg;
+
+  sb := AddSpeedBtn('SofortBtn', BtnGroupSpace);
+  SofortBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faSofortBtn;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('GrauBtn', 0);
+  GrauBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faGrauBtn;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('BlauBtn', 0);
+  BlauBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faBlauBtn;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('MultiBtn', 0);
+  MultiBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faMultiBtn;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('KoppelBtn', 0);
+  KoppelBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faKoppelBtn;
+  InitSpeedButton(sb);
+
+  { ViewPoint Buttons }
+
+  BtnColor := claBeige;
+  BtnColor := SpeedColorScheme.claView;
+  BtnColorValue := clvView;
+
+  sb := AddSpeedBtn('SeiteBtn', BtnGroupSpace);
+  SeiteBtn := sb;
+  sb.Tag := faViewpointS;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('AchternBtn', 0);
+  AchternBtn := sb;
+  sb.Tag := faViewpointA;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('TopBtn', 0);
+  TopBtn := sb;
+  sb.Tag := faViewpointT;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('NullBtn', 0);
+  NullBtn := sb;
+  sb.Tag := faViewpoint3;
+  InitSpeedButton(sb);
+
+  { Zoom Buttons }
+
+  BtnColor := claTeal;
+  BtnColor := SpeedColorScheme.claZoom;
+  BtnColorValue := clvZoom;
+
+  sb := AddSpeedBtn('ZoomOutBtn', BtnGroupSpace);
+  ZoomOutBtn := sb;
+  sb.Tag := faRggZoomOut;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('ZoomInBtn', 0);
+  ZoomInBtn := sb;
+  sb.Tag := faRggZoomIn;
+  InitSpeedButton(sb);
+end;
+
+procedure TActionSpeedBarRG02.ToggleColorModeBtnClick(Sender: TObject);
+begin
+  UpdateColor;
+  FormMain.UpdateColorScheme;
+end;
+
+procedure TActionSpeedBarRG02.ToggleFontSizeBtnClick(Sender: TObject);
+begin
+  UpdateFontSize;
+  FormMain.LayoutComponents;
+end;
+
+end.
