@@ -29,17 +29,29 @@ uses
   System.Types,
   System.UITypes,
   System.UIConsts,
+  RggScroll,
+  RggDisplayTypes,
+  RggDisplay,
+  RggRaumGraph,
+  RggRota,
+  RggTestData,
+  RggCtrls,
+  RggChartGraph,
   FMX.Platform,
   FMX.Graphics,
   FMX.Types,
   FMX.Controls,
   FMX.Forms,
   FMX.StdCtrls,
+  FMX.ExtCtrls,
   FMX.Objects,
   FMX.ScrollBox,
   FMX.Memo,
   FMX.Listbox,
-  FMX.Dialogs;
+  FMX.Dialogs,
+  FMX.Edit,
+  FMX.Surfaces,
+  FMX.Layouts;
 
 {$define FMX}
 
@@ -144,6 +156,16 @@ type
     procedure UpdateSpeedButtonDown;
     procedure UpdateSpeedButtonEnabled;
   public
+    procedure ChartImageBtnClick(Sender: TObject);
+    procedure SalingImageBtnClick(Sender: TObject);
+    procedure ControllerImageBtnClick(Sender: TObject);
+
+    procedure LineColorBtnClick(Sender: TObject);
+    procedure SeiteBtnClick(Sender: TObject);
+    procedure AchternBtnClick(Sender: TObject);
+    procedure TopBtnClick(Sender: TObject);
+    procedure NullBtnClick(Sender: TObject);
+
     procedure MemoryBtnClick(Sender: TObject);
     procedure MemoryRecallBtnClick(Sender: TObject);
 
@@ -160,10 +182,17 @@ type
     function GetChecked(fa: Integer): Boolean;
     procedure HandleAction(fa: Integer);
   public
+    DL: TRggDisplayList;
+    RotaForm: TRotaForm;
+    procedure HandleSegment(fa: Integer);
+  public
     Rigg: TRigg;
     ReportManager: TRggReportManager;
+    FViewPoint: TViewPoint;
     procedure SetIsUp(const Value: Boolean);
     function GetIsUp: Boolean;
+    procedure SetViewPoint(const Value: TViewPoint);
+    property ViewPoint: TViewPoint read FViewPoint write SetViewPoint;
     property IsUp: Boolean read GetIsUp write SetIsUp;
   protected
     Bitmap: TBitmap;
@@ -172,6 +201,20 @@ type
     ImagePositionY: single;
     TextPositionX: single;
     TextPositionY: single;
+  public
+    SalingImage: TImage;
+    SalingGraph: TSalingGraph;
+    ControllerImage: TImage;
+    ControllerGraph: TSalingGraph;
+    ChartImage: TImage;
+    ChartGraph: TChartGraph;
+    procedure InitSalingGraph;
+    procedure InitControllerGraph;
+    procedure InitChartGraph;
+    procedure UpdateSalingGraph;
+    procedure UpdateControllerGraph;
+    procedure UpdateChartGraph;
+    procedure LayoutImages;
   protected
     procedure DestroyForms;
     procedure MemoBtnClick(Sender: TObject);
@@ -191,7 +234,7 @@ uses
   FrmAction,
   RiggVar.RG.Main,
   RiggVar.RG.Speed01,
-//  RiggVar.RG.Speed02,
+  RiggVar.RG.Speed02,
   RiggVar.App.Main,
   RiggVar.FB.ActionConst,
   RiggVar.FB.Classes;
@@ -230,10 +273,10 @@ begin
 
   FormMain := self;
   Caption := ApplicationTitleText;
-  Top := 20;
-  Width := 1600;
-  Height := 1000;
-  Margin := 10;
+  Top := 30;
+  Width := 1700;
+  Height := 960;
+  Margin := 2;
   Raster := MainVar.Raster;
   SpeedPanelHeight := Raster;
   ListboxWidth := 200;
@@ -245,9 +288,6 @@ begin
 
   SetupListbox(ParamListbox);
   SetupListbox(ReportListbox);
-  SetupComboBox(TrimmCombo);
-  SetupComboBox(ParamCombo);
-  SetupComboBox(ReportCombo);
 
   Rigg := TRigg.Create;
   Rigg.ControllerTyp := ctOhne;
@@ -263,8 +303,22 @@ begin
   Main.InitText;
   Main.IsUp := True;
 
+  RotaForm := TRotaForm.Create; // ownership kept
+  rggm.StrokeRigg := RotaForm;
+  RotaForm.Image := Image;
+  RotaForm.Init;
+  DL := RotaForm.RaumGraph.DL;
+  RotaForm.IsUp := True;
+  RotaForm.ViewPoint := vp3D;
+  RotaForm.ZoomIndex := 8;
+//  RotaForm.LegendItemChecked := False;
+  RotaForm.FixPoint := ooD;
+//  RotaForm.RaumGraph.Koppel := True;
+
+  RotaForm.Draw;
+
   { Params }
-  Main.RggMain.Param := fpVorstag;
+  Main.RggMain.Param := fpVorstag; // --> TempIst wird gesetzt, SetupTrackBar() aufgerufen
   if ParamListbox <> nil then
   begin
     InitParamListbox;
@@ -343,6 +397,10 @@ begin
   OnKeyDown := FormKeyUp;
 {$endif}
 
+  InitSalingGraph;
+  InitControllerGraph;
+  InitChartGraph;
+
   Main.RggMain.Draw;
   Main.RggMain.MemoryBtnClick;
   Main.FederText.CheckState;
@@ -351,6 +409,7 @@ begin
   InitSpeedButtons;
   UpdateSpeedButtonDown;
   UpdateSpeedButtonEnabled;
+  UpdateColorScheme;
 end;
 
 procedure TFormMain.FormDestroy(Sender: TObject);
@@ -360,11 +419,16 @@ begin
   TL.Free;
   RL.Free;
   ReportManager.Free;
+  RotaForm := nil;
   Main.Free;
   Main := nil;
 
   Image.Free;
   Bitmap.Free;
+
+  SalingGraph.Free;
+  ControllerGraph.Free;
+  ChartGraph.Free;
 end;
 
 procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
@@ -516,6 +580,9 @@ begin
   begin
     Main.DoMouseWheel(Shift, WheelDelta);
     ShowTrimm;
+    UpdateSalingGraph;
+    UpdateControllerGraph;
+    UpdateChartGraph;
     Handled := True;
   end;
 end;
@@ -527,7 +594,7 @@ begin
     FormShown := True;
     { ClientHeigt is now available }
     LayoutComponents;
-//    LayoutImages;
+    LayoutImages;
     SetupListboxItems(ParamListbox, claAqua);
     SetupListboxItems(ReportListbox, claAquamarine);
   end;
@@ -553,7 +620,7 @@ procedure TFormMain.CheckSpaceForListbox;
 begin
   if not FormShown then
     Exit;
-  ReportListbox.Visible := ClientHeight > 940;
+  ReportListbox.Visible := ClientHeight > 910;
 end;
 
 procedure TFormMain.CheckSpaceForMemo;
@@ -565,10 +632,12 @@ begin
 
   if (ClientWidth < 1100) or (ClientHeight < 800) then
   begin
+    if RotaForm.LegendItemChecked then
+    begin
+      RotaForm.LegendBtnClick(nil);
+    end;
     SpeedPanel.Visible := False;
     TrimmText.Visible := False;
-    if TrimmCombo <> nil then
-      TrimmCombo.Visible := False;
     ParamListbox.Visible := False;
     ReportListbox.Visible := False;
     Image.Position.X := 0;
@@ -583,8 +652,6 @@ begin
   begin
     SpeedPanel.Visible := True;
     TrimmText.Visible := True;
-    if TrimmCombo <> nil then
-      TrimmCombo.Visible := True;
     ParamListbox.Visible := True;
     ReportListbox.Visible := True;
     Image.Position.X := ImagePositionX;
@@ -608,29 +675,29 @@ begin
   { ClientWidth and ClientHeight are not yet available when starting up.
     ClientHeigt is available when FormShow is called.
    }
-//  if FormShown then
-//  begin
-//    { when FormResize is called after FormShow }
-//    if (ClientWidth < 1200) or (ClientHeight < 600) then
-//      ChartImage.Visible := False;
-//    if (ClientWidth < 1500) or (ClientHeight < 655) then
-//      ControllerImage.Visible := False;
-//    if (ClientWidth < 1500) or (ClientHeight < 875) then
-//      SalingImage.Visible := False;
-//  end
-//  else
-//  begin
-//    { when FormResize is called before FormShow }
-//    if (Width < 1200) or (Height < 600) then
-//      ChartImage.Visible := False;
-//    if (Width < 1500) or (Height < 655) then
-//      ControllerImage.Visible := False;
-//    if (Width < 1500) or (Height < 875) then
-//      SalingImage.Visible := False;
-//  end;
-//
-//  Main.FederText.CheckState;
-//  UpdateSpeedButtonDown;
+  if FormShown then
+  begin
+    { when FormResize is called after FormShow }
+    if (ClientWidth < 1200) or (ClientHeight < 600) then
+      ChartImage.Visible := False;
+    if (ClientWidth < 1500) or (ClientHeight < 655) then
+      ControllerImage.Visible := False;
+    if (ClientWidth < 1500) or (ClientHeight < 875) then
+      SalingImage.Visible := False;
+  end
+  else
+  begin
+    { when FormResize is called before FormShow }
+    if (Width < 1200) or (Height < 600) then
+      ChartImage.Visible := False;
+    if (Width < 1500) or (Height < 655) then
+      ControllerImage.Visible := False;
+    if (Width < 1500) or (Height < 875) then
+      SalingImage.Visible := False;
+  end;
+
+  Main.FederText.CheckState;
+  UpdateSpeedButtonDown;
 end;
 
 procedure TFormMain.ToggleFontColor;
@@ -795,6 +862,29 @@ begin
       UpdateReport;
     end;
 
+    faChartRect..faChartReset: ChartGraph.HA(fa);
+
+    faToggleLineColor: LineColorBtnClick(nil);
+
+    faToggleSegmentF..faToggleSegmentA: HandleSegment(fa);
+
+    faRggZoomIn: RotaForm.ZoomInBtnClick(nil);
+    faRggZoomOut: RotaForm.ZoomOutBtnClick(nil);
+
+    faToggleUseDisplayList:
+    begin
+      RotaForm.UseDisplayListBtnClick(nil);
+      UpdateSpeedButtonEnabled;
+    end;
+
+    faToggleShowLegend: RotaForm.LegendBtnClick(nil);
+    faToggleUseQuickSort: RotaForm.UseQuickSortBtnClick(nil);
+    faRggBogen: RotaForm.BogenBtnClick(nil);
+    faToggleChartGraph: ChartImageBtnClick(nil);
+    faToggleSalingGraph: SalingImageBtnClick(nil);
+    faToggleControllerGraph: ControllerImageBtnClick(nil);
+    faToggleMatrixText: RotaForm.MatrixItemClick(nil);
+
     faMemoryBtn: MemoryBtnClick(nil);
     faMemoryRecallBtn: MemoryRecallBtnClick(nil);
 
@@ -841,8 +931,8 @@ begin
     'a': fa := faSalingA;
     'A': fa := faFixpointA0;
 
-    'b': fa := faFixpointB;
-    'B': fa := faFixpointB0;
+    'b': fa := faFixpointB; // fa := faCycleBitmapP;
+    'B': fa := faFixpointB0; // fa := faCycleBitmapM;
 
     'c': fa := faCycleColorSchemeP;
     'C': fa := faCycleColorSchemeM;
@@ -859,8 +949,8 @@ begin
     'g': fa := faWheelDown;
     'G': ;
 
-    'h': fa := faMemeToggleHelp;
-    'H': fa := faSalingH;
+    'h': fa := faMemeToggleHelp; // fa := faSalingH;
+    'H': fa := faSalingH; // fa := faHull;
 
     'i': fa := faToggleLineColor;
     'I': fa := faToggleUseDisplayList;
@@ -877,8 +967,8 @@ begin
     'm': fa := faMemoryBtn;
     'M': fa := faCopyAndPaste;
 
-    'n': ;
-    'N': ;
+    'n': ; // fa := faRandomBlack;
+    'N': ; // fa := faRandomWhite;
 
     'r': fa := faMemeToggleReport;
     'R': fa := faReadTrimmFile;
@@ -891,8 +981,8 @@ begin
 
     's': fa := faMemeGotoSquare;
 
-    't': fa := faToggleFontColor;
-    'T': ;
+    't': fa := faToggleFontColor; // fa := faParamT1
+    'T': ; // fa := faParamT2;
 
     'u': fa := faToggleDataText;
     'U': fa := faToggleDiffText;
@@ -900,7 +990,7 @@ begin
     'v': fa := faVorstag;
     'w': fa := faWante;
 
-    'z': ;
+    'z': ; // fa := faResetZoom;
     'Z': fa := faUpdateTrimm0;
 
     '0': fa := faTrimm0;
@@ -914,16 +1004,16 @@ begin
     '8': fa := faLogo;
     '9': ;
 
-    '!': ;
-    '"': ;
+    '!': ; //fa := faParamT1;
+    '"': ; //fa := faParamT2;
 
-    '=': ;
-    '?': ;
+    '=': ; //fa := faActionPageE;
+    '?': ; //fa := faActionPageX;
 
     '+': fa := faActionPageP;
     '*': fa := faActionPageM;
 
-    '#': ;
+    '#': ; //fa := faBitmapEscape;
 
     else fa := faNoop;
 
@@ -1165,7 +1255,7 @@ begin
   TrimmText := TText.Create(Self);
   SetupText(TrimmText);
 
-  SpeedPanel := TActionSpeedBarRG01.Create(Self);
+  SpeedPanel := TActionSpeedBarRG02.Create(Self);
   SpeedPanel.Parent := Self;
   SpeedPanel.ShowHint := True;
   SpeedPanel.Opacity := OpacityValue;
@@ -1173,15 +1263,6 @@ begin
   ParamListbox := TListbox.Create(Self);
   ParamListbox.Parent := Self;
   ParamListbox.Opacity := OpacityValue;
-
-  TrimmCombo := TComboBox.Create(Self);
-  TrimmCombo.Parent := Self;
-
-//  ParamCombo := TComboBox.Create(Self);
-//  ParamCombo.Parent := Self;
-
-//  ReportCombo := TComboBox.Create(Self);
-//  ReportCombo.Parent := Self;
 
   ReportListbox := TListbox.Create(Self);
   ReportListbox.Parent := Self;
@@ -1216,22 +1297,10 @@ begin
   TrimmText.Width := ListboxWidth;
   TrimmText.Height := 150;
 
-  TrimmCombo.Position.X := TrimmText.Position.X;
-  TrimmCombo.Position.Y := TrimmText.Position.Y + TrimmText.Height + Margin;
-  TrimmCombo.Width := ListboxWidth;
-
-//  ParamCombo.Position.X := TrimmCombo.Position.X;
-//  ParamCombo.Position.Y := TrimmCombo.Position.Y + TrimmCombo.Height + Margin;
-//  ParamCombo.Width := TrimmMemo.Width;
-
-//  ReportCombo.Position.X := ParamCombo.Position.X;
-//  ReportCombo.Position.Y := ParamCombo.Position.Y + ParamCombo.Height + Margin;
-//  ReportCombo.Width := TrimmMemo.Width;
-
   ParamListbox.Position.X := TrimmText.Position.X;
-  ParamListbox.Position.Y := TrimmCombo.Position.Y + TrimmCombo.Height + Margin;
+  ParamListbox.Position.Y := TrimmText.Position.Y + TrimmText.Height + Margin;
   ParamListbox.Width := ListboxWidth;
-  ParamListbox.Height := 240;
+  ParamListbox.Height := 270;
 //  ParamListbox.Height := ClientHeight - ParamListbox.Position.Y - Margin - Raster;
 //  ParamListbox.Anchors := ParamListbox.Anchors + [TAnchorKind.akBottom];
 
@@ -1260,6 +1329,193 @@ begin
 
   TextPositionX := ReportText.Position.X;
   TextPositionY := ReportText.Position.Y;
+end;
+
+procedure TFormMain.LineColorBtnClick(Sender: TObject);
+var
+  b: Boolean;
+begin
+  b := not DL.WantLineColors;
+  DL.WantLineColors := b;
+  UpdateSpeedButtonDown;
+  RotaForm.Draw;
+end;
+
+procedure TFormMain.HandleSegment(fa: Integer);
+var
+  rg: TRaumGraph;
+begin
+  rg := RotaForm.RaumGraph;
+
+  case fa of
+    faToggleSegmentF: rg.WantFixpunkt := not rg.WantFixPunkt;
+    faToggleSegmentM: rg.WantMast:= not rg.WantMast;
+    faToggleSegmentW: rg.WantWante:= not rg.WantWante;
+    faToggleSegmentV: rg.WantVorstag := not rg.WantVorstag;
+    faToggleSegmentS: rg.WantSaling := not rg.WantSaling;
+    faToggleSegmentR: rg.WantRumpf := not rg.WantRumpf;
+    faToggleSegmentC: rg.WantController := not rg.WantController;
+    faToggleSegmentA: rg.WantAchsen := not rg.WantAchsen;
+  end;
+
+  RotaForm.Draw;
+end;
+
+procedure TFormMain.ChartImageBtnClick(Sender: TObject);
+begin
+  ChartImage.Visible := not ChartImage.Visible;
+end;
+
+procedure TFormMain.SalingImageBtnClick(Sender: TObject);
+begin
+  SalingImage.Visible := not SalingImage.Visible;
+end;
+
+procedure TFormMain.ControllerImageBtnClick(Sender: TObject);
+begin
+  ControllerImage.Visible := not ControllerImage.Visible;
+  if ControllerImage.Visible then
+    UpdateControllerGraph;
+end;
+
+procedure TFormMain.SeiteBtnClick(Sender: TObject);
+begin
+  RotaForm.ViewPoint := vpSeite;
+end;
+
+procedure TFormMain.AchternBtnClick(Sender: TObject);
+begin
+  RotaForm.ViewPoint := vpAchtern;
+end;
+
+procedure TFormMain.TopBtnClick(Sender: TObject);
+begin
+  RotaForm.ViewPoint := vpTop;
+end;
+
+procedure TFormMain.NullBtnClick(Sender: TObject);
+begin
+  RotaForm.ViewPoint := vp3D;
+end;
+
+procedure TFormMain.InitSalingGraph;
+begin
+  SalingImage := TImage.Create(Self);
+  SalingImage.Parent := Self;
+  SalingImage.HitTest := False;
+
+  SalingGraph := TSalingGraph.Create;
+  SalingGraph.BackgroundColor := claAntiquewhite;
+  SalingGraph.ImageOpacity := 0.2;
+  SalingGraph.SalingA := 850;
+  SalingGraph.SalingH := 120;
+  SalingGraph.SalingL := 479;
+  SalingGraph.SalingHOffset := 37;
+  SalingGraph.Image := SalingImage;
+  UpdateSalingGraph;
+end;
+
+procedure TFormMain.UpdateSalingGraph;
+begin
+  if IsUp and SalingImage.Visible then
+  begin
+    SalingGraph.SalingA := Round(Main.RggMain.ParamValue[fpSalingA]);
+    SalingGraph.SalingH := Round(Main.RggMain.ParamValue[fpSalingH]);
+    SalingGraph.SalingL := Round(Main.RggMain.ParamValue[fpSalingL]);
+    SalingGraph.Draw(TFigure.dtSalingDetail);
+  end;
+end;
+
+procedure TFormMain.InitControllerGraph;
+begin
+  ControllerImage := TImage.Create(Self);
+  ControllerImage.Parent := Self;
+  ControllerImage.HitTest := False;
+  ControllerImage.Visible := False;
+
+  ControllerGraph := TSalingGraph.Create;
+  ControllerGraph.BackgroundColor := MainVar.ColorScheme.claBackground;
+  ControllerGraph.ImageOpacity := 0.2;
+
+  ControllerGraph.ControllerTyp := TControllerTyp.ctDruck;
+  ControllerGraph.EdgePos := 25;
+  ControllerGraph.ControllerPos := 80;
+  ControllerGraph.ParamXE := -20;
+  ControllerGraph.ParamXE0 := 110;
+
+  ControllerGraph.Image := ControllerImage;
+  UpdateControllerGraph;
+end;
+
+procedure TFormMain.UpdateControllerGraph;
+//var
+//  TrimmRec: TTrimmControls;
+begin
+  if IsUp and ControllerImage.Visible then
+  begin
+//    TrimmRec := Rigg.Glieder;
+
+    ControllerGraph.ControllerTyp := Rigg.ControllerTyp;
+//    ControllerGraph.ControllerPos := TrimmRec.Controller;
+    ControllerGraph.ControllerPos := Round(Main.RggMain.ParamValue[fpController]);
+    ControllerGraph.ParamXE := Round(Rigg.MastPositionE);
+    ControllerGraph.ParamXE0 := Round(Rigg.iP[ooE0, x] - Rigg.iP[ooD0, x]);
+    ControllerGraph.EdgePos := Round(Rigg.GSB.Find(fpController).Min);
+
+    ControllerGraph.Draw(TFigure.dtController);
+  end;
+end;
+
+procedure TFormMain.InitChartGraph;
+begin
+  ChartImage := TImage.Create(Self);
+  ChartImage.Parent := Self;
+  ChartImage.HitTest := False;
+
+  ChartGraph := TChartGraph.Create;
+  ChartGraph.Image := ChartImage;
+  ChartGraph.SuperInit;
+  ChartGraph.WantRectangles := True;
+
+  UpdateChartGraph;
+end;
+
+procedure TFormMain.UpdateChartGraph;
+begin
+  if IsUp and ChartImage.Visible then
+  begin
+    ChartGraph.SuperCalc;
+  end;
+end;
+
+procedure TFormMain.LayoutImages;
+var
+  PosX: single;
+  PosY: single;
+begin
+  if not ComponentsCreated then
+    Exit;
+
+  PosX := ClientWidth - Raster - Margin - ControllerImage.Width;
+  PosY := SpeedPanel.Position.Y + SpeedPanel.Height + Margin;
+  PosY := PosY + ControllerImage.Height;
+
+  ControllerImage.Position.X := PosX;
+  ControllerImage.Position.Y := PosY;
+  ControllerImage.Anchors := [TAnchorKind.akTop, TAnchorKind.akRight];
+
+  SalingImage.Position.X := PosX;
+  SalingImage.Position.Y := PosY + ControllerImage.Height + Margin;
+  SalingImage.Anchors := [TAnchorKind.akTop, TAnchorKind.akRight];
+
+  ChartImage.Position.X := Image.Position.X + 700;
+  ChartImage.Position.Y := Image.Position.Y + 0;
+end;
+
+procedure TFormMain.SetViewPoint(const Value: TViewPoint);
+begin
+  FViewPoint := Value;
+  RotaForm.ViewPoint := Value;
 end;
 
 procedure TFormMain.ReportListboxChange(Sender: TObject);
@@ -1321,8 +1577,8 @@ begin
   LI.Clear;
 
   { Add a subset of available Params }
-//  Add(fpController);
-//  Add(fpWinkel);
+  Add(fpController);
+  Add(fpWinkel);
   Add(fpVorstag);
   Add(fpWante);
   Add(fpWoben);
@@ -1410,7 +1666,7 @@ begin
     Main.FederText.CheckState;
     if ReportText.Visible then
     begin
-      ShowTrimmData;
+    ShowTrimmData;
       ReportText.Text := RL.Text;
     end;
   end;
@@ -1469,11 +1725,11 @@ var
   T: TText;
 begin
   cr := Sender as TListboxItem;
-    T := cr.FindStyleResource('text') as TText;
-    if Assigned(T) then
-    begin
+  T := cr.FindStyleResource('text') as TText;
+  if Assigned(T) then
+  begin
 //    T.Font.Family := 'Consolas';
-      T.Font.Size := 14;
+    T.Font.Size := 14;
     T.TextSettings.FontColor := cr.Tag;
   end;
 end;
@@ -1507,13 +1763,13 @@ end;
 
 procedure TFormMain.MultiBtnClick(Sender: TObject);
 begin
-//  RotaForm.WantOverlayedRiggs := not RotaForm.WantOverlayedRiggs;
-//  Main.RggMain.Draw;
+  RotaForm.WantOverlayedRiggs := not RotaForm.WantOverlayedRiggs;
+  Main.RggMain.Draw;
 end;
 
 procedure TFormMain.KoppelBtnClick(Sender: TObject);
 begin
-//  RotaForm.KoppelBtnClick(Sender);
+  RotaForm.KoppelBtnClick(Sender);
 end;
 
 function TFormMain.GetChecked(fa: TFederAction): Boolean;
@@ -1527,15 +1783,15 @@ begin
     faToggleAllProps: result := AllProps;
     faToggleAllTags: result := ReportManager.XmlAllTags;
 
-//    faMemeToggleHelp: result := HelpText.Visible;
-//    faMemeToggleReport: result := ReportText.Visible;
+    faMemeToggleHelp: result := HelpText.Visible;
+    faMemeToggleReport: result := ReportText.Visible;
     faButtonFrameReport: result := WantButtonFrameReport;
-//    faChartRect..faChartReset: result := ChartGraph.GetChecked(fa);
+    faChartRect..faChartReset: result := ChartGraph.GetChecked(fa);
     faReportNone..faReportReadme: result := ReportManager.GetChecked(fa);
-//    faToggleSegmentF..faToggleSegmentA: result := RotaForm.RaumGraph.GetChecked(fa);
+    faToggleSegmentF..faToggleSegmentA: result := RotaForm.RaumGraph.GetChecked(fa);
 
-//    faToggleLineColor: result := DL.WantLineColors;
-//    faToggleShowLegend: result := RotaForm.LegendItemChecked;
+    faToggleLineColor: result := DL.WantLineColors;
+    faToggleShowLegend: result := RotaForm.LegendItemChecked;
 
 //    faViewpointS: result := RotaForm.ViewPoint = vpSeite;
 //    faViewpointA: result := RotaForm.ViewPoint = vpAchtern;
@@ -1545,21 +1801,21 @@ begin
 //    ZoomInBtn: result := False;
 //    ZoomOutBtn: result := False;
 
-//    faToggleUseDisplayList: result := RotaForm.UseDisplayList;
-//    faToggleUseQuickSort: result := RotaForm.RaumGraph.DL.UseQuickSort;
-//    faRggBogen: result := RotaForm.Bogen;
+    faToggleUseDisplayList: result := RotaForm.UseDisplayList;
+    faToggleUseQuickSort: result := RotaForm.RaumGraph.DL.UseQuickSort;
+    faRggBogen: result := RotaForm.Bogen;
 
     faSofortBtn: result := Main.RggMain.SofortBerechnen;
     faGrauBtn: result := Main.RggMain.BtnGrauDown;
     faBlauBtn: result := Main.RggMain.BtnBlauDown;
     faMemoryBtn: result := False;
-//    faMultiBtn: result := RotaForm.WantOverlayedRiggs;
-//    faKoppelBtn: result := RotaForm.RaumGraph.Koppel;
+    faMultiBtn: result := RotaForm.WantOverlayedRiggs;
+    faKoppelBtn: result := RotaForm.RaumGraph.Koppel;
 
-//    faToggleChartGraph: result := ChartImage.IsVisible;
-//    faToggleSalingGraph: result := SalingImage.IsVisible;
-//    faToggleControllerGraph: result := ControllerImage.IsVisible;
-//    faToggleMatrixText: result := RotaForm.MatrixItemChecked;
+    faToggleChartGraph: result := ChartImage.IsVisible;
+    faToggleSalingGraph: result := SalingImage.IsVisible;
+    faToggleControllerGraph: result := ControllerImage.IsVisible;
+    faToggleMatrixText: result := RotaForm.MatrixItemChecked;
   end;
 end;
 

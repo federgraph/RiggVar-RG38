@@ -72,7 +72,7 @@ const
   claSample = claCyan;
   claOption = claBeige;
 
-  PageCountRG = 6;
+  PageCountRG = 9;
 
 constructor TActionMapTablet.Create;
 begin

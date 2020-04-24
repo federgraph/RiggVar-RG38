@@ -428,7 +428,7 @@ begin
     faMemeToggleHelp: result := F.HelpText.Visible;
     faMemeToggleReport: result := F.ReportText.Visible;
     faButtonFrameReport: result := F.WantButtonFrameReport;
-//    faChartRect..faChartReset: result := F.ChartGraph.GetChecked(fa);
+    faChartRect..faChartReset: result := F.ChartGraph.GetChecked(fa);
     faReportNone..faReportReadme: result := F.ReportManager.GetChecked(fa);
 
     faToggleDataText: result := F.ShowDataText;
@@ -447,7 +447,7 @@ end;
 
 procedure TMain0.DoTouchbarTop(Delta: single);
 begin
-//  FormMain.RotaForm.RotateZ(Delta * 0.3);
+  FormMain.RotaForm.RotateZ(Delta * 0.3);
 end;
 
 procedure TMain0.DoTouchbarRight(Delta: single);
@@ -457,7 +457,7 @@ end;
 
 procedure TMain0.DoTouchbarBottom(Delta: single);
 begin
-//  FormMain.RotaForm.Zoom(Delta);
+  FormMain.RotaForm.Zoom(Delta);
 end;
 
 procedure TMain0.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer);

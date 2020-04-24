@@ -122,7 +122,7 @@ type
 
     Demo: Boolean;
 
-    StrokeRigg: IStrokeRigg;
+    StrokeRigg: IStrokeRigg; // injected, not owned
 
     RiggLED: Boolean;
     StatusText: string;
@@ -225,7 +225,7 @@ end;
 
 destructor TRggMain.Destroy;
 begin
-  StrokeRigg := nil;
+//  StrokeRigg := nil; // not owned
   Rigg.Free;
   inherited;
 end;
@@ -236,7 +236,7 @@ begin
     Exit;
 
   RggTrackbar.OnChange := TrackBarChange;
-  StrokeRigg := TDummyStrokeRigg.Create(Rigg);
+//  StrokeRigg := TStrokeRigg.Create(Rigg);
 
   InitFactArray;
 
@@ -360,7 +360,7 @@ begin
   begin
     FHullVisible := Value;
     StrokeRigg.HullVisible := Value;
-  Draw;
+    Draw;
   end;
 end;
 
@@ -419,10 +419,10 @@ begin
     end;
 
     fpD0X:
-      begin
-        Rigg.Reset;
-        UpdateGetriebe;
-      end;
+    begin
+      Rigg.Reset;
+      UpdateGetriebe;
+    end;
   end;
 end;
 
@@ -531,16 +531,16 @@ begin
   sb := FactArray.Find(idx);
   if Assigned(sb) then
   begin
-  if Value = CurrentValue then
-    //do nothing
-  else if Value >= sb.Max then
-    sb.Ist := sb.Max
-  else if Value <= sb.Min then
-    sb.Ist := sb.Min
-  else
-    sb.Ist := Value;
+    if Value = CurrentValue then
+      //do nothing
+    else if Value >= sb.Max then
+      sb.Ist := sb.Max
+    else if Value <= sb.Min then
+      sb.Ist := sb.Min
+    else
+      sb.Ist := Value;
 
-  UpdateGraph;
+    UpdateGraph;
   end;
 end;
 
@@ -634,7 +634,7 @@ begin
   end;
 
   Rigg.ManipulatorMode := (Value = fpWinkel);
-   FParam := Value;
+  FParam := Value;
   CurrentValue := FactArray.Find(FParam).Ist;
   SetupTrackBarForRgg;
   UpdateGraph;
@@ -1094,7 +1094,7 @@ begin
     faSalingTypOhneStarr: Rigg.SalingTyp := stOhne_2;
   end;
   if StrokeRigg <> nil then
-  StrokeRigg.SalingTyp := Rigg.SalingTyp;
+    StrokeRigg.SalingTyp := Rigg.SalingTyp;
   SetParam(FParam);
 end;
 
@@ -1270,22 +1270,22 @@ procedure TRggMain0.DoSmallWheel(Delta: single);
 var
   f: single;
 begin
-    f := GetSmallStep;
-    if Delta > 0 then
-      DoWheel(f)
-    else
-      DoWheel(-f);
+  f := GetSmallStep;
+  if Delta > 0 then
+    DoWheel(f)
+  else
+    DoWheel(-f);
 end;
 
 procedure TRggMain0.DoBigWheel(Delta: single);
 var
   f: single;
 begin
-    f := GetBigStep;
-    if Delta > 0 then
-      DoWheel(f)
-    else
-      DoWheel(-f);
+  f := GetBigStep;
+  if Delta > 0 then
+    DoWheel(f)
+  else
+    DoWheel(-f);
 end;
 
 procedure TRggMain0.DoWheel(Delta: single);
@@ -1502,7 +1502,7 @@ begin
   RiggLED := False;
   StatusText := '';
 
-   Rigg.UpdateGetriebe;
+  Rigg.UpdateGetriebe;
 
   temp := (SofortBerechnen and Rigg.GetriebeOK and Rigg.MastOK);
 
