@@ -17,7 +17,6 @@ type
     ReadTrimmFileBtn: TSpeedButton;
     SaveTrimmFileBtn: TSpeedButton;
     CopyTrimmFileBtn: TSpeedButton;
-
     CopyTrimmItemBtn: TSpeedButton;
     PasteTrimmItemBtn: TSpeedButton;
     CopyAndPasteBtn: TSpeedButton;
@@ -74,20 +73,11 @@ procedure TActionSpeedBarRG01.InitSpeedButtons;
 var
   sb: TSpeedBtn;
 begin
-  { SpeedPanel Update Buttons }
+  { Special Buttons }
 
-  BtnColor := SpeedColorScheme.claProp;
   BtnColorValue := clvData;
 
-  sb := AddSpeedBtn('ColorModeBtn', BtnGroupSpace);
-  ColorModeBtn := sb;
-  sb.Text := 'CM';
-  sb.Hint := 'Toggle ColorMode';
-  sb.OnClick := ToggleColorModeBtnClick;
-  sb.Tag := faNoop;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('FontSizeBtn');
+  sb := AddSpeedBtn('FontSizeBtn', BtnGroupSpace);
   FontSizeBtn := sb;
   sb.Text := 'FS';
   sb.Hint := 'Toggle FontSize';
@@ -95,10 +85,16 @@ begin
   sb.Tag := faNoop;
   InitSpeedButton(sb);
 
+  sb := AddSpeedBtn('ColorModeBtn');
+  ColorModeBtn := sb;
+  sb.Text := 'CM';
+  sb.Hint := 'Toggle ColorMode';
+  sb.OnClick := ToggleColorModeBtnClick;
+  sb.Tag := faNoop;
+  InitSpeedButton(sb);
+
   { Check Box Buttons }
 
-  BtnColor := claCrimson;
-  BtnColor := SpeedColorScheme.claOption;
   BtnColorValue := clvOption;
 
   sb := AddSpeedBtn('SandboxedBtn', BtnGroupSpace);
@@ -111,8 +107,6 @@ begin
   sb.Tag := faToggleSandboxed;
   InitSpeedButton(sb);
 
-  BtnColor := claGoldenrod;
-  BtnColor := SpeedColorScheme.claProp;
   BtnColorValue := clvProp;
 
   sb := AddSpeedBtn('AllPropsBtn');
@@ -135,8 +129,6 @@ begin
 
   { Data Buttons }
 
-  BtnColor := claChartreuse;
-  BtnColor := SpeedColorScheme.claData;
   BtnColorValue := clvData;
 
   sb := AddSpeedBtn('MT0Btn', BtnGroupSpace);
@@ -211,8 +203,6 @@ begin
 
   { Param Value Buttons }
 
-  BtnColor := claCornflowerBlue;
-  BtnColor := SpeedColorScheme.claWheel;
   BtnColorValue := clvWheel;
 
   sb := AddSpeedBtn('M10Btn', BtnGroupSpace);
@@ -305,6 +295,7 @@ end;
 
 procedure TActionSpeedBarRG01.AllTagsBtnClick(Sender: TObject);
 begin
+  { All XML Tags or not }
   Main.ActionHandler.Execute(faToggleAllTags);
 end;
 

@@ -163,7 +163,7 @@ begin
 
   InitTrimmData;
 
-  RggMain := rggm; //TRggMain.Create;
+  RggMain := rggm;
 
   { this should be done after or when calling RggMain.Init }
 //  RggMain.InitLogo; // sets WantLogoData to true
@@ -193,37 +193,31 @@ end;
 
 procedure TMain1.SetShowTrimmText(const Value: Boolean);
 begin
-//  FederText.TrimmVisible := Value;
   FormMain.ShowTrimmText := Value;
 end;
 
 procedure TMain1.SetShowDiffText(const Value: Boolean);
 begin
-//  FederText.DiffVisible := Value;
   FormMain.ShowDiffText := Value;
 end;
 
 procedure TMain1.SetShowDataText(const Value: Boolean);
 begin
-//  FederText.DataVisible := Value;
   FormMain.ShowDataText := Value;
 end;
 
 function TMain1.GetShowTrimmText: Boolean;
 begin
-//  result := FederText.TrimmVisible;
   result := FormMain.ShowTrimmText;
 end;
 
 function TMain1.GetShowDiffText: Boolean;
 begin
-//  result := FederText.DiffVisible;
   result := FormMain.ShowDiffText;
 end;
 
 function TMain1.GetShowDataText: Boolean;
 begin
-//  result := FederText.DataVisible;
   result := FormMain.ShowDataText;
 end;
 
@@ -315,7 +309,6 @@ begin
   { copy }
   fd := RggData;
   RggMain.SaveTrimm(fd);
-  //fd.WriteJSon(FL);
   fd.WantAll := True;
   fd.SaveTrimmItem(FL);
   s := FL.Text;
@@ -329,8 +322,8 @@ procedure TMain1.PasteTrimmItem;
 begin
   Logger.Info('in PasteTrimmItem');
   PasteTrimm;
-  // note: there is just one paste button (pti), named after the item,
-  // but you can paste a Trimm-Item OR a Trimm-File
+  { Note: There is just one paste button (pti), named after the item, }
+  { but you can paste a Trimm-Item OR a Trimm-File. }
 end;
 
 procedure TMain1.PasteTrimm;
@@ -389,7 +382,6 @@ begin
       if IsTrimmItem then
       begin
         RggData.LoadTrimmItem(ML);
-        //RggMain.LoadTrimm(RggData);
         CurrentTrimm.Assign(RggData);
         Trimm := FTrimm;
         Logger.Info(Format('  Trimm %d assigned', [Trimm]));
@@ -510,21 +502,21 @@ begin
   Logger.Info('in ReadTrimmFile');
   fp := GetTrimmFilePath;
 
-// By default you try and load the 'manually edited' Trimm-File.txt;
-// this should make sense on the Desktop,
-// or on any device where you have access to the Documents folder.
+{ By default you try and load the 'manually edited' Trimm-File.txt; }
+{ this should make sense on the Desktop, }
+{ or on any device where you have access to the Documents folder. }
   fn := TrimmFileName;
 
-// Maybe you want to have the same behaviour on Windows and iOS
-// for debugging purpose only...
+{ Maybe you want to have the same behaviour on Windows and iOS }
+{ for debugging purpose only... }
 {$ifdef MSWINDOWS}
 //  fn := TrimmFileNameAuto;
 {$endif}
 
-// On Android and iOS the Trimm-File in the known location cannot be edited,
-// so it does not make sense to read a 'manually edited' Trimm-File.txt,
-// but you can manualy read a Trimm-File-Auto.txt if already saved,
-// e.g. by clicking on a button.
+{ On Android and iOS the Trimm-File in the known location cannot be edited, }
+{ so it does not make sense to read a 'manually edited' Trimm-File.txt, }
+{ but you can manualy read a Trimm-File-Auto.txt if already saved, }
+{ e.g. by clicking on a button. }
 {$ifdef IOS}
   fn := TrimmFileNameAuto;
 {$endif}
@@ -853,10 +845,6 @@ begin
 
     faHull: result := RggMain.HullVisible;
     faDemo: result := RggMain.Demo;
-
-//    faToggleDataText: result := Main.FederText.DataVisible;
-//    faToggleDiffText: result := Main.FederText.DiffVisible;
-//    faToggleTrimmText: result := Main.FederText.TrimmVisible;
 
     faSofortBtn: result := RggMain.SofortBerechnen;
     faGrauBtn: result := RggMain.BtnGrauDown;

@@ -127,7 +127,7 @@ begin
 
   claLog := claOrange;
   claReport := claOrange;
-  claOption := claOrangeRed; // claYellow
+  claOption := claOrangeRed;
   claProp := claGoldenrod;
   claData := claLime;
   claWheel := claAqua;

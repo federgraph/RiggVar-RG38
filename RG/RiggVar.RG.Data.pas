@@ -41,9 +41,9 @@ type
 
     Version: Integer;
     FModified: Boolean;
-    procedure Check(ML: TStrings);
-    function IsCode(ML: TStrings): Boolean;
-    procedure LoadCode(ML: TStrings);
+    procedure Check(AML: TStrings);
+    function IsCode(AML: TStrings): Boolean;
+    procedure LoadCode(AML: TStrings);
     procedure ProcessH;
     procedure ProcessW;
     procedure DoSave(fs: string; AML: TStrings);
@@ -170,7 +170,7 @@ type
     procedure ReadTestFile(FL: TStrings);
 
     procedure SaveTrimmFile(AML: TStrings);
-    procedure ReadTrimmFile(ML: TStrings);
+    procedure ReadTrimmFile(AML: TStrings);
 
     procedure SaveTrimmItem(AML: TStrings);
     procedure LoadTrimmItem(AML: TStrings);
@@ -290,8 +290,9 @@ end;
 
 procedure TRggData.Reset1;
 begin
-  Faktor := 1;
 //  Name := '420';
+
+  Faktor := 1;
   OffsetX := 0;
   OffsetZ := 0;
 
@@ -439,15 +440,15 @@ begin
 //  SB.WO.Max = 2070;
 end;
 
-function TRggData.IsCode(ML: TStrings): Boolean;
+function TRggData.IsCode(AML: TStrings): Boolean;
 var
   i: Integer;
 begin
   result := false;
-  if ML.Count > 0 then
+  if AML.Count > 0 then
   begin
-    for i := 0 to ML.Count-1 do
-      if Pos(':=', ML[i]) > 0 then
+    for i := 0 to AML.Count-1 do
+      if Pos(':=', AML[i]) > 0 then
       begin
         result := True;
         break;
@@ -455,14 +456,14 @@ begin
   end
 end;
 
-procedure TRggData.LoadCode(ML: TStrings);
+procedure TRggData.LoadCode(AML: TStrings);
 var
   i: Integer;
   s: string;
 begin
-  for i := 0 to ML.Count-1 do
+  for i := 0 to AML.Count-1 do
   begin
-    s := Trim(ML[i]);
+    s := Trim(AML[i]);
     if s = '' then
       Continue;
     if Pos('with', s) > 0 then
@@ -473,30 +474,30 @@ begin
       Continue;
     s := StringReplace(s, ':=', '=', []);
     s := StringReplace(s, ';', '', []);
-    ML[i] := s;
+    AML[i] := s;
   end;
-  if ML.Count > 0 then
+  if AML.Count > 0 then
   begin
     Version := 1;
-    Check(ML);
-    Load(ML);
+    Check(AML);
+    Load(AML);
   end;
 end;
 
-procedure TRggData.Check(ML: TStrings);
+procedure TRggData.Check(AML: TStrings);
 var
   s: string;
   temp: string;
   i, l: Integer;
 begin
-  for l := 0 to ML.Count-1 do
+  for l := 0 to AML.Count-1 do
   begin
-    s := ML[l];
+    s := AML[l];
     i := Pos('=', s);
     if i > 0 then
     begin
       temp := Trim(Copy(s, 1, i-1)) + '=' + Trim(Copy(s, i+1, Length(s)));
-      ML[l] := temp;
+      AML[l] := temp;
     end
     else
       temp := StringReplace(Trim(s), ' ', '_', [rfReplaceAll]);
@@ -1039,7 +1040,7 @@ begin
 
 end;
 
-procedure TRggData.ReadTrimmFile(ML: TStrings);
+procedure TRggData.ReadTrimmFile(AML: TStrings);
 var
   c: Integer;
   i, j: Integer;
@@ -1050,9 +1051,9 @@ begin
   SL := TStringList.Create;
   try
     c := 0;
-    for i := 0 to ML.Count-1 do
+    for i := 0 to AML.Count-1 do
     begin
-      s := ML[i];
+      s := AML[i];
       if s = '' then
         Continue;
 
