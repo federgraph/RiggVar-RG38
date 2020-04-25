@@ -42,6 +42,11 @@ type
     claEquationText: TAlphaColor;
     claTouchbarText: TAlphaColor;
 
+    IsDark: Boolean;
+
+    Dark: Integer;
+    Light: Integer;
+
     constructor Create(cs: Integer);
 
     procedure BlackText;
@@ -99,6 +104,8 @@ end;
 
 constructor TColorScheme.Create(cs: Integer);
 begin
+  Dark := 5;
+  Light := 2;
   WantBlackText := True;
   claTouchbarText := claBlack;
   SchemeDefault := cs;
@@ -112,9 +119,10 @@ begin
   case cs of
     1:
     begin
+      IsDark := True;
       if WantBlackText then
       begin
-        claBackground := claSlateblue; //claWhite;
+        claBackground := claSlateblue;
         claLabelText := claBlack;
         claSampleText := claBlack;
         claToolBtnFill := claGray;
@@ -139,19 +147,21 @@ begin
     end;
     2:
     begin
-      claBackground := StringToAlphaColor('#FFBBBBBB');
+      IsDark := False;
+      claBackground := StringToAlphaColor('#FFF9F9F9');
       claLabelText := claWhite;
       claSampleText := claWhite;
       claToolBtnFill := claGray;
       claTouchBtnFill := claGray;
-      claCornerScrollbar := claGray;
+      claCornerScrollbar := claLavender;
       claCornerBtnText:= claBlue;
       claEquationFill := claNull;
       claEquationText := claBlack;
     end;
     3:
     begin
-      claBackground := claCornflowerblue; //claPurple;
+      IsDark := True;
+      claBackground := claCornflowerblue;
       claLabelText := claWhite;
       claSampleText := claWhite;
       claToolBtnFill := claWhite;
@@ -163,6 +173,7 @@ begin
     end;
     4:
     begin
+      IsDark := True;
       claBackground := StringToAlphaColor('#FF372E69');
       claLabelText := claWhite;
       claSampleText := claWhite;
@@ -175,6 +186,7 @@ begin
     end;
     5:
     begin
+      IsDark := True;
       claBackground := StringToAlphaColor('#FF333333');
       claLabelText := claWhite;
       claSampleText := claWhite;
@@ -187,6 +199,7 @@ begin
     end;
     6:
     begin
+      IsDark := True;
       claBackground := claBlack;
       claLabelText := claWhite;
       claSampleText := claWhite;
@@ -199,6 +212,7 @@ begin
     end;
     7:
     begin
+      IsDark := True;
       claBackground := claPurple; //claNull;
       claLabelText := claBlack;
       claSampleText := claBlack;

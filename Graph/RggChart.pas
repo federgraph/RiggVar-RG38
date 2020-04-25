@@ -203,7 +203,7 @@ type
     WantTextRect: Boolean;
     WantLegend: Boolean;
 
-    procedure HA(fa: Integer);
+    procedure HandleAction(fa: Integer);
     function GetChecked(fa: TFederAction): Boolean;
   public
     constructor Create;
@@ -1873,7 +1873,7 @@ begin
   end;
 end;
 
-procedure TChartForm.HA(fa: Integer);
+procedure TChartForm.HandleAction(fa: Integer);
 begin
   case fa of
     faChartRect:

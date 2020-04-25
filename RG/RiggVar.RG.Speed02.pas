@@ -14,6 +14,8 @@ uses
 type
   TActionSpeedBarRG02 = class(TActionSpeedBar)
   private
+    ColorModeBtn: TSpeedButton;
+    FontSizeBtn: TSpeedButton;
     UseDisplayListBtn: TSpeedButton;
     UseQuickSortBtn: TSpeedButton;
     LegendBtn: TSpeedButton;
@@ -51,10 +53,7 @@ type
     ChartImageBtn: TSpeedButton;
     SalingImageBtn: TSpeedButton;
     ControllerImageBtn: TSpeedButton;
-
-    ColorModeBtn: TSpeedButton;
-    FontSizeBtn: TSpeedButton;
-
+  private
     procedure ToggleColorModeBtnClick(Sender: TObject);
     procedure ToggleFontSizeBtnClick(Sender: TObject);
   protected
@@ -197,19 +196,9 @@ procedure TActionSpeedBarRG02.InitSpeedButtons;
 var
   sb: TSpeedBtn;
 begin
-  { SpeedPanel Update Buttons }
+  { Special Buttons }
 
-  BtnColor := claOrange;
-  BtnColor := SpeedColorScheme.claScheme;
   BtnColorValue := clvScheme;
-
-  sb := AddSpeedBtn('ColorModeBtn', BtnGroupSpace);
-  ColorModeBtn := sb;
-  sb.Text := 'CM';
-  sb.Hint := 'Toggle ColorMode';
-  sb.OnClick := ToggleColorModeBtnClick;
-  sb.Tag := faNoop;
-  InitSpeedButton(sb);
 
   sb := AddSpeedBtn('FontSizeBtn');
   FontSizeBtn := sb;
@@ -219,10 +208,16 @@ begin
   sb.Tag := faNoop;
   InitSpeedButton(sb);
 
+  sb := AddSpeedBtn('ColorModeBtn', BtnGroupSpace);
+  ColorModeBtn := sb;
+  sb.Text := 'CM';
+  sb.Hint := 'Toggle ColorMode';
+  sb.OnClick := ToggleColorModeBtnClick;
+  sb.Tag := faNoop;
+  InitSpeedButton(sb);
+
   { DisplayList Graph Toggle }
 
-  BtnColor := claCoral;
-  BtnColor := SpeedColorScheme.claGraph;
   BtnColorValue := clvGraph;
 
   sb := AddSpeedBtn('UseDisplayListBtn', BtnGroupSpace);
@@ -233,8 +228,6 @@ begin
 
   { DisplayList Graph Options }
 
-  BtnColor := claYellow;
-  BtnColor := SpeedColorScheme.claOption;
   BtnColorValue := clvOption;
 
   sb := AddSpeedBtn('UseQuickSortBtn', BtnGroupSpace);
@@ -259,8 +252,6 @@ begin
 
   { DisplayList Graph Segments }
 
-  BtnColor := claCrimson;
-  BtnColor := SpeedColorScheme.claSegment;
   BtnColorValue := clvSegment;
 
   sb := AddSpeedBtn('FixpunktBtn', BtnGroupSpace);
@@ -314,8 +305,6 @@ begin
 
   { Bogen }
 
-  BtnColor := claDodgerblue;
-  BtnColor := SpeedColorScheme.claBogen;
   BtnColorValue := clvBogen;
 
   sb := AddSpeedBtn('BogenBtn', BtnGroupSpace);
@@ -326,8 +315,6 @@ begin
 
   { Image Elements, and Matrix Text }
 
-  BtnColor := claGoldenrod;
-  BtnColor := SpeedColorScheme.claImage;
   BtnColorValue := clvImage;
 
   sb := AddSpeedBtn('ChartImageBtn', BtnGroupSpace);
@@ -408,8 +395,6 @@ begin
 
   { ViewPoint Buttons }
 
-  BtnColor := claBeige;
-  BtnColor := SpeedColorScheme.claView;
   BtnColorValue := clvView;
 
   sb := AddSpeedBtn('SeiteBtn', BtnGroupSpace);
@@ -434,8 +419,6 @@ begin
 
   { Zoom Buttons }
 
-  BtnColor := claTeal;
-  BtnColor := SpeedColorScheme.claZoom;
   BtnColorValue := clvZoom;
 
   sb := AddSpeedBtn('ZoomOutBtn', BtnGroupSpace);
@@ -451,14 +434,22 @@ end;
 
 procedure TActionSpeedBarRG02.ToggleColorModeBtnClick(Sender: TObject);
 begin
+  if DarkMode then
+    Main.ColorScheme := MainVar.ColorScheme.Light
+  else
+    Main.ColorScheme := MainVar.ColorScheme.Dark;
+
+  DarkMode := MainVar.ColorScheme.IsDark;
   UpdateColor;
   FormMain.UpdateColorScheme;
 end;
 
 procedure TActionSpeedBarRG02.ToggleFontSizeBtnClick(Sender: TObject);
 begin
-  UpdateFontSize;
+  ToggleBigMode;
   FormMain.LayoutComponents;
+  FormMain.CheckSpaceForMemo;
+  FormMain.CheckSpaceForImages;
 end;
 
 end.

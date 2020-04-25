@@ -54,7 +54,7 @@ type
     constructor Create(MemoLines: TStrings);
     destructor Destroy; override;
     procedure InitLB(LB: TStrings);
-    procedure HA(fa: Integer);
+    procedure HandleAction(fa: Integer);
     function GetChecked(fa: Integer): Boolean;
     procedure ShowCurrentReport;
     function GetItemIndexOfReport(const Value: TRggReport): Integer;
@@ -125,7 +125,7 @@ begin
   end;
 end;
 
-procedure TRggReportManager.HA(fa: Integer);
+procedure TRggReportManager.HandleAction(fa: Integer);
 var
   rg: TRggReport;
 begin

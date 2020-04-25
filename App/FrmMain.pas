@@ -134,19 +134,19 @@ type
     property ShowTrimmText: Boolean read GetShowTrimmText write SetShowTrimmText;
     property ShowDiffText: Boolean read GetShowDiffText write SetShowDiffText;
     property ShowDataText: Boolean read GetShowDataText write SetShowDataText;
-  protected
+  public
     ComponentsCreated: Boolean;
     procedure CreateComponents;
     procedure CheckSpaceForImages;
     procedure CheckSpaceForMemo;
     procedure CheckSpaceForListbox;
     procedure SetupMemo(MM: TMemo);
-    procedure SetupText(T: TText);
+    procedure SetupText(T: TText; fs: single = 16);
     procedure SetupComboBox(CB: TComboBox);
     procedure SetupListbox(LB: TListBox);
     procedure SetupListboxItems(LB: TListbox; cla: TAlphaColor);
     procedure ListboxItemStyleLookup(Sender: TObject);
-  private
+  public
     Raster: Integer;
     Margin: Integer;
     ListboxWidth: Integer;
@@ -272,7 +272,6 @@ begin
   Application.OnException := ApplicationEventsException;
 
   FormMain := self;
-  Caption := ApplicationTitleText;
   Top := 30;
   Width := 1700;
   Height := 960;
@@ -311,9 +310,7 @@ begin
   RotaForm.IsUp := True;
   RotaForm.ViewPoint := vp3D;
   RotaForm.ZoomIndex := 8;
-//  RotaForm.LegendItemChecked := False;
   RotaForm.FixPoint := ooD;
-//  RotaForm.RaumGraph.Koppel := True;
 
   RotaForm.Draw;
 
@@ -357,20 +354,22 @@ begin
     TrimmCombo.OnChange := TrimmComboChange;
   end;
 
-  HintText.BringToFront;
   HintText.TextSettings.FontColor := claYellow;
 
   HelpText.BringToFront;
   HelpText.TextSettings.FontColor := claWhite;
   HelpText.Visible := False;
 
-  ReportText.BringToFront;
   ReportText.TextSettings.FontColor := claAntiquewhite;
   ReportText.Visible := True;
 
-  TrimmText.BringToFront;
   TrimmText.TextSettings.FontColor := claBeige;
   TrimmText.Visible := True;
+
+  HintText.BringToFront;
+  ReportText.BringToFront;
+  TrimmText.BringToFront;
+  SpeedPanel.BringToFront;
 
   InitHelpText;
 
@@ -609,6 +608,8 @@ begin
     Inc(Main.ResizeCounter);
     Main.UpdateTouch;
     Main.UpdateText;
+    if FormShown then
+      SpeedPanel.UpdateLayout;
   end;
   UpdateReport;
 //  CheckSpaceForListbox;
@@ -636,10 +637,11 @@ begin
     begin
       RotaForm.LegendBtnClick(nil);
     end;
-    SpeedPanel.Visible := False;
+//    SpeedPanel.Visible := False;
     TrimmText.Visible := False;
     ParamListbox.Visible := False;
-    ReportListbox.Visible := False;
+    if ReportListbox <> nil then
+      ReportListbox.Visible := False;
     Image.Position.X := 0;
     Image.Position.Y := 0;
     Image.Width := Bitmap.Width;
@@ -650,10 +652,11 @@ begin
   end
   else
   begin
-    SpeedPanel.Visible := True;
+//    SpeedPanel.Visible := True;
     TrimmText.Visible := True;
     ParamListbox.Visible := True;
-    ReportListbox.Visible := True;
+    if ReportListbox <> nil then
+      ReportListbox.Visible := True;
     Image.Position.X := ImagePositionX;
     Image.Position.Y := ImagePositionY;
     Image.Width := ClientWidth - Image.Position.X - Raster - Margin;
@@ -858,11 +861,11 @@ begin
 
     faReportNone..faReportReadme:
     begin
-      ReportManager.HA(fa);
+      ReportManager.HandleAction(fa);
       UpdateReport;
     end;
 
-    faChartRect..faChartReset: ChartGraph.HA(fa);
+    faChartRect..faChartReset: ChartGraph.HandleAction(fa);
 
     faToggleLineColor: LineColorBtnClick(nil);
 
@@ -943,22 +946,22 @@ begin
     'e': fa := faFixpointE;
     'E': fa := faFixpointE0;
 
-    'f': fa := faWheelLeft; // fa := faFixpointF;
+    'f': fa := faFixpointF;
     'F': fa := faFixpointF0;
 
-    'g': fa := faWheelDown;
+    'g': ;
     'G': ;
 
     'h': fa := faMemeToggleHelp; // fa := faSalingH;
     'H': fa := faSalingH; // fa := faHull;
 
-    'i': fa := faToggleLineColor;
-    'I': fa := faToggleUseDisplayList;
+    'i': fa := faWheelRight;
+    'I': fa := faWheelLeft;
 
-    'j': fa := faWheelRight;
-    'J': ;
+    'j': fa := faWheelUp;
+    'J': fa := faWheelDown;
 
-    'k': fa := faWheelUp;
+    'k': ;
     'K': fa := faKoppelBtn;
 
     'l': fa := faMemeGotoLandscape;
@@ -1051,7 +1054,7 @@ begin
   HL.Add('  Ctrl-Wheel  = bigger step');
   HL.Add('');
   HL.Add('Another Test: change Format of Window.');
-  HL.Add('  1..9, 0 - Format selection');
+  HL.Add('  1..8, 0 - Trimm selection');
   HL.Add('  1, p, s - Landscape, Portrait, Square');
   HL.Add('');
   HL.Add('Window Status:');
@@ -1164,13 +1167,13 @@ begin
   end;
 end;
 
-procedure TFormMain.SetupText(T: TText);
+procedure TFormMain.SetupText(T: TText; fs: single);
 begin
   T.Parent := Self;
   T.WordWrap := False;
   T.HorzTextAlign := TTextAlign.Leading;
   T.Font.Family := 'Consolas';
-  T.Font.Size := 16;
+  T.Font.Size := fs;
   T.AutoSize := True;
   T.HitTest := False;
 end;
@@ -1241,16 +1244,12 @@ begin
 
   HintText := TText.Create(Self);
   SetupText(HintText);
-  HintText.Font.Family := 'Consolas';
-//  HintText.Font.Size := 18;
 
   HelpText := TText.Create(Self);
   SetupText(HelpText);
-  HelpText.Font.Family := 'Courier New';
 
   ReportText := TText.Create(Self);
   SetupText(ReportText);
-  ReportText.Font.Family := 'Courier New';
 
   TrimmText := TText.Create(Self);
   SetupText(TrimmText);
@@ -1283,9 +1282,11 @@ begin
   if not ComponentsCreated then
     Exit;
 
-  { Problem: ClientWidht and ClientHeight are still at DesignTime Values.}
-  { It only 'works' if these are big enough, }
-  { So that computed values for Height and Width are > 0 }
+  { ClientWidth and ClientHeight may still be at DesignTime Values, }
+  { when called earlier than FormShow. }
+  { Then it only 'works' if these values are big enough, }
+  { so that computed values for Height and Width are > 0 }
+
   SpeedPanel.Position.X := 2 * Raster + Margin;
   SpeedPanel.Position.Y := Raster + Margin;
   SpeedPanel.Width := ClientWidth - 3 * Raster - 2 * Margin;
@@ -1301,8 +1302,6 @@ begin
   ParamListbox.Position.Y := TrimmText.Position.Y + TrimmText.Height + Margin;
   ParamListbox.Width := ListboxWidth;
   ParamListbox.Height := 270;
-//  ParamListbox.Height := ClientHeight - ParamListbox.Position.Y - Margin - Raster;
-//  ParamListbox.Anchors := ParamListbox.Anchors + [TAnchorKind.akBottom];
 
   ReportListbox.Position.X := ParamListbox.Position.X;
   ReportListbox.Position.Y := ParamListbox.Position.Y + ParamListbox.Height + Margin;
@@ -1894,16 +1893,26 @@ begin
   if not ComponentsCreated then
     Exit;
 
-  UpdateBackgroundColor(SpeedPanel.SpeedColorScheme.claBack);
+//  UpdateBackgroundColor(SpeedPanel.SpeedColorScheme.claBack);
 
   if ReportLabel <> nil then
     ReportLabel.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claReport;
 
   HintText.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claHintText;
-  TrimmText.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claTrimmText;
   ReportText.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claReportText;
   HelpText.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claHelpText;
+  TrimmText.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claTrimmText;
 
+//  SetupListboxItems(Listbox1, SpeedPanel.SpeedColorScheme.claList1);
+//  SetupListboxItems(Listbox2, SpeedPanel.SpeedColorScheme.claList2);
+//  SetupListboxItems(Listbox3, SpeedPanel.SpeedColorScheme.claList3);
+  SetupListboxItems(ParamListbox, SpeedPanel.SpeedColorScheme.claParamList);
+  SetupListboxItems(ReportListbox, SpeedPanel.SpeedColorScheme.claReportList);
+
+  ControllerGraph.BackgroundColor := MainVar.ColorScheme.claBackground;
+  UpdateControllerGraph;
+  SalingGraph.BackgroundColor := MainVar.ColorScheme.claBackground;
+  UpdateSalingGraph;
 end;
 
 end.

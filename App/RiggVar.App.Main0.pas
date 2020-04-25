@@ -307,6 +307,13 @@ begin
     FormMain.UpdateBackgroundColor(MainVar.ColorScheme.claBackground);
     FederText.UpdateColorScheme;
   end;
+
+  if IsUp then
+  begin
+    FormMain.SpeedPanel.DarkMode := MainVar.ColorScheme.IsDark;
+    FormMain.SpeedPanel.UpdateColor;
+    FormMain.UpdateColorScheme;
+  end;
 end;
 
 procedure TMain0.SetTouch(const Value: Integer);

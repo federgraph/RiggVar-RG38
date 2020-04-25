@@ -368,13 +368,19 @@ end;
 
 procedure TActionSpeedBarRG01.ToggleColorModeBtnClick(Sender: TObject);
 begin
+  if DarkMode then
+    Main.ColorScheme := MainVar.ColorScheme.Light
+  else
+    Main.ColorScheme := MainVar.ColorScheme.Dark;
+
+  DarkMode := MainVar.ColorScheme.IsDark;
   UpdateColor;
   FormMain.UpdateColorScheme;
 end;
 
 procedure TActionSpeedBarRG01.ToggleFontSizeBtnClick(Sender: TObject);
 begin
-  UpdateFontSize;
+  ToggleBigMode;
   FormMain.LayoutComponents;
 end;
 

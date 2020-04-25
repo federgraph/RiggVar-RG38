@@ -1,4 +1,4 @@
-unit RiggVar.FB.SpeedColor;
+﻿unit RiggVar.FB.SpeedColor;
 
 interface
 
@@ -65,6 +65,12 @@ type
     claHelpText: TAlphaColor;
     claParamList: TAlphaColor;
     claReportList: TAlphaColor;
+
+    claList1: TAlphaColor;
+    claList2: TAlphaColor;
+    claList3: TAlphaColor;
+
+    claMemo: TAlphaColor;
 
     procedure InitDark;
     procedure InitLight;
@@ -137,18 +143,25 @@ begin
   claZoom := claTeal;
 
   claHintText := claYellow;
-  claTrimmText := claBeige;
+  claTrimmText := claPlum;
   claReportText := claAntiqueWhite;
   claHelpText := claWhite;
+
   claParamList := claAqua;
   claReportList := claAquamarine;
+
+  claList1 := claGold;
+  claList2 := claCoral;
+  claList3 := claAntiquewhite;
+
+  claMemo := claDodgerblue;
 end;
 
 procedure TSpeedColorScheme.InitLight;
 begin
   claScheme := claOrange;
 
-  claBack := StringToAlphaColor('#FFF0F0F0'); // Anti-Flash White
+  claBack := StringToAlphaColor('#FFF0F0F0');
   claHot := claBlack;
   claLog := claOrange;
   claReport := claBurlywood;
@@ -168,11 +181,18 @@ begin
   claZoom := claPurple;
 
   claHintText := claDarkorange;
-  claTrimmText := claGray;
-  claReportText := claNavy;
+  claTrimmText := claDodgerblue;
+  claReportText := claBlack;
   claHelpText := claBlue;
-  claParamList := claOrangeRed;
-  claReportList := claNavy;
+
+  claParamList := claOrange;
+  claReportList := claSlateblue;
+
+  claList1 := claSlateblue;
+  claList2 := claSlategray;
+  claList3 := claOrangered;
+
+  claMemo := claDodgerblue;
 end;
 
 end.
