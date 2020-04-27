@@ -21,6 +21,7 @@ type
   public
     ColorValue: TSpeedColorValue;
     IsFirstInGroup: Boolean;
+    SpecialWidth: Integer;
   end;
 
   TActionSpeedBar = class(TLayout)
@@ -54,7 +55,6 @@ type
     procedure SpeedButtonClick(Sender: TObject); virtual;
     procedure UpdateCaptions;
     procedure UpdateHints;
-//    procedure ToggleDarkMode;
     procedure ToggleBigMode;
   public
     SpeedColorScheme: TSpeedColorScheme;
@@ -135,9 +135,10 @@ begin
   B.Width := BtnWidth;
   B.Height := BtnHeight;
 {$ifdef FMX}
-  { Does not work.
-    Because B not assigned yet to actual SpeedButton instance ? }
+  { Does not work. }
+  { Because B not assigned yet to actual SpeedButton instance ? }
 //  InitSpeedButton(B);
+  { also maybe not wanted to do this here }
 {$endif}
 {$ifdef Vcl}
   B.Font.Name := 'Consolas';
@@ -182,6 +183,11 @@ begin
       else
         gs := 0;
       UpdateLayoutForBtn(sb, gs);
+      if sb.SpecialWidth > 0 then
+      begin
+        BtnLeft := BtnLeft + Round(sb.SpecialWidth - sb.Width);
+        sb.Width := sb.SpecialWidth;
+      end;
       sb.Visible := sb.Position.X < self.Width - sb.Width;
     end;
   end;
@@ -216,12 +222,6 @@ begin
     end;
   end;
 end;
-
-//procedure TActionSpeedBar.ToggleDarkMode;
-//begin
-//  DarkMode := not DarkMode;
-//  UpdateColor;
-//end;
 
 procedure TActionSpeedBar.UpdateColor;
 var
@@ -288,6 +288,12 @@ begin
     SB.IsFirstInGroup := True
   else
     SB.IsFirstInGroup := False;
+
+  if sb.Width < sb.SpecialWidth then
+  begin
+    BtnLeft := BtnLeft + Round(sb.SpecialWidth - sb.Width);
+    sb.Width := sb.SpecialWidth;
+  end;
 end;
 
 procedure TActionSpeedBar.UpdateSpeedButtonFontColor(SB: TSpeedButton);
@@ -318,11 +324,6 @@ begin
 //    cr.PressedColor := cla;
     cr.Font.Size := SpeedPanelFontSize;
   end;
-end;
-
-procedure TActionSpeedBar.InitSpeedButtons;
-begin
-  { virtual }
 end;
 
 function TActionSpeedBar.FindStyleByName(AParent: TFMXObject; AName: string): TFMXObject;
@@ -369,6 +370,11 @@ begin
     SpeedColorScheme.InitDark
   else
     SpeedColorScheme.InitLight;
+end;
+
+procedure TActionSpeedBar.InitSpeedButtons;
+begin
+  { virtual }
 end;
 
 procedure TActionSpeedBar.SpeedButtonClick(Sender: TObject);

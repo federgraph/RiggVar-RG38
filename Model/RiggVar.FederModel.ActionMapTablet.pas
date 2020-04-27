@@ -213,9 +213,9 @@ begin
 
       cl := BottomRight;
       cla := claWhite;
-      InitAC(cl, 1, faCycleColorSchemeM, claWhite);
-      InitAC(cl, 2, faCycleColorSchemeP, claWhite);
-      InitAC(cl, 3, faNoop, cla);
+      InitAC(cl, 1, faCycleColorSchemeM, cla);
+      InitAC(cl, 2, faCycleColorSchemeP, cla);
+      InitAC(cl, 3, faToggleFontColor, cla);
       InitAC(cl, 4, faToggleSandboxed, cla);
       InitAC(cl, 5, faMemoryRecallBtn, cla);
       InitAC(cl, 6, faMemoryBtn, cla);

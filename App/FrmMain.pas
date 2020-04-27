@@ -76,7 +76,6 @@ type
     FormShown: Boolean;
     procedure ApplicationEventsException(Sender: TObject; E: Exception);
     procedure HandleShowHint(Sender: TObject);
-    procedure ToggleFontColor;
     procedure Flash(s: string);
     procedure Reset;
   protected
@@ -703,22 +702,6 @@ begin
   UpdateSpeedButtonDown;
 end;
 
-procedure TFormMain.ToggleFontColor;
-begin
-  if HintText.TextSettings.FontColor = claYellow then
-  begin
-    HintText.TextSettings.FontColor := claNavy;
-    ReportText.TextSettings.FontColor := claBlack;
-    HelpText.TextSettings.FontColor := claBlack;
-  end
-  else
-  begin
-    HintText.TextSettings.FontColor := claYellow;
-    ReportText.TextSettings.FontColor := claWhite;
-    HelpText.TextSettings.FontColor := claWhite;
-  end;
-end;
-
 procedure TFormMain.UpdateBackgroundColor(AColor: TAlphaColor);
 begin
   Self.Fill.Color := AColor;
@@ -848,10 +831,13 @@ begin
       UpdateFormat(750, 1000)
     end;
 
+    { Attention: You must handle any action you feed to Execute in Main }
+    { otherwise there would be a loop, see TMain0.HandleAction }
     faActionPageP: Main.ActionHandler.Execute(faActionPageP);
     faActionPageM: Main.ActionHandler.Execute(faActionPageM);
     faCycleColorSchemeP: Main.ActionHandler.Execute(faCycleColorSchemeP);
     faCycleColorSchemeM: Main.ActionHandler.Execute(faCycleColorSchemeM);
+    faToggleFontColor: Main.ActionHandler.Execute(fa);
 
     faButtonFrameReport:
     begin
@@ -896,8 +882,6 @@ begin
     faBlauBtn: BlauBtnClick(nil);
     faMultiBtn: MultiBtnClick(nil);
     faKoppelBtn: KoppelBtnClick(nil);
-
-    faToggleFontColor: ToggleFontColor;
 
     faShowActi: ActiBtnClick(nil);
     faShowMemo: MemoBtnClick(nil);
@@ -1893,8 +1877,6 @@ begin
   if not ComponentsCreated then
     Exit;
 
-//  UpdateBackgroundColor(SpeedPanel.SpeedColorScheme.claBack);
-
   if ReportLabel <> nil then
     ReportLabel.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claReport;
 
@@ -1903,9 +1885,6 @@ begin
   HelpText.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claHelpText;
   TrimmText.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claTrimmText;
 
-//  SetupListboxItems(Listbox1, SpeedPanel.SpeedColorScheme.claList1);
-//  SetupListboxItems(Listbox2, SpeedPanel.SpeedColorScheme.claList2);
-//  SetupListboxItems(Listbox3, SpeedPanel.SpeedColorScheme.claList3);
   SetupListboxItems(ParamListbox, SpeedPanel.SpeedColorScheme.claParamList);
   SetupListboxItems(ReportListbox, SpeedPanel.SpeedColorScheme.claReportList);
 
@@ -1913,6 +1892,30 @@ begin
   UpdateControllerGraph;
   SalingGraph.BackgroundColor := MainVar.ColorScheme.claBackground;
   UpdateSalingGraph;
+
+  { The above code is located here because it is application specific
+    and closely tied to the form where the elements live. }
+
+  { As for the colors, there are still competing concepts and
+      multiple points of implementation and
+      differences in recognition and/or presence of target groups and
+      differences in location of code as well as
+      legacy relations between elements,
+      possible redundance and maybe more.
+
+    Units: RiggVar.FB.Scheme vs. RiggVar.FB.SpeedColor
+    Scope: A range of schemes vs. just a boolean toggle between Dark and Light mode
+    Text: Attached to Frame vs. independent on the Form
+    Location: SpeedColorScheme located in field of MainVar vs. in TSpeedBar }
+
+  { Current situation:
+    Present Target Groups: Background, Text, ButtonFrame, SpeedPanel
+    Missing Target Groups: Text inside of ButtonFrame
+    Background: Secial treatment.
+    Text: Text is now independent, much as in RG application (good)
+    Text Colors: defined in TSpeedColorScheme record (new, still playing)
+    Frame Colors: defined in TColorScheme record, as in FC, this will not change. }
+
 end;
 
 end.

@@ -200,7 +200,7 @@ begin
 
   BtnColorValue := clvScheme;
 
-  sb := AddSpeedBtn('FontSizeBtn');
+  sb := AddSpeedBtn('FontSizeBtn', BtnGroupSpace);
   FontSizeBtn := sb;
   sb.Text := 'FS';
   sb.Hint := 'Toggle FontSize';
@@ -208,7 +208,7 @@ begin
   sb.Tag := faNoop;
   InitSpeedButton(sb);
 
-  sb := AddSpeedBtn('ColorModeBtn', BtnGroupSpace);
+  sb := AddSpeedBtn('ColorModeBtn');
   ColorModeBtn := sb;
   sb.Text := 'CM';
   sb.Hint := 'Toggle ColorMode';
@@ -434,14 +434,7 @@ end;
 
 procedure TActionSpeedBarRG02.ToggleColorModeBtnClick(Sender: TObject);
 begin
-  if DarkMode then
-    Main.ColorScheme := MainVar.ColorScheme.Light
-  else
-    Main.ColorScheme := MainVar.ColorScheme.Dark;
-
-  DarkMode := MainVar.ColorScheme.IsDark;
-  UpdateColor;
-  FormMain.UpdateColorScheme;
+  Main.ToggleDarkMode;
 end;
 
 procedure TActionSpeedBarRG02.ToggleFontSizeBtnClick(Sender: TObject);

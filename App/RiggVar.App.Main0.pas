@@ -95,6 +95,7 @@ type
     procedure CycleToolSet(i: Integer); virtual;
     procedure CycleColorSchemeM; virtual;
     procedure CycleColorSchemeP; virtual;
+    procedure ToggleDarkMode;
 
     procedure BlackText;
     procedure GrayText;
@@ -316,6 +317,14 @@ begin
   end;
 end;
 
+procedure TMain0.ToggleDarkMode;
+begin
+  if MainVar.ColorScheme.IsDark then
+    ColorScheme := MainVar.ColorScheme.Light
+  else
+    ColorScheme := MainVar.ColorScheme.Dark;
+end;
+
 procedure TMain0.SetTouch(const Value: Integer);
 begin
   FTouch := Value;
@@ -417,8 +426,18 @@ begin
     faCycleColorSchemeM: CycleColorSchemeM;
     faCycleColorSchemeP: CycleColorSchemeP;
 
+    faToggleFontColor: ToggleDarkMode;
+
     else
+    begin
+      { Make sure you do not create a cycle. }
+      { This may happen if you call Main.ActionHandler.Execute(fa)
+      {   from FormMain.HandleAction(fa) when handling a keyboard shortcut. }
       FormMain.HandleAction(fa);
+      { So, if you feed an action to the general point of entry
+          then make sure you handle it there.
+        Search FormMain for '.Execute' or '.HandleAction' }
+    end;
   end;
 end;
 
@@ -441,6 +460,8 @@ begin
     faToggleDataText: result := F.ShowDataText;
     faToggleDiffText: result := F.ShowDiffText;
     faToggleTrimmText: result := F.ShowTrimmText;
+
+    faToggleFontColor: result := MainVar.ColorScheme.IsDark;
 
     else
       result := F.GetChecked(fa);

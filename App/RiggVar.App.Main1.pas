@@ -884,6 +884,7 @@ begin
 
   ML.Add('Report:');
   ML.Add('  ReportCounter = ' + IntToStr(ReportCounter));
+  ML.Add('  ColorScheme = ' + IntToStr(MainVar.ColorScheme.Scheme));
 //  ML.Add('  Scale = ' + FloatToStr(RetinaScale));
 //  ML.Add('  Retina = ' + BoolStr[IsRetina]);
   ML.Add('  Sandboxed = ' + BoolStr[IsSandboxed]);

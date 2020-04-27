@@ -187,6 +187,10 @@ implementation
 uses
   RiggVar.App.Main;
 
+{ ML - Memo Lines, often used as a name for a parameter of type TStrings }
+{ AML - needed to avoid naming conflict with field ML! }
+{ Maybe a better Name for AML would be TL - Text Lines }
+
 { TRggData }
 
 constructor TRggData.Create;

@@ -116,10 +116,10 @@ end;
 procedure TColorScheme.Init(cs: Integer);
 begin
   Scheme := cs;
+  IsDark := True;
   case cs of
     1:
     begin
-      IsDark := True;
       if WantBlackText then
       begin
         claBackground := claSlateblue;
@@ -160,7 +160,6 @@ begin
     end;
     3:
     begin
-      IsDark := True;
       claBackground := claCornflowerblue;
       claLabelText := claWhite;
       claSampleText := claWhite;
@@ -173,7 +172,6 @@ begin
     end;
     4:
     begin
-      IsDark := True;
       claBackground := StringToAlphaColor('#FF372E69');
       claLabelText := claWhite;
       claSampleText := claWhite;
@@ -186,7 +184,6 @@ begin
     end;
     5:
     begin
-      IsDark := True;
       claBackground := StringToAlphaColor('#FF333333');
       claLabelText := claWhite;
       claSampleText := claWhite;
@@ -199,7 +196,6 @@ begin
     end;
     6:
     begin
-      IsDark := True;
       claBackground := claBlack;
       claLabelText := claWhite;
       claSampleText := claWhite;
@@ -212,7 +208,6 @@ begin
     end;
     7:
     begin
-      IsDark := True;
       claBackground := claPurple; //claNull;
       claLabelText := claBlack;
       claSampleText := claBlack;

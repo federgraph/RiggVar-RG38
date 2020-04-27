@@ -72,6 +72,8 @@ type
 
     claMemo: TAlphaColor;
 
+    IsDark: Boolean;
+    procedure Init(WantDark: Boolean);
     procedure InitDark;
     procedure InitLight;
     function GetColor(Value: TSpeedColorValue): TAlphaColor;
@@ -118,9 +120,19 @@ begin
   end;
 end;
 
+procedure TSpeedColorScheme.Init(WantDark: Boolean);
+begin
+  if WantDark then
+    InitDark
+  else
+    InitLight;
+end;
+
 procedure TSpeedColorScheme.InitDark;
 begin
-  claBack := StringToAlphaColor('#FF333333'); //claSlateGray;
+  IsDark := True;
+
+  claBack := claSlateGray;
   claHot := claBeige;
 
   claScheme := claOrange;
@@ -159,6 +171,8 @@ end;
 
 procedure TSpeedColorScheme.InitLight;
 begin
+  IsDark := False;
+
   claScheme := claOrange;
 
   claBack := StringToAlphaColor('#FFF0F0F0');
