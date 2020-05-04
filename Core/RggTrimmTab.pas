@@ -420,7 +420,7 @@ begin
   end;
 end;
 
-function TTrimmTab.GetEndPunkt;
+function TTrimmTab.GetEndPunkt: TPoint;
 begin
   result := Point(x2, y2);
 end;

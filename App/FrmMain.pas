@@ -301,7 +301,7 @@ begin
   Main.InitText;
   Main.IsUp := True;
 
-  RotaForm := TRotaForm.Create; // ownership kept
+  RotaForm := TRotaForm.Create; // ownership kept by FormMain
   rggm.StrokeRigg := RotaForm;
   RotaForm.Image := Image;
   RotaForm.Init;
@@ -636,7 +636,6 @@ begin
     begin
       RotaForm.LegendBtnClick(nil);
     end;
-//    SpeedPanel.Visible := False;
     TrimmText.Visible := False;
     ParamListbox.Visible := False;
     if ReportListbox <> nil then
@@ -651,7 +650,6 @@ begin
   end
   else
   begin
-//    SpeedPanel.Visible := True;
     TrimmText.Visible := True;
     ParamListbox.Visible := True;
     if ReportListbox <> nil then
@@ -675,8 +673,7 @@ begin
     but always before FormShow always called. }
 
   { ClientWidth and ClientHeight are not yet available when starting up.
-    ClientHeigt is available when FormShow is called.
-   }
+    ClientHeigt is available when FormShow is called. }
   if FormShown then
   begin
     { when FormResize is called after FormShow }
@@ -831,14 +828,6 @@ begin
       UpdateFormat(750, 1000)
     end;
 
-    { Attention: You must handle any action you feed to Execute in Main }
-    { otherwise there would be a loop, see TMain0.HandleAction }
-    faActionPageP: Main.ActionHandler.Execute(faActionPageP);
-    faActionPageM: Main.ActionHandler.Execute(faActionPageM);
-    faCycleColorSchemeP: Main.ActionHandler.Execute(faCycleColorSchemeP);
-    faCycleColorSchemeM: Main.ActionHandler.Execute(faCycleColorSchemeM);
-    faToggleFontColor: Main.ActionHandler.Execute(fa);
-
     faButtonFrameReport:
     begin
       FWantButtonFrameReport := not WantButtonFrameReport;
@@ -918,8 +907,8 @@ begin
     'a': fa := faSalingA;
     'A': fa := faFixpointA0;
 
-    'b': fa := faFixpointB; // fa := faCycleBitmapP;
-    'B': fa := faFixpointB0; // fa := faCycleBitmapM;
+    'b': fa := faFixpointB;
+    'B': fa := faFixpointB0;
 
     'c': fa := faCycleColorSchemeP;
     'C': fa := faCycleColorSchemeM;
@@ -954,8 +943,8 @@ begin
     'm': fa := faMemoryBtn;
     'M': fa := faCopyAndPaste;
 
-    'n': ; // fa := faRandomBlack;
-    'N': ; // fa := faRandomWhite;
+    'n': ;
+    'N': ;
 
     'r': fa := faMemeToggleReport;
     'R': fa := faReadTrimmFile;
@@ -968,8 +957,8 @@ begin
 
     's': fa := faMemeGotoSquare;
 
-    't': fa := faToggleFontColor; // fa := faParamT1
-    'T': ; // fa := faParamT2;
+    't': fa := faToggleFontColor;
+    'T': ;
 
     'u': fa := faToggleDataText;
     'U': fa := faToggleDiffText;
@@ -991,8 +980,8 @@ begin
     '8': fa := faLogo;
     '9': ;
 
-    '!': ; //fa := faParamT1;
-    '"': ; //fa := faParamT2;
+    '!': ;
+    '"': ;
 
     '=': ; //fa := faActionPageE;
     '?': ; //fa := faActionPageX;
@@ -1000,7 +989,7 @@ begin
     '+': fa := faActionPageP;
     '*': fa := faActionPageM;
 
-    '#': ; //fa := faBitmapEscape;
+    '#': ;
 
     else fa := faNoop;
 
@@ -1039,7 +1028,7 @@ begin
   HL.Add('');
   HL.Add('Another Test: change Format of Window.');
   HL.Add('  1..8, 0 - Trimm selection');
-  HL.Add('  1, p, s - Landscape, Portrait, Square');
+  HL.Add('  l, p, s - Landscape, Portrait, Square');
   HL.Add('');
   HL.Add('Window Status:');
   HL.Add(Format('  Client-W-H = (%d, %d)', [ClientWidth, ClientHeight]));
@@ -1188,7 +1177,6 @@ begin
 {$ifdef FMX}
   LB.ShowScrollBars := False;
   LB.StyleLookup := 'transparentlistboxstyle';
-//  LB.StyleLookup := 'listboxstyle';
 {$endif}
 
 {$ifdef Vcl}
@@ -1431,15 +1419,10 @@ begin
 end;
 
 procedure TFormMain.UpdateControllerGraph;
-//var
-//  TrimmRec: TTrimmControls;
 begin
   if IsUp and ControllerImage.Visible then
   begin
-//    TrimmRec := Rigg.Glieder;
-
     ControllerGraph.ControllerTyp := Rigg.ControllerTyp;
-//    ControllerGraph.ControllerPos := TrimmRec.Controller;
     ControllerGraph.ControllerPos := Round(Main.RggMain.ParamValue[fpController]);
     ControllerGraph.ParamXE := Round(Rigg.MastPositionE);
     ControllerGraph.ParamXE0 := Round(Rigg.iP[ooE0, x] - Rigg.iP[ooD0, x]);
@@ -1711,7 +1694,6 @@ begin
   T := cr.FindStyleResource('text') as TText;
   if Assigned(T) then
   begin
-//    T.Font.Family := 'Consolas';
     T.Font.Size := 14;
     T.TextSettings.FontColor := cr.Tag;
   end;
@@ -1775,14 +1757,6 @@ begin
 
     faToggleLineColor: result := DL.WantLineColors;
     faToggleShowLegend: result := RotaForm.LegendItemChecked;
-
-//    faViewpointS: result := RotaForm.ViewPoint = vpSeite;
-//    faViewpointA: result := RotaForm.ViewPoint = vpAchtern;
-//    faViewpointT: result := RotaForm.ViewPoint = vpTop;
-//    faViewpoint3: result := RotaForm.ViewPoint = vp3D;
-
-//    ZoomInBtn: result := False;
-//    ZoomOutBtn: result := False;
 
     faToggleUseDisplayList: result := RotaForm.UseDisplayList;
     faToggleUseQuickSort: result := RotaForm.RaumGraph.DL.UseQuickSort;
@@ -1892,30 +1866,6 @@ begin
   UpdateControllerGraph;
   SalingGraph.BackgroundColor := MainVar.ColorScheme.claBackground;
   UpdateSalingGraph;
-
-  { The above code is located here because it is application specific
-    and closely tied to the form where the elements live. }
-
-  { As for the colors, there are still competing concepts and
-      multiple points of implementation and
-      differences in recognition and/or presence of target groups and
-      differences in location of code as well as
-      legacy relations between elements,
-      possible redundance and maybe more.
-
-    Units: RiggVar.FB.Scheme vs. RiggVar.FB.SpeedColor
-    Scope: A range of schemes vs. just a boolean toggle between Dark and Light mode
-    Text: Attached to Frame vs. independent on the Form
-    Location: SpeedColorScheme located in field of MainVar vs. in TSpeedBar }
-
-  { Current situation:
-    Present Target Groups: Background, Text, ButtonFrame, SpeedPanel
-    Missing Target Groups: Text inside of ButtonFrame
-    Background: Secial treatment.
-    Text: Text is now independent, much as in RG application (good)
-    Text Colors: defined in TSpeedColorScheme record (new, still playing)
-    Frame Colors: defined in TColorScheme record, as in FC, this will not change. }
-
 end;
 
 end.

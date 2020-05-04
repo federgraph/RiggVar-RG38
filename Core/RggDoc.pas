@@ -205,7 +205,7 @@ var
 begin
   //strm.WriteBuffer(RggDocSignature[1], 8);
 
-  ss := TStringStream.Create;
+  ss := TStringStream.Create('');
   ss.WriteString(RggDocSignature);
   c := ss.Position;
   ss.Position := 0;
@@ -219,7 +219,7 @@ var
   c: Integer;
 begin
   { Signature }
-  ss := TStringStream.Create;
+  ss := TStringStream.Create('');
   ss.CopyFrom(strm, RggDocSignature.Length);
   c := ss.Position;
   ss.Position := 0;
@@ -569,7 +569,7 @@ end;
 procedure TRggDocument.GetDefaultDoc;
 const
   EModulStahl = 210E3; { N/mm^2 }
-  EModulAlu = 70E3; { N/mm^2 }
+//  EModulAlu = 70E3; { N/mm^2 } // not used
   EAgross = 100E6; { N }
   EARumpf = 10E6; { N }
   EASaling = 1E6; { N }

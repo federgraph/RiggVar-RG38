@@ -4,7 +4,6 @@ interface
 
 uses
   System.Classes,
-  System.Generics.Collections,
   RiggVar.RG.Def,
   RiggVar.FB.ActionConst,
   RggReport;
@@ -40,8 +39,8 @@ type
     FMemo: TStrings;
     ML: TStrings;
     RiggReport: TRiggReport;
-    RD: TDictionary<Integer, TRggReport>;
-    RDI: TDictionary<TRggReport, Integer>;
+    RDR: array[0..Integer(High(TRggReport))] of TRggReport; //TDictionary<Integer, TRggReport>;
+    RDI: array[TRggReport] of Integer; //TDictionary<TRggReport, Integer>;
     rs: set of TRggReport;
     FCurrentIndex: Integer;
     FCurrentReport: TRggReport;
@@ -79,16 +78,12 @@ begin
   FMemo := MemoLines;
   ML := MemoLines;
   RiggReport := TRiggReport.Create;
-  RD := TDictionary<Integer, TRggReport>.Create;
-  RDI := TDictionary<TRggReport, Integer>.Create;
   InitRD;
 end;
 
 destructor TRggReportManager.Destroy;
 begin
   ML := nil; // not owned
-  RD.Free;
-  RDI.Free;
   RiggReport.Free;
   inherited;
 end;
@@ -188,22 +183,23 @@ end;
 
 function TRggReportManager.GetItemIndexOfReport(const Value: TRggReport): Integer;
 begin
-  if not RDI.TryGetValue(Value, result) then
-  begin
-    result := -1;
-  end;
+  result := RDI[Value];
 end;
 
 procedure TRggReportManager.SetCurrentIndex(const Value: Integer);
 var
   r: TRggReport;
 begin
+  if Value < 0 then
+    Exit;
+  if Value > Integer(High(TRggReport)) then
+    Exit;
+
 //  FCurrentReport := RD.Items[Value];
-  if RD.TryGetValue(Value, r) then
-  begin
-    FCurrentIndex := Value;
-    FCurrentReport := r;
-  end;
+
+  r := RDR[Value];
+  FCurrentIndex := Value;
+  FCurrentReport := r;
 end;
 
 procedure TRggReportManager.SetCurrentReport(const Value: TRggReport);
@@ -332,8 +328,8 @@ begin
   i := 0;
   for r in rs do
   begin
-    RD.Add(i, r);
-    RDI.Add(r, i);
+    RDR[i] := r;
+    RDI[r] := i;
     Inc(i);
   end;
 end;
