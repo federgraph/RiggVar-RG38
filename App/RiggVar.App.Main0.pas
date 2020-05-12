@@ -65,8 +65,6 @@ type
     IsUp: Boolean;
     IsOrthoProjection: Boolean;
 
-    Layout: TLayout;
-
     FederText1: TFederTouch;
     FederText2: TFederTouchPhone;
 
@@ -467,7 +465,7 @@ end;
 
 procedure TMain0.DoTouchbarLeft(Delta: single);
 begin
-//  DoMouseWheel([ssCtrl], Round(Delta));
+  DoMouseWheel([ssCtrl], Round(Delta));
 end;
 
 procedure TMain0.DoTouchbarTop(Delta: single);
@@ -494,7 +492,8 @@ begin
   else if ssShift in Shift then
   begin
     Main.DoSmallWheel(WheelDelta);
-  end
+  end;
+  FormMain.UpdateReport;
 end;
 
 procedure TMain0.PlusOne;

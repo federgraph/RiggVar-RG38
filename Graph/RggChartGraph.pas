@@ -122,7 +122,6 @@ end;
 procedure TChartGraph.DrawChart(g: TCanvas);
 var
   LineToPoint: TPointF;
-  oy: single;
 
   function Limit(a: double): double;
   begin
@@ -135,8 +134,8 @@ var
 
   procedure LineTo(x2, y2: single);
   begin
-    g.DrawLine(LineToPoint, PointF(x2, oy + y2), 0.5);
-    LineToPoint := PointF(x2, oy + y2);
+    g.DrawLine(LineToPoint, PointF(x2, y2), 0.5);
+    LineToPoint := PointF(x2, y2);
   end;
 
 var
@@ -146,7 +145,6 @@ var
 begin
   DrawLabels(g);
 
-  oy := 0;
   Radius := 2;
 
   for p := 0 to ParamCount-1 do
@@ -156,15 +154,15 @@ begin
     g.Stroke.Color := cf[p];
     tempY := Box.Height * (bf[p, 0] - Ymin) / (Ymax - Ymin);
     Pt.X := Box.X;
-    Pt.y := Box.Y + Round(Limit(tempY));
+    Pt.Y := Box.Y + Round(Limit(tempY));
     LineToPoint := PointF(Pt.X, Pt.Y);
     for i := 1 to LNr do
     begin
       tempX := Box.Width * (i / LNr);
       tempY := Box.Height * (bf[p, i] - Ymin) / (Ymax - Ymin);
-      Pt.x := Box.X + Round(Limit(tempX));
-      Pt.y := Box.Y + Round(Limit(tempY));
-      LineTo(Pt.x, Pt.y);
+      Pt.X := Box.X + Round(Limit(tempX));
+      Pt.Y := Box.Y + Round(Limit(tempY));
+      LineTo(Pt.X, Pt.Y);
     end;
 
     if WantRectangles then

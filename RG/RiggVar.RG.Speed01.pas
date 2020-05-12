@@ -135,8 +135,6 @@ begin
   MT0Btn := sb;
   sb.Text := 'MT0';
   sb.Hint := 'Update Trimm 0';
-  sb.StaysPressed := False;
-  sb.IsPressed := False;
   sb.OnClick := MT0BtnClick;
   sb.Tag := faUpdateTrimm0;
   InitSpeedButton(sb);
@@ -145,8 +143,6 @@ begin
   ReadTrimmFileBtn := sb;
   sb.Text := 'rtf';
   sb.Hint := 'Read Trimm File';
-  sb.StaysPressed := False;
-  sb.IsPressed := False;
   sb.OnClick := ReadTrimmFileBtnClick;
   sb.Tag := faReadTrimmFile;
   InitSpeedButton(sb);
@@ -155,8 +151,6 @@ begin
   SaveTrimmFileBtn := sb;
   sb.Text := 'stf';
   sb.Hint := 'Save Trimm File';
-  sb.StaysPressed := False;
-  sb.IsPressed := False;
   sb.OnClick := SaveTrimmFileBtnClick;
   sb.Tag := faSaveTrimmFile;
   InitSpeedButton(sb);
@@ -165,8 +159,6 @@ begin
   CopyTrimmFileBtn := sb;
   sb.Text := 'ctf';
   sb.Hint := 'Copy Trimm File';
-  sb.StaysPressed := False;
-  sb.IsPressed := False;
   sb.OnClick := CopyTrimmFileBtnClick;
   sb.Tag := faCopyTrimmFile;
   InitSpeedButton(sb);
@@ -175,8 +167,6 @@ begin
   CopyTrimmItemBtn := sb;
   sb.Text := 'cti';
   sb.Hint := 'Copy Trimm Item';
-  sb.StaysPressed := False;
-  sb.IsPressed := False;
   sb.OnClick := CopyTrimmItemBtnClick;
   sb.Tag := faCopyTrimmItem;
   InitSpeedButton(sb);
@@ -185,8 +175,6 @@ begin
   PasteTrimmItemBtn := sb;
   sb.Text := 'pti';
   sb.Hint := 'Paste Trimm Item';
-  sb.StaysPressed := False;
-  sb.IsPressed := False;
   sb.OnClick := PasteTrimmItemBtnClick;
   sb.Tag := faPasteTrimmItem;
   InitSpeedButton(sb);
@@ -195,8 +183,6 @@ begin
   CopyAndPasteBtn := sb;
   sb.Text := 'M';
   sb.Hint := 'Copy And Paste';
-  sb.StaysPressed := False;
-  sb.IsPressed := False;
   sb.OnClick := CopyAndPasteBtnClick;
   sb.Tag := faCopyAndPaste;
   InitSpeedButton(sb);
@@ -209,8 +195,6 @@ begin
   M10Btn := sb;
   sb.Text := '-10';
   sb.Hint := 'Param Value Minus 10';
-  sb.StaysPressed := False;
-  sb.IsPressed := False;
   sb.OnClick := M10BtnClick;
   sb.Tag := faParamValueMinus10;
   InitSpeedButton(sb);
@@ -219,8 +203,6 @@ begin
   M1Btn := sb;
   sb.Text := '-1';
   sb.Hint := 'Param Value Minus 1';
-  sb.StaysPressed := False;
-  sb.IsPressed := False;
   sb.OnClick := M1BtnClick;
   sb.Tag := faParamValueMinus1;
   InitSpeedButton(sb);
@@ -229,8 +211,6 @@ begin
   P1Btn := sb;
   sb.Text := '+1';
   sb.Hint := 'Param Value Plus 1';
-  sb.StaysPressed := False;
-  sb.IsPressed := False;
   sb.OnClick := P1BtnClick;
   sb.Tag := faParamValuePlus1;
   InitSpeedButton(sb);
@@ -239,8 +219,6 @@ begin
   P10Btn := sb;
   sb.Text := '+10';
   sb.Hint := 'Param Value Plus 10';
-  sb.StaysPressed := False;
-  sb.IsPressed := False;
   sb.OnClick := P10BtnClick;
   sb.Tag := faParamValuePlus10;
   InitSpeedButton(sb);

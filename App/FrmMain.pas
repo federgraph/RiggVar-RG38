@@ -271,6 +271,7 @@ begin
   Application.OnException := ApplicationEventsException;
 
   FormMain := self;
+  Left := 100;
   Top := 30;
   Width := 1700;
   Height := 960;
@@ -442,12 +443,14 @@ begin
   begin
     Main.ActionHandler.Execute(fa);
   end;
-
   ShowTrimm;
 end;
 
 procedure TFormMain.UpdateReport;
 begin
+  if not FormShown then
+    Exit;
+
   if ReportText = nil then
     Exit;
   if not ReportText.Visible then
@@ -595,6 +598,8 @@ begin
     LayoutImages;
     SetupListboxItems(ParamListbox, claAqua);
     SetupListboxItems(ReportListbox, claAquamarine);
+    UpdateSpeedButtonDown;
+    UpdateReport;
   end;
 end;
 
@@ -1201,10 +1206,11 @@ begin
 {$endif}
 
 {$ifdef Vcl}
+  MM.Parent := Self;
   MM.Font.Name := 'Consolas';
   MM.Font.Size := 11;
   MM.Font.Color := clTeal;
-  MM.ScrollBars := ssBoth;
+  MM.ScrollBars := TScrollStyle.ssBoth;
 {$endif}
 end;
 
@@ -1335,11 +1341,15 @@ end;
 procedure TFormMain.ChartImageBtnClick(Sender: TObject);
 begin
   ChartImage.Visible := not ChartImage.Visible;
+  if ChartImage.Visible then
+    UpdateChartGraph;
 end;
 
 procedure TFormMain.SalingImageBtnClick(Sender: TObject);
 begin
   SalingImage.Visible := not SalingImage.Visible;
+  if SalingImage.Visible then
+    UpdateSalingGraph;
 end;
 
 procedure TFormMain.ControllerImageBtnClick(Sender: TObject);
@@ -1374,6 +1384,7 @@ begin
   SalingImage := TImage.Create(Self);
   SalingImage.Parent := Self;
   SalingImage.HitTest := False;
+  SalingImage.Visible := False;
 
   SalingGraph := TSalingGraph.Create;
   SalingGraph.BackgroundColor := claAntiquewhite;
@@ -1437,6 +1448,7 @@ begin
   ChartImage := TImage.Create(Self);
   ChartImage.Parent := Self;
   ChartImage.HitTest := False;
+  ChartImage.Visible := False;
 
   ChartGraph := TChartGraph.Create;
   ChartGraph.Image := ChartImage;
@@ -1523,6 +1535,7 @@ begin
   if ParamListbox.ItemIndex <> -1 then
     Main.RggMain.Param := Main.RggMain.Text2Param(ParamListbox.Items[ParamListbox.ItemIndex]);
   ShowTrimm;
+  UpdateControllerGraph;
   Main.FederText.CheckState;
 end;
 
@@ -1793,9 +1806,10 @@ begin
   if not Assigned(FormMemo) then
   begin
     FormMemo := TFormMemo.Create(nil);
-    FormMemo.Parent := self; //needed for Alt-Tab
+    FormMemo.Parent := self; // needed for Alt-Tab
     FormMemo.Memo.Lines.Clear;
-    //Main.WriteVersion1Diff(FormMemo.Memo.Lines);
+    Main.WriteTrimmItem;
+    FormMemo.Memo.Text := Main.FLText;
     CheckFormBounds(FormMemo);
   end;
   FormMemo.Visible := True;
@@ -1807,11 +1821,11 @@ begin
   if not Assigned(FormAction) then
   begin
     FormAction := TFormAction.Create(nil);
-    FormAction.Parent := self;
+    FormAction.Parent := self; // needed for Alt-Tab
     CheckFormBounds(FormAction);
   end;
   FormAction.Visible := True;
-  FormAction.Show;
+  FormAction.Show; //needed on Mac
 end;
 
 procedure TFormMain.DestroyForms;
