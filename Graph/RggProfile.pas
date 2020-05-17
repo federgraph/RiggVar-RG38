@@ -286,6 +286,7 @@ begin
   { symmetry line }
 //  MetaLINE(   0.00, 72.00,   0.00,  0.00, claRed);
 
+{ Legend: }
 { MetaLINE(    x1,   y1,    x2,     y2); }
 { MetaARC(     xm,   ym,     r,    phi1,    phi2); }
 end;
@@ -508,7 +509,6 @@ var
 
   procedure MetaLINE(x1, y1, x2, y2: single; c: TAlphaColor);
   begin
-//    g.Stroke.Color := c;
     x1 := ox + x1 * zf;
     y1 := oy + y1 * zf;
     x2 := ox + x2 * zf;
@@ -523,7 +523,6 @@ var
   var
     a1, a2: single;
   begin
-//    g.Stroke.Color := c;
     if lg = Quer then
     begin
       xm := ox + xm * zf;
@@ -547,7 +546,6 @@ var
 begin
   g.Stroke.Cap := TStrokeCap.Round;
   g.Stroke.Join := TStrokeJoin.Round;
-//  g.Stroke.Thickness := 3.0;
   ox := 0;
   oy := 0;
   zf := 1.0;

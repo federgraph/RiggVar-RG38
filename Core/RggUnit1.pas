@@ -530,7 +530,6 @@ var
   WobenMin, WobenMax, WobenIst, Diff: double;
   Saling1L, WStrich, W1Strich, Basis, Skalar: double;
   Temp, TempA, TempC, TempD: TRealPoint;
-  oooTemp: TRealRiggPoints;
 
   function WobenIstVonPsi(psi: double): double;
   begin
@@ -583,7 +582,6 @@ var
 
 begin
   ResetStatus;
-  oooTemp := rP; { aktuelle Koordinaten sichern }
 
   { Vorstag gegeben, Winkel numerisch ermitteln! }
   { Startwinkel }
@@ -769,6 +767,8 @@ var
   TempA, TempC, TempD, temp: TRealPoint;
   Basis, Skalar, WStrich, W1Strich, Saling1L: double;
 begin
+  temp := Null;
+
   { Punkte D, C und F schon bekannt, FrWoben3d bleibt erhalten }
   FrSalingL := SalingLplus;
 

@@ -279,7 +279,9 @@ end;
 procedure TTouchBtn.SetHint(const Value: string);
 begin
   if Assigned(FText) then
+  begin
     FText.Hint := Value;
+  end;
 end;
 
 procedure TTouchBtn.UpdateHint;
@@ -352,6 +354,7 @@ var
   b: TCornerBtn;
 begin
   b := TCornerBtn.Create(TFederTouchBase.OwnerComponent);
+  TFederTouchBase.ParentObject.AddObject(b);
   b.CornerPos := CornerPos;
   b.FID := BtnID;
   b.X := X;
@@ -360,7 +363,6 @@ begin
   b.Opacity := TFederTouchBase.OpacityValue;
   b.Init;
   b.Color := BtnColor;
-  TFederTouchBase.ParentObject.AddObject(b);
 
   b.Caption := Main.ActionHandler.GetShortCaption(Action);
   b.FText.Color := MainVar.ColorScheme.claCornerBtnText;

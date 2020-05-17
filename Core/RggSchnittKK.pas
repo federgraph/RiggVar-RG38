@@ -497,6 +497,12 @@ begin
       t2.Top := Round(FM2[y] - R2);
       t2.Bottom := Round(FM2[y] + R2);
 
+      { fpc compiler warned that t does not seem to be initialized }
+      t.Left := 0;
+      t.Right := 0;
+      t.Top := 0;
+      t.Bottom := 0;
+
       ret := IntersectRect(t, t1, t2);
       if ret then
       begin

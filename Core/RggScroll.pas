@@ -128,6 +128,7 @@ procedure TRggSB.LoadFromStream(s: TStream);
 var
   temp: Integer;
 begin
+  temp := 0;
   s.ReadBuffer(temp, SizeOf(Integer));
   Ist := temp;
   s.ReadBuffer(temp, SizeOf(Integer));

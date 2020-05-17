@@ -22,8 +22,6 @@ uses
   System.SysUtils,
   System.Classes,
   System.Types,
-  System.UIConsts,
-  System.UITypes,
   RiggVar.RG.Def;
 
 const

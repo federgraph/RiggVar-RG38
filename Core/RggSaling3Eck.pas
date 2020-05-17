@@ -45,7 +45,7 @@ type
   public
     constructor Create;
     procedure CopyFromRigg(Rigg: TRigg);
-    procedure GetLW(H, A: double; var L, W: double);
+    procedure GetLW(H, A: double; out L, W: double);
 
     property Saling_H: double read FSalingH write SetSalingH;
     property Saling_A: double read FSalingH write SetSalingA;
@@ -76,7 +76,7 @@ begin
   FSalingAMax := 1100;
 end;
 
-procedure TSalingDreieck.GetLW(H, A: double; var L, W: double);
+procedure TSalingDreieck.GetLW(H, A: double; out L, W: double);
 begin
   L := Hypot(H, A / 2);
   W := arctan2(H, A * 2);

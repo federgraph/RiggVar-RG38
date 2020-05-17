@@ -21,7 +21,6 @@ interface
 uses
   System.SysUtils,
   System.Classes,
-  System.UITypes,
   System.IniFiles,
   System.Math,
   RiggVar.RG.Def,
@@ -848,6 +847,7 @@ procedure TGetriebe.LoadFromStream(S: TStream);
 var
   temp: Integer;
 begin
+  temp := 0;
   S.ReadBuffer(temp, SizeOf(Integer));
   SalingTyp := TSalingTyp(temp);
   TrimmTab.LoadFromStream(S);

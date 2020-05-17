@@ -20,9 +20,7 @@ interface
 
 uses
   System.SysUtils,
-  System.Classes,
-  System.UITypes,
-  RiggVar.RG.Def;
+  System.Classes;
 
 type
   TFederTrackbar = class

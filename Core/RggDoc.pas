@@ -232,6 +232,8 @@ procedure TRggDocument.LoadFromStream(strm: TStream);
 var
   temp: Integer;
 begin
+  temp := 0;
+
   { Signature }
   LoadSignatureFromStream(strm);
   if not SignatureOK then
@@ -706,7 +708,7 @@ end;
 procedure TRggDocument.GetLogoDoc;
 const
   EModulStahl = 210E3; { N/mm^2 }
-  EModulAlu = 70E3; { N/mm^2 }
+  //EModulAlu = 70E3; { N/mm^2 }
   EAgross = 100E6; { N }
   EARumpf = 10E6; { N }
   EASaling = 1E6; { N }
@@ -1120,6 +1122,7 @@ var
   i, tempEI: Integer;
   T: TTrimmTabDaten;
 begin
+  tempEI := 0;
   with Memo do
   begin
     // Rigg - diese Properties werden im Objektinspektor gesetzt

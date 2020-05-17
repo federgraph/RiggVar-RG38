@@ -195,8 +195,6 @@ begin
   if Value > Integer(High(TRggReport)) then
     Exit;
 
-//  FCurrentReport := RD.Items[Value];
-
   r := RDR[Value];
   FCurrentIndex := Value;
   FCurrentReport := r;

@@ -646,9 +646,6 @@ begin
   end;
   RaumGraph.Viewpoint := Value; // for GetriebeGraph
 
-//  FXpos := RotaData.Xpos;
-//  FYpos := RotaData.Ypos;
-
   FIncrementT := RotaData.IncrementT;
   FIncrementW := RotaData.IncrementW;
 

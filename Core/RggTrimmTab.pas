@@ -148,7 +148,7 @@ type
     n: Integer; { there are n+1 Control Points }
     m: Integer; { there are m+1 points along the interval of 0 <= u <= 1 }
     function BlendingValue(u: double; k: Integer): double;
-    procedure ComputePoint(u: double; var pt: vec3);
+    procedure ComputePoint(u: double; out pt: vec3);
   public
     curve: TBezierKurve; { m+1 }
     Controls: TControlPunkte; { n+1 }
@@ -373,6 +373,7 @@ procedure TTrimmTab.LoadFromStream(S: TStream);
 var
   T: TTrimmTabDaten;
 begin
+  T := DefaultTrimmTabDaten;
   try
     S.ReadBuffer(T, SizeOf(TTrimmTabDaten));
   except
@@ -861,7 +862,7 @@ begin
   result := bv;
 end;
 
-procedure TBezier.ComputePoint(u: double; var pt: vec3);
+procedure TBezier.ComputePoint(u: double; out pt: vec3);
 var
   k: Integer;
   b: double;

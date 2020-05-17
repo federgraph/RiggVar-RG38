@@ -88,7 +88,7 @@ type
     procedure KG21(l, l1, l2, l3, i1, i2, i3: Integer);
     procedure Stabkraefte;
     procedure Stabkraefte_2;
-    procedure Auflagerkraefte(SumFX, SumFY, SumMO: double; var Lager: TAuflager);
+    procedure Auflagerkraefte(SumFX, SumFY, SumMO: double; out Lager: TAuflager);
     procedure Verschiebungen;
     procedure ActionF;
   end;
@@ -227,7 +227,7 @@ begin
   KG21(6, 5, 4, 2, 9, 7, 3);
 end;
 
-procedure TFachwerk.Auflagerkraefte(SumFX, SumFY, SumMO: double; var Lager: TAuflager);
+procedure TFachwerk.Auflagerkraefte(SumFX, SumFY, SumMO: double; out Lager: TAuflager);
 var
   FB: double;
 begin

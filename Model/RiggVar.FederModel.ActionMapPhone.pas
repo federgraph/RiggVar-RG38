@@ -57,11 +57,7 @@ type
 
 implementation
 
-uses
-  RiggVar.App.Main;
-
 const
-  PageCountSK = 2;
   PageCountRG = 10;
 
 constructor TActionMapPhone.Create;

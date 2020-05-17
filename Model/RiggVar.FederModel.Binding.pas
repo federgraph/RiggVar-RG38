@@ -19,25 +19,24 @@
 interface
 
 uses
-  Classes;
+  System.Classes;
 
 type
   TFederBinding = class
-  private
   public
-    function InitInfoText(SL: TStrings): string;
-    function InitHelpText(SL: TStrings): string;
-    function InitHelpTextForIO(SL: TStrings): string;
+    procedure InitInfoText(SL: TStrings);
+    procedure InitHelpText(SL: TStrings);
+    procedure InitHelpTextForIO(SL: TStrings);
 
-    function InitNormalKeys(SL: TStrings): string;
-    function InitSpecialKeys(SL: TStrings): string;
+    procedure InitNormalKeys(SL: TStrings);
+    procedure InitSpecialKeys(SL: TStrings);
 
-    function InitHullPoints(ML: TStrings): string;
+    procedure InitHullPoints(ML: TStrings);
   end;
 
 implementation
 
-function TFederBinding.InitHelpTextForIO(SL: TStrings): string;
+procedure TFederBinding.InitHelpTextForIO(SL: TStrings);
 begin
   SL.Add('Using a TrimmFile as TrimmFileAuto manually from the app:');
   SL.Add('');
@@ -79,7 +78,7 @@ begin
   SL.Add('  or paste via clipboard.');
 end;
 
-function TFederBinding.InitInfoText(SL: TStrings): string;
+procedure TFederBinding.InitInfoText(SL: TStrings);
 begin
   SL.Add('Info about Trimm 420 App');
   SL.Add('');
@@ -107,7 +106,7 @@ begin
 {$endif}
 end;
 
-function TFederBinding.InitHelpText(SL: TStrings): string;
+procedure TFederBinding.InitHelpText(SL: TStrings);
 begin
   SL.Add('Help Text');
   SL.Add('=========');
@@ -121,7 +120,7 @@ SL.Add('');
   InitSpecialKeys(SL);
 end;
 
-function TFederBinding.InitNormalKeys(SL: TStrings): string;
+procedure TFederBinding.InitNormalKeys(SL: TStrings);
 begin
   SL.Add('Taste a : faSalingA');
   SL.Add('Taste A : ');
@@ -203,7 +202,7 @@ begin
 
 end;
 
-function TFederBinding.InitSpecialKeys(SL: TStrings): string;
+procedure TFederBinding.InitSpecialKeys(SL: TStrings);
 begin
   SL.Add('Taste 0 : faTrimm0');
   SL.Add('Taste 1 : faTrimm1');
@@ -233,7 +232,7 @@ end;
 
 *)
 
-function TFederBinding.InitHullPoints(ML: TStrings): string;
+procedure TFederBinding.InitHullPoints(ML: TStrings);
 begin
   ML.Add('procedure THullMeshData.GetPoints;');
   ML.Add('begin');

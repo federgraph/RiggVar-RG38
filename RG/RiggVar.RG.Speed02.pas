@@ -349,13 +349,11 @@ begin
 
   sb := AddSpeedBtn('MemoryBtn', BtnGroupSpace);
   MemoryBtn := sb;
-  sb.StaysPressed := False;
   sb.Tag := faMemoryBtn;
   InitSpeedButton(sb);
 
   sb := AddSpeedBtn('MemoryRecallBtn', 0);
   MemoryRecallBtn := sb;
-  sb.StaysPressed := False;
   sb.Tag := faMemoryRecallBtn;
   InitSpeedButton(sb);
 

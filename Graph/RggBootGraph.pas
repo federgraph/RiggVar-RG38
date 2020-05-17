@@ -30,6 +30,7 @@ type
   protected
     BogenIndexD: Integer;
     function FindBogenIndexOf(P: TRealPoint): Integer;
+    function GetFreshRiggPoints: TIntRiggPoints;
   public
     rP: TRealRiggPoints;
     Kurve: TMastKurve;
@@ -177,6 +178,18 @@ begin
   result := MinIndex;
 end;
 
+function TBootGraph.GetFreshRiggPoints: TIntRiggPoints;
+var
+  i: TRiggPoint;
+begin
+  for i := Low(TRiggPoint) to High(TRiggPoint) do
+  begin
+    Result[i, x] := 0;
+    Result[i, y] := 0;
+    Result[i, z] := 0;
+  end;
+end;
+
 procedure TBootGraph.LoadFromIniFile(FileName: string);
 var
   IniFile: TIniFile;
@@ -184,6 +197,7 @@ var
   i: TRiggPoint;
   iP: TIntRiggPoints;
 begin
+  iP := GetFreshRiggPoints;
   IniFile := TIniFile.Create(FileName);
   S := 'Koordinaten Rumpf';
   try
