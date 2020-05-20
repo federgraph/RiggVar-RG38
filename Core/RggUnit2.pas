@@ -418,6 +418,8 @@ var
   FU1, FU2, FBekannt: double;
   l2, h, alpha: double;
 begin
+  FU1 := 0;
+  FU2 := 0;
   GetWantenSpannung;
   { 1. Wantenkraft3Dto2D; FB ermitteln }
   h := Abstand(rP[ooP0], rP[ooP]);
@@ -679,6 +681,8 @@ function TMast.GetKoppelFaktor: double;
 var
   FU1, FU2, FB: double;
 begin
+  FU1 := 0;
+  FU2 := 0;
   result := 0;
   case SalingTyp of
     stOhne, stOhne_2:
@@ -826,6 +830,10 @@ var
   SPSaling, SPController: TRealPoint;
   k1, k2, EC: double;
 begin
+  SPSaling := Null;
+  SPController := Null;
+  k1 := 0;
+  k2 := 0;
   Abstaende;
 
   { Geometrie für Mastsystem }

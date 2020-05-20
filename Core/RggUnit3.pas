@@ -767,6 +767,7 @@ var
   Temp, TempA0, TempA, TempC, TempD: TRealPoint;
   WStrich3d, WStrich2d, W1Strich, Saling1L, Skalar: double;
 begin
+  Temp := Null;
   MakeRumpfKoord;
   rPe[ooE] := rP[ooE];
   try

@@ -377,8 +377,6 @@ var
   EdgePosition: single;
   claDeck: TAlphaColor;
 
-  PosX: single;
-  PosY: single;
   s: string;
 
   procedure TextOut(x, y: single; s: string; ha, va: TTextAlign);
@@ -523,19 +521,6 @@ begin
     Canvas.Stroke.Color := claYellow;
     R := RectF(PosXE0-2.5, -11, PosXE0 + 2.5, 11);
     Canvas.DrawRect(R, 0, 0, [], 1.0);
-
-    { Button }
-    Canvas.Stroke.Thickness := 1.0;
-    Canvas.Stroke.Color := claBlack;
-    Canvas.Fill.Color := claSilver;
-    PosX := PosXE0 - 20;
-    PosY := -45;
-    R := RectF(PosX - 15, PosY - 1, PosX + 15, PosY + 10);
-    Canvas.FillRect(R, 0, 0, [], 1.0);
-
-    WantTextRect := False;
-    Canvas.Fill.Color := claWhite;
-    TextOut(PosX, PosY, 'Zustellen', TTextAlign.Center, TTextAlign.Leading);
   end;
 
   { Profil Blau - in Höhe E }

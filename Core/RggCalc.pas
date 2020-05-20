@@ -35,7 +35,7 @@ type
 
 function SchnittGG(P1, P2, P3, P4: TRealPoint; var SP: TRealPoint): Boolean;
 function Abstand(P1, P2: TRealPoint): double;
-function PsiVonPhi(phi, l1, l2, l3, l4: double; var sv: Boolean): double;
+function PsiVonPhi(phi, l1, l2, l3, l4: double; out sv: Boolean): double;
 function StartWinkel(l1, l2, l3, l4: double; var sv: Boolean): double;
 function Hoehe(a, b, c: double; var k: double): double;
 function vadd(a, b: TRealPoint): TRealPoint;
@@ -205,7 +205,7 @@ begin
   result := sqrt(sqr(b) - sqr(k) * sqr(a));
 end;
 
-function PsiVonPhi(phi, l1, l2, l3, l4: double; var sv: Boolean): double;
+function PsiVonPhi(phi, l1, l2, l3, l4: double; out sv: Boolean): double;
 var
   a, b, c, Rad: double;
 begin

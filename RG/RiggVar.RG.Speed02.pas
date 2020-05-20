@@ -343,8 +343,6 @@ begin
 
   { Original Rigg Toolbar Buttons }
 
-  BtnColor := claBeige;
-  BtnColor := SpeedColorScheme.claMemory;
   BtnColorValue := clvMemory;
 
   sb := AddSpeedBtn('MemoryBtn', BtnGroupSpace);
@@ -357,8 +355,6 @@ begin
   sb.Tag := faMemoryRecallBtn;
   InitSpeedButton(sb);
 
-  BtnColor := claAquamarine;
-  BtnColor := SpeedColorScheme.claRigg;
   BtnColorValue := clvRigg;
 
   sb := AddSpeedBtn('SofortBtn', BtnGroupSpace);
