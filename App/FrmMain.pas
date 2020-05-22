@@ -29,12 +29,10 @@ uses
   System.Types,
   System.UITypes,
   System.UIConsts,
-  RggScroll,
   RggDisplayTypes,
   RggDisplay,
   RggRaumGraph,
   RggRota,
-  RggTestData,
   RggCtrls,
   RggChartGraph,
   FMX.Platform,
@@ -430,8 +428,7 @@ begin
   ChartGraph.Free;
 end;
 
-procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
-  Shift: TShiftState);
+procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
 var
   fa: Integer;
 begin
@@ -467,13 +464,13 @@ begin
   if WantButtonFrameReport then
   begin
     Main.FederText.Report(RL);
+    ReportText.Text := RL.Text;
   end
   else
   begin
     ReportManager.ShowCurrentReport;
+    ReportText.Text := RL.Text;
   end;
-
-  ReportText.Text := RL.Text;
 end;
 
 procedure TFormMain.UpdateFormat(w, h: Integer);
@@ -616,7 +613,7 @@ begin
       SpeedPanel.UpdateLayout;
   end;
   UpdateReport;
-//  CheckSpaceForListbox;
+//  CheckSpaceForListbox; // not necessary because it is transparent
   CheckSpaceForMemo;
   CheckSpaceForImages;
 end;
@@ -645,13 +642,16 @@ begin
     ParamListbox.Visible := False;
     if ReportListbox <> nil then
       ReportListbox.Visible := False;
+
+    HelpText.Position.X := Raster + 30;
+
+    ReportText.Position.X := Raster + 30;
+
     Image.Position.X := 0;
     Image.Position.Y := 0;
     Image.Width := Bitmap.Width;
     Image.Height := Bitmap.Height;
     Image.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop];
-    HelpText.Position.X := Raster + 30;
-    ReportText.Position.X := Raster + 30;
   end
   else
   begin
@@ -659,13 +659,16 @@ begin
     ParamListbox.Visible := True;
     if ReportListbox <> nil then
       ReportListbox.Visible := True;
+
+    HelpText.Position.X := TextPositionX;
+
+    ReportText.Position.X := TextPositionX;
+
     Image.Position.X := ImagePositionX;
     Image.Position.Y := ImagePositionY;
     Image.Width := ClientWidth - Image.Position.X - Raster - Margin;
     Image.Height := ClientHeight - Image.Position.Y - Raster - Margin;
     Image.Anchors := Image.Anchors + [TAnchorKind.akRight, TAnchorKind.akBottom];
-    HelpText.Position.X := TextPositionX;
-    ReportText.Position.X := TextPositionX;
   end;
 end;
 
@@ -679,6 +682,7 @@ begin
 
   { ClientWidth and ClientHeight are not yet available when starting up.
     ClientHeigt is available when FormShow is called. }
+
   if FormShown then
   begin
     { when FormResize is called after FormShow }

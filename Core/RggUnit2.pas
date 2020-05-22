@@ -830,10 +830,6 @@ var
   SPSaling, SPController: TRealPoint;
   k1, k2, EC: double;
 begin
-  SPSaling := Null;
-  SPController := Null;
-  k1 := 0;
-  k2 := 0;
   Abstaende;
 
   { Geometrie für Mastsystem }

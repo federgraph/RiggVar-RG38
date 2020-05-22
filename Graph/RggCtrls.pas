@@ -308,42 +308,23 @@ begin
     InternalDrawProfile6(Canvas);
   end;
 
-  { Profilschnitt  mit Path }
-//  if False then
-//  begin
-//    Canvas.Stroke.Thickness := 1.0;
-//    Canvas.Stroke.Color := claRed;
-//    w := PBSize.X;
-//    h := PBSize.Y;
-//    f := h / 500;
-//    m1 := Canvas.Matrix;
-//    m2 := TMatrix.Identity;
-//    mt := TMatrix.CreateScaling(f, -f);
-//    m2 := m2 * mt;
-//    mt := TMatrix.CreateTranslation(w / 2, (oy - SalingH + SalingHOffset) * f);
-//    m2 := m2 * mt;
-//    Canvas.SetMatrix(m2);
-//    Canvas.DrawPath(FPathDataHoch, 1.0);
-//    Canvas.SetMatrix(m1);
-//  end;
-
   { Text }
   Canvas.Font.Size := 40.0;
   th := 80;
 
-  Canvas.Fill.Color := claBlack;
+  Canvas.Fill.Color := claYellow;
   PosX := 50;
   PosY := 50;
   s := Format('SHO = %d mm',[SalingHOffset]);
   TextOut(PosX, PosY, s, TTextAlign.Leading, TTextAlign.Leading);
 
-  Canvas.Fill.Color := claGreen;
+  Canvas.Fill.Color := claLime;
   PosX := -480;
   PosY := oy - 3 * th;
   s := Format('SalingL = %d mm',[SalingL]);
   TextOut(PosX, PosY, s, TTextAlign.Center, TTextAlign.Leading);
 
-  Canvas.Fill.Color := claNavy;
+  Canvas.Fill.Color := claAqua;
   PosX := 50;
   PosY := oy - 1.5 * th;
   s := Format('SalingH = %d mm',[SalingH]);
@@ -355,7 +336,7 @@ begin
   s := Format('SalingH - SHO = %d mm',[SalingH - SalingHOffset]);
   TextOut(PosX, PosY, s, TTextAlign.Leading, TTextAlign.Leading);
 
-  Canvas.Fill.Color := claBlue;
+  Canvas.Fill.Color := claWhite;
   PosX := -300;
   PosY := oy + 10;
   s := Format('SalingA = %d mm',[SalingA]);
@@ -441,23 +422,29 @@ begin
   R := RectF(-100, 80, 85, 32);
   Canvas.FillRect(R, 20, -20, AllCorners, 1.0);
 
-  { rechter Klotz mit Rundung im Deckausschnitt }
-  KlotzX1 := EdgePosition - 10;
-  KlotzX2 := 80;
+  { Deck vorn }
+  KlotzX1 := EdgePosition - 10 - 5; // EdgePosition - Radius, at least
+  KlotzX2 := 100; // or bigger
   R := RectF(KlotzX1, -80, KlotzX2,  80);
-  Canvas.Stroke.Thickness := 40;
-  DebugColor := claBlue;
-  Canvas.Stroke.Color := claDeck;
-  Canvas.DrawRect(R, 0, 0, [], 1.0);
+  DebugColor := claLime;
+  SetFillColor(claDeck);
+  Canvas.FillRect(R, 0, 0, [], 1.0);
 
-  KlotzX2 := EdgePosition;
-  KlotzX1 := KlotzX2 - 50;
-  DebugColor := claFuchsia;
+  { rechter Klotz mit Rundung im Deckausschnitt }
+  KlotzX2 := EdgePosition; // Kante Deck vorn !
+  KlotzX1 := KlotzX2 - 50; //does not matter much, should just be wide enough
+  DebugColor := claBeige;
   SetFillColor(BackgroundColor);
   R := RectF(KlotzX1, -32, KlotzX2,  32);
   Canvas.FillRect(R, 10, 10, AllCorners, 1.0);
 
-  { Controller ausblenden, wenn OhneSaling/Mast starr }
+  { Profil Blau - in Höhe E }
+  OffsetY := ProfilPosXE;
+  Canvas.Stroke.Thickness := 1.0;
+  Canvas.Stroke.Color := claBlue;
+  InternalDrawProfile3(Canvas);
+
+  { Only show Controller when used }
   if ControllerTyp <> ctOhne then
   begin
     { linker Klotz }
@@ -495,6 +482,12 @@ begin
     Canvas.Fill.Color := claGray;
     Canvas.FillRect(R, 0,0, [], 1.0);
 
+    { Ablesemarke (Rechteck) an Stelle EO }
+    Canvas.Stroke.Thickness := 1.0;
+    Canvas.Stroke.Color := claYellow;
+    R := RectF(PosXE0-2.5, -11, PosXE0 + 2.5, 11);
+    Canvas.DrawRect(R, 0, 0, [], 1.0);
+
     { Teilung Text }
     WantTextRect := False;
     Canvas.Stroke.Thickness := 0.2;
@@ -515,19 +508,7 @@ begin
     WantTextRect := False;
     TextOut(PosXE0, -22, 'E0', TTextAlign.Center, TTextAlign.Leading);
     TextOut(50, 34, 'Ablesemarke an Position E0 + Offset', TTextAlign.Center, TTextAlign.Leading);
-
-    { Ablesemarke (Rechteck) an Stelle EO }
-    Canvas.Stroke.Thickness := 1.0;
-    Canvas.Stroke.Color := claYellow;
-    R := RectF(PosXE0-2.5, -11, PosXE0 + 2.5, 11);
-    Canvas.DrawRect(R, 0, 0, [], 1.0);
   end;
-
-  { Profil Blau - in Höhe E }
-  OffsetY := ProfilPosXE;
-  Canvas.Stroke.Thickness := 1.0;
-  Canvas.Stroke.Color := claBlue;
-  InternalDrawProfile3(Canvas);
 end;
 
 procedure TSalingGraph.DrawTestFigure(g: TCanvas);

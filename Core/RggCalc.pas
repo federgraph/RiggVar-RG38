@@ -33,11 +33,11 @@ type
     ggOK
   );
 
-function SchnittGG(P1, P2, P3, P4: TRealPoint; var SP: TRealPoint): Boolean;
+function SchnittGG(P1, P2, P3, P4: TRealPoint; out SP: TRealPoint): Boolean;
 function Abstand(P1, P2: TRealPoint): double;
 function PsiVonPhi(phi, l1, l2, l3, l4: double; out sv: Boolean): double;
-function StartWinkel(l1, l2, l3, l4: double; var sv: Boolean): double;
-function Hoehe(a, b, c: double; var k: double): double;
+function StartWinkel(l1, l2, l3, l4: double; out sv: Boolean): double;
+function Hoehe(a, b, c: double; out k: double): double;
 function vadd(a, b: TRealPoint): TRealPoint;
 function vsub(a, b: TRealPoint): TRealPoint;
 function vprod(a, b: TRealPoint): TRealPoint;
@@ -131,7 +131,7 @@ begin
   Abstand := sqrt(h4);
 end;
 
-function SchnittGG(P1, P2, P3, P4: TRealPoint; var SP: TRealPoint): Boolean;
+function SchnittGG(P1, P2, P3, P4: TRealPoint; out SP: TRealPoint): Boolean;
 var
   a1, a2: double;
   sx, sz, x1, z1, x3, z3: double;
@@ -198,7 +198,7 @@ begin
   SP[z] := sz;
 end;
 
-function Hoehe(a, b, c: double; var k: double): double;
+function Hoehe(a, b, c: double; out k: double): double;
 begin
   k := sqr(a) + sqr(b) - sqr(c);
   k := k / 2 / a / a;
@@ -225,7 +225,7 @@ begin
     result := 0;
 end;
 
-function StartWinkel(l1, l2, l3, l4: double; var sv: Boolean): double;
+function StartWinkel(l1, l2, l3, l4: double; out sv: Boolean): double;
 var
   cosphi: double;
   sw: double;
