@@ -44,6 +44,8 @@ type
     WantOnResize: Boolean;
     ColorScheme: TColorScheme;
     Raster: Integer;
+    ScaledRaster: Integer;
+    Scale: single;
     ClientWidth: Integer;
     ClientHeight: Integer;
     class constructor Create;

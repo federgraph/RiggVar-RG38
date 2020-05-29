@@ -1,11 +1,11 @@
-﻿unit RggPolarkar;
+﻿unit RggPolarKar;
 
 interface
 
 uses
   System.SysUtils,
   System.Math,
-  Vector3D,
+  RggVector,
   RggTypes,
   RggMatrix;
 

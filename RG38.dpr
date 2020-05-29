@@ -75,7 +75,7 @@ uses
   RggDisplayTypes in 'Graph\RggDisplayTypes.pas',
   RggChart in 'Graph\RggChart.pas',
   RggChartGraph in 'Graph\RggChartGraph.pas',
-  Vector3D in 'Graph\Vector3D.pas',
+  RggVector in 'Graph\RggVector.pas',
   RiggVar.Util.AppUtils in 'Util\RiggVar.Util.AppUtils.pas',
   RiggVar.Util.Logger in 'Util\RiggVar.Util.Logger.pas';
 

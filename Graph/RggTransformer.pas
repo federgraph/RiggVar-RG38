@@ -67,7 +67,7 @@ type
 implementation
 
 uses
-  Vector3D;
+  RggVector;
 
 { TRggTransformer00 }
 

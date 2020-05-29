@@ -1,4 +1,4 @@
-﻿unit Vector3D;
+﻿unit RggVector;
 
 { VECTOR3D.Pas: Vector operations für ThreeD. }
 

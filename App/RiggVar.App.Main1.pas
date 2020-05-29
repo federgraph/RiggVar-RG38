@@ -303,7 +303,6 @@ end;
 
 procedure TMain1.CopyAndPaste;
 var
-  s: string;
   fd: TRggData;
 begin
   { copy }
@@ -311,7 +310,6 @@ begin
   RggMain.SaveTrimm(fd);
   fd.WantAll := True;
   fd.SaveTrimmItem(FL);
-  s := FL.Text;
 
   { paste }
   ReadText(FL);
@@ -670,7 +668,7 @@ begin
   Logger.Info('SetTrimm: ' + IntToStr(Value));
   FTrimm := Value;
   RggMain.LoadTrimm(CurrentTrimm);
-  FormMain.UpdateReport;
+  FormMain.UpdateOnParamValueChanged;
 end;
 
 function TMain1.GetIsRggParam: Boolean;
@@ -748,13 +746,13 @@ begin
     fa420:
     begin
       RggMain.Init420;
-      FormMain.UpdateReport;
+      FormMain.UpdateOnParamValueChanged;
     end;
 
     faLogo:
     begin
       RggMain.InitLogo;
-      FormMain.UpdateReport;
+      FormMain.UpdateOnParamValueChanged;
     end;
 
     faUpdateTrimm0: UpdateTrimm0;
@@ -840,7 +838,10 @@ begin
     faWantRenderE,
     faWantRenderS:
     begin
-      result := RggMain.StrokeRigg.QueryRenderOption(fa);
+      if RggMain.StrokeRigg <> nil then
+        result := RggMain.StrokeRigg.QueryRenderOption(fa)
+      else
+        result := False;
     end;
 
     faHull: result := RggMain.HullVisible;
@@ -885,12 +886,14 @@ begin
   ML.Add('Report:');
   ML.Add('  ReportCounter = ' + IntToStr(ReportCounter));
   ML.Add('  ColorScheme = ' + IntToStr(MainVar.ColorScheme.Scheme));
-//  ML.Add('  Scale = ' + FloatToStr(RetinaScale));
-//  ML.Add('  Retina = ' + BoolStr[IsRetina]);
+  ML.Add('  Scale = ' + FloatToStr(Scale));
+  ML.Add('  Retina = ' + BoolStr[IsRetina]);
   ML.Add('  Sandboxed = ' + BoolStr[IsSandboxed]);
   ML.Add('  WantOnResize = ' + BoolStr[MainVar.WantOnResize]);
   ML.Add('  ResizeCounter = ' + IntToStr(ResizeCounter));
   ML.Add(Format('  ClientSize = (%d, %d)', [MainVar.ClientWidth, MainVar.ClientHeight]));
+  ML.Add(Format('  Image.Size = (%d, %d)', [Round(FormMain.Image.Width), Round(FormMain.Image.Height)]));
+  ML.Add(Format('  Bitmap.Size = (%d, %d)', [FormMain.Bitmap.Width, FormMain.Bitmap.Height]));
   ML.Add('---');
 end;
 

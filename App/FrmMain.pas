@@ -147,6 +147,7 @@ type
     Raster: Integer;
     Margin: Integer;
     ListboxWidth: Integer;
+    ReportMemoWidth: Integer;
     SpeedPanelHeight: Integer;
     SpeedPanel: TActionSpeedBar;
     procedure InitSpeedButtons;
@@ -186,12 +187,13 @@ type
     Rigg: TRigg;
     ReportManager: TRggReportManager;
     FViewPoint: TViewPoint;
+    procedure UpdateOnParamValueChanged;
     procedure SetIsUp(const Value: Boolean);
     function GetIsUp: Boolean;
     procedure SetViewPoint(const Value: TViewPoint);
     property ViewPoint: TViewPoint read FViewPoint write SetViewPoint;
     property IsUp: Boolean read GetIsUp write SetIsUp;
-  protected
+  public
     Bitmap: TBitmap;
     Image: TImage;
     ImagePositionX: single;
@@ -269,17 +271,32 @@ begin
   Application.OnException := ApplicationEventsException;
 
   FormMain := self;
-  Left := 100;
-  Top := 30;
-  Width := 1700;
-  Height := 960;
+  if (Screen.Width >= 1920) and (Screen.Height >= 1024) then
+  begin
+    { Tested on normal HD screen }
+    Left := 100;
+    Top := 30;
+    Width := 1700;
+    Height := 960;
+    ReportMemoWidth := 480;
+  end
+  else
+  begin
+    { Tested on Microsoft Surface Tablet }
+    Left := 20;
+    Top := 30;
+    Width := 1336;
+    Height := 800;
+    ReportMemoWidth := 320;
+  end;
+
   Margin := 2;
   Raster := MainVar.Raster;
+  MainVar.Scale := FScale;
+  MainVar.ScaledRaster := Raster;
+
   SpeedPanelHeight := Raster;
   ListboxWidth := 200;
-
-  { RSP-20787 when TFormPosition.ScreenCenter}
-//  Self.Position := TFormPosition.ScreenCenter;
 
   CreateComponents;
 
@@ -305,12 +322,9 @@ begin
   RotaForm.Image := Image;
   RotaForm.Init;
   DL := RotaForm.RaumGraph.DL;
-  RotaForm.IsUp := True;
   RotaForm.ViewPoint := vp3D;
   RotaForm.ZoomIndex := 8;
   RotaForm.FixPoint := ooD;
-
-  RotaForm.Draw;
 
   { Params }
   Main.RggMain.Param := fpVorstag; // --> TempIst wird gesetzt, SetupTrackBar() aufgerufen
@@ -441,6 +455,15 @@ begin
     Main.ActionHandler.Execute(fa);
   end;
   ShowTrimm;
+end;
+
+procedure TFormMain.UpdateOnParamValueChanged;
+begin
+  ShowTrimm;
+  UpdateSalingGraph;
+  UpdateControllerGraph;
+  UpdateChartGraph;
+  UpdateReport;
 end;
 
 procedure TFormMain.UpdateReport;
@@ -577,10 +600,7 @@ begin
   if (ssShift in Shift) or (ssCtrl in Shift) then
   begin
     Main.DoMouseWheel(Shift, WheelDelta);
-    ShowTrimm;
-    UpdateSalingGraph;
-    UpdateControllerGraph;
-    UpdateChartGraph;
+    UpdateOnParamValueChanged;
     Handled := True;
   end;
 end;
@@ -597,6 +617,8 @@ begin
     SetupListboxItems(ReportListbox, claAquamarine);
     UpdateSpeedButtonDown;
     UpdateReport;
+    RotaForm.IsUp := True;
+    RotaForm.Draw;
   end;
 end;
 
@@ -632,7 +654,7 @@ begin
   if not ComponentsCreated then
     Exit;
 
-  if (ClientWidth < 1100) or (ClientHeight < 800) then
+  if (ClientWidth < 900) or (ClientHeight < 700) then
   begin
     if RotaForm.LegendItemChecked then
     begin
@@ -686,11 +708,16 @@ begin
   if FormShown then
   begin
     { when FormResize is called after FormShow }
-    if (ClientWidth < 1200) or (ClientHeight < 600) then
+    if (ChartImage.BoundsRect.Right > ClientWidth - Raster) or
+       (ChartImage.BoundsRect.Bottom > ClientHeight - Raster) then
       ChartImage.Visible := False;
-    if (ClientWidth < 1500) or (ClientHeight < 655) then
+
+    if (ControllerImage.BoundsRect.Left < ReportText.BoundsRect.Right) or
+       (ControllerImage.BoundsRect.Bottom > ClientHeight - Raster) then
       ControllerImage.Visible := False;
-    if (ClientWidth < 1500) or (ClientHeight < 875) then
+
+    if (SalingImage.BoundsRect.Left < ReportText.BoundsRect.Right) or
+       (SalingImage.BoundsRect.Bottom > ClientHeight - Raster) then
       SalingImage.Visible := False;
   end
   else
@@ -1160,7 +1187,7 @@ begin
   T.HitTest := False;
 end;
 
-procedure TFormMain.SetupComboBox(CB: TComboBox);
+procedure TFormMain.SetupCombobox(CB: TComboBox);
 begin
   if CB = nil then
     Exit;
@@ -1178,7 +1205,7 @@ begin
 {$endif}
 end;
 
-procedure TFormMain.SetupListBox(LB: TListBox);
+procedure TFormMain.SetupListbox(LB: TListBox);
 begin
   if LB = nil then
     Exit;
@@ -1478,8 +1505,11 @@ begin
   if not ComponentsCreated then
     Exit;
 
-  PosX := ClientWidth - Raster - Margin - ControllerImage.Width;
+  PosX := ClientWidth - (Raster + Margin + ControllerImage.Width);
   PosY := SpeedPanel.Position.Y + SpeedPanel.Height + Margin;
+  if Screen.Height < 1000 then
+    PosY := PosY + 100
+  else
   PosY := PosY + ControllerImage.Height;
 
   ControllerImage.Position.X := PosX;
@@ -1754,7 +1784,7 @@ begin
   RotaForm.KoppelBtnClick(Sender);
 end;
 
-function TFormMain.GetChecked(fa: TFederAction): Boolean;
+function TFormMain.GetChecked(fa: Integer): Boolean;
 begin
   result := false;
   if not IsUp then
@@ -1882,6 +1912,7 @@ begin
 
   ControllerGraph.BackgroundColor := MainVar.ColorScheme.claBackground;
   UpdateControllerGraph;
+
   SalingGraph.BackgroundColor := MainVar.ColorScheme.claBackground;
   UpdateSalingGraph;
 end;

@@ -77,6 +77,9 @@ type
     ActionTest: TActionTest;
     FederBinding: TFederBinding;
 
+    Scale: single;
+    IsRetina: Boolean;
+
     constructor Create;
     destructor Destroy; override;
 
@@ -140,6 +143,9 @@ uses
 
 constructor TMain0.Create;
 begin
+  Scale := MainVar.Scale;
+  IsRetina := Scale > 1;
+
   FL := TStringList.Create;
   Logger := TLogger.Create;
 
@@ -428,9 +434,6 @@ begin
 
     else
     begin
-      { Make sure you do not create a cycle. }
-      { This may happen if you call Main.ActionHandler.Execute(fa)
-      {   from FormMain.HandleAction(fa) when handling a keyboard shortcut. }
       FormMain.HandleAction(fa);
     end;
   end;
@@ -493,7 +496,7 @@ begin
   begin
     Main.DoSmallWheel(WheelDelta);
   end;
-  FormMain.UpdateReport;
+  FormMain.UpdateOnParamValueChanged;
 end;
 
 procedure TMain0.PlusOne;
