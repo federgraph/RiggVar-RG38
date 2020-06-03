@@ -255,8 +255,8 @@ end;
 procedure TMain0.InitTouch;
 begin
   InitRaster;
-  FederText1.Visible := not IsPhone;
   FederText2.Visible := IsPhone;
+  FederText1.Visible := not FederText2.Visible;
 end;
 
 procedure TMain0.UpdateText;

@@ -8,7 +8,6 @@ uses
   RiggVar.FB.Classes,
   System.SysUtils,
   System.Classes,
-  System.Generics.Collections,
   System.Math.Vectors;
 
 type

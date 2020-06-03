@@ -387,6 +387,20 @@ begin
   sb.Tag := faKoppelBtn;
   InitSpeedButton(sb);
 
+  { Zoom Buttons }
+
+  BtnColorValue := clvZoom;
+
+  sb := AddSpeedBtn('ZoomOutBtn', BtnGroupSpace);
+  ZoomOutBtn := sb;
+  sb.Tag := faRggZoomOut;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('ZoomInBtn', 0);
+  ZoomInBtn := sb;
+  sb.Tag := faRggZoomIn;
+  InitSpeedButton(sb);
+
   { ViewPoint Buttons }
 
   BtnColorValue := clvView;
@@ -409,20 +423,6 @@ begin
   sb := AddSpeedBtn('NullBtn', 0);
   NullBtn := sb;
   sb.Tag := faViewpoint3;
-  InitSpeedButton(sb);
-
-  { Zoom Buttons }
-
-  BtnColorValue := clvZoom;
-
-  sb := AddSpeedBtn('ZoomOutBtn', BtnGroupSpace);
-  ZoomOutBtn := sb;
-  sb.Tag := faRggZoomOut;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('ZoomInBtn', 0);
-  ZoomInBtn := sb;
-  sb.Tag := faRggZoomIn;
   InitSpeedButton(sb);
 end;
 

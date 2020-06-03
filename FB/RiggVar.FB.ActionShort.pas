@@ -125,6 +125,7 @@ begin
 
     faToggleAllText: result := 'tat';
     faToggleTouchFrame: result := 'fra';
+    faToggleSpeedPanel: result := 'SP';
 
     faCycleColorSchemeM: result := 'c-';
     faCycleColorSchemeP: result := 'c+';
@@ -165,7 +166,7 @@ begin
     faChartAP: result := 'cA';
     faChartBP: result := 'cB';
 
-    faParamCountPlus: result := 'pc+';
+    faParamCountPlus: result := 'pC+';
     faParamCountMinus: result := 'pC-';
 
     faPComboPlus: result := 'cP+';

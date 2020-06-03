@@ -162,8 +162,6 @@ var
   cl: TCornerLocation;
   cla: TAlphaColor;
 begin
-//  cla := ClaWhite;
-
 {
 [1][2][3][4][5]-----[1][2][3][4][5]
 [6]-----------------------------[6]
@@ -205,7 +203,7 @@ begin
       InitAC(cl, 1, faParamValuePlus10, cla);
       InitAC(cl, 2, faShowActi, claForm);
       InitAC(cl, 3, faShowMemo, claForm);
-      InitAC(cl, 4, faNoop, cla); // faToggleDropTarget
+      InitAC(cl, 4, faToggleSpeedPanel, cla);
       InitAC(cl, 5, faHull, claOption);
       InitAC(cl, 6, faParamValuePlus1, cla);
       InitAC(cl, 7, faParamValueMinus1, cla);

@@ -123,7 +123,7 @@ procedure TChartGraph.DrawChart(g: TCanvas);
 var
   LineToPoint: TPointF;
 
-  function Limit(a: double): double;
+  function Limit(a: single): single;
   begin
     if a < -32000 then
       a := -32000
@@ -139,30 +139,30 @@ var
   end;
 
 var
-  Pt: TPoint;
-  i, p, Radius: Integer;
-  tempX, tempY: double;
+  P: TPoint;
+  i, param: Integer;
+  Radius: Integer;
+  tempX, tempY: single;
 begin
   DrawLabels(g);
 
   Radius := 2;
 
-  for p := 0 to ParamCount-1 do
+  for param := 0 to ParamCount-1 do
   begin
-
     { Kurve }
-    g.Stroke.Color := cf[p];
-    tempY := Box.Height * (bf[p, 0] - Ymin) / (Ymax - Ymin);
-    Pt.X := Box.X;
-    Pt.Y := Box.Y + Round(Limit(tempY));
-    LineToPoint := PointF(Pt.X, Pt.Y);
+    g.Stroke.Color := cf[param];
+    tempY := Box.Height * (bf[param, 0] - Ymin) / (Ymax - Ymin);
+    P.X := Box.X;
+    P.Y := Box.Y + Round(Limit(tempY));
+    LineToPoint := PointF(P.X, P.Y);
     for i := 1 to LNr do
     begin
       tempX := Box.Width * (i / LNr);
-      tempY := Box.Height * (bf[p, i] - Ymin) / (Ymax - Ymin);
-      Pt.X := Box.X + Round(Limit(tempX));
-      Pt.Y := Box.Y + Round(Limit(tempY));
-      LineTo(Pt.X, Pt.Y);
+      tempY := Box.Height * (bf[param, i] - Ymin) / (Ymax - Ymin);
+      P.X := Box.X + Round(Limit(tempX));
+      P.Y := Box.Y + Round(Limit(tempY));
+      LineTo(P.X, P.Y);
     end;
 
     if WantRectangles then
@@ -170,16 +170,16 @@ begin
       { Rechtecke }
       g.Stroke.Thickness := 1.0;
       g.Stroke.Color := claWhite;
-      g.Fill.Color := cf[p];
+      g.Fill.Color := cf[param];
       for i := 0 to LNr do
       begin
         tempX := Box.Width * (i / LNr);
-        tempY := Box.Height * (bf[p, i] - Ymin) / (Ymax - Ymin);
-        Pt.x := Box.X + Round(Limit(tempX));
-        Pt.y := Box.Y + Round(Limit(tempY));
+        tempY := Box.Height * (bf[param, i] - Ymin) / (Ymax - Ymin);
+        P.x := Box.X + Round(Limit(tempX));
+        P.y := Box.Y + Round(Limit(tempY));
         g.FillRect(
-          RectF(Pt.x - Radius, Pt.y - Radius,
-                Pt.x + Radius, Pt.y + Radius), 0, 0, [], 1.0);
+          RectF(P.x - Radius, P.y - Radius,
+                P.x + Radius, P.y + Radius), 0, 0, [], 1.0);
       end;
     end;
 

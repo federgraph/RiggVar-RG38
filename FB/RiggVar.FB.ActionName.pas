@@ -246,6 +246,7 @@ faToggleFontColor: result := 'faToggleFontColor';
 faToggleSandboxed: result := 'faToggleSandboxed';
 faToggleAllProps: result := 'faToggleAllProps';
 faToggleAllTags: result := 'faToggleAllTags';
+faToggleSpeedPanel: result := 'faToggleSpeedPanel';
 
 { BtnLegendTablet }
 faTL01: result := 'faTL01';

@@ -67,8 +67,6 @@ type
 implementation
 
 uses
-//  Winapi.Windows,
-//  Winapi.Messages,
   RiggVar.App.Main;
 
 { TRggReportManager }
@@ -184,6 +182,10 @@ end;
 function TRggReportManager.GetItemIndexOfReport(const Value: TRggReport): Integer;
 begin
   result := RDI[Value];
+  if (result = 0) and (Value <> rgLog) then
+  begin
+    result := RDI[rgNone];
+  end;
 end;
 
 procedure TRggReportManager.SetCurrentIndex(const Value: Integer);
@@ -211,12 +213,9 @@ begin
 end;
 
 procedure TRggReportManager.ShowCurrentReport;
-//var
-//  MemoPosY: LongInt;
 begin
   ML.BeginUpdate;
   try
-//    MemoPosY := SendMessage(FMemo.Handle, EM_GETFIRSTVISIBLELINE, 0, 0);
     ML.Clear;
     case CurrentReport of
       rgNone: ;
@@ -271,7 +270,6 @@ begin
       rgXML:
       begin
         Main.RggMain.Rigg.WriteXml(ML, XmlAllTags);
-//        SendMessage(FMemo.Handle, EM_LINESCROLL, 0, MemoPosY);
       end;
 {$endif}
       rgShort: ML.Text := Main.TrimmShort;

@@ -72,8 +72,8 @@ type
 
     EdgePos: Integer; { Abstand von E0 zur Anschlagkante Deck + Klotzdicke }
     ControllerPos: Integer; { Abstand(iP[ooE0,x], iP[ooE ,x]) in mm }
-    ParamXE: Integer;  { Abstand(iP[ooD0,x], iP[ooE,x]) in mm }
-    ParamXE0: Integer; // { Abstand(iP[ooD0,x], iP[ooE0,x]) in mm }
+    ParamXE: double;  { Abstand(iP[ooD0,x], iP[ooE,x]) in mm }
+    ParamXE0: Integer; { Abstand(iP[ooD0,x], iP[ooE0,x]) in mm }
 
     SalingA: Integer; { Abstand(iP[ooA,x], iP[ooB,x]) in mm }
     SalingH: Integer; { Abstand Verbindungslinie Salinge zu Hinterkante Mast in mm }
@@ -205,10 +205,6 @@ var
 
   oy: single;
   th: single;
-
-//  m1, m2, mt: TMatrix;
-//  f: single;
-//  w, h: single;
 
   procedure MoveToLineTo(x1, y1, x2, y2: single);
   begin

@@ -13,9 +13,8 @@ uses
   RggVector;
 
 const
-  // pi = 3.14159265;
-  maxvert = 400; // 30;
-  maxcon = 1000; // 30;
+  maxvert = 400;
+  maxcon = 1000;
 
 type
   TRotationAngle = (raPhi, raTheta, raGamma, raXrot, raYrot, raZrot);
@@ -23,7 +22,6 @@ type
   TVertArrayF = array [0 .. maxvert] of single;
   TVertArrayI = array [0 .. maxvert] of Integer;
   TConArray = array [0 .. maxcon] of Integer;
-  TConColors = array [0 .. 15] of TAlphaColor;
 
   Matrix4x4 = array [1 .. 4, 1 .. 4] of double;
 

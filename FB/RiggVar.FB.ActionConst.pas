@@ -317,7 +317,9 @@ faMemeFormat7 = 235;
 faMemeFormat8 = 236;
 faMemeFormat9 = 237;
 
-faMax = 238;
+faToggleSpeedPanel = 238;
+
+faMax = 239;
 
 ParamsRange = [faController .. faMastfussD0X];
 ReportsRange = [faReportNone .. faReportReadme];

@@ -20,6 +20,8 @@ uses
   RggRaumGraph;
 
 type
+  TConColors = array [0 .. 15] of TAlphaColor;
+
   THullGraph0 = class(TRggGraph)
   private
     procedure MessageBeep(Value: Integer);
@@ -32,7 +34,7 @@ type
     con: TConArray;
     ncon: Integer;
     gr: TConColors;
-    { Matrix }
+
     function AddVert(x, y, z: single): Integer;
     procedure AddLine(p1, p2: Integer);
     procedure Paint(g: TCanvas);

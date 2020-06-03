@@ -150,9 +150,13 @@ type
     ReportMemoWidth: Integer;
     SpeedPanelHeight: Integer;
     SpeedPanel: TActionSpeedBar;
+    SpeedPanel1: TActionSpeedBar;
+    SpeedPanel2: TActionSpeedBar;
     procedure InitSpeedButtons;
+    procedure LayoutSpeedPanel(SP: TActionSpeedBar);
     procedure UpdateSpeedButtonDown;
     procedure UpdateSpeedButtonEnabled;
+    procedure ToggleSpeedPanel;
   public
     procedure ChartImageBtnClick(Sender: TObject);
     procedure SalingImageBtnClick(Sender: TObject);
@@ -274,10 +278,10 @@ begin
   if (Screen.Width >= 1920) and (Screen.Height >= 1024) then
   begin
     { Tested on normal HD screen }
-    Left := 100;
-    Top := 30;
-    Width := 1700;
-    Height := 960;
+  Left := 100;
+  Top := 30;
+  Width := 1700;
+  Height := 960;
     ReportMemoWidth := 480;
   end
   else
@@ -624,20 +628,28 @@ end;
 
 procedure TFormMain.FormResize(Sender: TObject);
 begin
-  MainVar.ClientWidth := ClientWidth;
-  MainVar.ClientHeight := ClientHeight;
+  //if not FormShown then
+  //   Exit;
+
+  { will be done via Resize and UpdateTouch }
+  //MainVar.ClientWidth := ClientWidth;
+  //MainVar.ClientHeight := ClientHeight;
+
   if (Main <> nil) and Main.IsUp then
   begin
     Inc(Main.ResizeCounter);
     Main.UpdateTouch;
     Main.UpdateText;
-    if FormShown then
-      SpeedPanel.UpdateLayout;
   end;
-  UpdateReport;
-//  CheckSpaceForListbox; // not necessary because it is transparent
-  CheckSpaceForMemo;
-  CheckSpaceForImages;
+
+  if FormShown then
+  begin
+    SpeedPanel.UpdateLayout;
+    UpdateReport;
+//  CheckSpaceForListbox; // not necessary because Listbox is transparent
+    CheckSpaceForMemo;
+    CheckSpaceForImages;
+  end;
 end;
 
 procedure TFormMain.CheckSpaceForListbox;
@@ -831,6 +843,8 @@ end;
 procedure TFormMain.HandleAction(fa: Integer);
 begin
   case fa of
+    faToggleSpeedPanel: ToggleSpeedPanel;
+
     faMemeToggleHelp:
     begin
       HelpText.Visible := not HelpText.Visible;
@@ -994,7 +1008,7 @@ begin
     's': fa := faMemeGotoSquare;
 
     't': fa := faToggleFontColor;
-    'T': ;
+    'T': fa := FaToggleSpeedPanel;
 
     'u': fa := faToggleDataText;
     'U': fa := faToggleDiffText;
@@ -1263,10 +1277,20 @@ begin
   TrimmText := TText.Create(Self);
   SetupText(TrimmText);
 
-  SpeedPanel := TActionSpeedBarRG02.Create(Self);
-  SpeedPanel.Parent := Self;
-  SpeedPanel.ShowHint := True;
-  SpeedPanel.Opacity := OpacityValue;
+  SpeedPanel1 := TActionSpeedBarRG01.Create(Self);
+  SpeedPanel1.Parent := Self;
+  SpeedPanel1.ShowHint := True;
+  SpeedPanel1.Visible := False;
+  SpeedPanel1.Opacity := OpacityValue;
+
+  SpeedPanel2 := TActionSpeedBarRG02.Create(Self);
+  SpeedPanel2.Parent := Self;
+  SpeedPanel2.ShowHint := True;
+  SpeedPanel2.Visible := False;
+  SpeedPanel2.Opacity := OpacityValue;
+
+  SpeedPanel := SpeedPanel2;
+  SpeedPanel.Visible := True;
 
   ParamListbox := TListbox.Create(Self);
   ParamListbox.Parent := Self;
@@ -1286,6 +1310,31 @@ begin
   ComponentsCreated := True;
 end;
 
+procedure TFormMain.ToggleSpeedPanel;
+begin
+  SpeedPanel.Visible := False;
+
+  if SpeedPanel = SpeedPanel1 then
+    SpeedPanel := SpeedPanel2
+  else
+    SpeedPanel := SpeedPanel1;
+
+  SpeedPanel.Visible := True;
+  SpeedPanel.UpdateSpeedButtonEnabled;
+  SpeedPanel.UpdateSpeedButtonDown;
+end;
+
+procedure TFormMain.LayoutSpeedPanel(SP: TActionSpeedBar);
+begin
+  SP.Anchors := [];
+  SP.Position.X := 2 * Raster + Margin;
+  SP.Position.Y := Raster + Margin;
+  SP.Width := ClientWidth - 3 * Raster - 2 * Margin;
+  SP.Height := SpeedPanelHeight;
+  SP.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akRight];
+  SP.UpdateLayout;
+end;
+
 procedure TFormMain.LayoutComponents;
 begin
   if not ComponentsCreated then
@@ -1296,11 +1345,8 @@ begin
   { Then it only 'works' if these values are big enough, }
   { so that computed values for Height and Width are > 0 }
 
-  SpeedPanel.Position.X := 2 * Raster + Margin;
-  SpeedPanel.Position.Y := Raster + Margin;
-  SpeedPanel.Width := ClientWidth - 3 * Raster - 2 * Margin;
-  SpeedPanel.Height := SpeedPanelHeight;
-  SpeedPanel.Anchors := SpeedPanel.Anchors + [TAnchorKind.akRight];
+  LayoutSpeedPanel(SpeedPanel1);
+  LayoutSpeedPanel(SpeedPanel2);
 
   TrimmText.Position.X := Raster + Margin;
   TrimmText.Position.Y := 2 * Raster + Margin;
@@ -1373,6 +1419,8 @@ procedure TFormMain.ChartImageBtnClick(Sender: TObject);
 begin
   ChartImage.Visible := not ChartImage.Visible;
   if ChartImage.Visible then
+    ChartImage.BringToFront;
+  if ChartImage.Visible then
     UpdateChartGraph;
 end;
 
@@ -1380,12 +1428,16 @@ procedure TFormMain.SalingImageBtnClick(Sender: TObject);
 begin
   SalingImage.Visible := not SalingImage.Visible;
   if SalingImage.Visible then
+    SalingImage.BringToFront;
+  if SalingImage.Visible then
     UpdateSalingGraph;
 end;
 
 procedure TFormMain.ControllerImageBtnClick(Sender: TObject);
 begin
   ControllerImage.Visible := not ControllerImage.Visible;
+  if ControllerImage.Visible then
+    ControllerImage.BringToFront;
   if ControllerImage.Visible then
     UpdateControllerGraph;
 end;
@@ -1466,7 +1518,7 @@ begin
   begin
     ControllerGraph.ControllerTyp := Rigg.ControllerTyp;
     ControllerGraph.ControllerPos := Round(Main.RggMain.ParamValue[fpController]);
-    ControllerGraph.ParamXE := Round(Rigg.MastPositionE);
+    ControllerGraph.ParamXE := Rigg.MastPositionE;
     ControllerGraph.ParamXE0 := Round(Rigg.iP[ooE0, x] - Rigg.iP[ooD0, x]);
     ControllerGraph.EdgePos := Round(Rigg.GSB.Find(fpController).Min);
 
@@ -1878,8 +1930,10 @@ end;
 
 procedure TFormMain.InitSpeedButtons;
 begin
-  if SpeedPanel <> nil then
-    SpeedPanel.InitSpeedButtons;
+  if SpeedPanel1 <> nil then
+    SpeedPanel1.InitSpeedButtons;
+  if SpeedPanel2 <> nil then
+    SpeedPanel2.InitSpeedButtons;
 end;
 
 procedure TFormMain.UpdateSpeedButtonDown;

@@ -263,6 +263,7 @@ ActionGroupRggSonstiges: TActionGroup = [
   faButtonFrameReport,
   faToggleFontColor,
   faToggleSandboxed,
+  faToggleSpeedPanel,
   faToggleAllProps,
   faToggleAllTags];
 

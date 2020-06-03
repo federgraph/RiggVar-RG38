@@ -126,7 +126,8 @@ begin
     faActionPageX: result := 'Action Page X';
 
     faToggleAllText: result := 'Toggle all text';
-    faToggleTouchFrame: result := 'Touch frame';
+    faToggleTouchFrame: result := 'Toggle Touch Frame';
+    faToggleSpeedPanel: result := 'Toggle Speed Panel';
 
     faCycleColorSchemeM: result := 'cycle 3D color scheme -';
     faCycleColorSchemeP: result := 'cycle 3D color scheme +';

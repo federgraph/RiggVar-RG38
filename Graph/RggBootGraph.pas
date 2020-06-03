@@ -67,7 +67,6 @@ end;
 procedure TBootGraph.SetKoordinaten(const Value: TRealRiggPoints);
 begin
   rP := Value;
-//  Transformer.FixPunkt := rP[FixPoint]; // now using OnGetFixPunkt Event
   GrafikOK := True;
   Updated := False;
 end;
