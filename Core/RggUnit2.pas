@@ -713,7 +713,7 @@ var
   DX3, DY3, W3: double;
   D, D1, D2: double;
   BekanntFX, BekanntFY: double;
-  S: String;
+  s: string;
 begin
   W1 := -1;
   W2 := -1;
@@ -738,6 +738,13 @@ begin
     BekanntFY := -FB * DY3 / W3;
     { Ausrechnen der Stabkräfte }
     D := DX1 * DY2 - DX2 * DY1;
+    if D = 0 then
+    begin
+      { we do not want exceptions when running in the debugger }
+      FU1 := 0;
+      FU2 := 0;
+      Exit;
+    end;
     D1 := BekanntFX * DY2 - BekanntFY * DX2;
     D2 := BekanntFY * DX1 - BekanntFX * DY1;
     FU1 := D1 / D * W1; { 1. neu ermittelte Stabkraft }
@@ -748,17 +755,17 @@ begin
       { D ist Null, wenn FU1 und FU2 auf einer Geraden liegen. }
       FU1 := 0;
       FU2 := 0;
-      S := 'SolveKG21: EZeroDivide;';
+      s := 'SolveKG21: EZeroDivide;';
       if W1 = 0 then
-        S := ' W1';
+        s := ' W1';
       if W2 = 0 then
-        S := S + ' W2';
+        s := S + ' W2';
       if W3 = 0 then
-        S := S + ' W3';
+        s := S + ' W3';
       if D = 0 then
-        S := S + ' W2';
-      S := S + 'sind Null!';
-      Main.Logger.Info(S);
+        s := S + ' W2';
+      s := s + 'sind Null!';
+      Main.Logger.Info(s);
     end;
   end;
 end; { KG21 }

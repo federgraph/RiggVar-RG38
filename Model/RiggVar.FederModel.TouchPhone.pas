@@ -137,39 +137,41 @@ procedure TFederTouchPhone.InitCornerMenu;
 var
   cp: TCornerPos;
   cl: TAlphaColor;
+  fa: Integer;
 begin
   TCornerBtn.OffsetX := 0;
   TCornerBtn.OffsetY := 0;
   TCornerBtn.BtnWidth := MainVar.Raster;
   TCornerBtn.BtnHeight := MainVar.Raster;
-  TCornerBtn.Circle := false;
+  TCornerBtn.Circle := False;
 
+  fa := faNoop;
   cl := claYellow;
   PageBtnP := CornerMenu.NewBtn(cpTR, 0, 0, cl, faActionPageP, 9);
   PageBtnM := CornerMenu.NewBtn(cpTL, 0, 0, cl, faActionPageM, 10);
   CornerBtnList.Add(PageBtnP);
   CornerBtnList.Add(PageBtnM);
   cl := claCornflowerBlue;
-  CornerBtnList.Add(CornerMenu.NewBtn(cpBL, 0, 0, cl, faNoop, 7));
-  CornerBtnList.Add(CornerMenu.NewBtn(cpBR, 0, 0, cl, faNoop, 8));
+  CornerBtnList.Add(CornerMenu.NewBtn(cpBL, 0, 0, cl, fa, 7));
+  CornerBtnList.Add(CornerMenu.NewBtn(cpBR, 0, 0, cl, fa, 8));
 
   cp := cpTL;
   cl := claWhite;
-  CornerBtnList.Add(CornerMenu.NewBtn(cp, 1, 0, cl, faNoop, 1));
-  CornerBtnList.Add(CornerMenu.NewBtn(cp, 2, 0, cl, faNoop, 2));
-  CornerBtnList.Add(CornerMenu.NewBtn(cp, 3, 0, cl, faNoop, 3));
+  CornerBtnList.Add(CornerMenu.NewBtn(cp, 1, 0, cl, fa, 1));
+  CornerBtnList.Add(CornerMenu.NewBtn(cp, 2, 0, cl, fa, 2));
+  CornerBtnList.Add(CornerMenu.NewBtn(cp, 3, 0, cl, fa, 3));
 
   cp := cpBR;
   cl := claWhite;
-  CornerBtnList.Add(CornerMenu.NewBtn(cp, 1, 0, cl, faNoop, 6));
-  CornerBtnList.Add(CornerMenu.NewBtn(cp, 2, 0, cl, faNoop, 5));
-  CornerBtnList.Add(CornerMenu.NewBtn(cp, 3, 0, cl, faNoop, 4));
+  CornerBtnList.Add(CornerMenu.NewBtn(cp, 1, 0, cl, fa, 6));
+  CornerBtnList.Add(CornerMenu.NewBtn(cp, 2, 0, cl, fa, 5));
+  CornerBtnList.Add(CornerMenu.NewBtn(cp, 3, 0, cl, fa, 4));
 
   cl := MainVar.ColorScheme.claCornerScrollbar;
-  ST00 := CornerMenu.NewBtn(cpT, 0, 0, cl, faNoop);
-  SR00 := CornerMenu.NewBtn(cpR, 0, 0, cl, faNoop);
-  SB00 := CornerMenu.NewBtn(cpB, 0, 0, cl, faNoop);
-  SL00 := CornerMenu.NewBtn(cpL, 0, 0, cl, faNoop);
+  ST00 := CornerMenu.NewBtn(cpT, 0, 0, cl, fa);
+  SR00 := CornerMenu.NewBtn(cpR, 0, 0, cl, fa);
+  SB00 := CornerMenu.NewBtn(cpB, 0, 0, cl, fa);
+  SL00 := CornerMenu.NewBtn(cpL, 0, 0, cl, fa);
 
   ST00.Text.Align := TAlignLayout.Client;
   ST00.Text.HitTest := false;

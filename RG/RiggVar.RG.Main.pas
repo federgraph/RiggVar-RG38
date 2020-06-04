@@ -356,7 +356,7 @@ end;
 
 procedure TRggMain.SetHullVisible(const Value: Boolean);
 begin
-  if Value <> FHullVisible then
+  if (Value <> FHullVisible) and (StrokeRigg <> nil) then
   begin
     FHullVisible := Value;
     StrokeRigg.HullVisible := Value;
@@ -1347,22 +1347,20 @@ end;
 procedure TRggMain.DoBiegungGF;
 var
   a, b, c, k, h: double;
-  pc, pf: TRealPoint;
-  kg, kh, kc: TRealPoint;
-  IndexG, IndexH, IndexC: Integer;
+  pf: TRealPoint;
+  kg, kh: TRealPoint;
+  IndexG: Integer;
+  IndexH: Integer;
 begin
   if StrokeRigg <> nil then
   begin
-    pc := Rigg.rP[ooC];
     pf := Rigg.rP[ooF];
 
     IndexG := 13;
     IndexH := 40;
-    IndexC := 50;
 
     kg := StrokeRigg.GetMastKurvePoint(IndexG);
     kh := StrokeRigg.GetMastKurvePoint(IndexH);
-    kc := StrokeRigg.GetMastKurvePoint(IndexC);
 
     a := Abstand(kg, pf);
     b := Abstand(pf, kh);
@@ -1383,8 +1381,13 @@ end;
 procedure TRggMain.DebugBiegungGF(ML: TStrings);
 var
   a, b, c, k, h: double;
-  pd, pc, pf: TRealPoint;
-  kd, kg, kh, kc: TRealPoint;
+  //pd: TRealPoint;
+  //pc: TRealPoint;
+  pf: TRealPoint;
+  //kd: TRealPoint;
+  kg: TRealPoint;
+  kh: TRealPoint;
+  //kc: TRealPoint;
   bm, l: double;
   t: double;
   IndexG, IndexD, IndexH, IndexC: double;
@@ -1392,8 +1395,8 @@ begin
   ML.Clear;
   if StrokeRigg <> nil then
   begin
-    pd := Rigg.rP[ooD];
-    pc := Rigg.rP[ooC];
+    //pd := Rigg.rP[ooD];
+    //pc := Rigg.rP[ooC];
     pf := Rigg.rP[ooF];
 
     bm := BogenMax;
@@ -1429,9 +1432,9 @@ begin
     ML.Add('IndexC := 50;');
 
     kg := StrokeRigg.GetMastKurvePoint(Round(IndexG));
-    kd := StrokeRigg.GetMastKurvePoint(Round(IndexD));
+    //kd := StrokeRigg.GetMastKurvePoint(Round(IndexD));
     kh := StrokeRigg.GetMastKurvePoint(Round(IndexH));
-    kc := StrokeRigg.GetMastKurvePoint(Round(IndexC));
+    //kc := StrokeRigg.GetMastKurvePoint(Round(IndexC));
 
 //    ML.Add('');
 //    t := Abstand(pd, kd);

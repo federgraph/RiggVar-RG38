@@ -290,7 +290,7 @@ begin
   if True then
   begin
     Canvas.Stroke.Thickness := 5.0;
-    Canvas.Stroke.Color := claBlue;
+    Canvas.Stroke.Color := claAqua;
     Canvas.Fill.Color := claSilver;
     WantSegmentColor := False;
     WantRight := False;
@@ -437,7 +437,7 @@ begin
   { Profil Blau - in Höhe E }
   OffsetY := ProfilPosXE;
   Canvas.Stroke.Thickness := 1.0;
-  Canvas.Stroke.Color := claBlue;
+  Canvas.Stroke.Color := claAqua;
   InternalDrawProfile3(Canvas);
 
   { Only show Controller when used }

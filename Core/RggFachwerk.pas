@@ -161,8 +161,16 @@ begin
   D := DX1 * DY2 - DX2 * DY1;
   D1 := BekanntFX * DY2 - BekanntFY * DX2;
   D2 := BekanntFY * DX1 - BekanntFX * DY1;
-  FS1[i1] := D1 / D * W1; { 1. neu ermittelte Stabkraft }
-  FS1[i2] := D2 / D * W2; { 2. neu ermittelte Stabkraft }
+  if D <> 0 then
+  begin
+    FS1[i1] := D1 / D * W1; { 1. neu ermittelte Stabkraft }
+    FS1[i2] := D2 / D * W2; { 2. neu ermittelte Stabkraft }
+  end
+  else
+  begin
+    FS1[i1] := 0;
+    FS1[i2] := 0;
+  end;
 end; { KG20 }
 
 procedure TFachwerk.KG21(l, l1, l2, l3, i1, i2, i3: Integer);
@@ -181,6 +189,14 @@ begin
   W3 := Sqrt(sqr(DX3) + sqr(DY3)); { Stablänge }
   { Summe der bekannten Kräfte }
   { mit DX/W = cos alpha, DY/W = sin alpha }
+  if W3 = 0 then
+  begin
+    BekanntFX := 0;
+    BekanntFY := 0;
+    FS1[i1] := 0; { 1. neu ermittelte Stabkraft }
+    FS1[i2] := 0; { 2. neu ermittelte Stabkraft }
+    Exit;
+  end;
   BekanntFX := -FX[l] - FS1[i3] * DX3 / W3;
   BekanntFY := -FY[l] - FS1[i3] * DY3 / W3;
   { Ausrechnen der Stabkräfte }

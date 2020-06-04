@@ -240,7 +240,6 @@ begin
   end
   else
   begin
-//    g.Stroke.Color := claMast;
     g.Stroke.Color := Props.Color;
     g.Stroke.Thickness := 1.0;
     DrawPoly(ZugMast, 0.5);

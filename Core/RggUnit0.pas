@@ -414,9 +414,16 @@ begin
 end;
 
 procedure TGetriebe.Wanten3dTo2d;
+var
+  u, v: double;
 begin
-  FrWunten2d := sqrt(sqr(FrWunten3d) - sqr((FrPuettingA - FrSalingA) / 2));
-  FrWoben2d := sqrt(sqr(FrWoben3d) - sqr(FrSalingA / 2));
+  u := sqr(FrWunten3d) - sqr((FrPuettingA - FrSalingA) / 2);
+  v := sqr(FrWoben3d) - sqr(FrSalingA / 2);
+  if (u > 0) and (v > 0) then
+  begin
+    FrWunten2d := sqrt(u);
+    FrWoben2d := sqrt(v);
+  end;
 end;
 
 function TGetriebe.GetriebeStatusText: string;

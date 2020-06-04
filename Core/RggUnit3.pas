@@ -624,6 +624,8 @@ begin
 end;
 
 procedure TRiggFS.MakeRumpfKoord;
+var
+  r1, r2: double;
 begin
   { Festpunkte übernehmen }
   rPe[ooD0] := rP[ooD0];
@@ -640,13 +642,19 @@ begin
     Exit;
   end;
 
+  r1 := Abstand(rP[ooP0], Null);
+  r2 := sqrt(sqr(rLe[5]) - sqr(rLe[6] / 2));
+  if (r1 < 0.1) or (r2 < 0.1) then
+  begin
+    Exit;
+  end;
   try
     with SchnittKK do
     begin
       SchnittEbene := seXZ;
       { 1. Aufruf SchnittKK: ooP0, ooA0, ooB0 ermitteln }
-      Radius1 := Abstand(rP[ooP0], Null);
-      Radius2 := sqrt(sqr(rLe[5]) - sqr(rLe[6] / 2));
+      Radius1 := r1;
+      Radius2 := r2;
       MittelPunkt1 := Null;
       MittelPunkt2 := rPe[ooD0];
       rPe[ooP0] := SchnittPunkt1;
@@ -674,18 +682,28 @@ end;
 procedure TRiggFS.MakeKoord;
 var
   Temp: TRealPoint;
-  S: String;
+  s: string;
+  s1, s2: double;
+  r1, r2: double;
 begin
   MakeRumpfKoord;
   rPe[ooE] := rP[ooE];
   try
+    s1 := sqr(rLe[10]) - sqr(rLe[11] / 2);
+    s2 := sqr(rLe[13]) - sqr(rLe[11] / 2);
+    if (s1 < 0.1) or (s2 < 0.1) then
+    begin
+      Exit;
+    end;
+    r1 := sqrt(s1);
+    r2 := sqrt(s2);
     with SchnittKK do
     begin
       SchnittEbene := seXZ;
       { 1. Aufruf SchnittKK: Saling2d und WanteOben2d;
         Schnittpunkt Temp wird im 2. Aufruf benötigt }
-      Radius1 := sqrt(sqr(rLe[10]) - sqr(rLe[11] / 2));
-      Radius2 := sqrt(sqr(rLe[13]) - sqr(rLe[11] / 2));
+      Radius1 := r1;
+      Radius2 := r2;
       Temp := Null;
       Temp[x] := rL[16];
       MittelPunkt1 := Temp;
@@ -693,9 +711,9 @@ begin
       Temp[x] := rL[16] + rL[15];
       MittelPunkt2 := Temp;
       Temp := SchnittPunkt1;
-      S := Bemerkung;
-      S := Format('TRiggFS.MakeKoord, 1. Aufruf: %s', [S]);
-      LogList.Add(S);
+      s := Bemerkung;
+      s := Format('TRiggFS.MakeKoord, 1. Aufruf: %s', [s]);
+      LogList.Add(s);
 
       if Status = bmEntfernt then
       begin
@@ -711,9 +729,9 @@ begin
       MittelPunkt2 := rPe[ooD0];
       rPe[ooA] := SchnittPunkt1;
       rPe[ooA, y] := rLe[11] / 2;
-      S := Bemerkung;
-      S := Format('TRiggFS.MakeKoord, 2. Aufruf: %s', [S]);
-      LogList.Add(S);
+      s := Bemerkung;
+      s := Format('TRiggFS.MakeKoord, 2. Aufruf: %s', [s]);
+      LogList.Add(s);
 
       if Status = bmK1inK2 then
       begin
@@ -733,9 +751,9 @@ begin
       MittelPunkt2 := rPe[ooD0];
       rPe[ooD] := SchnittPunkt1;
       rPe[ooD, y] := 0;
-      S := Bemerkung;
-      S := Format('TRiggFS.MakeKoord, 3. Aufruf: %s', [S]);
-      LogList.Add(S);
+      s := Bemerkung;
+      s := Format('TRiggFS.MakeKoord, 3. Aufruf: %s', [s]);
+      LogList.Add(s);
 
       { 4. Aufruf SchnittKK: WanteOben2d und MastOben; ooC ermitteln }
       Radius1 := sqrt(sqr(rLe[13]) - sqr(rLe[11] / 2));
@@ -744,9 +762,9 @@ begin
       MittelPunkt2 := rPe[ooD];
       rPe[ooC] := SchnittPunkt1;
       rPe[ooC, y] := 0;
-      S := Bemerkung;
-      S := Format('TRiggFS.MakeKoord, 4. Aufruf: %s', [S]);
-      LogList.Add(S);
+      s := Bemerkung;
+      s := Format('TRiggFS.MakeKoord, 4. Aufruf: %s', [s]);
+      LogList.Add(s);
     end;
 
     { Berechnung für Punkt ooF - Masttop }
