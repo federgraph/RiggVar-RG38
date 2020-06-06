@@ -278,10 +278,10 @@ begin
   if (Screen.Width >= 1920) and (Screen.Height >= 1024) then
   begin
     { Tested on normal HD screen }
-  Left := 100;
-  Top := 30;
-  Width := 1700;
-  Height := 960;
+    Left := 100;
+    Top := 30;
+    Width := 1700;
+    Height := 960;
     ReportMemoWidth := 480;
   end
   else
@@ -328,7 +328,8 @@ begin
   DL := RotaForm.RaumGraph.DL;
   RotaForm.ViewPoint := vp3D;
   RotaForm.ZoomIndex := 8;
-  RotaForm.FixPoint := ooD;
+  RotaForm.FixPoint := ooD0;
+  { Set initial translation in RotatForm, FXPos and FYPos, default. }
 
   { Params }
   Main.RggMain.Param := fpVorstag; // --> TempIst wird gesetzt, SetupTrackBar() aufgerufen
@@ -467,7 +468,7 @@ begin
   UpdateSalingGraph;
   UpdateControllerGraph;
   UpdateChartGraph;
-  UpdateReport;
+//  UpdateReport; // already done via ShowTrimm
 end;
 
 procedure TFormMain.UpdateReport;
@@ -604,7 +605,6 @@ begin
   if (ssShift in Shift) or (ssCtrl in Shift) then
   begin
     Main.DoMouseWheel(Shift, WheelDelta);
-    UpdateOnParamValueChanged;
     Handled := True;
   end;
 end;
@@ -614,13 +614,17 @@ begin
   if not FormShown then
   begin
     FormShown := True;
+
     { ClientHeigt is now available }
     LayoutComponents;
     LayoutImages;
+
     SetupListboxItems(ParamListbox, claAqua);
     SetupListboxItems(ReportListbox, claAquamarine);
+
     UpdateSpeedButtonDown;
     UpdateReport;
+
     RotaForm.IsUp := True;
     RotaForm.Draw;
   end;
@@ -1562,7 +1566,7 @@ begin
   if Screen.Height < 1000 then
     PosY := PosY + 100
   else
-  PosY := PosY + ControllerImage.Height;
+    PosY := PosY + ControllerImage.Height;
 
   ControllerImage.Position.X := PosX;
   ControllerImage.Position.Y := PosY;

@@ -1,27 +1,68 @@
 ﻿unit RggVector;
 
-{ VECTOR3D.Pas: Vector operations für ThreeD. }
-
 interface
 
 type
+  vec2 = record
+    x, y, z: double;
+  end;
+
   vec3 = record
     x, y, z: double;
   end;
 
-function Mag(v: vec3): double;
+function InitPoint2D(ax: double; ay: double): vec2;
+function Mag2D(v: vec2): double;
+function Normalize2D(v: vec2): vec2;
+
+function InitPoint3D(ax: double; ay: double; az: double): vec3;
+function Mag3D(v: vec3): double;
+function Normalize3D(v: vec3): vec3;
 function Subtract(v1, v2: vec3): vec3;
 function Cross(v1, v2: vec3): vec3;
 function Divide(v :vec3; num: double): vec3;
-procedure Normalize(var v: vec3);
 function Dot(v1, v2: vec3): double;
 
 function LookUpRa10(Index: Integer): double;
 
+const
+  vec3Null: vec3 = (x: 0; y: 0; z: 0);
+
 implementation
 
+function InitPoint2D(ax: double; ay: double): vec2;
+begin
+  result.x := ax;
+  result.y := ay;
+end;
+
+function InitPoint3D(ax: double; ay: double; az: double): vec3;
+begin
+  result.x := ax;
+  result.y := ay;
+  result.z := az;
+end;
+
+function Mag2D(v: vec2): double;
+begin
+  result := sqrt(v.x * v.x + v.y * v.y);
+end;
+
+function Normalize2D(v: vec2): vec2;
+var
+  d: double;
+begin
+  result := InitPoint2D(v.x, v.y);
+  d := Mag2D(result);
+  if (d <> 0) then
+  begin
+    result.x := result.x / d;
+    result.y := result.y / d;
+  end;
+end;
+
 { Calculate the magnitude of the vector }
-function Mag(v: vec3): double;
+function Mag3D(v: vec3): double;
 begin
   result := sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 end;
@@ -73,6 +114,20 @@ begin
     v.x := v.x / d;
     v.y := v.y / d;
     v.z := v.z / d;
+  end;
+end;
+
+function Normalize3D(v: vec3): vec3;
+var
+  d: double;
+begin
+  result := InitPoint3D(v.x, v.y, v.z);
+  d := Mag3D(result);
+  if (d <> 0) then
+  begin
+    result.x := result.x / d;
+    result.y := result.y / d;
+    result.z := result.z / d;
   end;
 end;
 

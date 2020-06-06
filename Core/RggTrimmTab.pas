@@ -24,6 +24,7 @@ uses
   System.Types,
   System.Inifiles,
   System.Math,
+  RggVector,
   RggTypes;
 
 const
@@ -132,10 +133,6 @@ type
     property EndwertKraft: Integer read GetEndwertKraft write SetEndwertKraft;
     property EndwertWeg: Integer read GetEndwertWeg write SetEndwertWeg;
     property TrimmtabDaten: TTrimmTabDaten read GetTrimmTabDaten write SetTrimmTabDaten;
-  end;
-
-  vec3 = record
-    x, y, z: double;
   end;
 
   TControlPunkte = array [1 .. BezierKurveVomGrad + 1] of vec3;

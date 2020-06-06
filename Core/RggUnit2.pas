@@ -844,7 +844,7 @@ begin
     stFest, stDrehbar, stOhne_2:
       begin
         SchnittGG(rP[ooD0], rP[ooC], rP[ooP], rP[ooD], SPSaling);
-        SchnittGG(rP[ooD0], rP[ooC], rP[ooE], rP[ooC0], SPController);
+        SchnittGG(rP[ooD0], rP[ooC], rP[ooE], rP[ooE0], SPController);
         ld := Abstand(rP[ooD0], SPSaling);
         le := Abstand(rP[ooD0], SPController);
         lc := rL[0];
@@ -859,7 +859,7 @@ begin
 
     stOhne:
       begin
-        SchnittGG(rP[ooD0], rP[ooC], rP[ooE], rP[ooC0], SPController);
+        SchnittGG(rP[ooD0], rP[ooC], rP[ooE], rP[ooE0], SPController);
         ld := rL[16];
         le := Abstand(rP[ooD0], SPController);
         lc := rL[0];

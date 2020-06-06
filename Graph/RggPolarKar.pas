@@ -428,10 +428,8 @@ begin
     end
     else
     begin
-      tempY := Cross(zVec, ux);
-      Normalize(tempY);
-      tempZ := Cross(ux, tempY);
-      Normalize(tempZ);
+      tempY := Normalize3D(Cross(zVec, ux));
+      tempZ := Normalize3D(Cross(ux, tempY));
       tempcos := dot(uz, tempZ);
       tempsin := -dot(uz, tempY);
       wg := ArcCos(CheckSinCos(tempcos));
@@ -442,8 +440,7 @@ begin
     { Winkel Phi ermitteln im Bereich -180..180 Grad }
     if Theta90 then
     begin
-      tempVec := Cross(uy, zVec);
-      Normalize(tempVec);
+      tempVec := Normalize3D(Cross(uy, zVec));
       tempcos := tempVec.x; //tempcos := -uz.x;
       tempsin := tempVec.y; //tempsin := -uz.y;
     end
@@ -451,7 +448,7 @@ begin
     begin
       tempVec := ux;
       tempVec.z := 0;
-      Normalize(tempVec); //d := Hypot(ux.x,ux.y);
+      tempVec := Normalize3D(tempVec); //d := Hypot(ux.x,ux.y);
       tempcos := dot(xVec, tempVec); //tempcos := ux.x/d;
       tempsin := dot(yVec, tempVec); //tempsin := ux.y/d;
     end;
