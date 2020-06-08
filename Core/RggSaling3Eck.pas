@@ -79,7 +79,7 @@ end;
 procedure TSalingDreieck.GetLW(H, A: double; out L, W: double);
 begin
   L := Hypot(H, A / 2);
-  W := arctan2(H, A * 2);
+  W := arctan2(H, A / 2);
 end;
 
 function TSalingDreieck.GetSalingL: double;
@@ -89,7 +89,7 @@ end;
 
 function TSalingDreieck.GetSalingW: double;
 begin
-  result := arctan2(FSalingH, FSalingA * 2);
+  result := arctan2(FSalingH, FSalingA / 2);
 end;
 
 procedure TSalingDreieck.SetSalingH(Value: double);

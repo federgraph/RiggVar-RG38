@@ -41,7 +41,7 @@ type
   TChartStatus = (csBerechnet, csGeladen);
   TYLineArray = array[0..ANr-1] of TLineDataR50;
   TYAchseSortedList = array[0..VNr-1] of TYAchseValue;
-  TYAchseSet = set of TYAchseValue;
+  TYAchseSet = set of TYAchseValue; { die berechneten Kurven }
   TYAchseStringArray = array[0..PNr-1] of string;
 
   TChartForm = class
@@ -600,7 +600,7 @@ begin
       else if (s = 'Controller') then
           Rigg.RealGlied[fpController] := PAntrieb
       else if (s = 'Winkel') then
-        Rigg.RealGlied[fpWinkel] := PAntrieb / 10 * P180
+        Rigg.RealGlied[fpWinkel] := PAntrieb * P180
       else if (s = 'Vorstag') then
         Rigg.RealGlied[fpVorstag] := PAntrieb
       else if (s = 'Wante') then
@@ -647,7 +647,7 @@ begin
         if (s = 'Controller') then
           Rigg.RealGlied[fpController] := Antrieb
         else if (s = 'Winkel') then
-          Rigg.RealGlied[fpWinkel] := Antrieb / 10 * P180
+          Rigg.RealGlied[fpWinkel] := Antrieb * P180
         else if (s = 'Vorstag') then
           Rigg.RealGlied[fpVorstag] := Antrieb
         else if (s = 'Wante') then

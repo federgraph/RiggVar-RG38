@@ -1381,13 +1381,9 @@ end;
 procedure TRggMain.DebugBiegungGF(ML: TStrings);
 var
   a, b, c, k, h: double;
-  //pd: TRealPoint;
-  //pc: TRealPoint;
   pf: TRealPoint;
-  //kd: TRealPoint;
   kg: TRealPoint;
   kh: TRealPoint;
-  //kc: TRealPoint;
   bm, l: double;
   t: double;
   IndexG, IndexD, IndexH, IndexC: double;
@@ -1395,8 +1391,6 @@ begin
   ML.Clear;
   if StrokeRigg <> nil then
   begin
-    //pd := Rigg.rP[ooD];
-    //pc := Rigg.rP[ooC];
     pf := Rigg.rP[ooF];
 
     bm := BogenMax;
@@ -1432,19 +1426,7 @@ begin
     ML.Add('IndexC := 50;');
 
     kg := StrokeRigg.GetMastKurvePoint(Round(IndexG));
-    //kd := StrokeRigg.GetMastKurvePoint(Round(IndexD));
     kh := StrokeRigg.GetMastKurvePoint(Round(IndexH));
-    //kc := StrokeRigg.GetMastKurvePoint(Round(IndexC));
-
-//    ML.Add('');
-//    t := Abstand(pd, kd);
-//    ML.Add(Format('ooD D = %.2f', [t]));
-//    t := Abstand(kg, pf);
-//    ML.Add(Format('G ooF = %.2f', [t]));
-//    t := Abstand(Rigg.rP[ooD0], kg);
-//    ML.Add(Format('ooD0 D = %.2f', [t]));
-//    t := Abstand(pd, kh);
-//    ML.Add(Format('ooD H = %.2f', [t]));
 
     a := Abstand(kg, pf);
     b := Abstand(pf, kh);
