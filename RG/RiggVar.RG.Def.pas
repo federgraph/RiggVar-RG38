@@ -207,6 +207,86 @@ const
   claGestrichelt = TAlphaColors.Antiquewhite;
   claFixPoint = claYellow;
 
+  NoParamString: string = 'kein Parameter';
+
+  ControllerString: string = 'Controller';
+  WinkelString: string = 'Winkel';
+  VorstagString: string = 'Vorstag';
+  WanteString: string = 'Wante';
+  WanteObenString: string = 'WanteOben';
+
+  SalingAString: string = 'Saling Abstand';
+  SalingHString: string = 'Saling Höhe';
+  SalingLString: string = 'Saling Länge';
+  SalingWString: string = 'Saling Winkel';
+
+  MastFootD0XString: string = 'Mastfuß D0x';
+
+  VorstagOhneSalingString: string = 'Vorstag OS';
+  WantenkraftOhneSalingString: string = 'Wantenkraft OS';
+
+  SalingHTooSmallString: string = ' Salinghöhe zu klein!';
+
+  MastfallF0CString: string = 'Mastfall F0C';
+  MastfallF0FString: string = 'Mastfall F0F';
+  VorstagSpannungString: string = 'Vorstag-Spannung';
+  WantenSpannungString: string = 'Wanten-Spannung';
+  DurchbiegungHDString: string = 'Durchbiegung hd';
+  ElasticityPointCString: string = 'Elastizität Punkt C';
+
+  AnfangsZustandString: string = 'Diagramm befindet sich im Anfangszustand.';
+  ResetMessageString: string = 'Diagramm wurde in den Anfangszustand versetzt.';
+
+  BlueString: string = 'Blau';
+  RedString: string = 'Rot';
+  GreenString: string = 'Grün';
+  WhiteString: string = 'Weiß';
+  YellowString: string = 'Gelb';
+
+  ProgressCaptionString: string = 'Kurve wird berechnet';
+  ProgressCaptionFormatString: string = 'Parameter %d von %d';
+
+  TopTitleString = 'RiggChart';
+
+  SalingFestString: string = 'fest';
+  SalingDrehbarString: string = 'drehbar';
+  OhneSalingString: string = 'ohne Saling';
+  OhneSalingStarrString: string = 'ohne Saling (BK)';
+
+  TopTitleTestString: string = 'Top Title';
+  BottomTitleTestString: string = 'Bottom Title';
+  ParamTitleTestString: string = 'Param Title';
+
+  StatusResetString: string = 'Diagramm wurde zurückgesetzt';
+  StatusNotComputedString: string = 'Kurve wurde nicht berechnet!';
+  StatusNotLoadedString: string = 'Kurve wurde nicht geladen!';
+
+  AllCurvesNormalizedString: string = 'Alle Kurven normiert [%]';
+
+  YMinString: string = 'YMin';
+  YMaxString: string = 'YMax';
+
+  ControllerText: string = 'Zustellung Mast-Controller [mm]';
+  WinkelText: string = 'Winkel [1E-1 Grad]';
+  VorstagText: string = 'Vorstaglänge [mm]';
+  WanteText: string = 'Wantenlänge [mm]';
+  WanteObenText: string = 'Länge des oberen Wantenabschnitts [mm]';
+  SalingHText: string = 'Höhe des Salingdreiecks [mm]';
+  SalingAText: string = 'Saling-Abstand [mm]';
+  SalingLText: string = 'Saling-Länge [mm]';
+  SalingWText: string = 'Saling-Winkel [Grad]';
+
+  XMinEditString: string = 'XMinEdit';
+  XMaxEditString: string = 'XMaxEdit';
+
+  PMinEditString: string = 'PMinEdit';
+  PMaxEditString: string = 'PMaxEdit';
+
+  YMinEditString: string = 'YMinEdit';
+  YMaxEditString: string = 'YMaxEdit';
+
+  PIdentString: string = 'Nr.';
+
 implementation
 
 end.

@@ -23,7 +23,7 @@ type
     Height: Integer;
   end;
 
-  TChartGraph = class(TChartForm)
+  TChartGraph = class(TChartModel)
   private
     FImage: TImage; // injected, not owned
     FBitmap: TBitmap; // owned, created in InitBitmap
@@ -32,6 +32,7 @@ type
   private
     Box: TRggBox;
     Raster: Integer;
+    Padding: Integer;
   private
     procedure DrawToCanvas(g: TCanvas);
     procedure DrawChart(g: TCanvas);
@@ -57,8 +58,8 @@ constructor TChartGraph.Create;
 begin
   inherited;
 
-  Width := 800;
-  Height := 600;
+  Width := 650;
+  Height := 400;
 
   Box := TRggBox.Create;
   Box.X := 120;
@@ -66,7 +67,8 @@ begin
   Box.Width := 500;
   Box.Height := 300;
 
-  Raster := 30;
+  Raster := 24;
+  Padding := 2;
 
   WantRectangles := False;
   WantTextRect := False;
@@ -122,6 +124,11 @@ end;
 procedure TChartGraph.DrawChart(g: TCanvas);
 var
   LineToPoint: TPointF;
+  P: TPoint;
+  i, param: Integer;
+  Radius: Integer;
+  tempX, tempY: single;
+  WantChartPunktX: Boolean;
 
   function Limit(a: single): single;
   begin
@@ -138,15 +145,40 @@ var
     LineToPoint := PointF(x2, y2);
   end;
 
-var
-  P: TPoint;
-  i, param: Integer;
-  Radius: Integer;
-  tempX, tempY: single;
+  procedure DrawVerticalLine;
+  begin
+    P.X := Round(Box.X + Limit(tempX));
+    P.Y := Round(Box.Y + Limit(tempY));
+    LineToPoint := PointF(P.X, P.Y);
+    P.Y := Box.Y;
+    LineTo(P.X, P.Y);
+  end;
+
 begin
   DrawLabels(g);
 
-  Radius := 2;
+  g.Stroke.Thickness := 1;
+
+  { ChartPunktX }
+  WantChartPunktX := True;
+  if WantChartPunktX then
+  begin
+    g.Stroke.Color := claRed;
+    tempX := Box.Width * ((ChartPunktX) - Xmin) / (XMax - Xmin);
+    tempY := Box.Height;
+    DrawVerticalLine;
+
+    g.Stroke.Color := claSilver;
+    tempX := Box.Width * ((ChartPunktX-APWidth) - Xmin) / (XMax - Xmin);
+    tempY := Box.Height;
+    DrawVerticalLine;
+
+    tempX := Box.Width * ((ChartPunktX+APWidth) - Xmin) / (XMax - Xmin);
+    tempY := Box.Height;
+    DrawVerticalLine;
+  end;
+
+  Radius := 3;
 
   for param := 0 to ParamCount-1 do
   begin
@@ -173,10 +205,10 @@ begin
       g.Fill.Color := cf[param];
       for i := 0 to LNr do
       begin
-        tempX := Box.Width * (i / LNr);
+        tempX := Box.Width * i / LNr;
         tempY := Box.Height * (bf[param, i] - Ymin) / (Ymax - Ymin);
-        P.x := Box.X + Round(Limit(tempX));
-        P.y := Box.Y + Round(Limit(tempY));
+        P.X := Box.X + Round(Limit(tempX));
+        P.Y := Box.Y + Round(Limit(tempY));
         g.FillRect(
           RectF(P.x - Radius, P.y - Radius,
                 P.x + Radius, P.y + Radius), 0, 0, [], 1.0);
@@ -224,30 +256,44 @@ begin
   w := 290;
   h := 25;
 
-  PosX := 0;
-  PosY := 0;
+  { Column 1 }
+  PosX := Padding;
 
-  s := Format('Ymin..Ymax = %.1f .. %.1f', [Ymin, Ymax]);
-  TextRect(s, TTextAlign.Leading, TTextAlign.Leading);
-
-  PosY := PosY + Raster;
+  { Column 1, Row 1 }
+  PosY := Padding;
   s := Format('Xmin..Xmax = %.1f .. %.1f', [Xmin, Xmax]);
   TextRect(s, TTextAlign.Leading, TTextAlign.Leading);
 
-  PosX := 300;
-  PosY := 0;
-
-  s := LeftTitle;
-  TextRect(s, TTextAlign.Leading, TTextAlign.Leading);
-
+  { Column 1, Row 2 }
   PosY := PosY + Raster;
-  s := BottomTitle;
+  s := Format('Ymin..Ymax = %.1f .. %.1f', [Ymin, Ymax]);
   TextRect(s, TTextAlign.Leading, TTextAlign.Leading);
 
+  { Column 1, Row 3 }
+  PosX := 20;
+  PosY := PosY + Raster;
+  s := 'Parameter';
+  TextRect(s, TTextAlign.Leading, TTextAlign.Leading);
+
+  { Column 2 }
+  PosX := 300;
+
+  { Column 2, Row 1 }
+  PosY := Padding;
+  s := XTitle;
+  TextRect(s, TTextAlign.Leading, TTextAlign.Leading);
+
+  { Column 2, Row 2 }
+  PosY := PosY + Raster;
+  s := YTitle;
+  TextRect(s, TTextAlign.Leading, TTextAlign.Leading);
+
+  { Column 2, Row 3 }
   if ParamCount > 1 then
   begin
+    PosX := PosX + 15;
     PosY := PosY + Raster;
-    s := RightTitle;
+    s := PTitle;
     TextRect(s, TTextAlign.Leading, TTextAlign.Leading);
   end;
 end;
@@ -285,8 +331,9 @@ begin
   bw := 16;
   bh := 3;
 
+  { continue in Colum  1, Row 4 }
   PosX := 20;
-  PosY := 2 * Raster + 10;
+  PosY := 3 * Raster + 10;
   g.Fill.Color := claSilver;
   g.Font.Family := 'Consolas';
   g.Font.Size := 16;
@@ -297,6 +344,7 @@ begin
     g.Stroke.Color := claWhite;
     g.Fill.Color := cf[p];
     g.FillRect(RectF(PosX, PosY, PosX + bw, PosY + bh), 0, 0, [], 1.0);
+
     { Text }
     g.Fill.Color := claSilver;
     PosY := PosY + 16;

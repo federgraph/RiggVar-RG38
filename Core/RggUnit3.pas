@@ -646,6 +646,7 @@ begin
   r2 := sqrt(sqr(rLe[5]) - sqr(rLe[6] / 2));
   if (r1 < 0.1) or (r2 < 0.1) then
   begin
+    Inc(ExitCounter5);
     Exit;
   end;
   try
@@ -693,6 +694,7 @@ begin
     s2 := sqr(rLe[13]) - sqr(rLe[11] / 2);
     if (s1 < 0.1) or (s2 < 0.1) then
     begin
+      Inc(ExitCounter6);
       Exit;
     end;
     r1 := sqrt(s1);

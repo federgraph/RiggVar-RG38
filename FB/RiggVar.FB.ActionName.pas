@@ -48,7 +48,9 @@ faActionPage6: result := 'faActionPage6';
 
 { Forms }
 faShowActi: result := 'faShowActi';
+faShowOpti: result := 'faShowOpti';
 faShowMemo: result := 'faShowMemo';
+faShowDiag: result := 'faShowDiag';
 
 { TouchLayout }
 faTouchTablet: result := 'faTouchTablet';

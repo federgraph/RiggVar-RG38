@@ -105,6 +105,8 @@ begin
 
     faShowMemo: result := 'FM';
     faShowActi: result := 'FA';
+    faShowOpti: result := 'FO';
+    faShowDiag: result := 'FD';
 
     faWheelLeft: result := 'wl';
     faWheelRight: result := 'wr';

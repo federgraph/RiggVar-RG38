@@ -69,6 +69,8 @@ faParamValueMinus10
 
 ActionGroupForms: TActionGroup = [
 faShowActi,
+faShowOpti,
+faShowDiag,
 faShowMemo];
 
 ActionGroupViewParams: TActionGroup = [

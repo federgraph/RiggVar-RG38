@@ -107,6 +107,8 @@ begin
 
     faShowMemo: result := 'Form Memo';
     faShowActi: result := 'Form Actions';
+    faShowOpti: result := 'Form Options';
+    faShowDiag: result := 'Form Diagramm';
 
     faWheelLeft: result := 'Wheel -1';
     faWheelRight: result := 'Wheel +1';

@@ -38,6 +38,14 @@ type
   public
     UpdateGetriebeCounter: Integer;
 
+    ExitCounter1: Integer;
+    ExitCounter2: Integer;
+    ExitCounter3: Integer;
+    ExitCounter4: Integer;
+    ExitCounter5: Integer;
+    ExitCounter6: Integer;
+    procedure ResetExitCounters;
+
     constructor Create;
 
     procedure ResetStatus;
@@ -81,6 +89,16 @@ begin
   Exclude(FGetriebeStatus, gsWanteZulang);
 end;
 
+procedure TGetriebeFS.ResetExitCounters;
+begin
+  ExitCounter1 := 0;
+  ExitCounter2 := 0;
+  ExitCounter3 := 0;
+  ExitCounter4 := 0;
+  ExitCounter5 := 0;
+  ExitCounter6 := 0;
+end;
+
 procedure TGetriebeFS.UpdateGetriebe;
 begin
   Inc(UpdateGetriebeCounter);
@@ -119,6 +137,7 @@ begin
     Include(FGetriebeStatus, gsErrorPsivonPhi);
     LogList.Add('TGetriebeFS.UpdateGetriebeFS:');
     LogList.Add('  svar False in PsivonPhi');
+    Inc(ExitCounter1);
     Exit;
   end;
 
@@ -335,6 +354,7 @@ begin
     Include(FGetriebeStatus, gsErrorPsivonPhi);
     LogList.Add('TGetriebeFS.BerechneWinkel:');
     LogList.Add('  svar False in PsivonPhi');
+    Inc(ExitCounter2);
     Exit;
   end;
   FrWinkel := FrPhi - FrAlpha;

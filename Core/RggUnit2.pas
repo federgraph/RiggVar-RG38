@@ -379,6 +379,7 @@ begin
     FB := 0;
     BiegungE := 0;
     ControllerFree := True;
+    Inc(ExitCounter3);
     Exit;
   end;
 
@@ -743,6 +744,7 @@ begin
       { we do not want exceptions when running in the debugger }
       FU1 := 0;
       FU2 := 0;
+      Inc(ExitCounter4);
       Exit;
     end;
     D1 := BekanntFX * DY2 - BekanntFY * DX2;

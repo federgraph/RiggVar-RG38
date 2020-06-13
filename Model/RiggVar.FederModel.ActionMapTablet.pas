@@ -526,11 +526,11 @@ begin
       cl := TopRight;
       InitAC(cl, 1, faXComboMinus, cla);
       InitAC(cl, 2, faXComboPlus, claWhite);
-      InitAC(cl, 3, faYComboMinus, cla);
-      InitAC(cl, 4, faYComboPlus, cla);
+      InitAC(cl, 3, faPComboMinus, cla);
+      InitAC(cl, 4, faPComboPlus, cla);
       //InitAC(cl, 5, faActionPageP, claYellow);
-      InitAC(cl, 6, faPComboPlus, cla);
-      InitAC(cl, 7, faPComboMinus, cla);
+      InitAC(cl, 6, faYComboPlus, cla);
+      InitAC(cl, 7, faYComboMinus, cla);
       InitAC(cl, 8, faNoop, cla);
 
       cl := BottomLeft;

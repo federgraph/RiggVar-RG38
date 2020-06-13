@@ -25,6 +25,8 @@ const
   P180 = PI / 180;
 
 type
+  TLineDataR = TLineDataR50;
+
   TxpName = (
     xpController,
     xpWinkel,
@@ -38,14 +40,16 @@ type
     xpWPowerOS,
     xpSalingW);
 
+  TxpNameSet = set of TXpName;
+
   TChartStatus = (csBerechnet, csGeladen);
-  TYLineArray = array[0..ANr-1] of TLineDataR50;
+  TYLineArray = array[0..ANr-1] of TLineDataR;
   TYAchseSortedList = array[0..VNr-1] of TYAchseValue;
   TYAchseSet = set of TYAchseValue; { die berechneten Kurven }
   TYAchseStringArray = array[0..PNr-1] of string;
 
-  TChartForm = class
-  private
+  TChartModel = class
+  public
     FSalingTyp: TSalingTyp;
 
     Rigg: TRigg;
@@ -54,15 +58,16 @@ type
 
     procedure InitRigg;
     procedure UpdateGetriebe;
-
-    property SalingTyp: TSalingTyp read FSalingTyp;
-  private
+  public
     ProgressPosition: Integer;
     ProgressCaption: string;
-  private
     MemoLines: TStringList;
+    MemoCounter: Integer;
     procedure GetMemoText;
-  private
+  public
+    XSet: TxpNameSet;
+    PSet: TxpNameSet;
+
     XComboItems: TStrings;
     YComboItems: TStrings;
     PComboItems: TStrings;
@@ -92,7 +97,7 @@ type
     YLEDFillColor: TAlphaColor;
     PLEDFillColor: TAlphaColor;
     XLEDFillColor: TAlphaColor;
-  private
+
     XminEditText: string;
     XmaxEditText: string;
     PMinEditText: string;
@@ -111,14 +116,11 @@ type
     procedure UpdateXMinMax;
     procedure UpdateYMinMax;
     procedure UpdatePMinMax;
-  private
+  public
     APWidth: Integer;
-
-    BPBtnIsPressed: Boolean;
-    APBtnIsPressed: Boolean;
-
-    procedure APItemClick(Sender: TObject);
-    procedure BPItemClick(Sender: TObject);
+    FAP: Boolean;
+    procedure SetAP(const Value: Boolean);
+    property AP: Boolean read FAP write SetAP;
   private
     APSpinnerValue: Integer;
     APSpinnerMax: Integer;
@@ -126,15 +128,18 @@ type
     PSpinnerValue: Integer;
     PSpinnerMax: Integer;
 
+    UserSelectedKurvenZahl: Integer;
+    DefaultKurvenZahl: Integer;
     KurvenZahlSpinnerValue: Integer;
     KurvenZahlSpinnerMax: Integer;
 
     procedure InitSpinner;
-  protected
+  public
     GroupKurvenZahl: Integer;
     ParamCount: Integer;
     FShowGroup: Boolean;
     GroupText: TYAchseStringArray;
+    property ShowGroup: Boolean read FShowGroup write FShowGroup;
   private
     YAchseSet: TYAchseSet;
     YAchseRecordList: TYAchseRecordList;
@@ -149,9 +154,9 @@ type
     property DarkColors: Boolean read FDarkColors write SetDarkColors;
   protected
     TopTitle: string;
-    LeftTitle: string;
-    BottomTitle: string;
-    RightTitle: string;
+    YTitle: string;
+    XTitle: string;
+    PTitle: string;
 
     Xmin: single;
     Xmax: single;
@@ -171,23 +176,24 @@ type
     PText: TYAchseStringArray;
     PColorText: TYAchseStringArray;
   protected
-    TempF: TLineDataR50;
-    TestF: TLineDataR50;
+    TempF: TLineDataR;
+    TestF: TLineDataR;
     af: array[0..PNr-1] of TYLineArray;
-    bf: array[0..PNr-1] of TLineDataR50;
+    bf: array[0..PNr-1] of TLineDataR;
     cf: array[0..PNr-1] of TAlphaColor;
+    ChartPunktX: double;
     procedure InitStraightLine;
     procedure GetCurves;
     procedure DrawInternal;
     procedure ShowTogether(ParamNo: Integer);
-  private
-    FBuissy: Boolean;
-    FStatus: set of TChartStatus;
-    function GetTsbName(Text: string): TxpName;
   protected
     FValid: Boolean;
+    FBuissy: Boolean;
+    FStatus: set of TChartStatus;
+    function GetTsbName(Value: string): TxpName;
     property Valid: Boolean read FValid write FValid;
-  private
+  public
+    CalcCounter: Integer;
     procedure Reset;
     procedure Calc;
 
@@ -204,7 +210,7 @@ type
     WantLegend: Boolean;
 
     procedure HandleAction(fa: Integer);
-    function GetChecked(fa: TFederAction): Boolean;
+    function GetChecked(fa: Integer): Boolean;
   public
     constructor Create;
     destructor Destroy; override;
@@ -213,55 +219,85 @@ type
     procedure SuperCalc;
 
     procedure Draw; virtual;
+    procedure DoOnAction; virtual;
   end;
 
 implementation
 
 uses
   RiggVar.App.Main,
+  RiggVar.FB.Classes,
   RiggVar.RG.Def,
   RggCalc,
   RggScroll;
 
-procedure TChartForm.InitXComboItems;
+procedure TChartModel.InitXComboItems;
 var
   ML: TStrings;
 begin
   ML := XComboItems;
-  ML.Add('Controller');
-  ML.Add('Winkel');
-  ML.Add('Vorstag');
-  ML.Add('Wante');
-  ML.Add('Wante oben');
-  ML.Add('Saling Höhe');
-  ML.Add('Saling Abstand');
+  ML.Add(ControllerString);
+  ML.Add(WinkelString);
+  ML.Add(VorstagString);
+  ML.Add(WanteString);
+  ML.Add(WanteObenString);
+  ML.Add(SalingHString);
+  ML.Add(SalingAString);
 end;
 
-procedure TChartForm.InitPComboItems;
+procedure TChartModel.InitPComboItems;
 var
   ML: TStrings;
 begin
   ML := PComboItems;
-  ML.Add('Saling Abstand');
-  ML.Add('Saling Höhe');
+  ML.Add(SalingAString);
+  ML.Add(SalingHString);
 end;
 
-procedure TChartForm.InitYComboItems;
+procedure TChartModel.InitYComboItems;
 var
   ML: TStrings;
 begin
   ML := YComboItems;
-  ML.Add('Durchbiegung hd');
-  ML.Add('Elastizität Punkt C');
-  ML.Add('Mastfall F0C');
-  ML.Add('Mastfall F0F');
-  ML.Add('Vorstag-Spannung');
-  ML.Add('Wanten-Spannung');
+  ML.Add(DurchbiegungHDString);
+  ML.Add(ElasticityPointCString);
+  ML.Add(MastfallF0CString);
+  ML.Add(MastfallF0FString);
+  ML.Add(VorstagSpannungString);
+  ML.Add(WantenSpannungString);
 end;
 
-constructor TChartForm.Create;
+constructor TChartModel.Create;
 begin
+  UserSelectedKurvenZahl := 3;
+
+  Include(XSet, xpController);
+  Include(XSet, xpWinkel);
+  Include(XSet, xpVorstag);
+  Include(XSet, xpWante);
+  Include(XSet, xpWoben);
+  Include(XSet, xpSalingH);
+  Include(XSet, xpSalingA);
+  Include(XSet, xpSalingL);
+  Include(XSet, xpSalingW);
+
+  PSet := XSet;
+//  Include(PSet, xpController);
+//  Include(PSet, xpWinkel);
+//  Include(PSet, xpVorstag);
+//  Include(PSet, xpWante);
+//  Include(PSet, xpWoben);
+//  Include(PSet, xpSalingH);
+//  Include(PSet, xpSalingA);
+//  Include(PSet, xpSalingL);
+//  Include(PSet, xpSalingW);
+
   FSalingTyp := stFest;
+
+  RggDocument := TRggDocument.Create;
+  MemoLines := TStringList.Create;
+  MemoLines.Add(AnfangsZustandString);
+  SalingDreieck := TSalingDreieck.Create;
 
   ParamCount := 3;
   APWidth := 30;
@@ -282,21 +318,15 @@ begin
   PComboItemIndex := 1;
   YComboItemIndex := 3;
 
-  FXTextClicked := 'Vorstag';
-  FPTextClicked := 'Kein Parameter';
+  FXTextClicked := VorstagString;
+  FPTextClicked := SalingHString;
 
   InitSpinner;
 
   InitRigg;
 
-  RggDocument := TRggDocument.Create;
-  SalingDreieck := TSalingDreieck.Create;
-
-  MemoLines := TStringList.Create;
-  MemoLines.Add('Diagramm befindet sich im Anfangszustand.');
-
-  UpdateXCombo(SalingTyp);
-  UpdatePCombo(SalingTyp);
+  UpdateXCombo(FSalingTyp);
+  UpdatePCombo(FSalingTyp);
 
   XComboItemIndex := XComboItems.IndexOf(FXTextClicked);
   PComboItemIndex := PComboItems.IndexOf(FPTextClicked);
@@ -310,26 +340,22 @@ begin
 
   DarkColors := False;
 
-  PColorText[0] := 'Blau';
-  PColorText[1] := 'Rot';
-  PColorText[2] := 'Grün';
-  PColorText[3] := 'Weiß';
-  PColorText[4] := 'Gelb';
+  PColorText[0] := BlueString;
+  PColorText[1] := RedString;
+  PColorText[2] := GreenString;
+  PColorText[3] := WhiteString;
+  PColorText[4] := YellowString;
 
   PText := PColorText;
 
-  APItemClick(nil);
-//  BereichItemClick(nil);
-
-  UpdateXMinMax;
-  UpdatePMinMax;
+  AP := True;
 
   InitStraightLine;
 
   Reset;
 end;
 
-destructor TChartForm.Destroy;
+destructor TChartModel.Destroy;
 begin
   RggDocument.Free;
   MemoLines.Free;
@@ -339,23 +365,16 @@ begin
   PComboItems.Free;
 end;
 
-procedure TChartForm.APItemClick(Sender: TObject);
+procedure TChartModel.SetAP(const Value: Boolean);
 begin
-  APBtnIsPressed := not APBtnIsPressed;
-  BPBtnIsPressed := not APBtnIsPressed;
+  FAP := Value;
+  XLEDFillColor := claYellow;
+  PLEDFillColor := claYellow;
   UpdateXMinMax;
   UpdatePMinMax;
 end;
 
-procedure TChartForm.BPItemClick(Sender: TObject);
-begin
-  BPBtnIsPressed := not BPBtnIsPressed;
-  APBtnIsPressed := not BPBtnIsPressed;
-  UpdateXMinMax;
-  UpdatePMinMax;
-end;
-
-procedure TChartForm.Reset;
+procedure TChartModel.Reset;
 begin
   FBuissy := False;
   FValid := False;
@@ -367,10 +386,10 @@ begin
   PLEDFillColor := claRed;
   DrawInternal;
   MemoLines.Clear;
-  MemoLines.Add('Diagramm wurde in den Anfangszustand versetzt.');
+  MemoLines.Add(ResetMessageString);
 end;
 
-procedure TChartForm.SetDarkColors(const Value: Boolean);
+procedure TChartModel.SetDarkColors(const Value: Boolean);
 begin
   FDarkColors := Value;
   if FDarkColors then
@@ -391,7 +410,7 @@ begin
   end;
 end;
 
-procedure TChartForm.InitStraightLine;
+procedure TChartModel.InitStraightLine;
 var
   i: Integer;
 begin
@@ -407,14 +426,12 @@ begin
   TestF := TempF;
 end;
 
-procedure TChartForm.UpdateYAchseList;
+procedure TChartModel.UpdateYAchseList;
 var
   i: Integer;
   s: string;
   YAV: TYAchseValue;
 begin
-  { wird von YComboClick aufgerufen und vom constructor }
-
   { ComboIndex zurücksetzen auf -1 }
   for YAV := Low(TYAchseValue) to High(TYAchseValue) do
     YAchseRecordList[YAV].ComboIndex := -1;
@@ -435,13 +452,13 @@ begin
   end;
 end;
 
-procedure TChartForm.UpdateYAchseSet;
+procedure TChartModel.UpdateYAchseSet;
 var
   i: Integer;
   s: string;
   YAV: TYAchseValue;
 begin
-  { Wird nur bei NeuBerechnung aufgerufen }
+  { Wird nur bei Neuberechnung aufgerufen }
 
   YAchseSet := [];
   for i := 0 to YComboItems.Count-1 do
@@ -451,7 +468,7 @@ begin
       { Position j des Eintrag finden durch  Textvergleich }
       if s = YAchseRecordList[YAV].ComboText then
       begin
-        { Position in der ComboBox festhalten }
+        { Position in Combo festhalten }
         YAchseRecordList[YAV].ArrayIndex := i;
         { festhalten, welche Kurven existieren }
         if i <= ANr-1 then
@@ -461,7 +478,7 @@ begin
   end;
 end;
 
-function TChartForm.ComboIndexToCurve(ComboIndex: Integer): Integer;
+function TChartModel.ComboIndexToCurve(ComboIndex: Integer): Integer;
 var
   YAV: TYAchseValue;
 begin
@@ -479,11 +496,12 @@ begin
   end;
 end;
 
-procedure TChartForm.Calc;
+procedure TChartModel.Calc;
 begin
   if not FBuissy then
   begin
     { Berechnen }
+    Inc(CalcCounter);
 
     if not CheckBeforeCalc then
       Exit;
@@ -491,11 +509,15 @@ begin
     FBuissy := True;
 
     { Parameterzahl bearbeiten }
-    if PComboSelectedText = 'kein Parameter' then
+    if PComboSelectedText = NoParamString then
     begin
       PMinEditValue := 0;
       PMaxEditValue := 0;
       KurvenZahlSpinnerValue := 1;
+    end
+    else if KurvenZahlSpinnerValue = 1 then
+    begin
+      KurvenZahlSpinnerValue := UserSelectedKurvenZahl;
     end;
 
     ParamCount := KurvenZahlSpinnerValue;
@@ -526,7 +548,7 @@ begin
   end;
 end;
 
-procedure TChartForm.LoadNormal;
+procedure TChartModel.LoadNormal;
 var
   j: Integer;
   p: Integer;
@@ -538,21 +560,37 @@ begin
   UpdateYMinMax;
 end;
 
-procedure TChartForm.GetCurves;
+procedure TChartModel.GetCurves;
 var
   i, j, p: Integer;
   Antrieb, PAntrieb: double;
   Anfang, Ende, PAnfang, PEnde: double;
   InputRec: TTrimmControls;
   PunktOK: Boolean;
-  s: string;
   temp, tempL, tempH, tempA: double;
+  st: string;
+  xn: TxpName;
+  pn: TxpName;
 begin
+  xn := GetTsbName(XComboSelectedText);
+  pn := GetTsbName(PComboSelectedText);
+
   { Getriebezustand sichern und verfügbar machen }
   InputRec := Rigg.Glieder;
 
-  TopTitle := Format(
-    '(Co%dVo%dWi%dWo%dWa%dSh%dSa%dSl%d',
+  case xn of
+    xpController: ChartPunktX := InputRec.Controller;
+    xpWinkel: ChartPunktX := InputRec.Winkel; // / 10;
+    xpVorstag: ChartPunktX := InputRec.Vorstag;
+    xpWante: ChartPunktX := InputRec.Wanten;
+    xpWoben: ChartPunktX := InputRec.Woben;
+    xpSalingH: ChartPunktX := InputRec.SalingH;
+    xpSalingA: ChartPunktX := InputRec.SalingA;
+    xpSalingL: ChartPunktX := InputRec.SalingL;
+    xpVorstagOS: ChartPunktX := InputRec.Vorstag;
+  end;
+
+  TopTitle := Format('Co%dVo%dWi%dWo%dWa%dSh%dSa%dSl%d',
     [InputRec.Controller,
      InputRec.Vorstag,
      InputRec.Winkel,
@@ -562,14 +600,15 @@ begin
      InputRec.SalingA,
      InputRec.SalingL]);
 
-  case SalingTyp of
-    stFest: TopTitle := TopTitle + '/fest)';
-    stDrehbar: TopTitle := TopTitle + '/drehbar)';
-    stOhne: TopTitle := TopTitle + '/ohne Saling)';
-    stOhne_2: TopTitle := TopTitle + '/ohne Saling (BK))';
+  case FSalingTyp of
+    stFest: st := SalingFestString;
+    stDrehbar: st := SalingDrehbarString;
+    stOhne: st := OhneSalingString;
+    stOhne_2: st := OhneSalingStarrString;
   end;
 
-  TopTitle := 'Riggchart - ' + DateToStr(Date) + ' - ' + TopTitle;
+  TopTitle := Format('(%s/%s)', [TopTitle, st]);
+  TopTitle := TopTitleString + ' - ' + DateToStr(Date) + ' - ' + TopTitle;
 
   Rigg.ProofRequired := False;
 
@@ -581,9 +620,9 @@ begin
     for p := 0 to ParamCount - 1 do
     begin
       if ParamCount > 1 then
-        ProgressCaption := Format('Parameter %d von %d', [p+1, ParamCount])
+        ProgressCaption := Format(ProgressCaptionFormatString, [p + 1, ParamCount])
       else
-        ProgressCaption := 'Kurve wird berechnet';
+        ProgressCaption := ProgressCaptionString;
 
       if ParamCount > 1 then
       begin
@@ -592,44 +631,45 @@ begin
       end;
 
       { Parameter ansteuern }
-      s := PComboSelectedText;
       if ParamCount < 2 then
       begin
        { do nothing }
       end
-      else if (s = 'Controller') then
-          Rigg.RealGlied[fpController] := PAntrieb
-      else if (s = 'Winkel') then
-        Rigg.RealGlied[fpWinkel] := PAntrieb * P180
-      else if (s = 'Vorstag') then
-        Rigg.RealGlied[fpVorstag] := PAntrieb
-      else if (s = 'Wante') then
-        Rigg.RealGlied[fpWante] := PAntrieb
-      else if (s = 'Wante oben') then
-        Rigg.RealGlied[fpWoben] := PAntrieb
-      else if (s = 'Saling Höhe') then
-        Rigg.RealGlied[fpSalingH] := PAntrieb
-      else if (s = 'Saling Abstand') then
-        Rigg.RealGlied[fpSalingA] := PAntrieb
-      else if (s = 'Saling Länge') and (SalingTyp = stDrehbar) then
-        Rigg.RealGlied[fpSalingL] := PAntrieb
-      else if (s = 'Saling Länge') and (SalingTyp = stFest) then
-      begin
-        tempL := Rigg.RealGlied[fpSalingL];
-        temp := PAntrieb/tempL;
-        tempH := temp * Rigg.RealGlied[fpSalingH];
-        tempA := temp * Rigg.RealGlied[fpSalingA];
-        Rigg.RealGlied[fpSalingH] := tempH;
-        Rigg.RealGlied[fpSalingA] := tempA;
-      end
-      else if (s = 'Saling Winkel') then
-      begin
-        temp := PAntrieb * P180;
-        tempL := Rigg.RealGlied[fpSalingL];
-        tempH := tempL * sin(temp);
-        tempA := 2 * tempL * cos(temp);
-        Rigg.RealGlied[fpSalingH] := tempH;
-        Rigg.RealGlied[fpSalingA] := tempA;
+      else
+      case pn of
+        xpController: Rigg.RealGlied[fpController] := PAntrieb;
+        xpWinkel: Rigg.RealGlied[fpWinkel] := PAntrieb * P180;
+        xpVorstag: Rigg.RealGlied[fpVorstag] := PAntrieb;
+        xpWante: Rigg.RealGlied[fpWante] := PAntrieb;
+        xpWoben: Rigg.RealGlied[fpWoben] := PAntrieb;
+        xpSalingH: Rigg.RealGlied[fpSalingH] := PAntrieb;
+        xpSalingA: Rigg.RealGlied[fpSalingA] := PAntrieb;
+        xpSalingL:
+        begin
+          case FSalingTyp of
+            stDrehbar: Rigg.RealGlied[fpSalingL] := PAntrieb;
+            stFest:
+            begin
+              tempL := Rigg.RealGlied[fpSalingL];
+              temp := PAntrieb/tempL;
+              tempH := temp * Rigg.RealGlied[fpSalingH];
+              tempA := temp * Rigg.RealGlied[fpSalingA];
+              Rigg.RealGlied[fpSalingH] := tempH;
+              Rigg.RealGlied[fpSalingA] := tempA;
+            end;
+          end;
+        end;
+        xpVorstagOS: ;
+        xpWPowerOS: ;
+        xpSalingW:
+        begin
+          temp := PAntrieb * P180;
+          tempL := Rigg.RealGlied[fpSalingL];
+          tempH := tempL * sin(temp);
+          tempA := 2 * tempL * cos(temp);
+          Rigg.RealGlied[fpSalingH] := tempH;
+          Rigg.RealGlied[fpSalingA] := tempA;
+        end;
       end;
 
       { Definitionsbereich bestimmen und Berechnungsschleife starten }
@@ -643,47 +683,45 @@ begin
         Antrieb := Anfang + (Ende - Anfang) * i / LNr;
 
         { Antrieb ansteuern }
-        s := XComboSelectedText;
-        if (s = 'Controller') then
-          Rigg.RealGlied[fpController] := Antrieb
-        else if (s = 'Winkel') then
-          Rigg.RealGlied[fpWinkel] := Antrieb * P180
-        else if (s = 'Vorstag') then
-          Rigg.RealGlied[fpVorstag] := Antrieb
-        else if (s = 'Wante') then
-          Rigg.RealGlied[fpWante] := Antrieb
-        else if (s = 'Wante oben') then
-          Rigg.RealGlied[fpWoben] := Antrieb
-        else if (s = 'Saling Höhe') then
-          Rigg.RealGlied[fpSalingH] := Antrieb
-        else if (s = 'Saling Abstand') then
-          Rigg.RealGlied[fpSalingA] := Antrieb
-        else if (s = 'Saling Länge') and (SalingTyp = stDrehbar) then
-          Rigg.RealGlied[fpSalingL] := Antrieb
-        else if (s = 'Saling Länge') and (SalingTyp = stFest) then
-        begin
-          tempL := Rigg.RealGlied[fpSalingL];
-          temp := Antrieb/tempL;
-          tempH := temp * Rigg.RealGlied[fpSalingH];
-          tempA := temp * Rigg.RealGlied[fpSalingA];
-          Rigg.RealGlied[fpSalingH] := tempH;
-          Rigg.RealGlied[fpSalingA] := tempA;
-        end
-        else if (s = 'Saling Winkel') then
-        begin
-          temp := Antrieb * P180;
-          tempL := Rigg.RealGlied[fpSalingL];
-          tempH := tempL * sin(temp);
-          tempA := 2 * tempL * cos(temp);
-          Rigg.RealGlied[fpSalingH] := tempH;
-          Rigg.RealGlied[fpSalingA] := tempA;
+        case xn of
+          xpController: Rigg.RealGlied[fpController] := Antrieb;
+          xpWinkel: Rigg.RealGlied[fpWinkel] := Antrieb * P180;
+          xpVorstag: Rigg.RealGlied[fpVorstag] := Antrieb;
+          xpWante: Rigg.RealGlied[fpWante] := Antrieb;
+          xpWOben: Rigg.RealGlied[fpWoben] := Antrieb;
+          xpSalingH: Rigg.RealGlied[fpSalingH] := Antrieb;
+          xpSalingA: Rigg.RealGlied[fpSalingA] := Antrieb;
+          xpSalingL:
+          begin
+            case FSalingTyp of
+              stDrehbar: Rigg.RealGlied[fpSalingL] := Antrieb;
+              stFest:
+              begin
+                tempL := Rigg.RealGlied[fpSalingL];
+                temp := Antrieb/tempL;
+                tempH := temp * Rigg.RealGlied[fpSalingH];
+                tempA := temp * Rigg.RealGlied[fpSalingA];
+                Rigg.RealGlied[fpSalingH] := tempH;
+                Rigg.RealGlied[fpSalingA] := tempA;
+              end;
+            end;
+          end;
+          xpSalingW:
+          begin
+            temp := Antrieb * P180;
+            tempL := Rigg.RealGlied[fpSalingL];
+            tempH := tempL * sin(temp);
+            tempA := 2 * tempL * cos(temp);
+            Rigg.RealGlied[fpSalingH] := tempH;
+            Rigg.RealGlied[fpSalingA] := tempA;
+          end;
         end;
 
         { Berechnen }
-        if SalingTyp = stFest then
+        if FSalingTyp = stFest then
         begin
-          if (XComboSelectedText = 'Winkel') or
-             (PComboSelectedText = 'Winkel') then
+          if (XComboSelectedText = WinkelString) or
+             (PComboSelectedText = WinkelString) then
             Rigg.UpdateGetriebeFS
           else
             Rigg.BerechneWinkel;
@@ -802,40 +840,40 @@ begin
   end;
 end;
 
-procedure TChartForm.Draw;
+procedure TChartModel.Draw;
 begin
 
 end;
 
-procedure TChartForm.DrawNormal;
+procedure TChartModel.DrawNormal;
 begin
   FShowGroup := False;
   LoadNormal;
   DrawInternal;
 end;
 
-procedure TChartForm.DrawInternal;
+procedure TChartModel.DrawInternal;
 begin
   if FValid then
   begin
-    LeftTitle := GetYText(YComboSelectedText);
-    BottomTitle := XAchseText;
-    RightTitle := Format('Parameter %s', [ParamText]);
+    YTitle := GetYText(YComboSelectedText);
+    XTitle := XAchseText;
+    PTitle := Format('%s', [ParamText]);
     Xmin := XAchseMin;
     Xmax := XAchseMax;
     LookForYMinMax;
   end
   else
   begin
-    TopTitle := 'Top Title';
+    TopTitle := TopTitleTestString;
+    XTitle := BottomTitleTestString;
+    PTitle := ParamTitleTestString;
     if FStatus = [] then
-      LeftTitle := 'Diagramm wurde zurückgesetzt'
+      YTitle := StatusResetString // 'Diagramm wurde zurückgesetzt'
     else if csBerechnet in FStatus then
-      LeftTitle := 'Kurve wurde nicht berechnet!'
+      YTitle := StatusNotComputedString // 'Kurve wurde nicht berechnet!'
     else if csGeladen in FStatus then
-      LeftTitle := 'Kurve wurde nicht geladen!';
-    BottomTitle := 'Bottom Title';
-    RightTitle := 'Right Title';
+      YTitle := StatusNotLoadedString; // 'Kurve wurde nicht geladen!';
 
     Xmin := 0;
     Xmax := 100;
@@ -863,45 +901,42 @@ begin
     Draw;
 end;
 
-procedure TChartForm.YComboChange(Sender: TObject);
+procedure TChartModel.YComboChange(Sender: TObject);
 var
   j, p: Integer;
 begin
+  FShowGroup := False;
   if (YComboItemIndex < 0) or (YComboItemIndex > VNr-1) then
   begin
     FValid := False;
-    YMinEditText := 'YMin';
-    YMaxEditText := 'YMax';
-    Draw;
+    YMinEditText := YMinEditString;
+    YMaxEditText := YMaxEditString;
+    DrawInternal;
     Exit;
   end;
   j := ComboIndexToCurve(YComboItemIndex);
   if not Valid then
   begin
-    YMinEditText := 'YMin';
-    YMaxEditText := 'YMax';
-    Draw;
+    YMinEditText := YMinString;
+    YMaxEditText := YMaxString;
+    DrawInternal;
     Exit;
   end;
   for p := 0 to ParamCount - 1 do
     bf[p] := af[p, j];
   UpdateYMinMax;
-  Draw; { auch TestF zeichnen }
+  DrawInternal; { auch TestF zeichnen }
 end;
 
-procedure TChartForm.DrawGroup;
+procedure TChartModel.DrawGroup;
 begin
   if FShowGroup then
-  begin
     DrawTogether
-  end
   else
-  begin
     DrawNormal;
-  end;
 end;
 
-procedure TChartForm.DrawTogether;
+procedure TChartModel.DrawTogether;
 begin
   if FStatus = [] then
     Exit;
@@ -911,7 +946,7 @@ begin
   FShowGroup := True;
 end;
 
-procedure TChartForm.ShowTogether(ParamNo: Integer);
+procedure TChartModel.ShowTogether(ParamNo: Integer);
 var
   i, j, p: Integer;
   YAV: TYAchseValue;
@@ -970,13 +1005,13 @@ begin
   end;
 
   FValid := True;
-  YMinEditText := 'YMin';
-  YMaxEditText := 'YMax';
+  YMinEditText := YMinString;
+  YMaxEditText := YMaxString;
 
   TopTitle := '';
-  LeftTitle := 'Alle Kurven normiert [%]';
-  BottomTitle := XAchseText;
-  RightTitle := Format('Parameter Nr.%d', [ParamNo]);
+  YTitle := AllCurvesNormalizedString; // 'Alle Kurven normiert [%]';
+  XTitle := XAchseText;
+  PTitle := Format('%s%d', [PIdentString, ParamNo]); //Nr.1
 
   Xmin := XAchseMin;
   Xmax := XAchseMax;
@@ -1006,7 +1041,7 @@ begin
   PText := tempPText;
 end;
 
-procedure TChartForm.UpdateYMinMax;
+procedure TChartModel.UpdateYMinMax;
 var
   min, max: double;
   i, j, p: Integer;
@@ -1017,8 +1052,8 @@ begin
   if not Valid then
   begin
     { MessageBeep(MB_ICONEXCLAMATION); }
-    YMinEditText := 'YMin';
-    YMaxEditText := 'YMax';
+    YMinEditText := YMinString;
+    YMaxEditText := YMaxString;
     Exit;
   end;
   TempF := af[p, j];
@@ -1035,21 +1070,21 @@ begin
   YMaxEditText := Format('%6.2f', [max]);
 end;
 
-procedure TChartForm.LookForYMinMax;
+procedure TChartModel.LookForYMinMax;
 var
   i, j, p: Integer;
 begin
   { Maximum und Minimum suchen über alle Parameter hinweg }
   if RggDocument.CalcTyp = ctQuerKraftBiegung then
   begin
-    if (YComboSelectedText = 'Vorstag-Spannung') or
-       (YComboSelectedText = 'Wanten-Spannung') then
+    if (YComboSelectedText = VorstagSpannungString) or
+       (YComboSelectedText = WantenSpannungString) then
     begin
       Ymax := 5000; { 5000 N }
       Ymin := -1000; { -1000 N }
       Exit;
     end;
-    if (YComboSelectedText = 'Elastizität Punkt C') then
+    if (YComboSelectedText = ElasticityPointCString) then
     begin
       YMax := 1000; { 1000 mm }
       YMin := 0;
@@ -1062,13 +1097,13 @@ begin
   if not Valid then
   begin
     { MessageBeep(MB_ICONEXCLAMATION); }
-    YMinEditText := 'YMin';
-    YMaxEditText := 'YMax';
+    YMinEditText := YMinString;
+    YMaxEditText := YMaxString;
     Exit;
   end;
   Ymax := af[p, j, 0];
   Ymin := Ymax;
-  for p := 0 to ParamCount-1 do
+  for p := 0 to ParamCount - 1 do
   begin
     TempF := af[p, j];
     for i := 0 to LNr do
@@ -1081,7 +1116,7 @@ begin
   end;
 end;
 
-function TChartForm.GetYText(Text: string): string;
+function TChartModel.GetYText(Text: string): string;
 var
   YAV: TYAchseValue;
 begin
@@ -1094,18 +1129,19 @@ begin
     end;
 end;
 
-procedure TChartForm.GetMemoText;
+procedure TChartModel.GetMemoText;
 var
   p: Integer;
   YAV: TYAchseValue;
   xpName: TxpName;
   T: TTrimmTabDaten;
 begin
+  Inc(MemoCounter);
   with MemoLines do
   begin
     Clear;
     { SalingTyp }
-    case SalingTyp of
+    case FSalingTyp of
       stFest: Add('SalingTyp: Feste Salinge');
       stDrehbar: Add('SalingTyp: Drehbare Salinge');
       stOhne_2: Add('SalingTyp: Ohne Salinge (Mast biegsam)');
@@ -1117,9 +1153,9 @@ begin
       ctOhne: Add('ControllerTyp: kein Controller');
     end;
     { CalcTyp }
-    if SalingTyp = stOhne then
+    if FSalingTyp = stOhne then
       Add('BerechnungsTyp: Wantenkraft vorgegeben');
-    if SalingTyp <> stOhne then
+    if FSalingTyp <> stOhne then
     case Rigg.CalcTyp of
       ctQuerKraftBiegung: Add('BerechnungsTyp: nur Quekraftbiegung');
       ctBiegeKnicken: Add('BerechnungsTyp: Biegeknicken');
@@ -1164,6 +1200,8 @@ begin
     { X }
     Add('');
     Add('XAchse: ' + XAchseText);
+    Add(Format('  Use AP: %s', [BoolStr[AP]]));
+    Add(Format('  AP Width: %d', [APWidth]));
     Add(Format('  %d ... %d', [XAchseMin, XAchseMax]));
     { P }
     if ParamCount > 1 then
@@ -1172,7 +1210,7 @@ begin
       Add('Parameter: ' + ParamText);
       with MemoLines do
       begin
-        for p := 0 to ParamCount-1 do
+        for p := 0 to ParamCount - 1 do
           Add(Format('  #%d: %s (%s) ', [p + 1, PText[p], PColorText[p]]));
       end;
     end;
@@ -1214,10 +1252,10 @@ begin
           Add(Format('  SalingWinkel: %g Grad',[
             arctan2(RealGlied[fpSalingH], RealGlied[fpSalingA]) * D180]));
       if (SalingTyp = stFest) and (xpName = xpSalingW) then
-        Add(Format('  SalingLänge: %g mm', [RealGlied[fpSalingL]]));
+        Add(Format('  SalingLänge: %6.2f mm', [RealGlied[fpSalingL]]));
 
       if (SalingTyp = stDrehbar) and (xpName <> xpSalingL) then
-        Add(Format('  SalingLänge: %g mm', [RealGlied[fpSalingL]]));
+        Add(Format('  SalingLänge: %6.2f mm', [RealGlied[fpSalingL]]));
       if (SalingTyp = stOhne) and (xpName <> xpVorstag) then { nicht VorstagOS - ok }
         Add(Format('  Vorstag: %g mm', [RealGlied[fpVorstagOS]]));
       if (SalingTyp = stOhne) and (xpName <> xpWPowerOS) then
@@ -1245,10 +1283,23 @@ begin
       Add(Format('  D0F: %d mm (Top)', [Round(MastLaenge)]));
       Add(Format('  Biegesteifigkeit EI: %d Nm^2', [MastEI]));
     end;
+    { Exit Counters }
+    Add('');
+    with Rigg do
+    begin
+      if ExitCounter1 > 0 then Add(Format('  EC 1: %d ', [ExitCounter1]));
+      if ExitCounter2 > 0 then Add(Format('  EC 2: %d ', [ExitCounter2]));
+      if ExitCounter3 > 0 then Add(Format('  EC 3: %d ', [ExitCounter3]));
+      if ExitCounter4 > 0 then Add(Format('  EC 4: %d ', [ExitCounter4]));
+      if ExitCounter5 > 0 then Add(Format('  EC 5: %d ', [ExitCounter5]));
+      if ExitCounter6 > 0 then Add(Format('  EC 6: %d ', [ExitCounter6]));
+    end;
+    Add(Format('Memo Counter: %d', [MemoCounter]));
+    Add(Format('Calc Counter: %d', [CalcCounter]));
   end;
 end;
 
-procedure TChartForm.XComboChange(Sender: TObject);
+procedure TChartModel.XComboChange(Sender: TObject);
 begin
   UpdateXMinMax;
   FXTextClicked := XComboSelectedText;
@@ -1256,10 +1307,10 @@ begin
     XLEDFillColor := claLime
   else
     XLEDFillColor := claRed;
-  UpdatePCombo(SalingTyp);
+  UpdatePCombo(FSalingTyp);
 end;
 
-procedure TChartForm.PComboChange(Sender: TObject);
+procedure TChartModel.PComboChange(Sender: TObject);
 begin
   UpdatePMinMax;
   FPTextClicked := PComboSelectedText;
@@ -1269,7 +1320,7 @@ begin
     PLEDFillColor := claRed;
 end;
 
-procedure TChartForm.UpdateXCombo(SalingTyp: TSalingTyp);
+procedure TChartModel.UpdateXCombo(SalingTyp: TSalingTyp);
 var
   i: Integer;
 begin
@@ -1278,36 +1329,36 @@ begin
     Clear;
     if SalingTyp = stFest then
     begin
-      Add('Controller');
-      Add('Vorstag');
-      Add('Winkel');
-      Add('Wante');
-      Add('Wante oben');
-      Add('Saling Höhe');
-      Add('Saling Abstand');
-      Add('Saling Länge');
-      Add('Saling Winkel');
+      Add(ControllerString);
+      Add(VorstagString);
+      Add(WinkelString);
+      Add(WanteString);
+      Add(WanteObenString);
+      Add(SalingHString);
+      Add(SalingAString);
+      Add(SalingLString);
+      Add(SalingWString);
     end;
     if SalingTyp = stDrehbar then
     begin
-      Add('Controller');
-      Add('Vorstag');
-      Add('Wante');
-      Add('Wante oben');
-      Add('Saling Länge');
+      Add(ControllerString);
+      Add(VorstagString);
+      Add(WanteString);
+      Add(WanteObenString);
+      Add(SalingLString);
     end;
     if SalingTyp = stOhne_2 then
     begin
-      Add('Controller');
-      Add('Vorstag');
-      Add('Wante');
+      Add(ControllerString);
+      Add(VorstagString);
+      Add(WanteString);
     end;
     if SalingTyp = stOhne then
     begin
-      Add('Vorstag');
+      Add(VorstagString);
     end;
   end;
-  XComboItemIndex := XComboItems.IndexOf('Vorstag');
+  XComboItemIndex := XComboItems.IndexOf(VorstagString);
   for i := 0 to XComboItems.Count-1 do
     if (XComboItems[i] = FXTextClicked) then
     begin
@@ -1317,183 +1368,183 @@ begin
   UpdatePCombo(SalingTyp);
 end;
 
-procedure TChartForm.UpdatePCombo(SalingTyp: TSalingTyp);
+procedure TChartModel.UpdatePCombo(SalingTyp: TSalingTyp);
 var
   i: Integer;
 begin
   with PComboItems do
   begin
     Clear;
-    Add('kein Parameter');
-    if XComboSelectedText = 'Controller' then
+    Add(NoParamString);
+    if XComboSelectedText = ControllerString then
     begin
       if SalingTyp = stFest then
       begin
-        Add('Vorstag');
-        Add('Winkel');
-        Add('Wante');
-        Add('Wante oben');
-        Add('Saling Höhe');
-        Add('Saling Abstand');
-        Add('Saling Länge');
-        Add('Saling Winkel');
+        Add(VorstagString);
+        Add(WinkelString);
+        Add(WanteString);
+        Add(WanteObenString);
+        Add(SalingHString);
+        Add(SalingAString);
+        Add(SalingLString);
+        Add(SalingWString);
       end;
       if SalingTyp = stDrehbar then
       begin
-        Add('Vorstag');
-        Add('Wante');
-        Add('Wante oben');
-        Add('Saling Länge');
+        Add(VorstagString);
+        Add(WanteString);
+        Add(WanteObenString);
+        Add(SalingLString);
       end;
       if SalingTyp = stOhne_2 then
       begin
-        Add('Vorstag');
-        Add('Wante');
+        Add(VorstagString);
+        Add(WanteString);
       end;
     end
-    else if (XComboSelectedText = 'Vorstag') then
+    else if XComboSelectedText = VorstagString then
     begin
       if SalingTyp = stFest then
       begin
-        Add('Controller');
-        Add('Wante');
-        Add('Wante oben');
-        Add('Saling Höhe');
-        Add('Saling Abstand');
-        Add('Saling Länge');
-        Add('Saling Winkel');
+        Add(ControllerString);
+        Add(WanteString);
+        Add(WanteObenString);
+        Add(SalingHString);
+        Add(SalingAString);
+        Add(SalingLString);
+        Add(SalingWString);
       end;
       if SalingTyp = stDrehbar then
       begin
-        Add('Controller');
-        Add('Wante');
-        Add('Wante oben');
-        Add('Saling Länge');
+        Add(ControllerString);
+        Add(WanteString);
+        Add(WanteObenString);
+        Add(SalingLString);
       end;
       if SalingTyp = stOhne_2 then
       begin
-        Add('Controller');
-        Add('Wante');
+        Add(ControllerString);
+        Add(WanteString);
       end;
     end
-    else if (XComboSelectedText = 'Winkel') then
+    else if XComboSelectedText = WinkelString then
     begin
       if SalingTyp = stFest then
       begin
-        Add('Controller');
-        Add('Wante');
-        Add('Wante oben');
-        Add('Saling Höhe');
-        Add('Saling Abstand');
-        Add('Saling Länge');
-        Add('Saling Winkel');
+        Add(ControllerString);
+        Add(WanteString);
+        Add(WanteObenString);
+        Add(SalingHString);
+        Add(SalingAString);
+        Add(SalingLString);
+        Add(SalingWString);
       end;
     end
-    else if (XComboSelectedText = 'Wante') then
+    else if XComboSelectedText = WanteString then
     begin
       if SalingTyp = stFest then
       begin
-        Add('Controller');
-        Add('Vorstag');
-        Add('Winkel');
-        Add('Wante oben');
-        Add('Saling Höhe');
-        Add('Saling Abstand');
-        Add('Saling Länge');
-        Add('Saling Winkel');
+        Add(ControllerString);
+        Add(VorstagString);
+        Add(WinkelString);
+        Add(WanteObenString);
+        Add(SalingHString);
+        Add(SalingAString);
+        Add(SalingLString);
+        Add(SalingWString);
       end;
       if SalingTyp = stDrehbar then
       begin
-        Add('Controller');
-        Add('Vorstag');
-        Add('Wante oben');
-        Add('Saling Länge');
+        Add(ControllerString);
+        Add(VorstagString);
+        Add(WanteObenString);
+        Add(SalingLString);
       end;
       if SalingTyp = stOhne_2 then
       begin
-        Add('Controller');
-        Add('Vorstag');
+        Add(ControllerString);
+        Add(VorstagString);
       end;
     end
-    else if (XComboSelectedText = 'Wante oben') then
+    else if (XComboSelectedText = WanteObenString) then
     begin
       if SalingTyp = stFest then
       begin
-        Add('Controller');
-        Add('Vorstag');
-        Add('Winkel');
-        Add('Wante');
-        Add('Saling Höhe');
-        Add('Saling Abstand');
-        Add('Saling Länge');
-        Add('Saling Winkel');
+        Add(ControllerString);
+        Add(VorstagString);
+        Add(WinkelString);
+        Add(WanteString);
+        Add(SalingHString);
+        Add(SalingAString);
+        Add(SalingLString);
+        Add(SalingWString);
       end;
       if SalingTyp = stDrehbar then
       begin
-        Add('Controller');
-        Add('Vorstag');
-        Add('Wante');
-        Add('Saling Länge');
+        Add(ControllerString);
+        Add(VorstagString);
+        Add(WanteString);
+        Add(SalingLString);
       end;
     end
-    else if (XComboSelectedText = 'Saling Höhe') then
+    else if (XComboSelectedText = SalingHString) then
     begin
       if SalingTyp = stFest then
       begin
-        Add('Controller');
-        Add('Vorstag');
-        Add('Winkel');
-        Add('Wante');
-        Add('Wante oben');
-        Add('Saling Abstand');
-        Add('Saling Länge');
-        Add('Saling Winkel');
+        Add(ControllerString);
+        Add(VorstagString);
+        Add(WinkelString);
+        Add(WanteString);
+        Add(WanteObenString);
+        Add(SalingAString);
+        Add(SalingLString);
+        Add(SalingWString);
       end;
     end
-    else if (XComboSelectedText = 'Saling Abstand') then
+    else if (XComboSelectedText = SalingAString) then
     begin
       if SalingTyp = stFest then
       begin
-        Add('Controller');
-        Add('Vorstag');
-        Add('Winkel');
-        Add('Wante');
-        Add('Wante oben');
-        Add('Saling Höhe');
-        Add('Saling Länge');
-        Add('Saling Winkel');
+        Add(ControllerString);
+        Add(VorstagString);
+        Add(WinkelString);
+        Add(WanteString);
+        Add(WanteObenString);
+        Add(SalingHString);
+        Add(SalingLString);
+        Add(SalingWString);
       end;
     end
-    else if (XComboSelectedText = 'Saling Länge') then
+    else if (XComboSelectedText = SalingLString) then
     begin
       if SalingTyp = stFest then
       begin
-        Add('Controller');
-        Add('Vorstag');
-        Add('Winkel');
-        Add('Wante');
-        Add('Wante oben');
-        Add('Saling Höhe');
-        Add('Saling Abstand');
-        Add('Saling Winkel');
+        Add(ControllerString);
+        Add(VorstagString);
+        Add(WinkelString);
+        Add(WanteString);
+        Add(WanteObenString);
+        Add(SalingHString);
+        Add(SalingAString);
+        Add(SalingWString);
       end;
       if SalingTyp = stDrehbar then
       begin
-        Add('Controller');
-        Add('Vorstag');
-        Add('Wante');
-        Add('Wante oben');
+        Add(ControllerString);
+        Add(VorstagString);
+        Add(WanteString);
+        Add(WanteObenString);
       end;
     end
-    else if (XComboSelectedText = 'Saling Winkel') then
+    else if (XComboSelectedText = SalingWString) then
     begin
       if SalingTyp = stFest then
       begin
-        Add('Controller');
-        Add('Vorstag');
-        Add('Winkel');
-        Add('Wante');
-        Add('Wante oben');
+        Add(ControllerString);
+        Add(VorstagString);
+        Add(WinkelString);
+        Add(WanteString);
+        Add(WanteObenString);
       end;
     end;
   end;
@@ -1508,57 +1559,57 @@ begin
   UpdatePMinMax;
 end;
 
-function TChartForm.GetXText(Text: string): string;
+function TChartModel.GetXText(Text: string): string;
 var
   s: string;
 begin
-  if Text = 'Controller' then s := 'Zustellung Mast-Controller [mm]'
-  else if Text = 'Winkel' then s := 'Winkel [1E-1 Grad]'
-  else if Text = 'Vorstag' then s := 'Vorstaglänge [mm]'
-  else if Text = 'Wante' then s := 'Wantenlänge [mm]'
-  else if Text = 'Wante oben' then s := 'Länge des oberen Wantenabschnitts [mm]'
-  else if Text = 'Saling Höhe' then s := 'Höhe des Salingdreiecks [mm]'
-  else if Text = 'Saling Abstand' then s := 'Saling-Abstand [mm]'
-  else if Text = 'Saling Länge' then s := 'Saling-Länge [mm]'
-  else if Text = 'Saling Winkel' then s := 'Saling-Winkel [Grad]';
+  if Text = ControllerString then s := ControllerText
+  else if Text = WinkelString then s := WinkelText
+  else if Text = VorstagString then s := VorstagText
+  else if Text = WanteString then s := WanteText
+  else if Text = WanteObenString then s := WanteObenText
+  else if Text = SalingHString then s := SalingHText
+  else if Text = SalingAString then s := SalingAText
+  else if Text = SalingLString then s := SalingLText
+  else if Text = SalingWString then s := SalingWText;
   result := s;
 end;
 
-function TChartForm.GetPText(Text: string): string;
+function TChartModel.GetPText(Text: string): string;
 var
   s: string;
 begin
-  if Text = 'Controller' then s := 'Zustellung Mast-Controller [mm]'
-  else if Text = 'Winkel' then s := 'Winkel [1E-1 Grad]'
-  else if Text = 'Vorstag' then s := 'Vorstaglänge [mm]'
-  else if Text = 'Wante' then s := 'Wantenlänge [mm]'
-  else if Text = 'Wante oben' then s := 'Länge des oberen Wantenabschnitts [mm]'
-  else if Text = 'Saling Höhe' then s := 'Höhe des Salingdreiecks [mm]'
-  else if Text = 'Saling Abstand' then s := 'Saling-Abstand [mm]'
-  else if Text = 'Saling Länge' then s := 'Saling-Länge [mm]'
-  else if Text = 'Saling Winkel' then s := 'Saling-Winkel [Grad]';
+  if Text = ControllerString then s := ControllerText
+  else if Text = WinkelString then s := WinkelText
+  else if Text = VorstagString then s := VorstagText
+  else if Text = WanteString then s := WanteText
+  else if Text = WanteObenString then s := WanteObenText
+  else if Text = SalingHString then s := SalingHText
+  else if Text = SalingAString then s := SalingAText
+  else if Text = SalingLString then s := SalingLText
+  else if Text = SalingWString then s := SalingWText;
   result := s;
 end;
 
-function TChartForm.GetTsbName(Text: string): TxpName;
+function TChartModel.GetTsbName(Value: string): TxpName;
 var
   xp: TxpName;
 begin
   xp := xpController;
-  if Text = 'Winkel' then xp := xpWinkel
-  else if Text = 'Vorstag' then xp := xpVorstag
-  else if Text = 'Wante' then xp := xpWante
-  else if Text = 'Wante oben' then xp := xpWoben
-  else if Text = 'Saling Höhe' then xp := xpSalingH
-  else if Text = 'Saling Abstand' then xp := xpSalingA
-  else if Text = 'Saling Länge' then xp := xpSalingL
-  else if Text = 'Saling Winkel' then xp := xpSalingW;
-  { else if Text = 'Vorstag OS' then xp := xpVorstagOS }
-  { else if Text = 'Wantenkraft OS' then xp := xpWPowerOS }
+  if Value = WinkelString then xp := xpWinkel
+  else if Value = VorstagString then xp := xpVorstag
+  else if Value = WanteString then xp := xpWante
+  else if Value = WanteObenString then xp := xpWoben
+  else if Value = SalingHString then xp := xpSalingH
+  else if Value = SalingAString then xp := xpSalingA
+  else if Value = SalingLString then xp := xpSalingL
+  else if Value = SalingWString then xp := xpSalingW
+  else if Value = VorstagOhneSalingString then xp := xpVorstagOS
+  else if Value = WantenkraftOhneSalingString then xp := xpWPowerOS;
   result := xp;
 end;
 
-procedure TChartForm.UpdateXMinMax;
+procedure TChartModel.UpdateXMinMax;
 var
   s: string;
   xp: TxpName;
@@ -1566,20 +1617,11 @@ var
   f: TRggSB;
 begin
   s := XComboSelectedText;
-
-  if s = 'Controller' then xp := xpController
-  else if s = 'Winkel' then xp := xpWinkel
-  else if s = 'Vorstag' then xp := xpVorstag
-  else if s = 'Wante' then xp := xpWante
-  else if s = 'Wante oben' then xp := xpWoben
-  else if s = 'Saling Höhe' then xp := xpSalingH
-  else if s = 'Saling Abstand' then xp := xpSalingA
-  else if s = 'Saling Länge' then xp := xpSalingL
-  else if s = 'Saling Winkel' then xp := xpSalingW
-  else
+  xp := GetTsbName(s);
+  if not (xp in XSet) then
     Exit;
 
-  if (SalingTyp = stFest) and (xp = xpSalingL) then
+  if (FSalingTyp = stFest) and (xp = xpSalingL) then
   begin
     SalingDreieck.CopyFromRigg(Rigg);
     tempMin := Ceil(SalingDreieck.Saling_LMin);
@@ -1602,51 +1644,46 @@ begin
   end;
 
   try
-    if BPBtnIsPressed then
+    Minimum := tempMin;
+    Maximum := tempMax;
+
+    if AP then
     begin
-      Minimum := tempMin;
-      Maximum := tempMax;
-    end
-    else if APBtnIsPressed then
-    begin
-      Minimum := tempMin;
-      Maximum := tempMax;
       if (tempIst - APWidth) > tempMin then
         Minimum := tempIst - APWidth;
       if (tempIst + APWidth) < tempMax then
         Maximum := tempIst + APWidth;
-    end
-    else
-    begin
-      try
-        Minimum := StrToInt(XMinEditText);
-        Maximum := StrToInt(XMaxEditText);
-        if Minimum < tempMin then Minimum := tempMin;
-        if Maximum > tempMax then Maximum := tempMax;
-        if Minimum > Maximum then Minimum := tempMin;
-        if Maximum < Minimum then Maximum := tempMax;
-      except
-        on EConvertError do
-        begin
-          Minimum := tempMin;
-          Maximum := tempMax;
-        end;
-      end;
     end;
+
+//    try
+//      Minimum := StrToInt(XMinEditText);
+//      Maximum := StrToInt(XMaxEditText);
+//      if Minimum < tempMin then Minimum := tempMin;
+//      if Maximum > tempMax then Maximum := tempMax;
+//      if Minimum > Maximum then Minimum := tempMin;
+//      if Maximum < Minimum then Maximum := tempMax;
+//    except
+//      on EConvertError do
+//      begin
+//        Minimum := tempMin;
+//        Maximum := tempMax;
+//      end;
+//    end;
+
     XMinEditText := IntToStr(Minimum);
     XMaxEditText := IntToStr(Maximum);
   except
     on ERangeError do
     begin
-      XMinEditText := '0';
-      XMaxEditText := '100';
+      XMinEditText := IntToStr(0);
+      XMaxEditText := IntToStr(LNr);
       Valid := False;
       XLEDFillColor := claRed;
     end;
   end;
 end;
 
-procedure TChartForm.UpdatePMinMax;
+procedure TChartModel.UpdatePMinMax;
 var
   s: string;
   xp: TxpName;
@@ -1654,27 +1691,23 @@ var
   f: TRggSB;
 begin
   s := PComboSelectedText;
-  if s = ('kein Parameter') then
+  if s = NoParamString then
   begin
-    PMinEditText := '0';
-    PMaxEditText := '0';
+    PMinEditText := IntToStr(0);
+    PMaxEditText := IntToStr(0);
     KurvenZahlSpinnerValue := 1;
     Exit;
+  end
+  else if KurvenZahlSpinnerValue = 1 then
+  begin
+    KurvenzahlSpinnerValue := UserSelectedKurvenZahl;
   end;
 
-  if s = 'Controller' then xp := xpController
-  else if s = 'Winkel' then xp := xpWinkel
-  else if s = 'Vorstag' then xp := xpVorstag
-  else if s = 'Wante' then xp := xpWante
-  else if s = 'Wante oben' then xp := xpWoben
-  else if s = 'Saling Höhe' then xp := xpSalingH
-  else if s = 'Saling Abstand' then xp := xpSalingA
-  else if s = 'Saling Länge' then xp := xpSalingL
-  else if s = 'Saling Winkel' then xp := xpSalingW
-  else
+  xp := GetTsbName(s);
+  if not (xp in XSet) then
     Exit;
 
-  if (SalingTyp = stFest) and (xp = xpSalingL) then
+  if (FSalingTyp = stFest) and (xp = xpSalingL) then
   begin
     SalingDreieck.CopyFromRigg(Rigg);
     tempMin := Ceil(SalingDreieck.Saling_LMin);
@@ -1697,56 +1730,51 @@ begin
   end;
 
   try
-    if BPBtnIsPressed then
+    Minimum := tempMin;
+    Maximum := tempMax;
+
+    if AP then
     begin
-      Minimum := tempMin;
-      Maximum := tempMax;
-    end
-    else if APBtnIsPressed then
-    begin
-      Minimum := tempMin;
-      Maximum := tempMax;
       if (tempIst - APWidth) > tempMin then
         Minimum := tempIst - APWidth;
       if (tempIst + APWidth) < tempMax then
         Maximum := tempIst + APWidth;
-    end
-    else
-    begin
-      try
-        Minimum := StrToInt(PMinEditText);
-        Maximum := StrToInt(PMaxEditText);
-        if Minimum < tempMin then Minimum := tempMin;
-        if Maximum > tempMax then Maximum := tempMax;
-        if Minimum > Maximum then Minimum := tempMin;
-        if Maximum < Minimum then Maximum := tempMax;
-      except
-        on EConvertError do
-        begin
-          Minimum := tempMin;
-          Maximum := tempMax;
-        end;
-      end;
     end;
+
+//    try
+//      Minimum := StrToInt(PMinEditText);
+//      Maximum := StrToInt(PMaxEditText);
+//      if Minimum < tempMin then Minimum := tempMin;
+//      if Maximum > tempMax then Maximum := tempMax;
+//      if Minimum > Maximum then Minimum := tempMin;
+//      if Maximum < Minimum then Maximum := tempMax;
+//    except
+//      on EConvertError do
+//      begin
+//        Minimum := tempMin;
+//        Maximum := tempMax;
+//      end;
+//    end;
+
     PMinEditText := IntToStr(Minimum);
     PMaxEditText := IntToStr(Maximum);
   except
     on ERangeError do
     begin
-      PMinEditText := '0';
-      PMaxEditText := '100';
+      PMinEditText := IntToStr(0);
+      PMaxEditText := IntToStr(LNr);
       Valid := False;
       PLEDFillColor := claRed;
     end;
   end;
 end;
 
-function  TChartForm.CheckBeforeCalc: Boolean;
+function  TChartModel.CheckBeforeCalc: Boolean;
 begin
   result := True;
-  if (XMinEditText = 'XMinEdit') or (XMaxEditText = 'XMaxEdit') then
+  if (XMinEditText = XMinEditString) or (XMaxEditText = XMaxEditString) then
     UpdateXMinMax;
-  if (PMinEditText = 'PMinEdit') or (PMaxEditText = 'PMaxEdit') then
+  if (PMinEditText = PMinEditString) or (PMaxEditText = PMaxEditString) then
     UpdatePMinMax;
 //  if not ValidateInput(XMinEdit) then result := False;
 //  if not ValidateInput(XMaxEdit) then result := False;
@@ -1754,7 +1782,7 @@ begin
 //  if not ValidateInput(PMaxEdit) then result := False;
 end;
 
-procedure TChartForm.DoAfterCalc;
+procedure TChartModel.DoAfterCalc;
 begin
   { X }
   XLEDFillColor := claLime;
@@ -1771,7 +1799,7 @@ begin
   ParamMax := StrToInt(PMaxEditText);
 end;
 
-procedure TChartForm.UpdateGetriebe;
+procedure TChartModel.UpdateGetriebe;
 begin
   Rigg.UpdateGetriebe;
 
@@ -1779,31 +1807,25 @@ begin
     Rigg.UpdateRigg;
 end;
 
-procedure TChartForm.InitSpinner;
+procedure TChartModel.InitSpinner;
 begin
-//  KurvenZahlSpinner.Increment := 1;
-//  KurvenZahlSpinner.Min := 1;
   KurvenZahlSpinnerMax := ANr;
-  KurvenZahlSpinnerValue := 1;
+  KurvenZahlSpinnerValue := ParamCount;
 
-//  PSpinner.Increment := 1;
-//  PSpinner.Min := 1;
   PSpinnerMax := PNr;
   PSpinnerValue := 1;
 
-//  APSpinner.Increment := 1;
-//  APSpinner.Min := 1;
   APSpinnerMax := 100;
   APSpinnerValue := APWidth;
 end;
 
-procedure TChartForm.InitRigg;
+procedure TChartModel.InitRigg;
 begin
   Rigg := Main.RggMain.Rigg;
   FSalingTyp := Rigg.SalingTyp;
 end;
 
-function TChartForm.XComboSelectedText: string;
+function TChartModel.XComboSelectedText: string;
 begin
   if XComboItemIndex = -1 then
   begin
@@ -1814,7 +1836,7 @@ begin
   result := XComboItems[XComboItemIndex];
 end;
 
-function TChartForm.YComboSelectedText: string;
+function TChartModel.YComboSelectedText: string;
 begin
   if YComboItemIndex = -1 then
   begin
@@ -1825,7 +1847,7 @@ begin
   result := YComboItems[YComboItemIndex];
 end;
 
-function TChartForm.PComboSelectedText: string;
+function TChartModel.PComboSelectedText: string;
 begin
   if PComboItemIndex = -1 then
   begin
@@ -1836,44 +1858,47 @@ begin
   result := PComboItems[PComboItemIndex];
 end;
 
-procedure TChartForm.SuperInit;
+procedure TChartModel.SuperInit;
 begin
-  XComboItemIndex := XComboItems.IndexOf('Wante');
+  XComboItemIndex := XComboItems.IndexOf(WanteString);
   XComboChange(nil);
 
   { SalingHöhe }
-  PComboItemIndex := PComboItems.IndexOf('Saling Höhe');
+  PComboItemIndex := PComboItems.IndexOf(SalingHString);
   PComboChange(nil);
 
   { Mastfall F0F }
-  YComboItemIndex := YComboItems.IndexOf('Mastfall F0F');
+  YComboItemIndex := YComboItems.IndexOf(MastfallF0FString);
   YComboChange(nil);
 
   UpdateYAchseList;
 
   KurvenZahlSpinnerValue := 3;
+  DefaultKurvenZahl := 3;
 end;
 
-procedure TChartForm.SuperCalc;
+procedure TChartModel.SuperCalc;
 begin
+  UpdateXMinMax;
+  UpdatePMinMax;
   Calc;
 end;
 
-function TChartForm.GetChecked(fa: TFederAction): Boolean;
+function TChartModel.GetChecked(fa: Integer): Boolean;
 begin
   case fa of
     faChartRect: result := WantRectangles;
     faChartTextRect: result := WantTextRect;
     faChartLegend: result := WantLegend;
-    faChartAP: result := APBtnIsPressed;
-    faChartBP: result := BPBtnIsPressed;
+    faChartAP: result := AP;
+    faChartBP: result := not AP;
     faChartGroup: result := FShowGroup;
     else
       result := False;
   end;
 end;
 
-procedure TChartForm.HandleAction(fa: Integer);
+procedure TChartModel.HandleAction(fa: Integer);
 begin
   case fa of
     faChartRect:
@@ -1896,16 +1921,14 @@ begin
 
     faChartAP:
     begin
-      APItemClick(nil);
+      FAP := True;
       SuperCalc;
-//      Draw;
     end;
 
     faChartBP:
     begin
-      BPItemClick(nil);
+      FAP := False;
       SuperCalc;
-//      Draw;
     end;
 
     faChartGroup:
@@ -1920,6 +1943,8 @@ begin
       if KurvenZahlSpinnerValue > PNr then
         KurvenZahlSpinnerValue := PNr;
 
+      UserSelectedKurvenZahl := KurvenZahlSpinnerValue;
+
       if FShowGroup then
         DrawGroup
       else
@@ -1931,6 +1956,8 @@ begin
       Dec(KurvenZahlSpinnerValue);
       if KurvenZahlSpinnerValue < 1 then
         KurvenZahlSpinnerValue := 1;
+
+      UserSelectedKurvenZahl := KurvenZahlSpinnerValue;
 
       if FShowGroup then
         DrawGroup
@@ -1946,15 +1973,15 @@ begin
         { Wrap to Index 1, skip over Indedex 0 = kein Parameter }
         PComboItemIndex := 1;
       end;
-      Calc;
+      SuperCalc;
     end;
 
     faPComboMinus:
     begin
       Dec(PComboItemIndex);
-      if PComboItemIndex < 0 then
+      if PComboItemIndex < 1 then
         PComboItemIndex := PComboItems.Count - 1;
-      Calc;
+      SuperCalc;
     end;
 
     faXComboPlus:
@@ -1962,7 +1989,8 @@ begin
       Inc(XComboItemIndex);
       if XComboItemIndex >= XComboItems.Count then
         XComboItemIndex := 0;
-      Calc;
+      UpdatePCombo(Rigg.SalingTyp);
+      SuperCalc;
     end;
 
     faXComboMinus:
@@ -1970,7 +1998,8 @@ begin
       Dec(XComboItemIndex);
       if XComboItemIndex < 0 then
         XComboItemIndex := XComboItems.Count - 1;
-      Calc;
+      UpdatePCombo(Rigg.SalingTyp);
+      SuperCalc;
     end;
 
     faYComboPlus:
@@ -1993,6 +2022,13 @@ begin
 
   end;
 
+  DoOnAction;
+end;
+
+procedure TChartModel.DoOnAction;
+begin
+//  if (FormDiagram <> nil) and FormDiagram.Visible then
+//    FormDiagram.UpdateUI;
 end;
 
 end.
