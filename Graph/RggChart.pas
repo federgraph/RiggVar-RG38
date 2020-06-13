@@ -69,12 +69,12 @@ type
     PSet: TxpNameSet;
 
     XComboItems: TStrings;
-    YComboItems: TStrings;
     PComboItems: TStrings;
+    YComboItems: TStrings;
 
     XComboItemIndex: Integer;
-    YComboItemIndex: Integer;
     PComboItemIndex: Integer;
+    YComboItemIndex: Integer;
 
     procedure InitXComboItems;
     procedure InitYComboItems;
@@ -84,16 +84,16 @@ type
     procedure UpdatePCombo(SalingTyp: TSalingTyp);
 
     procedure XComboChange(Sender: TObject);
-    procedure YComboChange(Sender: TObject);
     procedure PComboChange(Sender: TObject);
+    procedure YComboChange(Sender: TObject);
 
     function XComboSelectedText: string;
-    function YComboSelectedText: string;
     function PComboSelectedText: string;
+    function YComboSelectedText: string;
 
     function GetXText(Text: string): string;
     function GetPText(Text: string): string;
-  private
+  protected
     YLEDFillColor: TAlphaColor;
     PLEDFillColor: TAlphaColor;
     XLEDFillColor: TAlphaColor;
@@ -121,17 +121,17 @@ type
     FAP: Boolean;
     procedure SetAP(const Value: Boolean);
     property AP: Boolean read FAP write SetAP;
-  private
+  protected
     APSpinnerValue: Integer;
     APSpinnerMax: Integer;
 
     PSpinnerValue: Integer;
     PSpinnerMax: Integer;
 
-    UserSelectedKurvenZahl: Integer;
-    DefaultKurvenZahl: Integer;
     KurvenZahlSpinnerValue: Integer;
     KurvenZahlSpinnerMax: Integer;
+    DefaultKurvenZahl: Integer;
+    UserSelectedKurvenZahl: Integer;
 
     procedure InitSpinner;
   public
@@ -140,7 +140,7 @@ type
     FShowGroup: Boolean;
     GroupText: TYAchseStringArray;
     property ShowGroup: Boolean read FShowGroup write FShowGroup;
-  private
+  protected
     YAchseSet: TYAchseSet;
     YAchseRecordList: TYAchseRecordList;
     YAchseSortedList: TYAchseSortedList;
@@ -148,7 +148,7 @@ type
     procedure UpdateYAchseList;
     procedure UpdateYAchseSet;
     function ComboIndexToCurve(ComboIndex: Integer): Integer;
-  private
+  protected
     FDarkColors: Boolean;
     procedure SetDarkColors(const Value: Boolean);
     property DarkColors: Boolean read FDarkColors write SetDarkColors;
@@ -188,7 +188,7 @@ type
     procedure ShowTogether(ParamNo: Integer);
   protected
     FValid: Boolean;
-    FBuissy: Boolean;
+    FBusy: Boolean;
     FStatus: set of TChartStatus;
     function GetTsbName(Value: string): TxpName;
     property Valid: Boolean read FValid write FValid;
@@ -270,6 +270,13 @@ end;
 constructor TChartModel.Create;
 begin
   UserSelectedKurvenZahl := 3;
+  ParamCount := 3;
+  APWidth := 30;
+  FSalingTyp := stFest;
+
+  YLEDFillColor := claRed;
+  XLEDFillColor := claRed;
+  PLEDFillColor := claRed;
 
   Include(XSet, xpController);
   Include(XSet, xpWinkel);
@@ -282,61 +289,6 @@ begin
   Include(XSet, xpSalingW);
 
   PSet := XSet;
-//  Include(PSet, xpController);
-//  Include(PSet, xpWinkel);
-//  Include(PSet, xpVorstag);
-//  Include(PSet, xpWante);
-//  Include(PSet, xpWoben);
-//  Include(PSet, xpSalingH);
-//  Include(PSet, xpSalingA);
-//  Include(PSet, xpSalingL);
-//  Include(PSet, xpSalingW);
-
-  FSalingTyp := stFest;
-
-  RggDocument := TRggDocument.Create;
-  MemoLines := TStringList.Create;
-  MemoLines.Add(AnfangsZustandString);
-  SalingDreieck := TSalingDreieck.Create;
-
-  ParamCount := 3;
-  APWidth := 30;
-
-  YLEDFillColor := claRed;
-  XLEDFillColor := claRed;
-  PLEDFillColor := claRed;
-
-  XComboItems := TStringList.Create;
-  YComboItems := TStringList.Create;
-  PComboItems := TStringList.Create;
-
-  InitXComboItems;
-  InitYComboItems;
-  InitPComboItems;
-
-  XComboItemIndex := 3;
-  PComboItemIndex := 1;
-  YComboItemIndex := 3;
-
-  FXTextClicked := VorstagString;
-  FPTextClicked := SalingHString;
-
-  InitSpinner;
-
-  InitRigg;
-
-  UpdateXCombo(FSalingTyp);
-  UpdatePCombo(FSalingTyp);
-
-  XComboItemIndex := XComboItems.IndexOf(FXTextClicked);
-  PComboItemIndex := PComboItems.IndexOf(FPTextClicked);
-
-  InitYAchseRecordList(YAchseRecordList);
-  { Hiermit werden die Felder ComboText und Text initialisiert.
-    ComboIndex wird in UpdateYAchseList weiter unten bestimmt.
-    ArrayIndex wird beim Berechnen oder Einlesen neu bestimmt.
-    YAchseSet = [] zeigt an, daß ArrayIndex nicht gültig ist.
-  }
 
   DarkColors := False;
 
@@ -346,11 +298,34 @@ begin
   PColorText[3] := WhiteString;
   PColorText[4] := YellowString;
 
-  PText := PColorText;
+  RggDocument := TRggDocument.Create;
+  SalingDreieck := TSalingDreieck.Create;
+
+  MemoLines := TStringList.Create;
+  MemoLines.Add(AnfangsZustandString);
+
+  XComboItems := TStringList.Create;
+  YComboItems := TStringList.Create;
+  PComboItems := TStringList.Create;
+
+  InitSpinner;
+
+  InitRigg;
+
+  { needed in UpdateXCombo }
+  FXTextClicked := VorstagString;
+  FPTextClicked := SalingHString;
+
+  { will initiate ItemIndex for X and P }
+  UpdateXCombo(FSalingTyp);
+  UpdatePCombo(FSalingTyp);
+
+  InitYComboItems;
+  YComboItemIndex := 3;
+
+  InitYAchseRecordList(YAchseRecordList);
 
   AP := True;
-
-  InitStraightLine;
 
   Reset;
 end;
@@ -376,7 +351,7 @@ end;
 
 procedure TChartModel.Reset;
 begin
-  FBuissy := False;
+  FBusy := False;
   FValid := False;
   FStatus := [];
   YAchseSet := [];
@@ -459,7 +434,6 @@ var
   YAV: TYAchseValue;
 begin
   { Wird nur bei Neuberechnung aufgerufen }
-
   YAchseSet := [];
   for i := 0 to YComboItems.Count-1 do
   begin
@@ -498,7 +472,7 @@ end;
 
 procedure TChartModel.Calc;
 begin
-  if not FBuissy then
+  if not FBusy then
   begin
     { Berechnen }
     Inc(CalcCounter);
@@ -506,7 +480,7 @@ begin
     if not CheckBeforeCalc then
       Exit;
 
-    FBuissy := True;
+    FBusy := True;
 
     { Parameterzahl bearbeiten }
     if PComboSelectedText = NoParamString then
@@ -541,7 +515,7 @@ begin
     GetMemoText;
     Include(FStatus, csBerechnet);
     YLEDFillColor := claLime;
-    FBuissy := False;
+    FBusy := False;
 
     LoadNormal;
     DrawInternal;
