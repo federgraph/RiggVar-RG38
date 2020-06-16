@@ -170,11 +170,9 @@ begin
 
     g.Stroke.Color := claSilver;
     tempX := Box.Width * ((ChartPunktX-APWidth) - Xmin) / (XMax - Xmin);
-    tempY := Box.Height;
     DrawVerticalLine;
 
     tempX := Box.Width * ((ChartPunktX+APWidth) - Xmin) / (XMax - Xmin);
-    tempY := Box.Height;
     DrawVerticalLine;
   end;
 
@@ -184,14 +182,14 @@ begin
   begin
     { Kurve }
     g.Stroke.Color := cf[param];
-    tempY := Box.Height * (bf[param, 0] - Ymin) / (Ymax - Ymin);
+    tempY := Box.Height - Box.Height * (bf[param, 0] - Ymin) / (Ymax - Ymin);
     P.X := Box.X;
     P.Y := Box.Y + Round(Limit(tempY));
     LineToPoint := PointF(P.X, P.Y);
     for i := 1 to LNr do
     begin
       tempX := Box.Width * (i / LNr);
-      tempY := Box.Height * (bf[param, i] - Ymin) / (Ymax - Ymin);
+      tempY := Box.Height - Box.Height * (bf[param, i] - Ymin) / (Ymax - Ymin);
       P.X := Box.X + Round(Limit(tempX));
       P.Y := Box.Y + Round(Limit(tempY));
       LineTo(P.X, P.Y);
@@ -206,7 +204,7 @@ begin
       for i := 0 to LNr do
       begin
         tempX := Box.Width * i / LNr;
-        tempY := Box.Height * (bf[param, i] - Ymin) / (Ymax - Ymin);
+        tempY := Box.Height - Box.Height * (bf[param, i] - Ymin) / (Ymax - Ymin);
         P.X := Box.X + Round(Limit(tempX));
         P.Y := Box.Y + Round(Limit(tempY));
         g.FillRect(

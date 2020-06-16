@@ -114,8 +114,8 @@ type
     procedure LookForYMinMax;
 
     procedure UpdateXMinMax;
-    procedure UpdateYMinMax;
     procedure UpdatePMinMax;
+    procedure UpdateYMinMax;
   public
     APWidth: Integer;
     FAP: Boolean;
@@ -186,12 +186,16 @@ type
     procedure GetCurves;
     procedure DrawInternal;
     procedure ShowTogether(ParamNo: Integer);
+  private
+    FOnActionHandled: TNotifyEvent;
+    FOnUpdateAvailable: TNotifyEvent;
+    procedure SetOnActionHandled(const Value: TNotifyEvent);
+    procedure SetOnUpdateAvailable(const Value: TNotifyEvent);
   protected
     FValid: Boolean;
     FBusy: Boolean;
     FStatus: set of TChartStatus;
     function GetTsbName(Value: string): TxpName;
-    property Valid: Boolean read FValid write FValid;
   public
     CalcCounter: Integer;
     procedure Reset;
@@ -212,6 +216,8 @@ type
     procedure HandleAction(fa: Integer);
     function GetChecked(fa: Integer): Boolean;
   public
+    IsUp: Boolean;
+
     constructor Create;
     destructor Destroy; override;
 
@@ -220,6 +226,10 @@ type
 
     procedure Draw; virtual;
     procedure DoOnAction; virtual;
+
+    property Valid: Boolean read FValid write FValid;
+    property OnActionHandled: TNotifyEvent read FOnActionHandled write SetOnActionHandled;
+    property OnUpdateAvailable: TNotifyEvent read FOnUpdateAvailable write SetOnUpdateAvailable;
   end;
 
 implementation
@@ -274,10 +284,6 @@ begin
   APWidth := 30;
   FSalingTyp := stFest;
 
-  YLEDFillColor := claRed;
-  XLEDFillColor := claRed;
-  PLEDFillColor := claRed;
-
   Include(XSet, xpController);
   Include(XSet, xpWinkel);
   Include(XSet, xpVorstag);
@@ -312,18 +318,13 @@ begin
 
   InitRigg;
 
-  { needed in UpdateXCombo }
   FXTextClicked := VorstagString;
   FPTextClicked := SalingHString;
-
-  { will initiate ItemIndex for X and P }
   UpdateXCombo(FSalingTyp);
-  UpdatePCombo(FSalingTyp);
-
   InitYComboItems;
   YComboItemIndex := 3;
-
   InitYAchseRecordList(YAchseRecordList);
+  UpdateYAchseList;
 
   AP := True;
 
@@ -385,6 +386,16 @@ begin
   end;
 end;
 
+procedure TChartModel.SetOnActionHandled(const Value: TNotifyEvent);
+begin
+  FOnActionHandled := Value;
+end;
+
+procedure TChartModel.SetOnUpdateAvailable(const Value: TNotifyEvent);
+begin
+  FOnUpdateAvailable := Value;
+end;
+
 procedure TChartModel.InitStraightLine;
 var
   i: Integer;
@@ -407,20 +418,15 @@ var
   s: string;
   YAV: TYAchseValue;
 begin
-  { ComboIndex zurücksetzen auf -1 }
   for YAV := Low(TYAchseValue) to High(TYAchseValue) do
     YAchseRecordList[YAV].ComboIndex := -1;
-  { ComboIndex neu bestimmen. Nicht ausgewählte Einträge bleiben auf -1 }
   for i := 0 to YComboItems.Count-1 do
   begin
     s := YComboItems[i];
     for YAV := Low(TYAchseValue) to High(TYAchseValue) do
-      { Position j des Eintrag finden durch  Textvergleich }
       if s = YAchseRecordList[YAV].ComboText then
       begin
-        { Position in der ComboBox festhalten }
         YAchseRecordList[YAV].ComboIndex := i;
-        { Reihenfolge in Liste festhalten }
         YAchseSortedList[i] := YAV;
         break;
       end;
@@ -433,18 +439,14 @@ var
   s: string;
   YAV: TYAchseValue;
 begin
-  { Wird nur bei Neuberechnung aufgerufen }
   YAchseSet := [];
   for i := 0 to YComboItems.Count-1 do
   begin
     s := YComboItems[i];
     for YAV := Low(TYAchseValue) to High(TYAchseValue) do
-      { Position j des Eintrag finden durch  Textvergleich }
       if s = YAchseRecordList[YAV].ComboText then
       begin
-        { Position in Combo festhalten }
         YAchseRecordList[YAV].ArrayIndex := i;
-        { festhalten, welche Kurven existieren }
         if i <= ANr-1 then
           Include(YAchseSet, YAV);
         break;
@@ -474,7 +476,6 @@ procedure TChartModel.Calc;
 begin
   if not FBusy then
   begin
-    { Berechnen }
     Inc(CalcCounter);
 
     if not CheckBeforeCalc then
@@ -482,7 +483,6 @@ begin
 
     FBusy := True;
 
-    { Parameterzahl bearbeiten }
     if PComboSelectedText = NoParamString then
     begin
       PMinEditValue := 0;
@@ -500,7 +500,6 @@ begin
       PSpinnerValue := ParamCount;
 
     PSpinnerMax := ParamCount;
-    { MaxValue muß größer MinValue sein }
     if PSpinnerMax = 1 then
       PSpinnerMax := 2;
 
@@ -549,12 +548,13 @@ begin
   xn := GetTsbName(XComboSelectedText);
   pn := GetTsbName(PComboSelectedText);
 
-  { Getriebezustand sichern und verfügbar machen }
+  { Getriebezustand sichern und verfügbar machen /
+    record the model state and make it available, within this method }
   InputRec := Rigg.Glieder;
 
   case xn of
     xpController: ChartPunktX := InputRec.Controller;
-    xpWinkel: ChartPunktX := InputRec.Winkel; // / 10;
+    xpWinkel: ChartPunktX := InputRec.Winkel;
     xpVorstag: ChartPunktX := InputRec.Vorstag;
     xpWante: ChartPunktX := InputRec.Wanten;
     xpWoben: ChartPunktX := InputRec.Woben;
@@ -587,7 +587,7 @@ begin
   Rigg.ProofRequired := False;
 
   try
-    { Parameterbereich bestimmen und Schleife starten }
+    { determine parameter range (P) and and start outer loop }
     PAnfang := StrToInt(PminEditText);
     PEnde := StrToInt(PmaxEditText);
     PAntrieb := (PEnde + PAnfang) / 2;
@@ -604,7 +604,7 @@ begin
         PText[p] := Format('%6.2f', [PAntrieb]);
       end;
 
-      { Parameter ansteuern }
+      { Parameter ansteuern / set the param to its new loop value }
       if ParamCount < 2 then
       begin
        { do nothing }
@@ -646,7 +646,7 @@ begin
         end;
       end;
 
-      { Definitionsbereich bestimmen und Berechnungsschleife starten }
+      { determine definition range (X) and start inner loop }
       Anfang := StrToInt(XminEditText);
       Ende := StrToInt(XmaxEditText);
       for i := 0 to LNr do
@@ -656,7 +656,7 @@ begin
 
         Antrieb := Anfang + (Ende - Anfang) * i / LNr;
 
-        { Antrieb ansteuern }
+        { Antrieb ansteuern / set the primary driving member to new value }
         case xn of
           xpController: Rigg.RealGlied[fpController] := Antrieb;
           xpWinkel: Rigg.RealGlied[fpWinkel] := Antrieb * P180;
@@ -691,7 +691,7 @@ begin
           end;
         end;
 
-        { Berechnen }
+        { Berechnen / do some number crunching within the model (Rigg) }
         if FSalingTyp = stFest then
         begin
           if (XComboSelectedText = WinkelString) or
@@ -707,7 +707,7 @@ begin
         Rigg.UpdateRigg;
         PunktOK := Rigg.GetriebeOK and Rigg.MastOK and Rigg.RiggOK;
 
-        { Ergebnisse einspeichern }
+        { Ergebnisse einspeichern / take the results }
         if yavVorstagSpannung in YAchseSet then
         begin
           j := YAchseRecordList[yavVorstagSpannung].ArrayIndex;
@@ -807,16 +807,11 @@ begin
     end;
 
   finally
-    { Getriebe wiederherstellen }
+    { Getriebe wiederherstellen / restore the model state }
     Rigg.ProofRequired := True;
     Rigg.Glieder := InputRec;
     UpdateGetriebe;
   end;
-end;
-
-procedure TChartModel.Draw;
-begin
-
 end;
 
 procedure TChartModel.DrawNormal;
@@ -899,7 +894,7 @@ begin
   for p := 0 to ParamCount - 1 do
     bf[p] := af[p, j];
   UpdateYMinMax;
-  DrawInternal; { auch TestF zeichnen }
+  DrawInternal;
 end;
 
 procedure TChartModel.DrawGroup;
@@ -922,7 +917,7 @@ end;
 
 procedure TChartModel.ShowTogether(ParamNo: Integer);
 var
-  i, j, p: Integer;
+  i, j, param: Integer;
   YAV: TYAchseValue;
   min, max, diff, temp: double;
   tempParamCount: Integer;
@@ -932,48 +927,48 @@ begin
     ParamNo := ParamCount;
 
   { bf füllen }
-  p := 0; { p steht hier für die Anzahl der Kurven in YAchseSet }
+  param := 0; { p steht hier für die Anzahl der Kurven in YAchseSet }
   for i := 0 to YComboItems.Count - 1 do
   begin
     YAV := YAchseSortedList[i];
     if YAV in YAchseSet then
     begin
       j := YAchseRecordList[YAV].ArrayIndex;
-      if p = PNr then
+      if param = PNr then
         break;
-      bf[p] := af[ParamNo - 1, j];
-      GroupText[p] := YAchseRecordList[YAV].ComboText;
-      p := p + 1;
+      bf[param] := af[ParamNo - 1, j];
+      GroupText[param] := YAchseRecordList[YAV].ComboText;
+      param := param + 1;
     end;
   end;
 
-  GroupKurvenZahl := p;
-  for p := 0 to GroupKurvenZahl - 1 do
+  GroupKurvenZahl := param;
+  for param := 0 to GroupKurvenZahl - 1 do
   begin
     { Maximum und Minimum ermitteln }
-    max := bf[p, 0];
+    max := bf[param, 0];
     min := max;
     for i := 0 to LNr do
     begin
-      if bf[p, i] > max then
-        max := bf[p, i];
-      if bf[p, i] < min then
-        min := bf[p, i];
+      if bf[param, i] > max then
+        max := bf[param, i];
+      if bf[param, i] < min then
+        min := bf[param, i];
     end;
 
     { Normieren }
     diff := max - min;
-    temp := p * 100 / GroupKurvenZahl;
+    temp := param * 100 / GroupKurvenZahl;
     if max-min = 0 then
       for i := 0 to LNr do
-        bf[p, i] := temp
+        bf[param, i] := temp
     else
     begin
       for i := 0 to LNr do
       try
-        bf[p, i] := (bf[p, i] - min) * 100 / diff;
+        bf[param, i] := (bf[param, i] - min) * 100 / diff;
       except on EMathError do
-        bf[p, i] := 0;
+        bf[param, i] := 0;
       end;
     end;
   end;
@@ -1750,10 +1745,6 @@ begin
     UpdateXMinMax;
   if (PMinEditText = PMinEditString) or (PMaxEditText = PMaxEditString) then
     UpdatePMinMax;
-//  if not ValidateInput(XMinEdit) then result := False;
-//  if not ValidateInput(XMaxEdit) then result := False;
-//  if not ValidateInput(PMinEdit) then result := False;
-//  if not ValidateInput(PMaxEdit) then result := False;
 end;
 
 procedure TChartModel.DoAfterCalc;
@@ -1834,21 +1825,17 @@ end;
 
 procedure TChartModel.SuperInit;
 begin
+  { Auswahl Anrieb (Definitionsbereich X): Wantenlänge }
   XComboItemIndex := XComboItems.IndexOf(WanteString);
   XComboChange(nil);
 
-  { SalingHöhe }
+  { Auswahl Parameter: SalingHöhe }
   PComboItemIndex := PComboItems.IndexOf(SalingHString);
   PComboChange(nil);
 
-  { Mastfall F0F }
+  { Selektierer Y-Wert: Mastfall F0F }
   YComboItemIndex := YComboItems.IndexOf(MastfallF0FString);
   YComboChange(nil);
-
-  UpdateYAchseList;
-
-  KurvenZahlSpinnerValue := 3;
-  DefaultKurvenZahl := 3;
 end;
 
 procedure TChartModel.SuperCalc;
@@ -2001,8 +1988,16 @@ end;
 
 procedure TChartModel.DoOnAction;
 begin
-//  if (FormDiagram <> nil) and FormDiagram.Visible then
-//    FormDiagram.UpdateUI;
+  if IsUp then
+    if Assigned(FOnActionHandled) then
+      OnActionHandled(Self);
+end;
+
+procedure TChartModel.Draw;
+begin
+  if IsUp then
+    if Assigned(FOnUpdateAvailable) then
+      OnUpdateAvailable(self);
 end;
 
 end.
