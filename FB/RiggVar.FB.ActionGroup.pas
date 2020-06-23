@@ -64,14 +64,19 @@ faWheelUp,
 faParamValuePlus1,
 faParamValueMinus1,
 faParamValuePlus10,
-faParamValueMinus10
-];
+faParamValueMinus10];
 
 ActionGroupForms: TActionGroup = [
 faShowActi,
+faShowMemo,
 faShowOpti,
+faShowConf,
+faShowTrimmTab,
+faShowChart,
 faShowDiag,
-faShowMemo];
+faShowDiagC,
+faShowDiagE,
+faShowDiagQ];
 
 ActionGroupViewParams: TActionGroup = [
 faPan,
@@ -103,7 +108,8 @@ faMastfallVorlauf,
 faBiegung,
 faMastfussD0X,
 faVorstagOS,
-faWPowerOS];
+faWPowerOS,
+faParamAPW];
 
 ActionGroupRggFixPoints: TActionGroup = [
 faFixpointA0,

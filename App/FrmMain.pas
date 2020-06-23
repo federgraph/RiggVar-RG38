@@ -512,6 +512,7 @@ procedure TFormMain.UpdateItemIndexParams;
 begin
   UpdateItemIndexParamsLB;
   UpdateItemIndexParamsCB;
+  ShowTrimm;
 end;
 
 procedure TFormMain.UpdateItemIndexParamsLB;
@@ -1539,8 +1540,6 @@ begin
 
   ChartGraph := TChartGraph.Create;
   ChartGraph.Image := ChartImage;
-  ChartGraph.SuperInit;
-  ChartGraph.WantRectangles := True;
 
   UpdateChartGraph;
 end;

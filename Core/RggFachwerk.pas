@@ -18,7 +18,8 @@
 
 interface
 
-uses RggTypes;
+uses
+  RggTypes;
 
 type
   TGeometrie = array [0 .. 1, 1 .. 9] of Integer;

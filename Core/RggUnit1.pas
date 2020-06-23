@@ -22,6 +22,7 @@ uses
   System.SysUtils,
   System.Classes,
   System.Math,
+  RggStrings,
   RggTypes,
   RggCalc,
   RggSchnittKK,
@@ -135,8 +136,8 @@ begin
   begin
     FGetriebeOK := False;
     Include(FGetriebeStatus, gsErrorPsivonPhi);
-    LogList.Add('TGetriebeFS.UpdateGetriebeFS:');
-    LogList.Add('  svar False in PsivonPhi');
+    LogList.Add(LogList_String_InUpdateGetriebeFS);
+    LogList.Add(LogList_String_FalseInPsiVonPhi);
     Inc(ExitCounter1);
     Exit;
   end;
@@ -352,8 +353,8 @@ begin
   begin
     FGetriebeOK := False;
     Include(FGetriebeStatus, gsErrorPsivonPhi);
-    LogList.Add('TGetriebeFS.BerechneWinkel:');
-    LogList.Add('  svar False in PsivonPhi');
+    LogList.Add(LogList_String_InBerechneWinkel);
+    LogList.Add(LogList_String_FalseInPsiVonPhi);
     Inc(ExitCounter2);
     Exit;
   end;
@@ -1017,7 +1018,7 @@ end;
 function TGetriebeFS.GetVorstagNull: double;
 var
   Temp, TempP, TempD, TempC: TRealPoint;
-  S: String;
+  s: string;
   WStrich, WStrich2d: double;
 begin
   result := 0;
@@ -1040,9 +1041,9 @@ begin
           Temp[x] := FrMastunten + FrMastoben;
           MittelPunkt2 := Temp;
           Temp := SchnittPunkt1;
-            S := Bemerkung;
-            S := Format('GetVorstagNull, stFest/1: %s', [S]);
-            LogList.Add(S);
+            s := Bemerkung;
+            s := Format(LogList_Format_String_GetVorstagNullFest, [1, s]);
+            LogList.Add(s);
 
             { 2. Aufruf SchnittKK: TempP ermitteln }
             Radius1 := FrWunten2d;
@@ -1051,9 +1052,9 @@ begin
             MittelPunkt2 := rP[ooD0];
             TempP := SchnittPunkt1;
             TempP[y] := 0;
-            S := Bemerkung;
-            S := Format('GetVorstagNull, stFest/2: %s', [S]);
-            LogList.Add(S);
+            s := Bemerkung;
+            s := Format(LogList_Format_String_GetVorstagNullFest, [2, s]);
+            LogList.Add(s);
 
             { 3. Aufruf SchnittKK: Saling2d und MastUnten; TempD ermitteln }
             Radius1 := FrSalingH;
@@ -1062,9 +1063,9 @@ begin
             MittelPunkt2 := rP[ooD0];
             TempD := SchnittPunkt1;
             TempD[y] := 0;
-            S := Bemerkung;
-            S := Format('GetVorstagNull, stFest/3: %s', [S]);
-            LogList.Add(S);
+            s := Bemerkung;
+            s := Format(LogList_Format_String_GetVorstagNullFest, [3, s]);
+            LogList.Add(s);
 
             { 4. Aufruf SchnittKK: WanteOben2d und MastOben; TempC ermitteln }
             Radius1 := FrWoben2d;
@@ -1073,9 +1074,9 @@ begin
             MittelPunkt2 := TempD;
             TempC := SchnittPunkt1;
             TempC[y] := 0;
-            S := Bemerkung;
-            S := Format('GetVorstagNull, stFest/4: %s', [S]);
-            LogList.Add(S);
+            s := Bemerkung;
+            s := Format(LogList_Format_String_GetVorstagNullFest, [4, s]);
+            LogList.Add(s);
 
             result := Abstand(rP[ooC0], TempC);
           end;
@@ -1092,9 +1093,9 @@ begin
             MittelPunkt2 := TempC;
             TempP := SchnittPunkt1;
             TempP[y] := 0;
-            S := Bemerkung;
-            S := Format('GetVorstagNull, stDrehbar/1: %s', [S]);
-            LogList.Add(S);
+            s := Bemerkung;
+            s := Format(LogList_Format_String_GetVorstagNullDrehbar, [1, s]);
+            LogList.Add(s);
 
             Radius1 := Abstand(rP[ooD0], rP[ooA0]);
             Radius2 := FrWunten3d;
@@ -1102,9 +1103,9 @@ begin
             MittelPunkt2 := TempP;
           Temp := SchnittPunkt1;
           Temp[y] := 0;
-            S := Bemerkung;
-            S := Format('GetVorstagNull, stDrehbar/2: %s', [S]);
-            LogList.Add(S);
+            s := Bemerkung;
+            s := Format(LogList_Format_String_GetVorstagNullDrehbar, [2, s]);
+            LogList.Add(s);
 
           WStrich := Abstand(Temp, TempC);
             WStrich2d := sqrt(sqr(WStrich) - sqr(rP[ooA0, y]));
@@ -1115,9 +1116,9 @@ begin
             MittelPunkt2 := rP[ooD0];
             TempC := SchnittPunkt1;
             TempC[y] := 0;
-            S := Bemerkung;
-            S := Format('GetVorstagNull, stDrehbar/3: %s', [S]);
-            LogList.Add(S);
+            s := Bemerkung;
+            s := Format(LogList_Format_String_GetVorstagNullDrehbar, [3, s]);
+            LogList.Add(s);
 
           result := Abstand(rP[ooC0], TempC);
           end;
@@ -1131,9 +1132,9 @@ begin
             MittelPunkt2 := rP[ooD0];
             TempC := SchnittPunkt1;
             TempC[y] := 0;
-            S := Bemerkung;
-            S := Format('GetVorstagNull, stOhne/1: %s', [S]);
-            LogList.Add(S);
+            s := Bemerkung;
+            s := Format(LogList_Format_String_GetVorstagNullOhne, [1, s]);
+            LogList.Add(s);
             result := Abstand(rP[ooC0], TempC);
           end;
       end;
@@ -1141,7 +1142,10 @@ begin
 
   except
     on E: EMathError do
-      LogList.Add('TGetriebeFS.GetVorstagNull:  ' + E.Message);
+    begin
+      s := Format(LogList_Format_String_GetVorstagNullException, [E.Message]);
+      LogList.Add(s);
+    end;
   end;
 end;
 

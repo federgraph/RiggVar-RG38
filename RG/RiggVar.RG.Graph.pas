@@ -133,8 +133,7 @@ type
 implementation
 
 uses
-  RiggVar.FB.ActionConst,
-  RiggVar.App.Main;
+  RiggVar.FB.ActionConst;
 
 { TStrokeRigg }
 

@@ -106,7 +106,16 @@ begin
     faShowMemo: result := 'FM';
     faShowActi: result := 'FA';
     faShowOpti: result := 'FO';
+    faShowConf: result := 'FC';
+
+    faShowTrimmTab: result := 'FT';
+
     faShowDiag: result := 'FD';
+    faShowDiagC: result := 'DC';
+    faShowDiagE: result := 'DE';
+    faShowDiagQ: result := 'DQ';
+
+    faShowChart: result := 'CF'; // old ChartForm
 
     faWheelLeft: result := 'wl';
     faWheelRight: result := 'wr';
@@ -320,6 +329,7 @@ begin
     faGrayText: result := 'gtx';
     faWhiteText: result := 'wtx';
 
+    faParamAPW: result := 'apw';
   end;
 end;
 

@@ -24,6 +24,7 @@ uses
   System.Types,
   System.Inifiles,
   System.Math,
+  System.UIConsts,
   RggVector,
   RggTypes;
 
@@ -38,6 +39,24 @@ type
   { TTabellenTyp = (itKonstante, itGerade, itParabel, itBezier); }
 
   TBezier = class;
+
+  TTrimmTabKurve = array [1 .. PunkteMax] of TPoint;
+
+  TTrimmTabGraphModel = class
+  public
+    TabellenTyp: TTabellenTyp;
+
+    x1, y1, x2, y2: Integer;
+
+    EndwertWeg: Integer;
+    EndwertKraft: Integer;
+
+    PunkteAnzahl: Integer;
+    Kurve: TTrimmTabKurve; { Punkt 0 ist der NullPunkt }
+
+    LineDataX: TLineDataR100;
+    LineDataY: TLineDataR100;
+  end;
 
   ITrimmTab = interface
   ['{B3EE7E6D-ED13-4F90-A4F9-ABFFD56D0A95}']
@@ -66,7 +85,7 @@ type
     procedure GetMemoLines(ML: TStrings);
     procedure ProcessTrimmTab(ML: TStrings);
 
-//    procedure Draw(Canvas: TCanvas; Rect: TRect);
+    procedure UpdateGraphModel(Model: TTrimmTabGraphModel);
 
     procedure LoadFromIniFile(IniFile: TIniFile);
     procedure WriteToIniFile(IniFile: TIniFile);
@@ -82,7 +101,7 @@ type
     property TrimmtabDaten: TTrimmTabDaten read GetTrimmTabDaten write SetTrimmTabDaten;
   end;
 
-  TTrimmTab = class
+  TTrimmTab = class(TInterfacedObject, ITrimmTab)
   private
     FTabellenTyp: TTabellenTyp;
     FValid: Boolean;
@@ -105,7 +124,8 @@ type
     procedure SetTrimmTabDaten(Value: TTrimmTabDaten); virtual;
     function GetTrimmTabDaten: TTrimmTabDaten; virtual;
   public
-    Kurve: array [1 .. PunkteMax] of TPoint; { Punkt 0 ist der NullPunkt }
+    FScale: single;
+    Kurve: TTrimmTabKurve; { Punkt 0 ist der NullPunkt }
     PunkteAnzahl: Integer; { tatsächliche Anzahl Punkte entsprechend Memo }
     EndKraftMin, EndWegMin, KraftMax, WegMax: Integer;
     Bezier: TBezier;
@@ -121,6 +141,7 @@ type
     procedure LoadFromStream(S: TStream);
     procedure SaveToStream(S: TStream);
     procedure GetMemoLines(ML: TStrings);
+    procedure UpdateGraphModel(Model: TTrimmTabGraphModel);
     procedure ProcessTrimmTab(ML: TStrings);
     function EvalY(x: double): double; virtual;
     function EvalX(y: double): double; virtual;
@@ -147,7 +168,7 @@ type
     function BlendingValue(u: double; k: Integer): double;
     procedure ComputePoint(u: double; out pt: vec3);
   public
-    curve: TBezierKurve; { m+1 }
+    Curve: TBezierKurve; { m+1 }
     Controls: TControlPunkte; { n+1 }
     constructor Create;
     procedure ComputeCoefficients;
@@ -176,6 +197,7 @@ implementation
 
 constructor TTrimmTab.Create;
 begin
+  FScale := 1.0;
   Bezier := TBezier.Create;
   EndKraftMin := 100;
   KraftMax := 3000; { in N }
@@ -819,6 +841,57 @@ begin
   MittelPunkt := MittelPunkt;
 end;
 
+procedure TTrimmTab.UpdateGraphModel(Model: TTrimmTabGraphModel);
+var
+  i: Integer;
+begin
+  if not Valid then
+    GetPolynom;
+  if TabellenTyp = itBezier then
+    Bezier.GenerateCurve;
+
+  Model.TabellenTyp := TabellenTyp;
+
+  Model.x1 := x1;
+  Model.y1 := y1;
+
+  Model.x2 := x2;
+  Model.y2 := y2;
+
+  Model.EndwertWeg := EndwertWeg;
+  Model.EndwertKraft := EndwertKraft;
+
+  Model.Kurve := Kurve;
+  Model.PunkteAnzahl := PunkteAnzahl;
+
+  { LineData }
+  case TabellenTyp of
+    itParabel, itBezier:
+      begin
+        for i := 0 to 100 do
+        begin
+          case TabellenTyp of
+            itParabel:
+              begin
+                { Weg }
+                Model.LineDataX[i] := EvalY(i / 100 * EndwertKraft) / (EndwertWeg);
+                { Kraft als Argument auf y-Achse }
+                Model.LineDataY[i] := i / 100;
+              end;
+            itBezier:
+              begin
+                { Weg }
+                Model.LineDataX[i] := Bezier.Curve[i + 1].y / EndwertWeg;
+                { Kraft }
+                Model.LineDataY[i] := Bezier.Curve[i + 1].x / EndwertKraft;
+              end;
+          end;
+        end;
+      end;
+  end;
+
+end;
+
 { TBezier }
 
 constructor TBezier.Create;
@@ -886,7 +959,7 @@ var
 begin
   ComputeCoefficients;
   for k := 0 to m do
-    ComputePoint(k / m, curve[k + 1]);
+    ComputePoint(k / m, Curve[k + 1]);
 end;
 
 end.

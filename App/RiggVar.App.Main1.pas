@@ -702,6 +702,7 @@ begin
     faMastfallVorlauf: RggMain.SetParameter(faMastfallVorlauf);
     faBiegung: RggMain.SetParameter(faBiegung);
     faMastfussD0X: RggMain.SetParameter(faMastfussD0X);
+    faParamAPW: RggMain.SetParameter(faParamAPW);
 
     faFixpointA0: RggMain.FixPoint := ooA0;
     faFixpointA: RggMain.FixPoint := ooA;
@@ -804,6 +805,7 @@ begin
     faMastfallVorlauf: result := RggMain.Param = fpMastfallVorlauf;
     faBiegung: result := RggMain.Param = fpBiegung;
     faMastfussD0X: result := RggMain.Param = fpD0X;
+    faParamAPW: result := RggMain.Param = fpAPW;
 
     faFixpointA0: result := RggMain.FixPoint = ooA0;
     faFixpointA: result := RggMain.FixPoint = ooA;
@@ -893,7 +895,6 @@ begin
   ML.Add('  ResizeCounter = ' + IntToStr(ResizeCounter));
   ML.Add(Format('  ClientSize = (%d, %d)', [MainVar.ClientWidth, MainVar.ClientHeight]));
   ML.Add(Format('  Image.Size = (%d, %d)', [Round(FormMain.Image.Width), Round(FormMain.Image.Height)]));
-  ML.Add(Format('  Bitmap.Size = (%d, %d)', [FormMain.Bitmap.Width, FormMain.Bitmap.Height]));
   ML.Add('---');
 end;
 

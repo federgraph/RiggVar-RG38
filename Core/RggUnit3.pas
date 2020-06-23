@@ -23,6 +23,7 @@ uses
   System.Classes,
   System.IniFiles,
   System.Math,
+  RggStrings,
   RggTypes,
   RggCalc,
   RggSchnittKK,
@@ -149,36 +150,36 @@ end;
 
 procedure TRiggFS.WriteToIniFile(IniFile: TIniFile);
 var
-  S, S1, S2: String;
+  s, s1, s2: string;
   i: Integer;
 begin
   inherited WriteToIniFile(IniFile);
   with IniFile do
   begin
-    S := 'EA';
+    s := EA_IniString;
     for i := 0 to 19 do
     begin
-      S1 := IntToStr(i);
-      S2 := Format('%.6g', [rEA[i]]);
-      WriteString(S, S1, S2);
+      s1 := IntToStr(i);
+      s2 := Format('%.6g', [rEA[i]]);
+      WriteString(s, s1, s2);
     end;
   end;
 end;
 
 procedure TRiggFS.LoadFromIniFile(IniFile: TIniFile);
 var
-  S, S1, S2: String;
+  s, s1, s2: string;
   i: Integer;
 begin
   inherited LoadFromIniFile(IniFile);
   with IniFile do
   begin
-    S := 'EA';
+    s := EA_IniString;
     for i := 0 to 19 do
     begin
-      S1 := IntToStr(i);
-      S2 := ReadString(S, S1, '100000');
-      rEA[i] := StrToFloat(S2);
+      s1 := IntToStr(i);
+      s2 := ReadString(s, s1, IntToStr(100000));
+      rEA[i] := StrToFloat(s2);
     end;
   end;
 end;
@@ -206,18 +207,18 @@ end;
 
 function TRiggFS.RiggStatusText: string;
 var
-  S: string;
+  s: string;
 begin
-  S := '  Rigg:';
+  s := Status_String_Rigg;
   if RiggOK then
-    S := S + '    Letzte Rechnung O.K.';
+    s := s + Status_String_RiggLetzteRechnungOK;
   if rsNichtEntspannbar in FRiggStatus then
-    S := S + '    Nicht entspannbar';
+    s := s + Status_String_RiggNichtEntspannbar;
   if rsWanteAufDruck in FRiggStatus then
-    S := S + '    Wante auf Druck';
+    s := s + Status_String_RiggWanteAufDruck;
   if rsKraftZuGross in FRiggStatus then
-    S := S + '    Kraft zu groß';
-  Result := S;
+    s := s + Status_String_RiggForceTooBig;
+  Result := s;
 end;
 
 procedure TRiggFS.Entlasten;
@@ -370,7 +371,7 @@ begin
     begin
       FRiggOK := False;
       Include(FRiggStatus, rsWanteAufDruck);
-      LogList.Add('TRiggFS.Kraefte: Wante auf Druck');
+      LogList.Add(LogList_String_WanteAufDruck);
     end;
   end;
 end;
@@ -398,7 +399,7 @@ begin
     rF[2] := F1;
     rF[3] := F1;
     if abs(l1 - rL[2]) > 0.01 then
-      LogList.Add('Rigg.Split: Längenabweichung');
+      LogList.Add(LogList_String_LengthDeviation);
 
     { Punkt D0 }
     h := P0D0;
@@ -481,7 +482,7 @@ begin
     begin
       FRiggOK := False;
       Include(FRiggStatus, rsKraftZuGross);
-      LogList.Add(Format('TRiggFS.Split: Betrag rF[%d] > 32000 N', [j]));
+      LogList.Add(Format(LogList_Format_String_BetragTooBig, [j]));
     end;
   end;
 end;
@@ -523,12 +524,12 @@ begin
     { Probe Punkt A0 }
     temptest := Probe(ooA0, ooA, ooB0, ooC0, ooD0, 8, 6, 3, 5);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format('TRiggFS.Probe: Probe A0 = %6.2f', [tempResult]));
+    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooA0], tempResult]));
     test := test and temptest;
     { Probe Punkt B0 }
     temptest := Probe(ooB0, ooA0, ooB, ooC0, ooD0, 6, 7, 2, 4);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format('TRiggFS.Probe: Probe B0 = %6.2f', [tempResult]));
+    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooB0], tempResult]));
     test := test and temptest;
     { Probe Punkt C0 }
     KnotenLastC0[x] := rF[19] * -cos(delta1);
@@ -537,42 +538,42 @@ begin
     TetraF.KnotenLast := KnotenLastC0;
     temptest := Probe(ooC0, ooA0, ooB0, ooD0, ooC, 3, 2, 1, 14);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format('TRiggFS.Probe: Probe C0 = %6.2f', [tempResult]));
+    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooC0], tempResult]));
     TetraF.KnotenLast := Null;
     test := test and temptest;
     { Probe Punkt D0 }
     TetraF.KnotenLast := KnotenLastD0;
     temptest := Probe(ooD0, ooA0, ooB0, ooC0, ooC, 5, 4, 1, 0);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format('TRiggFS.Probe: Probe D0 = %6.2f', [tempResult]));
+    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooD0], tempResult]));
     TetraF.KnotenLast := Null;
     test := test and temptest;
     { Probe Punkt A }
     temptest := Probe(ooA, ooA0, ooB, ooC, ooD, 8, 11, 13, 10);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format('TRiggFS.Probe: Probe A = %6.2f', [tempResult]));
+    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooA], tempResult]));
     test := test and temptest;
     { Probe Punkt B }
     temptest := Probe(ooB, ooA, ooB0, ooC, ooD, 11, 7, 12, 9);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format('TRiggFS.Probe: Probe B = %6.2f', [tempResult]));
+    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooB], tempResult]));
     test := test and temptest;
     { Probe Punkt C }
     TetraF.KnotenLast := KnotenLastC;
     temptest := Probe(ooC, ooA, ooB, ooC0, ooD0, 13, 12, 14, 0);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format('TRiggFS.Probe: Probe C = %6.2f', [tempResult]));
+    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooC], tempResult]));
     TetraF.KnotenLast := Null;
     test := test and temptest;
 
     if test = False then
     begin
       FRiggOK := False;
-      LogList.Add('TRiggFS.Probe: Probe falsch');
-      Main.Logger.Info('Probe falsch!');
+      LogList.Add(LogList_String_ProbeFalsch);
+      Main.Logger.Info(LogList_String_ProbeFalsch);
     end
     else
-      LogList.Add('TRiggFS.Probe: Probe O.K.');
+      LogList.Add(LogList_String_ProbeOK);
   end;
 
   if (SalingTyp = stOhne) or (SalingTyp = stOhne_2) then
@@ -580,12 +581,12 @@ begin
     { Probe Punkt A0 }
     temptest := Probe(ooA0, ooA, ooB0, ooC0, ooD0, 8, 6, 3, 5);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format('TRiggFS.Probe: ProbeOS A0 = %6.2f', [tempResult]));
+    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooA0], tempResult]));
     test := test and temptest;
     { Probe Punkt B0 }
     test := test and Probe(ooB0, ooA0, ooB, ooC0, ooD0, 6, 7, 2, 4);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format('TRiggFS.Probe: ProbeOS B0 = %6.2f', [tempResult]));
+    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooB0], tempResult]));
     test := test and temptest;
     { Probe Punkt C0 }
     KnotenLastC0[x] := rF[19] * -cos(delta1);
@@ -594,32 +595,32 @@ begin
     TetraF.KnotenLast := KnotenLastC0;
     temptest := Probe(ooC0, ooA0, ooB0, ooD0, ooC, 3, 2, 1, 14);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format('TRiggFS.Probe: ProbeOS C0 = %6.2f', [tempResult]));
+    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooC0], tempResult]));
     TetraF.KnotenLast := Null;
     test := test and temptest;
     { Probe Punkt D0 }
     TetraF.KnotenLast := KnotenLastD0;
     temptest := Probe(ooD0, ooA0, ooB0, ooC0, ooC, 5, 4, 1, 0);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format('TRiggFS.Probe: ProbeOS D0 = %6.2f', [tempResult]));
+    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooD0], tempResult]));
     TetraF.KnotenLast := Null;
     test := test and temptest;
     { Probe Punkt C }
     TetraF.KnotenLast := KnotenLastC;
     temptest := Probe(ooC, ooA, ooB, ooC0, ooD0, 13, 12, 14, 0);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format('TRiggFS.Probe: ProbeOS C = %6.2f', [tempResult]));
+    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooC], tempResult]));
     TetraF.KnotenLast := Null;
     test := test and temptest;
 
     if test = False then
     begin
       FRiggOK := False;
-      LogList.Add('TRigg.Probe: Probe falsch');
-      Main.Logger.Info('Probe falsch!');
+      LogList.Add(LogList_String_ProbeFalsch);
+      Main.Logger.Info(LogList_String_ProbeFalsch);
     end
     else
-      LogList.Add('TRigg.Probe: Probe O.K.');
+      LogList.Add(LogList_String_ProbeOK);
   end;
 end;
 
@@ -676,7 +677,7 @@ begin
     end;
   except
     on E: EMathError do
-      LogList.Add('TRiggFS.MakeRumpfKoord:  ' + E.Message);
+      LogList.Add(LogList_String_MakeRumpfKoordExcept + E.Message);
   end;
 end;
 
@@ -714,7 +715,7 @@ begin
       MittelPunkt2 := Temp;
       Temp := SchnittPunkt1;
       s := Bemerkung;
-      s := Format('TRiggFS.MakeKoord, 1. Aufruf: %s', [s]);
+      s := Format(LogList_Format_String_MakeKoord, [1, s]);
       LogList.Add(s);
 
       if Status = bmEntfernt then
@@ -732,7 +733,7 @@ begin
       rPe[ooA] := SchnittPunkt1;
       rPe[ooA, y] := rLe[11] / 2;
       s := Bemerkung;
-      s := Format('TRiggFS.MakeKoord, 2. Aufruf: %s', [s]);
+      s := Format(LogList_Format_String_MakeKoord, [2, s]);
       LogList.Add(s);
 
       if Status = bmK1inK2 then
@@ -754,7 +755,7 @@ begin
       rPe[ooD] := SchnittPunkt1;
       rPe[ooD, y] := 0;
       s := Bemerkung;
-      s := Format('TRiggFS.MakeKoord, 3. Aufruf: %s', [s]);
+      s := Format(LogList_Format_String_MakeKoord, [3, s]);
       LogList.Add(s);
 
       { 4. Aufruf SchnittKK: WanteOben2d und MastOben; ooC ermitteln }
@@ -765,7 +766,7 @@ begin
       rPe[ooC] := SchnittPunkt1;
       rPe[ooC, y] := 0;
       s := Bemerkung;
-      s := Format('TRiggFS.MakeKoord, 4. Aufruf: %s', [s]);
+      s := Format(LogList_Format_String_MakeKoord, [4, s]);
       LogList.Add(s);
     end;
 
@@ -777,13 +778,13 @@ begin
 
   except
     on E: EMathError do
-      LogList.Add('TRiggFS.MakeKoord:  ' + E.Message);
+      LogList.Add(LogList_String_MakeKoordExept + E.Message);
   end;
 end;
 
 procedure TRiggFS.MakeKoordDS;
 var
-  S: String;
+  s: string;
   Temp, TempA0, TempA, TempC, TempD: TRealPoint;
   WStrich3d, WStrich2d, W1Strich, Saling1L, Skalar: double;
 begin
@@ -805,9 +806,9 @@ begin
       MittelPunkt2 := TempC;
       TempA := SchnittPunkt1;
       TempA[y] := 0;
-      S := Bemerkung;
-      S := Format('TRiggFS.MakeKoordDS/1: %s', [S]);
-      LogList.Add(S);
+      s := Bemerkung;
+      s := Format(LogList_FormatString_MakeKoordDS, [1, s]);
+      LogList.Add(s);
 
       if Status = bmEntfernt then
       begin
@@ -821,9 +822,9 @@ begin
       MittelPunkt2 := TempA;
       TempA0 := SchnittPunkt1;
       TempA0[y] := 0;
-      S := Bemerkung;
-      S := Format('TRiggFS.MakeKoordDS/2: %s', [S]);
-      LogList.Add(S);
+      s := Bemerkung;
+      s := Format(LogList_FormatString_MakeKoordDS, [2, s]);
+      LogList.Add(s);
 
       if Status = bmEntfernt then
       begin
@@ -840,9 +841,9 @@ begin
       MittelPunkt2 := rPe[ooD0];
       rPe[ooC] := SchnittPunkt1;
       rPe[ooC, y] := 0;
-      S := Bemerkung;
-      S := Format('TRiggFS.MakeKoordDS/3: %s', [S]);
-      LogList.Add(S);
+      s := Bemerkung;
+      s := Format(LogList_FormatString_MakeKoordDS, [3, s]);
+      LogList.Add(s);
 
       if Status = bmK1inK2 then
       begin
@@ -890,7 +891,7 @@ begin
 
   except
     on E: EMathError do
-      LogList.Add('TRiggFS.MakeKoord:  ' + E.Message);
+      LogList.Add(LogList_String_MakeKoordDSExept + E.Message);
   end;
 end;
 
@@ -1028,7 +1029,7 @@ procedure TRiggFS.MakeKoordOS;
 var
   Temp: TRealPoint;
   Skalar: double;
-  S: String;
+  s: String;
 begin
   MakeRumpfKoord;
   rPe[ooE] := rP[ooE];
@@ -1043,9 +1044,9 @@ begin
       MittelPunkt1 := rPe[ooP0];
       MittelPunkt2 := rPe[ooD0];
       rPe[ooC] := SchnittPunkt1;
-      S := Bemerkung;
-      S := Format('TRiggFS.MakeKoordOS, 1. Aufruf: %s', [S]);
-      LogList.Add(S);
+      s := Bemerkung;
+      s := Format(LogList_Format_String_MakeKoordOS, [1, s]);
+      LogList.Add(s);
 
       if Status = bmK1inK2 then
       begin
@@ -1079,7 +1080,7 @@ begin
 
   except
     on E: EMathError do
-      LogList.Add('TRiggFS.MakeKoord:  ' + E.Message);
+      LogList.Add(LogList_String_MakeKoordExeptOS + E.Message);
   end;
 end;
 

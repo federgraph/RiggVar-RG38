@@ -21,6 +21,7 @@ interface
 uses
   System.SysUtils,
   System.Classes,
+  RggStrings,
   RggTypes,
   RggUnit3,
   RggDoc,
@@ -98,19 +99,20 @@ end;
 procedure TRigg.WriteToDocFile(FileName: String);
 var
   Document: TRggDocument;
-  S: String;
+  s: string;
 begin
   Document := TRggDocument.Create;
   try
     GetDocument(Document);
-    S := ExtractFileExt(FileName);
-    if S = '.rgi' then
+    s := ExtractFileExt(FileName);
+    if s = RGI_File_Extension then
     begin
       Document.WriteToIniFile(FileName);
     end
-    else if S = '.rgg' then
+    else if s = RGG_File_Extension then
     begin
-      S := ChangeFileExt(FileName, '.rgi');
+      { write as .rgi }
+      s := ChangeFileExt(FileName, RGI_File_Extension);
       Document.WriteToIniFile(FileName);
       // Document.SaveToFile(FileName);
     end;
@@ -122,17 +124,17 @@ end;
 procedure TRigg.LoadFromDocFile(FileName: String);
 var
   Document: TRggDocument;
-  S: String;
+  s: string;
 begin
   Document := TRggDocument.Create;
   try
-    S := ExtractFileExt(FileName);
-    if S = '.rgi' then
+    s := ExtractFileExt(FileName);
+    if s = RGI_File_Extension then
     begin
       Document.LoadFromIniFile(FileName);
       SetDocument(Document);
     end;
-    // if S = '.rgg' then
+    // if S = RGG_File_Extension then
     // begin
     // Document.LoadFromFile(FileName);
     // SetDocument(Document);

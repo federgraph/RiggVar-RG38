@@ -27,10 +27,12 @@ uses
   RiggVar.RG.Def,
   RiggVar.RG.Track,
   RiggVar.RG.Graph,
+  RggStrings,
   RggScroll,
   RggTypes,
   RggUnit4,
-  RggCalc;
+  RggCalc,
+  RggChart;
 
 type
   TFederAction = Integer;
@@ -123,6 +125,7 @@ type
     Demo: Boolean;
 
     StrokeRigg: IStrokeRigg; // injected, not owned
+    ChartGraph: TChartModel;
 
     RiggLED: Boolean;
     StatusText: string;
@@ -298,6 +301,7 @@ begin
     faMastfallVorlauf: Param := fpMastfallVorlauf;
     faBiegung: Param := fpBiegung;
     faMastfussD0X: Param := fpD0X;
+    faParamAPW: Param := fpAPW;
   end;
 end;
 
@@ -422,6 +426,15 @@ begin
     begin
       Rigg.Reset;
       UpdateGetriebe;
+    end;
+
+    fpAPW:
+    begin
+      if ChartGraph <> nil then
+      begin
+        ChartGraph.APWidth := Round(CurrentValue);
+        ChartGraph.UpdateXMinMax;
+      end;
     end;
   end;
 end;
@@ -653,11 +666,11 @@ begin
     result := fpWante
   else if (T = 'Wante oben') or (T = 'Woben') then
     result := fpWoben
-  else if (T = 'Saling Höhe') or (T = 'SalingH') then
+  else if (T = SalingHString) or (T = 'SalingH') then
     result := fpSalingH
-  else if (T = 'Saling Abstand') or (T = 'SalingA') then
+  else if (T = SalingAString) or (T = 'SalingA') then
     result := fpSalingA
-  else if (T = 'Saling Länge') or (T = 'SalingL') then
+  else if (T = SalingLString) or (T = 'SalingL') then
     result := fpSalingL
   else if (T = 'Saling Winkel') or (T = 'SalingW') then
     result := fpSalingW
@@ -669,12 +682,14 @@ begin
     result := fpMastfallVorlauf
   else if T = 'Biegung' then
     result := fpBiegung
-  else if T = 'Mastfuß D0x' then
+  else if T = MastFootD0XString then
     result := fpD0X
   else if T = 't1' then
     result := fpT1
   else if T = 't2' then
     result := fpT2
+  else if T = 'AP Width' then
+    result := fpAPW
     ;
 end;
 
@@ -713,6 +728,8 @@ begin
     result := 't1'
   else if P = fpT2 then
     result := 't2'
+  else if P = fpAPW then
+    result := 'AP Width'
     ;
 end;
 
@@ -754,7 +771,7 @@ begin
   for i := fpController to fpD0X do
   begin
     sb := FactArray.Find(i);
-    sb.TinyStep := 1;
+    sb.SmallStep := 1;
     sb.BigStep := 10;
     temp := sb.Ist;
     sb.Min := temp - 100;
@@ -826,6 +843,10 @@ begin
 
     FactArray.T2.Min := 1;
     FactArray.T2.Max := 800;
+
+    FactArray.APWidth.Min := 1;
+    FactArray.APWidth.Ist := 30;
+    FactArray.APWidth.Max := 100;
   end;
 end;
 
@@ -934,7 +955,7 @@ begin
   for i := fpController to fpD0X do
   begin
     sb := FactArray.Find(i);
-    sb.TinyStep := 1;
+    sb.SmallStep := 1;
     sb.BigStep := 10;
     temp := sb.Ist;
     sb.Min := temp - 100;
@@ -998,8 +1019,11 @@ begin
   FactArray.T2.Min := 1;
   FactArray.T2.Max := 800;
 
-  SetParam(FParam);
+  FactArray.APWidth.Min := 1;
+  FactArray.APWidth.Ist := 30;
+  FactArray.APWidth.Max := 100;
 
+  SetParam(FParam);
 end;
 
 procedure TRggMain.SaveTrimm(fd: TRggData);
@@ -1189,8 +1213,8 @@ begin
   tb.Max := sb.Max;
   tb.ValueNoChange := temp;
   tb.Min := sb.Min;
-  tb.Frequency := sb.TinyStep;
-//  tb.LineSize := sb.TinyStep;
+  tb.Frequency := sb.SmallStep;
+//  tb.LineSize := sb.SmallStep;
 //  tb.PageSize := sb.BigStep;
 
   if Param = fpWinkel then

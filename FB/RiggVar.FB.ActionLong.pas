@@ -108,7 +108,13 @@ begin
     faShowMemo: result := 'Form Memo';
     faShowActi: result := 'Form Actions';
     faShowOpti: result := 'Form Options';
+    faShowConf: result := 'Form Config';
+    faShowChart: result := 'Form Chart';
     faShowDiag: result := 'Form Diagramm';
+    faShowDiagC: result := 'Form Live Diagramm Controls';
+    faShowDiagE: result := 'Form Diagramm Edits';
+    faShowDiagQ: result := 'Form Diagramm Quick';
+    faShowTrimmTab: result := 'Form Trimm Tab';
 
     faWheelLeft: result := 'Wheel -1';
     faWheelRight: result := 'Wheel +1';
@@ -318,6 +324,7 @@ begin
     faParamRZ: result := 'Model Rotation Z';
     faParamCZ: result := 'Camera Position Z';
 
+    faParamAPW: result := 'Param AP Width';
   end;
 end;
 

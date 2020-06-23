@@ -24,6 +24,7 @@ uses
   System.IniFiles,
   System.Types,
   System.Math,
+  RggStrings,
   RggTypes,
   RggCalc,
   RggUnit1;
@@ -182,38 +183,38 @@ end;
 
 function TMast.MastStatusText: string;
 var
-  S: string;
+  s: string;
 begin
-  S := '  Mast:';
+  s := Status_String_Mast;
   if FMastOK then
-    S := S + ' O.K.'
+    s := s + Status_String_OK
   else
   begin
     if msBiegungNegativ in FMastStatus then
-      S := S + ' Mastbiegung negativ'
+      s := s + Status_String_MastBiegungNegativ
     else if msControllerJenseits in FMastStatus then
-      S := S + ' Controller über Mitte gestellt'
+      s := s + Status_String_MastControllerBeyondMiddle
     else if msZugKraftimMast in FMastStatus then
-      S := S + ' Controller zu weit zurück'
+      s := s + Status_String_MastControllerTooFarBack
     else if msControllerKraftZuGross in FMastStatus then
-      S := S + ' Controller zu weit';
+      s := s + Status_String_MastControllerTooFar;
   end;
-  result := S;
+  result := s;
 end;
 
 procedure TMast.WriteToIniFile(ini: TIniFile);
 var
-  S: String;
+  s: string;
   tempEI: Integer;
 begin
   inherited WriteToIniFile(ini);
-  S := 'Rigg';
-  ini.WriteInteger(S, 'ControllerTyp', Ord(FControllerTyp));
-  ini.WriteInteger(S, 'CalcTyp', Ord(FCalcTyp));
+  s := Rigg_IniSectionString;
+  ini.WriteInteger(s, ControllerTyp_IniString, Ord(FControllerTyp));
+  ini.WriteInteger(s, CalcTyp_IniString, Ord(FCalcTyp));
 
-  S := 'Mast';
+  s := Mast_IniSectionString;
   tempEI := Round(EI / 1E6);
-  ini.WriteInteger(S, 'EI', tempEI);
+  ini.WriteInteger(s, EI_IniString, tempEI);
 end;
 
 procedure TMast.SaveToStream(S: TStream);
@@ -225,15 +226,15 @@ end;
 
 procedure TMast.LoadFromIniFile(ini: TIniFile);
 var
-  S: String;
+  s: String;
 begin
   inherited LoadFromIniFile(ini);
-  S := 'Rigg';
-  ControllerTyp := TControllerTyp(ini.ReadInteger(S, 'ControllerTyp', Ord(ctDruck)));
-  CalcTyp := TCalcTyp(ini.ReadInteger(S, 'CalcTyp', Ord(ctBiegeKnicken)));
+  s := Rigg_IniSectionString;
+  ControllerTyp := TControllerTyp(ini.ReadInteger(S, ControllerTyp_IniString, Ord(ctDruck)));
+  CalcTyp := TCalcTyp(ini.ReadInteger(S, CalcTyp_IniString, Ord(ctBiegeKnicken)));
 
-  S := 'Mast';
-  EI := ini.ReadInteger(S, 'EI', 14700) * 1E6;
+  s := Mast_IniSectionString;
+  EI := ini.ReadInteger(S, EI_IniString, 14700) * 1E6;
 end;
 
 procedure TMast.LoadFromStream(S: TStream);
@@ -431,7 +432,7 @@ begin
     stFest, stDrehbar:
       begin
         { Gleichgewicht am Punkt ooP }
-        { KM       KU1      KU2      KB        FU1  FU2  FB }
+        {         KM       KU1      KU2      KB        FU1  FU2  FB }
         SolveKG21(rP[ooP], rP[ooD], rP[ooC], rP[ooP0], FU1, FU2, FBekannt);
         { Winkel alpha2 ermitteln }
         Gamma := pi / 2 - arctan2((rP[ooC, x] - rP[ooD0, x]), (rP[ooC, z] - rP[ooD0, z]));
@@ -446,7 +447,7 @@ begin
     stOhne_2:
       begin
         { Gleichgewicht am Punkt ooC }
-        { KM       KU1       KU2       KB        FU1  FU2  FB }
+        {         KM       KU1       KU2       KB        FU1  FU2  FB }
         SolveKG21(rP[ooC], rP[ooD0], rP[ooC0], rP[ooP0], FU1, FU2, FBekannt);
         F1 := 0;
         F2 := 0;
@@ -696,11 +697,11 @@ begin
           KU1 Knoten der zur 1. unbekannten Stabkraft FU1 gehört
           KU2 Knoten der zur 2. unbekannten Stabkraft FU2 gehört
           KB  Knoten der zur bekannten Stabkraft FB gehört
-          KM       KU1       KU2      KB        FU1  FU2  FB *)
+                  KM       KU1       KU2      KB        FU1  FU2  FB *)
         SolveKG21(rP[ooC], rP[ooC0], rP[ooP], rP[ooD0], FU1, FU2, FB);
 
         FB := FU2;
-        { KM       KU1      KU2       KB       FU1  FU2  FB }
+        {         KM       KU1      KU2       KB       FU1  FU2  FB }
         SolveKG21(rP[ooP], rP[ooD], rP[ooP0], rP[ooC], FU1, FU2, FB);
         result := FU1; { selbe Einheit wie FB }
       end;
@@ -757,16 +758,16 @@ begin
       { D ist Null, wenn FU1 und FU2 auf einer Geraden liegen. }
       FU1 := 0;
       FU2 := 0;
-      s := 'SolveKG21: EZeroDivide;';
+      s := LogString_SolveKG21_Except;
       if W1 = 0 then
-        s := ' W1';
+        s := s + LogString_W1;
       if W2 = 0 then
-        s := S + ' W2';
+        s := s + LogString_W2;
       if W3 = 0 then
-        s := S + ' W3';
+        s := s + LogString_W3;
       if D = 0 then
-        s := S + ' W2';
-      s := s + 'sind Null!';
+        s := s + LogString_D;
+      s := s + LogString_AreNull;
       Main.Logger.Info(s);
     end;
   end;
@@ -915,7 +916,7 @@ begin
           begin
             FE := 0;
             FD := 0;
-            Main.Logger.Info('MBox: EZeroDivide; cos(alpha?) = 0');
+            Main.Logger.Info(LogString_ZeroDivideAlpha);
           end;
         end;
         FLvon1 := FE * sin(alpha1);
@@ -950,7 +951,7 @@ begin
           begin
             FE := 0;
             FD := 0;
-            Main.Logger.Info('MBox: EZeroDivide; cos(alpha?) = 0');
+            Main.Logger.Info(LogString_ZeroDivideAlpha);
           end;
         end;
         FLvon1 := FE * sin(alpha1);

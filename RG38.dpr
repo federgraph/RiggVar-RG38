@@ -77,7 +77,8 @@ uses
   RggChartGraph in 'Graph\RggChartGraph.pas',
   RggVector in 'Graph\RggVector.pas',
   RiggVar.Util.AppUtils in 'Util\RiggVar.Util.AppUtils.pas',
-  RiggVar.Util.Logger in 'Util\RiggVar.Util.Logger.pas';
+  RiggVar.Util.Logger in 'Util\RiggVar.Util.Logger.pas',
+  RggStrings in 'Core\RggStrings.pas';
 
 {$R *.res}
 

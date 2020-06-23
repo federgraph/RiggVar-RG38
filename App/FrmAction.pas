@@ -120,7 +120,7 @@ end;
 
 procedure TFormAction.FormCreate(Sender: TObject);
 begin
-  Caption := 'Feder Actions';
+  Caption := 'Form Actions';
   ML := TStringList.Create;
 
   Left := 10;

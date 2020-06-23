@@ -4,6 +4,7 @@ interface
 
 uses
   RiggVar.FB.ActionConst,
+  RggStrings,
   RggUnit4,
   RggTypes,
   RggDoc,
@@ -16,16 +17,16 @@ uses
   System.Math;
 
 const
-  ANr = 6; { maximale Anzahl Kurven, d.h. berechneter Y Werte }
-  PNr = 5; { maximale Anzahl der Werte des Parameters }
-  VNr = 14; { Anzahl der zur Auswahl stehenden Y Werte }
-  LNr = 50; { Anzahl der Punkte im Diagramm - 1 }
+  ANr = 6; { MaxCurves, maximale Anzahl Kurven, d.h. berechneter Y Werte }
+  PNr = 5; { MaxParamCount, maximale Anzahl der Werte des Parameters }
+  VNr = 14; { CountOfAvailableCurves, Anzahl der zur Auswahl stehenden Y Werte }
+  LNr = 50; { CountOfPointsInPolyLine - 1, Anzahl der Punkte im Diagramm - 1 }
   ErrorIndex = 999;
   D180 = 180 / PI;
   P180 = PI / 180;
 
 type
-  TLineDataR = TLineDataR50;
+  TLineDataR = TLineDataR50; { needs to match LNr }
 
   TxpName = (
     xpController,
@@ -93,7 +94,7 @@ type
 
     function GetXText(Text: string): string;
     function GetPText(Text: string): string;
-  protected
+  public
     YLEDFillColor: TAlphaColor;
     PLEDFillColor: TAlphaColor;
     XLEDFillColor: TAlphaColor;
@@ -113,15 +114,15 @@ type
 
     procedure LookForYMinMax;
 
-    procedure UpdateXMinMax;
-    procedure UpdatePMinMax;
-    procedure UpdateYMinMax;
+    procedure UpdateXMinMax; virtual;
+    procedure UpdatePMinMax; virtual;
+    procedure UpdateYMinMax; virtual;
   public
     APWidth: Integer;
     FAP: Boolean;
     procedure SetAP(const Value: Boolean);
     property AP: Boolean read FAP write SetAP;
-  protected
+  public
     APSpinnerValue: Integer;
     APSpinnerMax: Integer;
 
@@ -152,7 +153,7 @@ type
     FDarkColors: Boolean;
     procedure SetDarkColors(const Value: Boolean);
     property DarkColors: Boolean read FDarkColors write SetDarkColors;
-  protected
+  public
     TopTitle: string;
     YTitle: string;
     XTitle: string;
@@ -175,11 +176,44 @@ type
 
     PText: TYAchseStringArray;
     PColorText: TYAchseStringArray;
-  protected
+  public
     TempF: TLineDataR;
     TestF: TLineDataR;
-    af: array[0..PNr-1] of TYLineArray;
-    bf: array[0..PNr-1] of TLineDataR;
+
+    {
+      af is a fixed size array
+      af holds the computed data
+      af = array of array of TLineDataR
+      af = array of array of (array of single)
+
+      af = [0..PNr-1, 0..ANr-1, 0..LNr] or
+      af = [0..4,     0..5,     0..50] or
+      af = [Index of Parameter, Index of Curve, Index of Point in Curve]
+
+      The loop to compute new values:
+      for p := 0 to ParamCount-1 do
+        for i := 0 to LNr-1 do
+        begin
+          j := Index of curve to be plotted
+          af[p, j, i] := computed value from model;
+        end;
+
+      ParamCount can be PNr or less, but at least one.
+
+      af = (z, y, x) // logical indices
+      af = (p, j, i) // actual indices used
+        The parameter planes are stacked vertical in z direction.
+        The curve to be displayed in the chart is in horizontal xy plane.
+
+      bf holds a copy of a plane in af for display (horizontal or vertical)
+        vertical: plane xz or ip (standard)
+          Set of curves of same type (selected) for different values of the param.
+        horizontal: plane xy or ij
+          Group of different curves for the same value of the selected param.
+    }
+
+    af: array[0..PNr-1] of TYLineArray; { computed data }
+    bf: array[0..PNr-1] of TLineDataR; { copy of one plane in af, for display }
     cf: array[0..PNr-1] of TAlphaColor;
     ChartPunktX: double;
     procedure InitStraightLine;
@@ -204,9 +238,9 @@ type
     procedure LoadNormal;
     procedure DrawNormal;
     procedure DrawTogether;
-    procedure DrawGroup; // param group or curve group
+    procedure DrawGroup;
 
-    function CheckBeforeCalc: Boolean;
+    function CheckBeforeCalc: Boolean; virtual;
     procedure DoAfterCalc;
   public
     WantRectangles: Boolean;

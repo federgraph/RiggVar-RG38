@@ -70,7 +70,7 @@ begin
   Raster := 24;
   Padding := 2;
 
-  WantRectangles := False;
+  WantRectangles := True;
   WantTextRect := False;
   WantLegend := True;
 end;

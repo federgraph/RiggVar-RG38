@@ -48,9 +48,15 @@ faActionPage6: result := 'faActionPage6';
 
 { Forms }
 faShowActi: result := 'faShowActi';
-faShowOpti: result := 'faShowOpti';
 faShowMemo: result := 'faShowMemo';
+faShowOpti: result := 'faShowOpti';
+faShowConf: result := 'faShowConf';
+faShowChart: result := 'faShowChart';
 faShowDiag: result := 'faShowDiag';
+faShowDiagC: result := 'faShowDiagC';
+faShowDiagE: result := 'faShowDiagE';
+faShowDiagQ: result := 'faShowDiagQ';
+faShowTrimmTab: result := 'faShowTrimmTab';
 
 { TouchLayout }
 faTouchTablet: result := 'faTouchTablet';
@@ -107,6 +113,7 @@ faBiegung: result := 'faBiegung';
 faMastfussD0X: result := 'faMastfussD0X';
 faVorstagOS: result := 'faVorstagOS';
 faWPowerOS: result := 'faWPowerOS';
+faParamAPW: result := 'faParamAPW';
 
 { RggFixPoints }
 faFixpointA0: result := 'faFixpointA0';
@@ -246,9 +253,9 @@ faMemeToggleReport: result := 'faMemeToggleReport';
 faButtonFrameReport: result := 'faButtonFrameReport';
 faToggleFontColor: result := 'faToggleFontColor';
 faToggleSandboxed: result := 'faToggleSandboxed';
+faToggleSpeedPanel: result := 'faToggleSpeedPanel';
 faToggleAllProps: result := 'faToggleAllProps';
 faToggleAllTags: result := 'faToggleAllTags';
-faToggleSpeedPanel: result := 'faToggleSpeedPanel';
 
 { BtnLegendTablet }
 faTL01: result := 'faTL01';
@@ -308,7 +315,7 @@ faCircleParamM1Z: result := 'faCircleParamM1Z';
 faCircleParamM2Z: result := 'faCircleParamM2Z';
 faCirclesReset: result := 'faCirclesReset';
 
-{ Format }
+{ MemeFormat }
 faMemeGotoLandscape: result := 'faMemeGotoLandscape';
 faMemeGotoSquare: result := 'faMemeGotoSquare';
 faMemeGotoPortrait: result := 'faMemeGotoPortrait';
