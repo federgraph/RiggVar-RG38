@@ -222,6 +222,8 @@ type
     procedure DestroyForms;
     procedure MemoBtnClick(Sender: TObject);
     procedure ActiBtnClick(Sender: TObject);
+    procedure ConfigBtnClick(Sender: TObject);
+    procedure TrimmTabBtnClick(Sender: TObject);
     procedure CheckFormBounds(AForm: TForm);
   end;
 
@@ -929,6 +931,8 @@ begin
 
     faShowActi: ActiBtnClick(nil);
     faShowMemo: MemoBtnClick(nil);
+    faShowConf: ConfigBtnClick(nil);
+    faShowTrimmTab: TrimmTabBtnClick(nil);
 
     faToggleSandboxed: IsSandboxed := not IsSandboxed;
     faToggleAllProps: AllProps := not AllProps;
@@ -946,11 +950,11 @@ end;
 function TFormMain.GetActionFromKey(Key: Word): Integer;
 begin
   result := faNoop;
-//  case Key of
-//    vkF12: result := faMemeSaveBitmap;
-//    vkC: result := faMemeCopyBitmap;
-//    vkV: result := faMemePasteBitmap;
-//  end
+  case Key of
+    vkF12: ; //result := faMemeSaveBitmap;
+    vkC: ; // result := faMemeCopyBitmap;
+    vkV: // result := faMemePasteBitmap;
+  end;
 end;
 
 function TFormMain.GetActionFromKeyChar(KeyChar: char): Integer;
@@ -1915,6 +1919,16 @@ begin
   end;
   FormAction.Visible := True;
   FormAction.Show; //needed on Mac
+end;
+
+procedure TFormMain.ConfigBtnClick(Sender: TObject);
+begin
+  Main.RggMain.ShowConfigForm;
+end;
+
+procedure TFormMain.TrimmTabBtnClick(Sender: TObject);
+begin
+  Main.RggMain.ShowTrimmTabForm;
 end;
 
 procedure TFormMain.DestroyForms;

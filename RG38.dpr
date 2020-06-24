@@ -78,7 +78,10 @@ uses
   RggVector in 'Graph\RggVector.pas',
   RiggVar.Util.AppUtils in 'Util\RiggVar.Util.AppUtils.pas',
   RiggVar.Util.Logger in 'Util\RiggVar.Util.Logger.pas',
-  RggStrings in 'Core\RggStrings.pas';
+  RggStrings in 'Core\RggStrings.pas',
+  FrmConfig in 'Frm\FrmConfig.pas' {FormConfig},
+  FrmTrimmTab in 'Frm\FrmTrimmTab.pas' {FormTrimmTab},
+  RggTrimmTabGraph in 'Graph\RggTrimmTabGraph.pas';
 
 {$R *.res}
 

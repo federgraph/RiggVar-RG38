@@ -203,8 +203,8 @@ begin
       InitAC(cl, 1, faParamValuePlus10, cla);
       InitAC(cl, 2, faShowActi, claForm);
       InitAC(cl, 3, faShowMemo, claForm);
-      InitAC(cl, 4, faToggleSpeedPanel, cla);
-      InitAC(cl, 5, faHull, claOption);
+      InitAC(cl, 4, faShowConf, claForm);
+      InitAC(cl, 5, faShowTrimmTab, claForm);
       InitAC(cl, 6, faParamValuePlus1, cla);
       InitAC(cl, 7, faParamValueMinus1, cla);
       InitAC(cl, 8, faParamValueMinus10, cla);
@@ -213,7 +213,7 @@ begin
       cla := claWhite;
       InitAC(cl, 1, faCycleColorSchemeM, cla);
       InitAC(cl, 2, faCycleColorSchemeP, cla);
-      InitAC(cl, 3, faToggleFontColor, cla);
+      InitAC(cl, 3, faToggleSpeedPanel, cla);
       InitAC(cl, 4, faToggleSandboxed, cla);
       InitAC(cl, 5, faMemoryRecallBtn, cla);
       InitAC(cl, 6, faMemoryBtn, cla);
