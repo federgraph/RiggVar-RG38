@@ -22,8 +22,6 @@ uses
   System.SysUtils,
   System.Classes,
   System.Math,
-  System.UITypes,
-  FMX.Forms,
   RiggVar.FB.ActionConst,
   RiggVar.RG.Data,
   RiggVar.RG.Def,
@@ -140,9 +138,6 @@ type
     constructor Create(ARigg: TRigg);
     destructor Destroy; override;
 
-    procedure ShowConfigForm;
-    procedure ShowTrimmTabForm;
-
     procedure Reset;
     procedure UpdateGetriebe;
     procedure UpdateGraph;
@@ -205,9 +200,7 @@ implementation
 
 uses
   RggDoc,
-  RiggVar.App.Main,
-  FrmTrimmTab,
-  FrmConfig;
+  RiggVar.App.Main;
 
 const
   tfs = '%-3s %s %8s %6s';
@@ -1559,42 +1552,6 @@ begin
   Main.Logger.Info('in MemoryRecallBtnClick');
   Rigg.Glieder := RefCtrl;
   UpdateGetriebe;
-end;
-
-procedure TRggMain.ShowConfigForm;
-begin
-  if FormConfig = nil then
-  begin
-    FormConfig := TFormConfig.Create(Application);
-    FormConfig.Parent := nil;
-    FormConfig.Init(Rigg);
-  end;
-
-  { Istwerte in GSB aktualisieren für aktuelle Werte in Optionform }
-  Rigg.UpdateGSB;
-  FormConfig.ShowModal;
-  if FormConfig.ModalResult = mrOK then
-  begin
-    Rigg.UpdateGlieder; { neue GSB Werte --> neue Integerwerte }
-    Rigg.Reset; { neue Integerwerte --> neue Gleitkommawerte }
-    UpdateGetriebe;
-  end;
-end;
-
-procedure TRggMain.ShowTrimmTabForm;
-begin
-  if not Assigned(FormTrimmTab) then
-  begin
-    FormTrimmTab := TFormTrimmTab.Create(Application);
-    FormTrimmTab.Parent := nil;
-    FormTrimmTab.Init(Rigg);
-  end;
-
-  FormTrimmTab.ShowModal;
-  if FormTrimmTab.ModalResult = mrOK then
-  begin
-//    UpdateGetriebe;
-  end;
 end;
 
 end.

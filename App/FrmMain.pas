@@ -237,6 +237,8 @@ implementation
 uses
   FrmMemo,
   FrmAction,
+  FrmConfig,
+  FrmTrimmTab,
   RiggVar.RG.Main,
   RiggVar.RG.Speed01,
   RiggVar.RG.Speed02,
@@ -1923,12 +1925,40 @@ end;
 
 procedure TFormMain.ConfigBtnClick(Sender: TObject);
 begin
-  Main.RggMain.ShowConfigForm;
+  if FormConfig = nil then
+  begin
+    FormConfig := TFormConfig.Create(Application);
+    FormConfig.Parent := nil;
+    FormConfig.Init(Rigg);
+  end;
+
+  { Istwerte in GSB aktualisieren für aktuelle Werte in Optionform }
+  Rigg.UpdateGSB;
+  FormConfig.ShowModal;
+  if FormConfig.ModalResult = mrOK then
+  begin
+    Rigg.UpdateGlieder; { neue GSB Werte --> neue Integerwerte }
+    Rigg.Reset; { neue Integerwerte --> neue Gleitkommawerte }
+    Main.RggMain.UpdateGetriebe;
+    UpdateReport;
+  end;
 end;
 
 procedure TFormMain.TrimmTabBtnClick(Sender: TObject);
 begin
-  Main.RggMain.ShowTrimmTabForm;
+  if not Assigned(FormTrimmTab) then
+  begin
+    FormTrimmTab := TFormTrimmTab.Create(Application);
+    FormTrimmTab.Parent := nil;
+    FormTrimmTab.Init(Rigg);
+  end;
+
+  FormTrimmTab.ShowModal;
+  if FormTrimmTab.ModalResult = mrOK then
+  begin
+//    Main.RggMain.UpdateGetriebe;
+    UpdateReport;
+  end;
 end;
 
 procedure TFormMain.DestroyForms;
