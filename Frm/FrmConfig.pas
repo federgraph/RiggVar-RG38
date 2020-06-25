@@ -35,6 +35,13 @@ type
 
   { TFormConfig }
 
+  TRggComboBox = class(TComboBox)
+  private
+    function GetText: string;
+  public
+    property Text: string read GetText;
+  end;
+
   TFormConfig = class(TForm)
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -60,22 +67,22 @@ type
     LengthEditLabel: TLabel;
 
     TrimmComboLabel: TLabel;
-    TrimmCombo: TComboBox;
+    TrimmCombo: TRggComboBox;
 
     { Fachwerk / Material }
     tsFachwerk: TTabItem;
     GroupBoxMaterial: TGroupBox;
 
     ElementLabel: TLabel;
-    ElementCombo: TComboBox;
+    ElementCombo: TRggComboBox;
 
     EAEdit: TEdit;
     EAEditLabel: TLabel;
     TakeOverBtn: TButton;
-    MaterialCombo: TComboBox;
+    MaterialCombo: TRggComboBox;
     MaterialComboLabel: TLabel;
     QuerschnittComboLabel: TLabel;
-    QuerschnittCombo: TComboBox;
+    QuerschnittCombo: TRggComboBox;
     ALabel: TLabel;
     AEdit: TEdit;
     EEdit: TEdit;
@@ -88,12 +95,12 @@ type
     GroupBoxMast: TGroupBox;
 
     MastTypeComboLabel: TLabel;
-    MastTypeCombo: TComboBox;
+    MastTypeCombo: TRggComboBox;
     EIEdit: TEdit;
     EILabel: TLabel;
 
     MastMassComboLabel: TLabel;
-    MastMassCombo: TComboBox;
+    MastMassCombo: TRggComboBox;
     MastMassEdit: TEdit;
     MassMassEditLabel: TLabel;
 
@@ -165,6 +172,9 @@ type
     procedure LayoutComponents;
     procedure InitGrid;
   public
+    FirstColumnIndex: Integer;
+    FirstRowIndex: Integer;
+    SecondRowIndex: Integer;
     Margin: single;
     Raster: Integer;
 
@@ -198,12 +208,16 @@ begin
   FTrimmList := TStringList.Create;
   FTempList := TStringList.Create;
 
+  FirstColumnIndex := 1;
+  FirstRowIndex := 0; // 0 in FMX and 1 in VCL/LCL
+  SecondRowIndex := FirstRowIndex + 1;
+
   Margin := 10;
   Raster := 70;
 
   CreateComponents;
 
-  PageControl.TabIndex := tsFachwerk.Index;
+  PageControl.TabIndex := tsRumpf.Index;
 end;
 
 procedure TFormConfig.FormDestroy(Sender: TObject);
@@ -235,7 +249,7 @@ begin
   Rigg := ARigg;
   IniFileName := ChangeFileExt(ParamStr(0), '.ini');
 
-  FRumpfCell := Point(1, 0);
+  FRumpfCell := Point(1, FirstRowIndex);
   RumpfLabel.Text := 'Feld A0x';
 
   FillRiggLists;
@@ -364,22 +378,20 @@ begin
   PosEdit.Text := IntToStr(Round(FGSB.Wante.Ist));
   MaxEdit.Text := IntToStr(Round(FGSB.Wante.Max));
 
-  { Elemente }
+  { elements }
   GetKeyList(FElementList, FTempList);
   ElementCombo.Items := FTempList;
   ElementCombo.ItemIndex := 0;
-  if ElementCombo.Selected <> nil then
-    EAEdit.Text := FElementList.Values[ElementCombo.Selected.Text];
+  EAEdit.Text := FElementList.Values[ElementCombo.Text];
 
-  { MastMaße }
+  { mast length values }
   GetKeyList(FMastMassList, FTempList);
   MastMassCombo.Items := FTempList;
   MastMassCombo.ItemIndex := 0;
-  if MastMassCombo.Selected <> nil then
-    MastMassEdit.Text := FMastMassList.Values[MastMassCombo.Selected.Text];
+  MastMassEdit.Text := FMastMassList.Values[MastMassCombo.Text];
 
-  { Werte in FiP im StringGrid anzeigen }
-  r := -1; // -1 in FMX
+  { hull coordinates }
+  r := FirstRowIndex - 1;
   for m := ooA0 to ooF0 do
   begin
     Inc(r);
@@ -399,15 +411,13 @@ begin
   GetKeyList(FMaterialList, FTempList);
   MaterialCombo.Items := FTempList;
   MaterialCombo.ItemIndex := 0;
-  if MaterialCombo.Selected <> nil then
-    EEdit.Text := FMaterialList.Values[MaterialCombo.Selected.Text];
+  EEdit.Text := FMaterialList.Values[MaterialCombo.Text];
 
   { Querschnitt }
   GetKeyList(FQuerschnittList, FTempList);
   QuerschnittCombo.Items := FTempList;
   QuerschnittCombo.ItemIndex := 0;
-  if QuerschnittCombo.Selected <> nil then
-    AEdit.Text := FQuerschnittList.Values[QuerschnittCombo.Selected.Text];
+  AEdit.Text := FQuerschnittList.Values[QuerschnittCombo.Text];
 
   { MastTyp }
   GetKeyList(FMastTypList, FTempList);
@@ -417,8 +427,7 @@ begin
     if IntToStr(FiEI) = FMastTypList.Values[MastTypeCombo.Items[i]] then
       j := i;
   MastTypeCombo.ItemIndex := j;
-  if MastTypeCombo.Selected <> nil then
-    EIEdit.Text := FMastTypList.Values[MastTypeCombo.Selected.Text];
+  EIEdit.Text := FMastTypList.Values[MastTypeCombo.Text];
 end;
 
 procedure TFormConfig.LoadFromIniFile;
@@ -477,10 +486,7 @@ begin
   c := a * b;
   EAEdit.Text := Format('%.6g', [c]);
 
-  if ElementCombo.Selected = nil then
-    Exit;
-
-  s := ElementCombo.Selected.Text;
+  s := ElementCombo.Text;
   if s = '' then
     Exit;
 
@@ -593,10 +599,9 @@ var
   temp: Integer;
   s: string;
 begin
-  if MastMassCombo.Selected = nil then
+  s := MastMassCombo.Text;
+  if s = '' then
     Exit;
-
-  s := MastMassCombo.Selected.Text;
 
   temp := 0;
   if s = 'Saling' then
@@ -620,7 +625,7 @@ end;
 
 procedure TFormConfig.OKBtnClick(Sender: TObject);
 begin
-  Rigg.iP := FiP; { Rumpfkoordinaten}
+  Rigg.iP := FiP; { Rumpfkoordinaten }
   Rigg.MastUnten := FiMastSaling;
   Rigg.MastOben := FiMastWante - FiMastSaling;
   Rigg.MastLaenge := FiMastTop;
@@ -631,43 +636,28 @@ end;
 
 procedure TFormConfig.MastTypeComboChange(Sender: TObject);
 begin
-  if MastTypeCombo.Selected <> nil then
-  begin
-    EIEdit.Text := FMastTypList.Values[MastTypeCombo.Selected.Text];
+  EIEdit.Text := FMastTypList.Values[MastTypeCombo.Text];
     FiEI := StrToInt(EIEdit.Text);
-  end;
 end;
 
 procedure TFormConfig.MastMassComboChange(Sender: TObject);
 begin
-  if MastMassCombo.Selected <> nil then
-  begin
-    MastMassEdit.Text := FMastMassList.Values[MastMassCombo.Selected.Text];
-  end;
+  MastMassEdit.Text := FMastMassList.Values[MastMassCombo.Text];
 end;
 
 procedure TFormConfig.QuerschnittComboChange(Sender: TObject);
 begin
-  if QuerschnittCombo.Selected <> nil then
-  begin
-    AEdit.Text := FQuerschnittList.Values[QuerschnittCombo.Selected.Text];
-  end;
+  AEdit.Text := FQuerschnittList.Values[QuerschnittCombo.Text];
 end;
 
 procedure TFormConfig.MaterialComboChange(Sender: TObject);
 begin
-  if MaterialCombo.Selected <> nil then
-  begin
-    EEdit.Text := FMaterialList.Values[MaterialCombo.Selected.Text];
-  end;
+  EEdit.Text := FMaterialList.Values[MaterialCombo.Text];
 end;
 
 procedure TFormConfig.ElementComboChange(Sender: TObject);
 begin
-  if ElementCombo.Selected <> nil then
-  begin
-    EAEdit.Text := FElementList.Values[ElementCombo.Selected.Text];
-  end;
+  EAEdit.Text := FElementList.Values[ElementCombo.Text];
 end;
 
 procedure TFormConfig.FormShow(Sender: TObject);
@@ -681,35 +671,33 @@ begin
   FillRiggLists;
   LoadRiggCombos;
 
-  GridSelectCell(Grid, 1, 0, FCanSelectDummy);
-//  RumpfSpinEdit.Value := StrToIntDef(Grid.Cells[FRumpfCell.X, FRumpfCell.Y], 0);
-//  RumpfEdit.Text := Format('%4.0f mm',[RumpfSpinEdit.Value]);
+  GridSelectCell(Grid, FirstColumnIndex, FirstRowIndex, FCanSelectDummy);
 end;
 
 procedure TFormConfig.GridSelectCell(Sender: TObject; const ACol, ARow: Integer; var CanSelect: Boolean);
 var
-  sColumn, sHeader, SCell: string;
+  sRowHeaderText, sColHeaderText, sCellText: string;
 begin
   CanSelect := True;
 
   if ACol = 0 then
     CanSelect := False;
 
-  if (ACol = 2) and (ARow > 1) then
+  if (ACol = 2) and (ARow > SecondRowIndex) then
     CanSelect := False;
 
   if CanSelect then
   begin
     FRumpfCell := Point(ACol, ARow);
 
-    sColumn := TrimLeft(Grid.Cells[0, ARow]);
-    sCell := Grid.Cells[ACol, ARow];
-    sHeader := Grid.Columns[ACol].Header;
+    sRowHeaderText := TrimLeft(Grid.Cells[0, ARow]);
+    sColHeaderText := Grid.Columns[ACol].Header;
+    sCellText := Grid.Cells[ACol, ARow];
 
-    RumpfLabel.Text := Format('Feld %s%s:', [sColumn, sHeader]);
+    RumpfLabel.Text := Format('Feld %s%s:', [sRowHeaderText, sColHeaderText]);
     if RumpfSpinEdit <> nil then
     begin
-      RumpfSpinEdit.Value := StrToIntDef(sCell, 0);
+      RumpfSpinEdit.Value := StrToIntDef(sCellText, 0);
       RumpfEdit.Text := Format('%4.0f mm', [RumpfSpinEdit.Value]);
     end;
   end;
@@ -720,31 +708,26 @@ var
   oo: TRiggPoint;
   kk: TKoord;
 begin
-  { changed from old days:
-    - introduction of ooN0
-    - elements of a TIntPoint are of type double now, no longer an Integer
-  }
-
-  oo := TRiggPoint(FRumpfCell.Y); { A0 is now second element in enum }
-  kk := TKoord(FRumpfCell.X - 1); {this has not changed }
+  oo := TRiggPoint(FRumpfCell.Y - FirstRowIndex + Ord(ooA0));
+  kk := TKoord(FRumpfCell.X - FirstColumnIndex);
 
   FiP[oo, kk] := RumpfSpinEdit.Value;
   Grid.Cells[FRumpfCell.X, FRumpfCell.Y] := Format('%4.0f', [RumpfSpinEdit.Value]);
-  if FRumpfCell.Y = 2 then
+  if FRumpfCell.Y = SecondRowIndex then
   begin
     FiP[ooA0] := FiP[ooB0];
     FiP[ooA0, y] := -FiP[ooB0, y];
-    Grid.Cells[1, 1] := Format('%4.0f', [FiP[ooA0, x]]);
-    Grid.Cells[2, 1] := Format('%4.0f', [FiP[ooA0, y]]);
-    Grid.Cells[3, 1] := Format('%4.0f', [FiP[ooA0, z]]);
+    Grid.Cells[1, FirstRowIndex] := Format('%4.0f', [FiP[ooA0, x]]);
+    Grid.Cells[2, FirstRowIndex] := Format('%4.0f', [FiP[ooA0, y]]);
+    Grid.Cells[3, FirstRowIndex] := Format('%4.0f', [FiP[ooA0, z]]);
   end;
-  if FRumpfCell.Y = 1 then
+  if FRumpfCell.Y = FirstRowIndex then
   begin
     FiP[ooB0] := FiP[ooA0];
     FiP[ooB0, y] := -FiP[ooA0, y];
-    Grid.Cells[1, 2] := Format('%4.0f', [FiP[ooB0, x]]);
-    Grid.Cells[2, 2] := Format('%4.0f', [FiP[ooB0, y]]);
-    Grid.Cells[3, 2] := Format('%4.0f', [FiP[ooB0, z]]);
+    Grid.Cells[1, SecondRowIndex] := Format('%4.0f', [FiP[ooB0, x]]);
+    Grid.Cells[2, SecondRowIndex] := Format('%4.0f', [FiP[ooB0, y]]);
+    Grid.Cells[3, SecondRowIndex] := Format('%4.0f', [FiP[ooB0, z]]);
   end;
 end;
 
@@ -819,7 +802,7 @@ begin
   TrimmComboLabel.Parent := gb;
   TrimmComboLabel.Text := 'Trimmvariable';
 
-  TrimmCombo := TComboBox.Create(Self);
+  TrimmCombo := TRggComboBox.Create(Self);
   TrimmCombo.Parent := gb;
   ML := TrimmCombo.Items;
   ML.Add('Controller');
@@ -846,7 +829,7 @@ begin
   ElementLabel.Parent := ts;
   ElementLabel.Text := 'Fachwerkstäbe';
 
-  ElementCombo := TComboBox.Create(Self);
+  ElementCombo := TRggComboBox.Create(Self);
   ElementCombo.Parent := ts;
   ML := ElementCombo.Items;
   ML.Add('Rumpfstäbe');
@@ -868,7 +851,7 @@ begin
   TakeOverBtn.Parent := ts;
   TakeOverBtn.Text := 'Auswahl übernehmen';
 
-  MaterialCombo := TComboBox.Create(Self);
+  MaterialCombo := TRggComboBox.Create(Self);
   MaterialCombo.Parent := gb;
 
   MaterialComboLabel := TLabel.Create(Self);
@@ -879,7 +862,7 @@ begin
   QuerschnittComboLabel.Parent := gb;
   QuerschnittComboLabel.Text := 'Querschnitt';
 
-  QuerschnittCombo := TComboBox.Create(Self);
+  QuerschnittCombo := TRggComboBox.Create(Self);
   QuerschnittCombo.Parent := gb;
 
   ALabel := TLabel.Create(Self);
@@ -923,7 +906,7 @@ begin
   MastTypeComboLabel.Parent := gb;
   MastTypeComboLabel.Text := 'Profil';
 
-  MastTypeCombo := TComboBox.Create(Self);
+  MastTypeCombo := TRggComboBox.Create(Self);
   MastTypeCombo.Parent := gb;
 
   EIEdit := TEdit.Create(Self);
@@ -939,7 +922,7 @@ begin
   MastMassComboLabel.Parent := gb;
   MastMassComboLabel.Text := 'Abmessungen';
 
-  MastMassCombo := TComboBox.Create(Self);
+  MastMassCombo := TRggComboBox.Create(Self);
   MastMassCombo.Parent := gb;
   ML := MastMassCombo.Items;
   ML.Add('Controller');
@@ -1372,6 +1355,16 @@ begin
 
   { for testing only }
   GridSelectCell(Grid, 1, 0, FCanSelectDummy);
+end;
+
+{ TRggComboBox }
+
+function TRggComboBox.GetText: string;
+begin
+  if Selected <> nil then
+    result := Selected.Text
+  else
+    result := '';
 end;
 
 end.
