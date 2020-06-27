@@ -327,9 +327,16 @@ faMemeFormat7 = 245;
 faMemeFormat8 = 246;
 faMemeFormat9 = 247;
 
-faMax = 248;
+faParamEAH = 248;
+faParamEAR = 249;
+faParamEI = 250;
 
-ParamsRange = [faController .. faParamAPW];
+faMax = 251;
+
+ParamsRange = [
+  faController .. faParamAPW,
+  faParamEAH ..faParamEI];
+
 ReportsRange = [faReportNone .. faReportReadme];
 TrimmsRange = [faTrimm0 .. faLogo];
 

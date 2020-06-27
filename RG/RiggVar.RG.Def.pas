@@ -63,7 +63,10 @@ type
     fpD0X,
     fpT1,
     fpT2,
-    fpAPW
+    fpAPW,
+    fpEAH,
+    fpEAR,
+    fpEI
     );
 
 const

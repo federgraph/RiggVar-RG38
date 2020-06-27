@@ -133,14 +133,37 @@ const
   RGI_File_Extension: string = '.rgi';
   RGG_File_Extension: string = '.rgg';
 
-  { from Chart }
+  { from different locations }
+
+  GradString: string = 'Grad';
+  KiloNewtonString: string = 'KN';
+  NewtonMeterSquareString: string = 'Nm^2';
+  MilimeterString: string = 'mm';
+
+  NoDigitRealPlusUnitFormatString: string = '%.0f %s';
+
+  VOString: string = 'V0';
+  WAString: string = 'WA';
+  WOString: string = 'WO';
+  SHString: string = 'SH';
+  SAString: string = 'SA';
+  SLString: string = 'SL';
+  SWString: string = 'SW';
+  MVString: string = 'MV';
+
+  MFString: string = 'MF';
+  F0FString: string = 'F0F';
+  F0CString: string = 'F0C';
+  BieString: string = 'Bie';
+  BGFString: string = 'BGF';
+
   NoParamString: string = 'kein Parameter';
 
   ControllerString: string = 'Controller';
   WinkelString: string = 'Winkel';
   VorstagString: string = 'Vorstag';
   WanteString: string = 'Wante';
-  WanteObenString: string = 'WanteOben';
+  WanteObenString: string = 'Wante Oben';
 
   SalingAString: string = 'Saling Abstand';
   SalingHString: string = 'Saling Höhe';
@@ -151,6 +174,15 @@ const
 
   VorstagOhneSalingString: string = 'Vorstag OS';
   WantenkraftOhneSalingString: string = 'Wantenkraft OS';
+
+  BiegungString: string = 'Biegung';
+  MastfallVorlaufString = 'Mastfall Vorlauf';
+  T1String = 't1';
+  T2String = 't2';
+  APWidthString: string = 'AP Width';
+  EAHullString: string = 'EA Hull';
+  EARiggString: string = 'EA Rigg';
+  EIMastString: string = 'EI Mast';
 
   SalingHTooSmallString: string = ' Salinghöhe zu klein!';
 
@@ -213,6 +245,81 @@ const
   YMaxEditString: string = 'YMaxEdit';
 
   PIdentString: string = 'Nr.';
+
+  { added from FormConfig }
+
+  Material_IniSectionString: string = 'Material';
+  Profile_IniSectionString: string = 'Profile';
+  Querschnitte_IniSectionString: string = 'Querschnitte';
+
+  MsgStr_NotFound: string = 'nicht gefunden';
+
+  ComboTextHullRods: string = 'Rumpflängen';
+  ComboTextWanten: string = 'Wanten';
+  ComboTextVorstag: string = 'Vorstag';
+  ComboTextSpreader: string = 'Salinge';
+  ComboTextSpreaderConnection: string = 'Saling-Verbindung';
+  ComboTextMast: string = 'Mast';
+
+  LabelText_WinkelInGrad: string = 'Winkel in Grad';
+  LabelText_DistanceInMM: string = 'Abmessungen in mm';
+
+  MastComboTextController: string = 'Controller';
+  MastComboTextSpreader: string = 'Saling';
+  MastComboTextShroud: string = 'Wante';
+  MastComboTextTop: string = 'Top';
+
+  OKBtnCaption: string = 'OK';
+  CancelBtnCaption: string = 'Abbrechen';
+
+  TrimmPageCaption: string = 'Trimm';
+
+  TrimmGroupBoxCaption: string = 'Längen';
+  PosLabelCaption: string = 'Pos';
+  MinLabelCaption: string = 'Min';
+  MaxLabelCaption: string = 'Max';
+
+  LengthEditLabelCaption: string = 'Abmessungen in mm';
+  TrimmComboLabelCaption: string = 'Trimmvariable';
+
+  GroupBoxMaterialCaption: string = 'Material';
+
+  FachwerkPageCaption: string = 'Fachwerk';
+  ElementLabelCaption: string = 'Fachwerkstäbe';
+  EAEditText: string = 'EAEdit';
+  EAEditLabelCaption: string = 'EA in KN';
+  TakeOverBtnCaption: string = 'Auswahl übernehmen';
+
+  MaterialComboLabelCaption: string = 'Material';
+  QuerschnittComboLabelCaption: string = 'Querschnitt';
+  ALabelCaption: string = 'A';
+  ELabelCaption: string = 'E';
+  AEditText: string = 'AEdit';
+  EEditText: string = 'EEdit';
+  EEditLabelCaption: string = 'E-Modul in KN/mm^2';
+  AEditLabelCaption: string = 'Querschnitt in mm^2';
+
+  MastPageCaption: string = 'Mast';
+  GroupBoxMastCaption: string = 'Mast';
+  MastTypeComboLabelCaption: string = 'Profil';
+  EIEditText: string = 'EIEdit';
+  EILabelCaption: string = 'Biegesteifigkeit EI in Nm^2';
+  MastMassComboLabelCaption: string = 'Abmessungen';
+  MassMassEditLabelCaption: string = 'Abstand vom Mastfuß in mm';
+
+  HullPageCaption: string = 'Rumpf';
+  GroupBoxHullCaption: string = 'Feld Editieren';
+  FieldString: string = 'Feld';
+  RumpfBtnCaption: string = 'Übernehmen';
+
+  IniMemoPageCaption: string = 'Rigg.ini';
+
+  SaveIniBtnCaption: string = 'Speichern';
+  LoadIniBtnCaption: string = 'Laden';
+
+  EA_S_Key: string = 'EA Small';
+  EA_M_Key: string = 'EA Medium';
+  EA_L_Key: string = 'EA Large';
 
 implementation
 

@@ -46,6 +46,10 @@ type
 //    );
 
   TRggSB = class
+  private
+    FMin: double;
+    FIst: double;
+    FMax: double;
   public
     Ist: double;
     Min: double;
@@ -53,10 +57,18 @@ type
     SmallStep: Integer;
     BigStep: Integer;
 
+    IsMulti: Boolean;
+    IsVolatile: Boolean;
+
+    constructor Create;
+
     procedure Assign(Value: TRggSB);
     procedure SaveToStream(s: TStream);
     procedure LoadFromStream(s: TStream);
     function GetValue(n: TsbParam): double;
+
+    procedure Save;
+    procedure Reset;
   end;
 
   TRggFA = class
@@ -83,6 +95,9 @@ type
     D0X: TRggSB;
 
     APWidth: TRggSB;
+    EAHull: TRggSB;
+    EARigg: TRggSB;
+    EI: TRggSB;
 
     constructor Create;
     destructor Destroy; override;
@@ -98,6 +113,8 @@ type
 
     procedure SaveToStream(s: TStream);
     procedure LoadFromStream(s: TStream);
+
+    procedure ResetVolatile;
   end;
 
 implementation
@@ -111,6 +128,16 @@ begin
   Max := Value.Max;
   SmallStep := Value.SmallStep;
   BigStep := Value.BigStep;
+end;
+
+constructor TRggSB.Create;
+begin
+  FMin := 0;
+  FMax := 1000;
+  FIst := 100;
+
+  SmallStep := 1;
+  BigStep := 10;
 end;
 
 function TRggSB.GetValue(n: TsbParam): double;
@@ -141,6 +168,20 @@ begin
   s.WriteBuffer(BigStep, SizeOf(Integer));
 end;
 
+procedure TRggSB.Reset;
+begin
+  Min := FMin;
+  Max := FMax;
+  Ist := FIst;
+end;
+
+procedure TRggSB.Save;
+begin
+  FMin := Min;
+  FMax := Max;
+  FIst := Ist;
+end;
+
 procedure TRggSB.SaveToStream(s: TStream);
 var
   temp: Integer;
@@ -160,7 +201,8 @@ end;
 
 constructor TRggFA.Create;
 begin
-  Dummy := TRggSB.Create;
+  { items corresponding to long established params }
+
   Controller := TRggSB.Create;
   Winkel := TRggSB.Create;
   Vorstag := TRggSB.Create;
@@ -177,16 +219,67 @@ begin
   MastfallVorlauf := TRggSB.Create;
   Biegung := TRggSB.Create;
   D0X := TRggSB.Create;
+
+  { more volatile items below }
+
+  Dummy := TRggSB.Create;
+  Dummy.IsVolatile := True;
+
   T1 := TRggSB.Create;
+  T1.Min := 0;
+  T1.Max := 500;
+  T1.Ist := 0;
+  T1.IsVolatile := True;
+  T1.Save;
+
   T2 := TRggSB.Create;
+  T2.Min := 1;
+  T2.Max := 800;
   T2.Ist := 1;
+  T2.IsVolatile := True;
+  T2.Save;
 
   APWidth := TRggSB.Create;
   APWidth.Min := 1;
   APWidth.Ist := 30;
   APWidth.Max := 100;
-  APWidth.SmallStep := 1;
-  APWidth.BigStep := 10;
+  APWidth.Save;
+
+  EARigg := TRggSB.Create;
+  EARigg.Min := 1000;
+  EARigg.Ist := 10000;
+  EARigg.Max := 100000;
+  EARigg.IsMulti := True;
+  EARigg.IsVolatile := True;
+  EARigg.Save;
+
+  EAHull := TRggSB.Create;
+  EAHull.Min := 1000;
+  EAHull.Ist := 10000;
+  EAHull.Max := 100000;
+  EAHull.IsMulti := True;
+  EAHull.IsVolatile := True;
+  EAHull.Save;
+
+  EI := TRggSB.Create;
+  EI.Min := 12000;
+  EI.Ist := 15000;
+  EI.Max := 20000;
+  EI.IsMulti := True;
+  EI.IsVolatile := True;
+  EI.Save;
+end;
+
+procedure TRggFA.ResetVolatile;
+begin
+  T1.Reset;
+  T2.Reset;
+
+  APWidth.Reset;
+
+  EARigg.Reset;
+  EAHull.Reset;
+  EI.Reset;
 end;
 
 destructor TRggFA.Destroy;
@@ -208,9 +301,14 @@ begin
   MastfallVorlauf.Free;
   Biegung.Free;
   D0X.Free;
+
   T1.Free;
   T2.Free;
+
   APWidth.Free;
+  EI.Free;
+  EARigg.Free;
+  EAHull.Free;
   inherited;
 end;
 
@@ -236,6 +334,22 @@ begin
   T2.SmallStep := Value;
 end;
 
+procedure TRggFA.InitBigStep(Value: Integer);
+begin
+  Controller.BigStep := Value;
+  Winkel.BigStep := Value;
+  Vorstag.BigStep := Value;
+  Wante.BigStep := Value;
+  Woben.BigStep := Value;
+  SalingH.BigStep := Value;
+  SalingA.BigStep := Value;
+  SalingL.BigStep := Value;
+  VorstagOS.BigStep := Value;
+  WPowerOS.BigStep := Value;
+  T1.BigStep := Value;
+  T2.BigStep := Value;
+end;
+
 procedure TRggFA.Assign(Value: TRggFA);
 begin
   Controller.Assign(Value.Controller);
@@ -254,13 +368,19 @@ begin
   MastfallVorlauf.Assign(Value.MastfallVorlauf);
   Biegung.Assign(Value.Biegung);
   D0X.Assign(Value.D0X);
+
   T1.Assign(Value.T1);
   T2.Assign(Value.T2);
+
   APWidth.Assign(Value.APWidth);
+  EARigg.Assign(Value.EARigg);
+  EAHull.Assign(Value.EAHull);
+  EI.Assign(Value.EI);
 end;
 
 function TRggFA.GetSB(sbn: TsbName): TRggSB;
 begin
+  { this can only resolve some, for which TsbName exists }
   result := nil;
   case sbn of
     fpController: result := Controller;
@@ -274,22 +394,6 @@ begin
     fpVorstagOS: result := VorstagOS;
     fpWPowerOS: result := WPowerOS;
   end;
-end;
-
-procedure TRggFA.InitBigStep(Value: Integer);
-begin
-  Controller.BigStep := Value;
-  Winkel.BigStep := Value;
-  Vorstag.BigStep := Value;
-  Wante.BigStep := Value;
-  Woben.BigStep := Value;
-  SalingH.BigStep := Value;
-  SalingA.BigStep := Value;
-  SalingL.BigStep := Value;
-  VorstagOS.BigStep := Value;
-  WPowerOS.BigStep := Value;
-  T1.BigStep := Value;
-  T2.BigStep := Value;
 end;
 
 function TRggFA.Find(Value: TFederParam): TRggSB;
@@ -314,6 +418,9 @@ begin
     TFederParam.fpVorstagOS: result := VorstagOS;
     TFederParam.fpWPowerOS: result := WPowerOS;
     TFederParam.fpAPW: result := APWidth;
+    TFederParam.fpEAH: result := EAHull;
+    TFederParam.fpEAR: result := EARigg;
+    TFederParam.fpEI: result := EI;
     else
       result := Dummy;
   end;
@@ -339,7 +446,8 @@ begin
   D0X.LoadFromStream(s);
   T1.LoadFromStream(s);
   T2.LoadFromStream(s);
-  APWidth.LoadFromStream(s);
+
+  { volatile items will not be streamed }
 end;
 
 procedure TRggFA.SaveToStream(s: TStream);
@@ -362,7 +470,8 @@ begin
   D0X.SaveToStream(s);
   T1.SaveToStream(s);
   T2.SaveToStream(s);
-  APWidth.SaveToStream(s);
+
+  { volatile items will not be streamed }
 end;
 
 end.

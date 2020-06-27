@@ -240,8 +240,9 @@ begin
   FZoomBase := 0.05;
   FViewPoint := vp3D;
   FFixPoint := ooD0;
+//  FXPos := -260;
+//  FYPos := 0;
 
-  { PaintBox }
   Image.OnMouseDown := PaintBox3DMouseDown;
   Image.OnMouseMove := PaintBox3DMouseMove;
   Image.OnMouseUp := PaintBox3DMouseUp;
@@ -359,11 +360,13 @@ end;
 procedure TRotaForm.DrawMatrix(g: TCanvas);
 var
   R: TRectF;
+  tx: single;
   th: single;
+  oy, w, h: single;
 
   procedure TextOut(x, y: single; s: string);
   begin
-    R := RectF(x, y, x + 250, y + 20);
+    R := RectF(x, y, x + w, y + h);
     R.Offset(-NullpunktOffset.X, -NullpunktOffset.Y);
 
     g.DrawRect(R, 0, 0, [], 1.0); // debug only
@@ -379,15 +382,19 @@ var
   end;
 
 begin
+  oy := 10;
+  w := 250;
+  h := 20;
+  tx := 400;
   th := 25;
   g.Stroke.Thickness := 0.2;
   g.Stroke.Color := claWhite;
   g.Fill.Color := claSilver;
   g.Font.Family := 'Consolas';
   g.Font.Size := 16;
-  TextOut(400, 0 + 0 * th, MatrixTextU);
-  TextOut(400, 0 + 1 * th, MatrixTextV);
-  TextOut(400, 0 + 2 * th, MatrixTextW);
+  TextOut(tx, oy + 0 * th, MatrixTextU);
+  TextOut(tx, oy + 1 * th, MatrixTextV);
+  TextOut(tx, oy + 2 * th, MatrixTextW);
 end;
 
 procedure TRotaForm.DrawToImage(g: TCanvas);

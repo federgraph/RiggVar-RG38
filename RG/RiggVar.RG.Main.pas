@@ -301,6 +301,7 @@ begin
     faMastfallVorlauf: Param := fpMastfallVorlauf;
     faBiegung: Param := fpBiegung;
     faMastfussD0X: Param := fpD0X;
+
     faParamAPW: Param := fpAPW;
   end;
 end;
@@ -418,7 +419,7 @@ begin
     fpMastfallF0F,
     fpBiegung:
     begin
-      UpdateGetriebe; //otherwise Input-Hysterese when scrolling over Text-Form
+      UpdateGetriebe;
       Rigg.Schnittkraefte;
     end;
 
@@ -463,8 +464,8 @@ begin
       Rigg.RealGlied[fpSalingA] := tempA;
       Rigg.RealGlied[fpSalingL] := tempL;
 
-      //SalingH no change (just changed)
-      //SalingA no change (kept unchanged)
+      // SalingH no change (just changed)
+      // SalingA no change (kept unchanged)
       FactArray.SalingL.Ist := tempL;
       FactArray.SalingW.Ist := tempW;
     end;
@@ -480,8 +481,8 @@ begin
       Rigg.RealGlied[fpSalingA] := tempA;
       Rigg.RealGlied[fpSalingL] := tempL;
 
-      //SalingH no change (kept unchanged)
-      //SalingA no change (just changed)
+      // SalingH no change (kept unchanged)
+      // SalingA no change (just changed)
       FactArray.SalingL.Ist := tempL;
       FactArray.SalingW.Ist := tempW;
     end;
@@ -499,8 +500,8 @@ begin
 
       FactArray.SalingH.Ist := tempH;
       FactArray.SalingA.Ist := tempA;
-      //SalingL no change (just changed)
-      //SalingW no change (kept unchanged)
+      // SalingL no change (just changed)
+      // SalingW no change (kept unchanged)
     end;
 
     fpSalingW:
@@ -516,8 +517,8 @@ begin
 
       FactArray.SalingH.Ist := tempH;
       FactArray.SalingA.Ist := tempA;
-      //SalingL no change
-      //SalingW no change
+      // SalingL no change
+      // SalingW no change
     end;
 
     fpMastfallF0F:
@@ -545,7 +546,7 @@ begin
   if Assigned(sb) then
   begin
     if Value = CurrentValue then
-      //do nothing
+      { do nothing }
     else if Value >= sb.Max then
       sb.Ist := sb.Max
     else if Value <= sb.Min then
@@ -656,15 +657,15 @@ end;
 function TRggMain.Text2Param(T: string): TFederParam;
 begin
   result := fpT1;
-  if T = 'Controller' then
+  if T = ControllerString then
     result := fpController
-  else if T = 'Winkel' then
+  else if T = WinkelString then
     result := fpWinkel
-  else if T = 'Vorstag' then
+  else if T = VorstagString then
     result := fpVorstag
-  else if T = 'Wante' then
+  else if T = WanteString then
     result := fpWante
-  else if (T = 'Wante oben') or (T = 'Woben') then
+  else if (T = WanteObenString) or (T = 'Woben') then
     result := fpWoben
   else if (T = SalingHString) or (T = 'SalingH') then
     result := fpSalingH
@@ -672,24 +673,30 @@ begin
     result := fpSalingA
   else if (T = SalingLString) or (T = 'SalingL') then
     result := fpSalingL
-  else if (T = 'Saling Winkel') or (T = 'SalingW') then
+  else if (T = SalingWString) or (T = 'SalingW') then
     result := fpSalingW
-  else if T = 'Mastfall F0C' then
+  else if T = MastfallF0CString then
     result := fpMastfallF0C
-  else if T = 'Mastfall F0F' then
+  else if T = MastfallF0FString then
     result := fpMastfallF0F
-  else if T = 'Mastfall Vorlauf' then
+  else if T = MastfallVorlaufString then
     result := fpMastfallVorlauf
-  else if T = 'Biegung' then
+  else if T = BiegungString then
     result := fpBiegung
   else if T = MastFootD0XString then
     result := fpD0X
-  else if T = 't1' then
+  else if T = T1String then
     result := fpT1
-  else if T = 't2' then
+  else if T = T2String then
     result := fpT2
-  else if T = 'AP Width' then
+  else if T = APWidthString then
     result := fpAPW
+  else if T = EAHullString then
+    result := fpEAH
+  else if T = EARiggString then
+    result := fpEAR
+  else if T = EIMastString then
+    result := fpEI
     ;
 end;
 
@@ -697,39 +704,45 @@ function TRggMain.Param2Text(P: TFederParam): string;
 begin
   result := '';
   if P = fpController then
-    result := 'Controller'
+    result := ControllerString
   else if P = fpWinkel then
-    result := 'Winkel'
+    result := WinkelString
   else if P = fpVorstag then
-    result := 'Vorstag'
+    result := VorstagString
   else if P = fpWante then
-    result := 'Wante'
+    result := WanteString
   else if P = fpWoben then
-    result := 'Wante oben'
+    result := WanteObenString
   else if P = fpSalingH then
-    result := 'Saling Höhe'
+    result := SalingHString
   else if P = fpSalingA then
-    result := 'Saling Abstand'
+    result := SalingAString
   else if P = fpSalingL then
-    result := 'Saling Länge'
+    result := SalingLString
   else if P = fpSalingW then
-    result := 'Saling Winkel'
+    result := SalingWString
   else if P = fpMastfallF0C then
-    result := 'Mastfall F0C'
+    result := MastfallF0CString
   else if P = fpMastfallF0F then
-    result := 'Mastfall F0F'
+    result := MastfallF0FString
   else if P = fpMastfallVorlauf then
-    result := 'Mastfall Vorlauf'
+    result := MastfallVorlaufString
   else if P = fpBiegung then
-    result := 'Biegung'
+    result := BiegungString
   else if P = fpD0X then
-    result := 'Mastfuß D0x'
+    result := MastfootD0XString
   else if P = fpT1 then
-    result := 't1'
+    result := T1String
   else if P = fpT2 then
-    result := 't2'
+    result := T2String
   else if P = fpAPW then
-    result := 'AP Width'
+    result := APWidthString
+  else if P = fpEAH then
+    result := EAHullString
+  else if P = fpEAR then
+    result := EARiggString
+  else if P = fpEI then
+    result := EIMastString
     ;
 end;
 
@@ -767,7 +780,7 @@ begin
   FactArray.T1.Ist := 650;
   FactArray.T2.Ist := 150;
 
-  // allgemein setzen
+  { allgemein setzen }
   for i := fpController to fpD0X do
   begin
     sb := FactArray.Find(i);
@@ -778,7 +791,7 @@ begin
     sb.Max := temp + 100;
   end;
 
-  // speziell überschreiben
+  { speziell überschreiben }
   if WantLogoData then
   begin
     FactArray.Winkel.Min := 70;
@@ -838,15 +851,7 @@ begin
     FactArray.Biegung.Min := 0;
     FactArray.Biegung.Max := 500;
 
-    FactArray.T1.Min := 0;
-    FactArray.T1.Max := 500;
-
-    FactArray.T2.Min := 1;
-    FactArray.T2.Max := 800;
-
-    FactArray.APWidth.Min := 1;
-    FactArray.APWidth.Ist := 30;
-    FactArray.APWidth.Max := 100;
+    FactArray.ResetVolatile;
   end;
 end;
 
@@ -951,7 +956,7 @@ begin
   fd.F0F := Round(FactArray.MastfallF0F.Ist);
   fd.Bie := Round(FactArray.Biegung.Ist);
 
-  // allgemein setzen
+  { allgemein setzen }
   for i := fpController to fpD0X do
   begin
     sb := FactArray.Find(i);
@@ -1013,15 +1018,7 @@ begin
   FactArray.Biegung.Min := 0;
   FactArray.Biegung.Max := 500;
 
-  FactArray.T1.Min := 0;
-  FactArray.T1.Max := 800;
-
-  FactArray.T2.Min := 1;
-  FactArray.T2.Max := 800;
-
-  FactArray.APWidth.Min := 1;
-  FactArray.APWidth.Ist := 30;
-  FactArray.APWidth.Max := 100;
+  FactArray.ResetVolatile;
 
   SetParam(FParam);
 end;
@@ -1183,60 +1180,73 @@ begin
   ML.Clear;
   TML := ML;
 
-  AL('VO', fpVorstag);
-  AL('WA', fpWante);
-  AL('WO', fpWoben);
-  AL('SH', fpSalingH);
-  AL('SA', fpSalingA);
-  AL('SL', fpSalingL);
-  AL('SW', fpSalingW);
-  AL('MV', fpMastfallVorlauf);
+  AL(VOString, fpVorstag);
+  AL(WAString, fpWante);
+  AL(WOString, fpWoben);
+  AL(SHString, fpSalingH);
+  AL(SAString, fpSalingA);
+  AL(SLString, fpSalingL);
+  AL(SWString, fpSalingW);
+  AL(MVString, fpMastfallVorlauf);
 
-  BL('MF', Mastfall);
-  AL('F0F', fpMastfallF0F);
-  AL('F0C', fpMastfallF0C);
-  AL('Bie', fpBiegung);
-  BL('BGF', FormatValue(BiegungGF));
+  BL(MFString, Mastfall);
+  AL(F0FString, fpMastfallF0F);
+  AL(F0CString, fpMastfallF0C);
+  AL(BieString, fpBiegung);
+  BL(BGFString, FormatValue(BiegungGF));
 end;
 
 procedure TRggMain.SetupTrackbarForRgg;
 var
   temp: single;
-  S: string;
+  us: string;
   sb: TRggSB;
   tb: TFederTrackbar;
+  fs: string;
 begin
   tb := RggTrackbar;
   temp := ParamValue[Param];
   sb := FactArray.Find(Param);
-  tb.Min := -200; // kleiner als der kleinste Wert
+  tb.Min := -200; // smaller than the smallest Value
   tb.Max := sb.Max;
   tb.ValueNoChange := temp;
   tb.Min := sb.Min;
   tb.Frequency := sb.SmallStep;
-//  tb.LineSize := sb.SmallStep;
-//  tb.PageSize := sb.BigStep;
+  tb.WantMultiDelta := sb.IsMulti;
 
-  if Param = fpWinkel then
-    S := 'Grad'
-  else if Param = fpSalingW then
-    S := 'Grad'
+  { get unit string }
+  case Param of
+    fpWinkel, fpSalingW: us := GradString;
+    fpEAH, fpEAR: us := KiloNewtonString;
+    fpEI: us := NewtonMeterSquareString;
   else
-    S := 'mm';
-  MinValCaption := Format('%.0f %s', [sb.Min, S]);
-  MaxValCaption := Format('%.0f %s', [sb.Max, S]);
-  IstValCaption := Format('%.0f %s', [temp, S]);
+    us := MilimeterString;
+  end;
+
+  { get format string }
+  fs := NoDigitRealPlusUnitFormatString;
+
+  MinValCaption := Format(fs, [sb.Min, us]);
+  MaxValCaption := Format(fs, [sb.Max, us]);
+  IstValCaption := Format(fs, [temp, us]);
   ParamCaption := Param2Text(Param);
 end;
 
 procedure TRggMain.RggSpecialDoOnTrackBarChange;
+var
+  fs: string;
+  us: string;
 begin
-  if FParam = fpWinkel then
-    IstValCaption := Format('%.0f Grad', [RggTrackbar.Value])
-  else if FParam = fpSalingW then
-    IstValCaption := Format('%.0f Grad', [RggTrackbar.Value])
+  case Param of
+    fpWinkel, fpSalingW: us := GradString;
+    fpEAH, fpEAR: us := KiloNewtonString;
+    fpEI: us := NewtonMeterSquareString;
   else
-    IstValCaption := Format('%.0f mm', [RggTrackbar.Value]);
+    us := MilimeterString;
+  end;
+
+  fs := NoDigitRealPlusUnitFormatString;
+  IstValCaption := Format(fs, [RggTrackbar.Value, us]);
 
   ParamValue[FParam] := Round(RggTrackbar.Value);
 end;
@@ -1314,7 +1324,8 @@ end;
 
 procedure TRggMain0.DoWheel(Delta: single);
 begin
-  RggTrackbar.Value := RggTrackbar.Value + Delta; // --> UpdateGraph;
+//  RggTrackbar.Value := RggTrackbar.Value + Delta; // --> UpdateGraph;
+  RggTrackbar.Delta := Delta;
 end;
 
 procedure TRggMain0.DoRotation(Delta: single);
@@ -1490,7 +1501,6 @@ begin
     ML.Add('Modus = Pro');
 
   ML.Add('CounterG = ' + IntToStr(Rigg.UpdateGetriebeCounter));
-//  ML.Add('CounterT = ' + IntToStr(UpdateTextCounter));
 end;
 
 procedure TRggMain.UpdateJsonText(ML: TStrings);
@@ -1541,7 +1551,9 @@ end;
 
 procedure TRggMain.MemoryBtnClick;
 begin
+{$ifdef debug}
   Main.Logger.Info('in MemoryBtnClick');
+{$endif}
   RefCtrl := Rigg.Glieder;
   StrokeRigg.KoordinatenR := Rigg.rP;
   Draw;
@@ -1549,7 +1561,9 @@ end;
 
 procedure TRggMain.MemoryRecallBtnClick;
 begin
+{$ifdef debug}
   Main.Logger.Info('in MemoryRecallBtnClick');
+{$endif}
   Rigg.Glieder := RefCtrl;
   UpdateGetriebe;
 end;

@@ -864,17 +864,17 @@ begin
     result := True
   else
   begin
-    SCaption := Format('Lesen von %s', [ExtractFileName(FFileName)]);
-    S := 'FormatFehler';
+    SCaption := Format('Reading %s', [ExtractFileName(FFileName)]);
+    S := 'FormatError';
     S1 := Copy(Signature, 1, 6);
     if S1 = 'RGGDOC' then
     begin
-      S := S + #13 + 'vorliegend: Version ' + Signature;
-      S := S + #13 + 'erforderlich: Version ' + string(RggDocSignature);
+      S := S + #13 + 'found: Version ' + Signature;
+      S := S + #13 + 'required: Version ' + string(RggDocSignature);
     end
     else
     begin
-      S := S + #13 + 'Die Datei enthält kein gültiges';
+      S := S + #13 + 'This file does not contain a valid';
       S := S + #13 + 'Rigg - Dokument.';
     end;
     Main.Logger.Info(Format(S, [SCaption]));

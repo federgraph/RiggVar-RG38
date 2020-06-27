@@ -325,6 +325,9 @@ begin
     faParamCZ: result := 'Camera Position Z';
 
     faParamAPW: result := 'Param AP Width';
+    faParamEAH: result := 'Param EA Hull';
+    faParamEAR: result := 'Param EA Rigg';
+    faParamEI: result := 'Param EI Mast';
   end;
 end;
 

@@ -127,9 +127,9 @@ type
 implementation
 
 uses
+  System.Rtti,
   FrmMain,
   RggTypes,
-  System.Rtti,
   FMX.Platform,
   RiggVar.FB.Classes,
   RiggVar.App.Main,
@@ -702,7 +702,11 @@ begin
     faMastfallVorlauf: RggMain.SetParameter(faMastfallVorlauf);
     faBiegung: RggMain.SetParameter(faBiegung);
     faMastfussD0X: RggMain.SetParameter(faMastfussD0X);
+
     faParamAPW: RggMain.SetParameter(faParamAPW);
+    faParamEAH: RggMain.SetParameter(faParamEAH);
+    faParamEAR: RggMain.SetParameter(faParamEAR);
+    faParamEI: RggMain.SetParameter(faParamEI);
 
     faFixpointA0: RggMain.FixPoint := ooA0;
     faFixpointA: RggMain.FixPoint := ooA;
@@ -805,7 +809,11 @@ begin
     faMastfallVorlauf: result := RggMain.Param = fpMastfallVorlauf;
     faBiegung: result := RggMain.Param = fpBiegung;
     faMastfussD0X: result := RggMain.Param = fpD0X;
+
     faParamAPW: result := RggMain.Param = fpAPW;
+    faParamEAH: result := RggMain.Param = fpEAH;
+    faParamEAR: result := RggMain.Param = fpEAR;
+    faParamEI: result := RggMain.Param = fpEI;
 
     faFixpointA0: result := RggMain.FixPoint = ooA0;
     faFixpointA: result := RggMain.FixPoint = ooA;

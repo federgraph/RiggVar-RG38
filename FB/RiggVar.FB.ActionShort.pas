@@ -329,7 +329,10 @@ begin
     faGrayText: result := 'gtx';
     faWhiteText: result := 'wtx';
 
-    faParamAPW: result := 'apw';
+    faParamAPW: result := 'APW';
+    faParamEAH: result := 'EAH';
+    faParamEAR: result := 'EAR';
+    faParamEI: result := 'EI';
   end;
 end;
 

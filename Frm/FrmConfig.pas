@@ -8,6 +8,7 @@ uses
   System.Types,
   System.UITypes,
   System.UIConsts,
+  RggStrings,
   RggScroll,
   RggUnit4,
   RggTypes,
@@ -164,13 +165,14 @@ type
     FCanSelectDummy: Boolean;
 
     procedure GetKeyList(Source, Dest: TStringList);
-    procedure FillInifileLists;
+    procedure FillIniLists;
     procedure FillRiggLists;
     procedure LoadInifileCombos;
     procedure LoadRiggCombos;
     procedure CreateComponents;
     procedure LayoutComponents;
     procedure InitGrid;
+    procedure SelectInitialCell;
   public
     FirstColumnIndex: Integer;
     FirstRowIndex: Integer;
@@ -244,21 +246,30 @@ begin
   end;
 end;
 
+procedure TFormConfig.SelectInitialCell;
+var
+  b: Boolean;
+begin
+  FRumpfCell := Point(1, FirstRowIndex);
+  GridSelectCell(nil, FRumpfCell.X, FRumpfCell.Y, b);
+end;
+
 procedure TFormConfig.Init(ARigg: TRigg);
 begin
   Rigg := ARigg;
   IniFileName := ChangeFileExt(ParamStr(0), '.ini');
 
-  FRumpfCell := Point(1, FirstRowIndex);
-  RumpfLabel.Text := 'Feld A0x';
+  SelectInitialCell;
 
   FillRiggLists;
   LoadRiggCombos;
-  FillInifileLists;
+  FillIniLists;
   LoadInifileCombos;
 end;
 
 procedure TFormConfig.FillRiggLists;
+var
+  fs: string;
 begin
   FGSB := Rigg.GSB;
   FEAarray := Rigg.EA; { EA in KN }
@@ -272,28 +283,30 @@ begin
   FElementList.Clear;
   FTrimmList.Clear;
 
-  FMastMassList.Add(Format('Saling=%d', [FiMastSaling]));
-  FMastMassList.Add(Format('Wante=%d', [FiMastWante]));
-  FMastMassList.Add(Format('Top=%d', [FiMastTop]));
+  fs := '%s=%d';
+  FMastMassList.Add(Format(fs, [MastComboTextSpreader, FiMastSaling]));
+  FMastMassList.Add(Format(fs, [MastComboTextShroud, FiMastWante]));
+  FMastMassList.Add(Format(fs, [MastComboTextTop, FiMastTop]));
 
-  FElementList.Add(Format('Wanten=%.6g', [FEAarray[7]]));
-  FElementList.Add(Format('Vorstag=%.6g', [FEAarray[14]]));
-  FElementList.Add(Format('Mast=%.6g', [FEAarray[0]]));
-  FElementList.Add(Format('Saling=%.6g', [FEAarray[9]]));
-  FElementList.Add(Format('Saling-Verbindung=%.6g', [FEAarray[11]]));
-  FElementList.Add(Format('Rumpfstäbe=%.6g', [FEAarray[1]]));
+  fs := '%s=%.6g';
+  FElementList.Add(Format(fs, [ComboTextSpreader, FEAarray[7]]));
+  FElementList.Add(Format(fs, [ComboTextVorstag, FEAarray[14]]));
+  FElementList.Add(Format(fs, [ComboTextMast, FEAarray[0]]));
+  FElementList.Add(Format(fs, [ComboTextSpreader, FEAarray[9]]));
+  FElementList.Add(Format(fs, [ComboTextSpreaderConnection, FEAarray[11]]));
+  FElementList.Add(Format(fs, [ComboTextHullRods, FEAarray[1]]));
 
-  FTrimmList.Add('Controller');
-  FTrimmList.Add('Winkel');
-  FTrimmList.Add('Vorstag');
-  FTrimmList.Add('Wante');
-  FTrimmList.Add('Wante oben');
-  FTrimmList.Add('Saling Höhe');
-  FTrimmList.Add('Saling Abstand');
-  FTrimmList.Add('Saling Länge');
+  FTrimmList.Add(ControllerString);
+  FTrimmList.Add(WinkelString);
+  FTrimmList.Add(VorstagString);
+  FTrimmList.Add(WanteString);
+  FTrimmList.Add(WanteObenString);
+  FTrimmList.Add(SalingHString);
+  FTrimmList.Add(SalingAString);
+  FTrimmList.Add(SalingLString);
 end;
 
-procedure TFormConfig.FillInifileLists;
+procedure TFormConfig.FillIniLists;
 var
   ML: TStrings;
 begin
@@ -338,9 +351,9 @@ begin
   ML.Add('Niro=250');
   ML.Add('Alu=70');
   ML.Add('Kevlar=200');
-  ML.Add('EAklein=10');
-  ML.Add('EAmittel=100');
-  ML.Add('EAgross=1000');
+  ML.Add(EA_S_Key + '=10');
+  ML.Add(EA_M_Key + '=100');
+  ML.Add(EA_L_Key + '=1000');
 
   ML := IniMemo.Lines;
   ML.Clear;
@@ -360,9 +373,9 @@ begin
   ML.Add('Niro=250');
   ML.Add('Alu=70');
   ML.Add('Kevlar=200');
-  ML.Add('EAklein=10');
-  ML.Add('EAmittel=100');
-  ML.Add('EAgross=1000');
+  ML.Add(EA_S_Key + '=10');
+  ML.Add(EA_M_Key + '=100');
+  ML.Add(EA_L_Key + '=1000');
 end;
 
 procedure TFormConfig.LoadRiggCombos;
@@ -437,11 +450,11 @@ begin
   IniFile := TMemIniFile.Create(IniFileName);
   try
     FMaterialList.Clear;
-    IniFile.ReadSectionValues('Material', FMaterialList);
+    IniFile.ReadSectionValues(Material_IniSectionString, FMaterialList);
     FQuerschnittList.Clear;
-    IniFile.ReadSectionValues('Querschnitte', FQuerschnittList);
+    IniFile.ReadSectionValues(Querschnitte_IniSectionString, FQuerschnittList);
     FMastTypList.Clear;
-    IniFile.ReadSectionValues('Profile', FMastTypList);
+    IniFile.ReadSectionValues(Profile_IniSectionString, FMastTypList);
   finally
     IniFile.Free;
   end;
@@ -466,7 +479,7 @@ begin
   else
   begin
     s := ExtractFileName(InifileName);
-    s := s + 'nicht gefunden';
+    s := s + MsgStr_NotFound;
 //    MessageDlg(s, mtInformation, [mbOK], 0);
   end;
 end;
@@ -481,8 +494,11 @@ var
   s: string;
   a, b, c: double;
 begin
-  a := StrToFloat(EEdit.Text);
-  b := StrToFloat(AEdit.Text);
+  { Values loaded from ini-file did contain wrong decimal separator}
+  s := StringReplace(EEdit.Text, ',', '.', []);
+  a := StrToFloat(s);
+  s := StringReplace(AEdit.Text, ',', '.', []);
+  b := StrToFloat(s);
   c := a * b;
   EAEdit.Text := Format('%.6g', [c]);
 
@@ -490,7 +506,7 @@ begin
   if s = '' then
     Exit;
 
-  if s = 'Rumpflängen' then
+  if s = ComboTextHullRods then
   begin
     FEAarray[1] := c;
     FEAarray[2] := c;
@@ -499,21 +515,21 @@ begin
     FEAarray[5] := c;
     FEAarray[6] := c;
   end
-  else if s = 'Wanten' then
+  else if s = ComboTextWanten then
   begin
     FEAarray[7] := c;
     FEAarray[8] := c;
     FEAarray[12] := c;
     FEAarray[13] := c;
   end
-  else if s = 'Vorstag' then
+  else if s = ComboTextVorstag then
     FEAarray[14] := c
-  else if s = 'Saling' then
+  else if s = ComboTextSpreader then
   begin
     FEAarray[9] := c;
     FEAarray[10] := c;
   end
-  else if s = 'Saling-Verbindung' then
+  else if s = ComboTextSpreaderConnection then
     FEAarray[11] := c;
 
   FElementList.Values[s] := EAEdit.Text;
@@ -526,9 +542,9 @@ var
 begin
   i := TFederParam(TrimmCombo.ItemIndex);
   if i = TFederParam.fpWinkel then
-    LengthEditLabel.Text := 'Winkel in Grad'
+    LengthEditLabel.Text := LabelText_WinkelInGrad
   else
-    LengthEditLabel.Text := 'Abmessungen in mm';
+    LengthEditLabel.Text := LabelText_DistanceInMM;
 
   f := FGSB.Find(i);
   MinEdit.Text := IntToStr(Round(f.Min));
@@ -604,22 +620,22 @@ begin
     Exit;
 
   temp := 0;
-  if s = 'Saling' then
+  if s = MastComboTextSpreader then
     temp := FiMastSaling
-  else if s = 'Wante' then
+  else if s = MastComboTextShroud then
     temp := FiMastWante
-  else if s = 'Top' then
+  else if s = MastComboTextTop then
     temp := FiMastTop;
 
   i := StrToIntDef(MastMassEdit.Text, temp);
   MastMassEdit.Text := IntToStr(i);
 
   FMastMassList.Values[s] := IntToStr(i);
-  if s = 'Saling' then
+  if s = MastComboTextSpreader then
     FiMastSaling := i
-  else if s = 'Wante' then
+  else if s = MastComboTextShroud then
     FiMastWante := i
-  else if s = 'Top' then
+  else if s = MastComboTextTop then
     FiMastTop := i;
 end;
 
@@ -694,7 +710,7 @@ begin
     sColHeaderText := Grid.Columns[ACol].Header;
     sCellText := Grid.Cells[ACol, ARow];
 
-    RumpfLabel.Text := Format('Feld %s%s:', [sRowHeaderText, sColHeaderText]);
+    RumpfLabel.Text := Format('%s %s%s:', [FieldString, sRowHeaderText, sColHeaderText]);
     if RumpfSpinEdit <> nil then
     begin
       RumpfSpinEdit.Value := StrToIntDef(sCellText, 0);
@@ -745,13 +761,13 @@ var
 begin
   OKBtn :=  TButton.Create(Self);
   OKBtn.Parent := Self;
-  OKBtn.Text := 'OK';
+  OKBtn.Text := OKBtnCaption; //'OK';
   OKBtn.ModalResult := 1;
 
   CancelBtn := TButton.Create(Self);
   CancelBtn.Parent := Self;
   CancelBtn.Cancel := True;
-  CancelBtn.Text := 'Abbrechen';
+  CancelBtn.Text := CancelBtnCaption; //'Abbrechen';
   CancelBtn.Default := True;
   CancelBtn.ModalResult := 2;
 
@@ -772,15 +788,15 @@ begin
 
   LabelMin := TLabel.Create(Self);
   LabelMin.Parent := gb;
-  LabelMin.Text := 'Min';
+  LabelMin.Text := MinLabelCaption; // 'Min';
 
   LabelPos := TLabel.Create(Self);
   LabelPos.Parent := gb;
-  LabelPos.Text := 'Pos';
+  LabelPos.Text := PosLabelCaption; // 'Pos';
 
   LabelMax := TLabel.Create(Self);
   LabelMax.Parent := gb;
-  LabelMax.Text := 'Max';
+  LabelMax.Text := MaxLabelCaption; // 'Max';
 
   MinEdit := TEdit.Create(Self);
   MinEdit.Parent := gb;
@@ -796,161 +812,160 @@ begin
 
   LengthEditLabel := TLabel.Create(Self);
   LengthEditLabel.Parent := gb;
-  LengthEditLabel.Text := 'Abmessungen in mm';
+  LengthEditLabel.Text := LengthEditLabelCaption; // 'Abmessungen in mm';
 
   TrimmComboLabel := TLabel.Create(Self);
   TrimmComboLabel.Parent := gb;
-  TrimmComboLabel.Text := 'Trimmvariable';
+  TrimmComboLabel.Text := TrimmComboLabelCaption; // 'Trimmvariable';
 
   TrimmCombo := TRggComboBox.Create(Self);
   TrimmCombo.Parent := gb;
   ML := TrimmCombo.Items;
-  ML.Add('Controller');
-  ML.Add('Winkel');
-  ML.Add('Vorstag');
-  ML.Add('Wante');
-  ML.Add('Wante oben');
-  ML.Add('Saling Höhe');
-  ML.Add('Saling Abstand');
-  ML.Add('Saling Länge');
+  ML.Add(ControllerString);
+  ML.Add(WinkelString);
+  ML.Add(VorstagString);
+  ML.Add(WanteString);
+  ML.Add(WanteObenString);
+  ML.Add(SalingHString);
+  ML.Add(SalingAString);
+  ML.Add(SalingLString);
 
   { Page Fachwerk / Material }
 
   tsFachwerk := pc.Add(TTabItem);
-  tsFachwerk.Text := 'Fachwerk';
+  tsFachwerk.Text := FachwerkPageCaption; // 'Fachwerk'
   ts := tsFachwerk;
 
   GroupBoxMaterial := TGroupBox.Create(Self);
-  GroupBoxMaterial.Text := 'Material';
+  GroupBoxMaterial.Text := GroupBoxMaterialCaption; // 'Material';
   gb := GroupBoxMaterial;
   gb.Parent := ts;
 
   ElementLabel := TLabel.Create(Self);
   ElementLabel.Parent := ts;
-  ElementLabel.Text := 'Fachwerkstäbe';
+  ElementLabel.Text := ElementLabelCaption; //'Fachwerkstäbe';
 
   ElementCombo := TRggComboBox.Create(Self);
   ElementCombo.Parent := ts;
   ML := ElementCombo.Items;
-  ML.Add('Rumpfstäbe');
-  ML.Add('Wanten');
-  ML.Add('Vorstag');
-  ML.Add('Saling');
-  ML.Add('Saling-Verbindung');
+  ML.Add(ComboTextHullRods);
+  ML.Add(ComboTextWanten);
+  ML.Add(ComboTextVorstag);
+  ML.Add(ComboTextSpreader);
+  ML.Add(ComboTextSpreaderConnection);
 
   EAEdit := TEdit.Create(Self);
   EAEdit.Parent := ts;
-  EAEdit.Text := 'EAEdit';
+  EAEdit.Text := EAEditText; // 'EAEdit';
   EAEdit.ReadOnly := True;
 
   EAEditLabel := TLabel.Create(Self);
   EAEditLabel.Parent := ts;
-  EAEditLabel.Text := 'EA in KN';
+  EAEditLabel.Text := EAEditLabelCaption; // 'EA in KN';
 
   TakeOverBtn := TButton.Create(Self);
   TakeOverBtn.Parent := ts;
-  TakeOverBtn.Text := 'Auswahl übernehmen';
+  TakeOverBtn.Text := TakeOverBtnCaption; //'Auswahl übernehmen';
 
   MaterialCombo := TRggComboBox.Create(Self);
   MaterialCombo.Parent := gb;
 
   MaterialComboLabel := TLabel.Create(Self);
   MaterialComboLabel.Parent := gb;
-  MaterialComboLabel.Text := 'Material';
+  MaterialComboLabel.Text := MaterialComboLabelCaption; // 'Material';
 
   QuerschnittComboLabel := TLabel.Create(Self);
   QuerschnittComboLabel.Parent := gb;
-  QuerschnittComboLabel.Text := 'Querschnitt';
+  QuerschnittComboLabel.Text := QuerschnittComboLabelCaption; // 'Querschnitt';
 
   QuerschnittCombo := TRggComboBox.Create(Self);
   QuerschnittCombo.Parent := gb;
 
   ALabel := TLabel.Create(Self);
   ALabel.Parent := gb;
-  ALabel.Text := 'A';
+  ALabel.Text := ALabelCaption; // 'A';
 
   AEdit := TEdit.Create(Self);
   AEdit.Parent := gb;
-  AEdit.Text := 'AEdit';
+  AEdit.Text := AEditText; // 'AEdit';
   AEdit.ReadOnly := True;
 
   EEdit := TEdit.Create(Self);
   EEdit.Parent := gb;
-  EEdit.Text := 'EEdit';
+  EEdit.Text := EEditText; //'EEdit';
   EEdit.ReadOnly := True;
 
   ELabel := TLabel.Create(Self);
   ELabel.Parent := gb;
-  ELabel.Text := 'E';
+  ELabel.Text := ELabelCaption; // 'E';
 
   EEditLabel := TLabel.Create(Self);
   EEditLabel.Parent := gb;
-  EEditLabel.Text := 'E-Modul in KN/mm^2';
+  EEditLabel.Text := EEditLabelCaption; // 'E-Modul in KN/mm^2';
 
   AEditLabel := TLabel.Create(Self);
   AEditLabel.Parent := gb;
-  AEditLabel.Text := 'Querschnitt in mm^2';
+  AEditLabel.Text := AEditLabelCaption; // 'Querschnitt in mm^2';
 
   { Page Mast }
 
   tsMast := pc.Add(TTabItem);
-  tsMast.Text := 'Mast';
+  tsMast.Text := MastPageCaption; // 'Mast';
   ts := tsMast;
 
   GroupBoxMast := TGroupBox.Create(Self);
-  GroupBoxMast.Text := 'Mast';
+  GroupBoxMast.Text := GroupBoxMastCaption; // 'Mast';
   gb := GroupBoxMast;
   gb.Parent := ts;
 
   MastTypeComboLabel := TLabel.Create(Self);
   MastTypeComboLabel.Parent := gb;
-  MastTypeComboLabel.Text := 'Profil';
+  MastTypeComboLabel.Text := MastTypeComboLabelCaption; // 'Profil';
 
   MastTypeCombo := TRggComboBox.Create(Self);
   MastTypeCombo.Parent := gb;
 
   EIEdit := TEdit.Create(Self);
   EIEdit.Parent := gb;
-  EIEdit.Text := 'EIEdit';
+  EIEdit.Text := EIEditText; // 'EIEdit';
   EIEdit.ReadOnly := True;
 
   EILabel := TLabel.Create(Self);
   EILabel.Parent := gb;
-  EILabel.Text := 'Biegesteifigkeit EI in Nm^2';
+  EILabel.Text := EILabelCaption; // 'Biegesteifigkeit EI in Nm^2';
 
   MastMassComboLabel := TLabel.Create(Self);
   MastMassComboLabel.Parent := gb;
-  MastMassComboLabel.Text := 'Abmessungen';
+  MastMassComboLabel.Text := MastMassComboLabelCaption; //'Abmessungen';
 
   MastMassCombo := TRggComboBox.Create(Self);
   MastMassCombo.Parent := gb;
   ML := MastMassCombo.Items;
-  ML.Add('Controller');
-  ML.Add('Saling');
-  ML.Add('Wante');
-  ML.Add('Top');
+  ML.Add(MastComboTextController);
+  ML.Add(MastComboTextSpreader);
+  ML.Add(MastComboTextShroud);
+  ML.Add(MastComboTextTop);
 
   MastMassEdit := TEdit.Create(Self);
   MastMassEdit.Parent := gb;
 
   MassMassEditLabel := TLabel.Create(Self);
   MassMassEditLabel.Parent := gb;
-  MassMassEditLabel.Text := 'Abstand vom Mastfuß in mm';
+  MassMassEditLabel.Text := MassMassEditLabelCaption; // 'Abstand vom Mastfuß in mm';
 
   { Page Rumpf }
 
   tsRumpf := pc.Add(TTabItem);
-  tsRumpf.Text := 'Rumpf';
+  tsRumpf.Text := HullPageCaption; // 'Rumpf';
   ts := tsRumpf;
 
   GroupBoxRumpf := TGroupBox.Create(Self);
-  GroupBoxRumpf.Text := 'Feld Editieren';
+  GroupBoxRumpf.Text := GroupBoxHullCaption; // 'Feld Editieren';
   gb := GroupBoxRumpf;
   gb.Parent := ts;
 
   RumpfLabel := TLabel.Create(Self);
   RumpfLabel.Parent := gb;
-  RumpfLabel.Text := 'RumpfLabel';
   RumpfLabel.WordWrap := False;
   RumpfLabel.AutoSize := True;
 
@@ -961,7 +976,7 @@ begin
 
   RumpfBtn := TButton.Create(Self);
   RumpfBtn.Parent := gb;
-  RumpfBtn.Text := 'Übernehmen';
+  RumpfBtn.Text := RumpfBtnCaption; // 'Übernehmen';
 
   RumpfSpinEdit := TSpinBox.Create(Self);
   RumpfSpinEdit.Parent := gb;
@@ -976,7 +991,7 @@ begin
   { Page Ini }
 
   tsIniMemo := pc.Add(TTabItem);
-  tsIniMemo.Text := 'Rigg.ini';
+  tsIniMemo.Text := IniMemoPageCaption; // 'Rigg.ini';
   ts := tsIniMemo;
 
   IniMemo := TMemo.Create(Self);
@@ -985,11 +1000,11 @@ begin
 
   SaveIniBtn := TButton.Create(Self);
   SaveIniBtn.Parent := ts;
-  SaveIniBtn.Text := 'Speichern';
+  SaveIniBtn.Text := SaveIniBtnCaption; // 'Speichern';
 
   LoadIniBtn := TButton.Create(Self);
   LoadIniBtn.Parent := ts;
-  LoadIniBtn.Text := 'Laden';
+  LoadIniBtn.Text := LoadIniBtnCaption; // 'Laden';
 end;
 
 procedure TFormConfig.LayoutComponents;

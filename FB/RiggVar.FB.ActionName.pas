@@ -114,6 +114,9 @@ faMastfussD0X: result := 'faMastfussD0X';
 faVorstagOS: result := 'faVorstagOS';
 faWPowerOS: result := 'faWPowerOS';
 faParamAPW: result := 'faParamAPW';
+faParamEAH: result := 'faParamEAH';
+faParamEAR: result := 'faParamEAR';
+faParamEI: result := 'faParamEI';
 
 { RggFixPoints }
 faFixpointA0: result := 'faFixpointA0';

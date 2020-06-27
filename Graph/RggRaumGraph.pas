@@ -156,8 +156,6 @@ var
   MKT: array [0 .. BogenMax] of TRealPoint;
   KKT: TKoordLine;
 begin
-//  Transformer.UpdateTransformedFixPunkt; // now using OnGetFixPunkt
-
   { Graph drehen }
   if Assigned(Transformer) then
   begin

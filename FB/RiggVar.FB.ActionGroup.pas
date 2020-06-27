@@ -109,7 +109,10 @@ faBiegung,
 faMastfussD0X,
 faVorstagOS,
 faWPowerOS,
-faParamAPW];
+faParamAPW,
+faParamEAH,
+faParamEAR,
+faParamEI];
 
 ActionGroupRggFixPoints: TActionGroup = [
 faFixpointA0,
