@@ -37,10 +37,11 @@ uses
   RiggVar.FederModel.TouchBase,
   RiggVar.FederModel.Touch,
   RiggVar.FederModel.TouchPhone,
-  RiggVar.Util.Logger;
+  RiggVar.Util.Logger,
+  RiggVar.RG.Main;
 
 type
-  TMain0 =  class
+  TMain0 =  class(TRggMain)
   private
     FTouch: Integer;
     procedure InitRaster;
@@ -52,17 +53,12 @@ type
     function GetIsPhone: Boolean;
     procedure SetTouch(const Value: Integer);
     function GetFederText: TFederTouchBase;
-    function GetFLText: string;
-  protected
-    FL: TStringList;
-    procedure CopyText;
   public
     ActionMap1: TActionMap;
     ActionMap2: TActionMap;
     ActionHandler: IFederActionHandler;
     ActionHelper: TActionHelper;
 
-    IsUp: Boolean;
     IsOrthoProjection: Boolean;
 
     FederText1: TFederTouch;
@@ -70,8 +66,6 @@ type
 
     FederKeyboard: TFederKeyboard;
     BackgroundLock: Boolean;
-
-    Logger: TLogger;
 
     ActionGroupList: TActionGroupList;
     ActionTest: TActionTest;
@@ -123,7 +117,6 @@ type
 
     property Keyboard: TFederKeyboard read FederKeyboard;
     property FederText: TFederTouchBase read GetFederText;
-    property FLText: string read GetFLText;
   end;
 
 implementation
@@ -143,11 +136,9 @@ uses
 
 constructor TMain0.Create;
 begin
+  inherited;
   Scale := MainVar.Scale;
   IsRetina := Scale > 1;
-
-  FL := TStringList.Create;
-  Logger := TLogger.Create;
 
   ActionGroupList := TActionGroupList.Create;
   ActionTest := TActionTest.Create;
@@ -177,25 +168,11 @@ begin
   FederText1.Free;
   FederText2.Free;
 
-  Logger.Free;
-  FL.Free;
-
   ActionGroupList.Free;
   ActionTest.Free;
   FederBinding.Free;
 
   inherited;
-end;
-
-procedure TMain0.CopyText;
-var
-  cbs: IFMXClipboardService;
-begin
-  if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, IInterface(cbs)) then
-  begin
-    cbs.SetClipboard(FL.Text);
-    Logger.Info('in CopyText ( check clipboard )');
-  end;
 end;
 
 procedure TMain0.BlackText;
@@ -410,11 +387,6 @@ begin
     else
       result := FederText1;
   end;
-end;
-
-function TMain0.GetFLText: string;
-begin
-  result := FL.Text;
 end;
 
 procedure TMain0.HandleAction(fa: Integer);

@@ -4,7 +4,6 @@ interface
 
 uses
   System.Classes,
-  RiggVar.RG.Def,
   RiggVar.FB.ActionConst,
   RggReport;
 
@@ -233,51 +232,51 @@ begin
       rgAusgabeRL:
       begin
         RiggReport.ML.Clear;
-        RiggReport.AusgabeRL(Main.RggMain.Rigg.rL);
+        RiggReport.AusgabeRL(Main.Rigg.rL);
         ML.Assign(RiggReport.ML);
       end;
       rgAusgabeRP:
       begin
         RiggReport.ML.Clear;
-        RiggReport.AusgabeRP(Main.RggMain.Rigg.rP);
+        RiggReport.AusgabeRP(Main.Rigg.rP);
         ML.Assign(RiggReport.ML);
       end;
       rgAusgabeRLE:
       begin
         RiggReport.ML.Clear;
-        RiggReport.AusgabeRLE(Main.RggMain.Rigg.rLE);
+        RiggReport.AusgabeRLE(Main.Rigg.rLE);
         ML.Assign(RiggReport.ML);
       end;
       rgAusgabeRPE:
       begin
         RiggReport.ML.Clear;
-        RiggReport.AusgabeRPE(Main.RggMain.Rigg.rPE);
+        RiggReport.AusgabeRPE(Main.Rigg.rPE);
         ML.Assign(RiggReport.ML);
       end;
       rgAusgabeDiffL:
       begin
         RiggReport.ML.Clear;
-        RiggReport.AusgabeDiffL(Main.RggMain.Rigg.rL, Main.RggMain.Rigg.rLE);
+        RiggReport.AusgabeDiffL(Main.Rigg.rL, Main.Rigg.rLE);
         ML.Assign(RiggReport.ML);
       end;
       rgAusgabeDiffP:
       begin
         RiggReport.ML.Clear;
-        RiggReport.AusgabeDiffP(Main.RggMain.Rigg.rP, Main.RggMain.Rigg.rPE);
+        RiggReport.AusgabeDiffP(Main.Rigg.rP, Main.Rigg.rPE);
         ML.Assign(RiggReport.ML);
       end;
 {$ifdef MSWindows}
       rgXML:
       begin
-        Main.RggMain.Rigg.WriteXml(ML, XmlAllTags);
+        Main.Rigg.WriteXml(ML, XmlAllTags);
       end;
 {$endif}
       rgShort: ML.Text := Main.TrimmShort;
       rgLong: ML.Text := Main.TrimmLong;
-      rgDiffText: Main.RggMain.UpdateDiffText(ML);
-      rgJsonText: Main.RggMain.UpdateJsonText(ML);
-      rgDataText: Main.RggMain.UpdateDataText(ML);
-      rgTrimmText: Main.RggMain.UpdateTrimmText(ML);
+      rgDiffText: Main.UpdateDiffText(ML);
+      rgJsonText: Main.UpdateJsonText(ML);
+      rgDataText: Main.UpdateDataText(ML);
+      rgTrimmText: Main.UpdateTrimmText(ML);
       rgDebugReport:
       begin
         Main.DoCleanReport;

@@ -1820,7 +1820,7 @@ end;
 
 procedure TChartModel.InitRigg;
 begin
-  Rigg := Main.RggMain.Rigg;
+  Rigg := Main.Rigg;
   FSalingTyp := Rigg.SalingTyp;
 end;
 

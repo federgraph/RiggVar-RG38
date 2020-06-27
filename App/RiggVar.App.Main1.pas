@@ -25,52 +25,28 @@ uses
   RiggVar.FB.ActionConst,
   RiggVar.RG.Def,
   RiggVar.RG.Data,
-  RiggVar.RG.Main;
+  RggUnit4;
 
 type
   TMain1 = class(TMain0)
   private
-    FTrimm: Integer;
-    function GetCurrentTrimm: TRggData;
     function GetShowTrimmText: Boolean;
     function GetShowDiffText: Boolean;
     function GetShowDataText: Boolean;
     procedure SetShowTrimmText(const Value: Boolean);
     procedure SetShowDiffText(const Value: Boolean);
     procedure SetShowDataText(const Value: Boolean);
-    procedure SetTrimm(const Value: Integer);
-    procedure SetTrimmNoChange(const Value: Integer);
     procedure DoReadTrimmFile(fn: string);
     function GetTrimmFilePath: string;
     function GetIsRggParam: Boolean;
     function LogFileNameToInfoFormatted(t1, t2, fn: string): boolean;
   protected
-    procedure InitTrimmData;
     procedure PasteTrimm;
   public
-    RggMain: TRggMain; // RggMain.Rigg is the model of the app
-
-    RggData: TRggData; // temp object for data transfer
-
-    { slot used as reference for diffing }
-    Trimm0: TRggData;
-
-    { user data slots }
-    Trimm1: TRggData; // selected with button T1
-    Trimm2: TRggData; // selected with button T2
-    Trimm3: TRggData;
-    Trimm4: TRggData;
-    Trimm5: TRggData;
-    Trimm6: TRggData;
-
-    { example data slots }
-    Trimm7: TRggData; // 420
-    Trimm8: TRggData; // Logo
-
     ReportCounter: Integer;
     ResizeCounter: Integer;
 
-    constructor Create(rggm: TRggMain);
+    constructor Create(ARigg: TRigg);
     destructor Destroy; override;
 
     procedure HandleAction(fa: TFederAction); override;
@@ -78,13 +54,6 @@ type
 
     procedure DoBigWheel(Delta: single);
     procedure DoSmallWheel(Delta: single);
-
-    function GetTrimmItem(i: Integer): TRggData;
-    function GetTrimmItemReport(ReportID: Integer): string;
-    function GetTrimmItemReportData: string;
-    function GetTrimmItemReportJson: string;
-    function GetTrimmItemReportShort: string;
-    function GetTrimmItemReportLong: string;
 
     procedure WriteTrimmItem;
     procedure WriteTrimmFile;
@@ -109,14 +78,6 @@ type
     procedure ShowDebugData;
     procedure LogFileNameToInfo(fn: string);
 
-    property TrimmNoChange: Integer read FTrimm write SetTrimmNoChange;
-    property Trimm: Integer read FTrimm write SetTrimm;
-    property CurrentTrimm: TRggData read GetCurrentTrimm;
-    property TrimmData: string read GetTrimmItemReportData;
-    property TrimmJson: string read GetTrimmItemReportJson;
-    property TrimmShort: string read GetTrimmItemReportShort;
-    property TrimmLong: string read GetTrimmItemReportLong;
-
     property ShowTrimmText: Boolean read GetShowTrimmText write SetShowTrimmText;
     property ShowDiffText: Boolean read GetShowDiffText write SetShowDiffText;
     property ShowDataText: Boolean read GetShowDataText write SetShowDataText;
@@ -137,57 +98,19 @@ uses
 
 { TMain1 }
 
-constructor TMain1.Create(rggm: TRggMain);
+constructor TMain1.Create(ARigg: TRigg);
 begin
+  Rigg := ARigg;
+
   Main := self;
   MainVar.RG := True;
 
   inherited Create;
-
-  RggData := TRggData.Create;
-  RggData.Name := 'fd';
-
-  Trimm0 := TRggData.Create;
-  Trimm0.Name := 'T0';
-  Trimm7 := TRggData.Create;
-  Trimm7.Name := '420';
-  Trimm8 := TRggData.Create;
-  Trimm8.Name := 'Logo';
-
-  Trimm1 := TRggData.Create;
-  Trimm2 := TRggData.Create;
-  Trimm3 := TRggData.Create;
-  Trimm4 := TRggData.Create;
-  Trimm5 := TRggData.Create;
-  Trimm6 := TRggData.Create;
-
-  InitTrimmData;
-
-  RggMain := rggm;
-
-  { this should be done after or when calling RggMain.Init }
-//  RggMain.InitLogo; // sets WantLogoData to true
-//  RggMain.Init420; // resets WantLogo to false
-//  WantLogoData := False;
 end;
 
 destructor TMain1.Destroy;
 begin
   MainVar.AppIsClosing := True;
-
-  RggMain.Free;
-
-  RggData.Free;
-  Trimm0.Free;
-  Trimm1.Free;
-  Trimm2.Free;
-  Trimm3.Free;
-  Trimm4.Free;
-  Trimm5.Free;
-  Trimm6.Free;
-  Trimm7.Free;
-  Trimm8.Free;
-
   inherited;
 end;
 
@@ -221,61 +144,13 @@ begin
   result := FormMain.ShowDataText;
 end;
 
-function TMain1.GetTrimmItemReport(ReportID: Integer): string;
-begin
-  if Assigned(RggMain) and Assigned(RggMain.Rigg) and Assigned(RggData) and Assigned(FL) then
-  begin
-    RggMain.Rigg.SaveToFederData(RggData);
-    FL.Clear;
-    case ReportID of
-      0: RggData.WriteReport(FL);
-      1: RggData.WriteJSon(FL);
-      2:
-      begin
-        RggData.WantAll := False;
-        RggData.SaveTrimmItem(FL);
-      end;
-      3:
-      begin
-        RggData.WantAll := True;
-        RggData.SaveTrimmItem(FL);
-      end;
-
-      else
-        RggData.WriteReport(FL);
-    end;
-    result := FL.Text;
-    FL.Clear;
-  end;
-end;
-
-function TMain1.GetTrimmItemReportLong: string;
-begin
-  result := GetTrimmItemReport(3);
-end;
-
-function TMain1.GetTrimmItemReportShort: string;
-begin
-  result := GetTrimmItemReport(2);
-end;
-
-function TMain1.GetTrimmItemReportJson: string;
-begin
-  result := GetTrimmItemReport(1);
-end;
-
-function TMain1.GetTrimmItemReportData: string;
-begin
-  result := GetTrimmItemReport(0);
-end;
-
 procedure TMain1.WriteTrimmItem;
 var
   fd: TRggData;
 begin
   FL.Clear;
   fd := RggData;
-  RggMain.SaveTrimm(fd);
+  SaveTrimm(fd);
   fd.WantAll := True;
   fd.SaveTrimmItem(FL);
 end;
@@ -307,7 +182,7 @@ var
 begin
   { copy }
   fd := RggData;
-  RggMain.SaveTrimm(fd);
+  SaveTrimm(fd);
   fd.WantAll := True;
   fd.SaveTrimmItem(FL);
 
@@ -396,46 +271,6 @@ begin
   except
     Trimm := 1;
   end;
-end;
-
-procedure TMain1.InitTrimmData;
-var
-  fd: TRggData;
-begin
-  Logger.Info('in InitTrimmData ( default data )');
-  fd := Trimm0;
-  fd.Reset;
-
-  fd := Trimm1;
-  fd.Assign(Trimm0);
-  fd.Name := 'T1';
-  fd.MV := fd.MV + 10;
-
-  fd := Trimm2;
-  fd.Assign(Trimm0);
-  fd.Name := 'T2';
-  fd.WLPos := fd.WLPos + 20;
-
-  fd := Trimm3;
-  fd.Assign(Trimm0);
-  fd.Name := 'T3';
-  fd.VOPos := fd.VOPos + 30;
-
-  fd := Trimm4;
-  fd.Assign(Trimm0);
-  fd.Name := 'T4';
-  fd.SHPos := fd.SHPos + 40;
-
-  fd := Trimm5;
-  fd.Assign(Trimm0);
-  fd.Name := 'T5';
-  fd.SAPos := fd.SAPos + 50;
-
-  fd := Trimm6;
-  fd.Assign(Trimm0);
-  fd.Name := 'T6';
-  fd.VOPos := fd.VOPos + 60;
-  fd.WLPos := fd.WLPos - 20;
 end;
 
 function TMain1.GetTrimmFilePath: string;
@@ -553,7 +388,7 @@ begin
   if not IsRggParam then
     inherited
   else if MainVar.RG then
-    RggMain.DoBigWheel(Delta)
+    DoBigWheelRG(Delta)
   else
     inherited;
 end;
@@ -563,7 +398,7 @@ begin
   if not IsRggParam then
     inherited
   else if MainVar.RG then
-    RggMain.DoSmallWheel(Delta)
+    DoSmallWheelRG(Delta)
   else
     inherited;
 end;
@@ -632,43 +467,8 @@ end;
 procedure TMain1.UpdateTrimm0;
 begin
   Logger.Info('in UpdateTrimm0');
-  RggMain.SaveTrimm(Trimm0);
+  SaveTrimm(Trimm0);
   FormMain.UpdateReport;
-end;
-
-function TMain1.GetTrimmItem(i: Integer): TRggData;
-begin
-  case i of
-    1: result := Trimm1;
-    2: result := Trimm2;
-    3: result := Trimm3;
-    4: result := Trimm4;
-    5: result := Trimm5;
-    6: result := Trimm6;
-    7: result := Trimm7;
-    8: result := Trimm8;
-    else
-      result := Trimm0;
-  end;
-end;
-
-function TMain1.GetCurrentTrimm: TRggData;
-begin
-  result := GetTrimmItem(FTrimm);
-end;
-
-procedure TMain1.SetTrimmNoChange(const Value: Integer);
-begin
-  Logger.Info('SetTrimmNoChange: ' + IntToStr(Value));
-  FTrimm := Value;
-end;
-
-procedure TMain1.SetTrimm(const Value: Integer);
-begin
-  Logger.Info('SetTrimm: ' + IntToStr(Value));
-  FTrimm := Value;
-  RggMain.LoadTrimm(CurrentTrimm);
-  FormMain.UpdateOnParamValueChanged;
 end;
 
 function TMain1.GetIsRggParam: Boolean;
@@ -688,57 +488,57 @@ begin
     faParamValuePlus10, faWheelUp: DoMouseWheel([ssCtrl], 1);
     faParamValueMinus10, faWheelDown: DoMouseWheel([ssCtrl], -1);
 
-    faController: RggMain.SetParameter(faController);
-    faWinkel: RggMain.SetParameter(faWinkel);
-    faVorstag: RggMain.SetParameter(faVorstag);
-    faWante: RggMain.SetParameter(faWante);
-    faWoben: RggMain.SetParameter(faWoben);
-    faSalingH: RggMain.SetParameter(faSalingH);
-    faSalingA: RggMain.SetParameter(faSalingA);
-    faSalingL: RggMain.SetParameter(faSalingL);
-    faSalingW: RggMain.SetParameter(faSalingW);
-    faMastfallF0C: RggMain.SetParameter(faMastfallF0C);
-    faMastfallF0F: RggMain.SetParameter(faMastfallF0F);
-    faMastfallVorlauf: RggMain.SetParameter(faMastfallVorlauf);
-    faBiegung: RggMain.SetParameter(faBiegung);
-    faMastfussD0X: RggMain.SetParameter(faMastfussD0X);
+    faController: SetParameter(faController);
+    faWinkel: SetParameter(faWinkel);
+    faVorstag: SetParameter(faVorstag);
+    faWante: SetParameter(faWante);
+    faWoben: SetParameter(faWoben);
+    faSalingH: SetParameter(faSalingH);
+    faSalingA: SetParameter(faSalingA);
+    faSalingL: SetParameter(faSalingL);
+    faSalingW: SetParameter(faSalingW);
+    faMastfallF0C: SetParameter(faMastfallF0C);
+    faMastfallF0F: SetParameter(faMastfallF0F);
+    faMastfallVorlauf: SetParameter(faMastfallVorlauf);
+    faBiegung: SetParameter(faBiegung);
+    faMastfussD0X: SetParameter(faMastfussD0X);
 
-    faParamAPW: RggMain.SetParameter(faParamAPW);
-    faParamEAH: RggMain.SetParameter(faParamEAH);
-    faParamEAR: RggMain.SetParameter(faParamEAR);
-    faParamEI: RggMain.SetParameter(faParamEI);
+    faParamAPW: SetParameter(faParamAPW);
+    faParamEAH: SetParameter(faParamEAH);
+    faParamEAR: SetParameter(faParamEAR);
+    faParamEI: SetParameter(faParamEI);
 
-    faFixpointA0: RggMain.FixPoint := ooA0;
-    faFixpointA: RggMain.FixPoint := ooA;
-    faFixpointB0: RggMain.FixPoint := ooB0;
-    faFixpointB: RggMain.FixPoint := ooB;
-    faFixpointC0: RggMain.FixPoint := ooC0;
-    faFixpointC: RggMain.FixPoint := ooC;
-    faFixpointD0: RggMain.FixPoint := ooD0;
-    faFixpointD: RggMain.FixPoint := ooD;
-    faFixpointE0: RggMain.FixPoint := ooE0;
-    faFixpointE: RggMain.FixPoint := ooE;
-    faFixpointF0: RggMain.FixPoint := ooF0;
-    faFixpointF: RggMain.FixPoint := ooF;
+    faFixpointA0: FixPoint := ooA0;
+    faFixpointA: FixPoint := ooA;
+    faFixpointB0: FixPoint := ooB0;
+    faFixpointB: FixPoint := ooB;
+    faFixpointC0: FixPoint := ooC0;
+    faFixpointC: FixPoint := ooC;
+    faFixpointD0: FixPoint := ooD0;
+    faFixpointD: FixPoint := ooD;
+    faFixpointE0: FixPoint := ooE0;
+    faFixpointE: FixPoint := ooE;
+    faFixpointF0: FixPoint := ooF0;
+    faFixpointF: FixPoint := ooF;
 
     faSalingTypOhneStarr,
     faSalingTypOhne,
     faSalingTypDrehbar,
-    faSalingTypFest: RggMain.InitSalingTyp(fa);
+    faSalingTypFest: InitSalingTyp(fa);
 
     faWantRenderH,
     faWantRenderP,
     faWantRenderF,
     faWantRenderE,
-    faWantRenderS: RggMain.ToggleRenderOption(fa);
+    faWantRenderS: ToggleRenderOption(fa);
 
-    faViewpointS: RggMain.ViewPoint := vpSeite;
-    faViewpointA: RggMain.ViewPoint := vpAchtern;
-    faViewpointT: RggMain.ViewPoint := vpTop;
-    faViewpoint3: RggMain.ViewPoint := vp3D;
+    faViewpointS: ViewPoint := vpSeite;
+    faViewpointA: ViewPoint := vpAchtern;
+    faViewpointT: ViewPoint := vpTop;
+    faViewpoint3: ViewPoint := vp3D;
 
-    faHull: RggMain.SetOption(faHull);
-    faDemo: RggMain.SetOption(faDemo);
+    faHull: SetOption(faHull);
+    faDemo: SetOption(faDemo);
 
     faTrimm0: Trimm := 0;
     faTrimm1: Trimm := 1;
@@ -750,13 +550,13 @@ begin
 
     fa420:
     begin
-      RggMain.Init420;
+      Init420;
       FormMain.UpdateOnParamValueChanged;
     end;
 
     faLogo:
     begin
-      RggMain.InitLogo;
+      InitLogo;
       FormMain.UpdateOnParamValueChanged;
     end;
 
@@ -795,42 +595,42 @@ end;
 function TMain1.GetChecked(fa: TFederAction): Boolean;
 begin
   case fa of
-    faController: result := RggMain.Param = fpController;
-    faWinkel: result := RggMain.Param = fpWinkel;
-    faVorstag: result := RggMain.Param = fpVorstag;
-    faWante: result := RggMain.Param = fpWante;
-    faWoben: result := RggMain.Param = fpWoben;
-    faSalingH: result := RggMain.Param = fpSalingH;
-    faSalingA: result := RggMain.Param = fpSalingA;
-    faSalingL: result := RggMain.Param = fpSalingL;
-    faSalingW: result := RggMain.Param = fpSalingW;
-    faMastfallF0C: result := RggMain.Param = fpMastfallF0C;
-    faMastfallF0F: result := RggMain.Param = fpMastfallF0F;
-    faMastfallVorlauf: result := RggMain.Param = fpMastfallVorlauf;
-    faBiegung: result := RggMain.Param = fpBiegung;
-    faMastfussD0X: result := RggMain.Param = fpD0X;
+    faController: result := Param = fpController;
+    faWinkel: result := Param = fpWinkel;
+    faVorstag: result := Param = fpVorstag;
+    faWante: result := Param = fpWante;
+    faWoben: result := Param = fpWoben;
+    faSalingH: result := Param = fpSalingH;
+    faSalingA: result := Param = fpSalingA;
+    faSalingL: result := Param = fpSalingL;
+    faSalingW: result := Param = fpSalingW;
+    faMastfallF0C: result := Param = fpMastfallF0C;
+    faMastfallF0F: result := Param = fpMastfallF0F;
+    faMastfallVorlauf: result := Param = fpMastfallVorlauf;
+    faBiegung: result := Param = fpBiegung;
+    faMastfussD0X: result := Param = fpD0X;
 
-    faParamAPW: result := RggMain.Param = fpAPW;
-    faParamEAH: result := RggMain.Param = fpEAH;
-    faParamEAR: result := RggMain.Param = fpEAR;
-    faParamEI: result := RggMain.Param = fpEI;
+    faParamAPW: result := Param = fpAPW;
+    faParamEAH: result := Param = fpEAH;
+    faParamEAR: result := Param = fpEAR;
+    faParamEI: result := Param = fpEI;
 
-    faFixpointA0: result := RggMain.FixPoint = ooA0;
-    faFixpointA: result := RggMain.FixPoint = ooA;
-    faFixpointB0: result := RggMain.FixPoint = ooB0;
-    faFixpointB: result := RggMain.FixPoint = ooB;
-    faFixpointC0: result := RggMain.FixPoint = ooC0;
-    faFixpointC: result := RggMain.FixPoint = ooC;
-    faFixpointD0: result := RggMain.FixPoint = ooD0;
-    faFixpointD: result := RggMain.FixPoint = ooD;
-    faFixpointE0: result := RggMain.FixPoint = ooE0;
-    faFixpointE: result := RggMain.FixPoint = ooE;
-    faFixpointF0: result := RggMain.FixPoint = ooF0;
-    faFixpointF: result := RggMain.FixPoint = ooF;
+    faFixpointA0: result := FixPoint = ooA0;
+    faFixpointA: result := FixPoint = ooA;
+    faFixpointB0: result := FixPoint = ooB0;
+    faFixpointB: result := FixPoint = ooB;
+    faFixpointC0: result := FixPoint = ooC0;
+    faFixpointC: result := FixPoint = ooC;
+    faFixpointD0: result := FixPoint = ooD0;
+    faFixpointD: result := FixPoint = ooD;
+    faFixpointE0: result := FixPoint = ooE0;
+    faFixpointE: result := FixPoint = ooE;
+    faFixpointF0: result := FixPoint = ooF0;
+    faFixpointF: result := FixPoint = ooF;
 
-    faSalingTypFest: result := RggMain.Rigg.SalingTyp = stFest;
-    faSalingTypDrehbar: result := RggMain.Rigg.SalingTyp = stDrehbar;
-    faSalingTypOhne: result := RggMain.Rigg.SalingTyp = stOhne;
+    faSalingTypFest: result := Rigg.SalingTyp = stFest;
+    faSalingTypDrehbar: result := Rigg.SalingTyp = stDrehbar;
+    faSalingTypOhne: result := Rigg.SalingTyp = stOhne;
 
     faTrimm0: result := Trimm = 0;
     faTrimm1: result := Trimm = 1;
@@ -848,18 +648,18 @@ begin
     faWantRenderE,
     faWantRenderS:
     begin
-      if RggMain.StrokeRigg <> nil then
-        result := RggMain.StrokeRigg.QueryRenderOption(fa)
+      if StrokeRigg <> nil then
+        result := StrokeRigg.QueryRenderOption(fa)
       else
         result := False;
     end;
 
-    faHull: result := RggMain.HullVisible;
-    faDemo: result := RggMain.Demo;
+    faHull: result := HullVisible;
+    faDemo: result := Demo;
 
-    faSofortBtn: result := RggMain.SofortBerechnen;
-    faGrauBtn: result := RggMain.BtnGrauDown;
-    faBlauBtn: result := RggMain.BtnBlauDown;
+    faSofortBtn: result := SofortBerechnen;
+    faGrauBtn: result := BtnGrauDown;
+    faBlauBtn: result := BtnBlauDown;
     faMemoryBtn: result := False;
 
     else

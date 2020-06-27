@@ -22,6 +22,7 @@ uses
   RiggVar.RG.Def,
   RiggVar.RG.Report,
   RiggVar.FB.SpeedBar,
+  RiggVar.RG.Graph,
   RggTypes,
   RggUnit4,
   System.SysUtils,
@@ -186,6 +187,7 @@ type
   public
     DL: TRggDisplayList;
     RotaForm: TRotaForm;
+    StrokeRigg: IStrokeRigg;
     procedure HandleSegment(fa: Integer);
   public
     Rigg: TRigg;
@@ -259,8 +261,6 @@ begin
 end;
 
 procedure TFormMain.FormCreate(Sender: TObject);
-var
-  rggm: TRggMain;
 begin
 {$ifdef Debug}
   ReportMemoryLeaksOnShutdown := True;
@@ -314,11 +314,10 @@ begin
   Rigg := TRigg.Create;
   Rigg.ControllerTyp := ctOhne;
 
-  rggm := TRggMain.Create(Rigg); // rggm owns Rigg
-  Main := TMain.Create(rggm); // Main owns rggm
+  Main := TMain.Create(Rigg);
   Main.Logger.Verbose := True;
-  rggm.InitLogo; // sets WantLogoData to true
-  rggm.Init420; // resets WantLogoData to false
+  Main.InitLogo; // sets WantLogoData to true
+  Main.Init420; // resets WantLogoData to false
 
   Main.Trimm := 1;
 
@@ -326,7 +325,8 @@ begin
   Main.IsUp := True;
 
   RotaForm := TRotaForm.Create; // ownership kept by FormMain
-  rggm.StrokeRigg := RotaForm;
+  StrokeRigg := RotaForm;
+  Main.StrokeRigg := RotaForm;
   RotaForm.Image := Image;
   RotaForm.Init;
   DL := RotaForm.RaumGraph.DL;
@@ -336,7 +336,7 @@ begin
   { Set initial translation in RotatForm, FXPos and FYPos, default. }
 
   { Params }
-  Main.RggMain.Param := fpVorstag; // --> TempIst wird gesetzt, SetupTrackBar() aufgerufen
+  Main.Param := fpVorstag; // --> TempIst wird gesetzt, SetupTrackBar() aufgerufen
   if ParamListbox <> nil then
   begin
     InitParamListbox;
@@ -421,8 +421,8 @@ begin
   InitControllerGraph;
   InitChartGraph;
 
-  Main.RggMain.Draw;
-  Main.RggMain.MemoryBtnClick;
+  Main.Draw;
+  Main.MemoryBtnClick;
   Main.FederText.CheckState;
 
   Application.OnHint := HandleShowHint;
@@ -439,12 +439,16 @@ begin
   TL.Free;
   RL.Free;
   ReportManager.Free;
-  RotaForm := nil;
+
   Main.Free;
   Main := nil;
 
   Image.Free;
   Bitmap.Free;
+
+{ RotaForm is managed via StrokeRigg interface reference }
+// RotaForm.Free;
+// StrokeRigg := nil;
 
   SalingGraph.Free;
   ControllerGraph.Free;
@@ -558,7 +562,7 @@ var
   fp: TFederParam;
   i: Integer;
 begin
-  fp := Main.RggMain.Param;
+  fp := Main.Param;
   result := -1;
   for i := 0 to ML.Count-1 do
   begin
@@ -1495,9 +1499,9 @@ procedure TFormMain.UpdateSalingGraph;
 begin
   if IsUp and SalingImage.Visible then
   begin
-    SalingGraph.SalingA := Round(Main.RggMain.ParamValue[fpSalingA]);
-    SalingGraph.SalingH := Round(Main.RggMain.ParamValue[fpSalingH]);
-    SalingGraph.SalingL := Round(Main.RggMain.ParamValue[fpSalingL]);
+    SalingGraph.SalingA := Round(Main.ParamValue[fpSalingA]);
+    SalingGraph.SalingH := Round(Main.ParamValue[fpSalingH]);
+    SalingGraph.SalingL := Round(Main.ParamValue[fpSalingL]);
     SalingGraph.Draw(TFigure.dtSalingDetail);
   end;
 end;
@@ -1528,7 +1532,7 @@ begin
   if IsUp and ControllerImage.Visible then
   begin
     ControllerGraph.ControllerTyp := Rigg.ControllerTyp;
-    ControllerGraph.ControllerPos := Round(Main.RggMain.ParamValue[fpController]);
+    ControllerGraph.ControllerPos := Round(Main.ParamValue[fpController]);
     ControllerGraph.ParamXE := Rigg.MastPositionE;
     ControllerGraph.ParamXE0 := Round(Rigg.iP[ooE0, x] - Rigg.iP[ooD0, x]);
     ControllerGraph.EdgePos := Round(Rigg.GSB.Find(fpController).Min);
@@ -1628,7 +1632,7 @@ end;
 procedure TFormMain.ParamListboxChange(Sender: TObject);
 begin
   if ParamListbox.ItemIndex <> -1 then
-    Main.RggMain.Param := Main.RggMain.Text2Param(ParamListbox.Items[ParamListbox.ItemIndex]);
+    Main.Param := Main.Text2Param(ParamListbox.Items[ParamListbox.ItemIndex]);
   ShowTrimm;
   UpdateControllerGraph;
   Main.FederText.CheckState;
@@ -1646,7 +1650,7 @@ var
     LI.AddObject(rm.Param2Text(fp), TObject(fp));
   end;
 begin
-  rm := Main.RggMain;
+  rm := Main;
   LI := ParamListbox.Items;
   LI.Clear;
 
@@ -1674,7 +1678,7 @@ end;
 procedure TFormMain.InitParamCombo;
   procedure Add(fp: TFederParam);
   begin
-    ParamCombo.Items.AddObject(Main.RggMain.Param2Text(fp), TObject(fp));
+    ParamCombo.Items.AddObject(Main.Param2Text(fp), TObject(fp));
   end;
 begin
   if ParamCombo <> nil then
@@ -1704,7 +1708,7 @@ begin
   begin
     ii := ParamCombo.ItemIndex;
     fp := TFederParam(ParamCombo.Items.Objects[ii]);
-    Main.RggMain.Param := fp;
+    Main.Param := fp;
     ShowTrimm;
   end;
 end;
@@ -1767,7 +1771,7 @@ procedure TFormMain.ShowTrimm;
 begin
   if TL <> nil then
   begin
-    Main.RggMain.UpdateTrimmText(TL);
+    Main.UpdateTrimmText(TL);
     TrimmText.Text := TL.Text;
   end;
   UpdateReport;
@@ -1809,35 +1813,35 @@ end;
 
 procedure TFormMain.SofortBtnClick(Sender: TObject);
 begin
-  Main.RggMain.SofortBerechnen := not Main.RggMain.SofortBerechnen;
+  Main.SofortBerechnen := not Main.SofortBerechnen;
 end;
 
 procedure TFormMain.GrauBtnClick(Sender: TObject);
 begin
-  Main.RggMain.BtnGrauDown := not Main.RggMain.BtnGrauDown;
+  Main.BtnGrauDown := not Main.BtnGrauDown;
 end;
 
 procedure TFormMain.BlauBtnClick(Sender: TObject);
 begin
-  Main.RggMain.BtnBlauDown := not Main.RggMain.BtnBlauDown;
+  Main.BtnBlauDown := not Main.BtnBlauDown;
 end;
 
 procedure TFormMain.MemoryBtnClick(Sender: TObject);
 begin
-  Main.RggMain.MemoryBtnClick;
+  Main.MemoryBtnClick;
   UpdateReport;
 end;
 
 procedure TFormMain.MemoryRecallBtnClick(Sender: TObject);
 begin
-  Main.RggMain.MemoryRecallBtnClick;
+  Main.MemoryRecallBtnClick;
   ShowTrimm;
 end;
 
 procedure TFormMain.MultiBtnClick(Sender: TObject);
 begin
   RotaForm.WantOverlayedRiggs := not RotaForm.WantOverlayedRiggs;
-  Main.RggMain.Draw;
+  Main.Draw;
 end;
 
 procedure TFormMain.KoppelBtnClick(Sender: TObject);
@@ -1870,9 +1874,9 @@ begin
     faToggleUseQuickSort: result := RotaForm.RaumGraph.DL.UseQuickSort;
     faRggBogen: result := RotaForm.Bogen;
 
-    faSofortBtn: result := Main.RggMain.SofortBerechnen;
-    faGrauBtn: result := Main.RggMain.BtnGrauDown;
-    faBlauBtn: result := Main.RggMain.BtnBlauDown;
+    faSofortBtn: result := Main.SofortBerechnen;
+    faGrauBtn: result := Main.BtnGrauDown;
+    faBlauBtn: result := Main.BtnBlauDown;
     faMemoryBtn: result := False;
     faMultiBtn: result := RotaForm.WantOverlayedRiggs;
     faKoppelBtn: result := RotaForm.RaumGraph.Koppel;
@@ -1939,7 +1943,7 @@ begin
   begin
     Rigg.UpdateGlieder; { neue GSB Werte --> neue Integerwerte }
     Rigg.Reset; { neue Integerwerte --> neue Gleitkommawerte }
-    Main.RggMain.UpdateGetriebe;
+    Main.UpdateGetriebe;
     UpdateReport;
   end;
 end;
