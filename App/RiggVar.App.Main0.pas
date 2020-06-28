@@ -99,7 +99,7 @@ type
     procedure InitTouch;
     procedure UpdateTouch;
 
-    procedure UpdateText(ClearFlash: Boolean = False);
+    procedure UpdateText(ClearFlash: Boolean = False); override;
 
     procedure PlusOne;
     procedure PlusTen;
@@ -238,7 +238,8 @@ end;
 
 procedure TMain0.UpdateText;
 begin
-  FederText.UpdateText;
+  if FederText <> nil then
+    FederText.UpdateText;
 end;
 
 procedure TMain0.UpdateTouch;

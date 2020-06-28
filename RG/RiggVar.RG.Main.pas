@@ -43,6 +43,7 @@ type
   public
     Rigg: TRigg;
     IsUp: Boolean;
+    procedure TestStream;
   end;
 
   TRggText = class(TRggRigg)
@@ -54,6 +55,7 @@ type
     Logger: TLogger;
     constructor Create;
     destructor Destroy; override;
+    procedure UpdateText(ClearFlash: Boolean = False); virtual; abstract;
     property FLText: string read GetFLText;
   end;
 
@@ -62,11 +64,32 @@ type
     FParam: TFederParam;
     procedure SetParam(Value: TFederParam); virtual; abstract;
   public
-    FactArray: TRggFA; // not owned, cached from Rigg
     property Param: TFederParam read FParam write SetParam;
   end;
 
-  TRggTrimm = class(TRggParam)
+  TRggWheel = class(TRggParam)
+  protected
+    FactArray: TRggFA; // not owned, cached from Rigg
+    function GetBigStep: single;
+    function GetSmallStep: single;
+    procedure TrackBarChange(Sender: TObject);
+    procedure RggSpecialDoOnTrackBarChange; virtual;
+  public
+    RggTrackbar: TFederTrackbar;
+
+    constructor Create;
+    destructor Destroy; override;
+
+    procedure DoWheel(Delta: single);
+    procedure DoZoom(Delta: single);
+    procedure DoRotation(Delta: single);
+
+    procedure DoBigWheelRG(Delta: single);
+    procedure DoSmallWheelRG(Delta: single);
+    procedure DoRasterWheelRG(Delta: single);
+  end;
+
+  TRggTrimm = class(TRggWheel)
   protected
     FTrimm: Integer;
     function GetCurrentTrimm: TRggData;
@@ -114,32 +137,7 @@ type
     property TrimmLong: string read GetTrimmItemReportLong;
   end;
 
-  TRggWheel = class(TRggTrimm)
-  protected
-    function GetBigStep: single;
-    function GetSmallStep: single;
-    procedure TrackBarChange(Sender: TObject);
-    procedure RggSpecialDoOnTrackBarChange; virtual;
-  public
-    RggTrackbar: TFederTrackbar;
-
-    constructor Create;
-    destructor Destroy; override;
-
-    procedure TestStream;
-
-    procedure UpdateText(ClearFlash: Boolean = False);
-
-    procedure DoWheel(Delta: single);
-    procedure DoZoom(Delta: single);
-    procedure DoRotation(Delta: single);
-
-    procedure DoBigWheelRG(Delta: single);
-    procedure DoSmallWheelRG(Delta: single);
-    procedure DoRasterWheelRG(Delta: single);
-  end;
-
-  TRggMain = class(TRggWheel)
+  TRggMain = class(TRggTrimm)
   private
     FFixPoint: TRiggPoint;
     FixPunkt: TRealPoint;
@@ -181,6 +179,8 @@ type
     procedure SetBtnGrauDown(const Value: Boolean);
     procedure SetSofortBerechnen(const Value: Boolean);
     procedure SetOnUpdateGraph(const Value: TNotifyEvent);
+    procedure UpdateEAR(Value: single);
+    procedure UpdateEAH(Value: single);
   protected
     FAction: TFederAction;
     procedure InitFactArray;
@@ -195,7 +195,7 @@ type
 
     Demo: Boolean;
 
-    StrokeRigg: IStrokeRigg; // injected, not owned
+    StrokeRigg: IStrokeRigg; // injected
     ChartGraph: TChartModel;
 
     RiggLED: Boolean;
@@ -296,7 +296,6 @@ end;
 
 destructor TRggMain.Destroy;
 begin
-//  StrokeRigg := nil; // not owned
   Rigg.Free;
   inherited;
 end;
@@ -371,6 +370,9 @@ begin
     faMastfussD0X: Param := fpD0X;
 
     faParamAPW: Param := fpAPW;
+    faParamEAH: Param := fpEAH;
+    faParamEAR: Param := fpEAR;
+    faParamEI: Param := fpEI;
   end;
 end;
 
@@ -505,6 +507,25 @@ begin
         ChartGraph.UpdateXMinMax;
       end;
     end;
+
+    fpEAH:
+    begin
+      UpdateEAH(CurrentValue);
+      UpdateGetriebe;
+    end;
+
+    fpEAR:
+    begin
+      UpdateEAR(CurrentValue);
+      UpdateGetriebe;
+    end;
+
+    fpEI:
+    begin
+      Rigg.MastEI := Round(CurrentValue);
+      UpdateGetriebe;
+    end;
+
   end;
 end;
 
@@ -1427,11 +1448,7 @@ begin
   result := 1;
 end;
 
-procedure TRggWheel.UpdateText(ClearFlash: Boolean);
-begin
-end;
-
-procedure TRggWheel.TestStream;
+procedure TRggRigg.TestStream;
 var
   d: TRggDocument;
 begin
@@ -1633,6 +1650,78 @@ begin
 {$endif}
   Rigg.Glieder := RefCtrl;
   UpdateGetriebe;
+end;
+
+procedure TRggMain.UpdateEAR(Value: single);
+var
+  EA: TRiggLvektor; { EA in KN }
+  c: Integer;
+begin
+  EA := Rigg.EA;
+
+  c := Round(Value);
+
+//  { Rumpflängen }
+//  EA[1] := c;
+//  EA[2] := c;
+//  EA[3] := c;
+//  EA[4] := c;
+//  EA[5] := c;
+//  EA[6] := c;
+
+  { Wanten }
+  EA[7] := c;
+  EA[8] := c;
+  EA[12] := c;
+  EA[13] := c;
+
+  { Vorstag }
+  EA[14] := c;
+
+  { Saling }
+  EA[9] := c;
+  EA[10] := c;
+
+  { Saling-Verbindung }
+  EA[11] := c;
+
+  Rigg.EA := EA;
+end;
+
+procedure TRggMain.UpdateEAH(Value: single);
+var
+  EA: TRiggLvektor; { EA in KN }
+  c: Integer;
+begin
+  EA := Rigg.EA;
+
+  c := Round(Value);
+
+  { Rumpflängen }
+  EA[1] := c;
+  EA[2] := c;
+  EA[3] := c;
+  EA[4] := c;
+  EA[5] := c;
+  EA[6] := c;
+
+//  { Wanten }
+//  EA[7] := c;
+//  EA[8] := c;
+//  EA[12] := c;
+//  EA[13] := c;
+//
+//  { Vorstag }
+//  EA[14] := c;
+//
+//  { Saling }
+//  EA[9] := c;
+//  EA[10] := c;
+//
+//  { Saling-Verbindung }
+//  EA[11] := c;
+
+  Rigg.EA := EA;
 end;
 
 { TRggTrimm }

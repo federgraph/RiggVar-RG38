@@ -110,7 +110,7 @@ begin
     faShowOpti: result := 'Form Options';
     faShowConf: result := 'Form Config';
     faShowChart: result := 'Form Chart';
-    faShowDiag: result := 'Form Diagramm';
+    faShowDiagA: result := 'Form Diagramm';
     faShowDiagC: result := 'Form Live Diagramm Controls';
     faShowDiagE: result := 'Form Diagramm Edits';
     faShowDiagQ: result := 'Form Diagramm Quick';

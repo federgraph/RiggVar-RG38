@@ -73,7 +73,7 @@ faShowOpti,
 faShowConf,
 faShowTrimmTab,
 faShowChart,
-faShowDiag,
+faShowDiagA,
 faShowDiagC,
 faShowDiagE,
 faShowDiagQ];

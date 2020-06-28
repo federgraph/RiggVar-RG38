@@ -110,7 +110,7 @@ begin
 
     faShowTrimmTab: result := 'FT';
 
-    faShowDiag: result := 'FD';
+    faShowDiagA: result := 'DA';
     faShowDiagC: result := 'DC';
     faShowDiagE: result := 'DE';
     faShowDiagQ: result := 'DQ';
