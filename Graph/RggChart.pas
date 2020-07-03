@@ -611,8 +611,8 @@ begin
   case FSalingTyp of
     stFest: st := SalingFestString;
     stDrehbar: st := SalingDrehbarString;
-    stOhne: st := OhneSalingString;
-    stOhne_2: st := OhneSalingStarrString;
+    stOhneBiegt: st := OhneSalingString;
+    stOhneStarr: st := OhneSalingStarrString;
   end;
 
   TopTitle := Format('(%s/%s)', [TopTitle, st]);
@@ -1147,8 +1147,8 @@ begin
     case FSalingTyp of
       stFest: Add('SalingTyp: Feste Salinge');
       stDrehbar: Add('SalingTyp: Drehbare Salinge');
-      stOhne_2: Add('SalingTyp: Ohne Salinge (Mast biegsam)');
-      stOhne: Add('SalingTyp: Ohne Salinge (Mast starr)');
+      stOhneBiegt: Add('SalingTyp: Ohne Salinge (Mast biegsam)');
+      stOhneStarr: Add('SalingTyp: Ohne Salinge (Mast starr)');
     end;
     { ControllerTyp }
     case Rigg.ControllerTyp of
@@ -1156,9 +1156,9 @@ begin
       ctOhne: Add('ControllerTyp: kein Controller');
     end;
     { CalcTyp }
-    if FSalingTyp = stOhne then
+    if FSalingTyp = stOhneStarr then
       Add('BerechnungsTyp: Wantenkraft vorgegeben');
-    if FSalingTyp <> stOhne then
+    if FSalingTyp <> stOhneStarr then
     case Rigg.CalcTyp of
       ctQuerKraftBiegung: Add('BerechnungsTyp: nur Quekraftbiegung');
       ctBiegeKnicken: Add('BerechnungsTyp: Biegeknicken');
@@ -1234,9 +1234,9 @@ begin
     begin
       if (ControllerTyp = ctDruck) and (xpName <> xpController) then
         Add(Format('  Controller: %g mm', [RealGlied[fpController]]));
-      if (SalingTyp <> stOhne) and ManipulatorMode and (xpName <> xpWinkel) then
+      if (SalingTyp <> stOhneStarr) and ManipulatorMode and (xpName <> xpWinkel) then
         Add(Format(  '  Winkel: %g Grad', [RealGlied[fpWinkel] * D180]));
-      if (SalingTyp <> stOhne) and not ManipulatorMode and (xpName <> xpVorstag) then
+      if (SalingTyp <> stOhneStarr) and not ManipulatorMode and (xpName <> xpVorstag) then
         Add(Format('  Vorstag: %g mm', [RealGlied[fpVorstag]]));
       if xpName <> xpWante then
         Add(Format(  '  Wante: %g mm', [RealGlied[fpWante]]));
@@ -1259,9 +1259,9 @@ begin
 
       if (SalingTyp = stDrehbar) and (xpName <> xpSalingL) then
         Add(Format('  SalingLänge: %6.2f mm', [RealGlied[fpSalingL]]));
-      if (SalingTyp = stOhne) and (xpName <> xpVorstag) then { nicht VorstagOS - ok }
+      if (SalingTyp = stOhneStarr) and (xpName <> xpVorstag) then { nicht VorstagOS - ok }
         Add(Format('  Vorstag: %g mm', [RealGlied[fpVorstagOS]]));
-      if (SalingTyp = stOhne) and (xpName <> xpWPowerOS) then
+      if (SalingTyp = stOhneStarr) and (xpName <> xpWPowerOS) then
         Add(Format('  Wantenspannung: %g N', [RealGlied[fpWPowerOS]]));
     end;
     { Koordinaten }
@@ -1296,6 +1296,7 @@ begin
       if ExitCounter4 > 0 then Add(Format('  EC 4: %d ', [ExitCounter4]));
       if ExitCounter5 > 0 then Add(Format('  EC 5: %d ', [ExitCounter5]));
       if ExitCounter6 > 0 then Add(Format('  EC 6: %d ', [ExitCounter6]));
+      if ExitCounter7 > 0 then Add(Format('  EC 7: %d ', [ExitCounter6]));
     end;
     Add(Format('Memo Counter: %d', [MemoCounter]));
     Add(Format('Calc Counter: %d', [CalcCounter]));
@@ -1350,13 +1351,13 @@ begin
       Add(WanteObenString);
       Add(SalingLString);
     end;
-    if SalingTyp = stOhne_2 then
+    if SalingTyp = stOhneBiegt then
     begin
       Add(ControllerString);
       Add(VorstagString);
       Add(WanteString);
     end;
-    if SalingTyp = stOhne then
+    if SalingTyp = stOhneStarr then
     begin
       Add(VorstagString);
     end;
@@ -1399,7 +1400,7 @@ begin
         Add(WanteObenString);
         Add(SalingLString);
       end;
-      if SalingTyp = stOhne_2 then
+      if SalingTyp = stOhneBiegt then
       begin
         Add(VorstagString);
         Add(WanteString);
@@ -1424,7 +1425,7 @@ begin
         Add(WanteObenString);
         Add(SalingLString);
       end;
-      if SalingTyp = stOhne_2 then
+      if SalingTyp = stOhneBiegt then
       begin
         Add(ControllerString);
         Add(WanteString);
@@ -1463,7 +1464,7 @@ begin
         Add(WanteObenString);
         Add(SalingLString);
       end;
-      if SalingTyp = stOhne_2 then
+      if SalingTyp = stOhneBiegt then
       begin
         Add(ControllerString);
         Add(VorstagString);

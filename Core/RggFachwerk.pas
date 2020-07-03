@@ -213,7 +213,7 @@ procedure TFachwerk.Stabkraefte;
 begin
   KG20(1, 5, 4, 2, 1);
 
-  if SalingTyp = stOhne then
+  if SalingTyp = stOhneStarr then
   begin
     { Eine Kraft vorgeben! }
     FS1[4] := WantenPower;
@@ -354,7 +354,7 @@ begin
   FY[K2] := FY[K2] + Lager[BY];
 
   { Stabkräfte ausrechnen }
-  if SalingTyp = stOhne_2 then
+  if SalingTyp = stOhneBiegt then
     Stabkraefte_2
   else
     Stabkraefte;
@@ -366,7 +366,7 @@ begin
     FS[i] := FS1[i];
   end;
 
-  if (SalingTyp = stOhne) or (SalingTyp = stOhne_2) and
+  if (SalingTyp = stOhneStarr)  or (SalingTyp = stOhneBiegt) and
     (BerechneVerschiebungen = True) then
     { Verschiebungen ausrechnen }
     Verschiebungen; { jetzt sind die Stabkräfte unter Last "1" im

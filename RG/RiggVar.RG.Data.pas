@@ -1101,7 +1101,7 @@ begin
         else if c > 1 then
         begin
           { Trimm 1 - 6 }
-          fd := Main.GetTrimmItem(c-1);
+          fd := Main.GetTrimmItem(c - 1);
           fd.Reset;
           fd.Assign(Main.Trimm0);
           fd.LoadTrimmItem(SL);

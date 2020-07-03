@@ -19,8 +19,8 @@
 interface
 
 uses
-  SysUtils,
-  Classes;
+  System.SysUtils,
+  System.Classes;
 
 type
   TActionTest = class

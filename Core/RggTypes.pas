@@ -83,7 +83,7 @@ type
   TsbLabelArray = array [TsbName] of string;
   TTabellenTyp = (itKonstante, itGerade, itParabel, itBezier);
   TViewPoint = (vpSeite, vpAchtern, vpTop, vp3D);
-  TSalingTyp = (stOhne, stDrehbar, stFest, stOhne_2);
+  TSalingTyp = (stFest, stDrehbar, stOhneBiegt, stOhneStarr);
   TControllerTyp = (ctOhne, ctDruck, ctZugDruck);
   TGetriebeStatus = (gsWanteZukurz, gsWanteZulang, gsErrorPsivonPhi);
   TRiggStatus = (rsNichtEntspannbar, rsWanteAufDruck, rsKraftZuGross);
@@ -383,12 +383,12 @@ const
     'Big' // BigStep
     );
 
-procedure InitYAchseRecordList(var RecordList: TYAchseRecordList);
+procedure InitYAchseRecordList(out RecordList: TYAchseRecordList);
 function StrToRiggPoint(const s: string): TRiggPoint;
 
 implementation
 
-procedure InitYAchseRecordList(var RecordList: TYAchseRecordList);
+procedure InitYAchseRecordList(out RecordList: TYAchseRecordList);
 begin
   with RecordList[yavDurchbiegungHD] do
   begin

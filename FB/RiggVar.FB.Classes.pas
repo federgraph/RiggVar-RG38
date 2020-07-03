@@ -25,9 +25,7 @@ interface
 uses
   System.SysUtils,
   System.Classes,
-  System.Math,
-  System.Math.Vectors,
-  System.Types;
+  System.Math;
 
 const
   BoolStr: array[Boolean] of string = ('False', 'True');
@@ -89,11 +87,7 @@ type
     class function IncludeTrailingSlash(const s: string): string; static;
     class function StrToBoolDef(const Value: string; DefaultValue: Boolean): Boolean; static;
     class function StripFirstWord(var s: string): string; static;
-    class function CreateRotationMatrix3D(const AnAxis: TPoint3D; Angle: Single): TMatrix3D; static;
-    class function RotateDegrees(ov: TPoint3D; wi: single): TPoint3D; static;
-    class function RotateRadians(ov: TPoint3D; wi: single): TPoint3D; static;
     class function Round(Value: Extended; Decimals: Integer): double; static;
-    class function MakeEulerAngles(M: TMatrix3D; WantDegreeNormalize: Boolean): TPoint3D; static;
     class function IsEssentiallyZero(const Value: Single): Boolean; static;
   end;
 
@@ -211,55 +205,6 @@ begin
   Result := S1;
 end;
 
-class function TUtils.CreateRotationMatrix3D(const AnAxis: TPoint3D; Angle: Single): TMatrix3D;
-var
-  Axis: TPoint3D;
-  Cos, Sin, OneMinusCos: Extended;
-const
-  X = 0;
-  Y = 1;
-  Z = 2;
-  W = 3;
-begin
-  SinCos(Angle, Sin, Cos);
-  OneMinusCos := 1 - Cos;
-  Axis := AnAxis.Normalize;
-
-  FillChar(Result, SizeOf(Result), 0);
-
-  Result.M[X].V[X] := (OneMinusCos * Axis.V[0] * Axis.V[0]) + Cos;
-  Result.M[X].V[Y] := (OneMinusCos * Axis.V[0] * Axis.V[1]) - (Axis.V[2] * Sin);
-  Result.M[X].V[Z] := (OneMinusCos * Axis.V[2] * Axis.V[0]) + (Axis.V[1] * Sin);
-
-  Result.M[Y].V[X] := (OneMinusCos * Axis.V[0] * Axis.V[1]) + (Axis.V[2] * Sin);
-  Result.M[Y].V[Y] := (OneMinusCos * Axis.V[1] * Axis.V[1]) + Cos;
-  Result.M[Y].V[Z] := (OneMinusCos * Axis.V[1] * Axis.V[2]) - (Axis.V[0] * Sin);
-
-  Result.M[Z].V[X] := (OneMinusCos * Axis.V[2] * Axis.V[0]) - (Axis.V[1] * Sin);
-  Result.M[Z].V[Y] := (OneMinusCos * Axis.V[1] * Axis.V[2]) + (Axis.V[0] * Sin);
-  Result.M[Z].V[Z] := (OneMinusCos * Axis.V[2] * Axis.V[2]) + Cos;
-
-  Result.M[W].V[W] := 1;
-end;
-
-class function TUtils.RotateRadians(ov: TPoint3D; wi: single): TPoint3D;
-begin
-  result := TUtils.RotateDegrees(ov, RadToDeg(wi));
-end;
-
-class function TUtils.RotateDegrees(ov: TPoint3D; wi: single): TPoint3D;
-var
-  a: single;
-  m: TMatrix3D;
-begin
-  a := DegToRad(DegNormalize(Abs(wi)));
-  if wi >= 0 then
-    m := TUtils.CreateRotationMatrix3D(TPoint3D.Create(0,0,1), a)
-  else
-    m := TUtils.CreateRotationMatrix3D(TPoint3D.Create(0,0,-1), a);
-  result := ov * m;
-end;
-
 class function TUtils.Round(Value: Extended; Decimals: Integer): double;
 var
   p: Extended;
@@ -275,38 +220,9 @@ begin
  //result := Math.Round(Value * p) / p;
 end;
 
-class function TUtils.MakeEulerAngles(M: TMatrix3D; WantDegreeNormalize: Boolean): TPoint3D;
-var
-  tmp: single;
-  u: TPoint3D;
-begin
-  tmp := abs(M.m31);
-  if (tmp > 0.999999) then
-  begin
-    u.X := RadToDeg(0); //roll
-    u.Y := RadToDeg(-Pi / 2 * M.m31 / tmp); //pitch
-    u.Z := RadToDeg(ArcTan2(-M.m12, -M.m31 * M.m13)); //yaw
-  end
-  else
-  begin
-    u.X := RadToDeg(ArcTan2(M.m32, M.m33)); //roll
-    u.Y := RadToDeg(ArcSin(-M.m31)); //pitch
-    u.Z := RadToDeg(ArcTan2(M.m21, M.m11)); //yaw
-  end;
-
-  result := -u;
-
-  if WantDegreeNormalize then
-  begin
-    result.X := DegNormalize(result.X);
-    result.Y := DegNormalize(result.Y);
-    result.Z := DegNormalize(result.Z);
-  end;
-end;
-
 class function TUtils.IsEssentiallyZero(const Value: Single): Boolean;
 begin
-  result := ((Value < Epsilon2) and (Value > -Epsilon2));
+  result := ((Value < 0.00001) and (Value > -0.00001));
 end;
 
 { TTokenParser }

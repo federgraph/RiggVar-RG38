@@ -957,9 +957,9 @@ function TFormMain.GetActionFromKey(Key: Word): Integer;
 begin
   result := faNoop;
   case Key of
-    vkF12: ; //result := faMemeSaveBitmap;
+    vkF12: ; // result := faMemeSaveBitmap;
     vkC: ; // result := faMemeCopyBitmap;
-    vkV: // result := faMemePasteBitmap;
+    vkV: ; // result := faMemePasteBitmap;
   end;
 end;
 

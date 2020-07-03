@@ -290,7 +290,7 @@ begin
         Entlasten;
         MakeKoordDS;
       end;
-    stOhne, stOhne_2:
+    stOhneStarr, stOhneBiegt:
       begin
         KraefteOS;
         SplitOS;
@@ -576,7 +576,7 @@ begin
       LogList.Add(LogList_String_ProbeOK);
   end;
 
-  if (SalingTyp = stOhne) or (SalingTyp = stOhne_2) then
+  if (SalingTyp = stOhneStarr) or (SalingTyp = stOhneBiegt) then
   begin
     { Probe Punkt A0 }
     temptest := Probe(ooA0, ooA, ooB0, ooC0, ooD0, 8, 6, 3, 5);
@@ -643,8 +643,15 @@ begin
     Exit;
   end;
 
-  r1 := Abstand(rP[ooP0], Null);
+  r2 := sqr(rLe[5]) - sqr(rLe[6] / 2);
+  if (r2 < 0.1) then
+  begin
+    Inc(ExitCounter7);
+    Exit;
+  end;
+
   r2 := sqrt(sqr(rLe[5]) - sqr(rLe[6] / 2));
+  r1 := Abstand(rP[ooP0], Null);
   if (r1 < 0.1) or (r2 < 0.1) then
   begin
     Inc(ExitCounter5);
@@ -665,12 +672,27 @@ begin
       rPe[ooB0] := rPe[ooP0];
       rPe[ooB0, y] := -rLe[6] / 2;
     end;
+
+    r1 := sqr(rLe[3]) - sqr(rLe[6] / 2);
+    if (r1 < 0.1) then
+    begin
+      Inc(ExitCounter7);
+      Exit;
+    end;
+
+    r2 := rLe[1];
+    if (r2 < 0.1) then
+    begin
+      Inc(ExitCounter7);
+      Exit;
+    end;
+
     with SchnittKK do
     begin
       SchnittEbene := seXZ;
       { 2. Aufruf SchnittKK: ooC0 ermitteln }
-      Radius1 := sqrt(sqr(rLe[3]) - sqr(rLe[6] / 2));
-      Radius2 := rLe[1];
+      Radius1 := sqrt(r1);
+      Radius2 := r2;
       MittelPunkt1 := rPe[ooP0];
       MittelPunkt2 := rPe[ooD0];
       rPe[ooC0] := SchnittPunkt1;
@@ -938,13 +960,13 @@ begin
     KX[6] := rP[ooA0, x];
     KY[6] := rP[ooA0, z];
 
-    if SalingTyp = stOhne then
+    if SalingTyp = stOhneStarr then
     begin
       temp := sqrt(sqr(rL[8] + rL[13]) - sqr(rL[6] / 2));
       temp := arctan2(rL[6] / 2, temp);
       WantenPower := cos(temp) * WantenSpannung * 2;
     end;
-    if SalingTyp = stOhne_2 then
+    if SalingTyp = stOhneBiegt then
       MastDruck := FC;
     ActionF;
   end;
@@ -981,9 +1003,9 @@ begin
     { Punkt C }
     h := P0C;
     l2 := rL[6]; { PuettingAbstand }
-    if SalingTyp = stOhne then
+    if SalingTyp = stOhneStarr then
       F := Fachwerk.WantenPower;
-    if SalingTyp = stOhne_2 then
+    if SalingTyp = stOhneBiegt then
       F := Fachwerk.FS[4];
     SplitCalc;
     rF[ 7] := F1;
@@ -1115,7 +1137,7 @@ begin
       BiegeUndNeigeFS(TrimmSoll, limitA);
     stDrehbar:
       BiegeUndNeigeDS(TrimmSoll, limitA);
-    stOhne, stOhne_2:
+    stOhneStarr, stOhneBiegt:
       Exit; { Regeln nur für stFest und stDrehbar }
   end;
 

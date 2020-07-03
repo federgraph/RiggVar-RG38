@@ -209,8 +209,8 @@ const
 
   SalingFestString: string = 'fest';
   SalingDrehbarString: string = 'drehbar';
-  OhneSalingString: string = 'ohne Saling';
-  OhneSalingStarrString: string = 'ohne Saling (BK)';
+  OhneSalingString: string = 'ohne Saling biegt';
+  OhneSalingStarrString: string = 'ohne Saling starr';
 
   TopTitleTestString: string = 'Top Title';
   BottomTitleTestString: string = 'Bottom Title';
@@ -320,6 +320,8 @@ const
   EA_S_Key: string = 'EA Small';
   EA_M_Key: string = 'EA Medium';
   EA_L_Key: string = 'EA Large';
+
+  SWarningText: string = 'Änderungen in %s sichern?';
 
 implementation
 

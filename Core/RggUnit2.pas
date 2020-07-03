@@ -33,6 +33,13 @@ type
   TKurvenTyp = (KurveOhneController, KurveMitController);
   TMastStatusSet = set of TMastStatus;
 
+  TMastGraphModel = class
+  public
+    FLineCountM: Integer;
+    LineData: TLineDataR100; { Durchbiegungswerte in mm }
+    GetriebeOK: Boolean;
+  end;
+
   TMast = class(TGetriebeFS)
   private
     l0: double; { in mm }
@@ -113,6 +120,8 @@ type
     function MastStatusText: string;
     procedure GetMastPositionE;
 
+    procedure UpdateMastGraph(Model: TMastGraphModel);
+
     property MastEI: Integer read GetEI write SetEI;
     property MastStatus: TMastStatusSet read FMastStatus;
     property LineCountM: Integer read FLineCountM write FLineCountM;
@@ -143,7 +152,7 @@ begin
   FKnicklaenge := 4600.0; { in mm }
   FKorrekturFaktor := 0.8; { dimensionlos }
   { Achtung: inherited Create() ruft virtuelle Funktionen auf, deshalb muß
-    z.Bsp. EI vorher initialisiert werden, sonst Division durch Null! }
+   z.Bsp. EI vorher initialisiert werden, sonst Division durch Null! }
   inherited Create;
 end;
 
@@ -432,29 +441,29 @@ begin
     stFest, stDrehbar:
       begin
         { Gleichgewicht am Punkt ooP }
-        {         KM       KU1      KU2      KB        FU1  FU2  FB }
-        SolveKG21(rP[ooP], rP[ooD], rP[ooC], rP[ooP0], FU1, FU2, FBekannt);
+      {         KM       KU1      KU2      KB        FU1  FU2  FB  }
+      SolveKG21(rP[ooP], rP[ooD], rP[ooC], rP[ooP0], FU1, FU2, FBekannt);
         { Winkel alpha2 ermitteln }
         Gamma := pi / 2 - arctan2((rP[ooC, x] - rP[ooD0, x]), (rP[ooC, z] - rP[ooD0, z]));
         delta2 := arctan2((rP[ooA, z] - rP[ooD, z]), (rP[ooD, x] - rP[ooA, x]));
         Beta := Gamma - pi / 2;
         alpha2 := Beta + delta2;
-        F1 := 0;
-        F2 := -FU1 * cos(alpha2);
+      F1 := 0;
+      F2 := -FU1 * cos(alpha2);
         FA := F2 * (lc - ld) / lc;
         FB := F2 * ld / lc;
-      end;
-    stOhne_2:
+    end;
+    stOhneBiegt:
       begin
         { Gleichgewicht am Punkt ooC }
-        {         KM       KU1       KU2       KB        FU1  FU2  FB }
-        SolveKG21(rP[ooC], rP[ooD0], rP[ooC0], rP[ooP0], FU1, FU2, FBekannt);
-        F1 := 0;
-        F2 := 0;
-        FA := 0;
-        FB := 0;
-        FC := FU1;
-      end;
+      {         KM       KU1       KU2       KB        FU1  FU2  FB  }
+      SolveKG21(rP[ooC], rP[ooD0], rP[ooC0], rP[ooP0], FU1, FU2, FBekannt);
+      F1 := 0;
+      F2 := 0;
+      FA := 0;
+      FB := 0;
+      FC := FU1;
+    end;
   end;
 end;
 
@@ -504,7 +513,7 @@ begin
   repeat
     Zaehler := Zaehler + 1;
     temp := (TempA + TempB) / 2;
-    { zwei Zeilen aus GetControllerWeg }
+      { zwei Zeilen aus GetControllerWeg }
     Kraft := temp / alpha22; { in N }
     WegIst := a02 * Kraft; { in mm } { FControllerWeg }
 
@@ -558,7 +567,7 @@ begin
         Kurve := KurveOhneController;
         if FSalingWegKnick < hd then
           Kurve := KurveMitController;
-      end;
+    end;
     ctZugDruck:
       Kurve := KurveMitController;
   end;
@@ -603,7 +612,7 @@ begin
   { Salingkraft ermitteln }
   SalingKraft := FKoppelFaktor * MastDruck;
 
-  if SalingTyp <> stOhne_2 then
+  if SalingTyp <> stOhneBiegt then
   begin
     F1 := -ControllerKraft;
     F2 := SalingKraft;
@@ -612,11 +621,11 @@ begin
     FB := (F1 * le + F2 * ld) / lc;
     { Wantangriffspunkt ohne Einfluß der Druckkraft im Mast }
     FC := -MastDruck;
-    { Druckkraft ist negativ. FC wird nur bei stOhne_2 verwendet,
+    { Druckkraft ist negativ. FC wird nur bei stOhneBiegt verwendet,
       die Druckkraft im Mast ergibt sich sonst über den Umweg der Salingkraft }
   end;
 
-  if SalingTyp = stOhne_2 then
+  if SalingTyp = stOhneBiegt then
   begin
     F1 := -ControllerKraft;
     F2 := 0; { Salingkraft, hier immer Null }
@@ -687,24 +696,24 @@ begin
   FU2 := 0;
   result := 0;
   case SalingTyp of
-    stOhne, stOhne_2:
+    stOhneStarr, stOhneBiegt:
       result := 0;
     stFest, stDrehbar:
       begin
         FB := 1; { bekannte Kraft vom Betrag 1 im Mast }
-        (*
-          KM  betrachteter Knoten
+      (*
+      KM  betrachteter Knoten
           KU1 Knoten der zur 1. unbekannten Stabkraft FU1 gehört
           KU2 Knoten der zur 2. unbekannten Stabkraft FU2 gehört
           KB  Knoten der zur bekannten Stabkraft FB gehört
-                  KM       KU1       KU2      KB        FU1  FU2  FB *)
-        SolveKG21(rP[ooC], rP[ooC0], rP[ooP], rP[ooD0], FU1, FU2, FB);
+                KM       KU1       KU2      KB        FU1  FU2  FB *)
+      SolveKG21(rP[ooC], rP[ooC0], rP[ooP], rP[ooD0], FU1, FU2, FB);
 
-        FB := FU2;
-        {         KM       KU1      KU2       KB       FU1  FU2  FB }
-        SolveKG21(rP[ooP], rP[ooD], rP[ooP0], rP[ooC], FU1, FU2, FB);
+      FB := FU2;
+      {         KM       KU1      KU2       KB       FU1  FU2  FB  }
+      SolveKG21(rP[ooP], rP[ooD], rP[ooP0], rP[ooC], FU1, FU2, FB);
         result := FU1; { selbe Einheit wie FB }
-      end;
+    end;
   end;
 end;
 
@@ -780,27 +789,27 @@ begin
   case SalingTyp of
     stFest, stDrehbar:
       begin
-        case ControllerTyp of
+      case ControllerTyp of
           ctOhne:
             CalcW2;
           ctDruck:
             begin
-              CalcW2;
+          CalcW2;
               if (FControllerWeg > he) then
                 CalcW1W2;
-            end;
+        end;
           ctZugDruck:
             CalcW1W2;
-        end;
+      end;
         if CalcTyp = ctBiegeKnicken then
           CalcWKnick;
         if CalcTyp = ctKraftGemessen then
           CalcWante;
-      end;
+    end;
 
-    stOhne:
+    stOhneStarr:
       begin
-        case ControllerTyp of
+      case ControllerTyp of
           ctOhne:
             ; { nichts machen normalerweise }
           ctDruck:
@@ -808,20 +817,20 @@ begin
               CalcW1;
           ctZugDruck:
             CalcW1;
-        end;
       end;
+    end;
 
-    stOhne_2:
+    stOhneBiegt:
       begin
-        case ControllerTyp of
+      case ControllerTyp of
           ctOhne:
-            CalcW2;
+          CalcW2;
           ctDruck:
             begin
               CalcW2;
               if (FControllerWeg > he) then
                 CalcW1W2;
-            end;
+      end;
           ctZugDruck:
             CalcW1W2;
         end;
@@ -829,7 +838,7 @@ begin
           CalcWante
         else
           CalcWKnick; { sonst immer BiegeKnicken }
-      end;
+    end;
 
   end;
   FanOut;
@@ -844,34 +853,34 @@ begin
 
   { Geometrie für Mastsystem }
   case SalingTyp of
-    stFest, stDrehbar, stOhne_2:
-      begin
-        SchnittGG(rP[ooD0], rP[ooC], rP[ooP], rP[ooD], SPSaling);
-        SchnittGG(rP[ooD0], rP[ooC], rP[ooE], rP[ooE0], SPController);
-        ld := Abstand(rP[ooD0], SPSaling);
-        le := Abstand(rP[ooD0], SPController);
-        lc := rL[0];
-        EC := Abstand(rP[ooC], rP[ooE]);
-        hd := Hoehe(lc - 0.0001, rL[16], rL[15], k2);
-        he := Hoehe(lc - 0.0001, rL[18], EC, k1);
-        if SPSaling[x] - rP[ooD, x] > 0 then
-          hd := -hd;
-        if SPController[x] - rP[ooE, x] > 0 then
-          he := -he;
-      end;
+    stFest, stDrehbar, stOhneBiegt:
+    begin
+      SchnittGG(rP[ooD0], rP[ooC], rP[ooP], rP[ooD], SPSaling);
+      SchnittGG(rP[ooD0], rP[ooC], rP[ooE], rP[ooE0], SPController);
+      ld := Abstand(rP[ooD0], SPSaling);
+      le := Abstand(rP[ooD0], SPController);
+      lc := rL[0];
+      EC := Abstand(rP[ooC], rP[ooE]);
+      hd := Hoehe(lc - 0.0001, rL[16], rL[15], k2);
+      he := Hoehe(lc - 0.0001, rL[18], EC, k1);
+      if SPSaling[x] - rP[ooD, x] > 0 then
+        hd := -hd;
+      if SPController[x] - rP[ooE, x] > 0 then
+        he := -he;
+    end;
 
-    stOhne:
-      begin
-        SchnittGG(rP[ooD0], rP[ooC], rP[ooE], rP[ooE0], SPController);
-        ld := rL[16];
-        le := Abstand(rP[ooD0], SPController);
-        lc := rL[0];
-        EC := Abstand(rP[ooC], rP[ooE]);
-        hd := 0; { Null gesetzt, da nicht relevant }
-        he := Hoehe(lc - 0.0001, rL[18], EC, k1);
-        if SPController[x] - rP[ooE, x] > 0 then
-          he := -he;
-      end;
+    stOhneStarr:
+    begin
+      SchnittGG(rP[ooD0], rP[ooC], rP[ooE], rP[ooE0], SPController);
+      ld := rL[16];
+      le := Abstand(rP[ooD0], SPController);
+      lc := rL[0];
+      EC := Abstand(rP[ooC], rP[ooE]);
+      hd := 0; { Null gesetzt, da nicht relevant }
+      he := Hoehe(lc - 0.0001, rL[18], EC, k1);
+      if SPController[x] - rP[ooE, x] > 0 then
+        he := -he;
+    end;
   end;
 
   Clear; { bei ctOhne wird hier die Mastlinie genullt }
@@ -889,9 +898,9 @@ begin
         Beta := Gamma - pi / 2;
         alpha1 := Beta + delta1;
         alpha2 := Beta + delta2;
-      end;
+    end;
 
-    stOhne, stOhne_2:
+    stOhneStarr, stOhneBiegt:
       begin
         Gamma := pi / 2 - arctan2((rP[ooC, x] - rP[ooD0, x]), (rP[ooC, z] - rP[ooD0, z]));
         delta1 := arctan2((rP[ooE, z] - rP[ooC0, z]), (rP[ooC0, x] - rP[ooE, x]));
@@ -899,7 +908,7 @@ begin
         Beta := Gamma - pi / 2;
         alpha1 := Beta + delta1;
         alpha2 := 0; { Null gesetzt, da nicht relevant }
-      end;
+    end;
   end;
 
   GetMastPositionE;
@@ -908,73 +917,73 @@ begin
   case SalingTyp of
     stFest, stDrehbar:
       begin
-        try
+      try
           FE := F1 / cos(alpha1);
           FD := F2 / cos(alpha2);
-        except
+      except
           on EZeroDivide do
           begin
-            FE := 0;
-            FD := 0;
+          FE := 0;
+          FD := 0;
             Main.Logger.Info(LogString_ZeroDivideAlpha);
-          end;
         end;
-        FLvon1 := FE * sin(alpha1);
-        FLvon2 := FD * sin(alpha2);
-        FALvon12 := FLvon1 + FLvon2;
+      end;
+      FLvon1 := FE * sin(alpha1);
+      FLvon2 := FD * sin(alpha2);
+      FALvon12 := FLvon1 + FLvon2;
 
         FAx := FA * cos(Beta);
         FAy := FA * sin(Beta);
         FALx := FALvon12 * sin(Beta);
         FALy := FALvon12 * cos(Beta);
 
-        FD0x := FAx + FALx;
-        FD0y := -FAy + FALy;
+      FD0x :=  FAx + FALx;
+      FD0y := -FAy + FALy;
         FCx := FB * cos(Beta);
         FCy := FB * sin(Beta);
         { Mastdruckkraft FC hier nicht enthalten, im Fachwerkmodul
           wird später spezielle Prozedur für Stabkräfte aufgerufen. }
 
-        FEx := FE * cos(delta1);
-        FEy := FE * sin(delta1);
-        FDx := FD * cos(delta2);
-        FDy := FD * sin(delta2);
-      end;
+      FEx := FE * cos(delta1);
+      FEy := FE * sin(delta1);
+      FDx := FD * cos(delta2);
+      FDy := FD * sin(delta2);
+    end;
 
-    stOhne, stOhne_2:
+    stOhneStarr, stOhneBiegt:
       begin
-        try
+      try
           FE := F1 / cos(alpha1);
           FD := 0; { Null gesetzt, da nicht relevant }
-        except
+      except
           on EZeroDivide do
           begin
-            FE := 0;
-            FD := 0;
+          FE := 0;
+          FD := 0;
             Main.Logger.Info(LogString_ZeroDivideAlpha);
-          end;
         end;
-        FLvon1 := FE * sin(alpha1);
+      end;
+      FLvon1 := FE * sin(alpha1);
         FLvon2 := 0; { Null gesetzt, da nicht relevant }
-        FALvon12 := FLvon1 + FLvon2;
+      FALvon12 := FLvon1 + FLvon2;
 
         FAx := FA * cos(Beta);
         FAy := FA * sin(Beta);
         FALx := FALvon12 * sin(Beta);
         FALy := FALvon12 * cos(Beta);
 
-        FD0x := FAx + FALx;
-        FD0y := -FAy + FALy;
+      FD0x :=  FAx + FALx;
+      FD0y := -FAy + FALy;
         FCx := FB * cos(Beta);
         FCy := FB * sin(Beta);
-        { Mastdruckkraft FC hier nicht enthalten,
+      { Mastdruckkraft FC hier nicht enthalten,
           im Fachwerkmodul wird später spezielle Prozedur für Stabkräfte aufgerufen. }
 
-        FEx := FE * cos(delta1);
-        FEy := FE * sin(delta1);
+      FEx := FE * cos(delta1);
+      FEy := FE * sin(delta1);
         FDx := 0; { Null gesetzt, da nicht relevant }
         FDy := 0; { Null gesetzt, da nicht relevant }
-      end;
+    end;
   end;
 end;
 
@@ -1045,6 +1054,13 @@ begin
   PositionEStrich := -le * sin(Beta) + BiegungE * cos(Beta);
   PositionEStrich := PositionEStrich + BiegungE * tan(alpha1) * sin(Beta);
   MastPositionE := PositionEStrich;
+end;
+
+procedure TMast.UpdateMastGraph(Model: TMastGraphModel);
+begin
+  Model.LineData := LineData;
+  Model.FLineCountM := FLineCountM;
+  Model.GetriebeOK := GetriebeOK;
 end;
 
 end.

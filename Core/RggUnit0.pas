@@ -295,12 +295,18 @@ var
   EbeneACD, EbeneACA0: TRealPoint;
   tempWW, tempWS: double;
   tempSinus, tempCosinus: double;
+  t: double;
 begin
   ooTempA := EVektor(rP[ooA], rP[ooC]);
   ooTempB := EVektor(rP[ooA0], rP[ooA]);
   tempWW := sprod(ooTempA, ooTempB);
+  t := 1 - sqr(tempWW);
+  if abs(t) < 0.01 then
+  begin
+    tempWW := 0;
+  end;
   try
-    tempWW := arctan2(sqrt(1 - sqr(tempWW)), tempWW);
+    tempWW := arctan2(t, tempWW);
     { Wurzel ev. Null bei stOhne }
   except
     on EMathError do

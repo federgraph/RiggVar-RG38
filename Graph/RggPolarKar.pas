@@ -211,7 +211,7 @@ end;
 procedure TPolarKar.FillMatrixInc;
 begin
   tmat.Identity;
-  p1 := NullVec;
+  p1 := vec3Null;
   if FTheta <> 0 then
   begin
     p2.x := Mat.Mat[1, 2];
