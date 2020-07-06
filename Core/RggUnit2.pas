@@ -151,8 +151,8 @@ begin
   FExcenter := 20.0; { in mm }
   FKnicklaenge := 4600.0; { in mm }
   FKorrekturFaktor := 0.8; { dimensionlos }
-  { Achtung: inherited Create() ruft virtuelle Funktionen auf, deshalb muß
-   z.Bsp. EI vorher initialisiert werden, sonst Division durch Null! }
+  { Achtung: inherited Create ruft virtuelle Funktionen auf, deshalb muß
+    z.Bsp. EI vorher initialisiert werden, sonst Division durch Null. }
   inherited Create;
 end;
 
@@ -382,7 +382,7 @@ begin
 
   if alpha22 = 0 then
   begin
-    //Wenn F0C Position clamped because out of range (not between Min, Max)
+    { Wenn F0C Position clamped because out of range (not between Min, Max) }
     F1 := 0;
     F2 := 0;
     FA := 0;
@@ -439,23 +439,23 @@ begin
   FBekannt := WantenSpannung * cos(alpha) * 2; { Wantenspannung2d }
   case SalingTyp of
     stFest, stDrehbar:
-      begin
-        { Gleichgewicht am Punkt ooP }
+    begin
+      { Gleichgewicht am Punkt ooP }
       {         KM       KU1      KU2      KB        FU1  FU2  FB  }
       SolveKG21(rP[ooP], rP[ooD], rP[ooC], rP[ooP0], FU1, FU2, FBekannt);
-        { Winkel alpha2 ermitteln }
-        Gamma := pi / 2 - arctan2((rP[ooC, x] - rP[ooD0, x]), (rP[ooC, z] - rP[ooD0, z]));
-        delta2 := arctan2((rP[ooA, z] - rP[ooD, z]), (rP[ooD, x] - rP[ooA, x]));
-        Beta := Gamma - pi / 2;
-        alpha2 := Beta + delta2;
+      { Winkel alpha2 ermitteln }
+      Gamma := pi / 2 - arctan2((rP[ooC, x] - rP[ooD0, x]), (rP[ooC, z] - rP[ooD0, z]));
+      delta2 := arctan2((rP[ooA, z] - rP[ooD, z]), (rP[ooD, x] - rP[ooA, x]));
+      Beta := Gamma - pi / 2;
+      alpha2 := Beta + delta2;
       F1 := 0;
       F2 := -FU1 * cos(alpha2);
-        FA := F2 * (lc - ld) / lc;
-        FB := F2 * ld / lc;
+      FA := F2 * (lc - ld) / lc;
+      FB := F2 * ld / lc;
     end;
     stOhneBiegt:
-      begin
-        { Gleichgewicht am Punkt ooC }
+    begin
+      { Gleichgewicht am Punkt ooC }
       {         KM       KU1       KU2       KB        FU1  FU2  FB  }
       SolveKG21(rP[ooC], rP[ooD0], rP[ooC0], rP[ooP0], FU1, FU2, FBekannt);
       F1 := 0;
@@ -513,7 +513,7 @@ begin
   repeat
     Zaehler := Zaehler + 1;
     temp := (TempA + TempB) / 2;
-      { zwei Zeilen aus GetControllerWeg }
+    { zwei Zeilen aus GetControllerWeg }
     Kraft := temp / alpha22; { in N }
     WegIst := a02 * Kraft; { in mm } { FControllerWeg }
 
@@ -622,7 +622,7 @@ begin
     { Wantangriffspunkt ohne Einfluß der Druckkraft im Mast }
     FC := -MastDruck;
     { Druckkraft ist negativ. FC wird nur bei stOhneBiegt verwendet,
-      die Druckkraft im Mast ergibt sich sonst über den Umweg der Salingkraft }
+      die Druckkraft im Mast ergibt sich sonst über den Umweg der Salingkraft. }
   end;
 
   if SalingTyp = stOhneBiegt then
@@ -699,8 +699,8 @@ begin
     stOhneStarr, stOhneBiegt:
       result := 0;
     stFest, stDrehbar:
-      begin
-        FB := 1; { bekannte Kraft vom Betrag 1 im Mast }
+    begin
+      FB := 1; { bekannte Kraft vom Betrag 1 im Mast }
       (*
       KM  betrachteter Knoten
           KU1 Knoten der zur 1. unbekannten Stabkraft FU1 gehört
@@ -780,7 +780,7 @@ begin
       Main.Logger.Info(s);
     end;
   end;
-end; { KG21 }
+end;
 
 procedure TMast.SchnittKraefte;
 begin
@@ -788,56 +788,51 @@ begin
 
   case SalingTyp of
     stFest, stDrehbar:
-      begin
+    begin
       case ControllerTyp of
-          ctOhne:
-            CalcW2;
-          ctDruck:
-            begin
+        ctOhne: CalcW2;
+        ctDruck:
+        begin
           CalcW2;
-              if (FControllerWeg > he) then
-                CalcW1W2;
-        end;
-          ctZugDruck:
+          if (FControllerWeg > he) then
             CalcW1W2;
+        end;
+        ctZugDruck: CalcW1W2;
       end;
-        if CalcTyp = ctBiegeKnicken then
-          CalcWKnick;
-        if CalcTyp = ctKraftGemessen then
-          CalcWante;
+      if CalcTyp = ctBiegeKnicken then
+        CalcWKnick;
+      if CalcTyp = ctKraftGemessen then
+        CalcWante;
     end;
 
     stOhneStarr:
-      begin
+    begin
       case ControllerTyp of
-          ctOhne:
-            ; { nichts machen normalerweise }
-          ctDruck:
-            if (he < 0) then
-              CalcW1;
-          ctZugDruck:
+        ctOhne: ; { do nothing }
+        ctDruck:
+          if (he < 0) then
             CalcW1;
+        ctZugDruck:
+          CalcW1;
       end;
     end;
 
     stOhneBiegt:
-      begin
+    begin
       case ControllerTyp of
-          ctOhne:
+        ctOhne: CalcW2;
+        ctDruck:
+        begin
           CalcW2;
-          ctDruck:
-            begin
-              CalcW2;
-              if (FControllerWeg > he) then
-                CalcW1W2;
-      end;
-          ctZugDruck:
+          if (FControllerWeg > he) then
             CalcW1W2;
         end;
-        if CalcTyp = ctKraftGemessen then
-          CalcWante
-        else
-          CalcWKnick; { sonst immer BiegeKnicken }
+        ctZugDruck: CalcW1W2;
+      end;
+      if CalcTyp = ctKraftGemessen then
+        CalcWante
+      else
+        CalcWKnick; { sonst immer BiegeKnicken }
     end;
 
   end;
@@ -891,23 +886,23 @@ begin
   { Winkel }
   case SalingTyp of
     stFest, stDrehbar:
-      begin
-        Gamma := pi / 2 - arctan2((rP[ooC, x] - rP[ooD0, x]), (rP[ooC, z] - rP[ooD0, z]));
-        delta1 := arctan2((rP[ooE, z] - rP[ooC0, z]), (rP[ooC0, x] - rP[ooE, x]));
-        delta2 := arctan2((rP[ooA, z] - rP[ooD, z]), (rP[ooD, x] - rP[ooA, x]));
-        Beta := Gamma - pi / 2;
-        alpha1 := Beta + delta1;
-        alpha2 := Beta + delta2;
+    begin
+      Gamma := pi / 2 - arctan2((rP[ooC, x] - rP[ooD0, x]), (rP[ooC, z] - rP[ooD0, z]));
+      delta1 := arctan2((rP[ooE, z] - rP[ooC0, z]), (rP[ooC0, x] - rP[ooE, x]));
+      delta2 := arctan2((rP[ooA, z] - rP[ooD, z]), (rP[ooD, x] - rP[ooA, x]));
+      Beta := Gamma - pi / 2;
+      alpha1 := Beta + delta1;
+      alpha2 := Beta + delta2;
     end;
 
     stOhneStarr, stOhneBiegt:
-      begin
-        Gamma := pi / 2 - arctan2((rP[ooC, x] - rP[ooD0, x]), (rP[ooC, z] - rP[ooD0, z]));
-        delta1 := arctan2((rP[ooE, z] - rP[ooC0, z]), (rP[ooC0, x] - rP[ooE, x]));
-        delta2 := 0; { Null gesetzt, da nicht relevant }
-        Beta := Gamma - pi / 2;
-        alpha1 := Beta + delta1;
-        alpha2 := 0; { Null gesetzt, da nicht relevant }
+    begin
+      Gamma := pi / 2 - arctan2((rP[ooC, x] - rP[ooD0, x]), (rP[ooC, z] - rP[ooD0, z]));
+      delta1 := arctan2((rP[ooE, z] - rP[ooC0, z]), (rP[ooC0, x] - rP[ooE, x]));
+      delta2 := 0; { Null gesetzt, da nicht relevant }
+      Beta := Gamma - pi / 2;
+      alpha1 := Beta + delta1;
+      alpha2 := 0; { Null gesetzt, da nicht relevant }
     end;
   end;
 
@@ -916,33 +911,33 @@ begin
   { Kraftkomponenten bereitstellen }
   case SalingTyp of
     stFest, stDrehbar:
-      begin
+    begin
       try
-          FE := F1 / cos(alpha1);
-          FD := F2 / cos(alpha2);
+        FE := F1 / cos(alpha1);
+        FD := F2 / cos(alpha2);
       except
-          on EZeroDivide do
-          begin
+        on EZeroDivide do
+        begin
           FE := 0;
           FD := 0;
-            Main.Logger.Info(LogString_ZeroDivideAlpha);
+          Main.Logger.Info(LogString_ZeroDivideAlpha);
         end;
       end;
       FLvon1 := FE * sin(alpha1);
       FLvon2 := FD * sin(alpha2);
       FALvon12 := FLvon1 + FLvon2;
 
-        FAx := FA * cos(Beta);
-        FAy := FA * sin(Beta);
-        FALx := FALvon12 * sin(Beta);
-        FALy := FALvon12 * cos(Beta);
+      FAx := FA * cos(Beta);
+      FAy := FA * sin(Beta);
+      FALx := FALvon12 * sin(Beta);
+      FALy := FALvon12 * cos(Beta);
 
       FD0x :=  FAx + FALx;
       FD0y := -FAy + FALy;
-        FCx := FB * cos(Beta);
-        FCy := FB * sin(Beta);
-        { Mastdruckkraft FC hier nicht enthalten, im Fachwerkmodul
-          wird später spezielle Prozedur für Stabkräfte aufgerufen. }
+      FCx := FB * cos(Beta);
+      FCy := FB * sin(Beta);
+      { Mastdruckkraft FC hier nicht enthalten, im Fachwerkmodul
+        wird später spezielle Prozedur für Stabkräfte aufgerufen. }
 
       FEx := FE * cos(delta1);
       FEy := FE * sin(delta1);
@@ -951,38 +946,38 @@ begin
     end;
 
     stOhneStarr, stOhneBiegt:
-      begin
+    begin
       try
-          FE := F1 / cos(alpha1);
-          FD := 0; { Null gesetzt, da nicht relevant }
+        FE := F1 / cos(alpha1);
+        FD := 0; { Null gesetzt, da nicht relevant }
       except
-          on EZeroDivide do
-          begin
+        on EZeroDivide do
+        begin
           FE := 0;
           FD := 0;
-            Main.Logger.Info(LogString_ZeroDivideAlpha);
+          Main.Logger.Info(LogString_ZeroDivideAlpha);
         end;
       end;
       FLvon1 := FE * sin(alpha1);
-        FLvon2 := 0; { Null gesetzt, da nicht relevant }
+      FLvon2 := 0; { Null gesetzt, da nicht relevant }
       FALvon12 := FLvon1 + FLvon2;
 
-        FAx := FA * cos(Beta);
-        FAy := FA * sin(Beta);
-        FALx := FALvon12 * sin(Beta);
-        FALy := FALvon12 * cos(Beta);
+      FAx := FA * cos(Beta);
+      FAy := FA * sin(Beta);
+      FALx := FALvon12 * sin(Beta);
+      FALy := FALvon12 * cos(Beta);
 
       FD0x :=  FAx + FALx;
       FD0y := -FAy + FALy;
-        FCx := FB * cos(Beta);
-        FCy := FB * sin(Beta);
+      FCx := FB * cos(Beta);
+      FCy := FB * sin(Beta);
       { Mastdruckkraft FC hier nicht enthalten,
           im Fachwerkmodul wird später spezielle Prozedur für Stabkräfte aufgerufen. }
 
       FEx := FE * cos(delta1);
       FEy := FE * sin(delta1);
-        FDx := 0; { Null gesetzt, da nicht relevant }
-        FDy := 0; { Null gesetzt, da nicht relevant }
+      FDx := 0; { Null gesetzt, da nicht relevant }
+      FDy := 0; { Null gesetzt, da nicht relevant }
     end;
   end;
 end;
@@ -1012,9 +1007,9 @@ begin
   rL[19] := Abstand(rP[ooE0], rP[ooE]);
 end;
 
-{ überschriebene virtuelle Methode von TGetriebeFS }
 procedure TMast.BerechneF;
 begin
+  { überschriebene virtuelle Methode von TGetriebeFS }
   { Berechnung Punkt F - Masttop }
   SchnittKraefte;
   GetEpsilon;
@@ -1024,11 +1019,11 @@ begin
   rP[ooF, z] := rP[ooC, z] + FrMastEnde * sin(FrEpsilon);
 end;
 
-{ überschriebene virtuelle Methode von TGetriebeFS }
 procedure TMast.KorrekturF(tempH, k1, k2: double; var k3, Beta, Gamma: double);
 var
   k8, temp: double;
 begin
+  { überschriebene virtuelle Methode von TGetriebeFS }
   { k3 und Beta näherungsweise(!) neu bestimmen:
     dazu als erstes epsB bestimmen }
   he := 200; { Controller soll nicht anliegen }
