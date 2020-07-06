@@ -324,7 +324,7 @@ begin
   Main.InitText;
   Main.IsUp := True;
 
-  RotaForm := TRotaForm.Create; // ownership kept by FormMain
+  RotaForm := TRotaForm.Create;
   StrokeRigg := RotaForm;
   Main.StrokeRigg := RotaForm;
   RotaForm.Image := Image;
@@ -336,7 +336,7 @@ begin
   { Set initial translation in RotatForm, FXPos and FYPos, default. }
 
   { Params }
-  Main.Param := fpVorstag; // --> TempIst wird gesetzt, SetupTrackBar() aufgerufen
+  Main.Param := fpVorstag;
   if ParamListbox <> nil then
   begin
     InitParamListbox;
@@ -446,10 +446,6 @@ begin
   Image.Free;
   Bitmap.Free;
 
-{ RotaForm is managed via StrokeRigg interface reference }
-// RotaForm.Free;
-// StrokeRigg := nil;
-
   SalingGraph.Free;
   ControllerGraph.Free;
   ChartGraph.Free;
@@ -476,7 +472,6 @@ begin
   UpdateSalingGraph;
   UpdateControllerGraph;
   UpdateChartGraph;
-//  UpdateReport; // already done via ShowTrimm
 end;
 
 procedure TFormMain.UpdateReport;

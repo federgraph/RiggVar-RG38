@@ -88,7 +88,7 @@ type
     procedure KG20(l, l1, l2, i1, i2: Integer);
     procedure KG21(l, l1, l2, l3, i1, i2, i3: Integer);
     procedure Stabkraefte;
-    procedure Stabkraefte_2;
+    procedure StabkraefteOSB;
     procedure Auflagerkraefte(SumFX, SumFY, SumMO: double; out Lager: TAuflager);
     procedure Verschiebungen;
     procedure ActionF;
@@ -225,12 +225,11 @@ begin
   KG21(3, 4, 5, 2, 6, 5, 4);
   KG22(4, 5, 6, 3, 1, 8, 7, 6, 1);
   KG21(6, 5, 4, 2, 9, 7, 3);
-end; { Stabkraefte }
+end;
 
-procedure TFachwerk.Stabkraefte_2;
-{ bei stOhne_2 }
+procedure TFachwerk.StabkraefteOSB;
 begin
-  { Controllerzweischlag }
+  { Controller-Zweischlag }
   KG20(1, 5, 4, 2, 1);
 
   { Punkt C, MastDruck vorgegeben }
@@ -315,13 +314,12 @@ begin
         1:
           FO2[l] := F;
       end;
-    end; { j }
+    end;
 
     { Speichern des absoluten Verschiebungsbetrages des Knotens l }
     FO[l] := Sqrt(sqr(FO1[l]) + sqr(FO2[l]));
-
-  end; { l }
-end; { Verschiebungen }
+  end;
+end;
 
 procedure TFachwerk.ActionF;
 var
@@ -355,7 +353,7 @@ begin
 
   { Stabkräfte ausrechnen }
   if SalingTyp = stOhneBiegt then
-    Stabkraefte_2
+    StabkraefteOSB
   else
     Stabkraefte;
 

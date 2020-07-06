@@ -38,7 +38,7 @@
   Integerwert gespeichert werden.
 
   Der allgemeine und zu bevorzugende SalingTyp ist stFest. Ein Rigg vom SalingTyp
-  stDrehbar, stOhne bzw. stOhne_2 kann auch mit SalingTyp stFest gespeichert
+  stDrehbar, stOhneStarr bzw. stOhneBiegt kann auch mit SalingTyp stFest gespeichert
   werden.
 
   Die Festigkeitswerte EA und EI sowie die meisten Felder der Trimmtabelle sind

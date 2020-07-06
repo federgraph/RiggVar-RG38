@@ -203,8 +203,8 @@ type
     SalingA: double;
     SalingL: double;
     SalingW: double;
-    WantenWinkel: double;
-    KraftWinkel: double;
+    WantenWinkel: double; { in degrees }
+    KraftWinkel: double; { in degrees }
   end;
 
   TTrimmTabDaten = record { y = a0 + a1*(x-x0) + a2*(x-x1)(x-x0) }

@@ -1307,6 +1307,7 @@ begin
     fpWinkel, fpSalingW: us := GradString;
     fpEAH, fpEAR: us := KiloNewtonString;
     fpEI: us := NewtonMeterSquareString;
+    fpT1, fpT2: us := '';
   else
     us := MilimeterString;
   end;
@@ -1329,6 +1330,7 @@ begin
     fpWinkel, fpSalingW: us := GradString;
     fpEAH, fpEAR: us := KiloNewtonString;
     fpEI: us := NewtonMeterSquareString;
+    fpT1, fpT2: us := '';
   else
     us := MilimeterString;
   end;

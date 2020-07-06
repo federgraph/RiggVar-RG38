@@ -52,7 +52,7 @@ type
     FrPuettingA: double;
     FrBasis: double;
     FrController: double;
-    _FrWinkel: double;
+    _FrWinkel: double; { in radians }
     FrVorstag: double;
     FrWunten2d: double;
     FrWunten3d: double;
@@ -73,7 +73,7 @@ type
     FiControllerAnschlag: Integer;
 
     FiController: double;
-    FiWinkel: double;
+    FiWinkel: double; { in degrees }
     FiVorstag: double;
     FiWunten3d: double;
     FiWoben3d: double;
@@ -295,23 +295,26 @@ var
   EbeneACD, EbeneACA0: TRealPoint;
   tempWW, tempWS: double;
   tempSinus, tempCosinus: double;
-  t: double;
+  L: double;
+//  H: double;
 begin
   ooTempA := EVektor(rP[ooA], rP[ooC]);
   ooTempB := EVektor(rP[ooA0], rP[ooA]);
-  tempWW := sprod(ooTempA, ooTempB);
-  t := 1 - sqr(tempWW);
-  if abs(t) < 0.01 then
-  begin
-    tempWW := 0;
-  end;
-  try
-    tempWW := arctan2(t, tempWW);
-    { Wurzel ev. Null bei stOhne }
-  except
-    on EMathError do
-      tempWW := 0;
-  end;
+  L := sprod(ooTempA, ooTempB); { L = cosinus-ww }
+  tempWW := arccos(L);
+
+//  H := 1 - sqr(L); { H = sinus-quadrat-ww = 1 - cosinus-quadrat-ww }
+//  { sqrt can be a problem if H is around zero }
+//  tempWW := 0;
+//  if H > 0.1 then
+//  try
+//    h := sqrt(H);
+//    tempWW := arctan2(H, L);
+//  except
+//    on EMathError do
+//      tempWW := 0;
+//  end;
+
   { ooTempA := Evektor(rP[ooA],rP[ooC]); }
   ooTempB := EVektor(rP[ooA], rP[ooD]);
   EbeneACD := vprod(ooTempA, ooTempB);
@@ -334,22 +337,20 @@ begin
       Main.Logger.Error(Ebenen_senkrecht_in_GetSalingDaten_String);
   end;
 
-  with SD do
-  begin
-    SalingH := FrSalingH;
-    SalingA := FrSalingA;
-    SalingL := FrSalingL;
-    SalingW := arctan2(FrSalingA / 2, FrSalingH) * 180 / pi;
-    WantenWinkel := tempWW * 180 / pi;
-    KraftWinkel := tempWS * 180 / pi;
-  end;
+  SD.SalingH := FrSalingH;
+  SD.SalingA := FrSalingA;
+  SD.SalingL := FrSalingL;
+  SD.SalingW := arctan2(FrSalingA / 2, FrSalingH) * 180 / pi;
+  SD.WantenWinkel := tempWW * 180 / pi;
+  SD.KraftWinkel := tempWS * 180 / pi;
+
   result := SD;
 end;
 
 procedure TGetriebe.IntGliederToReal;
 begin
   FrController := FiController;
-  FrWinkel := FiWinkel * pi / 180; { FrWinkel in Grad }
+  FrWinkel := FiWinkel * pi / 180; { FrWinkel im Bogenmass }
   FrVorstag := FiVorstag;
   FrWunten3d := FiWunten3d;
   FrWoben3d := FiWoben3d;
