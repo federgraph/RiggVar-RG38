@@ -296,24 +296,11 @@ var
   tempWW, tempWS: double;
   tempSinus, tempCosinus: double;
   L: double;
-//  H: double;
 begin
   ooTempA := EVektor(rP[ooA], rP[ooC]);
   ooTempB := EVektor(rP[ooA0], rP[ooA]);
   L := sprod(ooTempA, ooTempB); { L = cosinus-ww }
   tempWW := arccos(L);
-
-//  H := 1 - sqr(L); { H = sinus-quadrat-ww = 1 - cosinus-quadrat-ww }
-//  { sqrt can be a problem if H is around zero }
-//  tempWW := 0;
-//  if H > 0.1 then
-//  try
-//    h := sqrt(H);
-//    tempWW := arctan2(H, L);
-//  except
-//    on EMathError do
-//      tempWW := 0;
-//  end;
 
   { ooTempA := Evektor(rP[ooA],rP[ooC]); }
   ooTempB := EVektor(rP[ooA], rP[ooD]);
