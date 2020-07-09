@@ -812,8 +812,7 @@ begin
         ctDruck:
           if (he < 0) then
             CalcW1;
-        ctZugDruck:
-          CalcW1;
+        ctZugDruck: CalcW1;
       end;
     end;
 

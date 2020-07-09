@@ -472,7 +472,8 @@ begin
     faToggleSegmentC: result := WantController;
     faToggleSegmentA: result := WantAchsen;
 
-    faKoppelBtn: result := Koppel;
+    faRggBogen: result := Bogen;
+    faRggKoppel: result := Koppel;
     else
       result := False;
   end;

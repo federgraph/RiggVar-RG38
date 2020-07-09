@@ -152,9 +152,16 @@ faMemoryRecallBtn,
 faSofortBtn,
 faGrauBtn,
 faBlauBtn,
-faMultiBtn,
-faKoppelBtn,
-faHull];
+faMultiBtn];
+
+ActionGroupRggSuper: TActionGroup = [
+faSuperSimple,
+faSuperNormal,
+faSuperGrau,
+faSuperBlau,
+faSuperMulti,
+faSuperDisplay,
+faSuperQuick];
 
 ActionGroupRggTrimmFile: TActionGroup = [
 faCopyTrimmItem,
@@ -243,7 +250,10 @@ ActionGroupRggGraph: TActionGroup = [
   faToggleUseDisplayList,
   faToggleUseQuickSort,
   faToggleShowLegend,
+
   faRggBogen,
+  faRggKoppel,
+  faRggHull,
 
   faRggZoomIn,
   faRggZoomOut,

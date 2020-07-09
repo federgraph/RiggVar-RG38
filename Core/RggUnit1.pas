@@ -46,6 +46,14 @@ type
     ExitCounter5: Integer;
     ExitCounter6: Integer;
     ExitCounter7: Integer;
+
+    Temp1: double;
+    Temp2: double;
+    Temp3: double;
+    Temp4: double;
+
+    WantToPlayWithExtendedSearchRange: Boolean;
+
     procedure ResetExitCounters;
 
     constructor Create;
@@ -224,6 +232,7 @@ end;
 procedure TGetriebeFS.BerechneWinkel;
 { FrVorstag gegeben, FrWinkel gesucht }
 var
+  Counter: Integer;
   svar: Boolean;
   VorstagIst, Diff: double;
   psiStart, psiEnde, psiA, psiB: double;
@@ -263,7 +272,8 @@ begin
   Wanten3dTo2d;
 
   { 1. Startwinkel ermitteln }
-  { Durchbiegung Null, Totlage für Winkel psi im Viergelenk D0 D C C0 }
+  { Durchbiegung Null, Mast gerade,
+    linke Totlage für Winkel psi im Viergelenk D0 D C C0 }
   with SchnittKK do
   begin
     SchnittEbene := seXZ;
@@ -303,16 +313,20 @@ begin
   begin
     { wenn Wante nicht zu locker dann Suche fortsetzen }
 
-    { Suchbereich erweitern, wenn Durchbiegung negativ
-      für psi = psiStart im VierGelenk P0 P D D0 }
-    ooTemp1 := vsub(rP[ooD], rP[ooD0]);
-    ooTemp2 := vsub(rP[ooC], rP[ooD]);
-    ooTemp := vprod(ooTemp1, ooTemp2);
-    if (ooTemp[y] > 0) then
-      psiStart := psiStart + 45 * pi / 180;
+    { may jump to 'other' intersection of circle C0C and KoppelKurve }
+    if WantToPlayWithExtendedSearchRange then
+    begin
+      { Suchbereich erweitern, wenn Durchbiegung negativ
+        für psi = psiStart im VierGelenk P0 P D D0 }
+      ooTemp1 := vsub(rP[ooD], rP[ooD0]);
+      ooTemp2 := vsub(rP[ooC], rP[ooD]);
+      ooTemp := vprod(ooTemp1, ooTemp2);
+      if (ooTemp[y] > 0) then
+        psiStart := psiStart + 45 * pi / 180;
+    end;
 
-    { 2. Endwinkel ermitteln -
-      Totlage für Winkel psi im Viergelenk D0 D C C0 }
+    { 2. Endwinkel ermitteln - Mastoben parallel zu Vorstag
+      rechte Totlage für Winkel psi im Viergelenk D0 D C C0 }
     with SchnittKK do
     begin
       SchnittEbene := seXZ;
@@ -329,9 +343,13 @@ begin
     { Viergelenk P0 P D D0, Koppelpunkt C }
     psiB := psiStart;
     psiA := psiEnde + 0.01 * pi / 180;
-    FiZaehler := 0;
+
+    Temp1 := psiA * 180 / pi;
+    Temp2 := psiB * 180 / pi;
+
+    Counter := 0;
     repeat
-      FiZaehler := FiZaehler + 1;
+      Counter := Counter + 1;
       FrPsi := (psiA + psiB) / 2;
       VorstagIst := VorstagLaenge(FrPsi);
       Diff := VorstagIst - FrVorstag;
@@ -339,8 +357,9 @@ begin
         psiB := FrPsi
       else
         psiA := FrPsi;
-    until (abs(Diff) < 0.01) or (FiZaehler = 200);
+    until (abs(Diff) < 0.01) or (Counter = 200);
 
+    Temp3 := Counter;
   end;
 
   { aktualisieren }
@@ -348,6 +367,10 @@ begin
   rP[ooA, y] := FrSalingA / 2;
   rP[ooB] := rP[ooP];
   rP[ooB, y] := -rP[ooA, y];
+  { We actually want PhiVonPsi, but we can use function PsiVonPhi;
+    imagine we are looking from behind - the mechanism appears mirrored,
+    angle Psi needs to be transformed back and forth,
+    and member length values passed according to mirrored model. }
   FrPhi := pi - PsiVonPhi(pi - FrPsi, FrBasis, FrMastunten, FrSalingH,
     FrWunten2d, svar);
   if svar = False then
@@ -361,7 +384,7 @@ begin
   end;
   FrWinkel := FrPhi - FrAlpha;
   FrSalingL := sqrt(sqr(FrSalingH) + sqr(FrSalingA / 2));
-  Rest;
+  Rest; { think: refactored away with 'extract method refactoring' }
 end;
 
 function TGetriebeFS.Koppelkurve: TKoordLine;
@@ -482,6 +505,7 @@ procedure TGetriebeFS.UpdateGetriebeDS;
   Vorstag, Rumpfkoordinaten. }
 { gesucht: Riggkoordinaten ooA, ooB, ooC, ooD, ooP, ooF }
 var
+  Counter: Integer;
   psiStart, psiEnde, psiEnde2, psiA, psiB: double;
   WobenMin, WobenMax, WobenIst, Diff: double;
   Saling1L, WStrich, W1Strich, Basis, Skalar: double;
@@ -607,9 +631,9 @@ begin
   { if GetriebeOK then : den richtigen Winkel FrPsi numerisch ermitteln }
   else
   begin
-    FiZaehler := 0;
+    Counter := 0;
     repeat
-      FiZaehler := FiZaehler + 1;
+      Counter := Counter + 1;
       FrPsi := (psiA + psiB) / 2;
       WobenIst := WobenIstVonPsi(FrPsi);
       Diff := WobenIst - FrWoben3d;
@@ -618,7 +642,7 @@ begin
       else
         psiA := FrPsi;
     until
-      (abs(Diff) < 0.01) or (FiZaehler = 200);
+      (abs(Diff) < 0.01) or (Counter = 200);
   end;
 
   { weiter im ebenen Trapez }

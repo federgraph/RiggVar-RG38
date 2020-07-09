@@ -37,6 +37,16 @@ var
 type
   EFileFormatError = class(Exception);
 
+  TGraphRadio = (
+    gSimple,
+    gNormal,
+    gBlau,
+    gGrau,
+    gMulti,
+    gDisplay,
+    gQuick
+  );
+
   TYAchseValue = (
     yavDurchbiegungHD,
     yavMastfallF0F,

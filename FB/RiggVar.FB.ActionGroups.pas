@@ -100,6 +100,7 @@ begin
   AddSpecial(ActionGroupRggViewPoint, 'RggViewPoint');
   AddSpecial(ActionGroupRggSalingType, 'RggSalingType');
   AddSpecial(ActionGroupRggAppMode, 'RggAppMode');
+  AddSpecial(ActionGroupRggSuper, 'RggSuper');
   AddSpecial(ActionGroupRggReport, 'RggReport');
   AddSpecial(ActionGroupRggChart, 'RggChart');
   AddSpecial(ActionGroupRggGraph, 'RggGraph');

@@ -69,7 +69,6 @@ type
     FrAlpha: double;
     FrEpsilon: double;
 
-    FiZaehler: Integer;
     FiControllerAnschlag: Integer;
 
     FiController: double;
@@ -295,12 +294,12 @@ var
   EbeneACD, EbeneACA0: TRealPoint;
   tempWW, tempWS: double;
   tempSinus, tempCosinus: double;
-  L: double;
+  cosWW: double;
 begin
   ooTempA := EVektor(rP[ooA], rP[ooC]);
   ooTempB := EVektor(rP[ooA0], rP[ooA]);
-  L := sprod(ooTempA, ooTempB); { L = cosinus-ww }
-  tempWW := arccos(L);
+  cosWW := sprod(ooTempA, ooTempB);
+  tempWW := arccos(cosWW);
 
   { ooTempA := Evektor(rP[ooA],rP[ooC]); }
   ooTempB := EVektor(rP[ooA], rP[ooD]);

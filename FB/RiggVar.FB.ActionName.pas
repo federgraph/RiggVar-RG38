@@ -51,12 +51,12 @@ faShowActi: result := 'faShowActi';
 faShowMemo: result := 'faShowMemo';
 faShowOpti: result := 'faShowOpti';
 faShowConf: result := 'faShowConf';
+faShowTrimmTab: result := 'faShowTrimmTab';
 faShowChart: result := 'faShowChart';
 faShowDiagA: result := 'faShowDiagA';
 faShowDiagC: result := 'faShowDiagC';
 faShowDiagE: result := 'faShowDiagE';
 faShowDiagQ: result := 'faShowDiagQ';
-faShowTrimmTab: result := 'faShowTrimmTab';
 
 { TouchLayout }
 faTouchTablet: result := 'faTouchTablet';
@@ -152,8 +152,15 @@ faSofortBtn: result := 'faSofortBtn';
 faGrauBtn: result := 'faGrauBtn';
 faBlauBtn: result := 'faBlauBtn';
 faMultiBtn: result := 'faMultiBtn';
-faKoppelBtn: result := 'faKoppelBtn';
-faHull: result := 'faHull';
+
+{ RggSuper }
+faSuperSimple: result := 'faSuperSimple';
+faSuperNormal: result := 'faSuperNormal';
+faSuperGrau: result := 'faSuperGrau';
+faSuperBlau: result := 'faSuperBlau';
+faSuperMulti: result := 'faSuperMulti';
+faSuperDisplay: result := 'faSuperDisplay';
+faSuperQuick: result := 'faSuperQuick';
 
 { RggReport }
 faReportNone: result := 'faReportNone';
@@ -199,6 +206,8 @@ faToggleUseDisplayList: result := 'faToggleUseDisplayList';
 faToggleUseQuickSort: result := 'faToggleUseQuickSort';
 faToggleShowLegend: result := 'faToggleShowLegend';
 faRggBogen: result := 'faRggBogen';
+faRggKoppel: result := 'faRggKoppel';
+faRggHull: result := 'faRggHull';
 faRggZoomIn: result := 'faRggZoomIn';
 faRggZoomOut: result := 'faRggZoomOut';
 faToggleSalingGraph: result := 'faToggleSalingGraph';

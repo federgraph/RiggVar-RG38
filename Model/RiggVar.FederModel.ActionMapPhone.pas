@@ -142,7 +142,7 @@ begin
     5:
     begin
       cla := claBeige;
-      IAC(1, faHull, claCyan);
+      IAC(1, faRggHull, claCyan);
       IAC(2, faNoop, cla);
       IAC(3, faNoop, cla);
 

@@ -81,7 +81,8 @@ uses
   RggStrings in 'Core\RggStrings.pas',
   FrmConfig in 'Frm\FrmConfig.pas' {FormConfig},
   FrmTrimmTab in 'Frm\FrmTrimmTab.pas' {FormTrimmTab},
-  RggTrimmTabGraph in 'Graph\RggTrimmTabGraph.pas';
+  RggTrimmTabGraph in 'Graph\RggTrimmTabGraph.pas',
+  RiggVar.RG.Speed03 in 'RG\RiggVar.RG.Speed03.pas';
 
 {$R *.res}
 

@@ -101,7 +101,8 @@ begin
     faRggZoomIn: FormMain.RotaForm.ZoomInBtnClick(Sender);
     faRggZoomOut: FormMain.RotaForm.ZoomOutBtnClick(Sender);
 
-    faRggBogen: FormMain.RotaForm.BogenBtnClick(Sender);
+    faRggBogen: FormMain.BogenBtnClick(Sender);
+    faRggKoppel: FormMain.KoppelBtnClick(Sender);
 
     faToggleChartGraph: FormMain.ChartImageBtnClick(Sender);
     faToggleSalingGraph: FormMain.SalingImageBtnClick(Sender);
@@ -119,7 +120,6 @@ begin
       FormMain.MultiBtnClick(Sender);
       UpdateSpeedButtonEnabled;
     end;
-    faKoppelBtn: FormMain.KoppelBtnClick(Sender);
   end;
 end;
 
@@ -150,7 +150,8 @@ begin
   ZoomInBtn.IsPressed := False;
   ZoomOutBtn.IsPressed := False;
 
-  BogenBtn.IsPressed := FormMain.RotaForm.Bogen;
+  BogenBtn.IsPressed := Main.GetChecked(faRggBogen);
+  KoppelBtn.IsPressed := Main.GetChecked(faRggKoppel);
 
   ChartImageBtn.IsPressed := FormMain.ChartImage.IsVisible;
   SalingImageBtn.IsPressed := FormMain.SalingImage.IsVisible;
@@ -164,7 +165,6 @@ begin
   MultiBtn.IsPressed := Main.GetChecked(faMultiBtn);
   GrauBtn.IsPressed := Main.GetChecked(faGrauBtn);
   BlauBtn.IsPressed := Main.GetChecked(faBlauBtn);
-  KoppelBtn.IsPressed := Main.GetChecked(faKoppelBtn);
 end;
 
 procedure TActionSpeedBarRG02.UpdateSpeedButtonEnabled;
@@ -303,7 +303,7 @@ begin
   InitSpeedButton(sb);
 {$endif}
 
-  { Bogen }
+  { Bogen and Koppel }
 
   BtnColorValue := clvBogen;
 
@@ -311,6 +311,12 @@ begin
   BogenBtn := sb;
   sb.StaysPressed := True;
   sb.Tag := faRggBogen;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('KoppelBtn', 0);
+  KoppelBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faRggKoppel;
   InitSpeedButton(sb);
 
   { Image Elements, and Matrix Text }
@@ -341,7 +347,7 @@ begin
   sb.Tag := faToggleMatrixText;
   InitSpeedButton(sb);
 
-  { Original Rigg Toolbar Buttons }
+  { Memory Buttons }
 
   BtnColorValue := clvMemory;
 
@@ -354,6 +360,8 @@ begin
   MemoryRecallBtn := sb;
   sb.Tag := faMemoryRecallBtn;
   InitSpeedButton(sb);
+
+  { Rigg Buttons }
 
   BtnColorValue := clvRigg;
 
@@ -379,12 +387,6 @@ begin
   MultiBtn := sb;
   sb.StaysPressed := True;
   sb.Tag := faMultiBtn;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('KoppelBtn', 0);
-  KoppelBtn := sb;
-  sb.StaysPressed := True;
-  sb.Tag := faKoppelBtn;
   InitSpeedButton(sb);
 
   { Zoom Buttons }

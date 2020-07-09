@@ -100,7 +100,7 @@ begin
     faToggleDebugText: result := 'Toggle debug text';
     faUpdateReportText: result := 'Update report text';
 
-    faHull: result := 'Toggle visibility of hull';
+    faRggHull: result := 'Toggle visibility of hull';
     faDemo: result := 'Toggle Demo / Pro mode';
     faCopyTrimmItem: result := 'Copy Trimm-Item';
     faPasteTrimmItem: result := 'Paste Trimm-Item or Trimm-File';
@@ -233,7 +233,9 @@ begin
     faToggleUseDisplayList: result := 'Toggle Use DisplayList';
     faToggleUseQuickSort: result := 'Toggle Use Quicksort';
     faToggleShowLegend: result := 'Toggle Show DL Legend';
-    faRggBogen: result := 'Show Mast Bogen';
+
+    faRggBogen: result := 'Show Mast-Bogen';
+    faRggKoppel: result := 'Show Koppel-Kurve';
 
     faToggleSalingGraph: result := 'Toggle Saling Graph';
     faToggleControllerGraph: result := 'Toggle Controller Graph';
@@ -247,7 +249,14 @@ begin
     faGrauBtn: result := 'Grau Btn';
     faBlauBtn: result := 'Blau Btn';
     faMultiBtn: result := 'Multi Btn';
-    faKoppelBtn: result := 'Koppel Btn';
+
+    faSuperSimple: result := 'Super Simple';
+    faSuperNormal: result := 'Super Normal';
+    faSuperGrau: result := 'Super Grau';
+    faSuperBlau: result := 'Super Blau';
+    faSuperMulti: result := 'Super Multi';
+    faSuperDisplay: result := 'Super Disp';
+    faSuperQuick: result := 'Super Quick';
 
     faTL01: result := 'Top Left 1';
     faTL02: result := 'Top Left 2';

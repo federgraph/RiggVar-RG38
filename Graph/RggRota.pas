@@ -842,12 +842,15 @@ end;
 function TRotaForm.QueryRenderOption(const fa: Integer): Boolean;
 begin
   case fa of
-    faHull: result := RumpfItemChecked;
     faWantRenderE: result := RaumGraph.WantRenderE;
     faWantRenderF: result := RaumGraph.WantRenderF;
     faWantRenderH: result := RaumGraph.WantRenderH;
     faWantRenderP: result := RaumGraph.WantRenderP;
     faWantRenderS: result := RaumGraph.WantRenderS;
+
+    faRggBogen: result := RaumGraph.Bogen;
+    faRggKoppel: result := RaumGraph.Koppel;
+    faRggHull: result := RumpfItemChecked;
     else
       result := False;
   end;

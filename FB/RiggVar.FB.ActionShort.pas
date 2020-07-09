@@ -75,7 +75,6 @@ begin
 
     fa420: result := '420';
     faLogo: result := 'logo';
-    faHull: result := 'hull';
     faDemo: result := 'mod';
 
     faUpdateTrimm0: result := 'ct0';
@@ -234,7 +233,10 @@ begin
     faToggleUseDisplayList: result := 'DL';
     faToggleUseQuickSort: result := 'QS';
     faToggleShowLegend: result := 'LG';
+
     faRggBogen: result := 'B';
+    faRggKoppel: result := 'K';
+    faRggHull: result := 'hull';
 
     faToggleSalingGraph: result := 'SG';
     faToggleControllerGraph: result := 'CG';
@@ -248,7 +250,14 @@ begin
     faGrauBtn: result := 'GB';
     faBlauBtn: result := 'BB';
     faMultiBtn: result := 'MB';
-    faKoppelBtn: result := 'KB';
+
+    faSuperSimple: result := 'gS';
+    faSuperNormal: result := 'gN';
+    faSuperGrau: result := 'gG';
+    faSuperBlau: result := 'gB';
+    faSuperMulti: result := 'gM';
+    faSuperDisplay: result := 'gD';
+    faSuperQuick: result := 'gQ';
 
     faVorstagOS: result := 'vos';
     faWPowerOS: result := 'wos';

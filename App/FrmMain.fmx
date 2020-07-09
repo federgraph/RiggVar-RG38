@@ -1,7 +1,7 @@
 object FormMain: TFormMain
   Left = 90
   Top = 60
-  Caption = 'RG38'
+  Caption = 'RGXX'
   ClientHeight = 600
   ClientWidth = 900
   Position = Designed

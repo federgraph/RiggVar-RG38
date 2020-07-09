@@ -176,7 +176,17 @@ type
     procedure GrauBtnClick(Sender: TObject);
     procedure BlauBtnClick(Sender: TObject);
     procedure MultiBtnClick(Sender: TObject);
+
+    procedure BogenBtnClick(Sender: TObject);
     procedure KoppelBtnClick(Sender: TObject);
+
+    procedure SuperSimpleBtnClick(Sender: TObject);
+    procedure SuperNormalBtnClick(Sender: TObject);
+    procedure SuperGrauBtnClick(Sender: TObject);
+    procedure SuperBlauBtnClick(Sender: TObject);
+    procedure SuperMultiBtnClick(Sender: TObject);
+    procedure SuperDisplayBtnClick(Sender: TObject);
+    procedure SuperQuickBtnClick(Sender: TObject);
   public
     procedure UpdateColorScheme;
     procedure LayoutComponents;
@@ -244,6 +254,7 @@ uses
   RiggVar.RG.Main,
   RiggVar.RG.Speed01,
   RiggVar.RG.Speed02,
+  RiggVar.RG.Speed03,
   RiggVar.App.Main,
   RiggVar.FB.ActionConst,
   RiggVar.FB.Classes;
@@ -359,7 +370,7 @@ begin
     ReportManager.InitLB(ReportListbox.Items);
     ReportListbox.OnChange := ReportListboxChange;
     ReportListbox.ItemIndex := ReportListbox.Items.IndexOf(
-    ReportManager.GetReportCaption(TRggReport.rgDiffText));
+    ReportManager.GetReportCaption(ReportManager.CurrentReport));
   end;
   if ReportCombo <> nil then
   begin
@@ -404,7 +415,7 @@ begin
   if MainVar.ColorScheme.claBackground <> claSlateBlue then
   begin
     Fill.Kind := TBrushKind.Solid; // because is still TBrushKind.None
-    Fill.Color := claSlateBlue;
+    Fill.Color := claSlateblue;
     UpdateBackgroundColor(MainVar.ColorScheme.claBackground);
   end;
 
@@ -915,8 +926,6 @@ begin
 
     faToggleShowLegend: RotaForm.LegendBtnClick(nil);
     faToggleUseQuickSort: RotaForm.UseQuickSortBtnClick(nil);
-    faRggBogen: RotaForm.BogenBtnClick(nil);
-    faToggleChartGraph: ChartImageBtnClick(nil);
     faToggleSalingGraph: SalingImageBtnClick(nil);
     faToggleControllerGraph: ControllerImageBtnClick(nil);
     faToggleMatrixText: RotaForm.MatrixItemClick(nil);
@@ -924,11 +933,13 @@ begin
     faMemoryBtn: MemoryBtnClick(nil);
     faMemoryRecallBtn: MemoryRecallBtnClick(nil);
 
+    faRggBogen: BogenBtnClick(nil);
+    faRggKoppel: KoppelBtnClick(nil);
+
     faSofortBtn: SofortBtnClick(nil);
     faGrauBtn: GrauBtnClick(nil);
     faBlauBtn: BlauBtnClick(nil);
     faMultiBtn: MultiBtnClick(nil);
-    faKoppelBtn: KoppelBtnClick(nil);
 
     faShowActi: ActiBtnClick(nil);
     faShowMemo: MemoBtnClick(nil);
@@ -995,7 +1006,7 @@ begin
     'J': fa := faWheelDown;
 
     'k': ;
-    'K': fa := faKoppelBtn;
+    'K': fa := faRggKoppel;
 
     'l': fa := faMemeGotoLandscape;
     'L': fa := faToggleShowLegend;
@@ -1026,7 +1037,7 @@ begin
     'v': fa := faVorstag;
     'w': fa := faWante;
 
-    'z': ; // fa := faResetZoom;
+    'z': ;
     'Z': fa := faUpdateTrimm0;
 
     '0': fa := faTrimm0;
@@ -1293,7 +1304,7 @@ begin
   SpeedPanel1.Visible := False;
   SpeedPanel1.Opacity := OpacityValue;
 
-  SpeedPanel2 := TActionSpeedBarRG02.Create(Self);
+  SpeedPanel2 := TActionSpeedBarRG03.Create(Self);
   SpeedPanel2.Parent := Self;
   SpeedPanel2.ShowHint := True;
   SpeedPanel2.Visible := False;
@@ -1635,7 +1646,7 @@ end;
 
 procedure TFormMain.InitParamListbox;
 var
-  rm: TRggMain;
+  rm: TMain;
   LI: TStrings;
   fp: TFederParam;
   s: string;
@@ -1839,9 +1850,18 @@ begin
   Main.Draw;
 end;
 
+procedure TFormMain.BogenBtnClick(Sender: TObject);
+begin
+  RotaForm.BogenBtnClick(Sender);
+  if Sender <> nil then
+    Main.FederText.CheckState;
+end;
+
 procedure TFormMain.KoppelBtnClick(Sender: TObject);
 begin
   RotaForm.KoppelBtnClick(Sender);
+  if Sender <> nil then
+    Main.FederText.CheckState;
 end;
 
 function TFormMain.GetChecked(fa: Integer): Boolean;
@@ -1867,14 +1887,15 @@ begin
 
     faToggleUseDisplayList: result := RotaForm.UseDisplayList;
     faToggleUseQuickSort: result := RotaForm.RaumGraph.DL.UseQuickSort;
+
     faRggBogen: result := RotaForm.Bogen;
+    faRggKoppel: result := RotaForm.RaumGraph.Koppel;
 
     faSofortBtn: result := Main.SofortBerechnen;
     faGrauBtn: result := Main.BtnGrauDown;
     faBlauBtn: result := Main.BtnBlauDown;
     faMemoryBtn: result := False;
     faMultiBtn: result := RotaForm.WantOverlayedRiggs;
-    faKoppelBtn: result := RotaForm.RaumGraph.Koppel;
 
     faToggleChartGraph: result := ChartImage.IsVisible;
     faToggleSalingGraph: result := SalingImage.IsVisible;
@@ -2015,6 +2036,57 @@ begin
 
   SalingGraph.BackgroundColor := MainVar.ColorScheme.claBackground;
   UpdateSalingGraph;
+end;
+
+procedure TFormMain.SuperSimpleBtnClick(Sender: TObject);
+begin
+  RotaForm.UseDisplayList := False;
+  RotaForm.WantOverlayedRiggs := False;
+  Main.GraphRadio := gSimple;
+end;
+
+procedure TFormMain.SuperNormalBtnClick(Sender: TObject);
+begin
+  RotaForm.UseDisplayList := False;
+  RotaForm.WantOverlayedRiggs := False;
+  Main.GraphRadio := gNormal;
+end;
+
+procedure TFormMain.SuperGrauBtnClick(Sender: TObject);
+begin
+  RotaForm.UseDisplayList := False;
+  RotaForm.WantOverlayedRiggs := True;
+  Main.GraphRadio := gGrau;
+end;
+
+procedure TFormMain.SuperBlauBtnClick(Sender: TObject);
+begin
+  RotaForm.UseDisplayList := False;
+  RotaForm.WantOverlayedRiggs := True;
+  Main.GraphRadio := gBlau;
+end;
+
+procedure TFormMain.SuperMultiBtnClick(Sender: TObject);
+begin
+  RotaForm.UseDisplayList := False;
+  RotaForm.WantOverlayedRiggs := True;
+  Main.GraphRadio := gMulti;
+end;
+
+procedure TFormMain.SuperDisplayBtnClick(Sender: TObject);
+begin
+  RotaForm.UseDisplayList := True;
+  RotaForm.WantOverlayedRiggs := False;
+  RotaForm.RaumGraph.DL.UseQuickSort := False;
+  Main.GraphRadio := gDisplay;
+end;
+
+procedure TFormMain.SuperQuickBtnClick(Sender: TObject);
+begin
+  RotaForm.UseDisplayList := True;
+  RotaForm.WantOverlayedRiggs := False;
+  RotaForm.RaumGraph.DL.UseQuickSort := True;
+  Main.GraphRadio := gQuick;
 end;
 
 end.
