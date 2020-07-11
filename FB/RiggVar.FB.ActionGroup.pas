@@ -71,6 +71,7 @@ faShowActi,
 faShowMemo,
 faShowOpti,
 faShowConf,
+faShowText,
 faShowTrimmTab,
 faShowChart,
 faShowDiagA,
@@ -145,10 +146,16 @@ faSalingTypDrehbar,
 faSalingTypFest,
 faSalingTypOhneStarr];
 
+ActionGroupRggCalcType: TActionGroup = [
+faCalcTypQuer,
+faCalcTypKnick,
+faCalcTypGemessen];
+
 ActionGroupRggAppMode: TActionGroup = [
 faDemo,
 faMemoryBtn,
 faMemoryRecallBtn,
+faKorrigiertItem,
 faSofortBtn,
 faGrauBtn,
 faBlauBtn,
@@ -261,6 +268,8 @@ ActionGroupRggGraph: TActionGroup = [
   faToggleSalingGraph,
   faToggleControllerGraph,
   faToggleChartGraph,
+  faToggleKraftGraph,
+
   faToggleMatrixText];
 
 ActionGroupMemeFormat: TActionGroup = [
@@ -349,6 +358,12 @@ ActionGroupCircles: TActionGroup = [
   faCircleParamM2Z,
   faCirclesReset];
 
+ActionGroupParamT: TActionGroup = [
+faParamT1,
+faParamT2,
+faParamT3,
+faParamT4];
+
 (*
 ActionGroupViewOptions: TActionGroup = [
 faToggleMoveMode,
@@ -359,12 +374,6 @@ ActionGroupViewType: TActionGroup = [
 faToggleViewType,
 faViewTypeOrtho,
 faViewTypePerspective];
-
-ActionGroupParamT: TActionGroup = [
-faParamT1,
-faParamT2,
-faParamT3,
-faParamT4];
 
 ActionGroupRggHullMesh: TActionGroup = [
 faHullMesh,

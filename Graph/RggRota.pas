@@ -111,6 +111,7 @@ type
     procedure SetControllerTyp(const Value: TControllerTyp);
     procedure SetWanteGestrichelt(const Value: Boolean);
     procedure SetBogen(const Value: Boolean);
+    procedure SetKoppel(const Value: Boolean);
     procedure SetBtnBlauDown(const Value: Boolean);
     procedure SetBtnGrauDown(const Value: Boolean);
     procedure SetGrauZeichnen(const Value: Boolean);
@@ -146,6 +147,7 @@ type
     FSofortBerechnen: Boolean;
     FWanteGestrichelt: Boolean;
     FBogen: Boolean;
+    FKoppel: Boolean;
     procedure InitGraph;
     procedure InitRaumGraph;
     procedure InitHullGraph;
@@ -187,6 +189,7 @@ type
     property KoppelKurve: TKoordLine write SetKoppelKurve;
     property WanteGestrichelt: Boolean read FWanteGestrichelt write SetWanteGestrichelt;
     property Bogen: Boolean read FBogen write SetBogen;
+    property Koppel: Boolean read FKoppel write SetKoppel;
 
     property RiggLED: Boolean read FRiggLED write SetRiggLED;
     property SofortBerechnen: Boolean read FSofortBerechnen write SetSofortBerechnen;
@@ -896,6 +899,12 @@ end;
 procedure TRotaForm.SetKoordinatenR(const Value: TRealRiggPoints);
 begin
   RPR := Value;
+end;
+
+procedure TRotaForm.SetKoppel(const Value: Boolean);
+begin
+  FKoppel := Value;
+  RaumGraph.Koppel := Value;
 end;
 
 procedure TRotaForm.SetKoppelKurve(const Value: TKoordLine);

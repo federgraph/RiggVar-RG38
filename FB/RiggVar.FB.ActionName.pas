@@ -52,6 +52,7 @@ faShowMemo: result := 'faShowMemo';
 faShowOpti: result := 'faShowOpti';
 faShowConf: result := 'faShowConf';
 faShowTrimmTab: result := 'faShowTrimmTab';
+faShowText: result := 'faShowText';
 faShowChart: result := 'faShowChart';
 faShowDiagA: result := 'faShowDiagA';
 faShowDiagC: result := 'faShowDiagC';
@@ -95,6 +96,12 @@ faParamRX: result := 'faParamRX';
 faParamRY: result := 'faParamRY';
 faParamRZ: result := 'faParamRZ';
 faParamCZ: result := 'faParamCZ';
+
+{ ParamT }
+faParamT1: result := 'faParamT1';
+faParamT2: result := 'faParamT2';
+faParamT3: result := 'faParamT3';
+faParamT4: result := 'faParamT4';
 
 { RggControls }
 faController: result := 'faController';
@@ -144,10 +151,16 @@ faSalingTypDrehbar: result := 'faSalingTypDrehbar';
 faSalingTypFest: result := 'faSalingTypFest';
 faSalingTypOhneStarr: result := 'faSalingTypOhneStarr';
 
+{ RggCalcType }
+faCalcTypQuer: result := 'faCalcTypQuer';
+faCalcTypKnick: result := 'faCalcTypKnick';
+faCalcTypGemessen: result := 'faCalcTypGemessen';
+
 { RggAppMode }
 faDemo: result := 'faDemo';
 faMemoryBtn: result := 'faMemoryBtn';
 faMemoryRecallBtn: result := 'faMemoryRecallBtn';
+faKorrigiertItem: result := 'faKorrigiertItem';
 faSofortBtn: result := 'faSofortBtn';
 faGrauBtn: result := 'faGrauBtn';
 faBlauBtn: result := 'faBlauBtn';
@@ -213,6 +226,7 @@ faRggZoomOut: result := 'faRggZoomOut';
 faToggleSalingGraph: result := 'faToggleSalingGraph';
 faToggleControllerGraph: result := 'faToggleControllerGraph';
 faToggleChartGraph: result := 'faToggleChartGraph';
+faToggleKraftGraph: result := 'faToggleKraftGraph';
 faToggleMatrixText: result := 'faToggleMatrixText';
 
 { RggSegment }

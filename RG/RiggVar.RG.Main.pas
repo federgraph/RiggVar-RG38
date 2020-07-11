@@ -150,7 +150,6 @@ type
     BiegungGFDiff: single;
 
     TML: TStrings;
-    FHullVisible: Boolean;
 
     FSofortBerechnen: Boolean;
     FBtnGrauDown: Boolean;
@@ -159,6 +158,10 @@ type
     FGraphRadio: TGraphRadio;
 
     FOnUpdateGraph: TNotifyEvent;
+    FKorrigiert: Boolean;
+    FBogen: Boolean;
+    FKoppel: Boolean;
+    FHullVisible: Boolean;
 
     function FormatValue(Value: single): string;
     procedure DoBiegungGF;
@@ -179,7 +182,6 @@ type
     procedure SetVisible(const Value: Boolean);
     procedure AL(A: string; fp: TFederParam);
     procedure BL(A: string; C: string);
-    procedure SetHullVisible(const Value: Boolean);
     function GetHullVisible: Boolean;
     procedure SetBtnBlauDown(const Value: Boolean);
     procedure SetBtnGrauDown(const Value: Boolean);
@@ -188,6 +190,10 @@ type
     procedure UpdateEAR(Value: single);
     procedure UpdateEAH(Value: single);
     procedure SetSuperRadio(const Value: TGraphRadio);
+    procedure SetKorrigiert(const Value: Boolean);
+    procedure SetBogen(const Value: Boolean);
+    procedure SetKoppel(const Value: Boolean);
+    procedure SetHullVisible(const Value: Boolean);
   protected
     FAction: TFederAction;
     procedure InitFactArray;
@@ -262,9 +268,12 @@ type
     property CurrentValue: single read GetCurrentValue write SetCurrentValue;
     property Mastfall: string read GetMastfall;
 
+    property Bogen: Boolean read FBogen write SetBogen;
+    property Koppel: Boolean read FKoppel write SetKoppel;
     property HullVisible: Boolean read GetHullVisible write SetHullVisible;
     property Visible: Boolean read FVisible write SetVisible;
 
+    property Korrigiert: Boolean read FKorrigiert write SetKorrigiert;
     property SofortBerechnen: Boolean read FSofortBerechnen write SetSofortBerechnen;
     property BtnGrauDown: Boolean read FBtnGrauDown write SetBtnGrauDown;
     property BtnBlauDown: Boolean read FBtnBlauDown write SetBtnBlauDown;
@@ -294,6 +303,7 @@ begin
   Demo := False;
 
   FParam := fpVorstag;
+  FKorrigiert := True;
   FSofortBerechnen := False;
   FBtnGrauDown := True;
   FBtnBlauDown := False;
@@ -349,6 +359,13 @@ begin
     StrokeRigg.BtnGrauDown := BtnGrauDown;
     StrokeRigg.BtnBlauDown := BtnBlauDown;
     StrokeRigg.RiggLED := RiggLED;
+
+    if Rigg.SalingTyp > stDrehbar then
+      StrokeRigg.Koppel := False
+    else
+      StrokeRigg.Koppel := FKoppel;
+
+//    StrokeRigg.Bogen := FBogen;
 
     StrokeRigg.Koordinaten := Rigg.rP;
     StrokeRigg.KoordinatenE := Rigg.rPe;
@@ -446,6 +463,28 @@ begin
     FHullVisible := Value;
     StrokeRigg.HullVisible := Value;
     Draw;
+  end;
+end;
+
+procedure TRggMain.SetBogen(const Value: Boolean);
+begin
+  FBogen := Value;
+  Draw;
+end;
+
+procedure TRggMain.SetKoppel(const Value: Boolean);
+begin
+  FKoppel := Value;
+  Draw;
+end;
+
+procedure TRggMain.SetKorrigiert(const Value: Boolean);
+begin
+  if (Value <> FKorrigiert) then
+  begin
+    FKorrigiert := Value;
+    Rigg.Korrigiert := Value;
+    UpdateGetriebe;
   end;
 end;
 

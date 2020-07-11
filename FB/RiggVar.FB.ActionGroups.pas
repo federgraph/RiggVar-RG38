@@ -93,12 +93,14 @@ begin
   { View }
   AddSpecial(ActionGroupFederText, 'FederText');
   AddSpecial(ActionGroupViewParams, 'ViewParams');
+  AddSpecial(ActionGroupParamT, 'ParamT');
 
   { RG }
   AddSpecial(ActionGroupRggControls, 'RggControls');
   AddSpecial(ActionGroupRggFixPoints, 'RggFixPoints');
   AddSpecial(ActionGroupRggViewPoint, 'RggViewPoint');
   AddSpecial(ActionGroupRggSalingType, 'RggSalingType');
+  AddSpecial(ActionGroupRggCalcType, 'RggCalcType');
   AddSpecial(ActionGroupRggAppMode, 'RggAppMode');
   AddSpecial(ActionGroupRggSuper, 'RggSuper');
   AddSpecial(ActionGroupRggReport, 'RggReport');
@@ -125,7 +127,6 @@ begin
 (*
   AddSpecial(ActionGroupViewType, 'ViewType');
   AddSpecial(ActionGroupViewFlags, 'ViewFlags');
-  AddSpecial(ActionGroupParamT, 'Texture Param');
   AddSpecial(ActionGroupEmptyLastLine, 'LastLine');
   AddSpecial(ActionGroupHelp, 'Help');
   AddSpecial(ActionGroupFormat, 'Format');

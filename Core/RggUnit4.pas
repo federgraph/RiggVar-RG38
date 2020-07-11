@@ -36,10 +36,13 @@ type
 {$ifdef MSWindows}
     procedure WriteXml(ML: TStrings; AllTags: Boolean = False);
 {$endif}
+    procedure AusgabeText(ML: TStrings);
+    procedure AusgabeKommentar(ML: TStrings);
+
     procedure SaveToFederData(fd: TRggData);
     procedure LoadFromFederData(fd: TRggData);
-    procedure WriteToDocFile(FileName: String);
-    procedure LoadFromDocFile(FileName: String);
+    procedure WriteToDocFile(FileName: string);
+    procedure LoadFromDocFile(FileName: string);
     procedure Assign(Source: TPersistent); override;
     procedure GetDocument(Doc: TRggDocument);
     procedure SetDocument(Doc: TRggDocument);
@@ -96,7 +99,7 @@ begin
 end;
 {$endif}
 
-procedure TRigg.WriteToDocFile(FileName: String);
+procedure TRigg.WriteToDocFile(FileName: string);
 var
   Document: TRggDocument;
   s: string;
@@ -121,7 +124,7 @@ begin
   end;
 end;
 
-procedure TRigg.LoadFromDocFile(FileName: String);
+procedure TRigg.LoadFromDocFile(FileName: string);
 var
   Document: TRggDocument;
   s: string;
@@ -480,6 +483,114 @@ begin
   ManipulatorMode := tempManipulatorMode;
 
   UpdateGSB;
+end;
+
+procedure TRigg.AusgabeText(ML: TStrings);
+var
+  tempSalingDaten: TSalingDaten;
+begin
+  tempSalingDaten := SalingDaten;
+
+//  MemoPosY := SendMessage(OutputForm.DisplayMemo.Handle, EM_GETFIRSTVISIBLELINE, 0, 0);
+//  ML := OutputForm.DisplayMemo.Lines;
+//  ML.BeginUpdate;
+//  ML.Clear;
+
+  { Text setzen }
+//  lbMastFall := Format('Mastfall = %5.1f cm', [Rigg.Trimm.Mastfall / 10]);
+//  lbSpannung := Format('Spannung = %5.0f N', [Rigg.rF[14]]);
+//  lbBiegung := Format('Biegung  = %5.1f cm', [Rigg.hd / 10]);
+
+  ML.Add('Trimm:');
+  ML.Add(Format('  Mastfall F0F     = %8.1f cm', [Trimm.Mastfall / 10]));
+  ML.Add(Format('  Vorstagspannung  = %8.1f N', [rF[14]]));
+  ML.Add(Format('  Durchbiegung hd  = %8.1f cm', [hd / 10]));
+
+  ML.Add('');
+  ML.Add('Saling:');
+  ML.Add(Format('  Saling Länge   = %6.2f mm', [tempSalingDaten.SalingL]));
+  ML.Add(Format('  Saling Höhe    = %6.2f mm', [tempSalingDaten.SalingH]));
+  ML.Add(Format('  Saling Abstand = %6.2f mm', [tempSalingDaten.SalingA]));
+  ML.Add(Format('  Saling Winkel  = %6.2f Grad', [tempSalingDaten.SalingW]));
+  ML.Add(Format('  Wanten Winkel  = %6.2f Grad', [tempSalingDaten.WantenWinkel]));
+  ML.Add(Format('  Kraft Winkel   = %6.2f Grad', [tempSalingDaten.KraftWinkel]));
+
+  ML.Add('');
+  ML.Add('SchnittKräfte:');
+  ML.Add(Format('  FC  = %8.2f N    (Mastdruckkraft)', [FC]));
+  ML.Add(Format('  FB  = %8.2f N    (Wanten/Vorstag)', [FB]));
+  ML.Add(Format('  F2  = %8.2f N    (Saling)', [F2]));
+  ML.Add(Format('  F1  = %8.2f N    (Controller)', [F1]));
+  ML.Add(Format('  FA  = %8.2f N    (Mastfuß)', [FA]));
+  ML.Add(Format('  hd  = %8.2f mm   (Saling Durchbiegung)', [hd]));
+  ML.Add(Format('  he  = %8.2f mm   (Controller Durchbiegung)', [he]));
+  ML.Add(Format('  sd  = %8.2f mm   (hd-FSalingWegKnick)', [hd-FSalingWegKnick]));
+
+  ML.Add('');
+  ML.Add('BiegeKnicken:');
+  ML.Add(Format('  KoppelFaktor       = %8.5f', [FKoppelFaktor]));
+  ML.Add(Format('  SalingAlpha        = %8.5f mm/N', [FSalingAlpha]));
+  ML.Add(Format('  ControllerAlpha    = %8.5f mm/N', [FControllerAlpha]));
+  ML.Add(Format('  SalingWeg          = %8.2f mm', [FSalingWeg]));
+  ML.Add(Format('  SalingWegKnick     = %8.2f mm', [FSalingWegKnick]));
+  ML.Add(Format('  ControllerWeg      = %8.2f mm', [FControllerWeg]));
+  ML.Add(Format('  FSchnittPunktKraft = %8.2f N', [FSchnittPunktKraft]));
+  ML.Add(Format('  FwSchnittOhne      = %8.2f mm', [FwSchnittOhne]));
+  ML.Add(Format('  FwSchnittMit       = %8.2f mm', [FwSchnittMit]));
+  ML.Add(Format('  FwSchnittOffset    = %8.2f mm', [FwSchnittOffset]));
+
+  ML.Add('');
+  ML.Add('SchnittWinkel:');
+  ML.Add(Format('  alpha1 = %6.2f Grad', [alpha1 * 180 / pi]));
+  ML.Add(Format('  alpha2 = %6.2f Grad', [alpha2 * 180 / pi]));
+  ML.Add(Format('  delta1 = %6.2f Grad', [delta1 * 180 / pi]));
+  ML.Add(Format('  delta2 = %6.2f Grad', [delta2 * 180 / pi]));
+  ML.Add(Format('  gamma  = %6.2f Grad', [gamma * 180 / pi]));
+  ML.Add(Format('  beta   = %6.2f Grad', [beta * 180 / pi]));
+
+  ML.Add('');
+  ML.Add('Winkel:');
+  ML.Add(Format('  phi       = %6.2f Grad', [phi * 180 / pi]));
+  ML.Add(Format('  psi       = %6.2f Grad', [psi * 180 / pi]));
+  ML.Add(Format('  alpha     = %6.2f Grad', [alpha * 180 / pi]));
+  ML.Add(Format('  phi-alpha = %6.2f Grad (Mast-Neigung)', [(phi-alpha)*180/pi]));
+  ML.Add(Format('  psi-alpha = %6.2f Grad (Wanten-Neigung)', [(psi-alpha)*180/pi]));
+
+  ML.Add('');
+  ML.Add('MastWinkel:');
+  ML.Add(Format('  epsB = %6.2f Grad', [epsB * 180 / pi]));
+  ML.Add(Format('  eps2 = %6.2f Grad', [eps2 * 180 / pi]));
+  ML.Add(Format('  eps1 = %6.2f Grad', [eps1 * 180 / pi]));
+  ML.Add(Format('  epsA = %6.2f Grad', [epsA * 180 / pi]));
+  ML.Add(Format('  Epsilon  = %6.2f Grad', [epsilon * 180 / pi]));
+
+//  SendMessage(OutputForm.DisplayMemo.Handle, EM_LINESCROLL, 0, MemoPosY);
+//  ML.EndUpdate;
+end;
+
+procedure TRigg.AusgabeKommentar(ML: TStrings);
+var
+  temp: double;
+begin
+//  ML := OutputForm.KommentarMemo.Lines;
+//  ML.BeginUpdate;
+//  ML.Clear;
+
+  temp := hd / 10; { Biegung in cm }
+  if temp < 0 then
+    ML.Add('Mastbiegung negativ!');
+  if temp < 2 then
+    ML.Add('Mast hat fast keine Vorbiegung.');
+  if temp > 10 then
+    ML.Add('Mastbiegung zu groß.');
+
+  temp := rF[14]; { Vorstagspannung in N }
+  if temp < 800 then
+    ML.Add('Vorstagspannung zu gering.');
+  if temp > 2000 then
+    ML.Add('Vorstagspannung zu groß.');
+
+//  ML.EndUpdate;
 end;
 
 end.

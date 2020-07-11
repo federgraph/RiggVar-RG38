@@ -78,10 +78,14 @@ begin
     faCopyTrimmFile: result := 'Copy Trimm File';
     faSaveTrimmFile: result := 'Save Trimm File';
 
-    faSalingTypOhneStarr: result := 'Ohne Salinge Starr';
-    faSalingTypOhne: result := 'Ohne Salinge';
-    faSalingTypDrehbar: result := 'Drehbare Salinge';
     faSalingTypFest: result := 'Feste Salinge';
+    faSalingTypDrehbar: result := 'Drehbare Salinge';
+    faSalingTypOhne: result := 'Ohne Salinge';
+    faSalingTypOhneStarr: result := 'Ohne Salinge Starr';
+
+    faCalcTypQuer: result := 'Querkraftbiegung';
+    faCalcTypKnick: result := 'Biegeknicken';
+    faCalcTypGemessen: result := 'Kraft gemessen';
 
     faWantRenderH: result := 'Want render H (Hull-Tetraeder)';
     faWantRenderP: result := 'Want render P (Fachwerk)';
@@ -109,12 +113,15 @@ begin
     faShowActi: result := 'Form Actions';
     faShowOpti: result := 'Form Options';
     faShowConf: result := 'Form Config';
-    faShowChart: result := 'Form Chart';
+    faShowTrimmTab: result := 'Form Trimm Tab';
+
     faShowDiagA: result := 'Form Diagramm';
     faShowDiagC: result := 'Form Live Diagramm Controls';
     faShowDiagE: result := 'Form Diagramm Edits';
     faShowDiagQ: result := 'Form Diagramm Quick';
-    faShowTrimmTab: result := 'Form Trimm Tab';
+
+    faShowChart: result := 'Form Chart';
+    faShowText: result := 'Form Text-Ausgabe';
 
     faWheelLeft: result := 'Wheel -1';
     faWheelRight: result := 'Wheel +1';
@@ -240,11 +247,13 @@ begin
     faToggleSalingGraph: result := 'Toggle Saling Graph';
     faToggleControllerGraph: result := 'Toggle Controller Graph';
     faToggleChartGraph: result := 'Toggle Chart Graph';
+    faToggleKraftGraph: result := 'Toggle Kraft Graph';
     faToggleMatrixText: result := 'Toggle Matrix Text';
 
     faMemoryBtn: result := 'Memory Btn';
     faMemoryRecallBtn: result := 'Memory Recall Btn';
 
+    faKorrigiertItem: result := 'Korrigiert Item';
     faSofortBtn: result := 'Sofort Btn';
     faGrauBtn: result := 'Grau Btn';
     faBlauBtn: result := 'Blau Btn';
@@ -337,6 +346,11 @@ begin
     faParamEAH: result := 'Param EA Hull';
     faParamEAR: result := 'Param EA Rigg';
     faParamEI: result := 'Param EI Mast';
+
+    faParamT1: result := 'Param T1';
+    faParamT2: result := 'Param T2';
+    faParamT3: result := 'Param T3';
+    faParamT4: result := 'Param T4';
   end;
 end;
 

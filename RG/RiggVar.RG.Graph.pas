@@ -21,6 +21,7 @@ type
 
     procedure SetWanteGestrichelt(const Value: Boolean);
     procedure SetBogen(const Value: Boolean);
+    procedure SetKoppel(const Value: Boolean);
     procedure SetHullVisible(const Value: Boolean);
 
     procedure SetFixPoint(const Value: TRiggPoint);
@@ -45,6 +46,7 @@ type
     property MastKurve: TMastKurve write SetMastKurve;
     property WanteGestrichelt: Boolean write SetWanteGestrichelt;
     property Bogen: Boolean write SetBogen;
+    property Koppel: Boolean write SetKoppel;
     property HullVisible: Boolean write SetHullVisible;
     property FixPoint: TRiggPoint write SetFixPoint;
     property ViewPoint: TViewPoint write SetViewPoint;
@@ -77,6 +79,7 @@ type
     FSofortBerechnen: Boolean;
     FKoordinatenR: TRealRiggPoints;
     FKoordinatenE: TRealRiggPoints;
+    FKoppel: Boolean;
     procedure SetBogen(const Value: Boolean);
     procedure SetWanteGestrichelt(const Value: Boolean);
     procedure SetFixPoint(const Value: TRiggPoint);
@@ -91,6 +94,7 @@ type
     procedure SetSofortBerechnen(const Value: Boolean);
     procedure SetKoordinatenE(const Value: TRealRiggPoints);
     procedure SetKoordinatenR(const Value: TRealRiggPoints);
+    procedure SetKoppel(const Value: Boolean);
   public
     WantRenderH: Boolean;
     WantRenderP: Boolean;
@@ -118,6 +122,7 @@ type
     property MastKurve: TMastKurve read FMastKurve write SetMastKurve;
     property WanteGestrichelt: Boolean read FWanteGestrichelt write SetWanteGestrichelt;
     property Bogen: Boolean read FBogen write SetBogen;
+    property Koppel: Boolean read FKoppel write SetKoppel;
     property HullVisible: Boolean read FHullVisible write SetHullVisible;
     property FixPoint: TRiggPoint read FFixPoint write SetFixPoint;
     property ViewPoint: TViewPoint read FViewPoint write SetViewPoint;
@@ -239,6 +244,11 @@ end;
 procedure TDummyStrokeRigg.SetKoordinatenR(const Value: TRealRiggPoints);
 begin
   FKoordinatenR := Value;
+end;
+
+procedure TDummyStrokeRigg.SetKoppel(const Value: Boolean);
+begin
+  FKoppel := Value;
 end;
 
 procedure TDummyStrokeRigg.SetKoppelKurve(const Value: TKoordLine);

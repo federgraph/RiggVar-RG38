@@ -299,7 +299,10 @@ begin
   ooTempA := EVektor(rP[ooA], rP[ooC]);
   ooTempB := EVektor(rP[ooA0], rP[ooA]);
   cosWW := sprod(ooTempA, ooTempB);
-  tempWW := arccos(cosWW);
+  if abs(cosWW) > 0.99 then
+    tempWW := 0
+  else
+    tempWW := arccos(cosWW);
 
   { ooTempA := Evektor(rP[ooA],rP[ooC]); }
   ooTempB := EVektor(rP[ooA], rP[ooD]);

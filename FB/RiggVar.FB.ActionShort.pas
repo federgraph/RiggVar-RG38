@@ -68,10 +68,14 @@ begin
     faTrimm5: result := 'T5';
     faTrimm6: result := 'T6';
 
-    faSalingTypOhneStarr: result := 'oss';
-    faSalingTypOhne: result := 'os';
-    faSalingTypDrehbar: result := 'ds';
     faSalingTypFest: result := 'fs';
+    faSalingTypDrehbar: result := 'ds';
+    faSalingTypOhne: result := 'os';
+    faSalingTypOhneStarr: result := 'oss';
+
+    faCalcTypQuer: result := 'cQ';
+    faCalcTypKnick: result := 'cK';
+    faCalcTypGemessen: result := 'cM';
 
     fa420: result := '420';
     faLogo: result := 'logo';
@@ -106,7 +110,6 @@ begin
     faShowActi: result := 'FA';
     faShowOpti: result := 'FO';
     faShowConf: result := 'FC';
-
     faShowTrimmTab: result := 'FT';
 
     faShowDiagA: result := 'DA';
@@ -115,6 +118,7 @@ begin
     faShowDiagQ: result := 'DQ';
 
     faShowChart: result := 'CF'; // old ChartForm
+    faShowText: result := 'TA';
 
     faWheelLeft: result := 'wl';
     faWheelRight: result := 'wr';
@@ -241,11 +245,13 @@ begin
     faToggleSalingGraph: result := 'SG';
     faToggleControllerGraph: result := 'CG';
     faToggleChartGraph: result := 'DG';
+    faToggleKraftGraph: result := 'KG';
     faToggleMatrixText: result := 'MT';
 
     faMemoryBtn: result := 'M';
     faMemoryRecallBtn: result := 'MR';
 
+    faKorrigiertItem: result := 'KI';
     faSofortBtn: result := 'SF';
     faGrauBtn: result := 'GB';
     faBlauBtn: result := 'BB';
@@ -342,6 +348,12 @@ begin
     faParamEAH: result := 'EAH';
     faParamEAR: result := 'EAR';
     faParamEI: result := 'EI';
+
+    faParamT1: result := 't1';
+    faParamT2: result := 't2';
+    faParamT3: result := 't3';
+    faParamT4: result := 't4';
+
   end;
 end;
 
