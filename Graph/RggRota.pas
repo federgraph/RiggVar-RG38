@@ -68,7 +68,10 @@ type
     FTheta: double;
     FGamma: double;
 
-    xmin, ymin, xmax, ymax: single;
+    xmin: single;
+    ymin: single;
+    xmax: single;
+    ymax: single;
 
     FXpos: single;
     FYpos: single;

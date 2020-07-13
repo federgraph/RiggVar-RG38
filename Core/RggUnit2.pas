@@ -70,8 +70,6 @@ type
 
     procedure LoadFromIniFile(ini: TIniFile); override;
     procedure WriteToIniFile(ini: TIniFile); override;
-    procedure LoadFromStream(S: TStream); override;
-    procedure SaveToStream(S: TStream); override;
 
     procedure Abstaende;
     procedure BerechneF; override;
@@ -226,13 +224,6 @@ begin
   ini.WriteInteger(s, EI_IniString, tempEI);
 end;
 
-procedure TMast.SaveToStream(S: TStream);
-begin
-  inherited SaveToStream(S);
-  S.WriteBuffer(ControllerTyp, SizeOf(Integer));
-  S.WriteBuffer(EI, SizeOf(double));
-end;
-
 procedure TMast.LoadFromIniFile(ini: TIniFile);
 var
   s: String;
@@ -244,17 +235,6 @@ begin
 
   s := Mast_IniSectionString;
   EI := ini.ReadInteger(S, EI_IniString, 14700) * 1E6;
-end;
-
-procedure TMast.LoadFromStream(S: TStream);
-var
-  temp: Integer;
-begin
-  temp := 0;
-  inherited LoadFromStream(S);
-  S.ReadBuffer(temp, SizeOf(Integer));
-  ControllerTyp := TControllerTyp(temp);
-  S.ReadBuffer(EI, SizeOf(double));
 end;
 
 procedure TMast.GetEpsilon;

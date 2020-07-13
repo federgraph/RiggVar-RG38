@@ -86,8 +86,6 @@ type
 
     procedure LoadFromIniFile(IniFile: TIniFile); override;
     procedure WriteToIniFile(IniFile: TIniFile); override;
-    procedure LoadFromStream(S: TStream); override;
-    procedure SaveToStream(S: TStream); override;
 
     procedure UpdateRigg;
     function Regeln(TrimmSoll: TTrimm): Integer;
@@ -182,18 +180,6 @@ begin
       rEA[i] := StrToFloat(s2);
     end;
   end;
-end;
-
-procedure TRiggFS.LoadFromStream(S: TStream);
-begin
-  inherited LoadFromStream(S);
-  S.ReadBuffer(rEA, SizeOf(TRiggLvektor));
-end;
-
-procedure TRiggFS.SaveToStream(S: TStream);
-begin
-  inherited SaveToStream(S);
-  S.WriteBuffer(rEA, SizeOf(TRiggLvektor));
 end;
 
 procedure TRiggFS.SetSalingTyp(Value: TSalingTyp);
@@ -794,9 +780,9 @@ begin
 
     { Berechnung für Punkt ooF - Masttop }
     gammaE := pi / 2 - arctan2((rPe[ooC, x] - rPe[ooD0, x]), (rPe[ooC, z] - rPe[ooD0, z]));
-    rPe[ooF, x] := rPe[ooD0, x] + FiMastL * cos(gammaE);
+    rPe[ooF, x] := rPe[ooD0, x] + FrMastLength * cos(gammaE);
     rPe[ooF, y] := 0;
-    rPe[ooF, z] := rPe[ooD0, z] + FiMastL * sin(gammaE);
+    rPe[ooF, z] := rPe[ooD0, z] + FrMastLength * sin(gammaE);
 
   except
     on E: EMathError do
@@ -906,9 +892,9 @@ begin
       { Berechnung für Punkt ooF - Masttop }
       gammaE := pi / 2 - arctan2((rPe[ooC, x] - rPe[ooD0, x]),
         (rPe[ooC, z] - rPe[ooD0, z]));
-      rPe[ooF, x] := rPe[ooD0, x] + FiMastL * cos(gammaE);
+      rPe[ooF, x] := rPe[ooD0, x] + FrMastLength * cos(gammaE);
       rPe[ooF, y] := 0;
-      rPe[ooF, z] := rPe[ooD0, z] + FiMastL * sin(gammaE);
+      rPe[ooF, z] := rPe[ooD0, z] + FrMastLength * sin(gammaE);
     end;
 
   except
@@ -1096,9 +1082,9 @@ begin
 
     { Berechnung für Punkt ooF - Masttop }
     gammaE := pi / 2 - arctan2((rPe[ooC, x] - rPe[ooD0, x]), (rPe[ooC, z] - rPe[ooD0, z]));
-    rPe[ooF, x] := rPe[ooD0, x] + FiMastL * cos(gammaE);
+    rPe[ooF, x] := rPe[ooD0, x] + FrMastLength * cos(gammaE);
     rPe[ooF, y] := 0;
-    rPe[ooF, z] := rPe[ooD0, z] + FiMastL * sin(gammaE);
+    rPe[ooF, z] := rPe[ooD0, z] + FrMastLength * sin(gammaE);
 
   except
     on E: EMathError do
@@ -1169,9 +1155,9 @@ begin
         { Hier nur Biegen und Neigen }
         case SalingTyp of
           stFest:
-            Berechnen(FiSalingH); { Saling wiederherstellen }
+            Berechnen(FrSalingH); { Saling wiederherstellen }
           stDrehbar:
-            Berechnen(FiSalingL);
+            Berechnen(FrSalingL);
         end;
         Exit; { weil Kraft schon bekannt }
       end;

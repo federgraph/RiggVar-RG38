@@ -697,7 +697,6 @@ begin
       ReportListbox.Visible := False;
 
     HelpText.Position.X := Raster + 30;
-
     ReportText.Position.X := Raster + 30;
 
     Image.Position.X := 0;
@@ -714,7 +713,6 @@ begin
       ReportListbox.Visible := True;
 
     HelpText.Position.X := TextPositionX;
-
     ReportText.Position.X := TextPositionX;
 
     Image.Position.X := ImagePositionX;
@@ -928,6 +926,7 @@ begin
     faToggleUseQuickSort: RotaForm.UseQuickSortBtnClick(nil);
     faToggleSalingGraph: SalingImageBtnClick(nil);
     faToggleControllerGraph: ControllerImageBtnClick(nil);
+    faToggleChartGraph: ChartImageBtnClick(nil);
     faToggleMatrixText: RotaForm.MatrixItemClick(nil);
 
     faMemoryBtn: MemoryBtnClick(nil);
@@ -1540,7 +1539,7 @@ begin
     ControllerGraph.ControllerTyp := Rigg.ControllerTyp;
     ControllerGraph.ControllerPos := Round(Main.ParamValue[fpController]);
     ControllerGraph.ParamXE := Rigg.MastPositionE;
-    ControllerGraph.ParamXE0 := Round(Rigg.iP[ooE0, x] - Rigg.iP[ooD0, x]);
+    ControllerGraph.ParamXE0 := Round(Rigg.rP[ooE0, x] - Rigg.rP[ooD0, x]);
     ControllerGraph.EdgePos := Round(Rigg.GSB.Find(fpController).Min);
 
     ControllerGraph.Draw(TFigure.dtController);

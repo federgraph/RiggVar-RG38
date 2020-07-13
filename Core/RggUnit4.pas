@@ -61,10 +61,10 @@ implementation
   var
   IniFile: TIniFile;
   begin
-  IniFile := TIniFile.Create(FileName);
-  try
-    inherited WriteToIniFile(IniFile);
-   finally
+    IniFile := TIniFile.Create(FileName);
+    try
+      inherited WriteToIniFile(IniFile);
+    finally
       IniFile.Free;
     end;
   end;
@@ -75,7 +75,7 @@ implementation
   begin
     IniFile := TIniFile.Create(FileName);
     try
-    inherited LoadFromIniFile(IniFile);
+      inherited LoadFromIniFile(IniFile);
     finally
       IniFile.Free;
     end;
@@ -139,8 +139,8 @@ begin
     end;
     // if S = RGG_File_Extension then
     // begin
-    // Document.LoadFromFile(FileName);
-    // SetDocument(Document);
+    //   Document.LoadFromFile(FileName);
+    //   SetDocument(Document);
     // end;
   finally
     Document.Free;
@@ -173,13 +173,13 @@ begin
   Doc.ControllerTyp := ControllerTyp;
   Doc.CalcTyp := CalcTyp;
   { Mast: Abmessungen }
-  Doc.FiMastL := Round(FiMastL);
-  Doc.FiMastunten := Round(FiMastunten);
-  Doc.FiMastoben := Round(FiMastoben);
-  Doc.FiMastfallVorlauf := Round(FiMastfallVorlauf);
+  Doc.FiMastL := Round(FrMastLength);
+  Doc.FiMastunten := Round(FrMastUnten);
+  Doc.FiMastoben := Round(FrMastOben);
+  Doc.FiMastfallVorlauf := Round(FrMastfallVorlauf);
   Doc.FiControllerAnschlag := Round(FiControllerAnschlag);
   { Rumpf: Koordinaten }
-  Doc.iP := iP;
+  Doc.iP := rP;
   { Festigkeitswerte }
   Doc.rEA := rEA;
   Doc.EI := EI;
@@ -195,13 +195,13 @@ var
   tempManipulatorMode: Boolean;
 begin
   { Mast: Abmessungen }
-  FiMastL := Doc.FiMastL;
-  FiMastunten := Doc.FiMastunten;
-  FiMastoben := Doc.FiMastoben;
-  FiMastfallVorlauf := Doc.FiMastfallVorlauf;
+  FrMastLength := Doc.FiMastL;
+  FrMastUnten := Doc.FiMastunten;
+  FrMastOben := Doc.FiMastoben;
+  FrMastfallVorlauf := Doc.FiMastfallVorlauf;
   FiControllerAnschlag := Doc.FiControllerAnschlag;
   { Rumpf: Koordinaten }
-  iP := Doc.iP;
+  rP := Doc.iP;
   { Festigkeitswerte }
   rEA := Doc.rEA;
   EI := Doc.EI;
@@ -314,29 +314,29 @@ end;
 
 procedure TRigg.SaveToFederData(fd: TRggData);
 begin
-  fd.A0X := Round(iP[ooA0, X]);
-  fd.A0Y := Round(iP[ooA0, Y]);
-  fd.A0Z := Round(iP[ooA0, Z]);
+  fd.A0X := Round(rP[ooA0, X]);
+  fd.A0Y := Round(rP[ooA0, Y]);
+  fd.A0Z := Round(rP[ooA0, Z]);
 
-  fd.C0X := Round(iP[ooC0, X]);
-  fd.C0Y := Round(iP[ooC0, Y]);
-  fd.C0Z := Round(iP[ooC0, Z]);
+  fd.C0X := Round(rP[ooC0, X]);
+  fd.C0Y := Round(rP[ooC0, Y]);
+  fd.C0Z := Round(rP[ooC0, Z]);
 
-  fd.D0X := Round(iP[ooD0, X]);
-  fd.D0Y := Round(iP[ooD0, Y]);
-  fd.D0Z := Round(iP[ooD0, Z]);
+  fd.D0X := Round(rP[ooD0, X]);
+  fd.D0Y := Round(rP[ooD0, Y]);
+  fd.D0Z := Round(rP[ooD0, Z]);
 
-  fd.E0X := Round(iP[ooE0, X]);
-  fd.E0Y := Round(iP[ooE0, Y]);
-  fd.E0Z := Round(iP[ooE0, Z]);
+  fd.E0X := Round(rP[ooE0, X]);
+  fd.E0Y := Round(rP[ooE0, Y]);
+  fd.E0Z := Round(rP[ooE0, Z]);
 
-  fd.F0X := Round(iP[ooF0, X]);
-  fd.F0Y := Round(iP[ooF0, Y]);
-  fd.F0Z := Round(iP[ooF0, Z]);
+  fd.F0X := Round(rP[ooF0, X]);
+  fd.F0Y := Round(rP[ooF0, Y]);
+  fd.F0Z := Round(rP[ooF0, Z]);
 
-  fd.MU := Round(FiMastUnten);
-  fd.MO := Round(FiMastOben);
-  fd.ML := Round(FiMastL);
+  fd.MU := Round(FrMastUnten);
+  fd.MO := Round(FrMastOben);
+  fd.ML := Round(FrMastLength);
   fd.MV := Round(MastfallVorlauf);
   fd.CA := Round(FiControllerAnschlag);
 
@@ -383,40 +383,40 @@ var
   tempManipulatorMode: Boolean;
 begin
   { Mast: Abmessungen }
-  FiMastL := fd.ML;
-  FiMastunten := fd.MU;
-  FiMastoben := fd.MO;
+  FrMastLength := fd.ML;
+  FrMastUnten := fd.MU;
+  FrMastOben := fd.MO;
   FiControllerAnschlag := fd.CA;
   MastfallVorlauf := fd.MV;
 
   { Rumpf: Koordinaten }
 
-  //iP := Doc.iP;
-  iP[ooA0, x] := fd.A0X;
-  iP[ooA0, y] := fd.A0Y;
-  iP[ooA0, z] := fd.A0Z;
-  iP[ooB0, x] := fd.A0X;
-  iP[ooB0, y] := -fd.A0Y;
-  iP[ooB0, z] := fd.A0Z;
-  iP[ooC0, x] := fd.C0X;
-  iP[ooC0, y] := fd.C0Y;
-  iP[ooC0, z] := fd.C0Z;
-  iP[ooD0, x] := fd.D0X;
-  iP[ooD0, y] := fd.D0Y;
-  iP[ooD0, z] := fd.D0Z;
-  iP[ooE0, x] := fd.E0X;
-  iP[ooE0, y] := fd.E0Y;
-  iP[ooE0, z] := fd.E0Z;
-  iP[ooF0, x] := fd.F0X;
-  iP[ooF0, y] := fd.F0Y;
-  iP[ooF0, z] := fd.F0Z;
-  iP[ooP0, x] := fd.A0X;
-  iP[ooP0, y] := 0;
-  iP[ooP0, z] := fd.A0Z;
+  //rP := Doc.iP;
+  rP[ooA0, x] := fd.A0X;
+  rP[ooA0, y] := fd.A0Y;
+  rP[ooA0, z] := fd.A0Z;
+  rP[ooB0, x] := fd.A0X;
+  rP[ooB0, y] := -fd.A0Y;
+  rP[ooB0, z] := fd.A0Z;
+  rP[ooC0, x] := fd.C0X;
+  rP[ooC0, y] := fd.C0Y;
+  rP[ooC0, z] := fd.C0Z;
+  rP[ooD0, x] := fd.D0X;
+  rP[ooD0, y] := fd.D0Y;
+  rP[ooD0, z] := fd.D0Z;
+  rP[ooE0, x] := fd.E0X;
+  rP[ooE0, y] := fd.E0Y;
+  rP[ooE0, z] := fd.E0Z;
+  rP[ooF0, x] := fd.F0X;
+  rP[ooF0, y] := fd.F0Y;
+  rP[ooF0, z] := fd.F0Z;
+  rP[ooP0, x] := fd.A0X;
+  rP[ooP0, y] := 0;
+  rP[ooP0, z] := fd.A0Z;
 
-  iP[ooP, x] := fd.A0X;
-  iP[ooP, y] := 0;
-  iP[ooP, z] := fd.A0Z;
+  rP[ooP, x] := fd.A0X;
+  rP[ooP, y] := 0;
+  rP[ooP, z] := fd.A0Z;
 
   { Festigkeitswerte }
 //  rEA := Doc.rEA;

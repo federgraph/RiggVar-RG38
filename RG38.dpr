@@ -53,6 +53,7 @@ uses
   RiggVar.RG.Report in 'RG\RiggVar.RG.Report.pas',
   RiggVar.RG.Speed01 in 'RG\RiggVar.RG.Speed01.pas',
   RiggVar.RG.Speed02 in 'RG\RiggVar.RG.Speed02.pas',
+  RiggVar.RG.Speed03 in 'RG\RiggVar.RG.Speed03.pas',
   RiggVar.RG.Track in 'RG\RiggVar.RG.Track.pas',
   RggDisplay in 'Graph\RggDisplay.pas',
   RggPolarKar in 'Graph\RggPolarKar.pas',
@@ -81,8 +82,7 @@ uses
   RggStrings in 'Core\RggStrings.pas',
   FrmConfig in 'Frm\FrmConfig.pas' {FormConfig},
   FrmTrimmTab in 'Frm\FrmTrimmTab.pas' {FormTrimmTab},
-  RggTrimmTabGraph in 'Graph\RggTrimmTabGraph.pas',
-  RiggVar.RG.Speed03 in 'RG\RiggVar.RG.Speed03.pas';
+  RggTrimmTabGraph in 'Graph\RggTrimmTabGraph.pas';
 
 {$R *.res}
 

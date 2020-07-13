@@ -44,25 +44,6 @@
   Die Festigkeitswerte EA und EI sowie die meisten Felder der Trimmtabelle sind
   Gleitkommazahlen. Wenn als Calctyp Biegeknicken angegeben ist, dann werden in
   der 'Trimmtabelle' die Biegeknickparameter gespeichert.
-
-  Binärformat:
-  Pos Size Description, Typ
-  0   8    Signature, Array[1..8] of Char
-  8   4    SalingTyp, Integer
-  12  4    ControllerTyp, Integer
-  16  4    CalcTyp, Integer
-  20  4    FiMastL, Integer
-  24  4    FiMastunten, Integer
-  28  4    FiMastoben, Integer
-  32  4    FiMastfallVorlauf, Integer
-  36  4    FiControllerAnschlag, Integer
-  40  4    FiReserved, Integer
-  iP, TIntRiggPoints
-  rEA, TRiggLvektor
-  EI, double
-  GSB, TsbArray
-  TrimmTabDaten, TTrimmTabDaten
-
 }
 
 interface
@@ -85,11 +66,8 @@ const
 type
   TRggDocument = class
   private
-    FFileName: string; // nur zum Zwischenspeichern des Dateinamens
     procedure GetLogoDoc;
     procedure GetDefaultDoc;
-    procedure LoadSignatureFromStream(strm: TStream);
-    procedure SaveSignatureToStream(strm: TStream);
   public
     Signature: string;
     { Rigg: Typ }
@@ -104,7 +82,7 @@ type
     FiControllerAnschlag: Integer;
     FiReserved: Integer;
     { Rumpf: Koordinaten in mm }
-    iP: TIntRiggPoints; { Array enthält auch die Riggkoordinaten }
+    iP: TRealRiggPoints; { Array enthält auch die Riggkoordinaten }
     { Festigkeitswerte }
     rEA: TRiggLvektor; { N }
     EI: double; { Nmm^2 }
@@ -119,34 +97,22 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    procedure TestStream;
-
-    function SignatureOK: Boolean; virtual;
     procedure GetDefaultDocument; virtual;
     procedure LoadFromFile(FileName: string); virtual;
     procedure SaveToFile(FileName: string); virtual;
-    procedure LoadFromStream(strm: TStream); virtual;
-    procedure SaveToStream(strm: TStream); virtual;
     procedure LoadFromIniFile(FileName: string); virtual;
     procedure WriteToIniFile(FileName: string); virtual;
     procedure DumpToMemo(Memo: TStrings); virtual;
-    procedure ReadFromDFM(Memo: TStrings);
-    procedure WriteToDFM(Memo: TStrings);
-    function SaveToString: string;
-    procedure LoadFromString(s: string);
 {$ifdef MSWindows}
     procedure WriteXML(ML: TStrings);
     function SaveToXML(d: IXMLNode): string;
 {$endif}
     procedure LoadFromXML(s: string);
-    function SaveToXMLBase64: string;
-    function LoadFromXMLBase64(s: string): string;
   end;
 
 implementation
 
 uses
-  RiggVar.App.Main,
   RiggVar.RG.Def,
   RiggVar.FB.Classes;
 
@@ -163,132 +129,13 @@ begin
 end;
 
 procedure TRggDocument.LoadFromFile(FileName: string);
-var
-  S: TFileStream;
 begin
-  S := TFileStream.Create(FileName, fmOpenRead);
-  try
-    FFileName := FileName;
-    LoadFromStream(S);
-  finally
-    S.Free;
-  end;
+  LoadFromIniFile(FileName);
 end;
 
 procedure TRggDocument.SaveToFile(FileName: string);
-var
-  S: TFileStream;
 begin
-  S := TFileStream.Create(FileName, fmCreate);
-  try
-    SaveToStream(S);
-  finally
-    S.Free;
-  end;
-end;
-
-procedure TRggDocument.TestStream;
-var
-  ms: TMemoryStream;
-begin
-  ms := TMemoryStream.Create;
-  SaveToStream(ms);
-  ms.Position := 0;
-  LoadFromStream(ms);
-  ms.Free;
-end;
-
-procedure TRggDocument.SaveSignatureToStream(strm: TStream);
-var
-  ss: TStringStream;
-  c: Integer;
-begin
-  //strm.WriteBuffer(RggDocSignature[1], 8);
-
-  ss := TStringStream.Create('');
-  ss.WriteString(RggDocSignature);
-  c := ss.Position;
-  ss.Position := 0;
-  strm.CopyFrom(ss, c);
-  ss.Free;
-end;
-
-procedure TRggDocument.LoadSignatureFromStream(strm: TStream);
-var
-  ss: TStringStream;
-  c: Integer;
-begin
-  { Signature }
-  ss := TStringStream.Create('');
-  ss.CopyFrom(strm, RggDocSignature.Length);
-  c := ss.Position;
-  ss.Position := 0;
-  Signature := 'temp';
-  Signature := ss.ReadString(c);
-  ss.Free;
-end;
-
-procedure TRggDocument.LoadFromStream(strm: TStream);
-var
-  temp: Integer;
-begin
-  temp := 0;
-
-  { Signature }
-  LoadSignatureFromStream(strm);
-  if not SignatureOK then
-    raise EFileFormatError.Create('FormatError');
-
-  { Rigg: Typ }
-  strm.ReadBuffer(temp, SizeOf(Integer));
-  SalingTyp := TSalingTyp(temp);
-  strm.ReadBuffer(temp, SizeOf(Integer));
-  ControllerTyp := TControllerTyp(temp);
-  strm.ReadBuffer(temp, SizeOf(Integer));
-  CalcTyp := TCalcTyp(temp);
-  { Mast: Abmessungen }
-  strm.ReadBuffer(FiMastL, SizeOf(Integer));
-  strm.ReadBuffer(FiMastunten, SizeOf(Integer));
-  strm.ReadBuffer(FiMastoben, SizeOf(Integer));
-  strm.ReadBuffer(FiMastfallVorlauf, SizeOf(Integer));
-  strm.ReadBuffer(FiControllerAnschlag, SizeOf(Integer));
-  strm.ReadBuffer(FiReserved, SizeOf(Integer));
-  { Rumpf: Koordinaten }
-  strm.ReadBuffer(iP, SizeOf(TIntRiggPoints));
-  { Festigkeitswerte }
-  strm.ReadBuffer(rEA, SizeOf(TRiggLvektor));
-  strm.ReadBuffer(EI, SizeOf(double));
-  { Grenzwerte }
-  GSB.LoadFromStream(strm);
-  { Trimmtabelle }
-  strm.ReadBuffer(TrimmTabDaten, SizeOf(TTrimmTabDaten));
-end;
-
-procedure TRggDocument.SaveToStream(strm: TStream);
-begin
-  { Signature }
-  SaveSignatureToStream(strm);
-
-  { Rigg: Typ }
-  strm.WriteBuffer(SalingTyp, SizeOf(Integer));
-  strm.WriteBuffer(ControllerTyp, SizeOf(Integer));
-  strm.WriteBuffer(CalcTyp, SizeOf(Integer));
-  { Mast: Abmessungen }
-  strm.WriteBuffer(FiMastL, SizeOf(Integer));
-  strm.WriteBuffer(FiMastunten, SizeOf(Integer));
-  strm.WriteBuffer(FiMastoben, SizeOf(Integer));
-  strm.WriteBuffer(FiMastfallVorlauf, SizeOf(Integer));
-  strm.WriteBuffer(FiControllerAnschlag, SizeOf(Integer));
-  strm.WriteBuffer(FiReserved, SizeOf(Integer));
-  { Rumpf: Koordinaten }
-  strm.WriteBuffer(iP, SizeOf(TIntRiggPoints));
-  { Festigkeitswerte }
-  strm.WriteBuffer(rEA, SizeOf(TRiggLvektor));
-  strm.WriteBuffer(EI, SizeOf(double));
-  { Grenzwerte }
-  GSB.SaveToStream(strm);
-  { Trimmtabelle }
-  strm.WriteBuffer(TrimmTabDaten, SizeOf(TTrimmTabDaten));
+  WriteToIniFile(FileName);
 end;
 
 procedure TRggDocument.LoadFromIniFile(FileName: string);
@@ -855,32 +702,6 @@ begin
   end;
 end;
 
-function TRggDocument.SignatureOK: Boolean;
-var
-  S, SCaption, S1: string;
-begin
-  result := False;
-  if Signature = string(RggDocSignature) then
-    result := True
-  else
-  begin
-    SCaption := Format('Reading %s', [ExtractFileName(FFileName)]);
-    S := 'FormatError';
-    S1 := Copy(Signature, 1, 6);
-    if S1 = 'RGGDOC' then
-    begin
-      S := S + #13 + 'found: Version ' + Signature;
-      S := S + #13 + 'required: Version ' + string(RggDocSignature);
-    end
-    else
-    begin
-      S := S + #13 + 'This file does not contain a valid';
-      S := S + #13 + 'Rigg - Dokument.';
-    end;
-    Main.Logger.Info(Format(S, [SCaption]));
-  end;
-end;
-
 procedure TRggDocument.DumpToMemo(Memo: TStrings);
 var
   S1, S2: string;
@@ -1006,287 +827,6 @@ begin
     end;
     Add('');
   end;
-end;
-
-procedure TRggDocument.WriteToDFM(Memo: TStrings);
-var
-  i, tempEI: Integer;
-begin
-  with Memo do
-  begin
-    // Rigg - diese Properties werden im Objektinspektor gesetzt
-    // Add(Format('SalingTyp=%d',[Ord(SalingTyp)]));
-    // Add(Format('ControllerTyp=%d',[Ord(ControllerTyp)]));
-    // Add(Format('CalcTyp=%d',[Ord(CalcTyp)]));
-
-    // Trimmtabelle
-    with TrimmTabDaten do
-    begin
-      Add(Format('TabellenTyp= %d', [Ord(TabellenTyp)]));
-      Add(Format('Ta0= %10.5f', [a0]));
-      Add(Format('Ta1= %10.5f', [a1]));
-      Add(Format('Ta2= %10.5f', [a2]));
-      Add(Format('Tx0= %10.5f', [x0]));
-      Add(Format('Tx1= %10.5f', [x1]));
-      Add(Format('Tx2= %10.5f', [x2]));
-    end;
-
-    // Mast
-    Add(Format('MastL= %d', [FiMastL]));
-    Add(Format('Mastunten= %d', [FiMastunten]));
-    Add(Format('Mastoben= %d', [FiMastoben]));
-    Add(Format('MastfallVorlauf= %d', [FiMastfallVorlauf]));
-    tempEI := Round(EI / 1E6);
-    Add(Format('EI= %d', [tempEI]));
-
-    // GSB
-    Add(Format('%s= %6d %6d %6d', ['Controller', GSB.Controller.Min, GSB.Controller.Ist, GSB.Controller.Max]));
-    Add(Format('%s= %6d %6d %6d', ['Winkel', GSB.Winkel.Min, GSB.Winkel.Ist, GSB.Winkel.Max]));
-    Add(Format('%s= %6d %6d %6d', ['Vorstag', GSB.Vorstag.Min, GSB.Vorstag.Ist, GSB.Vorstag.Max]));
-    Add(Format('%s= %6d %6d %6d', ['Wante', GSB.Wante.Min, GSB.Wante.Ist, GSB.Wante.Max]));
-    Add(Format('%s= %6d %6d %6d', ['Woben', GSB.Woben.Min, GSB.Woben.Ist, GSB.Woben.Max]));
-    Add(Format('%s= %6d %6d %6d', ['SalingH', GSB.SalingH.Min, GSB.SalingH.Ist, GSB.SalingH.Max]));
-    Add(Format('%s= %6d %6d %6d', ['SalingA', GSB.SalingA.Min, GSB.SalingA.Ist, GSB.SalingA.Max]));
-    Add(Format('%s= %6d %6d %6d', ['SalingL', GSB.SalingL.Min, GSB.SalingL.Ist, GSB.SalingL.Max]));
-    Add(Format('%s= %6d %6d %6d', ['VorstagOS', GSB.VorstagOS.Min, GSB.VorstagOS.Ist, GSB.VorstagOS.Max]));
-    Add(Format('%s= %6d %6d %6d', ['WPowerOS', GSB.WPowerOS.Min, GSB.WPowerOS.Ist, GSB.WPowerOS.Max]));
-
-    // Koordinaten
-    Add(Format('%s= %6d %6d %6d', ['A0', iP[ooA0, x], iP[ooA0, y], iP[ooA0, z]]));
-    Add(Format('%s= %6d %6d %6d', ['B0', iP[ooB0, x], iP[ooB0, y], iP[ooB0, z]]));
-    Add(Format('%s= %6d %6d %6d', ['C0', iP[ooC0, x], iP[ooC0, y], iP[ooC0, z]]));
-    Add(Format('%s= %6d %6d %6d', ['D0', iP[ooD0, x], iP[ooD0, y], iP[ooD0, z]]));
-    Add(Format('%s= %6d %6d %6d', ['E0', iP[ooE0, x], iP[ooE0, y], iP[ooE0, z]]));
-    Add(Format('%s= %6d %6d %6d', ['F0', iP[ooF0, x], iP[ooF0, y], iP[ooF0, z]]));
-    Add(Format('%s= %6d %6d %6d', ['A', iP[ooA, x], iP[ooA, y], iP[ooA, z]]));
-    Add(Format('%s= %6d %6d %6d', ['B', iP[ooB, x], iP[ooB, y], iP[ooB, z]]));
-    Add(Format('%s= %6d %6d %6d', ['C', iP[ooC, x], iP[ooC, y], iP[ooC, z]]));
-    Add(Format('%s= %6d %6d %6d', ['D', iP[ooD, x], iP[ooD, y], iP[ooD, z]]));
-    Add(Format('%s= %6d %6d %6d', ['E', iP[ooE, x], iP[ooE, y], iP[ooE, z]]));
-    Add(Format('%s= %6d %6d %6d', ['F', iP[ooF, x], iP[ooF, y], iP[ooF, z]]));
-
-    // EA
-    for i := 0 to 19 do
-      Add(Format('EA%d= %.6g', [i, rEA[i]]));
-  end;
-end;
-
-procedure TRggDocument.ReadFromDFM(Memo: TStrings);
-  procedure ReadGSB(c: TsbName; S: string);
-  var
-    S1: string;
-    sb: TRggSB;
-  begin
-    if S = '' then
-      Exit;
-    sb := GSB.GetSB(c);
-    if not Assigned(sb) then
-      Exit;
-    S := Trim(S);
-    S1 := TUtils.StripFirstWord(S);
-    sb.Min := StrToInt(S1);
-    S := Trim(S);
-    S1 := TUtils.StripFirstWord(S);
-    sb.Ist := StrToInt(S1);
-    sb.Max := StrToInt(S);
-  end;
-  procedure ReadKoord(k: TRiggPoint; S: string);
-  var
-    S1: string;
-  begin
-    if S = '' then
-      Exit;
-    S := Trim(S);
-    S1 := TUtils.StripFirstWord(S);
-    iP[k, x] := StrToInt(S1);
-    S := Trim(S);
-    S1 := TUtils.StripFirstWord(S);
-    iP[k, y] := StrToInt(S1);
-    iP[k, z] := StrToInt(S);
-  end;
-  procedure ReadInteger(S: string; var a: Integer);
-  begin
-    if S = '' then
-      Exit;
-    a := StrToInt(S);
-  end;
-  procedure ReadFloat(S: string; var a: double);
-  begin
-    if S = '' then
-      Exit;
-    a := StrToFloat(S);
-  end;
-
-var
-  S: string;
-  i, tempEI: Integer;
-  T: TTrimmTabDaten;
-begin
-  tempEI := 0;
-  with Memo do
-  begin
-    // Rigg - diese Properties werden im Objektinspektor gesetzt
-    // SalingTyp := TSalingTyp(StrToInt(Values['SalingTyp']));
-    // ControllerTyp := TControllerTyp(StrToInt(Values['ControllerTyp']));
-    // CalcTyp := TCalcTyp(StrToInt(Values['CalcTyp']));
-
-    // Trimmtabelle
-    T := DefaultTrimmTabDaten;
-    try
-      S := Values['TabellenTyp'];
-      if S <> '' then
-        T.TabellenTyp := TTabellenTyp(StrToInt(S));
-      S := Values['Ta0'];
-      ReadFloat(S, T.a0);
-      S := Values['Ta1'];
-      ReadFloat(S, T.a1);
-      S := Values['Ta2'];
-      ReadFloat(S, T.a2);
-      S := Values['Tx0'];
-      ReadFloat(S, T.x0);
-      S := Values['Tx1'];
-      ReadFloat(S, T.x1);
-      S := Values['Tx2'];
-      ReadFloat(S, T.x2);
-    except
-      on EConvertError do
-      begin
-        Main.Logger.Info('DefaultTrimmTabDaten geladen');
-        T := DefaultTrimmTabDaten;
-      end;
-    end;
-    TrimmTabDaten := T;
-
-    // Mast
-    S := Values['MastL'];
-    ReadInteger(S, FiMastL);
-    S := Values['Mastunten'];
-    ReadInteger(S, FiMastunten);
-    S := Values['Mastoben'];
-    ReadInteger(S, FiMastoben);
-    S := Values['MastfallVorlauf'];
-    ReadInteger(S, FiMastfallVorlauf);
-    S := Values['EI'];
-    ReadInteger(S, tempEI);
-    if S <> '' then
-      EI := tempEI * 1E6;
-
-    // GSB (Min,Ist,Max)
-    S := Values['Controller'];
-    ReadGSB(fpController, S);
-    S := Values['Winkel'];
-    ReadGSB(fpWinkel, S);
-    S := Values['Vorstag'];
-    ReadGSB(fpVorstag, S);
-    S := Values['Wante'];
-    ReadGSB(fpWante, S);
-    S := Values['Woben'];
-    ReadGSB(fpWoben, S);
-    S := Values['SalingH'];
-    ReadGSB(fpSalingH, S);
-    S := Values['SalingA'];
-    ReadGSB(fpSalingA, S);
-    S := Values['SalingL'];
-    ReadGSB(fpSalingL, S);
-    S := Values['VorstagOS'];
-    ReadGSB(fpVorstagOS, S);
-    S := Values['WPowerOS'];
-    ReadGSB(fpWPowerOS, S);
-
-    // Koordinaten (x,y,z)
-    S := Values['A0'];
-    ReadKoord(ooA0, S);
-    S := Values['B0'];
-    ReadKoord(ooB0, S);
-    S := Values['C0'];
-    ReadKoord(ooC0, S);
-    S := Values['D0'];
-    ReadKoord(ooD0, S);
-    S := Values['E0'];
-    ReadKoord(ooE0, S);
-    S := Values['F0'];
-    ReadKoord(ooF0, S);
-    S := Values['A'];
-    ReadKoord(ooA, S);
-    S := Values['B'];
-    ReadKoord(ooB, S);
-    S := Values['C'];
-    ReadKoord(ooC, S);
-    S := Values['D'];
-    ReadKoord(ooD, S);
-    S := Values['E'];
-    ReadKoord(ooE, S);
-    S := Values['F'];
-    ReadKoord(ooF, S);
-
-    // EA
-    for i := 0 to 19 do
-    begin
-      S := Values[Format('EA%d', [i])];
-      if S <> '' then
-        rEA[i] := StrToFloat(S);
-    end;
-  end;
-end;
-
- procedure TRggDocument.LoadFromString(s: string);
-// var
-// Decoder: TIdDecoderMime;
-// sDecoded: string;
-// Stream: TStringStream;
- begin
-// Decoder := TIdDecoderMime.Create(nil);
-// sDecoded := Decoder.DecodeString(s);;
-// Stream := TStringStream.Create(sDecoded);
-// Stream.Seek(0, soFromBeginning);
-// LoadFromStream(Stream);
-// Stream.Free;
-// Decoder.Free;
- end;
-
-// procedure TRggDocument.LoadFromStream(s: string);
-// var
-// Stream: TStream;
-// begin
-// Stream := TMemoryStream.Create;
-// Decoder := TIdDecoderMime.Create(nil);
-// Decoder.DecodeToStream(s, Stream);
-// Stream.Seek(0, soFromBeginning);
-// LoadFromStream(Stream);
-// Stream.Free;
-// Decoder.Free;
-// end;
-
-function TRggDocument.SaveToString: string;
-// var
-// Encoder: TIdEncoderMime;
-// Stream: TStream;
-begin
-// Stream := TMemoryStream.Create;
-// Encoder := TIdEncoderMime.Create(nil);
-// SaveToStream(Stream);
-// Stream.Seek(0, soFromBeginning);
-// result := Encoder.Encode(Stream, Stream.Size);
-// Stream.Free;
-// Encoder.Free;
-end;
-
-function TRggDocument.SaveToXMLBase64: string;
-// var
-//   Encoder: TIdEncoderMime;
-begin
-//   Encoder := TIdEncoderMime.Create(nil);
-//   result := Encoder.Encode(SaveToXML);
-//   Encoder.Free;
-end;
-
-function TRggDocument.LoadFromXMLBase64(s: string): string;
-// var
-//   Decoder: TIdDecoderMime;
-begin
-//   Decoder := TIdDecoderMime.Create(nil);
-//   result := Decoder.DecodeString(s);
-//   Decoder.Free;
 end;
 
 procedure TRggDocument.LoadFromXML(s: string);
