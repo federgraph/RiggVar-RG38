@@ -36,7 +36,7 @@ type
 {$ifdef MSWindows}
     procedure WriteXml(ML: TStrings; AllTags: Boolean = False);
 {$endif}
-    procedure AusgabeText(ML: TStrings);
+    procedure AusgabeText(ML: TStrings; WantAll: Boolean = True);
     procedure AusgabeKommentar(ML: TStrings);
 
     procedure SaveToFederData(fd: TRggData);
@@ -114,9 +114,9 @@ begin
     end
     else if s = RGG_File_Extension then
     begin
-      { write as .rgi }
+      { write as .rgi, .rgg no longer supported }
       s := ChangeFileExt(FileName, RGI_File_Extension);
-      Document.WriteToIniFile(FileName);
+      Document.WriteToIniFile(s);
       // Document.SaveToFile(FileName);
     end;
   finally
@@ -485,7 +485,7 @@ begin
   UpdateGSB;
 end;
 
-procedure TRigg.AusgabeText(ML: TStrings);
+procedure TRigg.AusgabeText(ML: TStrings; WantAll: Boolean = True);
 var
   tempSalingDaten: TSalingDaten;
 begin
@@ -516,6 +516,34 @@ begin
   ML.Add(Format('  Kraft Winkel   = %6.2f Grad', [tempSalingDaten.KraftWinkel]));
 
   ML.Add('');
+  ML.Add('Winkel:');
+  ML.Add(Format('  phi       = %6.2f Grad', [Phi * 180 / pi]));
+  ML.Add(Format('  psi       = %6.2f Grad', [psi * 180 / pi]));
+  ML.Add(Format('  alpha     = %6.2f Grad', [alpha * 180 / pi]));
+  ML.Add(Format('  phi-alpha = %6.2f Grad (Mast-Neigung)', [(Phi-alpha)*180/pi]));
+  ML.Add(Format('  psi-alpha = %6.2f Grad (Wanten-Neigung)', [(psi-alpha)*180/pi]));
+
+  ML.Add('');
+  ML.Add('MastWinkel:');
+  ML.Add(Format('  epsB = %6.2f Grad', [epsB * 180 / pi]));
+  ML.Add(Format('  eps2 = %6.2f Grad', [eps2 * 180 / pi]));
+  ML.Add(Format('  eps1 = %6.2f Grad', [eps1 * 180 / pi]));
+  ML.Add(Format('  epsA = %6.2f Grad', [epsA * 180 / pi]));
+  ML.Add(Format('  Epsilon  = %6.2f Grad', [epsilon * 180 / pi]));
+
+  ML.Add('');
+  ML.Add('SchnittWinkel:');
+  ML.Add(Format('  alpha1 = %6.2f Grad', [alpha1 * 180 / pi]));
+  ML.Add(Format('  alpha2 = %6.2f Grad', [alpha2 * 180 / pi]));
+  ML.Add(Format('  delta1 = %6.2f Grad', [delta1 * 180 / pi]));
+  ML.Add(Format('  delta2 = %6.2f Grad', [delta2 * 180 / pi]));
+  ML.Add(Format('  gamma  = %6.2f Grad', [gamma * 180 / pi]));
+  ML.Add(Format('  beta   = %6.2f Grad', [beta * 180 / pi]));
+
+  if not WantAll then
+    Exit;
+
+  ML.Add('');
   ML.Add('SchnittKräfte:');
   ML.Add(Format('  FC  = %8.2f N    (Mastdruckkraft)', [FC]));
   ML.Add(Format('  FB  = %8.2f N    (Wanten/Vorstag)', [FB]));
@@ -538,31 +566,6 @@ begin
   ML.Add(Format('  FwSchnittOhne      = %8.2f mm', [FwSchnittOhne]));
   ML.Add(Format('  FwSchnittMit       = %8.2f mm', [FwSchnittMit]));
   ML.Add(Format('  FwSchnittOffset    = %8.2f mm', [FwSchnittOffset]));
-
-  ML.Add('');
-  ML.Add('SchnittWinkel:');
-  ML.Add(Format('  alpha1 = %6.2f Grad', [alpha1 * 180 / pi]));
-  ML.Add(Format('  alpha2 = %6.2f Grad', [alpha2 * 180 / pi]));
-  ML.Add(Format('  delta1 = %6.2f Grad', [delta1 * 180 / pi]));
-  ML.Add(Format('  delta2 = %6.2f Grad', [delta2 * 180 / pi]));
-  ML.Add(Format('  gamma  = %6.2f Grad', [gamma * 180 / pi]));
-  ML.Add(Format('  beta   = %6.2f Grad', [beta * 180 / pi]));
-
-  ML.Add('');
-  ML.Add('Winkel:');
-  ML.Add(Format('  phi       = %6.2f Grad', [phi * 180 / pi]));
-  ML.Add(Format('  psi       = %6.2f Grad', [psi * 180 / pi]));
-  ML.Add(Format('  alpha     = %6.2f Grad', [alpha * 180 / pi]));
-  ML.Add(Format('  phi-alpha = %6.2f Grad (Mast-Neigung)', [(phi-alpha)*180/pi]));
-  ML.Add(Format('  psi-alpha = %6.2f Grad (Wanten-Neigung)', [(psi-alpha)*180/pi]));
-
-  ML.Add('');
-  ML.Add('MastWinkel:');
-  ML.Add(Format('  epsB = %6.2f Grad', [epsB * 180 / pi]));
-  ML.Add(Format('  eps2 = %6.2f Grad', [eps2 * 180 / pi]));
-  ML.Add(Format('  eps1 = %6.2f Grad', [eps1 * 180 / pi]));
-  ML.Add(Format('  epsA = %6.2f Grad', [epsA * 180 / pi]));
-  ML.Add(Format('  Epsilon  = %6.2f Grad', [epsilon * 180 / pi]));
 
 //  SendMessage(OutputForm.DisplayMemo.Handle, EM_LINESCROLL, 0, MemoPosY);
 //  ML.EndUpdate;

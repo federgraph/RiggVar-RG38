@@ -41,7 +41,6 @@ type
     function GetSalingDaten: TSalingDaten;
     procedure GetLogoData;
     procedure GetDefaultData;
-    procedure SetFrWinkel(const Value: double);
   protected
     FTrimm: TTrimm;
     FGetriebeOK: Boolean;
@@ -53,7 +52,7 @@ type
     FrBasis: double;
 
     FrController: double;
-    _FrWinkel: double;
+    FrWinkel: double;
     FrVorstag: double;
     FrWunten2D: double;
     FrWunten3D: double;
@@ -128,8 +127,6 @@ type
     property SalingDaten: TSalingDaten read GetSalingDaten;
     property Glieder: TTrimmControls read GetGlieder write SetGlieder;
     property RealGlied[Index: TsbName]: double read GetRealGlied write SetRealGlied;
-
-    property FrWinkel: double read _FrWinkel write SetFrWinkel;
   end;
 
 implementation
@@ -214,13 +211,6 @@ begin
     WPowerOS := Round(FWPowerOS);
   end;
   result := Trimm;
-end;
-
-procedure TGetriebe.SetFrWinkel(const Value: double);
-begin
-  _FrWinkel := Value;
-  if _FrWinkel > 2 * PI then
-    _FrWinkel := _FrWinkel - (2 * PI);
 end;
 
 procedure TGetriebe.SetGlieder(Values: TTrimmControls);

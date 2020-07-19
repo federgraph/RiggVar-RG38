@@ -58,6 +58,14 @@ faShowDiagA: result := 'faShowDiagA';
 faShowDiagC: result := 'faShowDiagC';
 faShowDiagE: result := 'faShowDiagE';
 faShowDiagQ: result := 'faShowDiagQ';
+faShowForce: result := 'faShowForce';
+faShowKreis: result := 'faShowKreis';
+faShowInfo: result := 'faShowInfo';
+faShowSplash: result := 'faShowSplash';
+faShowDetail: result := 'faShowDetail';
+faShowTabelle: result := 'faShowTabelle';
+faShowSaling: result := 'faShowSaling';
+faShowController: result := 'faShowController';
 
 { TouchLayout }
 faTouchTablet: result := 'faTouchTablet';
@@ -186,6 +194,7 @@ faReportTrimmText: result := 'faReportTrimmText';
 faReportJsonText: result := 'faReportJsonText';
 faReportDataText: result := 'faReportDataText';
 faReportDiffText: result := 'faReportDiffText';
+faReportAusgabeDetail: result := 'faReportAusgabeDetail';
 faReportAusgabeRL: result := 'faReportAusgabeRL';
 faReportAusgabeRP: result := 'faReportAusgabeRP';
 faReportAusgabeRLE: result := 'faReportAusgabeRLE';

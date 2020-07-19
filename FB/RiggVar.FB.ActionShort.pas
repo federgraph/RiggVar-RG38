@@ -110,7 +110,16 @@ begin
     faShowActi: result := 'FA';
     faShowOpti: result := 'FO';
     faShowConf: result := 'FC';
-    faShowTrimmTab: result := 'FT';
+    faShowTrimmTab: result := 'TT';
+
+    faShowForce: result := 'FF';
+    faShowKreis: result := 'FK';
+    faShowInfo: result := 'FI';
+    faShowSplash: result := 'FS';
+    faShowDetail: result := 'FD';
+    faShowTabelle: result := 'FT';
+    faShowSaling: result := 'sS';
+    faShowController: result := 'sC';
 
     faShowDiagA: result := 'DA';
     faShowDiagC: result := 'DC';
@@ -206,6 +215,7 @@ begin
     faReportJsonText: result := '~JT';
     faReportDataText: result := '~DT';
     faReportDiffText: result := '~dt';
+    faReportAusgabeDetail: result := 'RD';
     faReportAusgabeRL: result := 'RL';
     faReportAusgabeRP: result := 'RP';
     faReportAusgabeRLE: result := 'RLE';

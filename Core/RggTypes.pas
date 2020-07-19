@@ -33,6 +33,7 @@ const
 
 var
   WantLogoData: Boolean;
+  TKR: Integer = TranskreisRadius;
 
 type
   EFileFormatError = class(Exception);

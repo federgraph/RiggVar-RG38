@@ -141,6 +141,9 @@ begin
 
   { Berechnung der Punkte A, B, P und D }
   FrPsi := PsiVonPhi(FrPhi, FrBasis, FrWunten2D, FrSalingH, FrMastUnten, svar);
+  if FrPsi < 0 then
+    FrPsi := FrPsi + 2 * PI;
+
   if svar = False then
   begin
     FGetriebeOK := False;
@@ -371,8 +374,10 @@ begin
     imagine we are looking from behind - the mechanism appears mirrored,
     angle Psi needs to be transformed back and forth,
     and member length values passed according to mirrored model. }
-  FrPhi := pi - PsiVonPhi(pi - FrPsi, FrBasis, FrMastUnten, FrSalingH,
-    FrWunten2D, svar);
+  FrPhi := pi - PsiVonPhi(pi - FrPsi, FrBasis, FrMastUnten, FrSalingH, FrWunten2D, svar);
+  if FrPhi > 2 * PI then
+    FrPhi := FrPhi - 2 * PI;
+
   if svar = False then
   begin
     FGetriebeOK := False;

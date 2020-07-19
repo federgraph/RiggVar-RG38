@@ -123,6 +123,15 @@ begin
     faShowChart: result := 'Form Chart';
     faShowText: result := 'Form Text-Ausgabe';
 
+    faShowForce: result := 'Form Force';
+    faShowKreis: result := 'Form Kreis';
+    faShowInfo: result := 'Form Info';
+    faShowSplash: result := 'Form Splash';
+    faShowDetail: result := 'Form Detail';
+    faShowTabelle: result := 'Form Tabelle';
+    faShowSaling: result := 'Form Saling';
+    faShowController: result := 'Form Controller';
+
     faWheelLeft: result := 'Wheel -1';
     faWheelRight: result := 'Wheel +1';
     faWheelUp: result := 'Wheel -10';
@@ -209,6 +218,7 @@ begin
     faReportJsonText: result := 'Json Text Report';
     faReportDataText: result := 'Data Text Report';
     faReportDiffText: result := 'Diff Text Report';
+    faReportAusgabeDetail: result := 'Ausgabe Rigg Detail';
     faReportAusgabeRL: result := 'Ausgabe Rigg Längen';
     faReportAusgabeRP: result := 'Ausgabe Rigg Koordinaten';
     faReportAusgabeRLE: result := 'Ausgabe Rigg Längen Entspannt';
