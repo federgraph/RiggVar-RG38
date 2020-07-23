@@ -548,19 +548,8 @@ begin
     faTrimm5: Trimm := 5;
     faTrimm6: Trimm := 6;
 
-    fa420:
-    begin
-      Init420;
-      ParamValue[Param] := ParamValue[Param];
-      FormMain.UpdateOnParamValueChanged;
-    end;
-
-    faLogo:
-    begin
-      InitLogo;
-      ParamValue[Param] := ParamValue[Param];
-      FormMain.UpdateOnParamValueChanged;
-    end;
+    fa420: Init420;
+    faLogo: InitLogo;
 
     faUpdateTrimm0: UpdateTrimm0;
     faCopyAndPaste: CopyAndPaste;

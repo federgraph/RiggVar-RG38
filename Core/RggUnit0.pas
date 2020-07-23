@@ -171,7 +171,6 @@ begin
   if Value <> FrMastUnten then
   begin
     FrMastUnten := Value;
-    FrMastUnten := Value;
   end;
 end;
 
@@ -179,7 +178,6 @@ procedure TGetriebe.SetMastoben(Value: double);
 begin
   if Value <> FrMastOben then
   begin
-    FrMastOben := Value;
     FrMastOben := Value;
   end;
 end;
@@ -194,39 +192,30 @@ begin
 end;
 
 function TGetriebe.GetGlieder: TTrimmControls;
-var
-  Trimm: TTrimmControls;
 begin
   RealGliederToInt;
-  with Trimm do
-  begin
-    Controller := Round(FrController);
-    Wanten := Round(FrWunten3D + FrWoben3D);
-    Woben := Round(FrWoben3D);
-    SalingH := Round(FrSalingH);
-    SalingA := Round(FrSalingA);
-    SalingL := Round(FrSalingL);
-    Vorstag := Round(FrVorstag);
-    Winkel := Round(FWinkelDegrees);
-    WPowerOS := Round(FWPowerOS);
-  end;
-  result := Trimm;
+  result.Controller := Round(FrController);
+  result.Wanten := Round(FrWunten3D + FrWoben3D);
+  result.Woben := Round(FrWoben3D);
+  result.SalingH := Round(FrSalingH);
+  result.SalingA := Round(FrSalingA);
+  result.SalingL := Round(FrSalingL);
+  result.Vorstag := Round(FrVorstag);
+  result.Winkel := Round(FWinkelDegrees);
+  result.WPowerOS := Round(FWPowerOS);
 end;
 
 procedure TGetriebe.SetGlieder(Values: TTrimmControls);
 begin
-  with Values do
-  begin
-    FrController := Controller;
-    FWinkelDegrees := Winkel;
-    FrVorstag := Vorstag;
-    FrWunten3D := Wanten - Woben;
-    FrWoben3D := Woben;
-    FrSalingH := SalingH;
-    FrSalingA := SalingA;
-    FrSalingL := SalingL;
-    FWPowerOS := WPowerOS;
-  end;
+  FrController := Values.Controller;
+  FWinkelDegrees := Values.Winkel;
+  FrVorstag := Values.Vorstag;
+  FrWunten3D := Values.Wanten - Values.Woben;
+  FrWoben3D := Values.Woben;
+  FrSalingH := Values.SalingH;
+  FrSalingA := Values.SalingA;
+  FrSalingL := Values.SalingL;
+  FWPowerOS := Values.WPowerOS;
   IntGliederToReal;
 end;
 
@@ -255,10 +244,10 @@ begin
     fpVorstag: FrVorstag := Value;
     fpWante: FrWunten3D := Value - FrWoben3D;
     fpWoben:
-      begin
-        FrWunten3D := FrWunten3D + FrWoben3D - Value;
-        FrWoben3D := Value;
-      end;
+    begin
+      FrWunten3D := FrWunten3D + FrWoben3D - Value;
+      FrWoben3D := Value;
+    end;
     fpSalingH: FrSalingH := Value;
     fpSalingA: FrSalingA := Value;
     fpSalingL: FrSalingL := Value;
@@ -284,11 +273,9 @@ begin
   else
     tempWW := arccos(cosWW);
 
-  { ooTempA := Evektor(rP[ooA],rP[ooC]); }
   ooTempB := EVektor(rP[ooA], rP[ooD]);
   EbeneACD := vprod(ooTempA, ooTempB);
 
-  { ooTempA := Evektor(rP[ooA],rP[ooC]); }
   ooTempB := EVektor(rP[ooA], rP[ooA0]);
   EbeneACA0 := vprod(ooTempA, ooTempB);
 
@@ -318,34 +305,15 @@ end;
 
 procedure TGetriebe.IntGliederToReal;
 begin
-//  FrController := FiController;
+  { Integer Glieder have been eliminated. }
   FrWinkel := FWinkelDegrees * pi / 180;
-//  FrVorstag := FiVorstag;
-//  FrWunten3d := FiWunten3d;
-//  FrWoben3d := FiWoben3d;
-//  FrSalingH := FiSalingH;
-//  FrSalingA := FiSalingA;
-//  FrSalingL := FiSalingL;
-
-//  FrMastunten := FiMastunten;
-//  FrMastoben := FiMastoben;
   FrMastEnde := FrMastLength - FrMastOben - FrMastUnten;
 end;
 
 procedure TGetriebe.RealGliederToInt;
 begin
   { Integer Glieder have been eliminated. }
-//  FiController := FrController;
   FWinkelDegrees := FrWinkel * 180 / pi;
-//  FiVorstag := FrVorstag;
-//  FiWunten3d := FrWunten3d;
-//  FiWoben3d := FrWoben3d;
-//  FiSalingH := FrSalingH;
-//  FiSalingA := FrSalingA;
-//  FiSalingL := FrSalingL;
-
-//  FiMastunten := FrMastunten;
-//  FiMastoben := FrMastoben;
   FrMastLength := FrMastUnten + FrMastOben + FrMastEnde;
 end;
 
