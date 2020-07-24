@@ -654,9 +654,9 @@ begin
       MittelPunkt2 := rPe[ooD0];
       rPe[ooP0] := SchnittPunkt1;
       rPe[ooA0] := rPe[ooP0];
-      rPe[ooA0, y] := rLe[6] / 2;
+      rPe[ooA0, y] := -rLe[6] / 2;
       rPe[ooB0] := rPe[ooP0];
-      rPe[ooB0, y] := -rLe[6] / 2;
+      rPe[ooB0, y] := rLe[6] / 2;
     end;
 
     r1 := sqr(rLe[3]) - sqr(rLe[6] / 2);

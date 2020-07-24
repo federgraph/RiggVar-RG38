@@ -19,11 +19,11 @@ var
   rp: TRealRiggPoints;
 begin
   rp[ooA, x] := 2398;
-  rp[ooA, y] := 425;
+  rp[ooA, y] := -425;
   rp[ooA, z] := 2496;
 
   rp[ooB, x] := 2398;
-  rp[ooB, y] := -425;
+  rp[ooB, y] := 425;
   rp[ooB, z] := 2496;
 
   rp[ooC, x] := 2354;
@@ -47,11 +47,11 @@ begin
   rp[ooP, z] := 2496;
 
   rp[ooA0, x] := 2560;
-  rp[ooA0, y] := 765;
+  rp[ooA0, y] := -765;
   rp[ooA0, z] := 430;
 
   rp[ooB0, x] := 2560;
-  rp[ooB0, y] := -765;
+  rp[ooB0, y] := 765;
   rp[ooB0, z] := 430;
 
   rp[ooC0, x] := 4140;

@@ -417,11 +417,11 @@ begin
 
   { RumpfKoordinaten in mm }
   rP[ooA0, x] := 2560; { Pütting Stbd }
-  rP[ooA0, y] := 765;
+  rP[ooA0, y] := -765;
   rP[ooA0, z] := 430;
 
   rP[ooB0, x] := 2560; { Püttinge Bb }
-  rP[ooB0, y] := -765;
+  rP[ooB0, y] := 765;
   rP[ooB0, z] := 430;
 
   rP[ooC0, x] := 4140; { Vorstag }
@@ -515,11 +515,11 @@ begin
 
   { RumpfKoordinaten in mm }
   rP[ooA0, x] := 30 * f + ox; { Pütting Stbd }
-  rP[ooA0, y] := 40 * f;
+  rP[ooA0, y] := -40 * f;
   rP[ooA0, z] := 40 * f + oz;
 
   rP[ooB0, x] := 30 * f + ox;
-  rP[ooB0, y] := -40 * f;
+  rP[ooB0, y] := 40 * f;
   rP[ooB0, z] := 40 * f + oz;
 
   rP[ooC0, x] := 150 * f + ox;
@@ -592,7 +592,7 @@ begin
   { Mast }
   FrMastEnde := FrMastLength - FrMastUnten - FrMastOben;
   { Rumpflängen }
-  FrPuettingA := rP[ooA0, y] - rP[ooB0, y];
+  FrPuettingA := rP[ooB0, y] - rP[ooA0, y];
   FrBasis := Abstand(rP[ooP0], rP[ooD0]);
   FrAlpha := arctan2((rP[ooP0, z] - rP[ooD0, z]), (rP[ooD0, x] - rP[ooP0, x]));
 end;

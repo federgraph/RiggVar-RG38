@@ -155,7 +155,7 @@ begin
   end;
 
   rP[ooA, x] := rP[ooA0, x] + FrWunten2D * cos(FrPhi - FrAlpha);
-  rP[ooA, y] := FrSalingA / 2;
+  rP[ooA, y] := -FrSalingA / 2;
   rP[ooA, z] := rP[ooA0, z] + FrWunten2D * sin(FrPhi - FrAlpha);
 
   rP[ooB] := rP[ooA];
@@ -367,7 +367,7 @@ begin
 
   { aktualisieren }
   rP[ooA] := rP[ooP];
-  rP[ooA, y] := FrSalingA / 2;
+  rP[ooA, y] := -FrSalingA / 2;
   rP[ooB] := rP[ooP];
   rP[ooB, y] := -rP[ooA, y];
   { We actually want PhiVonPsi, but we can use function PsiVonPhi;
@@ -494,7 +494,7 @@ begin
 
   { aktualisieren }
   rP[ooA] := rP[ooP];
-  rP[ooA, y] := FrSalingA / 2;
+  rP[ooA, y] := -FrSalingA / 2;
   rP[ooB] := rP[ooP];
   rP[ooB, y] := -FrSalingA / 2;
   FrPhi := arctan2((rP[ooA0, x] - rP[ooA, x]), (rP[ooA, z] - rP[ooA0, z]));
@@ -674,7 +674,7 @@ begin
   rP[ooP, y] := 0;
   rP[ooB] := rP[ooA];
   rP[ooB, y] := -rP[ooA, y];
-  FrSalingA := 2 * rP[ooA, y];
+  FrSalingA := 2 * rP[ooB, y];
   FrSalingH := Abstand(rP[ooP], rP[ooD]);
   FrPhi := arctan2((rP[ooP0, x] - rP[ooP, x]), (rP[ooP, z] - rP[ooP0, z]));
   FrPhi := FrPhi + pi / 2 + FrAlpha;
@@ -746,7 +746,7 @@ begin
   FrPhi := arctan2((rP[ooA0, x] - rP[ooA, x]), (rP[ooA, z] - rP[ooA0, z]));
   FrPhi := FrPhi + pi / 2 + FrAlpha;
   FrWinkel := FrPhi - FrAlpha;
-  FrSalingA := 2 * rP[ooA, y];
+  FrSalingA := 2 * rP[ooB, y];
   FrSalingH := Abstand(rP[ooP], rP[ooD]);
   FrController := FiControllerAnschlag;
 end;
@@ -788,7 +788,7 @@ begin
   rP[ooD] := vadd(rP[ooD0], temp);
   { aktualisieren }
   FrSalingH := Abstand(rP[ooP], rP[ooD]);
-  FrSalingA := 2 * rP[ooA, y];
+  FrSalingA := 2 * rP[ooB, y];
   FrSalingL := Abstand(rP[ooA], rP[ooD]);
   FrPhi := arctan2((rP[ooP0, x] - rP[ooP, x]), (rP[ooP, z] - rP[ooP0, z]));
   FrPhi := FrPhi + pi / 2 + FrAlpha;
@@ -884,7 +884,7 @@ begin
   rP[ooB, y] := -rP[ooA, y];
   { aktualisieren }
   FrSalingH := Abstand(rP[ooP], rP[ooD]);
-  FrSalingA := 2 * rP[ooA, y];
+  FrSalingA := 2 * rP[ooB, y];
   FrSalingL := Abstand(rP[ooA], rP[ooD]);
   FrPhi := arctan2((rP[ooP0, x] - rP[ooP, x]), (rP[ooP, z] - rP[ooP0, z]));
   FrPhi := FrPhi + pi / 2 + FrAlpha;

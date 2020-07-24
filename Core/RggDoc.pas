@@ -443,11 +443,11 @@ begin
 
   { Rumpf: Koordinaten }
   iP[ooA0, x] := 2560; { Pütting Stbd }
-  iP[ooA0, y] := 765;
+  iP[ooA0, y] := -765;
   iP[ooA0, z] := 430;
 
   iP[ooB0, x] := 2560; { Püttinge Bb }
-  iP[ooB0, y] := -765;
+  iP[ooB0, y] := 765;
   iP[ooB0, z] := 430;
 
   iP[ooC0, x] := 4140; { Vorstag }
@@ -588,11 +588,11 @@ begin
 
   { RumpfKoordinaten in mm }
   iP[ooA0, x] := 30 * f + ox; { Pütting Stbd }
-  iP[ooA0, y] := 40 * f;
+  iP[ooA0, y] := -40 * f;
   iP[ooA0, z] := 40 * f + oz;
 
   iP[ooB0, x] := 30 * f + ox;
-  iP[ooB0, y] := -40 * f;
+  iP[ooB0, y] := 40 * f;
   iP[ooB0, z] := 40 * f + oz;
 
   iP[ooC0, x] := 150 * f + ox;

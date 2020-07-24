@@ -393,10 +393,10 @@ begin
 
   //rP := Doc.iP;
   rP[ooA0, x] := fd.A0X;
-  rP[ooA0, y] := fd.A0Y;
+  rP[ooA0, y] := -fd.A0Y;
   rP[ooA0, z] := fd.A0Z;
   rP[ooB0, x] := fd.A0X;
-  rP[ooB0, y] := -fd.A0Y;
+  rP[ooB0, y] := fd.A0Y;
   rP[ooB0, z] := fd.A0Z;
   rP[ooC0, x] := fd.C0X;
   rP[ooC0, y] := fd.C0Y;

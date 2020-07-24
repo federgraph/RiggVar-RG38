@@ -346,7 +346,7 @@ end;
 
 procedure TRggFace.CheckOrientation;
 begin
-  IsFrontFacing := Edge1.Direction.CrossProduct(Edge2.Direction).Y > 0;
+  IsFrontFacing := Edge1.Direction.CrossProduct(Edge2.Direction).Y < 0;
 end;
 
 constructor TRggFace.Create(Aff: TRiggFace; Ae1, Ae2, Ae3: TRiggEdge);

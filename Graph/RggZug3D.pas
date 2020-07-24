@@ -90,18 +90,18 @@ begin
     ZugMast[3].y := -yF;
 
     { WanteBb }
-    ZugWanteBb[0].x := xA0;
-    ZugWanteBb[0].y := -yA0;
-    ZugWanteBb[1].x := xA;
-    ZugWanteBb[1].y := -yA;
+    ZugWanteBb[0].x := xB0;
+    ZugWanteBb[0].y := -yB0;
+    ZugWanteBb[1].x := xB;
+    ZugWanteBb[1].y := -yB;
     ZugWanteBb[2].x := xC;
     ZugWanteBb[2].y := -yC;
 
     { WanteStb }
-    ZugWanteStb[0].x := xB0;
-    ZugWanteStb[0].y := -yB0;
-    ZugWanteStb[1].x := xB;
-    ZugWanteStb[1].y := -yB;
+    ZugWanteStb[0].x := xA0;
+    ZugWanteStb[0].y := -yA0;
+    ZugWanteStb[1].x := xA;
+    ZugWanteStb[1].y := -yA;
     ZugWanteStb[2].x := xC;
     ZugWanteStb[2].y := -yC;
 
