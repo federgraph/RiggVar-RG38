@@ -18,6 +18,10 @@
 
 interface
 
+{$ifdef fpc}
+{$mode delphi}
+{$endif}
+
 type
   TFederAction = Integer;
 

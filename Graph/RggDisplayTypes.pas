@@ -383,10 +383,10 @@ end;
 function TRggLine.ComputeSPY(SP: TRealPoint): double;
 var
   vSP: TRealPoint;
-  vAB: TRealPoint; // Rgg Vector 3D
+  vAB: TRealPoint;
 
   vABxz: TVector;
-  vSPxz: TVector; // Delphi 2D Vectors
+  vSPxz: TVector;
   lengthABxz, lengthSPxz: double;
   RatioSPtoAB, g: double;
 begin
