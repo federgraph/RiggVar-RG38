@@ -123,7 +123,7 @@ const
   LogList_Format_String_MakeKoord: string = 'TRiggFS.MakeKoord, %d. Aufruf: %s';
   LogList_String_MakeKoordExept: string = 'TRiggFS.MakeKoord:  ';
 
-  LogList_FormatString_MakeKoordDS: string = 'TRiggFS.MakeKoordDS/1: %s';
+  LogList_FormatString_MakeKoordDS: string = 'TRiggFS.MakeKoordDS/%d: %s';
   LogList_String_MakeKoordDSExept: string = 'TRiggFS.MakeKoordDS:  ';
 
   LogList_Format_String_MakeKoordOS: string = 'TRiggFS.MakeKoordOS, %d. Aufruf: %s';
