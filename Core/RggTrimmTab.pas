@@ -24,8 +24,8 @@ uses
   System.Types,
   System.Inifiles,
   System.Math,
+  System.Math.Vectors,
   System.UIConsts,
-  RggVector,
   RggTypes;
 
 const
@@ -61,8 +61,8 @@ type
   ITrimmTab = interface
   ['{B3EE7E6D-ED13-4F90-A4F9-ABFFD56D0A95}']
 
-    function EvalY(x: double): double;
-    function EvalX(y: double): double;
+    function EvalY(x: single): single;
+    function EvalX(y: single): single;
 
     function GetEvalDirection: Boolean;
     procedure SetEvalDirection(const Value: Boolean);
@@ -105,14 +105,14 @@ type
   private
     FTabellenTyp: TTabellenTyp;
     FValid: Boolean;
-    Fry1: double; { immer y2/2 im Fall itParabel }
+    Fry1: single; { immer y2/2 im Fall itParabel }
     FEvalDirection: Boolean;
     function GetEndwertKraft: Integer;
     function GetEndwertWeg: Integer;
     procedure SetEvalDirection(const Value: Boolean);
     function GetEvalDirection: Boolean;
   protected
-    a1, a2: double;
+    a1, a2: single;
     procedure SetTabellenTyp(Value: TTabellenTyp);
     function GetTabellenTyp: TTabellenTyp;
     procedure SetMittelPunkt(Value: TPoint); virtual;
@@ -143,8 +143,8 @@ type
     procedure GetMemoLines(ML: TStrings);
     procedure UpdateGraphModel(Model: TTrimmTabGraphModel);
     procedure ProcessTrimmTab(ML: TStrings);
-    function EvalY(x: double): double; virtual;
-    function EvalX(y: double): double; virtual;
+    function EvalY(x: single): single; virtual;
+    function EvalX(y: single): single; virtual;
 
     property EvalDirection: Boolean read GetEvalDirection write SetEvalDirection;
     property TabellenTyp: TTabellenTyp read GetTabellenTyp write SetTabellenTyp;
@@ -156,8 +156,8 @@ type
     property TrimmtabDaten: TTrimmTabDaten read GetTrimmTabDaten write SetTrimmTabDaten;
   end;
 
-  TControlPunkte = array [1 .. BezierKurveVomGrad + 1] of vec3;
-  TBezierKurve = array [1 .. AnzahlKurvenPunkte + 1] of vec3;
+  TControlPunkte = array [1 .. BezierKurveVomGrad + 1] of TPoint3D;
+  TBezierKurve = array [1 .. AnzahlKurvenPunkte + 1] of TPoint3D;
   TKoeffizientenArray = array [1 .. BezierKurveVomGrad + 1] of Integer;
 
   TBezier = class
@@ -165,8 +165,8 @@ type
     c: TKoeffizientenArray; { n+1 }
     n: Integer; { there are n+1 Control Points }
     m: Integer; { there are m+1 points along the interval of 0 <= u <= 1 }
-    function BlendingValue(u: double; k: Integer): double;
-    procedure ComputePoint(u: double; out pt: vec3);
+    function BlendingValue(u: single; k: Integer): single;
+    procedure ComputePoint(u: single; out pt: TPoint3D);
   public
     Curve: TBezierKurve; { m+1 }
     Controls: TControlPunkte; { n+1 }
@@ -523,9 +523,9 @@ end;
 
 procedure TTrimmTab.SetMittelPunkt(Value: TPoint);
 var
-  rTemp, min, max: double;
+  rTemp, min, max: single;
   iTemp: Integer;
-  Wurzel2Halbe: double;
+  Wurzel2Halbe: single;
 begin
   Valid := False;
   x1 := Value.x;
@@ -624,12 +624,12 @@ begin
 end;
 
 { liefert den Weg y in mm als Funktion der Kraft x in N zurück }
-function TTrimmTab.EvalY(x: double): double;
+function TTrimmTab.EvalY(x: single): single;
 var
-  KraftSoll, KraftIst, Diff: double; { Kräfte in N }
-  uA, uB, uIst: double; { Parameter u: 0 <= u <= 1 }
+  KraftSoll, KraftIst, Diff: single; { Kräfte in N }
+  uA, uB, uIst: single; { Parameter u: 0 <= u <= 1 }
   Zaehler: Integer;
-  Temp: vec3;
+  Temp: TPoint3D;
 begin
   result := 0;
 
@@ -689,13 +689,13 @@ end;
 
 { liefert die Kraft x in N als Funktion des Weges y in mm zurück }
 { bzw. liefert Wantenspannung 3D in Abhängigkeit von der Auslenkung des Vorstags }
-function TTrimmTab.EvalX(y: double): double;
+function TTrimmTab.EvalX(y: single): single;
 var
-  WegSoll, WegIst, Diff: double; { Wege in mm }
-  KraftA, KraftB, KraftIst: double; { Kräfte in N }
-  uA, uB, uIst: double;
+  WegSoll, WegIst, Diff: single; { Wege in mm }
+  KraftA, KraftB, KraftIst: single; { Kräfte in N }
+  uA, uB, uIst: single;
   Zaehler: Integer;
-  Temp: vec3;
+  Temp: TPoint3D;
 begin
   result := 0;
 
@@ -918,10 +918,10 @@ begin
   end;
 end;
 
-function TBezier.BlendingValue(u: double; k: Integer): double;
+function TBezier.BlendingValue(u: single; k: Integer): single;
 var
   j: Integer;
-  bv: double;
+  bv: single;
 begin
   { compute c[k] * (u to kth power) * ((1-u) to (n-k) power) }
   bv := c[k];
@@ -932,10 +932,10 @@ begin
   result := bv;
 end;
 
-procedure TBezier.ComputePoint(u: double; out pt: vec3);
+procedure TBezier.ComputePoint(u: single; out pt: TPoint3D);
 var
   k: Integer;
-  b: double;
+  b: single;
 begin
  { pt := Null; }
   pt.x := 0.0;

@@ -22,6 +22,7 @@ uses
   System.SysUtils,
   System.Classes,
   System.Math,
+  System.Math.Vectors,
   RiggVar.FB.ActionConst,
   RiggVar.RG.Data,
   RiggVar.RG.Def,
@@ -582,7 +583,7 @@ end;
 
 procedure TRggMain.ChangeRigg(Value: single);
 var
-  tempH, tempA, tempL, tempW: double;
+  tempH, tempA, tempL, tempW: single;
 begin
   case FParam of
     fpController: Rigg.RealGlied[fpController] := Value;
@@ -674,7 +675,7 @@ begin
       Rigg.BiegeUndNeigeC(FactArray.MastfallF0C.Ist, Value);
 
     fpD0X:
-      Rigg.rP[ooD0, X] := Round(Value);
+      Rigg.rP[ooD0].X := Round(Value);
   end;
 end;
 
@@ -913,7 +914,7 @@ begin
   FactArray.MastfallF0C.Ist := Rigg.RealTrimm[tiMastfallF0C];
   FactArray.MastfallF0F.Ist := Rigg.RealTrimm[tiMastfallF0F];
   FactArray.Biegung.Ist := Rigg.RealTrimm[tiBiegungS];
-  FactArray.D0X.Ist := Rigg.rP[ooD0, X];
+  FactArray.D0X.Ist := Rigg.rP[ooD0].X;
 
   FactArray.T1.Ist := 650;
   FactArray.T2.Ist := 150;
@@ -1021,13 +1022,13 @@ begin
       fpSalingW:
         sb.Ist := arctan2(Rigg.RealGlied[fpSalingH] * 2, Rigg.RealGlied[fpSalingA]) * 180 / pi;
       fpMastfallF0C:
-        sb.Ist := Abstand(Rigg.rP[ooF0], Rigg.rP[ooC]);
+        sb.Ist := (Rigg.rP[ooF0] - Rigg.rP[ooC]).Length;
       fpMastfallF0F:
-        sb.Ist := Abstand(Rigg.rP[ooF0], Rigg.rP[ooF]);
+        sb.Ist := (Rigg.rP[ooF0] - Rigg.rP[ooF]).Length;
       fpBiegung:
         sb.Ist := Rigg.hd;
       fpD0X:
-        sb.Ist := Rigg.rP[ooD0][x];
+        sb.Ist := Rigg.rP[ooD0].X;
     end;
   end;
 
@@ -1052,7 +1053,7 @@ begin
       Rigg.UpdateGetriebe;
       if Rigg.GetriebeOK then
       begin
-        result := Abstand(Rigg.rP[ooF0], Rigg.rP[ooF]); // - 5000;
+        result := (Rigg.rP[ooF0] - Rigg.rP[ooF]).Length; // - 5000;
         UpdateFactArrayFromRigg;
       end
       else
@@ -1087,7 +1088,7 @@ begin
   FactArray.MastfallF0C.Ist := Rigg.RealTrimm[tiMastfallF0C];
   FactArray.MastfallF0F.Ist := Rigg.RealTrimm[tiMastfallF0F];
   FactArray.Biegung.Ist := Rigg.RealTrimm[tiBiegungS];
-  FactArray.D0X.Ist := Rigg.rP[ooD0, X];
+  FactArray.D0X.Ist := Rigg.rP[ooD0].X;
 
   fd.F0C := Round(FactArray.MastfallF0C.Ist);
   fd.F0F := Round(FactArray.MastfallF0F.Ist);
@@ -1513,7 +1514,7 @@ end;
 
 procedure TRggMain.DoBiegungGF;
 var
-  a, b, c, k, h: double;
+  a, b, c, k, h: single;
   pf: TRealPoint;
   kg, kh: TRealPoint;
   IndexG: Integer;
@@ -1529,9 +1530,9 @@ begin
     kg := StrokeRigg.GetMastKurvePoint(IndexG);
     kh := StrokeRigg.GetMastKurvePoint(IndexH);
 
-    a := Abstand(kg, pf);
-    b := Abstand(pf, kh);
-    c := Abstand(kh, kg);
+    a := (kg - pf).Length;
+    b := (pf - kh).Length;
+    c := (kh - kg).Length;
 
     h := Hoehe(a-0.00001, b, c, k);
 
@@ -1547,13 +1548,13 @@ end;
 
 procedure TRggMain.DebugBiegungGF(ML: TStrings);
 var
-  a, b, c, k, h: double;
+  a, b, c, k, h: single;
   pf: TRealPoint;
   kg: TRealPoint;
   kh: TRealPoint;
-  bm, l: double;
-  t: double;
-  IndexG, IndexD, IndexH, IndexC: double;
+  bm, l: single;
+  t: single;
+  IndexG, IndexD, IndexH, IndexC: single;
 begin
   ML.Clear;
   if StrokeRigg <> nil then
@@ -1595,9 +1596,9 @@ begin
     kg := StrokeRigg.GetMastKurvePoint(Round(IndexG));
     kh := StrokeRigg.GetMastKurvePoint(Round(IndexH));
 
-    a := Abstand(kg, pf);
-    b := Abstand(pf, kh);
-    c := Abstand(kh, kg);
+    a := (kg - pf).Length;
+    b := (pf - kh).Length;
+    c := (kh - kg).Length;
 
     ML.Add('');
     h := Hoehe(a-0.00001, b, c, k);

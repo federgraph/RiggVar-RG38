@@ -110,10 +110,14 @@ begin
     faPasteTrimmItem: result := 'Paste Trimm-Item or Trimm-File';
 
     faShowMemo: result := 'Form Memo';
-    faShowActi: result := 'Form Actions';
-    faShowOpti: result := 'Form Options';
-    faShowConf: result := 'Form Config';
+    faShowActions: result := 'Form Actions';
+    faShowOptions: result := 'Form Options';
+    faShowDrawings: result := 'Form Drawings';
+    faShowConfig: result := 'Form Config';
     faShowTrimmTab: result := 'Form Trimm Tab';
+    faShowKreis: result := 'Form Kreis';
+    faShowInfo: result := 'Form Info';
+    faShowSplash: result := 'Form Splash';
 
     faShowDiagA: result := 'Form Diagramm';
     faShowDiagC: result := 'Form Live Diagramm Controls';
@@ -124,9 +128,6 @@ begin
     faShowText: result := 'Form Text-Ausgabe';
 
     faShowForce: result := 'Form Force';
-    faShowKreis: result := 'Form Kreis';
-    faShowInfo: result := 'Form Info';
-    faShowSplash: result := 'Form Splash';
     faShowDetail: result := 'Form Detail';
     faShowTabelle: result := 'Form Tabelle';
     faShowSaling: result := 'Form Saling';

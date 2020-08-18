@@ -64,7 +64,7 @@ type
     procedure AusgabeDiffP(rP, rPe: TRealRiggPoints);
     procedure AusgabeRF(rF: TRiggLvektor);
     procedure AusgabeWinkel(alpha, alpha1, alpha2, beta, gamma,
-      delta1, delta2, epsilon, phi, psi: double);
+      delta1, delta2, epsilon, phi, psi: single);
     procedure AusgabeTrimmControls(Ctrls: TTrimmControls);
     procedure AusgabeSalingDaten(SData: TSalingDaten);
     procedure AusgabeLog(Liste: TStringList);
@@ -320,7 +320,7 @@ begin
     begin
       if i in IndexAuswahlP then
       Add(Format('  rP[%s] %8.2f %8.2f %8.2f  (%s)',
-      [KoordTexte[i], rP[i,x], rP[i,y], rP[i,z], KoordLabels[i]]));
+      [KoordTexte[i], rP[i].X, rP[i].Y, rP[i].Z, KoordLabels[i]]));
     end;
     Add('');
   end;
@@ -340,7 +340,7 @@ begin
     begin
       if i in IndexAuswahlP then
       Add(Format('  rPe[%s] %8.2f %8.2f %8.2f  (%s)',
-      [KoordTexte[i], rPe[i,x], rPe[i,y], rPe[i,z], KoordLabels[i]]));
+      [KoordTexte[i], rPe[i].X, rPe[i].Y, rPe[i].Z, KoordLabels[i]]));
     end;
     Add('');
   end;
@@ -359,7 +359,7 @@ begin
     begin
       if i in IndexAuswahlP then
       Add(Format('  %s  %8.2f %8.2f %8.2f  (%s)',
-      [KoordTexte[i], rPe[i,x]-rP[i,x], rPe[i,y]-rP[i,y], rPe[i,z]-rP[i,z],
+      [KoordTexte[i], rPe[i].X-rP[i].X, rPe[i].Y-rP[i].Y, rPe[i].Z-rP[i].Z,
       KoordLabels[i]]));
     end;
     Add('');
@@ -385,7 +385,7 @@ begin
 end;
 
 procedure TRiggReport.AusgabeWinkel(alpha, alpha1, alpha2, beta, gamma,
-  delta1, delta2, epsilon, phi, psi: double);
+  delta1, delta2, epsilon, phi, psi: single);
 begin
   with FML do
   begin

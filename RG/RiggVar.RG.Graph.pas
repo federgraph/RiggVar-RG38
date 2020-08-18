@@ -3,6 +3,7 @@
 interface
 
 uses
+  System.Math.Vectors,
   RggTypes,
   RggUnit4;
 
@@ -16,7 +17,7 @@ type
     procedure SetKoordinatenE(const Value: TRealRiggPoints);
     procedure SetKoordinatenR(const Value: TRealRiggPoints);
     procedure SetMastKurve(const Value: TMastKurve);
-    procedure SetMastLineData(const Value: TLineDataR100; L: double; Beta: double);
+    procedure SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
     procedure SetKoppelKurve(const Value: TKoordLine);
 
     procedure SetWanteGestrichelt(const Value: Boolean);
@@ -33,7 +34,7 @@ type
     procedure SetRiggLED(const Value: Boolean);
     procedure SetSofortBerechnen(const Value: Boolean);
 
-    function GetMastKurvePoint(const Index: Integer): TRealPoint;
+    function GetMastKurvePoint(const Index: Integer): TPoint3D;
     procedure ToggleRenderOption(const fa: Integer);
     function QueryRenderOption(const fa: Integer): Boolean;
 
@@ -107,8 +108,8 @@ type
     procedure SetKoordinaten(const Value: TRealRiggPoints);
     procedure SetKoppelKurve(const Value: TKoordLine);
     procedure SetMastKurve(const Value: TMastKurve);
-    procedure SetMastLineData(const Value: TLineDataR100; L: double; Beta: double);
-    function GetMastKurvePoint(const Index: Integer): TRealPoint;
+    procedure SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
+    function GetMastKurvePoint(const Index: Integer): TPoint3D;
 
     procedure ToggleRenderOption(const fa: Integer);
     function QueryRenderOption(const fa: Integer): Boolean;
@@ -147,9 +148,9 @@ begin
   FRigg := rgg;
 end;
 
-procedure TDummyStrokeRigg.SetMastLineData(const Value: TLineDataR100; L: double; Beta: double);
+procedure TDummyStrokeRigg.SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
 var
-  temp1, temp2, temp3, temp4, tempL: double;
+  temp1, temp2, temp3, temp4, tempL: single;
   j, k: Integer;
 begin
   temp1 := cos(pi / 2 - Beta);
@@ -160,9 +161,9 @@ begin
   begin
     k := Round(100 / BogenMax * j);
     tempL := j * L / BogenMax;
-    FMastKurve[j, x] := FRigg.rP[ooD0, x] - tempL * temp1 + Value[k] * temp2;
-    FMastKurve[j, y] := 0;
-    FMastKurve[j, z] := FRigg.rP[ooD0, z] + tempL * temp3 + Value[k] * temp4;
+    FMastKurve[j].X := FRigg.rP[ooD0].X - tempL * temp1 + Value[k] * temp2;
+    FMastKurve[j].Y := 0;
+    FMastKurve[j].Z := FRigg.rP[ooD0].Z + tempL * temp3 + Value[k] * temp4;
   end;
 end;
 
@@ -272,15 +273,13 @@ begin
 
 end;
 
-function TDummyStrokeRigg.GetMastKurvePoint(const Index: Integer): TRealPoint;
+function TDummyStrokeRigg.GetMastKurvePoint(const Index: Integer): TPoint3D;
 begin
   if (Index >= 0) and (Index < Length(FMastKurve)) then
     result := FMastKurve[Index]
   else
   begin
-    result[x] := 0;
-    result[y] := 0;
-    result[z] := 0;
+    result := TPoint3D.Zero;
   end;
 end;
 

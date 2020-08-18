@@ -24,6 +24,7 @@ uses
   System.IniFiles,
   System.Types,
   System.Math,
+  System.Math.Vectors,
   RggStrings,
   RggTypes,
   RggCalc,
@@ -42,7 +43,7 @@ type
 
   TMast = class(TGetriebeFS)
   private
-    l0: double; { in mm }
+    l0: single; { in mm }
 
     FLineCountM: Integer;
     FControllerTyp: TControllerTyp;
@@ -58,52 +59,52 @@ type
     procedure FanIn;
     procedure FanOut;
     procedure GetEpsilon;
-    function GetKoppelFaktor: double;
-    procedure SolveKG21(KM, KU1, KU2, KB: TRealPoint; var FU1, FU2, FB: double);
+    function GetKoppelFaktor: single;
+    procedure SolveKG21(KM, KU1, KU2, KB: TPoint3D; var FU1, FU2, FB: single);
 
     procedure SetEI(Value: Integer);
     function GetEI: Integer;
 
   protected
-    FEx, FEy, FDx, FDy, FD0x, FD0y, FCx, FCy: double;
-    FE, FD, FAx, FAy, FALx, FALy, FLvon1, FLvon2, FALvon12: double;
+    FEx, FEy, FDx, FDy, FD0x, FD0y, FCx, FCy: single;
+    FE, FD, FAx, FAy, FALx, FALy, FLvon1, FLvon2, FALvon12: single;
 
     procedure LoadFromIniFile(ini: TIniFile); override;
     procedure WriteToIniFile(ini: TIniFile); override;
 
     procedure Abstaende;
     procedure BerechneF; override;
-    procedure KorrekturF(tempH, k1, k2: double; var k3, Beta, Gamma: double); override;
+    procedure KorrekturF(tempH, k1, k2: single; var k3, Beta, Gamma: single); override;
   public
     LineData: TLineDataR100; { Durchbiegungswerte in mm }
 
     ControllerFree: Boolean;
-    BiegungE: double; { in mm }
-    MastPositionE: double;
-    hd, he, lc, ld, le: double; { in mm }
-    F1, F2, FA, FB, FC: double; { in N }
-    EI: double; { in Nmm^2 }
+    BiegungE: single; { in mm }
+    MastPositionE: single;
+    hd, he, lc, ld, le: single; { in mm }
+    F1, F2, FA, FB, FC: single; { in N }
+    EI: single; { in Nmm^2 }
 
     { gammaE bedeutet gammaEntlastet und wird in RggUnit3 verwendet, hier nicht }
-    Beta, Gamma, gammaE, delta1, delta2, alpha1, alpha2: double; { in rad }
-    eps1, eps2, epsA, epsB: double; { in rad }
+    Beta, Gamma, gammaE, delta1, delta2, alpha1, alpha2: single; { in rad }
+    eps1, eps2, epsA, epsB: single; { in rad }
 
     rL: TRiggLvektor; { Längen belastet 3d in mm }
 
-    FExcenter: double; { in mm, Erfahrungswert }
-    FKnicklaenge: double; { in mm }
-    FXpos: double; { in mm }
+    FExcenter: single; { in mm, Erfahrungswert }
+    FKnicklaenge: single; { in mm }
+    FXpos: single; { in mm }
     FSchnittPunktKraft, { in N }
     FwSchnittOhne, { in N }
     FwSchnittMit, { in N }
-    FwSchnittOffset: double; { in mm }
-    FControllerWeg: double; { in mm }
-    FSalingWeg: double; { in mm }
-    FSalingWegKnick: double; { in mm }
-    FKoppelFaktor: double; { dimensionslos }
-    FKorrekturFaktor: double; { dimensionlos }
-    FSalingAlpha: double; { in mm/N }
-    FControllerAlpha: double; { in mm/N }
+    FwSchnittOffset: single; { in mm }
+    FControllerWeg: single; { in mm }
+    FSalingWeg: single; { in mm }
+    FSalingWegKnick: single; { in mm }
+    FKoppelFaktor: single; { dimensionslos }
+    FKorrekturFaktor: single; { dimensionlos }
+    FSalingAlpha: single; { in mm/N }
+    FControllerAlpha: single; { in mm/N }
 
     constructor Create;
 
@@ -111,8 +112,8 @@ type
     procedure GetSalingWeg;
     procedure GetControllerWeg;
     procedure GetSalingWegKnick;
-    function WvonF(f: double; Kurve: TKurvenTyp; Korrigiert: Boolean): double;
-    function FvonW(WSoll: double; Kurve: TKurvenTyp; Korrigiert: Boolean): double;
+    function WvonF(f: single; Kurve: TKurvenTyp; Korrigiert: Boolean): single;
+    function FvonW(WSoll: single; Kurve: TKurvenTyp; Korrigiert: Boolean): single;
     procedure SchnittKraefte;
     procedure ResetMastStatus;
     function MastStatusText: string;
@@ -123,8 +124,8 @@ type
     property MastEI: Integer read GetEI write SetEI;
     property MastStatus: TMastStatusSet read FMastStatus;
     property LineCountM: Integer read FLineCountM write FLineCountM;
-    property KoppelFaktor: double read FKoppelFaktor;
-    property SalingAlpha: double read FSalingAlpha;
+    property KoppelFaktor: single read FKoppelFaktor;
+    property SalingAlpha: single read FSalingAlpha;
     property Korrigiert: Boolean read FKorrigiert write FKorrigiert;
     property MastOK: Boolean read FMastOK;
     property ControllerTyp: TControllerTyp read FControllerTyp write FControllerTyp;
@@ -240,7 +241,7 @@ end;
 procedure TMast.GetEpsilon;
 var
   i: Integer;
-  DeltaL: double;
+  DeltaL: single;
 begin
   DeltaL := lc / 100;
   epsA := arctan2(LineData[1], DeltaL);
@@ -277,8 +278,8 @@ end;
 
 procedure TMast.CalcW1W2;
 var
-  alpha11, alpha22, alpha12, alpha21: double; { in mm/N }
-  a01, a02: double; { in mm/N }
+  alpha11, alpha22, alpha12, alpha21: single; { in mm/N }
+  a01, a02: single; { in mm/N }
   i: Integer;
 begin
   alpha11 := le * le * Sqr(lc - le) / lc / EI / 3;
@@ -321,8 +322,8 @@ end;
 
 procedure TMast.CalcW1;
 var
-  alpha11: double;
-  a01: double;
+  alpha11: single;
+  a01: single;
   i: Integer;
 begin
   alpha11 := le * le * Sqr(lc - le) / lc / EI / 3;
@@ -353,8 +354,8 @@ end;
 
 procedure TMast.CalcW2;
 var
-  alpha22: double;
-  a02: double;
+  alpha22: single;
+  a02: single;
   i: Integer;
 begin
   alpha22 := ld * ld * Sqr(lc - ld) / lc / EI / 3; { in mm/N }
@@ -406,14 +407,14 @@ end;
 
 procedure TMast.CalcWante;
 var
-  FU1, FU2, FBekannt: double;
-  l2, h, alpha: double;
+  FU1, FU2, FBekannt: single;
+  l2, h, alpha: single;
 begin
   FU1 := 0;
   FU2 := 0;
   GetWantenSpannung;
   { 1. Wantenkraft3Dto2D; FB ermitteln }
-  h := Abstand(rP[ooP0], rP[ooP]);
+  h := (rP[ooP0] - rP[ooP]).Length;
   l2 := rL[6] - rL[11]; { PüttingAbstand - SalingAbstand }
   alpha := arctan2(l2 / 2, h);
   FBekannt := WantenSpannung * cos(alpha) * 2; { Wantenspannung2d }
@@ -424,8 +425,8 @@ begin
       {         KM       KU1      KU2      KB        FU1  FU2  FB  }
       SolveKG21(rP[ooP], rP[ooD], rP[ooC], rP[ooP0], FU1, FU2, FBekannt);
       { Winkel alpha2 ermitteln }
-      Gamma := pi / 2 - arctan2((rP[ooC, x] - rP[ooD0, x]), (rP[ooC, z] - rP[ooD0, z]));
-      delta2 := arctan2((rP[ooA, z] - rP[ooD, z]), (rP[ooD, x] - rP[ooA, x]));
+      Gamma := pi / 2 - arctan2((rP[ooC].X - rP[ooD0].X), (rP[ooC].Z - rP[ooD0].Z));
+      delta2 := arctan2((rP[ooA].Z - rP[ooD].Z), (rP[ooD].X - rP[ooA].X));
       Beta := Gamma - pi / 2;
       alpha2 := Beta + delta2;
       F1 := 0;
@@ -451,7 +452,7 @@ procedure TMast.GetSalingWeg;
 { aus CalcW1 abgeleitet. Ermittelt die Durchbiegung hd, wenn he vorgegeben ist
   und die Salingkraft F2 Null ist. }
 var
-  alpha11, tempF1, a01: double;
+  alpha11, tempF1, a01: single;
 begin
   alpha11 := le * le * Sqr(lc - le) / lc / EI / 3;
   FControllerAlpha := alpha11; { im mm/N, wird in CalcWKnick gebraucht! }
@@ -464,7 +465,7 @@ procedure TMast.GetControllerWeg;
 { aus CalcW2 abgeleitet. Ermittelt die Durchbiegung he, wenn hd vorgegeben ist
   und die Controllerkraft F1 Null ist. }
 var
-  alpha22, tempF2, a02: double;
+  alpha22, tempF2, a02: single;
 begin
   alpha22 := ld * ld * Sqr(lc - ld) / lc / EI / 3; { in mm/N }
   FSalingAlpha := alpha22; { im mm/N, wird in WvonF gebraucht! }
@@ -476,9 +477,9 @@ end;
 procedure TMast.GetSalingWegKnick;
 var
   Zaehler: Integer;
-  WegDiff, WegIst, WegSoll: double; { in mm } { steht für FControllerWeg }
-  Temp, TempA, TempB: double; { in mm } { steht für FSalingWegKnick }
-  Kraft, alpha22, a02: double; { Zwischenwerte }
+  WegDiff, WegIst, WegSoll: single; { in mm } { steht für FControllerWeg }
+  Temp, TempA, TempB: single; { in mm } { steht für FSalingWegKnick }
+  Kraft, alpha22, a02: single; { Zwischenwerte }
 begin
   alpha22 := ld * ld * Sqr(lc - ld) / lc / EI / 3; { in mm/N }
   a02 := le * (lc - ld) * (lc * lc - le * le - Sqr(lc - ld)) / lc / EI / 6;
@@ -510,10 +511,10 @@ end;
 procedure TMast.CalcWKnick;
 var
   Kurve: TKurvenTyp;
-  WSoll: double; { in mm }
-  Mastdruck: double; { in N }
-  ControllerKraft: double; { in N }
-  SalingKraft: double; { in N }
+  WSoll: single; { in mm }
+  Mastdruck: single; { in N }
+  ControllerKraft: single; { in N }
+  SalingKraft: single; { in N }
 begin
   ResetMastStatus;
   GetControllerWeg; { berechnet FControllerWeg und FSalingAlpha }
@@ -615,13 +616,13 @@ begin
   end;
 end;
 
-function TMast.FvonW(WSoll: double; Kurve: TKurvenTyp; Korrigiert: Boolean): double;
+function TMast.FvonW(WSoll: single; Kurve: TKurvenTyp; Korrigiert: Boolean): single;
 { WSoll in mm, result in N }
 var
   Zaehler: Integer;
-  Knicklaenge: double; { in mm }
-  Diff, WIst: double; { in mm }
-  FTemp, FTempA, FTempB: double; { in N }
+  Knicklaenge: single; { in mm }
+  Diff, WIst: single; { in mm }
+  FTemp, FTempA, FTempB: single; { in N }
 begin
   result := 0;
   if WSoll < 0 then
@@ -649,11 +650,11 @@ begin
   result := FTemp;
 end;
 
-function TMast.WvonF(f: double; Kurve: TKurvenTyp; Korrigiert: Boolean): double;
+function TMast.WvonF(f: single; Kurve: TKurvenTyp; Korrigiert: Boolean): single;
 { F in N, result in mm }
 var
-  k: double;
-  Knicklaenge: double;
+  k: single;
+  Knicklaenge: single;
 begin
   Knicklaenge := FKnicklaenge;
   if Kurve = KurveMitController then
@@ -668,9 +669,9 @@ begin
     result := result + FKoppelFaktor * f * FSalingAlpha;
 end;
 
-function TMast.GetKoppelFaktor: double;
+function TMast.GetKoppelFaktor: single;
 var
-  FU1, FU2, FB: double;
+  FU1, FU2, FB: single;
 begin
   FU1 := 0;
   FU2 := 0;
@@ -697,13 +698,13 @@ begin
   end;
 end;
 
-procedure TMast.SolveKG21(KM, KU1, KU2, KB: TRealPoint; var FU1, FU2, FB: double);
+procedure TMast.SolveKG21(KM, KU1, KU2, KB: TPoint3D; var FU1, FU2, FB: single);
 var
-  DX1, DY1, W1: double;
-  DX2, DY2, W2: double;
-  DX3, DY3, W3: double;
-  D, D1, D2: double;
-  BekanntFX, BekanntFY: double;
+  DX1, DY1, W1: single;
+  DX2, DY2, W2: single;
+  DX3, DY3, W3: single;
+  D, D1, D2: single;
+  BekanntFX, BekanntFY: single;
   s: string;
 begin
   W1 := -1;
@@ -712,16 +713,16 @@ begin
   D := -1;
   try
     { unbekannte Kraft Nr.1 }
-    DX1 := KU1[x] - KM[x]; { delta x }
-    DY1 := KU1[z] - KM[z]; { delta y }
+    DX1 := KU1.X - KM.X; { delta x }
+    DY1 := KU1.Z - KM.Z; { delta y }
     W1 := sqrt(Sqr(DX1) + Sqr(DY1)); { Stablänge }
     { unbekannte Kraft Nr.2 }
-    DX2 := KU2[x] - KM[x]; { delta x }
-    DY2 := KU2[z] - KM[z]; { delta y }
+    DX2 := KU2.X - KM.X; { delta x }
+    DY2 := KU2.Z - KM.Z; { delta y }
     W2 := sqrt(Sqr(DX2) + Sqr(DY2)); { Stablänge }
     { bekannte Kraft Nr.3 }
-    DX3 := KB[x] - KM[x]; { delta x }
-    DY3 := KB[z] - KM[z]; { delta y }
+    DX3 := KB.X - KM.X; { delta x }
+    DY3 := KB.Z - KM.Z; { delta y }
     W3 := sqrt(Sqr(DX3) + Sqr(DY3)); { Stablänge }
     { Summe der bekannten Kräfte }
     { mit DX/W = cos alpha, DY/W = sin alpha }
@@ -820,8 +821,8 @@ end;
 
 procedure TMast.FanIn;
 var
-  SPSaling, SPController: TRealPoint;
-  k1, k2, EC: double;
+  SPSaling, SPController: TPoint3D;
+  k1, k2, EC: single;
 begin
   Abstaende;
 
@@ -831,15 +832,15 @@ begin
     begin
       SchnittGG(rP[ooD0], rP[ooC], rP[ooP], rP[ooD], SPSaling);
       SchnittGG(rP[ooD0], rP[ooC], rP[ooE], rP[ooE0], SPController);
-      ld := Abstand(rP[ooD0], SPSaling);
-      le := Abstand(rP[ooD0], SPController);
+      ld := (rP[ooD0] - SPSaling).Length;
+      le := (rP[ooD0] - SPController).Length;
       lc := rL[0];
-      EC := Abstand(rP[ooC], rP[ooE]);
+      EC := (rP[ooC] - rP[ooE]).Length;
       hd := Hoehe(lc - 0.0001, rL[16], rL[15], k2);
       he := Hoehe(lc - 0.0001, rL[18], EC, k1);
-      if SPSaling[x] - rP[ooD, x] > 0 then
+      if SPSaling.X - rP[ooD].X > 0 then
         hd := -hd;
-      if SPController[x] - rP[ooE, x] > 0 then
+      if SPController.X - rP[ooE].X > 0 then
         he := -he;
     end;
 
@@ -847,12 +848,12 @@ begin
     begin
       SchnittGG(rP[ooD0], rP[ooC], rP[ooE], rP[ooE0], SPController);
       ld := rL[16];
-      le := Abstand(rP[ooD0], SPController);
+      le := (rP[ooD0] - SPController).Length;
       lc := rL[0];
-      EC := Abstand(rP[ooC], rP[ooE]);
+      EC := (rP[ooC] - rP[ooE]).Length;
       hd := 0; { Null gesetzt, da nicht relevant }
       he := Hoehe(lc - 0.0001, rL[18], EC, k1);
-      if SPController[x] - rP[ooE, x] > 0 then
+      if SPController.X - rP[ooE].X > 0 then
         he := -he;
     end;
   end;
@@ -866,9 +867,9 @@ begin
   case SalingTyp of
     stFest, stDrehbar:
     begin
-      Gamma := pi / 2 - arctan2((rP[ooC, x] - rP[ooD0, x]), (rP[ooC, z] - rP[ooD0, z]));
-      delta1 := arctan2((rP[ooE, z] - rP[ooC0, z]), (rP[ooC0, x] - rP[ooE, x]));
-      delta2 := arctan2((rP[ooA, z] - rP[ooD, z]), (rP[ooD, x] - rP[ooA, x]));
+      Gamma := pi / 2 - arctan2((rP[ooC].X - rP[ooD0].X), (rP[ooC].Z - rP[ooD0].Z));
+      delta1 := arctan2((rP[ooE].Z - rP[ooC0].Z), (rP[ooC0].X - rP[ooE].X));
+      delta2 := arctan2((rP[ooA].Z - rP[ooD].Z), (rP[ooD].X - rP[ooA].X));
       Beta := Gamma - pi / 2;
       alpha1 := Beta + delta1;
       alpha2 := Beta + delta2;
@@ -876,8 +877,8 @@ begin
 
     stOhneStarr, stOhneBiegt:
     begin
-      Gamma := pi / 2 - arctan2((rP[ooC, x] - rP[ooD0, x]), (rP[ooC, z] - rP[ooD0, z]));
-      delta1 := arctan2((rP[ooE, z] - rP[ooC0, z]), (rP[ooC0, x] - rP[ooE, x]));
+      Gamma := pi / 2 - arctan2((rP[ooC].X - rP[ooD0].X), (rP[ooC].Z - rP[ooD0].Z));
+      delta1 := arctan2((rP[ooE].Z - rP[ooC0].Z), (rP[ooC0].X - rP[ooE].X));
       delta2 := 0; { Null gesetzt, da nicht relevant }
       Beta := Gamma - pi / 2;
       alpha1 := Beta + delta1;
@@ -964,26 +965,26 @@ end;
 procedure TMast.Abstaende;
 begin
   { Abstände ermitteln }
-  rL[0] := Abstand(rP[ooD0], rP[ooC]);
-  rL[1] := Abstand(rP[ooD0], rP[ooC0]);
-  rL[2] := Abstand(rP[ooB0], rP[ooC0]);
-  rL[3] := Abstand(rP[ooA0], rP[ooC0]);
-  rL[4] := Abstand(rP[ooB0], rP[ooD0]);
-  rL[5] := Abstand(rP[ooA0], rP[ooD0]);
-  rL[6] := Abstand(rP[ooA0], rP[ooB0]);
-  rL[7] := Abstand(rP[ooB0], rP[ooB]);
-  rL[8] := Abstand(rP[ooA0], rP[ooA]);
-  rL[9] := Abstand(rP[ooB], rP[ooD]);
-  rL[10] := Abstand(rP[ooA], rP[ooD]);
-  rL[11] := Abstand(rP[ooA], rP[ooB]);
-  rL[12] := Abstand(rP[ooB], rP[ooC]);
-  rL[13] := Abstand(rP[ooA], rP[ooC]);
-  rL[14] := Abstand(rP[ooC0], rP[ooC]);
-  rL[15] := Abstand(rP[ooC], rP[ooD]);
-  rL[16] := Abstand(rP[ooD0], rP[ooD]);
-  rL[17] := Abstand(rP[ooD], rP[ooE]);
-  rL[18] := Abstand(rP[ooD0], rP[ooE]);
-  rL[19] := Abstand(rP[ooE0], rP[ooE]);
+  rL[0] := (rP[ooD0] - rP[ooC]).Length;
+  rL[1] := (rP[ooD0] - rP[ooC0]).Length;
+  rL[2] := (rP[ooB0] - rP[ooC0]).Length;
+  rL[3] := (rP[ooA0] - rP[ooC0]).Length;
+  rL[4] := (rP[ooB0] - rP[ooD0]).Length;
+  rL[5] := (rP[ooA0] - rP[ooD0]).Length;
+  rL[6] := (rP[ooA0] - rP[ooB0]).Length;
+  rL[7] := (rP[ooB0] - rP[ooB]).Length;
+  rL[8] := (rP[ooA0] - rP[ooA]).Length;
+  rL[9] := (rP[ooB] - rP[ooD]).Length;
+  rL[10] := (rP[ooA] - rP[ooD]).Length;
+  rL[11] := (rP[ooA] - rP[ooB]).Length;
+  rL[12] := (rP[ooB] - rP[ooC]).Length;
+  rL[13] := (rP[ooA] - rP[ooC]).Length;
+  rL[14] := (rP[ooC0] - rP[ooC]).Length;
+  rL[15] := (rP[ooC] - rP[ooD]).Length;
+  rL[16] := (rP[ooD0] - rP[ooD]).Length;
+  rL[17] := (rP[ooD] - rP[ooE]).Length;
+  rL[18] := (rP[ooD0] - rP[ooE]).Length;
+  rL[19] := (rP[ooE0] - rP[ooE]).Length;
 end;
 
 procedure TMast.BerechneF;
@@ -992,15 +993,15 @@ begin
   { Berechnung Punkt F - Masttop }
   SchnittKraefte;
   GetEpsilon;
-  FrEpsilon := pi / 2 - arctan2((rP[ooC, x] - rP[ooD0, x]), (rP[ooC, z] - rP[ooD0, z])) - epsB;
-  rP[ooF, x] := rP[ooC, x] + FrMastEnde * cos(FrEpsilon);
-  rP[ooF, y] := 0;
-  rP[ooF, z] := rP[ooC, z] + FrMastEnde * sin(FrEpsilon);
+  FrEpsilon := pi / 2 - arctan2((rP[ooC].X - rP[ooD0].X), (rP[ooC].Z - rP[ooD0].Z)) - epsB;
+  rP[ooF].X := rP[ooC].X + FrMastEnde * cos(FrEpsilon);
+  rP[ooF].Y := 0;
+  rP[ooF].Z := rP[ooC].Z + FrMastEnde * sin(FrEpsilon);
 end;
 
-procedure TMast.KorrekturF(tempH, k1, k2: double; var k3, Beta, Gamma: double);
+procedure TMast.KorrekturF(tempH, k1, k2: single; var k3, Beta, Gamma: single);
 var
-  k8, temp: double;
+  k8, temp: single;
 begin
   { überschriebene virtuelle Methode von TGetriebeFS }
   { k3 und Beta näherungsweise(!) neu bestimmen:
@@ -1020,9 +1021,9 @@ end;
 
 procedure TMast.GetMastPositionE;
 var
-  PositionEStrich: double;
+  PositionEStrich: single;
 begin
-  MastPositionE := rP[ooE, x] - rP[ooD0, x];
+  MastPositionE := rP[ooE].X - rP[ooD0].X;
   if not ControllerFree then
     Exit;
   PositionEStrich := -le * sin(Beta) + BiegungE * cos(Beta);

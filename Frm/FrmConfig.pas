@@ -404,8 +404,7 @@ end;
 procedure TFormConfig.LoadRiggCombos;
 var
   m: TRiggPoint;
-  n: TKoord;
-  c, r: Integer;
+  r: Integer;
 begin
   { Trimm }
   TrimmCombo.Items := FTrimmList;
@@ -431,11 +430,9 @@ begin
   for m := ooA0 to ooF0 do
   begin
     Inc(r);
-    for n := x to z do
-    begin
-      c := Ord(n) + 1;
-      Grid.Cells[c, r] := Format('%4.0f', [FiP[m, n]]);
-    end;
+    Grid.Cells[1, r] := Format('%4.0f', [FiP[m].X]);
+    Grid.Cells[2, r] := Format('%4.0f', [FiP[m].Y]);
+    Grid.Cells[3, r] := Format('%4.0f', [FiP[m].Z]);
   end;
 end;
 
@@ -750,28 +747,28 @@ end;
 procedure TFormConfig.RumpfBtnClick(Sender: TObject);
 var
   oo: TRiggPoint;
-  kk: TKoord;
+  kk: Integer;
 begin
   oo := TRiggPoint(FRumpfCell.Y - FirstRowIndex + Ord(ooA0));
-  kk := TKoord(FRumpfCell.X - FirstColumnIndex);
+  kk := FRumpfCell.X - FirstColumnIndex;
 
-  FiP[oo, kk] := RumpfSpinEdit.Value;
+  FiP[oo].V[kk] := RumpfSpinEdit.Value;
   Grid.Cells[FRumpfCell.X, FRumpfCell.Y] := Format('%4.0f', [RumpfSpinEdit.Value]);
   if FRumpfCell.Y = SecondRowIndex then
   begin
     FiP[ooA0] := FiP[ooB0];
-    FiP[ooA0, y] := -FiP[ooB0, y];
-    Grid.Cells[1, FirstRowIndex] := Format('%4.0f', [FiP[ooA0, x]]);
-    Grid.Cells[2, FirstRowIndex] := Format('%4.0f', [FiP[ooA0, y]]);
-    Grid.Cells[3, FirstRowIndex] := Format('%4.0f', [FiP[ooA0, z]]);
+    FiP[ooA0].Y := -FiP[ooB0].Y;
+    Grid.Cells[1, FirstRowIndex] := Format('%4.0f', [FiP[ooA0].X]);
+    Grid.Cells[2, FirstRowIndex] := Format('%4.0f', [FiP[ooA0].Y]);
+    Grid.Cells[3, FirstRowIndex] := Format('%4.0f', [FiP[ooA0].Z]);
   end;
   if FRumpfCell.Y = FirstRowIndex then
   begin
     FiP[ooB0] := FiP[ooA0];
-    FiP[ooB0, y] := -FiP[ooA0, y];
-    Grid.Cells[1, SecondRowIndex] := Format('%4.0f', [FiP[ooB0, x]]);
-    Grid.Cells[2, SecondRowIndex] := Format('%4.0f', [FiP[ooB0, y]]);
-    Grid.Cells[3, SecondRowIndex] := Format('%4.0f', [FiP[ooB0, z]]);
+    FiP[ooB0].Y := -FiP[ooA0].Y;
+    Grid.Cells[1, SecondRowIndex] := Format('%4.0f', [FiP[ooB0].X]);
+    Grid.Cells[2, SecondRowIndex] := Format('%4.0f', [FiP[ooB0].Y]);
+    Grid.Cells[3, SecondRowIndex] := Format('%4.0f', [FiP[ooB0].Z]);
   end;
 end;
 

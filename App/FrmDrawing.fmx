@@ -1,0 +1,79 @@
+object FormDrawing: TFormDrawing
+  Left = 0
+  Top = 0
+  Caption = 'RGXX'
+  ClientHeight = 480
+  ClientWidth = 640
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnKeyUp = FormKeyUp
+  OnShow = FormShow
+  DesignerMasterStyle = 0
+  object DrawingList: TListBox
+    Position.X = 104.000000000000000000
+    Position.Y = 64.000000000000000000
+    Size.Width = 112.000000000000000000
+    Size.Height = 168.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    DisableFocusEffect = True
+    DefaultItemStyles.ItemStyle = ''
+    DefaultItemStyles.GroupHeaderStyle = ''
+    DefaultItemStyles.GroupFooterStyle = ''
+    OnKeyUp = DrawingListKeyUp
+    OnItemClick = DrawingListItemClick
+    Viewport.Width = 112.000000000000000000
+    Viewport.Height = 168.000000000000000000
+  end
+  object ElementList: TListBox
+    Position.X = 104.000000000000000000
+    Position.Y = 256.000000000000000000
+    Size.Width = 105.000000000000000000
+    Size.Height = 184.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    DisableFocusEffect = True
+    DefaultItemStyles.ItemStyle = ''
+    DefaultItemStyles.GroupHeaderStyle = ''
+    DefaultItemStyles.GroupFooterStyle = ''
+    OnChange = ElementListChange
+    OnKeyUp = ElementListKeyUp
+    Viewport.Width = 105.000000000000000000
+    Viewport.Height = 184.000000000000000000
+  end
+  object Image: TImage
+    MultiResBitmap = <
+      item
+      end>
+    Position.X = 264.000000000000000000
+    Position.Y = 120.000000000000000000
+    WrapMode = Original
+    OnMouseDown = ImageMouseDown
+    OnMouseMove = ImageMouseMove
+    OnMouseUp = ImageMouseUp
+    OnMouseWheel = ImageMouseWheel
+  end
+  object Memo: TMemo
+    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+    DataDetectorTypes = []
+    Position.X = 16.000000000000000000
+    Position.Y = 120.000000000000000000
+    TabOrder = 5
+    Viewport.Width = 50.000000000000000000
+    Viewport.Height = 50.000000000000000000
+  end
+  object InplaceShape: TCircle
+    Fill.Kind = None
+    Position.X = 360.000000000000000000
+    Position.Y = 192.000000000000000000
+    Size.Width = 50.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    OnMouseDown = InplaceShapeMouseDown
+    OnMouseMove = InplaceShapeMouseMove
+    OnMouseUp = InplaceShapeMouseUp
+  end
+end

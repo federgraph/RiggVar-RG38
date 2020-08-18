@@ -22,6 +22,8 @@ uses
   System.SysUtils,
   System.Classes,
   System.Types,
+  System.Math,
+  System.Math.Vectors,
   RiggVar.RG.Def;
 
 const
@@ -36,6 +38,8 @@ var
   TKR: Integer = TranskreisRadius;
 
 type
+  TRealPoint = TPoint3D;
+
   EFileFormatError = class(Exception);
 
   TGraphRadio = (
@@ -115,13 +119,13 @@ type
   Linie = array [0 .. LineCount] of TPoint;
   TLineDataR100 = array [0 .. 100] of single;
   TLineDataR50 = array [0 .. 50] of single;
-  TChartLine = array [0 .. CLMax] of double;
-  TChartLineData = array [0 .. CPMax] of double;
+  TChartLine = array [0 .. CLMax] of single;
+  TChartLineData = array [0 .. CPMax] of single;
 
   TKoord = (x, y, z);
-  TRealPoint = array [TKoord] of double;
-  TKoordLine = array [0 .. 100] of TRealPoint;
-  TIntPoint = array [TKoord] of double;
+//  TRealPoint = array [TKoord] of single;
+  TKoordLine = array [0 .. 100] of TPoint3D;
+//  TIntPoint = TPoint3D;
 
   TRiggPoint = (
     ooN0,
@@ -142,12 +146,12 @@ type
     ooM
     );
 
-  TIntRiggPoints = array [TRiggPoint] of TIntPoint;
-  TRealRiggPoints = array [TRiggPoint] of TRealPoint;
-  TMastKurve = array [0..BogenMax] of TRealPoint;
+  TIntRiggPoints = array [TRiggPoint] of TPoint3D; // TIntPoint;
+  TRealRiggPoints = array [TRiggPoint] of TPoint3D;
+  TMastKurve = array [0..BogenMax] of TPoint3D;
   TRggPolyLine = array of TPoint;
 
-  TRiggLvektor = array [0 .. 19] of double;
+  TRiggLvektor = array [0 .. 19] of single;
   TRiggLIndexRange = 0 .. 19;
 
   TTrimm = record
@@ -171,14 +175,14 @@ type
     );
 
   TRealTrimm = record
-    MastfallF0F: double;
-    VorstagDiff: double;
-    VorstagDiffE: double;
-    SpannungW: double;
-    SpannungV: double;
-    BiegungS: double;
-    BiegungC: double;
-    FlexWert: double;
+    MastfallF0F: single;
+    VorstagDiff: single;
+    VorstagDiffE: single;
+    SpannungW: single;
+    SpannungV: single;
+    BiegungS: single;
+    BiegungC: single;
+    FlexWert: single;
   end;
 
   TTrimmControls = record
@@ -210,29 +214,29 @@ type
   end;
 
   TSalingDaten = record
-    SalingH: double;
-    SalingA: double;
-    SalingL: double;
-    SalingW: double;
-    WantenWinkel: double; { in degrees }
-    KraftWinkel: double; { in degrees }
+    SalingH: single;
+    SalingA: single;
+    SalingL: single;
+    SalingW: single;
+    WantenWinkel: single; { in degrees }
+    KraftWinkel: single; { in degrees }
   end;
 
   TTrimmTabDaten = record { y = a0 + a1*(x-x0) + a2*(x-x1)(x-x0) }
     TabellenTyp: TTabellenTyp;
-    a0: double; { a0 = y0 } { a0 ist immer Null }
-    a1: double; { a1 = (y1-y0)/(x1-x0) }
-    a2: double; { a2 = ((y2-y1)/(x2-x1) - a1)/(x2-x0) }
-    x0: double; { KraftAnfang - immer Null }
-    x1: double; { KraftMitte }
-    x2: double; { KraftEnde } { wird benötigt für Begrenzung }
+    a0: single; { a0 = y0 } { a0 ist immer Null }
+    a1: single; { a1 = (y1-y0)/(x1-x0) }
+    a2: single; { a2 = ((y2-y1)/(x2-x1) - a1)/(x2-x0) }
+    x0: single; { KraftAnfang - immer Null }
+    x1: single; { KraftMitte }
+    x2: single; { KraftEnde } { wird benötigt für Begrenzung }
   end;
   { Biegeknicken }
   (* wird in der Trimmtabelle untergebracht:
     FKorrigiert: Boolean;
-    FExcenter: double; { in mm }
-    FKnicklaenge: double; { in mm }
-    FKorrekturFaktor: double; { dimensionslos }
+    FExcenter: single; { in mm }
+    FKnicklaenge: single; { in mm }
+    FKorrekturFaktor: single; { dimensionslos }
   *)
 
   TKoordLabels = array [TRiggPoint] of string;

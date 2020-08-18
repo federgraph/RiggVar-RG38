@@ -27,40 +27,40 @@ uses
 type
   TSalingDreieck = class
   private
-    FSalingHMin, FSalingH, FSalingHMax: double;
-    FSalingAMin, FSalingA, FSalingAMax: double;
+    FSalingHMin, FSalingH, FSalingHMax: single;
+    FSalingAMin, FSalingA, FSalingAMax: single;
 
-    procedure SetSalingH(Value: double);
-    procedure SetSalingA(Value: double);
-    procedure SetSalingL(Value: double);
-    procedure SetSalingW(Value: double);
+    procedure SetSalingH(Value: single);
+    procedure SetSalingA(Value: single);
+    procedure SetSalingL(Value: single);
+    procedure SetSalingW(Value: single);
 
-    function GetSalingL: double;
-    function GetSalingW: double;
+    function GetSalingL: single;
+    function GetSalingW: single;
 
-    function GetSalingLMin: double;
-    function GetSalingLMax: double;
-    function GetSalingWMin: double;
-    function GetSalingWMax: double;
+    function GetSalingLMin: single;
+    function GetSalingLMax: single;
+    function GetSalingWMin: single;
+    function GetSalingWMax: single;
   public
     constructor Create;
     procedure CopyFromRigg(Rigg: TRigg);
-    procedure GetLW(H, A: double; out L, W: double);
+    procedure GetLW(H, A: single; out L, W: single);
 
-    property Saling_H: double read FSalingH write SetSalingH;
-    property Saling_A: double read FSalingH write SetSalingA;
-    property Saling_L: double read GetSalingL write SetSalingL;
-    property Saling_W: double read GetSalingW write SetSalingW;
+    property Saling_H: single read FSalingH write SetSalingH;
+    property Saling_A: single read FSalingH write SetSalingA;
+    property Saling_L: single read GetSalingL write SetSalingL;
+    property Saling_W: single read GetSalingW write SetSalingW;
 
-    property Saling_AMin: double read FSalingAMin write FSalingAMin;
-    property Saling_AMax: double read FSalingAMax write FSalingAMax;
-    property Saling_HMin: double read FSalingHMin write FSalingHMin;
-    property Saling_HMax: double read FSalingHMax write FSalingHMax;
+    property Saling_AMin: single read FSalingAMin write FSalingAMin;
+    property Saling_AMax: single read FSalingAMax write FSalingAMax;
+    property Saling_HMin: single read FSalingHMin write FSalingHMin;
+    property Saling_HMax: single read FSalingHMax write FSalingHMax;
 
-    property Saling_LMin: double read GetSalingLMin;
-    property Saling_LMax: double read GetSalingLMax;
-    property Saling_WMin: double read GetSalingWMin;
-    property Saling_WMax: double read GetSalingWMax;
+    property Saling_LMin: single read GetSalingLMin;
+    property Saling_LMax: single read GetSalingLMax;
+    property Saling_WMin: single read GetSalingWMin;
+    property Saling_WMax: single read GetSalingWMax;
   end;
 
 implementation
@@ -75,23 +75,23 @@ begin
   FSalingAMax := 1100;
 end;
 
-procedure TSalingDreieck.GetLW(H, A: double; out L, W: double);
+procedure TSalingDreieck.GetLW(H, A: single; out L, W: single);
 begin
   L := Hypot(H, A / 2);
   W := arctan2(H, A / 2);
 end;
 
-function TSalingDreieck.GetSalingL: double;
+function TSalingDreieck.GetSalingL: single;
 begin
   result := Hypot(FSalingH, FSalingA / 2);
 end;
 
-function TSalingDreieck.GetSalingW: double;
+function TSalingDreieck.GetSalingW: single;
 begin
   result := arctan2(FSalingH, FSalingA / 2);
 end;
 
-procedure TSalingDreieck.SetSalingH(Value: double);
+procedure TSalingDreieck.SetSalingH(Value: single);
 begin
   if Value < FSalingHMin then
     FSalingH := FSalingHMin
@@ -101,7 +101,7 @@ begin
     FSalingH := Value;
 end;
 
-procedure TSalingDreieck.SetSalingA(Value: double);
+procedure TSalingDreieck.SetSalingA(Value: single);
 begin
   if Value < FSalingAMin then
     FSalingA := FSalingAMin
@@ -111,18 +111,18 @@ begin
     FSalingA := Value;
 end;
 
-procedure TSalingDreieck.SetSalingL(Value: double);
+procedure TSalingDreieck.SetSalingL(Value: single);
 var
-  temp: double;
+  temp: single;
 begin
   temp := Value / Saling_L;
   FSalingH := temp * FSalingH;
   FSalingA := temp * FSalingA;
 end;
 
-procedure TSalingDreieck.SetSalingW(Value: double);
+procedure TSalingDreieck.SetSalingW(Value: single);
 var
-  tempW, tempL: double;
+  tempW, tempL: single;
 begin
   tempW := Value * pi / 180;
   tempL := Saling_L;
@@ -130,33 +130,33 @@ begin
   FSalingA := 2 * tempL * cos(tempW);
 end;
 
-function TSalingDreieck.GetSalingLMin: double;
+function TSalingDreieck.GetSalingLMin: single;
 var
-  tempL, tempW: double;
+  tempL, tempW: single;
 begin
   GetLW(FSalingHMin, FSalingAMin, tempL, tempW);
   result := tempL;
 end;
 
-function TSalingDreieck.GetSalingLMax: double;
+function TSalingDreieck.GetSalingLMax: single;
 var
-  tempL, tempW: double;
+  tempL, tempW: single;
 begin
   GetLW(FSalingHMax, FSalingAMax, tempL, tempW);
   result := tempL;
 end;
 
-function TSalingDreieck.GetSalingWMin: double;
+function TSalingDreieck.GetSalingWMin: single;
 var
-  tempL, tempW: double;
+  tempL, tempW: single;
 begin
   GetLW(FSalingHMin, FSalingAMax, tempL, tempW);
   result := tempW;
 end;
 
-function TSalingDreieck.GetSalingWMax: double;
+function TSalingDreieck.GetSalingWMax: single;
 var
-  tempL, tempW: double;
+  tempL, tempW: single;
 begin
   GetLW(FSalingHMax, FSalingAMin, tempL, tempW);
   result := tempW;

@@ -23,6 +23,7 @@ uses
   System.Classes,
   System.IniFiles,
   System.Math,
+  System.Math.Vectors,
   RiggVar.RG.Def,
   RggStrings,
   RggScroll,
@@ -46,47 +47,47 @@ type
     FGetriebeOK: Boolean;
     FMastOK: Boolean;
     FGetriebeStatus: set of TGetriebeStatus;
-    FrWanteZulang: double;
+    FrWanteZulang: single;
 
-    FrPuettingA: double;
-    FrBasis: double;
+    FrPuettingA: single;
+    FrBasis: single;
 
-    FrController: double;
-    FrWinkel: double;
-    FrVorstag: double;
-    FrWunten2D: double;
-    FrWunten3D: double;
-    FrWoben2D: double;
-    FrWoben3D: double;
-    FrSalingL: double;
-    FrSalingH: double;
-    FrSalingA: double;
-    FrMastUnten: double;
-    FrMastOben: double;
-    FrMastEnde: double;
+    FrController: single;
+    FrWinkel: single;
+    FrVorstag: single;
+    FrWunten2D: single;
+    FrWunten3D: single;
+    FrWoben2D: single;
+    FrWoben3D: single;
+    FrSalingL: single;
+    FrSalingH: single;
+    FrSalingA: single;
+    FrMastUnten: single;
+    FrMastOben: single;
+    FrMastEnde: single;
 
-    FrPsi: double;
-    FrPhi: double;
-    FrAlpha: double;
-    FrEpsilon: double;
+    FrPsi: single;
+    FrPhi: single;
+    FrAlpha: single;
+    FrEpsilon: single;
 
     FiControllerAnschlag: Integer;
 
-    FWinkelDegrees: double;
-    FWPowerOS: double;
+    FWinkelDegrees: single;
+    FWPowerOS: single;
 
-    FrMastLength: double;
-    FrMastfallVorlauf: double;
+    FrMastLength: single;
+    FrMastfallVorlauf: single;
 
     procedure IntGliederToReal;
     procedure RealGliederToInt;
     procedure Wanten2dTo3d;
     procedure Wanten3dTo2d;
-    procedure SetMastL(Value: double);
-    procedure SetMastunten(Value: double);
-    procedure SetMastoben(Value: double);
-    function GetRealGlied(Index: TsbName): double;
-    procedure SetRealGlied(Index: TsbName; Value: double);
+    procedure SetMastL(Value: single);
+    procedure SetMastunten(Value: single);
+    procedure SetMastoben(Value: single);
+    function GetRealGlied(Index: TsbName): single;
+    procedure SetRealGlied(Index: TsbName; Value: single);
     procedure SetSalingTyp(Value: TSalingTyp); virtual;
 
     procedure LoadFromIniFile(ini: TIniFile); virtual;
@@ -112,21 +113,21 @@ type
     property ManipulatorMode: Boolean read FManipulatorMode write FManipulatorMode;
     property GetriebeOK: Boolean read FGetriebeOK;
 
-    property MastLaenge: double read FrMastLength write SetMastL;
-    property MastUnten: double read FrMastUnten write SetMastunten;
-    property MastOben: double read FrMastOben write SetMastoben;
-    property MastfallVorlauf: double read FrMastfallVorlauf write FrMastfallVorlauf;
+    property MastLaenge: single read FrMastLength write SetMastL;
+    property MastUnten: single read FrMastUnten write SetMastunten;
+    property MastOben: single read FrMastOben write SetMastoben;
+    property MastfallVorlauf: single read FrMastfallVorlauf write FrMastfallVorlauf;
 
-    property phi: double read FrPhi write FrPhi;
-    property psi: double read FrPsi write FrPsi;
-    property alpha: double read FrAlpha;
-    property epsilon: double read FrEpsilon write FrEpsilon;
-    property WantenSpannung: double read FWPowerOS write FWPowerOS;
+    property phi: single read FrPhi write FrPhi;
+    property psi: single read FrPsi write FrPsi;
+    property alpha: single read FrAlpha;
+    property epsilon: single read FrEpsilon write FrEpsilon;
+    property WantenSpannung: single read FWPowerOS write FWPowerOS;
     property ControllerAnschlag: Integer read FiControllerAnschlag write FiControllerAnschlag;
 
     property SalingDaten: TSalingDaten read GetSalingDaten;
     property Glieder: TTrimmControls read GetGlieder write SetGlieder;
-    property RealGlied[Index: TsbName]: double read GetRealGlied write SetRealGlied;
+    property RealGlied[Index: TsbName]: single read GetRealGlied write SetRealGlied;
   end;
 
 implementation
@@ -166,7 +167,7 @@ begin
   end;
 end;
 
-procedure TGetriebe.SetMastunten(Value: double);
+procedure TGetriebe.SetMastunten(Value: single);
 begin
   if Value <> FrMastUnten then
   begin
@@ -174,7 +175,7 @@ begin
   end;
 end;
 
-procedure TGetriebe.SetMastoben(Value: double);
+procedure TGetriebe.SetMastoben(Value: single);
 begin
   if Value <> FrMastOben then
   begin
@@ -182,7 +183,7 @@ begin
   end;
 end;
 
-procedure TGetriebe.SetMastL(Value: double);
+procedure TGetriebe.SetMastL(Value: single);
 begin
   if Value <> FrMastLength then
   begin
@@ -219,7 +220,7 @@ begin
   IntGliederToReal;
 end;
 
-function TGetriebe.GetRealGlied(Index: TsbName): double;
+function TGetriebe.GetRealGlied(Index: TsbName): single;
 begin
   result := 0;
   case Index of
@@ -236,7 +237,7 @@ begin
   end;
 end;
 
-procedure TGetriebe.SetRealGlied(Index: TsbName; Value: double);
+procedure TGetriebe.SetRealGlied(Index: TsbName; Value: single);
 begin
   case Index of
     fpController: FrController := Value;
@@ -259,31 +260,31 @@ end;
 function TGetriebe.GetSalingDaten: TSalingDaten;
 var
   SD: TSalingDaten;
-  ooTempA, ooTempB, ooTempC: TRealPoint;
-  EbeneACD, EbeneACA0: TRealPoint;
-  tempWW, tempWS: double;
-  tempSinus, tempCosinus: double;
-  cosWW: double;
+  ooTempA, ooTempB, ooTempC: TPoint3D;
+  EbeneACD, EbeneACA0: TPoint3D;
+  tempWW, tempWS: single;
+  tempSinus, tempCosinus: single;
+  cosWW: single;
 begin
-  ooTempA := EVektor(rP[ooA], rP[ooC]);
-  ooTempB := EVektor(rP[ooA0], rP[ooA]);
-  cosWW := sprod(ooTempA, ooTempB);
+  ooTempA := (rP[ooA] - rP[ooC]).Normalize;
+  ooTempB := (rP[ooA0] - rP[ooA]).Normalize;
+  cosWW := ooTempA.DotProduct(ooTempB);
   if abs(cosWW) > 0.99 then
     tempWW := 0
   else
     tempWW := arccos(cosWW);
 
-  ooTempB := EVektor(rP[ooA], rP[ooD]);
-  EbeneACD := vprod(ooTempA, ooTempB);
+  ooTempB := (rP[ooA] - rP[ooD]).Normalize;
+  EbeneACD := ooTempA.CrossProduct(ooTempB);
 
-  ooTempB := EVektor(rP[ooA], rP[ooA0]);
-  EbeneACA0 := vprod(ooTempA, ooTempB);
+  ooTempB := (rP[ooA] - rP[ooA0]).Normalize;
+  EbeneACA0 := ooTempA.CrossProduct(ooTempB);
 
-  ooTempA := EVektor(Null, EbeneACD);
-  ooTempB := EVektor(Null, EbeneACA0);
-  ooTempC := vprod(ooTempA, ooTempB);
-  tempSinus := Abstand(Null, ooTempC);
-  tempCosinus := sprod(ooTempA, ooTempB);
+  ooTempA := EbeneACD.Normalize;
+  ooTempB := EbeneACA0.Normalize;
+  ooTempC := ooTempA.CrossProduct(ooTempB);
+  tempSinus := ooTempC.Length;
+  tempCosinus := ooTempA.DotProduct(ooTempB);
 
   tempWS := 0;
   try
@@ -354,7 +355,7 @@ end;
 
 procedure TGetriebe.Wanten3dTo2d;
 var
-  u, v: double;
+  u, v: single;
 begin
   u := sqr(FrWunten3D) - sqr((FrPuettingA - FrSalingA) / 2);
   v := sqr(FrWoben3D) - sqr(FrSalingA / 2);
@@ -416,32 +417,32 @@ begin
   FWPowerOS := 1000; { angenommene Wantenspannung 3d }
 
   { RumpfKoordinaten in mm }
-  rP[ooA0, x] := 2560; { Pütting Stbd }
-  rP[ooA0, y] := -765;
-  rP[ooA0, z] := 430;
+  rP[ooA0].X := 2560; { Pütting Stbd }
+  rP[ooA0].Y := -765;
+  rP[ooA0].Z := 430;
 
-  rP[ooB0, x] := 2560; { Püttinge Bb }
-  rP[ooB0, y] := 765;
-  rP[ooB0, z] := 430;
+  rP[ooB0].X := 2560; { Püttinge Bb }
+  rP[ooB0].Y := 765;
+  rP[ooB0].Z := 430;
 
-  rP[ooC0, x] := 4140; { Vorstag }
-  rP[ooC0, y] := 0;
-  rP[ooC0, z] := 340;
+  rP[ooC0].X := 4140; { Vorstag }
+  rP[ooC0].Y := 0;
+  rP[ooC0].Z := 340;
 
-  rP[ooD0, x] := 2870; { Mastfuß }
-  rP[ooD0, y] := 0;
-  rP[ooD0, z] := -100;
+  rP[ooD0].X := 2870; { Mastfuß }
+  rP[ooD0].Y := 0;
+  rP[ooD0].Z := -100;
 
-  rP[ooE0, x] := 2970; { Controller }
-  rP[ooE0, y] := 0;
-  rP[ooE0, z] := 450;
+  rP[ooE0].X := 2970; { Controller }
+  rP[ooE0].Y := 0;
+  rP[ooE0].Z := 450;
 
-  rP[ooF0, x] := -30; { Spiegel }
-  rP[ooF0, y] := 0;
-  rP[ooF0, z] := 300;
+  rP[ooF0].X := -30; { Spiegel }
+  rP[ooF0].Y := 0;
+  rP[ooF0].Z := 300;
 
   rP[ooP0] := rP[ooA0];
-  rP[ooP0, y] := 0;
+  rP[ooP0].Y := 0;
 
   GSB.Controller.Ist := FrController;
   GSB.Winkel.Ist := FWinkelDegrees;
@@ -514,32 +515,32 @@ begin
   FWPowerOS := 1000; { angenommene Wantenspannung 3d }
 
   { RumpfKoordinaten in mm }
-  rP[ooA0, x] := 30 * f + ox; { Pütting Stbd }
-  rP[ooA0, y] := -40 * f;
-  rP[ooA0, z] := 40 * f + oz;
+  rP[ooA0].X := 30 * f + ox; { Pütting Stbd }
+  rP[ooA0].Y := -40 * f;
+  rP[ooA0].Z := 40 * f + oz;
 
-  rP[ooB0, x] := 30 * f + ox;
-  rP[ooB0, y] := 40 * f;
-  rP[ooB0, z] := 40 * f + oz;
+  rP[ooB0].X := 30 * f + ox;
+  rP[ooB0].Y := 40 * f;
+  rP[ooB0].Z := 40 * f + oz;
 
-  rP[ooC0, x] := 150 * f + ox;
-  rP[ooC0, y] := 0;
-  rP[ooC0, z] := 40 * f + oz;
+  rP[ooC0].X := 150 * f + ox;
+  rP[ooC0].Y := 0;
+  rP[ooC0].Z := 40 * f + oz;
 
-  rP[ooD0, x] := 80 * f + ox;
-  rP[ooD0, y] := 0;
-  rP[ooD0, z] := 10 * f + oz;
+  rP[ooD0].X := 80 * f + ox;
+  rP[ooD0].Y := 0;
+  rP[ooD0].Z := 10 * f + oz;
 
-  rP[ooE0, x] := 85 * f + ox;
-  rP[ooE0, y] := 0;
-  rP[ooE0, z] := 50 * f + oz;
+  rP[ooE0].X := 85 * f + ox;
+  rP[ooE0].Y := 0;
+  rP[ooE0].Z := 50 * f + oz;
 
-  rP[ooF0, x] := -85 * f + ox;
-  rP[ooF0, y] := 0;
-  rP[ooF0, z] := 40 * f + oz;
+  rP[ooF0].X := -85 * f + ox;
+  rP[ooF0].Y := 0;
+  rP[ooF0].Z := 40 * f + oz;
 
   rP[ooP0] := rP[ooA0];
-  rP[ooP0, y] := 0;
+  rP[ooP0].Y := 0;
 
   GSB.Controller.Ist := FrController;
   GSB.Winkel.Ist := FrWinkel;
@@ -588,13 +589,13 @@ procedure TGetriebe.Reset;
 begin
   { Rumpfkoordinaten }
   rP[ooP0] := rP[ooA0];
-  rP[ooP0, y] := 0;
+  rP[ooP0].Y := 0;
   { Mast }
   FrMastEnde := FrMastLength - FrMastUnten - FrMastOben;
   { Rumpflängen }
-  FrPuettingA := rP[ooB0, y] - rP[ooA0, y];
-  FrBasis := Abstand(rP[ooP0], rP[ooD0]);
-  FrAlpha := arctan2((rP[ooP0, z] - rP[ooD0, z]), (rP[ooD0, x] - rP[ooP0, x]));
+  FrPuettingA := rP[ooB0].Y - rP[ooA0].Y;
+  FrBasis := (rP[ooD0] - rP[ooP0]).Length;
+  FrAlpha := arctan2((rP[ooP0].Z - rP[ooD0].Z), (rP[ooD0].X - rP[ooP0].X));
 end;
 
 procedure TGetriebe.WriteToIniFile(ini: TIniFile);
@@ -646,44 +647,44 @@ begin
   ini.WriteInteger(s, WPowerOS_IniString, Round(GSB.WPowerOS.Max));
 
   s := Koordinaten_Rumpf_IniSectionString;
-  ini.WriteInteger(s, A0x_IniString, Round(rP[ooA0, x]));
-  ini.WriteInteger(s, A0y_IniString, Round(rP[ooA0, y]));
-  ini.WriteInteger(s, A0z_IniString, Round(rP[ooA0, z]));
-  ini.WriteInteger(s, B0x_IniString, Round(rP[ooB0, x]));
-  ini.WriteInteger(s, B0y_IniString, Round(rP[ooB0, y]));
-  ini.WriteInteger(s, B0z_IniString, Round(rP[ooB0, z]));
-  ini.WriteInteger(s, C0x_IniString, Round(rP[ooC0, x]));
-  ini.WriteInteger(s, C0y_IniString, Round(rP[ooC0, y]));
-  ini.WriteInteger(s, C0z_IniString, Round(rP[ooC0, z]));
-  ini.WriteInteger(s, D0x_IniString, Round(rP[ooD0, x]));
-  ini.WriteInteger(s, D0y_IniString, Round(rP[ooD0, y]));
-  ini.WriteInteger(s, D0z_IniString, Round(rP[ooD0, z]));
-  ini.WriteInteger(s, E0x_IniString, Round(rP[ooE0, x]));
-  ini.WriteInteger(s, E0y_IniString, Round(rP[ooE0, y]));
-  ini.WriteInteger(s, E0z_IniString, Round(rP[ooE0, z]));
-  ini.WriteInteger(s, F0x_IniString, Round(rP[ooF0, x]));
-  ini.WriteInteger(s, F0y_IniString, Round(rP[ooF0, y]));
-  ini.WriteInteger(s, F0z_IniString, Round(rP[ooF0, z]));
+  ini.WriteInteger(s, A0x_IniString, Round(rP[ooA0].X));
+  ini.WriteInteger(s, A0y_IniString, Round(rP[ooA0].Y));
+  ini.WriteInteger(s, A0z_IniString, Round(rP[ooA0].Z));
+  ini.WriteInteger(s, B0x_IniString, Round(rP[ooB0].X));
+  ini.WriteInteger(s, B0y_IniString, Round(rP[ooB0].Y));
+  ini.WriteInteger(s, B0z_IniString, Round(rP[ooB0].Z));
+  ini.WriteInteger(s, C0x_IniString, Round(rP[ooC0].X));
+  ini.WriteInteger(s, C0y_IniString, Round(rP[ooC0].Y));
+  ini.WriteInteger(s, C0z_IniString, Round(rP[ooC0].Z));
+  ini.WriteInteger(s, D0x_IniString, Round(rP[ooD0].X));
+  ini.WriteInteger(s, D0y_IniString, Round(rP[ooD0].Y));
+  ini.WriteInteger(s, D0z_IniString, Round(rP[ooD0].Z));
+  ini.WriteInteger(s, E0x_IniString, Round(rP[ooE0].X));
+  ini.WriteInteger(s, E0y_IniString, Round(rP[ooE0].Y));
+  ini.WriteInteger(s, E0z_IniString, Round(rP[ooE0].Z));
+  ini.WriteInteger(s, F0x_IniString, Round(rP[ooF0].X));
+  ini.WriteInteger(s, F0y_IniString, Round(rP[ooF0].Y));
+  ini.WriteInteger(s, F0z_IniString, Round(rP[ooF0].Z));
 
   s := Koordinaten_Rigg_IniSectionString;
-  ini.WriteInteger(s, Ax_IniString, Round(rP[ooA, x]));
-  ini.WriteInteger(s, Ay_IniString, Round(rP[ooA, y]));
-  ini.WriteInteger(s, Az_IniString, Round(rP[ooA, z]));
-  ini.WriteInteger(s, Bx_IniString, Round(rP[ooB, x]));
-  ini.WriteInteger(s, By_IniString, Round(rP[ooB, y]));
-  ini.WriteInteger(s, Bz_IniString, Round(rP[ooB, z]));
-  ini.WriteInteger(s, Cx_IniString, Round(rP[ooC, x]));
-  ini.WriteInteger(s, Cy_IniString, Round(rP[ooC, y]));
-  ini.WriteInteger(s, Cz_IniString, Round(rP[ooC, z]));
-  ini.WriteInteger(s, Dx_IniString, Round(rP[ooD, x]));
-  ini.WriteInteger(s, Dy_IniString, Round(rP[ooD, y]));
-  ini.WriteInteger(s, Dz_IniString, Round(rP[ooD, z]));
-  ini.WriteInteger(s, Ex_IniString, Round(rP[ooE, x]));
-  ini.WriteInteger(s, Ey_IniString, Round(rP[ooE, y]));
-  ini.WriteInteger(s, Ez_IniString, Round(rP[ooE, z]));
-  ini.WriteInteger(s, Fx_IniString, Round(rP[ooF, x]));
-  ini.WriteInteger(s, Fy_IniString, Round(rP[ooF, y]));
-  ini.WriteInteger(s, Fz_IniString, Round(rP[ooF, z]));
+  ini.WriteInteger(s, Ax_IniString, Round(rP[ooA].X));
+  ini.WriteInteger(s, Ay_IniString, Round(rP[ooA].Y));
+  ini.WriteInteger(s, Az_IniString, Round(rP[ooA].Z));
+  ini.WriteInteger(s, Bx_IniString, Round(rP[ooB].X));
+  ini.WriteInteger(s, By_IniString, Round(rP[ooB].Y));
+  ini.WriteInteger(s, Bz_IniString, Round(rP[ooB].Z));
+  ini.WriteInteger(s, Cx_IniString, Round(rP[ooC].X));
+  ini.WriteInteger(s, Cy_IniString, Round(rP[ooC].Y));
+  ini.WriteInteger(s, Cz_IniString, Round(rP[ooC].Z));
+  ini.WriteInteger(s, Dx_IniString, Round(rP[ooD].X));
+  ini.WriteInteger(s, Dy_IniString, Round(rP[ooD].Y));
+  ini.WriteInteger(s, Dz_IniString, Round(rP[ooD].Z));
+  ini.WriteInteger(s, Ex_IniString, Round(rP[ooE].X));
+  ini.WriteInteger(s, Ey_IniString, Round(rP[ooE].Y));
+  ini.WriteInteger(s, Ez_IniString, Round(rP[ooE].Z));
+  ini.WriteInteger(s, Fx_IniString, Round(rP[ooF].X));
+  ini.WriteInteger(s, Fy_IniString, Round(rP[ooF].Y));
+  ini.WriteInteger(s, Fz_IniString, Round(rP[ooF].Z));
 end;
 
 procedure TGetriebe.LoadFromIniFile(ini: TIniFile);
@@ -736,44 +737,44 @@ begin
   GSB.WPowerOS.Max := ini.ReadInteger(s, WPowerOS_IniString, Round(GSB.WPowerOS.Max));
 
   s := Koordinaten_Rumpf_IniSectionString;
-  rP[ooA0, x] := ini.ReadInteger(s, A0x_IniString, Round(rP[ooA0, x]));
-  rP[ooA0, y] := ini.ReadInteger(s, A0y_IniString, Round(rP[ooA0, y]));
-  rP[ooA0, z] := ini.ReadInteger(s, A0z_IniString, Round(rP[ooA0, z]));
-  rP[ooB0, x] := ini.ReadInteger(s, B0x_IniString, Round(rP[ooB0, x]));
-  rP[ooB0, y] := ini.ReadInteger(s, B0y_IniString, Round(rP[ooB0, y]));
-  rP[ooB0, z] := ini.ReadInteger(s, B0z_IniString, Round(rP[ooB0, z]));
-  rP[ooC0, x] := ini.ReadInteger(s, C0x_IniString, Round(rP[ooC0, x]));
-  rP[ooC0, y] := ini.ReadInteger(s, C0y_IniString, Round(rP[ooC0, y]));
-  rP[ooC0, z] := ini.ReadInteger(s, C0z_IniString, Round(rP[ooC0, z]));
-  rP[ooD0, x] := ini.ReadInteger(s, D0x_IniString, Round(rP[ooD0, x]));
-  rP[ooD0, y] := ini.ReadInteger(s, D0y_IniString, Round(rP[ooD0, y]));
-  rP[ooD0, z] := ini.ReadInteger(s, D0z_IniString, Round(rP[ooD0, z]));
-  rP[ooE0, x] := ini.ReadInteger(s, E0x_IniString, Round(rP[ooE0, x]));
-  rP[ooE0, y] := ini.ReadInteger(s, E0y_IniString, Round(rP[ooE0, y]));
-  rP[ooE0, z] := ini.ReadInteger(s, E0z_IniString, Round(rP[ooE0, z]));
-  rP[ooF0, x] := ini.ReadInteger(s, F0x_IniString, Round(rP[ooF0, x]));
-  rP[ooF0, y] := ini.ReadInteger(s, F0y_IniString, Round(rP[ooF0, y]));
-  rP[ooF0, z] := ini.ReadInteger(s, F0z_IniString, Round(rP[ooF0, z]));
+  rP[ooA0].X := ini.ReadInteger(s, A0x_IniString, Round(rP[ooA0].X));
+  rP[ooA0].Y := ini.ReadInteger(s, A0y_IniString, Round(rP[ooA0].Y));
+  rP[ooA0].Z := ini.ReadInteger(s, A0z_IniString, Round(rP[ooA0].Z));
+  rP[ooB0].X := ini.ReadInteger(s, B0x_IniString, Round(rP[ooB0].X));
+  rP[ooB0].Y := ini.ReadInteger(s, B0y_IniString, Round(rP[ooB0].Y));
+  rP[ooB0].Z := ini.ReadInteger(s, B0z_IniString, Round(rP[ooB0].Z));
+  rP[ooC0].X := ini.ReadInteger(s, C0x_IniString, Round(rP[ooC0].X));
+  rP[ooC0].Y := ini.ReadInteger(s, C0y_IniString, Round(rP[ooC0].Y));
+  rP[ooC0].Z := ini.ReadInteger(s, C0z_IniString, Round(rP[ooC0].Z));
+  rP[ooD0].X := ini.ReadInteger(s, D0x_IniString, Round(rP[ooD0].X));
+  rP[ooD0].Y := ini.ReadInteger(s, D0y_IniString, Round(rP[ooD0].Y));
+  rP[ooD0].Z := ini.ReadInteger(s, D0z_IniString, Round(rP[ooD0].Z));
+  rP[ooE0].X := ini.ReadInteger(s, E0x_IniString, Round(rP[ooE0].X));
+  rP[ooE0].Y := ini.ReadInteger(s, E0y_IniString, Round(rP[ooE0].Y));
+  rP[ooE0].Z := ini.ReadInteger(s, E0z_IniString, Round(rP[ooE0].Z));
+  rP[ooF0].X := ini.ReadInteger(s, F0x_IniString, Round(rP[ooF0].X));
+  rP[ooF0].Y := ini.ReadInteger(s, F0y_IniString, Round(rP[ooF0].Y));
+  rP[ooF0].Z := ini.ReadInteger(s, F0z_IniString, Round(rP[ooF0].Z));
 
   s := Koordinaten_Rigg_IniSectionString;
-  rP[ooA, x] := ini.ReadInteger(s, Ax_IniString, Round(rP[ooA, x]));
-  rP[ooA, y] := ini.ReadInteger(s, Ay_IniString, Round(rP[ooA, y]));
-  rP[ooA, z] := ini.ReadInteger(s, Az_IniString, Round(rP[ooA, z]));
-  rP[ooB, x] := ini.ReadInteger(s, Bx_IniString, Round(rP[ooB, x]));
-  rP[ooB, y] := ini.ReadInteger(s, By_IniString, Round(rP[ooB, y]));
-  rP[ooB, z] := ini.ReadInteger(s, Bz_IniString, Round(rP[ooB, z]));
-  rP[ooC, x] := ini.ReadInteger(s, Cx_IniString, Round(rP[ooC, x]));
-  rP[ooC, y] := ini.ReadInteger(s, Cy_IniString, Round(rP[ooC, y]));
-  rP[ooC, z] := ini.ReadInteger(s, Cz_IniString, Round(rP[ooC, z]));
-  rP[ooD, x] := ini.ReadInteger(s, Dx_IniString, Round(rP[ooD, x]));
-  rP[ooD, y] := ini.ReadInteger(s, Dy_IniString, Round(rP[ooD, y]));
-  rP[ooD, z] := ini.ReadInteger(s, Dz_IniString, Round(rP[ooD, z]));
-  rP[ooE, x] := ini.ReadInteger(s, Ex_IniString, Round(rP[ooE, x]));
-  rP[ooE, y] := ini.ReadInteger(s, Ey_IniString, Round(rP[ooE, y]));
-  rP[ooE, z] := ini.ReadInteger(s, Ez_IniString, Round(rP[ooE, z]));
-  rP[ooF, x] := ini.ReadInteger(s, Fx_IniString, Round(rP[ooF, x]));
-  rP[ooF, y] := ini.ReadInteger(s, Fy_IniString, Round(rP[ooF, y]));
-  rP[ooF, z] := ini.ReadInteger(s, Fz_IniString, Round(rP[ooF, z]));
+  rP[ooA].X := ini.ReadInteger(s, Ax_IniString, Round(rP[ooA].X));
+  rP[ooA].Y := ini.ReadInteger(s, Ay_IniString, Round(rP[ooA].Y));
+  rP[ooA].Z := ini.ReadInteger(s, Az_IniString, Round(rP[ooA].Z));
+  rP[ooB].X := ini.ReadInteger(s, Bx_IniString, Round(rP[ooB].X));
+  rP[ooB].Y := ini.ReadInteger(s, By_IniString, Round(rP[ooB].Y));
+  rP[ooB].Z := ini.ReadInteger(s, Bz_IniString, Round(rP[ooB].Z));
+  rP[ooC].X := ini.ReadInteger(s, Cx_IniString, Round(rP[ooC].X));
+  rP[ooC].Y := ini.ReadInteger(s, Cy_IniString, Round(rP[ooC].Y));
+  rP[ooC].Z := ini.ReadInteger(s, Cz_IniString, Round(rP[ooC].Z));
+  rP[ooD].X := ini.ReadInteger(s, Dx_IniString, Round(rP[ooD].X));
+  rP[ooD].Y := ini.ReadInteger(s, Dy_IniString, Round(rP[ooD].Y));
+  rP[ooD].Z := ini.ReadInteger(s, Dz_IniString, Round(rP[ooD].Z));
+  rP[ooE].X := ini.ReadInteger(s, Ex_IniString, Round(rP[ooE].X));
+  rP[ooE].Y := ini.ReadInteger(s, Ey_IniString, Round(rP[ooE].Y));
+  rP[ooE].Z := ini.ReadInteger(s, Ez_IniString, Round(rP[ooE].Z));
+  rP[ooF].X := ini.ReadInteger(s, Fx_IniString, Round(rP[ooF].X));
+  rP[ooF].Y := ini.ReadInteger(s, Fy_IniString, Round(rP[ooF].Y));
+  rP[ooF].Z := ini.ReadInteger(s, Fz_IniString, Round(rP[ooF].Z));
 end;
 
 end.

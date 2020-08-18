@@ -72,7 +72,7 @@ type
 
     EdgePos: Integer; { Abstand von E0 zur Anschlagkante Deck + Klotzdicke }
     ControllerPos: Integer; { Abstand(iP[ooE0,x], iP[ooE ,x]) in mm }
-    ParamXE: double;  { Abstand(iP[ooD0,x], iP[ooE,x]) in mm }
+    ParamXE: single;  { Abstand(iP[ooD0,x], iP[ooE,x]) in mm }
     ParamXE0: Integer; { Abstand(iP[ooD0,x], iP[ooE0,x]) in mm }
 
     SalingA: Integer; { Abstand(iP[ooA,x], iP[ooB,x]) in mm }

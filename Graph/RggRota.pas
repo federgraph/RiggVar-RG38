@@ -10,6 +10,7 @@ uses
   System.Types,
   System.UITypes,
   System.UIConsts,
+  System.Math.Vectors,
   FMX.Graphics,
   FMX.Objects,
   FMX.Types,
@@ -61,12 +62,12 @@ type
     procedure KoppelBtnClick(Sender: TObject);
   private
     FViewPoint: TViewPoint;
-    FZoomBase: double;
-    FZoom: double;
+    FZoomBase: single;
+    FZoom: single;
 
-    FPhi: double;
-    FTheta: double;
-    FGamma: double;
+    FPhi: single;
+    FTheta: single;
+    FGamma: single;
 
     xmin: single;
     ymin: single;
@@ -75,7 +76,7 @@ type
 
     FXpos: single;
     FYpos: single;
-    FIncrementW: double;
+    FIncrementW: single;
     FIncrementT: single;
     FZoomIndex: Integer;
 
@@ -121,7 +122,7 @@ type
     procedure SetRiggLED(const Value: Boolean);
     procedure SetSofortBerechnen(const Value: Boolean);
 
-    procedure SetMastLineData(const Value: TLineDataR100; L: double; Beta: double);
+    procedure SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
     function GetMastKurvePoint(const Index: Integer): TRealPoint;
     procedure ToggleRenderOption(const fa: Integer);
     function QueryRenderOption(const fa: Integer): Boolean;
@@ -135,7 +136,7 @@ type
     BitmapWidth: single;
     BitmapHeight: single;
     EraseBK: Boolean;
-    procedure Rotate(Phi, Theta, Gamma, xrot, yrot, zrot: double);
+    procedure Rotate(Phi, Theta, Gamma, xrot, yrot, zrot: single);
     procedure Translate(x, y: single);
     procedure InitRotaData;
   private
@@ -175,8 +176,8 @@ type
     procedure Init;
     procedure Draw;
 
-    procedure RotateZ(Delta: double);
-    procedure Zoom(Delta: double);
+    procedure RotateZ(Delta: single);
+    procedure Zoom(Delta: single);
 
     property ZoomIndex: Integer read FZoomIndex write SetZoomIndex;
     property ViewPoint: TViewPoint read FViewPoint write SetViewPoint;
@@ -298,7 +299,7 @@ end;
 
 procedure TRotaForm.InitRotaData;
 
-  function GetMatrix(Theta, Xrot: double): Matrix4x4;
+  function GetMatrix(Theta, Xrot: single): TMatrix3D;
   begin
     Rotator.Reset;
     Rotator.DeltaTheta := Theta;
@@ -355,12 +356,12 @@ end;
 
 procedure TRotaForm.UpdateMatrixText;
 var
-  m4x4: Matrix4x4;
+  m4x4: TMatrix3D;
 begin
-  m4x4 := Rotator.Mat.Mat;
-  MatrixTextU := Format('%8.4f %8.4f %8.4f',[m4x4[1,1],m4x4[1,2], m4x4[1,3]]);
-  MatrixTextV := Format('%8.4f %8.4f %8.4f',[m4x4[2,1],m4x4[2,2], m4x4[2,3]]);
-  MatrixTextW := Format('%8.4f %8.4f %8.4f',[m4x4[3,1],m4x4[3,2], m4x4[3,3]]);
+  m4x4 := Rotator.Mat;
+  MatrixTextU := Format('%8.4f %8.4f %8.4f',[m4x4.m11, m4x4.m12, m4x4.m13]);
+  MatrixTextV := Format('%8.4f %8.4f %8.4f',[m4x4.m21, m4x4.m22, m4x4.m23]);
+  MatrixTextW := Format('%8.4f %8.4f %8.4f',[m4x4.m31, m4x4.m32, m4x4.m33]);
 end;
 
 procedure TRotaForm.DrawMatrix(g: TCanvas);
@@ -785,7 +786,7 @@ begin
   Draw;
 end;
 
-procedure TRotaForm.Rotate(Phi, Theta, Gamma, xrot, yrot, zrot: double);
+procedure TRotaForm.Rotate(Phi, Theta, Gamma, xrot, yrot, zrot: single);
 begin
   Rotator.DeltaPhi := Phi;
   Rotator.DeltaTheta := Theta;
@@ -868,7 +869,7 @@ begin
 end;
 
 procedure TRotaForm.SetMastLineData(const Value: TLineDataR100; L,
-  Beta: double);
+  Beta: single);
 begin
   RaumGraph.SetMastLineData(Value, L, Beta);
 end;
@@ -940,14 +941,14 @@ begin
   Draw;
 end;
 
-procedure TRotaForm.Zoom(Delta: double);
+procedure TRotaForm.Zoom(Delta: single);
 begin
   FZoom := FZoom + FZoom * FZoomBase * Delta * 0.3;
   RaumGraph.Zoom := FZoom;
   Draw;
 end;
 
-procedure TRotaForm.RotateZ(Delta: double);
+procedure TRotaForm.RotateZ(Delta: single);
 begin
   Rotate(0, 0, 0, 0, 0, Delta);
   Draw;

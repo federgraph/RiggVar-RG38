@@ -4,6 +4,7 @@ interface
 
 uses
   System.IniFiles,
+  System.Math.Vectors,
   RggCalc,
   RggTypes,
   RggGraph;
@@ -39,7 +40,7 @@ type
 
     procedure LoadFromIniFile(FileName: string);
 
-    procedure SetMastLineData(const Value: TLineDataR100; L: double; Beta: double);
+    procedure SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
     procedure SetMastKurve(const Value: TMastKurve);
     procedure SetKoppelKurve(const Value: TKoordLine);
     function GetMastKurvePoint(const Index: Integer): TRealPoint;
@@ -89,9 +90,9 @@ begin
   RaumGraphProps.ControllerTyp := Value;
 end;
 
-procedure TBootGraph.SetMastLineData(const Value: TLineDataR100; L: double; Beta: double);
+procedure TBootGraph.SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
 var
-  temp1, temp2, temp3, temp4, tempL: double;
+  temp1, temp2, temp3, temp4, tempL: single;
   j, k: Integer;
 begin
   temp1 := cos(pi / 2 - Beta);
@@ -102,9 +103,9 @@ begin
   begin
     k := Round(100 / BogenMax * j);
     tempL := j * L / BogenMax;
-    Kurve[j, x] := rP[ooD0, x] - tempL * temp1 + Value[k] * temp2;
-    Kurve[j, y] := 0;
-    Kurve[j, z] := rP[ooD0, z] + tempL * temp3 + Value[k] * temp4;
+    Kurve[j].X := rP[ooD0].X - tempL * temp1 + Value[k] * temp2;
+    Kurve[j].Y := 0;
+    Kurve[j].Z := rP[ooD0].Z + tempL * temp3 + Value[k] * temp4;
   end;
 end;
 
@@ -149,9 +150,7 @@ begin
     result := Kurve[Index]
   else
   begin
-    result[x] := 0;
-    result[y] := 0;
-    result[z] := 0;
+    result := TRealPoint.Zero;
   end;
 end;
 
@@ -159,15 +158,15 @@ function TBootGraph.FindBogenIndexOf(P: TRealPoint): Integer;
 var
   i, j: Integer;
   MinIndex: Integer;
-  MinAbstand: double;
-  a: double;
+  MinAbstand: single;
+  a: single;
 begin
   j := Length(Kurve);
   MinIndex := j div 2;
   MinAbstand := 1000;
   for i := 0 to j - 1 do
   begin
-    a := Abstand(P, Kurve[i]);
+    a := (P - Kurve[i]).Length;
     if a < MinAbstand then
     begin
       MinAbstand := a;
@@ -183,9 +182,7 @@ var
 begin
   for i := Low(TRiggPoint) to High(TRiggPoint) do
   begin
-    Result[i, x] := 0;
-    Result[i, y] := 0;
-    Result[i, z] := 0;
+    result[i] := TPoint3D.Zero;
   end;
 end;
 
@@ -202,56 +199,52 @@ begin
   try
     with IniFile do
     begin
-      iP[ooA0, x] := ReadInteger(S, 'A0x', Round(iP[ooA0, x]));
-      iP[ooA0, y] := ReadInteger(S, 'A0y', Round(iP[ooA0, y]));
-      iP[ooA0, z] := ReadInteger(S, 'A0z', Round(iP[ooA0, z]));
-      iP[ooB0, x] := ReadInteger(S, 'B0x', Round(iP[ooB0, x]));
-      iP[ooB0, y] := ReadInteger(S, 'B0y', Round(iP[ooB0, y]));
-      iP[ooB0, z] := ReadInteger(S, 'B0z', Round(iP[ooB0, z]));
-      iP[ooC0, x] := ReadInteger(S, 'C0x', Round(iP[ooC0, x]));
-      iP[ooC0, y] := ReadInteger(S, 'C0y', Round(iP[ooC0, y]));
-      iP[ooC0, z] := ReadInteger(S, 'C0z', Round(iP[ooC0, z]));
-      iP[ooD0, x] := ReadInteger(S, 'D0x', Round(iP[ooD0, x]));
-      iP[ooD0, y] := ReadInteger(S, 'D0y', Round(iP[ooD0, y]));
-      iP[ooD0, z] := ReadInteger(S, 'D0z', Round(iP[ooD0, z]));
-      iP[ooE0, x] := ReadInteger(S, 'E0x', Round(iP[ooE0, x]));
-      iP[ooE0, y] := ReadInteger(S, 'E0y', Round(iP[ooE0, y]));
-      iP[ooE0, z] := ReadInteger(S, 'E0z', Round(iP[ooE0, z]));
-      iP[ooF0, x] := ReadInteger(S, 'F0x', Round(iP[ooF0, x]));
-      iP[ooF0, y] := ReadInteger(S, 'F0y', Round(iP[ooF0, y]));
-      iP[ooF0, z] := ReadInteger(S, 'F0z', Round(iP[ooF0, z]));
+      iP[ooA0].X := ReadInteger(S, 'A0x', Round(iP[ooA0].X));
+      iP[ooA0].Y := ReadInteger(S, 'A0y', Round(iP[ooA0].Y));
+      iP[ooA0].Z := ReadInteger(S, 'A0z', Round(iP[ooA0].Z));
+      iP[ooB0].X := ReadInteger(S, 'B0x', Round(iP[ooB0].X));
+      iP[ooB0].Y := ReadInteger(S, 'B0y', Round(iP[ooB0].Y));
+      iP[ooB0].Z := ReadInteger(S, 'B0z', Round(iP[ooB0].Z));
+      iP[ooC0].X := ReadInteger(S, 'C0x', Round(iP[ooC0].X));
+      iP[ooC0].Y := ReadInteger(S, 'C0y', Round(iP[ooC0].Y));
+      iP[ooC0].Z := ReadInteger(S, 'C0z', Round(iP[ooC0].Z));
+      iP[ooD0].X := ReadInteger(S, 'D0x', Round(iP[ooD0].X));
+      iP[ooD0].Y := ReadInteger(S, 'D0y', Round(iP[ooD0].Y));
+      iP[ooD0].Z := ReadInteger(S, 'D0z', Round(iP[ooD0].Z));
+      iP[ooE0].X := ReadInteger(S, 'E0x', Round(iP[ooE0].X));
+      iP[ooE0].Y := ReadInteger(S, 'E0y', Round(iP[ooE0].Y));
+      iP[ooE0].Z := ReadInteger(S, 'E0z', Round(iP[ooE0].Z));
+      iP[ooF0].X := ReadInteger(S, 'F0x', Round(iP[ooF0].X));
+      iP[ooF0].Y := ReadInteger(S, 'F0y', Round(iP[ooF0].Y));
+      iP[ooF0].Z := ReadInteger(S, 'F0z', Round(iP[ooF0].Z));
 
       S := 'Koordinaten Rigg';
-      iP[ooA, x] := ReadInteger(S, 'Ax', Round(iP[ooA, x]));
-      iP[ooA, y] := ReadInteger(S, 'Ay', Round(iP[ooA, y]));
-      iP[ooA, z] := ReadInteger(S, 'Az', Round(iP[ooA, z]));
-      iP[ooB, x] := ReadInteger(S, 'Bx', Round(iP[ooB, x]));
-      iP[ooB, y] := ReadInteger(S, 'By', Round(iP[ooB, y]));
-      iP[ooB, z] := ReadInteger(S, 'Bz', Round(iP[ooB, z]));
-      iP[ooC, x] := ReadInteger(S, 'Cx', Round(iP[ooC, x]));
-      iP[ooC, y] := ReadInteger(S, 'Cy', Round(iP[ooC, y]));
-      iP[ooC, z] := ReadInteger(S, 'Cz', Round(iP[ooC, z]));
-      iP[ooD, x] := ReadInteger(S, 'Dx', Round(iP[ooD, x]));
-      iP[ooD, y] := ReadInteger(S, 'Dy', Round(iP[ooD, y]));
-      iP[ooD, z] := ReadInteger(S, 'Dz', Round(iP[ooD, z]));
-      iP[ooE, x] := ReadInteger(S, 'Ex', Round(iP[ooE, x]));
-      iP[ooE, y] := ReadInteger(S, 'Ey', Round(iP[ooE, y]));
-      iP[ooE, z] := ReadInteger(S, 'Ez', Round(iP[ooE, z]));
-      iP[ooF, x] := ReadInteger(S, 'Fx', Round(iP[ooF, x]));
-      iP[ooF, y] := ReadInteger(S, 'Fy', Round(iP[ooF, y]));
-      iP[ooF, z] := ReadInteger(S, 'Fz', Round(iP[ooF, z]));
+      iP[ooA].X := ReadInteger(S, 'Ax', Round(iP[ooA].X));
+      iP[ooA].Y := ReadInteger(S, 'Ay', Round(iP[ooA].Y));
+      iP[ooA].Z := ReadInteger(S, 'Az', Round(iP[ooA].Z));
+      iP[ooB].X := ReadInteger(S, 'Bx', Round(iP[ooB].X));
+      iP[ooB].Y := ReadInteger(S, 'By', Round(iP[ooB].Y));
+      iP[ooB].Z := ReadInteger(S, 'Bz', Round(iP[ooB].Z));
+      iP[ooC].X := ReadInteger(S, 'Cx', Round(iP[ooC].X));
+      iP[ooC].Y := ReadInteger(S, 'Cy', Round(iP[ooC].Y));
+      iP[ooC].Z := ReadInteger(S, 'Cz', Round(iP[ooC].Z));
+      iP[ooD].X := ReadInteger(S, 'Dx', Round(iP[ooD].X));
+      iP[ooD].Y := ReadInteger(S, 'Dy', Round(iP[ooD].Y));
+      iP[ooD].Z := ReadInteger(S, 'Dz', Round(iP[ooD].Z));
+      iP[ooE].X := ReadInteger(S, 'Ex', Round(iP[ooE].X));
+      iP[ooE].Y := ReadInteger(S, 'Ey', Round(iP[ooE].Y));
+      iP[ooE].Z := ReadInteger(S, 'Ez', Round(iP[ooE].Z));
+      iP[ooF].X := ReadInteger(S, 'Fx', Round(iP[ooF].X));
+      iP[ooF].Y := ReadInteger(S, 'Fy', Round(iP[ooF].Y));
+      iP[ooF].Z := ReadInteger(S, 'Fz', Round(iP[ooF].Z));
     end;
     for i := ooA0 to ooF0 do
     begin
-      rP[i, x] := iP[i, x];
-      rP[i, y] := iP[i, y];
-      rP[i, z] := iP[i, z];
+      rP[i] := iP[i];
     end;
     for i := ooA to ooF do
     begin
-      rP[i, x] := iP[i, x];
-      rP[i, y] := iP[i, y];
-      rP[i, z] := iP[i, z];
+      rP[i] := iP[i];
     end;
     GrafikOK := True;
     Updated := False;

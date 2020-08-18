@@ -21,6 +21,7 @@ interface
 uses
   System.SysUtils,
   System.Classes,
+  System.Math.Vectors,
   RggStrings,
   RggTypes,
   RggUnit3,
@@ -31,7 +32,7 @@ uses
 type
   TRigg = class(TRiggFS)
   private
-    function GetRealTrimm(Index: TTrimmIndex): double;
+    function GetRealTrimm(Index: TTrimmIndex): single;
   public
 {$ifdef MSWindows}
     procedure WriteXml(ML: TStrings; AllTags: Boolean = False);
@@ -48,7 +49,7 @@ type
     procedure SetDocument(Doc: TRggDocument);
     procedure SetDefaultDocument;
     procedure GetRealTrimmRecord(var RealTrimm: TRealTrimm);
-    property RealTrimm[Index: TTrimmIndex]: double read GetRealTrimm;
+    property RealTrimm[Index: TTrimmIndex]: single read GetRealTrimm;
     property Trimm: TTrimm read FTrimm;
   end;
 
@@ -262,7 +263,7 @@ begin
   with RealTrimm do
    begin
     { Mastfall }
-    MastfallF0F := Abstand(rP[ooF0], rP[ooF]); { in mm }
+    MastfallF0F := (rP[ooF0] - rP[ooF]).Length; { in mm }
     { Vorstagspannung }
     if abs(rF[14]) < 32000 then
       SpannungV := rF[14] { in N }
@@ -278,20 +279,20 @@ begin
     { Biegung am Controller }
     BiegungC := he; { in mm }
     { "Elastizität" }
-    FlexWert := Abstand(rP[ooC], rPe[ooC]); { in mm }
+    FlexWert := (rP[ooC] - rPe[ooC]).Length; { in mm }
   end;
 end;
 
-function TRigg.GetRealTrimm(Index: TTrimmIndex): double;
+function TRigg.GetRealTrimm(Index: TTrimmIndex): single;
 var
-  temp: double;
+  temp: single;
 begin
   temp := 0;
   case Index of
-    tiMastfallF0F: temp := Abstand(rP[ooF0], rP[ooF]);
-    tiMastfallF0C: temp := Abstand(rP[ooF0], rP[ooC]);
+    tiMastfallF0F: temp := (rP[ooF0] - rP[ooF]).Length;
+    tiMastfallF0C: temp := (rP[ooF0] - rP[ooC]).Length;
     tiVorstagDiff: temp := VorstagDiff;
-    tiVorstagDiffE: temp := Abstand(rPe[ooC0], rPe[ooC]) - rL[14];
+    tiVorstagDiffE: temp := (rPe[ooC0] - rPe[ooC]).Length - rL[14];
     tiSpannungW: temp := SpannungW;
     tiSpannungV:
       begin
@@ -307,32 +308,32 @@ begin
     end;
     tiBiegungS: temp := hd;
     tiBiegungC: temp := he;
-    tiFlexWert: temp := Abstand(rP[ooC], rPe[ooC]); { in mm }
+    tiFlexWert: temp := (rP[ooC] - rPe[ooC]).Length; { in mm }
   end;
   result := temp;
 end;
 
 procedure TRigg.SaveToFederData(fd: TRggData);
 begin
-  fd.A0X := Round(rP[ooA0, X]);
-  fd.A0Y := Round(rP[ooA0, Y]);
-  fd.A0Z := Round(rP[ooA0, Z]);
+  fd.A0X := Round(rP[ooA0].X);
+  fd.A0Y := Round(rP[ooA0].Y);
+  fd.A0Z := Round(rP[ooA0].Z);
 
-  fd.C0X := Round(rP[ooC0, X]);
-  fd.C0Y := Round(rP[ooC0, Y]);
-  fd.C0Z := Round(rP[ooC0, Z]);
+  fd.C0X := Round(rP[ooC0].X);
+  fd.C0Y := Round(rP[ooC0].Y);
+  fd.C0Z := Round(rP[ooC0].Z);
 
-  fd.D0X := Round(rP[ooD0, X]);
-  fd.D0Y := Round(rP[ooD0, Y]);
-  fd.D0Z := Round(rP[ooD0, Z]);
+  fd.D0X := Round(rP[ooD0].X);
+  fd.D0Y := Round(rP[ooD0].Y);
+  fd.D0Z := Round(rP[ooD0].Z);
 
-  fd.E0X := Round(rP[ooE0, X]);
-  fd.E0Y := Round(rP[ooE0, Y]);
-  fd.E0Z := Round(rP[ooE0, Z]);
+  fd.E0X := Round(rP[ooE0].X);
+  fd.E0Y := Round(rP[ooE0].Y);
+  fd.E0Z := Round(rP[ooE0].Z);
 
-  fd.F0X := Round(rP[ooF0, X]);
-  fd.F0Y := Round(rP[ooF0, Y]);
-  fd.F0Z := Round(rP[ooF0, Z]);
+  fd.F0X := Round(rP[ooF0].X);
+  fd.F0Y := Round(rP[ooF0].Y);
+  fd.F0Z := Round(rP[ooF0].Z);
 
   fd.MU := Round(FrMastUnten);
   fd.MO := Round(FrMastOben);
@@ -392,31 +393,31 @@ begin
   { Rumpf: Koordinaten }
 
   //rP := Doc.iP;
-  rP[ooA0, x] := fd.A0X;
-  rP[ooA0, y] := -fd.A0Y;
-  rP[ooA0, z] := fd.A0Z;
-  rP[ooB0, x] := fd.A0X;
-  rP[ooB0, y] := fd.A0Y;
-  rP[ooB0, z] := fd.A0Z;
-  rP[ooC0, x] := fd.C0X;
-  rP[ooC0, y] := fd.C0Y;
-  rP[ooC0, z] := fd.C0Z;
-  rP[ooD0, x] := fd.D0X;
-  rP[ooD0, y] := fd.D0Y;
-  rP[ooD0, z] := fd.D0Z;
-  rP[ooE0, x] := fd.E0X;
-  rP[ooE0, y] := fd.E0Y;
-  rP[ooE0, z] := fd.E0Z;
-  rP[ooF0, x] := fd.F0X;
-  rP[ooF0, y] := fd.F0Y;
-  rP[ooF0, z] := fd.F0Z;
-  rP[ooP0, x] := fd.A0X;
-  rP[ooP0, y] := 0;
-  rP[ooP0, z] := fd.A0Z;
+  rP[ooA0].X := fd.A0X;
+  rP[ooA0].Y := -fd.A0Y;
+  rP[ooA0].Z := fd.A0Z;
+  rP[ooB0].X := fd.A0X;
+  rP[ooB0].Y := fd.A0Y;
+  rP[ooB0].Z := fd.A0Z;
+  rP[ooC0].X := fd.C0X;
+  rP[ooC0].Y := fd.C0Y;
+  rP[ooC0].Z := fd.C0Z;
+  rP[ooD0].X := fd.D0X;
+  rP[ooD0].Y := fd.D0Y;
+  rP[ooD0].Z := fd.D0Z;
+  rP[ooE0].X := fd.E0X;
+  rP[ooE0].Y := fd.E0Y;
+  rP[ooE0].Z := fd.E0Z;
+  rP[ooF0].X := fd.F0X;
+  rP[ooF0].Y := fd.F0Y;
+  rP[ooF0].Z := fd.F0Z;
+  rP[ooP0].X := fd.A0X;
+  rP[ooP0].Y := 0;
+  rP[ooP0].Z := fd.A0Z;
 
-  rP[ooP, x] := fd.A0X;
-  rP[ooP, y] := 0;
-  rP[ooP, z] := fd.A0Z;
+  rP[ooP].X := fd.A0X;
+  rP[ooP].Y := 0;
+  rP[ooP].Z := fd.A0Z;
 
   { Festigkeitswerte }
 //  rEA := Doc.rEA;
@@ -573,7 +574,7 @@ end;
 
 procedure TRigg.AusgabeKommentar(ML: TStrings);
 var
-  temp: double;
+  temp: single;
 begin
 //  ML := OutputForm.KommentarMemo.Lines;
 //  ML.BeginUpdate;
