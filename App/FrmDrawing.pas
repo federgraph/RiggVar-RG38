@@ -1,5 +1,21 @@
 ﻿unit FrmDrawing;
 
+(*
+-
+-     F
+-    * * *
+-   *   *   G
+-  *     * *   *
+- E - - - H - - - I
+-  *     * *         *
+-   *   *   *           *
+-    * *     *             *
+-     D-------A---------------B
+-              *
+-              (C) federgraph.de
+-
+*)
+
 interface
 
 uses
@@ -147,7 +163,7 @@ implementation
 uses
 //  RiggVar.FD.Drawing01,
 //  RiggVar.FD.Drawing02,
-//  RiggVar.FZ.Drawing03,
+//  RiggVar.FD.Drawing03,
 //  RiggVar.FD.Drawing04,
 //  RiggVar.FD.Drawing05, // see uses clause in interface section
 //  RiggVar.FD.Drawing06,
