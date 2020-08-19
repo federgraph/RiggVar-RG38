@@ -12,6 +12,7 @@ uses
   System.Math.Vectors,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings,
+  RiggVar.FD.Drawing05,
   FMX.Types,
   FMX.Controls,
   FMX.Forms,
@@ -24,7 +25,10 @@ uses
   FMX.Memo,
   FMX.Controls.Presentation,
   FMX.StdCtrls,
-  RiggVar.FD.Drawing05;
+  FMX.ListView.Types,
+  FMX.ListView.Appearances,
+  FMX.ListView.Adapters.Base,
+  FMX.ListView;
 
 {$define FMX}
 
@@ -34,8 +38,6 @@ type
 
   TFormDrawing = class(TForm)
     Memo: TMemo;
-    DrawingList: TListBox;
-    ElementList: TListBox;
     Image: TImage;
     InplaceShape: TCircle;
 
@@ -53,13 +55,10 @@ type
     procedure InplaceShapeMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
     procedure InplaceShapeMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
     procedure InplaceShapeMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
-
-    procedure DrawingListItemClick(const Sender: TCustomListBox; const Item: TListBoxItem);
-    procedure DrawingListKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
-
-    procedure ElementListChange(Sender: TObject);
-    procedure ElementListKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
   private
+    procedure DrawingListItemClick(const Sender: TObject; const AItem: TListViewItem);
+    procedure ElementListChange(Sender: TObject);
+
     procedure UpdateFromRiggBtnClick(Sender: TObject);
     procedure CodeBtnClick(Sender: TObject);
     procedure GlobalShowCaptionBtnClick(Sender: TObject);
@@ -91,7 +90,8 @@ type
     CurrentDrawing: TRggDrawing;
     CurrentElement: TRggElement;
     TempList: TStringList;
-//    Counter: Integer;
+    DrawingList: TListView;
+    ElementList: TListView;
     procedure InitComponentSize;
     procedure LayoutComponents;
     procedure DrawToCanvas(g: TCanvas);
@@ -126,6 +126,7 @@ type
   public
     RggDrawing05: TRggDrawing05;
     DrawCounter: Integer;
+    ClickCounter: Integer;
     procedure CreateDrawings;
     procedure Draw;
   public
@@ -216,21 +217,20 @@ end;
 procedure TFormDrawing.InitDrawings;
 var
   i: Integer;
-//  li: TListViewItem;
+  li: TListViewItem;
 begin
   DL.InitItems(TempList);
   for i := 0 to TempList.Count-1 do
   begin
-    DrawingList.Items.Add(TempList[i]);
-//    li := DrawingList.Items.Add;
-//    li.Text := TempList[i];
+    li := DrawingList.Items.Add;
+    li.Text := TempList[i];
   end;
 end;
 
 procedure TFormDrawing.InitElements;
 var
   i: Integer;
-//  li: TListViewItem;
+  li: TListViewItem;
 begin
   if CurrentDrawing = nil then
     Exit;
@@ -239,9 +239,8 @@ begin
   ElementList.Items.Clear;
   for i := 0 to TempList.Count-1 do
   begin
-    ElementList.Items.Add(TempList[i]);
-//    li := ElementList.Items.Add;
-//    li.Text := TempList[i];
+    li := ElementList.Items.Add;
+    li.Text := TempList[i];
   end;
 end;
 
@@ -290,6 +289,7 @@ begin
   CreateDrawings;
 
   Bitmap := TBitmap.Create(800, 800);
+
   Bitmap.Clear(claWhite);
 
   Image.Width := Bitmap.Width;
@@ -313,6 +313,30 @@ end;
 
 procedure TFormDrawing.CreateComponents;
 begin
+  DrawingList := TListView.Create(Self);
+  DrawingList.Parent := Self;
+  DrawingList.ItemAppearanceName := 'ListItem';
+  DrawingList.ItemAppearance.ItemHeight := 24;
+  DrawingList.ItemAppearanceObjects.ItemObjects.Accessory.Visible := False;
+  DrawingList.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'Consolas';
+  DrawingList.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
+  DrawingList.ItemAppearanceObjects.ItemObjects.Text.TextColor := TAlphaColors.Dodgerblue;
+  DrawingList.ItemAppearanceObjects.HeaderObjects.Text.Visible := False;
+  DrawingList.ItemAppearanceObjects.FooterObjects.Text.Visible := False;
+  DrawingList.OnItemClick := DrawingListItemClick;
+
+  ElementList := TListView.Create(Self);
+  ElementList.Parent := Self;
+  ElementList.ItemAppearanceName := 'ListItem';
+  ElementList.ItemAppearance.ItemHeight := 29;
+  ElementList.ItemAppearanceObjects.ItemObjects.Accessory.Visible := False;
+  ElementList.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'Consolas';
+  ElementList.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
+  ElementList.ItemAppearanceObjects.ItemObjects.Text.TextColor := TAlphaColors.Orangered;
+  ElementList.ItemAppearanceObjects.HeaderObjects.Text.Visible := False;
+  ElementList.ItemAppearanceObjects.FooterObjects.Text.Visible := False;
+  ElementList.OnChange := ElementListChange;
+
   InplaceShape.AutoCapture := True;
   InplaceShape.Fill.Kind := TBrushKind.None;
   InplaceShape.Width := 50;
@@ -664,11 +688,15 @@ begin
   InplaceShape.OnMouseUp := InplaceShapeMouseUp;
 end;
 
-procedure TFormDrawing.DrawingListItemClick(const Sender: TCustomListBox; const Item: TListBoxItem);
+procedure TFormDrawing.DrawingListItemClick(const Sender: TObject; const AItem: TListViewItem);
+var
+  ii: Integer;
 begin
-  if DrawingList.Selected = nil then
-    Exit;
-  SelectDrawing(DrawingList.ItemIndex);
+  ii := AItem.Index;
+  if ii > -1 then
+  begin
+    SelectDrawing(ii);
+  end;
 end;
 
 procedure TFormDrawing.SelectDrawing(ii: Integer);
@@ -695,12 +723,6 @@ begin
   end;
 end;
 
-procedure TFormDrawing.DrawingListKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
-begin
-  if KeyChar = ' ' then
-    SelectDrawing(DrawingList.ItemIndex);
-end;
-
 procedure TFormDrawing.ElementListChange(Sender: TObject);
 var
   ii: Integer;
@@ -708,15 +730,15 @@ begin
   if ElementList.Selected = nil then
     Exit;
 
-  ii := ElementList.ItemIndex;
+  ii := ElementList.Selected.Index;
   if ii > -1 then
     SelectElement(ii);
 end;
 
 procedure TFormDrawing.SelectElement(ii: Integer);
 begin
-//  Inc(Counter);
-//  Caption := IntToStr(Counter);
+  Inc(ClickCounter);
+//  Caption := IntToStr(ClickCounter);
 
   if CurrentDrawing = nil then
     Exit;
@@ -726,12 +748,6 @@ begin
     CurrentElement := CurrentDrawing.Element[ii];
     Draw;
   end;
-end;
-
-procedure TFormDrawing.ElementListKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
-begin
-  if KeyChar = ' ' then
-    ToggleShowCaptionBtnClick(nil);
 end;
 
 procedure TFormDrawing.UpdateInplacePosition;

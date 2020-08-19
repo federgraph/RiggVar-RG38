@@ -12,44 +12,12 @@ object FormDrawing: TFormDrawing
   OnKeyUp = FormKeyUp
   OnShow = FormShow
   DesignerMasterStyle = 0
-  object DrawingList: TListBox
-    Position.X = 104.000000000000000000
-    Position.Y = 64.000000000000000000
-    Size.Width = 112.000000000000000000
-    Size.Height = 168.000000000000000000
-    Size.PlatformDefault = False
-    TabOrder = 1
-    DisableFocusEffect = True
-    DefaultItemStyles.ItemStyle = ''
-    DefaultItemStyles.GroupHeaderStyle = ''
-    DefaultItemStyles.GroupFooterStyle = ''
-    OnKeyUp = DrawingListKeyUp
-    OnItemClick = DrawingListItemClick
-    Viewport.Width = 112.000000000000000000
-    Viewport.Height = 168.000000000000000000
-  end
-  object ElementList: TListBox
-    Position.X = 104.000000000000000000
-    Position.Y = 256.000000000000000000
-    Size.Width = 105.000000000000000000
-    Size.Height = 184.000000000000000000
-    Size.PlatformDefault = False
-    TabOrder = 2
-    DisableFocusEffect = True
-    DefaultItemStyles.ItemStyle = ''
-    DefaultItemStyles.GroupHeaderStyle = ''
-    DefaultItemStyles.GroupFooterStyle = ''
-    OnChange = ElementListChange
-    OnKeyUp = ElementListKeyUp
-    Viewport.Width = 105.000000000000000000
-    Viewport.Height = 184.000000000000000000
-  end
   object Image: TImage
     MultiResBitmap = <
       item
       end>
-    Position.X = 264.000000000000000000
-    Position.Y = 120.000000000000000000
+    Position.X = 248.000000000000000000
+    Position.Y = 48.000000000000000000
     WrapMode = Original
     OnMouseDown = ImageMouseDown
     OnMouseMove = ImageMouseMove
@@ -61,14 +29,14 @@ object FormDrawing: TFormDrawing
     DataDetectorTypes = []
     Position.X = 16.000000000000000000
     Position.Y = 120.000000000000000000
-    TabOrder = 5
-    Viewport.Width = 50.000000000000000000
-    Viewport.Height = 50.000000000000000000
+    TabOrder = 3
+    Viewport.Width = 46.000000000000000000
+    Viewport.Height = 46.000000000000000000
   end
   object InplaceShape: TCircle
     Fill.Kind = None
-    Position.X = 360.000000000000000000
-    Position.Y = 192.000000000000000000
+    Position.X = 288.000000000000000000
+    Position.Y = 168.000000000000000000
     Size.Width = 50.000000000000000000
     Size.Height = 50.000000000000000000
     Size.PlatformDefault = False
