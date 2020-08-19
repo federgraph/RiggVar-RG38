@@ -22,6 +22,7 @@ uses
   System.SysUtils,
   System.Classes,
   System.Math,
+  System.Math.Vectors,
   RggStrings,
   RggTypes,
   RggCalc,
@@ -31,11 +32,11 @@ uses
 type
   TGetriebeFS = class(TGetriebe)
   private
-    FrVorstagDiff: double;
-    FrSpannungW: double;
+    FrVorstagDiff: single;
+    FrSpannungW: single;
   protected
     procedure BerechneF; virtual;
-    procedure KorrekturF(tempH, k1, k2: double; var k3, Beta, Gamma: double); virtual; //deprecated;
+    procedure KorrekturF(tempH, k1, k2: single; var k3, Beta, Gamma: single); virtual; //deprecated;
   public
     UpdateGetriebeCounter: Integer;
 
@@ -47,10 +48,10 @@ type
     ExitCounter6: Integer;
     ExitCounter7: Integer;
 
-    Temp1: double;
-    Temp2: double;
-    Temp3: double;
-    Temp4: double;
+    Temp1: single;
+    Temp2: single;
+    Temp3: single;
+    Temp4: single;
 
     WantToPlayWithExtendedSearchRange: Boolean;
 
@@ -68,19 +69,19 @@ type
     procedure BerechneWinkel;
     procedure BerechneM;
     function Koppelkurve: TKoordLine;
-    procedure BiegeUndNeigeF1(Mastfall, Biegung: double);
-    procedure NeigeF(Mastfall: double);
-    procedure BiegeUndNeigeC(MastfallC, Biegung: double);
-    procedure BiegeUndNeigeFS(TrimmSoll: TTrimm; var SalingHStart: double);
-    procedure BiegeUndNeigeDS(TrimmSoll: TTrimm; var SalingLStart: double);
-    procedure MakeSalingHBiggerFS(SalingHplus: double);
-    procedure MakeSalingLBiggerDS(SalingLplus: double);
+    procedure BiegeUndNeigeF1(Mastfall, Biegung: single);
+    procedure NeigeF(Mastfall: single);
+    procedure BiegeUndNeigeC(MastfallC, Biegung: single);
+    procedure BiegeUndNeigeFS(TrimmSoll: TTrimm; var SalingHStart: single);
+    procedure BiegeUndNeigeDS(TrimmSoll: TTrimm; var SalingLStart: single);
+    procedure MakeSalingHBiggerFS(SalingHplus: single);
+    procedure MakeSalingLBiggerDS(SalingLplus: single);
     procedure GetWantenspannung;
-    function WantenKraftvonVorstag(WegSoll: double): double;
-    function GetVorstagNull: double;
+    function WantenKraftvonVorstag(WegSoll: single): single;
+    function GetVorstagNull: single;
 
-    property VorstagDiff: double read FrVorstagDiff;
-    property SpannungW: double read FrSpannungW;
+    property VorstagDiff: single read FrVorstagDiff;
+    property SpannungW: single read FrSpannungW;
   end;
 
 implementation
@@ -154,19 +155,19 @@ begin
     Exit;
   end;
 
-  rP[ooA, x] := rP[ooA0, x] + FrWunten2D * cos(FrPhi - FrAlpha);
-  rP[ooA, y] := FrSalingA / 2;
-  rP[ooA, z] := rP[ooA0, z] + FrWunten2D * sin(FrPhi - FrAlpha);
+  rP[ooA].X := rP[ooA0].X + FrWunten2D * cos(FrPhi - FrAlpha);
+  rP[ooA].Y := -FrSalingA / 2;
+  rP[ooA].Z := rP[ooA0].Z + FrWunten2D * sin(FrPhi - FrAlpha);
 
   rP[ooB] := rP[ooA];
-  rP[ooB, y] := -rP[ooA, y];
+  rP[ooB].Y := -rP[ooA].Y;
 
   rP[ooP] := rP[ooA];
-  rP[ooP, y] := 0;
+  rP[ooP].Y := 0;
 
-  rP[ooD, x] := rP[ooD0, x] + FrMastUnten * cos(FrPsi - FrAlpha);
-  rP[ooD, y] := 0;
-  rP[ooD, z] := rP[ooD0, z] + FrMastUnten * sin(FrPsi - FrAlpha);
+  rP[ooD].X := rP[ooD0].X + FrMastUnten * cos(FrPsi - FrAlpha);
+  rP[ooD].Y := 0;
+  rP[ooD].Z := rP[ooD0].Z + FrMastUnten * sin(FrPsi - FrAlpha);
 
   { Berechnung Punkt C }
   with SchnittKK do
@@ -179,7 +180,7 @@ begin
     rP[ooC] := SchnittPunkt1;
   end;
 
-  FrVorstag := Abstand(rP[ooC0], rP[ooC]);
+  FrVorstag := (rP[ooC0] - rP[ooC]).Length;
   FrSalingL := sqrt(sqr(FrSalingH) + sqr(FrSalingA / 2));
   Rest;
 end;
@@ -190,9 +191,9 @@ procedure TGetriebeFS.Rest;
 //  j: TKoord;
 begin
   { Berechnung Punkt ooE }
-  rP[ooE, x] := rP[ooE0, x] - FrController;
-  rP[ooE, y] := 0;
-  rP[ooE, z] := rP[ooE0, z];
+  rP[ooE].X := rP[ooE0].X - FrController;
+  rP[ooE].Y := 0;
+  rP[ooE].Z := rP[ooE0].Z;
 
   { Berechnung Punkt ooF, ooM }
   BerechneF; { virtuelle Methode }
@@ -210,25 +211,25 @@ end;
 
 procedure TGetriebeFS.BerechneF;
 var
-  temp: double;
+  temp: single;
 begin
   { Berechnung Punkt F - Masttop }
-  FrEpsilon := pi / 2 - arctan2((rP[ooC, x] - rP[ooD, x]), (rP[ooC, z] - rP[ooD, z]));
+  FrEpsilon := pi / 2 - arctan2((rP[ooC].X - rP[ooD].X), (rP[ooC].Z - rP[ooD].Z));
   temp := FrMastLength - FrMastUnten;
-  rP[ooF, x] := rP[ooD, x] + temp * cos(FrEpsilon);
-  rP[ooF, y] := 0;
-  rP[ooF, z] := rP[ooD, z] + temp * sin(FrEpsilon);
+  rP[ooF].X := rP[ooD].X + temp * cos(FrEpsilon);
+  rP[ooF].Y := 0;
+  rP[ooF].Z := rP[ooD].Z + temp * sin(FrEpsilon);
 end;
 
 procedure TGetriebeFS.BerechneM;
 var
-  ooTemp: TRealPoint;
-  a, t: double;
+  ooTemp: TPoint3D;
+  a, t: single;
 begin
-  a := Abstand(rp[ooF0], rp[ooF]);
+  a := (rp[ooF0] - rp[ooF]).Length;
   t := (a - MastfallVorlauf) / a;
-  ooTemp := vsub(rp[ooF], rp[ooF0]);
-  ooTemp := vadd(rp[ooF0], SkalarMult(ooTemp, t));
+  ooTemp := rp[ooF] - rp[ooF0];
+  ooTemp := rp[ooF0] + ooTemp * t;
   rp[ooM] := ooTemp;
 end;
 
@@ -237,16 +238,16 @@ procedure TGetriebeFS.BerechneWinkel;
 var
   Counter: Integer;
   svar: Boolean;
-  VorstagIst, Diff: double;
-  psiStart, psiEnde, psiA, psiB: double;
-  ooTemp, ooTemp1, ooTemp2: TRealPoint;
+  VorstagIst, Diff: single;
+  psiStart, psiEnde, psiA, psiB: single;
+  ooTemp, ooTemp1, ooTemp2: TPoint3D;
 
-  function VorstagLaenge(psi: double): double;
+  function VorstagLaenge(psi: single): single;
   { Viergelenk P0 P D D0, Koppelpunkt C }
   begin
-    rP[ooD, x] := rP[ooD0, x] + FrMastUnten * cos(psi - FrAlpha);
-    rP[ooD, y] := 0;
-    rP[ooD, z] := rP[ooD0, z] + FrMastUnten * sin(psi - FrAlpha);
+    rP[ooD].X := rP[ooD0].X + FrMastUnten * cos(psi - FrAlpha);
+    rP[ooD].Y := 0;
+    rP[ooD].Z := rP[ooD0].Z + FrMastUnten * sin(psi - FrAlpha);
 
     with SchnittKK do
     begin
@@ -267,7 +268,7 @@ var
       MittelPunkt2 := rP[ooD];
       rP[ooC] := SchnittPunkt1;
     end;
-    Result := Abstand(rP[ooC0], rP[ooC]);
+    Result := (rP[ooC0] - rP[ooC]).Length;
   end;
 
 begin
@@ -286,16 +287,16 @@ begin
     MittelPunkt2 := rP[ooC0];
     ooTemp := SchnittPunkt1;
   end;
-  psiStart := arctan2((rP[ooD0, x] - ooTemp[x]), (ooTemp[z] - rP[ooD0, z]));
+  psiStart := arctan2((rP[ooD0].X - ooTemp.X), (ooTemp.Z - rP[ooD0].Z));
   psiStart := pi / 2 + psiStart + FrAlpha;
 
   { Test, ob Wante locker bei Mast gerade und Vorstaglänge = FrVorstag.
     Ermittlung der Koordinaten für diesen Fall. }
   FrPsi := psiStart;
   rP[ooC] := ooTemp;
-  rP[ooD, x] := rP[ooD0, x] + FrMastUnten * cos(FrPsi - FrAlpha);
-  rP[ooD, y] := 0;
-  rP[ooD, z] := rP[ooD0, z] + FrMastUnten * sin(FrPsi - FrAlpha);
+  rP[ooD].X := rP[ooD0].X + FrMastUnten * cos(FrPsi - FrAlpha);
+  rP[ooD].Y := 0;
+  rP[ooD].Z := rP[ooD0].Z + FrMastUnten * sin(FrPsi - FrAlpha);
   with SchnittKK do
   begin
     SchnittEbene := seXZ;
@@ -305,7 +306,7 @@ begin
     MittelPunkt2 := rP[ooC];
     rP[ooP] := SchnittPunkt1;
   end;
-  FrWanteZulang := Abstand(rP[ooP0], rP[ooP]) + Abstand(rP[ooP], rP[ooC]) -
+  FrWanteZulang := (rP[ooP0] - rP[ooP]).Length + (rP[ooP] - rP[ooC]).Length -
     FrWunten2D - FrWoben2D;
   if FrWanteZulang < 0 then
   begin
@@ -321,10 +322,10 @@ begin
     begin
       { Suchbereich erweitern, wenn Durchbiegung negativ
         für psi = psiStart im VierGelenk P0 P D D0 }
-      ooTemp1 := vsub(rP[ooD], rP[ooD0]);
-      ooTemp2 := vsub(rP[ooC], rP[ooD]);
-      ooTemp := vprod(ooTemp1, ooTemp2);
-      if (ooTemp[y] > 0) then
+      ooTemp1 := rP[ooD] - rP[ooD0];
+      ooTemp2 := rP[ooC] - rP[ooD];
+      ooTemp := ooTemp1.CrossProduct(ooTemp2);
+      if (ooTemp.Y > 0) then
         psiStart := psiStart + 45 * pi / 180;
     end;
 
@@ -339,7 +340,7 @@ begin
       MittelPunkt2 := rP[ooC0];
       ooTemp := SchnittPunkt1;
     end;
-    psiEnde := arctan2((rP[ooD0, x] - ooTemp[x]), (ooTemp[z] - rP[ooD0, z]));
+    psiEnde := arctan2((rP[ooD0].X - ooTemp.X), (ooTemp.Z - rP[ooD0].Z));
     psiEnde := pi / 2 + psiEnde + FrAlpha;
 
     { 3. Winkel ermitteln, für den gilt: VorstagIst gleich FrVorstag }
@@ -367,9 +368,9 @@ begin
 
   { aktualisieren }
   rP[ooA] := rP[ooP];
-  rP[ooA, y] := FrSalingA / 2;
+  rP[ooA].Y := -FrSalingA / 2;
   rP[ooB] := rP[ooP];
-  rP[ooB, y] := -rP[ooA, y];
+  rP[ooB].Y := -rP[ooA].Y;
   { We actually want PhiVonPsi, but we can use function PsiVonPhi;
     imagine we are looking from behind - the mechanism appears mirrored,
     angle Psi needs to be transformed back and forth,
@@ -399,8 +400,8 @@ function TGetriebeFS.Koppelkurve: TKoordLine;
 var
   svar: Boolean;
   i: Integer;
-  phiA, phiE, phiM, psiM, WinkelStep: double;
-  ooTemp: TRealPoint;
+  phiA, phiE, phiM, psiM, WinkelStep: single;
+  ooTemp: TPoint3D;
   oooTemp: TRealRiggPoints;
 begin
   oooTemp := rP; { aktuelle Koordinaten sichern }
@@ -416,7 +417,7 @@ begin
     MittelPunkt2 := rP[ooD0];
     ooTemp := SchnittPunkt1;
   end;
-  phiA := arctan2((rP[ooP0, x] - ooTemp[x]), (ooTemp[z] - rP[ooP0, z]));
+  phiA := arctan2((rP[ooP0].X - ooTemp.X), (ooTemp.Z - rP[ooP0].Z));
   phiA := phiA + pi / 2 + FrAlpha;
 
   { 2. Endwinkel }
@@ -433,7 +434,7 @@ begin
     phiE := FrAlpha + 130 * pi / 180
   else
   begin
-    phiE := arctan2((rP[ooP0, x] - ooTemp[x]), (ooTemp[z] - rP[ooP0, z]));
+    phiE := arctan2((rP[ooP0].X - ooTemp.X), (ooTemp.Z - rP[ooP0].Z));
     phiE := phiE + pi / 2 + FrAlpha;
   end;
 
@@ -445,10 +446,10 @@ begin
   for i := 0 to 100 do
   begin
     psiM := PsiVonPhi(phiM, FrBasis, FrWunten2D, FrSalingH, FrMastUnten, svar);
-    rP[ooP, x] := rP[ooP0, x] + FrWunten2D * cos(phiM - FrAlpha);
-    rP[ooP, z] := rP[ooP0, z] + FrWunten2D * sin(phiM - FrAlpha);
-    rP[ooD, x] := rP[ooD0, x] + FrMastUnten * cos(psiM - FrAlpha);
-    rP[ooD, z] := rP[ooD0, z] + FrMastUnten * sin(psiM - FrAlpha);
+    rP[ooP].X := rP[ooP0].X + FrWunten2D * cos(phiM - FrAlpha);
+    rP[ooP].Z := rP[ooP0].Z + FrWunten2D * sin(phiM - FrAlpha);
+    rP[ooD].X := rP[ooD0].X + FrMastUnten * cos(psiM - FrAlpha);
+    rP[ooD].Z := rP[ooD0].Z + FrMastUnten * sin(psiM - FrAlpha);
     { Berechnung Punkt C }
     with SchnittKK do
     begin
@@ -459,23 +460,23 @@ begin
       MittelPunkt2 := rP[ooD];
       rP[ooC] := SchnittPunkt1;
     end;
-    Result[i, x] := rP[ooC, x];
-    Result[i, y] := 0;
-    Result[i, z] := rP[ooC, z];
+    Result[i].X := rP[ooC].X;
+    Result[i].Y := 0;
+    Result[i].Z := rP[ooC].Z;
     phiM := phiM + WinkelStep;
   end;
 
   rP := oooTemp; { aktuelle Koordinaten wiederherstellen }
 end;
 
-procedure TGetriebeFS.KorrekturF(tempH, k1, k2: double; var k3, Beta, Gamma: double);
+procedure TGetriebeFS.KorrekturF(tempH, k1, k2: single; var k3, Beta, Gamma: single);
 { Prozedur ist virtuell und wird später überschrieben,
   die genauere Mastbiegung wird dann verwendet
   um k3 und tempBeta neu zu bestimmen. }
 begin
 end;
 
-procedure TGetriebeFS.MakeSalingHBiggerFS(SalingHplus: double);
+procedure TGetriebeFS.MakeSalingHBiggerFS(SalingHplus: single);
 { FrSalingH größer machen, FrWoben2d, Neigung und Biegung beibehalten;
   FrWunten2d neu berechnen }
 begin
@@ -490,14 +491,14 @@ begin
     MittelPunkt2 := rP[ooC];
     rP[ooP] := SchnittPunkt1;
   end;
-  FrWunten2D := Abstand(rP[ooP], rP[ooP0]);
+  FrWunten2D := (rP[ooP] - rP[ooP0]).Length;
 
   { aktualisieren }
   rP[ooA] := rP[ooP];
-  rP[ooA, y] := FrSalingA / 2;
+  rP[ooA].Y := -FrSalingA / 2;
   rP[ooB] := rP[ooP];
-  rP[ooB, y] := -FrSalingA / 2;
-  FrPhi := arctan2((rP[ooA0, x] - rP[ooA, x]), (rP[ooA, z] - rP[ooA0, z]));
+  rP[ooB].Y := -FrSalingA / 2;
+  FrPhi := arctan2((rP[ooA0].X - rP[ooA].X), (rP[ooA].Z - rP[ooA0].Z));
   FrPhi := FrAlpha + pi / 2 + FrPhi;
   FrWinkel := FrPhi - FrAlpha;
   FrSalingL := sqrt(sqr(FrSalingH) + sqr(FrSalingA / 2));
@@ -511,18 +512,18 @@ procedure TGetriebeFS.UpdateGetriebeDS;
 { gesucht: Riggkoordinaten ooA, ooB, ooC, ooD, ooP, ooF }
 var
   Counter: Integer;
-  psiStart, psiEnde, psiEnde2, psiA, psiB: double;
-  WobenMin, WobenMax, WobenIst, Diff: double;
-  Saling1L, WStrich, W1Strich, Basis, Skalar: double;
-  Temp, TempA, TempC, TempD: TRealPoint;
+  psiStart, psiEnde, psiEnde2, psiA, psiB: single;
+  WobenMin, WobenMax, WobenIst, Diff: single;
+  Saling1L, WStrich, W1Strich, Basis, Skalar: single;
+  Temp, TempA, TempC, TempD: TPoint3D;
 
-  function WobenIstVonPsi(psi: double): double;
+  function WobenIstVonPsi(psi: single): single;
   begin
     { Berechnungen im Vierelenk D0 D C C0 }
     { 1. Berechnung von ooD }
-    rP[ooD, x] := rP[ooD0, x] + FrMastUnten * cos(psi - FrAlpha);
-    rP[ooD, y] := 0;
-    rP[ooD, z] := rP[ooD0, z] + FrMastUnten * sin(psi - FrAlpha);
+    rP[ooD].X := rP[ooD0].X + FrMastUnten * cos(psi - FrAlpha);
+    rP[ooD].Y := 0;
+    rP[ooD].Z := rP[ooD0].Z + FrMastUnten * sin(psi - FrAlpha);
 
     { 2. Berechnung Punkt C }
     with SchnittKK do
@@ -535,20 +536,20 @@ var
       rP[ooC] := SchnittPunkt1;
     end;
 
-    WStrich := Abstand(rP[ooA0], rP[ooC]);
-    Basis := Abstand(rP[ooA0], rP[ooD]);
+    WStrich := (rP[ooA0] - rP[ooC]).Length;
+    Basis := (rP[ooA0] - rP[ooD]).Length;
 
     { weiter mit Koordinatentransformation, ebenes Trapez A0, A, C, D }
     { Berechnung TempD }
-    TempD := Null;
-    TempD[x] := Basis;
+    TempD := TPoint3D.Zero;
+    TempD.X := Basis;
     { Berechnung TempC }
     with SchnittKK do
     begin
       SchnittEbene := seXZ;
       Radius1 := WStrich;
       Radius2 := FrMastOben;
-      MittelPunkt1 := Null;
+      MittelPunkt1 := TPoint3D.Zero;
       MittelPunkt2 := TempD;
       TempC := SchnittPunkt1;
     end;
@@ -558,11 +559,11 @@ var
       SchnittEbene := seXZ;
       Radius1 := FrWunten3D;
       Radius2 := FrSalingL;
-      MittelPunkt1 := Null;
+      MittelPunkt1 := TPoint3D.Zero;
       MittelPunkt2 := TempD;
       TempA := SchnittPunkt1;
     end;
-    Result := Abstand(TempA, TempC);
+    Result := (TempA - TempC).Length;
   end;
 
 begin
@@ -579,7 +580,7 @@ begin
     MittelPunkt2 := rP[ooC0];
     Temp := SchnittPunkt1;
   end;
-  psiStart := arctan2((rP[ooD0,x]-Temp[x]), (Temp[z]-rP[ooD0,z]));
+  psiStart := arctan2((rP[ooD0].X - Temp.X), (Temp.Z - rP[ooD0].Z));
   psiStart := psiStart + pi / 2 + FrAlpha + 0.1 * pi / 180;
 
   { Endwinkel }
@@ -592,7 +593,7 @@ begin
     MittelPunkt2 := rP[ooC0];
     Temp := SchnittPunkt1;
   end;
-  psiEnde := arctan2((rP[ooD0,x]-Temp[x]), (Temp[z]-rP[ooD0,z]));
+  psiEnde := arctan2((rP[ooD0].X - Temp.X), (Temp.Z - rP[ooD0].Z));
   psiEnde := psiEnde + pi / 2 + FrAlpha;
   psiEnde2 := psiEnde + 50 * pi / 180;
 
@@ -651,60 +652,60 @@ begin
   end;
 
   { weiter im ebenen Trapez }
-  SchnittGG(Null, TempC, TempD, TempA, temp);
+  SchnittGG(TPoint3D.Zero, TempC, TempD, TempA, temp);
   { Temp enthält jetzt den Schnittpunkt der Diagonalen }
-  W1Strich := Abstand(Null, temp);
-  Saling1L := Abstand(TempD, temp);
+  W1Strich := temp.Length;
+  Saling1L := (TempD - temp).Length;
 
   { weiter räumlich: }
   Skalar := W1Strich / WStrich;
-  temp := vsub(rP[ooC], rP[ooA0]);
-  temp := SkalarMult(temp, Skalar);
-  temp := vadd(rP[ooA0], temp);
+  temp := rP[ooC] - rP[ooA0];
+  temp := temp * Skalar;
+  temp := rP[ooA0] + temp;
   { Temp enthält jetzt den räumlichen Schnittpunkt der Diagonalen }
 
   { Berechnung Punkt ooA }
   Skalar := FrSalingL / Saling1L;
-  temp := vsub(temp, rP[ooD]);
-  temp := SkalarMult(temp, Skalar);
-  rP[ooA] := vadd(rP[ooD], temp);
+  temp := temp - rP[ooD];
+  temp := temp * Skalar;
+  rP[ooA] := rP[ooD] + temp;
 
   { aktualisieren }
   rP[ooP] := rP[ooA];
-  rP[ooP, y] := 0;
+  rP[ooP].Y := 0;
   rP[ooB] := rP[ooA];
-  rP[ooB, y] := -rP[ooA, y];
-  FrSalingA := 2 * rP[ooA, y];
-  FrSalingH := Abstand(rP[ooP], rP[ooD]);
-  FrPhi := arctan2((rP[ooP0, x] - rP[ooP, x]), (rP[ooP, z] - rP[ooP0, z]));
+  rP[ooB].Y := -rP[ooA].Y;
+  FrSalingA := 2 * rP[ooB].Y;
+  FrSalingH := (rP[ooP] - rP[ooD]).Length;
+  FrPhi := arctan2((rP[ooP0].X - rP[ooP].X), (rP[ooP].Z - rP[ooP0].Z));
   FrPhi := FrPhi + pi / 2 + FrAlpha;
   FrWinkel := FrPhi - FrAlpha;
   Rest;
 end;
 
-procedure TGetriebeFS.MakeSalingLBiggerDS(SalingLplus: double);
+procedure TGetriebeFS.MakeSalingLBiggerDS(SalingLplus: single);
 var
-  TempA, TempC, TempD, temp: TRealPoint;
-  Basis, Skalar, WStrich, W1Strich, Saling1L: double;
+  TempA, TempC, TempD, temp: TPoint3D;
+  Basis, Skalar, WStrich, W1Strich, Saling1L: single;
 begin
-  temp := Null;
+  temp := TPoint3D.Zero;
 
   { Punkte D, C und F schon bekannt, FrWoben3d bleibt erhalten }
   FrSalingL := SalingLplus;
 
-  WStrich := Abstand(rP[ooA0], rP[ooC]);
-  Basis := Abstand(rP[ooA0], rP[ooD]);
+  WStrich := (rP[ooA0] - rP[ooC]).Length;
+  Basis := (rP[ooA0] - rP[ooD]).Length;
   { weiter mit Koordinatentransformation, ebenes Trapez A0, A, C, D }
   { Berechnung TempD }
-  TempD := Null;
-  TempD[x] := Basis;
+  TempD := TPoint3D.Zero;
+  TempD.X := Basis;
   { Berechnung TempC }
   with SchnittKK do
   begin
     SchnittEbene := seXZ;
     Radius1 := WStrich;
     Radius2 := FrMastOben;
-    MittelPunkt1 := Null;
+    MittelPunkt1 := TPoint3D.Zero;
     MittelPunkt2 := TempD;
     TempC := SchnittPunkt1; { bleibt beim Regeln unverändert }
   end;
@@ -719,43 +720,43 @@ begin
     TempA := SchnittPunkt1; { verändert sich beim Regeln }
   end;
 
-  SchnittGG(Null, TempC, TempD, TempA, temp);
+  SchnittGG(TPoint3D.Zero, TempC, TempD, TempA, temp);
   { Temp enthält jetzt den Schnittpunkt der Diagonalen }
-  W1Strich := Abstand(Null, temp);
-  Saling1L := Abstand(TempD, temp);
+  W1Strich := temp.Length;
+  Saling1L := (TempD - temp).Length;
 
   { weiter räumlich: }
   Skalar := W1Strich / WStrich;
-  temp := vsub(rP[ooC], rP[ooA0]);
-  temp := SkalarMult(temp, Skalar);
-  temp := vadd(rP[ooA0], temp);
+  temp := rP[ooC] - rP[ooA0];
+  temp := temp * Skalar;
+  temp := rP[ooA0] + temp;
   { Temp enthält jetzt den räumlichen Schnittpunkt der Diagonalen }
 
   { Berechnung Punkt ooA }
   Skalar := FrSalingL / Saling1L;
-  temp := vsub(temp, rP[ooD]);
-  temp := SkalarMult(temp, Skalar);
-  rP[ooA] := vadd(rP[ooD], temp);
+  temp := temp - rP[ooD];
+  temp := temp * Skalar;
+  rP[ooA] := rP[ooD] + temp;
 
   { FrWunten3d ermitteln und aktualisieren }
-  FrWunten3D := Abstand(Null, TempA); { bzw. rP[ooA0],rP[ooA] }
+  FrWunten3D := TempA.Length; { bzw. (rP[ooA0] - rP[ooA]).Length }
   rP[ooP] := rP[ooA];
-  rP[ooP, y] := 0;
+  rP[ooP].Y := 0;
   rP[ooB] := rP[ooA];
-  rP[ooB, y] := -rP[ooA, y];
-  FrPhi := arctan2((rP[ooA0, x] - rP[ooA, x]), (rP[ooA, z] - rP[ooA0, z]));
+  rP[ooB].Y := -rP[ooA].Y;
+  FrPhi := arctan2((rP[ooA0].X - rP[ooA].X), (rP[ooA].Z - rP[ooA0].Z));
   FrPhi := FrPhi + pi / 2 + FrAlpha;
   FrWinkel := FrPhi - FrAlpha;
-  FrSalingA := 2 * rP[ooA, y];
-  FrSalingH := Abstand(rP[ooP], rP[ooD]);
+  FrSalingA := 2 * rP[ooB].Y;
+  FrSalingH := (rP[ooP] - rP[ooD]).Length;
   FrController := FiControllerAnschlag;
 end;
 
 procedure TGetriebeFS.UpdateGetriebeOSS;
 { FrVorstag und FrWoben2d gegeben }
 var
-  temp: TRealPoint;
-  Skalar: double;
+  temp: TPoint3D;
+  Skalar: single;
 begin
   ResetStatus;
   { Berechnung Punkt C }
@@ -768,32 +769,32 @@ begin
     MittelPunkt2 := rP[ooC0];
     rP[ooC] := SchnittPunkt1;
   end;
-  FrWunten2D := Abstand(rP[ooP0], rP[ooC]) - FrWoben2D;
+  FrWunten2D := (rP[ooP0] - rP[ooC]).Length - FrWoben2D;
   { Punkt P }
   Skalar := FrWoben2D / (FrWunten2D + FrWoben2D);
-  rP[ooP, x] := rP[ooC, x] - Skalar * (rP[ooC, x] - rP[ooP0, x]);
-  rP[ooP, y] := 0;
-  rP[ooP, z] := rP[ooC, z] - Skalar * (rP[ooC, z] - rP[ooP0, z]);
+  rP[ooP].X := rP[ooC].X - Skalar * (rP[ooC].X - rP[ooP0].X);
+  rP[ooP].Y := 0;
+  rP[ooP].Z := rP[ooC].Z - Skalar * (rP[ooC].Z - rP[ooP0].Z);
   { Punkte A, B }
   rP[ooA] := rP[ooP];
-  rP[ooA, y] := Skalar * rP[ooA0, y];
+  rP[ooA].Y := Skalar * rP[ooA0].Y;
   rP[ooB] := rP[ooA];
-  rP[ooB, y] := -rP[ooA, y];
+  rP[ooB].Y := -rP[ooA].Y;
   { Punkt D }
-  temp := vsub(rP[ooC], rP[ooD0]);
+  temp := rP[ooC] - rP[ooD0];
   Skalar := FrMastUnten / (FrMastUnten + FrMastOben);
-  temp[x] := Skalar * temp[x];
+  temp.X := Skalar * temp.X;
   { Temp[y] := 0; }
-  temp[z] := Skalar * temp[z];
-  rP[ooD] := vadd(rP[ooD0], temp);
+  temp.Z := Skalar * temp.Z;
+  rP[ooD] := rP[ooD0] + temp;
   { aktualisieren }
-  FrSalingH := Abstand(rP[ooP], rP[ooD]);
-  FrSalingA := 2 * rP[ooA, y];
-  FrSalingL := Abstand(rP[ooA], rP[ooD]);
-  FrPhi := arctan2((rP[ooP0, x] - rP[ooP, x]), (rP[ooP, z] - rP[ooP0, z]));
+  FrSalingH := (rP[ooP] - rP[ooD]).Length;
+  FrSalingA := 2 * rP[ooB].Y;
+  FrSalingL := (rP[ooA] - rP[ooD]).Length;
+  FrPhi := arctan2((rP[ooP0].X - rP[ooP].X), (rP[ooP].Z - rP[ooP0].Z));
   FrPhi := FrPhi + pi / 2 + FrAlpha;
   FrWinkel := FrPhi - FrAlpha;
-  FrPsi := arctan2((rP[ooD0, x] - rP[ooD, x]), (rP[ooD, z] - rP[ooD0, z]));
+  FrPsi := arctan2((rP[ooD0].X - rP[ooD].X), (rP[ooD].Z - rP[ooD0].Z));
   FrPsi := FrPsi + pi / 2 + FrAlpha;
   Wanten2dTo3d;
   Rest;
@@ -802,8 +803,8 @@ end;
 procedure TGetriebeFS.UpdateGetriebeOSB;
 { FrVorstag und FrWoben3d und FrWunten3d gegeben }
 var
-  TempW, Skalar, TempWunten2d, TempWoben2d: double;
-  temp: TRealPoint;
+  TempW, Skalar, TempWunten2d, TempWoben2d: single;
+  temp: TPoint3D;
 begin
   ResetStatus;
   { Wanten3dto2d }
@@ -823,7 +824,7 @@ begin
   end;
 
   { wenn die Wanten nicht straff sind: }
-  if Abstand(rP[ooD0], rP[ooC]) > FrMastUnten + FrMastOben then
+  if (rP[ooD0] - rP[ooC]).Length > FrMastUnten + FrMastOben then
   begin
     { Punkt C }
     with SchnittKK do
@@ -836,17 +837,18 @@ begin
       rP[ooC] := SchnittPunkt1;
     end;
     { Punkt D }
-    temp := vsub(rP[ooC], rP[ooD0]);
+    temp := rP[ooC]- rP[ooD0];
     Skalar := FrMastUnten / (FrMastUnten + FrMastOben);
-    temp[x] := Skalar * temp[x]; { Temp[y] := 0; }
-    temp[z] := Skalar * temp[z];
-    rP[ooD] := vadd(rP[ooD0], temp);
+    temp.X := Skalar * temp.X;
+  { Temp.Y := 0; }
+    temp.Z := Skalar * temp.Z;
+    rP[ooD] := rP[ooD0] + temp;
     { Wantenlängen }
     (*
       FrWoben2d := TempWoben2d;
-      FrWunten2d := Abstand(rP[ooP0],rP[ooC]) - FrWoben2d;
+      FrWunten2d := (rP[ooP0] - rP[ooC]).Length - FrWoben2d;
     *)
-    FrWanteZulang := FrWunten3D + FrWoben3D - Abstand(rP[ooC], rP[ooA0]);
+    FrWanteZulang := FrWunten3D + FrWoben3D - (rP[ooC] - rP[ooA0]).Length;
     FGetriebeOK := False;
     Include(FGetriebeStatus, gsWanteZulang);
   end
@@ -874,22 +876,22 @@ begin
 
   { Punkt P }
   Skalar := FrWoben2D / (FrWunten2D + FrWoben2D);
-  rP[ooP, x] := rP[ooC, x] - Skalar * (rP[ooC, x] - rP[ooP0, x]);
-  rP[ooP, y] := 0;
-  rP[ooP, z] := rP[ooC, z] - Skalar * (rP[ooC, z] - rP[ooP0, z]);
+  rP[ooP].X := rP[ooC].X - Skalar * (rP[ooC].X - rP[ooP0].X);
+  rP[ooP].Y := 0;
+  rP[ooP].Z := rP[ooC].Z - Skalar * (rP[ooC].Z - rP[ooP0].Z);
   { Punkte A, B }
   rP[ooA] := rP[ooP];
-  rP[ooA, y] := Skalar * rP[ooA0, y];
+  rP[ooA].Y := Skalar * rP[ooA0].Y;
   rP[ooB] := rP[ooA];
-  rP[ooB, y] := -rP[ooA, y];
+  rP[ooB].Y := -rP[ooA].Y;
   { aktualisieren }
-  FrSalingH := Abstand(rP[ooP], rP[ooD]);
-  FrSalingA := 2 * rP[ooA, y];
-  FrSalingL := Abstand(rP[ooA], rP[ooD]);
-  FrPhi := arctan2((rP[ooP0, x] - rP[ooP, x]), (rP[ooP, z] - rP[ooP0, z]));
+  FrSalingH := (rP[ooP] - rP[ooD]).Length;
+  FrSalingA := 2 * rP[ooB].Y;
+  FrSalingL := (rP[ooA] - rP[ooD]).Length;
+  FrPhi := arctan2((rP[ooP0].X - rP[ooP].X), (rP[ooP].Z - rP[ooP0].Z));
   FrPhi := FrPhi + pi / 2 + FrAlpha;
   FrWinkel := FrPhi - FrAlpha;
-  FrPsi := arctan2((rP[ooD0, x] - rP[ooD, x]), (rP[ooD, z] - rP[ooD0, z]));
+  FrPsi := arctan2((rP[ooD0].X - rP[ooD].X), (rP[ooD].Z - rP[ooD0].Z));
   FrPsi := FrPsi + pi / 2 + FrAlpha;
   { Wanten2dTo3d; Wantenlängen3d bleiben unverändert }
   Rest;
@@ -897,7 +899,7 @@ end;
 
 procedure TGetriebeFS.GetWantenspannung;
 var
-  VorstagNull: double;
+  VorstagNull: single;
 begin
   VorstagNull := GetVorstagNull;
   FrVorstagDiff := VorstagNull - FrVorstag;
@@ -908,17 +910,17 @@ begin
   Wantenspannung := SpannungW;
 end;
 
-function TGetriebeFS.WantenKraftvonVorstag(WegSoll: double): double;
+function TGetriebeFS.WantenKraftvonVorstag(WegSoll: single): single;
 { liefert Wantenspannung 3D in Abhängigkeit von der Auslenkung des Vorstags }
 begin
-  result := TrimmTab.EvalX(WegSoll);
+  result := 0; //TrimmTab.EvalX(WegSoll);
 end;
 
-function TGetriebeFS.GetVorstagNull: double;
+function TGetriebeFS.GetVorstagNull: single;
 var
-  Temp, TempP, TempD, TempC: TRealPoint;
+  Temp, TempP, TempD, TempC: TPoint3D;
   s: string;
-  WStrich, WStrich2d: double;
+  WStrich, WStrich2d: single;
 begin
   result := 0;
   try
@@ -933,24 +935,24 @@ begin
               Schnittpunkt Temp wird im 2. Aufruf benötigt }
             Radius1 := FrSalingH;
             Radius2 := FrWoben2D;
-          Temp := Null;
-          Temp[x] := FrMastUnten;
-          MittelPunkt1 := Temp;
-          { Temp := Null; }
-          Temp[x] := FrMastUnten + FrMastOben;
-          MittelPunkt2 := Temp;
-          Temp := SchnittPunkt1;
+            Temp := TPoint3D.Zero;
+            Temp.X := FrMastUnten;
+            MittelPunkt1 := Temp;
+            { Temp := Null; }
+            Temp.X := FrMastUnten + FrMastOben;
+            MittelPunkt2 := Temp;
+            Temp := SchnittPunkt1;
             s := Bemerkung;
             s := Format(LogList_Format_String_GetVorstagNullFest, [1, s]);
             LogList.Add(s);
 
             { 2. Aufruf SchnittKK: TempP ermitteln }
             Radius1 := FrWunten2D;
-            Radius2 := Abstand(Temp, Null); { Temp unter 1. ermittelt }
+            Radius2 := Temp.Length; { Temp unter 1. ermittelt }
             MittelPunkt1 := rP[ooP0];
             MittelPunkt2 := rP[ooD0];
             TempP := SchnittPunkt1;
-            TempP[y] := 0;
+            TempP.Y := 0;
             s := Bemerkung;
             s := Format(LogList_Format_String_GetVorstagNullFest, [2, s]);
             LogList.Add(s);
@@ -961,7 +963,7 @@ begin
             MittelPunkt1 := TempP;
             MittelPunkt2 := rP[ooD0];
             TempD := SchnittPunkt1;
-            TempD[y] := 0;
+            TempD.Y := 0;
             s := Bemerkung;
             s := Format(LogList_Format_String_GetVorstagNullFest, [3, s]);
             LogList.Add(s);
@@ -972,54 +974,54 @@ begin
             MittelPunkt1 := TempP;
             MittelPunkt2 := TempD;
             TempC := SchnittPunkt1;
-            TempC[y] := 0;
+            TempC.Y := 0;
             s := Bemerkung;
             s := Format(LogList_Format_String_GetVorstagNullFest, [4, s]);
             LogList.Add(s);
 
-            result := Abstand(rP[ooC0], TempC);
+            result := (rP[ooC0] - TempC).Length;
           end;
 
         stDrehbar:
           begin
             Radius1 := FrSalingL;
             Radius2 := FrWoben3D;
-            TempD := Null;
-            TempD[x] := FrMastUnten;
+            TempD := TPoint3D.Zero;
+            TempD.X := FrMastUnten;
             MittelPunkt1 := TempD;
-            TempC := Null;
-            TempC[x] := FrMastUnten + FrMastOben;
+            TempC := TPoint3D.Zero;
+            TempC.X := FrMastUnten + FrMastOben;
             MittelPunkt2 := TempC;
             TempP := SchnittPunkt1;
-            TempP[y] := 0;
+            TempP.Y := 0;
             s := Bemerkung;
             s := Format(LogList_Format_String_GetVorstagNullDrehbar, [1, s]);
             LogList.Add(s);
 
-            Radius1 := Abstand(rP[ooD0], rP[ooA0]);
+            Radius1 := (rP[ooD0] - rP[ooA0]).Length;
             Radius2 := FrWunten3D;
-            MittelPunkt1 := Null;
+            MittelPunkt1 := TPoint3D.Zero;
             MittelPunkt2 := TempP;
-          Temp := SchnittPunkt1;
-          Temp[y] := 0;
+            Temp := SchnittPunkt1;
+            Temp.Y := 0;
             s := Bemerkung;
             s := Format(LogList_Format_String_GetVorstagNullDrehbar, [2, s]);
             LogList.Add(s);
 
-          WStrich := Abstand(Temp, TempC);
-            WStrich2d := sqrt(sqr(WStrich) - sqr(rP[ooA0, y]));
+            WStrich := (Temp - TempC).Length;
+            WStrich2d := sqrt(sqr(WStrich) - sqr(rP[ooA0].Y));
 
             Radius1 := WStrich2d;
             Radius2 := FrMastUnten + FrMastOben;
             MittelPunkt1 := rP[ooP0];
             MittelPunkt2 := rP[ooD0];
             TempC := SchnittPunkt1;
-            TempC[y] := 0;
+            TempC.Y := 0;
             s := Bemerkung;
             s := Format(LogList_Format_String_GetVorstagNullDrehbar, [3, s]);
             LogList.Add(s);
 
-          result := Abstand(rP[ooC0], TempC);
+            result := (rP[ooC0] - TempC).Length;
           end;
 
         stOhneStarr, stOhneBiegt:
@@ -1030,11 +1032,11 @@ begin
             MittelPunkt1 := rP[ooP0];
             MittelPunkt2 := rP[ooD0];
             TempC := SchnittPunkt1;
-            TempC[y] := 0;
+            TempC.Y := 0;
             s := Bemerkung;
             s := Format(LogList_Format_String_GetVorstagNullOhne, [1, s]);
             LogList.Add(s);
-            result := Abstand(rP[ooC0], TempC);
+            result := (rP[ooC0] - TempC).Length;
           end;
       end;
     end;
@@ -1048,35 +1050,35 @@ begin
   end;
 end;
 
-procedure TGetriebeFS.NeigeF(Mastfall: double);
+procedure TGetriebeFS.NeigeF(Mastfall: single);
 var
-  D0: TRealPoint;
+  D0: TPoint3D;
 
-  oldF: TRealPoint;
-  oldC: TRealPoint;
-  oldD: TRealPoint;
+  oldF: TPoint3D;
+  oldC: TPoint3D;
+  oldD: TPoint3D;
 
-  newF: TRealPoint;
-  newC: TRealPoint;
-  newD: TRealPoint;
+  newF: TPoint3D;
+  newC: TPoint3D;
+  newD: TPoint3D;
 
-  D0F: double; // k3
-  D0C: double; // k1 + k2
-  D0D: double; // l4 (FrMastUnten)
+  D0F: single; // k3
+  D0C: single; // k1 + k2
+  D0D: single; // l4 (FrMastUnten)
 
-  newF0F: double;
+  newF0F: single;
 
-  oldPsi: double;
-  newPsi: double;
-  delta: double;
-  w: double;
+  oldPsi: single;
+  newPsi: single;
+  delta: single;
+  w: single;
 begin
   oldF := rp[ooF];
   oldC := rp[ooC];
   oldD := rp[ooD];
   D0 := rp[ooD0];
-  D0F := Abstand(rp[ooD0], rp[ooF]);
-  D0C := Abstand(rp[ooD0], rp[ooC]);
+  D0F := (rp[ooD0] - rp[ooF]).Length;
+  D0C := (rp[ooD0] - rp[ooC]).Length;
   D0D := FrMastUnten;
 
   { compute new Point F }
@@ -1095,28 +1097,28 @@ begin
   { compute new Points C and D }
 
   newF := rp[ooF];
-  oldPsi := Pi/2 - arctan2(oldF[x] - D0[x], oldF[z] - D0[z]);
-  newPsi := Pi/2 - arctan2(newF[x] - D0[x], newF[z] - D0[z]);
+  oldPsi := Pi/2 - arctan2(oldF.X - D0.X, oldF.Z - D0.Z);
+  newPsi := Pi/2 - arctan2(newF.X - D0.X, newF.Z - D0.Z);
   delta := newPsi - oldPsi;
 
-  w := Pi/2 - arctan2(oldC[x] - D0[x], oldC[z] - D0[z]);
+  w := Pi/2 - arctan2(oldC.X - D0.X, oldC.Z - D0.Z);
   w := w + delta;
-  newC[x] := D0[x] + D0C * cos(w);
-  newC[y] := 0;
-  newC[z] := D0[z] + D0C * sin(w);
+  newC.X := D0.X + D0C * cos(w);
+  newC.Y := 0;
+  newC.Z := D0.Z + D0C * sin(w);
 
-  w := Pi/2 - arctan2(oldD[x] - D0[x], oldD[z] - D0[z]);
+  w := Pi/2 - arctan2(oldD.X - D0.X, oldD.Z - D0.Z);
   w := w + delta;
-  newD[x] := D0[x] + D0D * cos(w);
-  newD[y] := 0;
-  newD[z] := D0[z] + D0D * sin(w);
+  newD.X := D0.X + D0D * cos(w);
+  newD.Y := 0;
+  newD.Z := D0.Z + D0D * sin(w);
 
   rp[ooC] := newC;
   rp[ooD] := newD;
 
   { continue as in original BiegeUndNeigeF }
 
-  FrVorstag := Abstand(rP[ooC0], rP[ooC]);
+  FrVorstag := (rP[ooC0] - rP[ooC]).Length;
 
   case SalingTyp of
     stFest:
@@ -1128,10 +1130,10 @@ begin
   BerechneM;
 end;
 
-procedure TGetriebeFS.BiegeUndNeigeF1(Mastfall, Biegung: double);
+procedure TGetriebeFS.BiegeUndNeigeF1(Mastfall, Biegung: single);
 var
-  k1, k2, k3, k4, k5, k6, k7: double;
-  tempAlpha, tempBeta, tempGamma: double;
+  k1, k2, k3, k4, k5, k6, k7: single;
+  tempAlpha, tempBeta, tempGamma: single;
 begin
   ResetStatus;
   if SalingTyp = stDrehbar then
@@ -1166,18 +1168,18 @@ begin
   end;
 
   { 3. psi, D, und C ermitteln }
-  FrPsi := arctan2((rP[ooD0, x] - rP[ooF, x]), (rP[ooF, z] - rP[ooD0, z]));
+  FrPsi := arctan2((rP[ooD0].X - rP[ooF].X), (rP[ooF].Z - rP[ooD0].Z));
   FrPsi := FrPsi + pi / 2 + FrAlpha - tempBeta;
 
-  rP[ooD, x] := rP[ooD0, x] + FrMastUnten * cos(FrPsi - FrAlpha);
-  rP[ooD, y] := 0;
-  rP[ooD, z] := rP[ooD0, z] + FrMastUnten * sin(FrPsi - FrAlpha);
+  rP[ooD].X := rP[ooD0].X + FrMastUnten * cos(FrPsi - FrAlpha);
+  rP[ooD].Y := 0;
+  rP[ooD].Z := rP[ooD0].Z + FrMastUnten * sin(FrPsi - FrAlpha);
 
-  rP[ooC, x] := rP[ooD, x] + FrMastOben * cos(FrPsi - FrAlpha + tempGamma);
-  rP[ooC, y] := 0;
-  rP[ooC, z] := rP[ooD, z] + FrMastOben * sin(FrPsi - FrAlpha + tempGamma);
+  rP[ooC].X := rP[ooD].X + FrMastOben * cos(FrPsi - FrAlpha + tempGamma);
+  rP[ooC].Y := 0;
+  rP[ooC].Z := rP[ooD].Z + FrMastOben * sin(FrPsi - FrAlpha + tempGamma);
 
-  FrVorstag := Abstand(rP[ooC0], rP[ooC]);
+  FrVorstag := (rP[ooC0] - rP[ooC]).Length;
 
   { 4. restliche Aktualisierungen vornehmen }
   case SalingTyp of
@@ -1190,46 +1192,46 @@ begin
   BerechneM;
 end;
 
-procedure TGetriebeFS.BiegeUndNeigeFS(TrimmSoll: TTrimm; var SalingHStart: double);
+procedure TGetriebeFS.BiegeUndNeigeFS(TrimmSoll: TTrimm; var SalingHStart: single);
 { var Parameter SalingHStart wird vom Regler benötigt }
 var
-  ooTemp: TRealPoint;
+  ooTemp: TPoint3D;
 begin
   BiegeUndNeigeF1(TrimmSoll.Mastfall, TrimmSoll.BiegungS);
 
   { 4. Startwert für FrSalingH ermitteln }
-  ooTemp := EVektor(rP[ooC], rP[ooP0]);
-  ooTemp := SkalarMult(ooTemp, FrWoben2D);
-  rP[ooP] := vadd(rP[ooC], ooTemp);
-  SalingHStart := Abstand(rP[ooP], rP[ooD]);
+  ooTemp := (rP[ooC] - rP[ooP0]).Normalize;
+  ooTemp := ooTemp * FrWoben2D;
+  rP[ooP] := rP[ooC] + ooTemp;
+  SalingHStart := (rP[ooP] - rP[ooD]).Length;
   FrSalingH := Trunc(SalingHStart) + 1; { FiSalingH garantiert größer }
 
   { 5. restliche Aktualisierungen in MakeSalingHBiggerFS vornehmen! }
   MakeSalingHBiggerFS(SalingHStart);
 end;
 
-procedure TGetriebeFS.BiegeUndNeigeDS(TrimmSoll: TTrimm; var SalingLStart: double);
+procedure TGetriebeFS.BiegeUndNeigeDS(TrimmSoll: TTrimm; var SalingLStart: single);
 { var Parameter SalingLStart wird vom Regler benötigt }
 var
-  ooTemp: TRealPoint;
+  ooTemp: TPoint3D;
 begin
   BiegeUndNeigeF1(TrimmSoll.Mastfall, TrimmSoll.BiegungS);
 
   { Startwert für SalingL ermitteln }
-  ooTemp := EVektor(rP[ooC], rP[ooA0]);
-  ooTemp := SkalarMult(ooTemp, FrWoben3D);
-  rP[ooA] := vadd(rP[ooC], ooTemp);
-  SalingLStart := Abstand(rP[ooA], rP[ooD]);
+  ooTemp := (rP[ooC] - rP[ooA0]).Normalize;
+  ooTemp := ooTemp * FrWoben3D;
+  rP[ooA] := rP[ooC] + ooTemp;
+  SalingLStart := (rP[ooA] - rP[ooD]).Length;
   FrSalingL := Trunc(SalingLStart) + 1; { FiSalingL dann garantiert größer! }
 
   { restliche Aktualisierungen in MakeSalingLBiggerDS vornehmen }
   MakeSalingLBiggerDS(SalingLStart);
 end;
 
-procedure TGetriebeFS.BiegeUndNeigeC(MastfallC, Biegung: double);
+procedure TGetriebeFS.BiegeUndNeigeC(MastfallC, Biegung: single);
 var
-  k1, k2: double;
-  tempAlpha: double;
+  k1, k2: single;
+  tempAlpha: single;
 begin
   ResetStatus;
   if SalingTyp = stDrehbar then
@@ -1252,15 +1254,15 @@ begin
   end;
 
   { psi und Punkt D }
-  FrPsi := arctan2((rP[ooD0, x] - rP[ooC, x]), (rP[ooC, z] - rP[ooD0, z]));
+  FrPsi := arctan2((rP[ooD0].X - rP[ooC].X), (rP[ooC].Z - rP[ooD0].Z));
   FrPsi := FrPsi + pi / 2 + FrAlpha - tempAlpha;
 
-  rP[ooD, x] := rP[ooD0, x] + FrMastUnten * cos(FrPsi - FrAlpha);
-  rP[ooD, y] := 0;
-  rP[ooD, z] := rP[ooD0, z] + FrMastUnten * sin(FrPsi - FrAlpha);
+  rP[ooD].X := rP[ooD0].X + FrMastUnten * cos(FrPsi - FrAlpha);
+  rP[ooD].Y := 0;
+  rP[ooD].Z := rP[ooD0].Z + FrMastUnten * sin(FrPsi - FrAlpha);
 
   { Vorstag }
-  FrVorstag := Abstand(rP[ooC0], rP[ooC]);
+  FrVorstag := (rP[ooC0] - rP[ooC]).Length;
 
   { Punkt F, M }
   BerechneF;

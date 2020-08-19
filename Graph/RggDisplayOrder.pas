@@ -337,8 +337,8 @@ end;
 
 procedure TRggEdge.Update;
 begin
-  V1 := TPoint3D.Create(Vert1.Point[x], Vert1.Point[y], Vert1.Point[z]);
-  V2 := TPoint3D.Create(Vert2.Point[x], Vert2.Point[y], Vert2.Point[z]);
+  V1 :=  Vert1.Point;
+  V2 := Vert2.Point;
   Direction := (V2-V1).Normalize;
 end;
 
@@ -346,7 +346,7 @@ end;
 
 procedure TRggFace.CheckOrientation;
 begin
-  IsFrontFacing := Edge1.Direction.CrossProduct(Edge2.Direction).Y > 0;
+  IsFrontFacing := Edge1.Direction.CrossProduct(Edge2.Direction).Y < 0;
 end;
 
 constructor TRggFace.Create(Aff: TRiggFace; Ae1, Ae2, Ae3: TRiggEdge);

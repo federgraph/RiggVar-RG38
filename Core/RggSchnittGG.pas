@@ -21,35 +21,36 @@ interface
 uses
   System.Types,
   System.Math,
+  System.Math.Vectors,
   RggTypes,
   RggCalc;
 
 type
   TSchnittGG = class
   protected
-    A, B: TRealPoint;
-    C, D: TRealPoint;
-    SP: TRealPoint;
+    A, B: TPoint3D;
+    C, D: TPoint3D;
+    SP: TPoint3D;
     Bem: TBemerkungGG;
     NeedCalc: Boolean;
     sv: Boolean;
     function GetBemerkung: string;
-    procedure SetPA(const Value: TRealPoint);
-    procedure SetPB(const Value: TRealPoint);
-    procedure SetPC(const Value: TRealPoint);
+    procedure SetPA(const Value: TPoint3D);
+    procedure SetPB(const Value: TPoint3D);
+    procedure SetPC(const Value: TPoint3D);
     function Vorhanden: Boolean;
-    procedure SetPD(const Value: TRealPoint);
-    function GetSchnittPunkt: TRealPoint;
+    procedure SetPD(const Value: TPoint3D);
+    function GetSchnittPunkt: TPoint3D;
   public
     constructor Create;
     function Schnitt: Boolean;
 
-    property PA: TRealPoint read A write SetPA;
-    property PB: TRealPoint read B write SetPB;
-    property PC: TRealPoint read C write SetPC;
-    property PD: TRealPoint read D write SetPD;
+    property PA: TPoint3D read A write SetPA;
+    property PB: TPoint3D read B write SetPB;
+    property PC: TPoint3D read C write SetPC;
+    property PD: TPoint3D read D write SetPD;
 
-    property SchnittPunkt: TRealPoint read GetSchnittPunkt;
+    property SchnittPunkt: TPoint3D read GetSchnittPunkt;
     property SPVorhanden: Boolean read Vorhanden;
     property Bemerkung: string read GetBemerkung;
   end;
@@ -94,13 +95,13 @@ implementation
 
 constructor TSchnittGG.Create;
 begin
-  A := Null;
-  B := Null;
-  C := Null;
-  D := Null;
-  B[x] := 100.0;
-  D[x] := 200.0;
-  D[z] := 100.0;
+  A := TPoint3D.Zero;
+  B := TPoint3D.Zero;
+  C := TPoint3D.Zero;
+  D := TPoint3D.Zero;
+  B.X := 100.0;
+  D.X := 200.0;
+  D.Z := 100.0;
 end;
 
 function TSchnittGG.GetBemerkung: string;
@@ -113,7 +114,7 @@ begin
   end;
 end;
 
-function TSchnittGG.GetSchnittPunkt: TRealPoint;
+function TSchnittGG.GetSchnittPunkt: TPoint3D;
 begin
   if NeedCalc = True then
     Schnitt;
@@ -136,20 +137,20 @@ begin
   sx := 0;
   sz := 0;
 
-  x1 := A[x];
-  z1 := A[z];
-  x3 := C[x];
-  z3 := C[z];
+  x1 := A.X;
+  z1 := A.Z;
+  x3 := C.X;
+  z3 := C.Z;
 
-  Quotient := B[x] - A[x];
+  Quotient := B.X - A.X;
   if abs(Quotient) > 0.001 then
-    a1 := (B[z] - A[z]) / Quotient
+    a1 := (B.Z - A.Z) / Quotient
   else
     Bem := g1Vertical;
 
-  Quotient := D[x] - C[x];
+  Quotient := D.X - C.X;
   if abs(Quotient) > 0.001 then
-    a2 := (D[z] - C[z]) / Quotient
+    a2 := (D.Z - C.Z) / Quotient
   else
     Bem := g2Vertical;
 
@@ -183,9 +184,9 @@ begin
       end;
   end;
 
-  SP[x] := sx;
-  SP[y] := 0;
-  SP[z] := sz;
+  SP.X := sx;
+  SP.Y := 0;
+  SP.Z := sz;
   sv := Bem <> ggParallel;
 end;
 
@@ -196,25 +197,25 @@ begin
   result := sv;
 end;
 
-procedure TSchnittGG.SetPA(const Value: TRealPoint);
+procedure TSchnittGG.SetPA(const Value: TPoint3D);
 begin
   A := Value;
   NeedCalc := True;
 end;
 
-procedure TSchnittGG.SetPB(const Value: TRealPoint);
+procedure TSchnittGG.SetPB(const Value: TPoint3D);
 begin
   B := Value;
   NeedCalc := True;
 end;
 
-procedure TSchnittGG.SetPC(const Value: TRealPoint);
+procedure TSchnittGG.SetPC(const Value: TPoint3D);
 begin
   C := Value;
   NeedCalc := True;
 end;
 
-procedure TSchnittGG.SetPD(const Value: TRealPoint);
+procedure TSchnittGG.SetPD(const Value: TPoint3D);
 begin
   D := Value;
   NeedCalc := True;
@@ -234,7 +235,7 @@ end;
 procedure TSchnittGGEx.SetA1(const Value: double);
 var
   w: single;
-  t: TRealPoint;
+  t: TPoint3D;
 begin
   FA1 := Value;
   while FA1 > 360 do
@@ -247,18 +248,18 @@ begin
   end;
 
   w := FA1 * 2 * PI / 360;
-  t[x] := cos(w);
-  t[y] := 0;
-  t[z] := sin(w);
-  t := SkalarMult(t, FR1 * FH1);
-  B := vadd(A, t);
+  t.X := cos(w);
+  t.Y := 0;
+  t.Z := sin(w);
+  t := t * (FR1 * FH1);
+  B := A + t;
   NeedCalc := True;
 end;
 
 procedure TSchnittGGEx.SetA2(const Value: double);
 var
   w: single;
-  t: TRealPoint;
+  t: TPoint3D;
 begin
   FA2 := Value;
   while FA2 > 360 do
@@ -271,62 +272,62 @@ begin
   end;
 
   w := FA2 * 2 * PI / 360;
-  t[x] := cos(w);
-  t[y] := 0;
-  t[z] := sin(w);
-  t := SkalarMult(t, FR2 * FH2);
-  D := vadd(C, t);
+  t.X := cos(w);
+  t.Y := 0;
+  t.Z := sin(w);
+  t := t * (FR2 * FH2);
+  D := C + t;
   NeedCalc := True;
 end;
 
 procedure TSchnittGGEx.SetM1(const Value: TPointF);
 var
-  T: TRealPoint;
+  T: TPoint3D;
 begin
-  T := vsub(B, A);
-  A[x] := Value.X;
-  A[y] := 0;
-  A[z] := Value.Y;
-  B := vadd(A, T);
+  T := B - A;
+  A.X := Value.X;
+  A.Y := 0;
+  A.Z := Value.Y;
+  B := A + T;
   NeedCalc := True;
 end;
 
 procedure TSchnittGGEx.SetM2(const Value: TPointF);
 var
-  T: TRealPoint;
+  T: TPoint3D;
 begin
-  T := vsub(D, C);
-  C[x] := Value.X;
-  C[y] := 0;
-  C[z] := Value.Y;
-  D := vadd(C, T);
+  T := D - C;
+  C.X := Value.X;
+  C.Y := 0;
+  C.Z := Value.Y;
+  D := C + T;
   NeedCalc := True;
 end;
 
 procedure TSchnittGGEx.SetR1(const Value: double);
 var
-  T: TRealPoint;
+  T: TPoint3D;
 begin
   if Value > 0.5 then
   begin
     FR1 := Value;
-    T := EVektor(A, B);
-    T := SkalarMult(T, Value * FH1);
-    B := vadd(A, T);
+    T := (A - B).Normalize;
+    T := T * (Value * FH1);
+    B := A + T;
     NeedCalc := True;
   end;
 end;
 
 procedure TSchnittGGEx.SetR2(const Value: double);
 var
-  T: TRealPoint;
+  T: TPoint3D;
 begin
   if Value > 0.5 then
   begin
     FR2 := Value;
-    T := EVektor(C, D);
-    T := SkalarMult(T, Value * FH2);
-    D := vadd(C, T);
+    T := (C - D).Normalize;
+    T := T * (Value * FH2);
+    D := C + T;
     NeedCalc := True;
   end;
 end;

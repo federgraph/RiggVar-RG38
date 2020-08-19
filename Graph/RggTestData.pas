@@ -18,76 +18,76 @@ class function TRggTestData.GetKoordinaten420: TRealRiggPoints;
 var
   rp: TRealRiggPoints;
 begin
-  rp[ooA, x] := 2398;
-  rp[ooA, y] := 425;
-  rp[ooA, z] := 2496;
+  rp[ooA].X := 2398;
+  rp[ooA].Y := -425;
+  rp[ooA].Z := 2496;
 
-  rp[ooB, x] := 2398;
-  rp[ooB, y] := -425;
-  rp[ooB, z] := 2496;
+  rp[ooB].X := 2398;
+  rp[ooB].Y := 425;
+  rp[ooB].Z := 2496;
 
-  rp[ooC, x] := 2354;
-  rp[ooC, y] := 0;
-  rp[ooC, z] := 4470;
+  rp[ooC].X := 2354;
+  rp[ooC].Y := 0;
+  rp[ooC].Z := 4470;
 
-  rp[ooD, x] := 2618;
-  rp[ooD, y] := 0;
-  rp[ooD, z] := 2488;
+  rp[ooD].X := 2618;
+  rp[ooD].Y := 0;
+  rp[ooD].Z := 2488;
 
-  rp[ooE, x] := 2870;
-  rp[ooE, y] := 0;
-  rp[ooE, z] := 450;
+  rp[ooE].X := 2870;
+  rp[ooE].Y := 0;
+  rp[ooE].Z := 450;
 
-  rp[ooF, x] := 2142;
-  rp[ooF, y] := 0;
-  rp[ooF, z] := 5970;
+  rp[ooF].X := 2142;
+  rp[ooF].Y := 0;
+  rp[ooF].Z := 5970;
 
-  rp[ooP, x] := 2398;
-  rp[ooP, y] := 0;
-  rp[ooP, z] := 2496;
+  rp[ooP].X := 2398;
+  rp[ooP].Y := 0;
+  rp[ooP].Z := 2496;
 
-  rp[ooA0, x] := 2560;
-  rp[ooA0, y] := 765;
-  rp[ooA0, z] := 430;
+  rp[ooA0].X := 2560;
+  rp[ooA0].Y := -765;
+  rp[ooA0].Z := 430;
 
-  rp[ooB0, x] := 2560;
-  rp[ooB0, y] := -765;
-  rp[ooB0, z] := 430;
+  rp[ooB0].X := 2560;
+  rp[ooB0].Y := 765;
+  rp[ooB0].Z := 430;
 
-  rp[ooC0, x] := 4140;
-  rp[ooC0, y] := 0;
-  rp[ooC0, z] := 340;
+  rp[ooC0].X := 4140;
+  rp[ooC0].Y := 0;
+  rp[ooC0].Z := 340;
 
-  rp[ooD0, x] := 2870;
-  rp[ooD0, y] := 0;
-  rp[ooD0, z] := -100;
+  rp[ooD0].X := 2870;
+  rp[ooD0].Y := 0;
+  rp[ooD0].Z := -100;
 
-  rp[ooE0, x] := 2970;
-  rp[ooE0, y] := 0;
-  rp[ooE0, z] := 450;
+  rp[ooE0].X := 2970;
+  rp[ooE0].Y := 0;
+  rp[ooE0].Z := 450;
 
-  rp[ooF0, x] := -30;
-  rp[ooF0, y] := 0;
-  rp[ooF0, z] := 300;
+  rp[ooF0].X := -30;
+  rp[ooF0].Y := 0;
+  rp[ooF0].Z := 300;
 
-  rp[ooP0, x] := 2560;
-  rp[ooP0, y] := 0;
-  rp[ooP0, z] := 430;
+  rp[ooP0].X := 2560;
+  rp[ooP0].Y := 0;
+  rp[ooP0].Z := 430;
 
-  rp[ooM, x] := 0;
-  rp[ooM, y] := 0;
-  rp[ooM, z] := 0;
+  rp[ooM].X := 0;
+  rp[ooM].Y := 0;
+  rp[ooM].Z := 0;
 
   result := rp;
 end;
 
 class function TRggTestData.GetMastKurve420: TMastKurve;
 
-  procedure Add(i: Integer; u, w: double);
+  procedure Add(i: Integer; u, w: single);
   begin
-    result[i, x] := u;
-    result[i, y] := 0;
-    result[i, z] := w;
+    result[i].X := u;
+    result[i].Y := 0;
+    result[i].Z := w;
   end;
 
 begin

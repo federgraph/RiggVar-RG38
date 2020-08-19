@@ -6,6 +6,7 @@ uses
   System.SysUtils,
   System.Classes,
   System.Math,
+  System.Types,
   System.Math.Vectors,
   RggTypes,
   RggCalc;
@@ -263,7 +264,7 @@ type
   );
 
   TRggPoint = record
-    P: TRealPoint;
+    P: TPoint3D;
     function IsEqual(B: TRggPoint): Boolean;
     function Compare(Q: TRggPoint): Integer;
   end;
@@ -276,7 +277,7 @@ type
     function IsTotallyBelow(Other: TRggLine): Boolean;
     function IsSame(Other: TRggLine): Boolean;
     function HasVisibleCrossing(SP: TRealPoint): Boolean;
-    function ComputeSPY(SP: TRealPoint): double;
+    function ComputeSPY(SP: TRealPoint): single;
     procedure ReportData(ML: TStrings);
   end;
 
@@ -302,9 +303,9 @@ const
 
 function TRggPoint.Compare(Q: TRggPoint): Integer;
 begin
-  if P[y] > Q.P[y] then
+  if P.Y > Q.P.Y then
     result := -1
-  else if P[y] < Q.P[y] then
+  else if P.Y < Q.P.Y then
     result := 1
   else
     result := 0;
@@ -312,10 +313,11 @@ end;
 
 function TRggPoint.IsEqual(B: TRggPoint): Boolean;
 begin
-  result :=
-    (P[x] = B.P[x]) and
-    (P[y] = B.P[y]) and
-    (P[z] = B.P[z]);
+  result := P.EqualsTo(B.P);
+//  result :=
+//    (P[x] = B.P[x]) and
+//    (P[y] = B.P[y]) and
+//    (P[z] = B.P[z]);
 end;
 
 { TRggLine }
@@ -332,19 +334,19 @@ end;
 function TRggLine.IsTotallyAbove(Other: TRggLine): Boolean;
 begin
   result :=
-    (A.P[y] < Other.A.P[y]) and
-    (A.P[y] < Other.B.P[y]) and
-    (B.P[y] < Other.A.P[y]) and
-    (B.P[y] < Other.B.P[y]);
+    (A.P.Y < Other.A.P.Y) and
+    (A.P.Y < Other.B.P.Y) and
+    (B.P.Y < Other.A.P.Y) and
+    (B.P.Y < Other.B.P.Y);
 end;
 
 function TRggLine.IsTotallyBelow(Other: TRggLine): Boolean;
 begin
   result :=
-    (A.P[y] > Other.A.P[y]) and
-    (A.P[y] > Other.B.P[y]) and
-    (B.P[y] > Other.A.P[y]) and
-    (B.P[y] > Other.B.P[y]);
+    (A.P.Y > Other.A.P.Y) and
+    (A.P.Y > Other.B.P.Y) and
+    (B.P.Y > Other.A.P.Y) and
+    (B.P.Y > Other.B.P.Y);
 end;
 
 function TRggLine.HasVisibleCrossing(SP: TRealPoint): Boolean;
@@ -354,18 +356,18 @@ var
 
   vABxz: TVector;
   vSPxz: TVector; // Delphi 2D Vectors
-  lengthABxz, lengthSPxz: double;
-  RatioSPtoAB, g: double;
+  lengthABxz, lengthSPxz: single;
+  RatioSPtoAB, g: single;
 begin
   result := False;
 
-  vSP := vsub(SP, A.P);
-  vAB := vsub(B.P, A.P);
+  vSP := SP - A.P;
+  vAB := B.P - A.P;
 
-  vABxz := TVector.Create(vAB[x], vAB[z]);
+  vABxz := TVector.Create(vAB.X, vAB.Z);
   lengthABxz := vABxz.Length;
 
-  vSPxz := TVector.Create(vSP[x], vSP[z]);
+  vSPxz := TVector.Create(vSP.X, vSP.Z);
   lengthSPxz := vSPxz.Length;
 
   if lengthABxz < Eps then
@@ -380,25 +382,25 @@ begin
   result := (g > Eps) and (g < 1-Eps);
 end;
 
-function TRggLine.ComputeSPY(SP: TRealPoint): double;
+function TRggLine.ComputeSPY(SP: TRealPoint): single;
 var
   vSP: TRealPoint;
-  vAB: TRealPoint; // Rgg Vector 3D
+  vAB: TRealPoint;
 
-  vABxz: TVector;
-  vSPxz: TVector; // Delphi 2D Vectors
-  lengthABxz, lengthSPxz: double;
-  RatioSPtoAB, g: double;
+  vABxz: TPointF;
+  vSPxz: TPointF;
+  lengthABxz, lengthSPxz: single;
+  RatioSPtoAB, g: single;
 begin
-  result := (A.P[y] + B.P[y]) / 2;
+  result := (A.P.Y + B.P.Y) / 2;
 
-  vSP := vsub(SP, A.P);
-  vAB := vsub(B.P, A.P);
+  vSP := SP - A.P;
+  vAB := B.P - A.P;
 
-  vABxz := TVector.Create(vAB[x], vAB[z]);
+  vABxz := TPointF.Create(vAB.X, vAB.Z);
   lengthABxz := vABxz.Length;
 
-  vSPxz := TVector.Create(vSP[x], vSP[z]);
+  vSPxz := TPointF.Create(vSP.X, vSP.Z);
   lengthSPxz := vSPxz.Length;
 
   if lengthABxz < Eps then
@@ -410,23 +412,23 @@ begin
 
   g := RatioSPtoAB;
 
-  if Sign(vAB[x]) <> Sign(vSP[x]) then
+  if Sign(vAB.X) <> Sign(vSP.X) then
     g := -RatioSPtoAB;
 
   if Abs(g) > 10000 then
   begin
     { does not come in here }
-    result := A.P[y];
+    result := A.P.Y;
     Exit;
   end;
 
-  result := A.P[y] + g * vAB[y];
+  result := A.P.Y + g * vAB.Y;
 end;
 
 procedure TRggLine.ReportData(ML: TStrings);
   procedure AddPoint(LN, PN: string; P: TRealPoint);
   begin
-    ML.Add(Format('%s [%s] = (%.2f, %.2f, %.2f)', [PN, LN, P[x], P[y], P[z]]));
+    ML.Add(Format('%s [%s] = (%.2f, %.2f, %.2f)', [PN, LN, P.X, P.Y, P.Z]));
   end;
 begin
   AddPoint(Name, 'A', A.P);
@@ -438,10 +440,10 @@ end;
 function TRggLinePair.CompareVV(v1, v2: TRealPoint): Integer;
 var
   m1, m2: TPoint3D;
-  r: double;
+  r: single;
 begin
-  m1 := TPoint3D.Create(v1[x], v1[y], v1[z]).Normalize;
-  m2 := TPoint3D.Create(v2[x], v2[y], v2[z]).Normalize;
+  m1 := v1.Normalize;
+  m2 := v2.Normalize;
   r := m2.Y - m1.Y;
   if r > 0 then
     result := 1
@@ -458,29 +460,29 @@ begin
   result := 0;
   if L1.A.IsEqual(L2.A) then
   begin
-    v1 := vsub(L1.B.P, L1.A.P);
-    v2 := vsub(L2.B.P, L2.A.P);
+    v1 := L1.B.P - L1.A.P;
+    v2 := L2.B.P - L2.A.P;
     result := CompareVV(v1, v2);
 //    result := L1.B.Compare(L2.B)
   end
   else if L1.A.IsEqual(L2.B) then
   begin
-    v1 := vsub(L1.B.P, L1.A.P);
-    v2 := vsub(L2.A.P, L2.B.P);
+    v1 := L1.B.P - L1.A.P;
+    v2 := L2.A.P - L2.B.P;
     result := CompareVV(v1, v2);
 //    result := L1.B.Compare(L2.A)
   end
   else if L1.B.IsEqual(L2.A) then
   begin
-    v1 := vsub(L1.A.P, L1.B.P);
-    v2 := vsub(L2.B.P, L2.A.P);
+    v1 := L1.A.P - L1.B.P;
+    v2 := L2.B.P - L2.A.P;
     result := CompareVV(v1, v2);
 //    result := -L1.A.Compare(L2.B)
   end
   else if L1.B.IsEqual(L2.B) then
   begin
-    v1 := vsub(L1.A.P, L1.B.P);
-    v2 := vsub(L2.A.P, L2.B.P);
+    v1 := L1.A.P - L1.B.P;
+    v2 := L2.A.P - L2.B.P;
     result := CompareVV(v1, v2);
 //    result := -L1.A.Compare(L2.A);
   end;
@@ -508,7 +510,7 @@ end;
 procedure TRggLinePair.ReportData(ML: TStrings);
   procedure AddPoint(LN, PN: string; P: TRealPoint);
   begin
-    ML.Add(Format('%s [%s] = (%.2f, %.2f, %.2f)', [PN, LN, P[x], P[y], P[z]]));
+    ML.Add(Format('%s [%s] = (%.2f, %.2f, %.2f)', [PN, LN, P.X, P.Y, P.Z]));
   end;
 begin
   AddPoint(L1.Name, 'A', L1.A.P);
@@ -519,7 +521,7 @@ end;
 
 function TRggLinePair.CompareSPY: Integer;
 var
-  ya, yb, dy: double;
+  ya, yb, dy: single;
 begin
   ya := L1.ComputeSPY(SP);
   yb := L2.ComputeSPY(SP);

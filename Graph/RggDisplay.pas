@@ -233,7 +233,7 @@ begin
     Exit;
   end;
 
-  LP.SP := Null;
+  LP.SP := TPoint3D.Zero;
   LP.L1.A.P := Left.P1;
   LP.L1.B.P := Left.P2;
   LP.L1.Name := Left.Name;
@@ -573,8 +573,8 @@ begin
   cr.ItemType := diEllipse;
   cr.P1 := P1;
   cr.P2 := P2;
-  cr.P1[x] := cr.P1[x] - Radius;
-  cr.P2[x] := cr.P2[x] + Radius;
+  cr.P1.X := cr.P1.X - Radius;
+  cr.P2.X := cr.P2.X + Radius;
   cr.CenterPoint := CenterPoint;
   cr.Radius := Radius;
 end;

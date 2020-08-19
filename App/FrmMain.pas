@@ -233,7 +233,8 @@ type
   protected
     procedure DestroyForms;
     procedure MemoBtnClick(Sender: TObject);
-    procedure ActiBtnClick(Sender: TObject);
+    procedure ActionsBtnClick(Sender: TObject);
+    procedure DrawingsBtnClick(Sender: TObject);
     procedure ConfigBtnClick(Sender: TObject);
     procedure TrimmTabBtnClick(Sender: TObject);
     procedure CheckFormBounds(AForm: TForm);
@@ -249,6 +250,7 @@ implementation
 uses
   FrmMemo,
   FrmAction,
+  FrmDrawing,
   FrmConfig,
   FrmTrimmTab,
   RiggVar.RG.Main,
@@ -940,9 +942,10 @@ begin
     faBlauBtn: BlauBtnClick(nil);
     faMultiBtn: MultiBtnClick(nil);
 
-    faShowActi: ActiBtnClick(nil);
     faShowMemo: MemoBtnClick(nil);
-    faShowConf: ConfigBtnClick(nil);
+    faShowActions: ActionsBtnClick(nil);
+    faShowDrawings: DrawingsBtnClick(nil);
+    faShowConfig: ConfigBtnClick(nil);
     faShowTrimmTab: TrimmTabBtnClick(nil);
 
     faToggleSandboxed: IsSandboxed := not IsSandboxed;
@@ -1539,7 +1542,7 @@ begin
     ControllerGraph.ControllerTyp := Rigg.ControllerTyp;
     ControllerGraph.ControllerPos := Round(Main.ParamValue[fpController]);
     ControllerGraph.ParamXE := Rigg.MastPositionE;
-    ControllerGraph.ParamXE0 := Round(Rigg.rP[ooE0, x] - Rigg.rP[ooD0, x]);
+    ControllerGraph.ParamXE0 := Round(Rigg.rP[ooE0].X - Rigg.rP[ooD0].X);
     ControllerGraph.EdgePos := Round(Rigg.GSB.Find(fpController).Min);
 
     ControllerGraph.Draw(TFigure.dtController);
@@ -1930,7 +1933,7 @@ begin
   FormMemo.Show; //needed on Mac
 end;
 
-procedure TFormMain.ActiBtnClick(Sender: TObject);
+procedure TFormMain.ActionsBtnClick(Sender: TObject);
 begin
   if not Assigned(FormAction) then
   begin
@@ -1940,6 +1943,18 @@ begin
   end;
   FormAction.Visible := True;
   FormAction.Show; //needed on Mac
+end;
+
+procedure TFormMain.DrawingsBtnClick(Sender: TObject);
+begin
+  if not Assigned(FormDrawing) then
+  begin
+    FormDrawing := TFormDrawing.Create(nil);
+    FormDrawing.Parent := self; // needed for Alt-Tab
+    CheckFormBounds(FormDrawing);
+  end;
+  FormDrawing.Visible := True;
+  FormDrawing.Show; //needed on Mac
 end;
 
 procedure TFormMain.ConfigBtnClick(Sender: TObject);
@@ -1985,6 +2000,11 @@ begin
   if FormAction <> nil then
   begin
     FormAction.DisposeOf;
+    FormAction := nil;
+  end;
+  if FormDrawing <> nil then
+  begin
+    FormDrawing.DisposeOf;
     FormAction := nil;
   end;
   if FormMemo <> nil then

@@ -12,7 +12,6 @@ uses
   FMX.Graphics,
   RiggVar.RG.Graph,
   RggCalc,
-  RggMatrix,
   RggTypes,
   RggDisplayTypes,
   RggDisplay,
@@ -110,25 +109,25 @@ begin
   DL.DF := DF;
   PD := TPathData.Create;
 
-  AchseN[x] := 0;
-  AchseN[y] := 0;
-  AchseN[z] := 0;
+  AchseN.X := 0;
+  AchseN.Y := 0;
+  AchseN.Z := 0;
 
-  AchseX[x] := 1;
-  AchseX[y] := 0;
-  AchseX[z] := 0;
+  AchseX.X := 1;
+  AchseX.Y := 0;
+  AchseX.Z := 0;
 
-  AchseY[x] := 0;
-  AchseY[y] := 1;
-  AchseY[z] := 0;
+  AchseY.X := 0;
+  AchseY.Y := 1;
+  AchseY.Z := 0;
 
-  AchseZ[x] := 0;
-  AchseZ[y] := 0;
-  AchseZ[z] := 1;
+  AchseZ.X := 0;
+  AchseZ.Y := 0;
+  AchseZ.Z := 1;
 
-  AchseX := SkalarMult(AchseX, 1000);
-  AchseY := SkalarMult(AchseY, 1000);
-  AchseZ := SkalarMult(AchseZ, 1000);
+  AchseX := AchseX * 1000;
+  AchseY := AchseY * 1000;
+  AchseZ := AchseZ * 1000;
 end;
 
 destructor TRaumGraph.Destroy;
@@ -199,54 +198,54 @@ begin
 
   with RaumGraphData do
   begin
-    xA0 := RPT[ooA0, x];
-    yA0 := RPT[ooA0, z];
-    xB0 := RPT[ooB0, x];
-    yB0 := RPT[ooB0, z];
-    xC0 := RPT[ooC0, x];
-    yC0 := RPT[ooC0, z];
-    xD0 := RPT[ooD0, x];
-    yD0 := RPT[ooD0, z];
-    xE0 := RPT[ooE0, x];
-    yE0 := RPT[ooE0, z];
-    xF0 := RPT[ooF0, x];
-    yF0 := RPT[ooF0, z];
+    xA0 := RPT[ooA0].X;
+    yA0 := RPT[ooA0].Z;
+    xB0 := RPT[ooB0].X;
+    yB0 := RPT[ooB0].Z;
+    xC0 := RPT[ooC0].X;
+    yC0 := RPT[ooC0].Z;
+    xD0 := RPT[ooD0].X;
+    yD0 := RPT[ooD0].Z;
+    xE0 := RPT[ooE0].X;
+    yE0 := RPT[ooE0].Z;
+    xF0 := RPT[ooF0].X;
+    yF0 := RPT[ooF0].Z;
 
-    xA := RPT[ooA, x];
-    yA := RPT[ooA, z];
-    xB := RPT[ooB, x];
-    yB := RPT[ooB, z];
-    xC := RPT[ooC, x];
-    yC := RPT[ooC, z];
-    xD := RPT[ooD, x];
-    yD := RPT[ooD, z];
-    xE := RPT[ooE, x];
-    yE := RPT[ooE, z];
-    xF := RPT[ooF, x];
-    yF := RPT[ooF, z];
+    xA := RPT[ooA].X;
+    yA := RPT[ooA].Z;
+    xB := RPT[ooB].X;
+    yB := RPT[ooB].Z;
+    xC := RPT[ooC].X;
+    yC := RPT[ooC].Z;
+    xD := RPT[ooD].X;
+    yD := RPT[ooD].Z;
+    xE := RPT[ooE].X;
+    yE := RPT[ooE].Z;
+    xF := RPT[ooF].X;
+    yF := RPT[ooF].Z;
 
-    xP0 := RPT[ooP0, x];
-    yP0 := RPT[ooP0, z];
-    xP := RPT[ooP, x];
-    yP := RPT[ooP, z];
-    xM := RPT[ooM, x];
-    yM := RPT[ooM, z];
-    xN := AchseNT[x];
-    yN := AchseNT[z];
+    xP0 := RPT[ooP0].X;
+    yP0 := RPT[ooP0].Z;
+    xP := RPT[ooP].X;
+    yP := RPT[ooP].Z;
+    xM := RPT[ooM].X;
+    yM := RPT[ooM].Z;
+    xN := AchseNT.X;
+    yN := AchseNT.Z;
 
-    xX := AchseXT[x];
-    yX := AchseXT[z];
-    xY := AchseYT[x];
-    yY := AchseYT[z];
-    xZ := AchseZT[x];
-    yZ := AchseZT[z];
+    xX := AchseXT.X;
+    yX := AchseXT.Z;
+    xY := AchseYT.X;
+    yY := AchseYT.Z;
+    xZ := AchseZT.X;
+    yZ := AchseZT.Z;
   end;
 
   { MastKurve }
   for j := 0 to BogenMax do
   begin
-    Zug3D.ZugMastKurve[j].x := MKT[j, x];
-    Zug3D.ZugMastKurve[j].y := -MKT[j, z];
+    Zug3D.ZugMastKurve[j].x := MKT[j].X;
+    Zug3D.ZugMastKurve[j].y := -MKT[j].Z;
   end;
 
   { Koppelkurve }
@@ -254,8 +253,8 @@ begin
   begin
     for j := 0 to 100 do
     begin
-      Zug3D.ZugKoppelKurve[j].X := KKT[j, x];
-      Zug3D.ZugKoppelKurve[j].Y := -KKT[j, z];
+      Zug3D.ZugKoppelKurve[j].X := KKT[j].X;
+      Zug3D.ZugKoppelKurve[j].Y := -KKT[j].Z;
     end;
   end;
 end;
@@ -331,7 +330,7 @@ begin
     begin
       DI.StrokeColor := claYellow;
       DI.StrokeWidth := 1;
-      DL.Ellipse('Fixpunkt', deFixPunkt, FixPunkt, FixPunkt, PointF(0, 0), TransKreisRadius);
+      DL.Ellipse('Fixpunkt', deFixPunkt, FixPunkt, FixPunkt, PointF(0, 0), TKR);
     end;
 
     { Rumpf }

@@ -107,17 +107,18 @@ begin
     faViewpoint3: result := 'vp3';
 
     faShowMemo: result := 'FM';
-    faShowActi: result := 'FA';
-    faShowOpti: result := 'FO';
-    faShowConf: result := 'FC';
+    faShowActions: result := 'FA';
+    faShowOptions: result := 'FO';
+    faShowDrawings: result := 'FD';
+    faShowConfig: result := 'FC';
     faShowTrimmTab: result := 'TT';
-
-    faShowForce: result := 'FF';
     faShowKreis: result := 'FK';
     faShowInfo: result := 'FI';
     faShowSplash: result := 'FS';
-    faShowDetail: result := 'FD';
-    faShowTabelle: result := 'FT';
+
+    faShowForce: result := 'sF';
+    faShowDetail: result := 'sD';
+    faShowTabelle: result := 'sT';
     faShowSaling: result := 'sS';
     faShowController: result := 'sC';
 

@@ -21,6 +21,7 @@ interface
 uses
   System.Types,
   System.Math,
+  System.Math.Vectors,
   RggTypes,
   RggCalc;
 
@@ -41,22 +42,22 @@ type
 
   TSchnittKK = class
   private
-    R1: double;
-    R2: double;
-    FM1: TRealPoint;
-    FM2: TRealPoint;
-    S1: TRealPoint;
-    S2: TRealPoint;
+    R1: single;
+    R2: single;
+    FM1: TPoint3D;
+    FM2: TPoint3D;
+    S1: TPoint3D;
+    S2: TPoint3D;
     Ebene: TSchnittEbene;
     Bem: TBemerkungKK;
     NeedCalc: Boolean;
     sv: Boolean;
-    procedure SetRadius1(Value: double);
-    procedure SetRadius2(Value: double);
-    procedure SetMittelPunkt1(Value: TRealPoint);
-    procedure SetMittelPunkt2(Value: TRealPoint);
-    function GetSchnittPunkt1: TRealPoint;
-    function GetSchnittPunkt2: TRealPoint;
+    procedure SetRadius1(Value: single);
+    procedure SetRadius2(Value: single);
+    procedure SetMittelPunkt1(Value: TPoint3D);
+    procedure SetMittelPunkt2(Value: TPoint3D);
+    function GetSchnittPunkt1: TPoint3D;
+    function GetSchnittPunkt2: TPoint3D;
     function GetBem: TBemerkungKK;
     function GetBemerkung: string;
     function Vorhanden: Boolean;
@@ -67,14 +68,14 @@ type
   protected
     procedure Schnitt; virtual;
   public
-    property Radius1: double read R1 write SetRadius1;
-    property Radius2: double read R2 write SetRadius2;
+    property Radius1: single read R1 write SetRadius1;
+    property Radius2: single read R2 write SetRadius2;
     property M1: TPointF write SetM1;
     property M2: TPointF write SetM2;
-    property MittelPunkt1: TRealPoint read FM1 write SetMittelPunkt1;
-    property MittelPunkt2: TRealPoint read FM2 write SetMittelPunkt2;
-    property SchnittPunkt1: TRealPoint read GetSchnittPunkt1;
-    property SchnittPunkt2: TRealPoint read GetSchnittPunkt2;
+    property MittelPunkt1: TPoint3D read FM1 write SetMittelPunkt1;
+    property MittelPunkt2: TPoint3D read FM2 write SetMittelPunkt2;
+    property SchnittPunkt1: TPoint3D read GetSchnittPunkt1;
+    property SchnittPunkt2: TPoint3D read GetSchnittPunkt2;
     property Status: TBemerkungKK read GetBem;
     property Bemerkung: string read GetBemerkung;
     property SPVorhanden: Boolean read Vorhanden;
@@ -90,22 +91,22 @@ type
 
   TSplitF = class
   public
-    l1, l2, h: double;
-    F, F1, F2: double;
-    alpha: double;
+    l1, l2, h: single;
+    F, F1, F2: single;
+    alpha: single;
     procedure SplitCalc;
   end;
 
   TTetraF = class
   public
-    d1, d2, d3, d4: TRealPoint;
-    l1, l2, l3, l4: double;
-    F1, F2, F3, F4: double;
-    FR: TRealPoint;
-    SkalarProdukt: double;
-    Toleranz: double;
-    KnotenLast: TRealPoint;
-    ProbeErgebnis: double;
+    d1, d2, d3, d4: TPoint3D;
+    l1, l2, l3, l4: single;
+    F1, F2, F3, F4: single;
+    FR: TPoint3D;
+    SkalarProdukt: single;
+    Toleranz: single;
+    KnotenLast: TPoint3D;
+    ProbeErgebnis: single;
     constructor Create;
     procedure VierteKraft;
     function SkalarProduktPositiv: Boolean;
@@ -116,7 +117,7 @@ implementation
 
 { TSchnittKK }
 
-procedure TSchnittKK.SetRadius1(Value: double);
+procedure TSchnittKK.SetRadius1(Value: single);
 begin
   if Value <> R1 then
   begin
@@ -125,7 +126,7 @@ begin
   end;
 end;
 
-procedure TSchnittKK.SetRadius2(Value: double);
+procedure TSchnittKK.SetRadius2(Value: single);
 begin
   if Value <> R2 then
   begin
@@ -136,46 +137,48 @@ end;
 
 procedure TSchnittKK.SetM1(const Value: TPointF);
 begin
-  FM1[x] := Value.X;
-  FM1[y] := Value.Y;
-  FM1[z] := 0;
+  FM1.X := Value.X;
+  FM1.Y := Value.Y;
+  FM1.Z := 0;
   NeedCalc := True;
 end;
 
 procedure TSchnittKK.SetM2(const Value: TPointF);
 begin
-  FM2[x] := Value.X;
-  FM2[y] := Value.Y;
-  FM2[z] := 0;
+  FM2.X := Value.X;
+  FM2.Y := Value.Y;
+  FM2.Z := 0;
   NeedCalc := True;
 end;
 
-procedure TSchnittKK.SetMittelPunkt1(Value: TRealPoint);
+procedure TSchnittKK.SetMittelPunkt1(Value: TPoint3D);
 begin
-  if (Value[x] <> FM1[x]) or (Value[y] <> FM1[y]) or (Value[z] <> FM1[z]) then
+//  if not Value.EqualsTo(FM1) then
+  if (Value.X <> FM1.X) or (Value.Y <> FM1.Y) or (Value.Z <> FM1.Z) then
   begin
     FM1 := Value;
     NeedCalc := True;
   end;
 end;
 
-procedure TSchnittKK.SetMittelPunkt2(Value: TRealPoint);
+procedure TSchnittKK.SetMittelPunkt2(Value: TPoint3D);
 begin
-  if (Value[x] <> FM2[x]) or (Value[y] <> FM2[y]) or (Value[z] <> FM2[z]) then
+//  if not Value.EqualsTo(FM2) then
+  if (Value.X <> FM2.X) or (Value.Y <> FM2.Y) or (Value.Z <> FM2.Z) then
   begin
     FM2 := Value;
     NeedCalc := True;
   end;
 end;
 
-function TSchnittKK.GetSchnittPunkt1: TRealPoint;
+function TSchnittKK.GetSchnittPunkt1: TPoint3D;
 begin
   if NeedCalc = True then
     Schnitt;
   result := S1;
 end;
 
-function TSchnittKK.GetSchnittPunkt2: TRealPoint;
+function TSchnittKK.GetSchnittPunkt2: TPoint3D;
 begin
   if NeedCalc = True then
     Schnitt;
@@ -240,41 +243,41 @@ label
 var
   a, b, h1, h2, h3, p, q, Entfernung: Extended;
   DeltaNullx, DeltaNully: Boolean;
-  M1M2, M1S1, KreuzProd: TRealPoint;
-  M1, M2, SP: TRealPoint;
+  M1M2, M1S1, KreuzProd: TPoint3D;
+  M1, M2, SP: TPoint3D;
 begin
   NeedCalc := False;
   sv := False;
 
-  S1 := Null;
-  S2 := Null;
+  S1 := TPoint3D.Zero;
+  S2 := TPoint3D.Zero;
 
   if Ebene = seXY then
   begin
-    M1[x] := FM1[x];
-    M1[y] := FM1[y];
-    M1[z] := 0;
-    M2[x] := FM2[x];
-    M2[y] := FM2[y];
-    M2[z] := 0;
+    M1.X := FM1.X;
+    M1.Y := FM1.Y;
+    M1.Z := 0;
+    M2.X := FM2.X;
+    M2.Y := FM2.Y;
+    M2.Z := 0;
   end
   else if Ebene = seXZ then
   begin
-    M1[x] := FM1[x];
-    M1[y] := FM1[z];
-    M1[z] := 0;
-    M2[x] := FM2[x];
-    M2[y] := FM2[z];
-    M2[z] := 0;
+    M1.X := FM1.X;
+    M1.Y := FM1.Z;
+    M1.Z := 0;
+    M2.X := FM2.X;
+    M2.Y := FM2.Z;
+    M2.Z := 0;
   end
   else if Ebene = seYZ then
   begin
-    M1[x] := FM1[y];
-    M1[y] := FM1[z];
-    M1[z] := 0;
-    M2[x] := FM2[y];
-    M2[y] := FM2[z];
-    M2[z] := 0;
+    M1.X := FM1.Y;
+    M1.Y := FM1.Z;
+    M1.Z := 0;
+    M2.X := FM2.Y;
+    M2.Y := FM2.Z;
+    M2.Z := 0;
   end;
 
   { Radien sollen größer Null sein }
@@ -284,8 +287,8 @@ begin
     Exit;
   end;
 
-  DeltaNullx := M2[x] - M1[x] = 0;
-  DeltaNully := M2[y] - M1[y] = 0;
+  DeltaNullx := M2.X - M1.X = 0;
+  DeltaNully := M2.Y - M1.Y = 0;
   { Spezialfall konzentrische Kreise }
   if DeltaNullx and DeltaNully then
   begin
@@ -293,53 +296,53 @@ begin
     Exit;
   end;
 
-  h1 := (R1 * R1 - R2 * R2) + (M2[x] * M2[x] - M1[x] * M1[x]) + (M2[y] * M2[y] - M1[y] * M1[y]);
+  h1 := (R1 * R1 - R2 * R2) + (M2.X * M2.X - M1.X * M1.X) + (M2.Y * M2.Y - M1.Y * M1.Y);
   { Spezialfall Mittelpunkte auf gleicher Höhe }
   if DeltaNully then { Rechnung vermeidet Division durch Null }
   begin
-    S1[x] := h1 / (2 * (M2[x] - M1[x]));
-    S2[x] := S1[x];
-    h3 := R1 * R1 - sqr(S1[x] - M1[x]);
+    S1.X := h1 / (2 * (M2.X - M1.X));
+    S2.X := S1.X;
+    h3 := R1 * R1 - sqr(S1.X - M1.X);
     if h3 < 0 then { kein Schnittpunkt }
     begin
-      S1 := Null;
-      S2 := Null;
+      S1 := TPoint3D.Zero;
+      S2 := TPoint3D.Zero;
       goto M;
     end;
     if h3 = 0 then { ein Schnittpunkt bzw. zwei identische }
     begin
-      S1[y] := M1[y];
-      S2[y] := S1[y];
+      S1.Y := M1.Y;
+      S2.Y := S1.Y;
       sv := True;
       goto M;
     end;
     if h3 > 0 then { zwei verschiedene Schnittpunkte }
     begin
-      S1[y] := M1[y] + sqrt(h3);
-      S2[y] := M1[y] - sqrt(h3);
+      S1.Y := M1.Y + sqrt(h3);
+      S2.Y := M1.Y - sqrt(h3);
       sv := True;
       goto M;
     end;
   end; { if DeltaNully }
 
   { Rechnung im Normalfall }
-  a := (-1) * (M2[x] - M1[x]) / (M2[y] - M1[y]);
-  b := h1 / (2 * (M2[y] - M1[y]));
-  p := 2 * (a * b - M1[x] - a * M1[y]) / (1 + a * a);
-  q := (M1[x] * M1[x] + b * b - 2 * b * M1[y] + M1[y] * M1[y] - R1 * R1) / (1 + a * a);
+  a := (-1) * (M2.X - M1.X) / (M2.Y - M1.Y);
+  b := h1 / (2 * (M2.Y - M1.Y));
+  p := 2 * (a * b - M1.X - a * M1.Y) / (1 + a * a);
+  q := (M1.X * M1.X + b * b - 2 * b * M1.Y + M1.Y * M1.Y - R1 * R1) / (1 + a * a);
   h2 := p * p / 4 - q;
   if h2 >= 0 then
   begin
     h2 := sqrt(h2);
-    S1[x] := -p / 2 + h2;
-    S2[x] := -p / 2 - h2;
-    S1[y] := a * S1[x] + b;
-    S2[y] := a * S2[x] + b;
+    S1.X := -p / 2 + h2;
+    S2.X := -p / 2 - h2;
+    S1.Y := a * S1.X + b;
+    S2.Y := a * S2.X + b;
     sv := True;
   end;
 
 M:
-  Entfernung := Abstand(M1, M2);
+  Entfernung := (M2 - M1).Length;
 
   if sv = False then
   begin
@@ -366,10 +369,10 @@ M:
   { den "richtigen" SchnittPunkt ermitteln }
   if Bem = bmZwei then
   begin
-    M1M2 := vsub(M2, M1);
-    M1S1 := vsub(S1, M1);
-    KreuzProd := vprod(M1M2, M1S1);
-    if KreuzProd[z] < 0 then
+    M1M2 := M2 - M1;
+    M1S1 := S1 - M1;
+    KreuzProd := M1M2.CrossProduct(M1S1);
+    if KreuzProd.Z < 0 then
     begin
       SP := S2;
       S2 := S1;
@@ -379,19 +382,19 @@ M:
 
   if Ebene = seXZ then
   begin
-    S1[z] := S1[y];
-    S1[y] := 0;
-    S2[z] := S2[y];
-    S2[y] := 0;
+    S1.Z := S1.Y;
+    S1.Y := 0;
+    S2.Z := S2.Y;
+    S2.Y := 0;
   end
   else if Ebene = seYZ then
   begin
-    S1[x] := S1[y];
-    S1[y] := S1[z];
-    S1[z] := 0;
-    S2[x] := S2[y];
-    S2[y] := S2[z];
-    S2[z] := 0;
+    S1.X := S1.Y;
+    S1.Y := S1.Z;
+    S1.Z := 0;
+    S2.X := S2.Y;
+    S2.Y := S2.Z;
+    S2.Z := 0;
   end;
 
 end;
@@ -412,36 +415,36 @@ constructor TTetraF.Create;
 begin
   inherited Create;
   Toleranz := 2;
-  KnotenLast := Null;
+  KnotenLast := TPoint3D.Zero;
 end;
 
 procedure TTetraF.VierteKraft;
 begin
-  d1[x] := d1[x] / l1;
-  d2[x] := d2[x] / l2;
-  d3[x] := d3[x] / l3;
+  d1.X := d1.X / l1;
+  d2.X := d2.X / l2;
+  d3.X := d3.X / l3;
 
-  d1[y] := d1[y] / l1;
-  d2[y] := d2[y] / l2;
-  d3[y] := d3[y] / l3;
+  d1.Y := d1.Y / l1;
+  d2.Y := d2.Y / l2;
+  d3.Y := d3.Y / l3;
 
-  d1[z] := d1[z] / l1;
-  d2[z] := d2[z] / l2;
-  d3[z] := d3[z] / l3;
+  d1.Z := d1.Z / l1;
+  d2.Z := d2.Z / l2;
+  d3.Z := d3.Z / l3;
 
-  FR[x] := F1 * d1[x] + F2 * d2[x] + F3 * d3[x];
-  FR[y] := F1 * d1[y] + F2 * d2[y] + F3 * d3[y];
-  FR[z] := F1 * d1[z] + F2 * d2[z] + F3 * d3[z];
+  FR.X := F1 * d1.X + F2 * d2.X + F3 * d3.X;
+  FR.Y := F1 * d1.Y + F2 * d2.Y + F3 * d3.Y;
+  FR.Z := F1 * d1.Z + F2 * d2.Z + F3 * d3.Z;
 
-  F4 := Abstand(FR, Null);
-  if FR[y] < 0 then
+  F4 := FR.Length;
+  if FR.Y < 0 then
     F4 := -F4;
 end;
 
 function TTetraF.SkalarProduktPositiv: Boolean;
 begin
   result := False;
-  SkalarProdukt := FR[x] * d4[x] + FR[y] * d4[y] + FR[z] * d4[z];
+  SkalarProdukt := FR.X * d4.X + FR.Y * d4.Y + FR.Z * d4.Z;
   if SkalarProdukt >= 0 then
     result := True;
 end;
@@ -450,27 +453,27 @@ function TTetraF.Probe: Boolean;
 begin
   result := True;
 
-  d1[x] := d1[x] / l1;
-  d2[x] := d2[x] / l2;
-  d3[x] := d3[x] / l3;
-  d4[x] := d4[x] / l4;
+  d1.X := d1.X / l1;
+  d2.X := d2.X / l2;
+  d3.X := d3.X / l3;
+  d4.X := d4.X / l4;
 
-  d1[y] := d1[y] / l1;
-  d2[y] := d2[y] / l2;
-  d3[y] := d3[y] / l3;
-  d4[y] := d4[y] / l4;
+  d1.Y := d1.Y / l1;
+  d2.Y := d2.Y / l2;
+  d3.Y := d3.Y / l3;
+  d4.Y := d4.Y / l4;
 
-  d1[z] := d1[z] / l1;
-  d2[z] := d2[z] / l2;
-  d3[z] := d3[z] / l3;
-  d4[z] := d4[z] / l4;
+  d1.Z := d1.Z / l1;
+  d2.Z := d2.Z / l2;
+  d3.Z := d3.Z / l3;
+  d4.Z := d4.Z / l4;
 
-  FR[x] := F1 * d1[x] + F2 * d2[x] + F3 * d3[x] + F4 * d4[x];
-  FR[y] := F1 * d1[y] + F2 * d2[y] + F3 * d3[y] + F4 * d4[y];
-  FR[z] := F1 * d1[z] + F2 * d2[z] + F3 * d3[z] + F4 * d4[z];
+  FR.X := F1 * d1.X + F2 * d2.X + F3 * d3.X + F4 * d4.X;
+  FR.Y := F1 * d1.Y + F2 * d2.Y + F3 * d3.Y + F4 * d4.Y;
+  FR.Z := F1 * d1.Z + F2 * d2.Z + F3 * d3.Z + F4 * d4.Z;
 
-  FR := vadd(FR, KnotenLast);
-  ProbeErgebnis := Abstand(FR, Null);
+  FR := FR + KnotenLast;
+  ProbeErgebnis := FR.Length;
   if ProbeErgebnis > Toleranz then
     result := False;
 end;
@@ -484,18 +487,18 @@ var
 begin
   if RectangleMode then
   begin
-    S1 := Null; //vcopy(S1, Null);
-    S2 := Null; //vcopy(S2, Null);
+    S1 := TPoint3D.Zero;
+    S2 := TPoint3D.Zero;
     try
-      t1.Left := Round(FM1[x] - R1);
-      t1.Right := Round(FM1[x] + R1);
-      t1.Top := Round(FM1[y] - R1);
-      t1.Bottom := Round(FM1[y] + R1);
+      t1.Left := Round(FM1.X - R1);
+      t1.Right := Round(FM1.X + R1);
+      t1.Top := Round(FM1.Y - R1);
+      t1.Bottom := Round(FM1.Y + R1);
 
-      t2.Left := Round(FM2[x] - R2);
-      t2.Right := Round(FM2[x] + R2);
-      t2.Top := Round(FM2[y] - R2);
-      t2.Bottom := Round(FM2[y] + R2);
+      t2.Left := Round(FM2.X - R2);
+      t2.Right := Round(FM2.X + R2);
+      t2.Top := Round(FM2.Y - R2);
+      t2.Bottom := Round(FM2.Y + R2);
 
       { fpc compiler warned that t does not seem to be initialized }
       t.Left := 0;
@@ -506,10 +509,10 @@ begin
       ret := IntersectRect(t, t1, t2);
       if ret then
       begin
-        S1[x] := t.Left;
-        S1[y] := t.Top;
-        S2[x] := t.Right;
-        S2[y] := t.Bottom;
+        S1.X := t.Left;
+        S1.Y := t.Top;
+        S2.X := t.Right;
+        S2.Y := t.Bottom;
       end;
     except
     end;

@@ -18,6 +18,10 @@
 
 interface
 
+{$ifdef fpc}
+{$mode delphi}
+{$endif}
+
 type
   TFederAction = Integer;
 
@@ -44,10 +48,10 @@ faActionPage5 = 10;
 faActionPage6 = 11;
 
 { Forms }
-faShowActi = 12;
+faShowActions = 12;
 faShowMemo = 13;
-faShowOpti = 14;
-faShowConf = 15;
+faShowOptions = 14;
+faShowConfig = 15;
 faShowForce = 16;
 faShowKreis = 17;
 faShowInfo = 18;
@@ -362,7 +366,9 @@ faMemeFormat7 = 274;
 faMemeFormat8 = 275;
 faMemeFormat9 = 276;
 
-faMax = 277;
+faShowDrawings = 277;
+
+faMax = 278;
 
 ParamsRange = [
 //  faParamT1 .. faParamT2,

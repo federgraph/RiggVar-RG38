@@ -64,7 +64,7 @@ type
 
     l3: Integer;
     w3: Integer;
-    h3: double;
+    h3: single;
 
     { computed value cache - initialized later, when loaded }
     F0C: Integer;

@@ -87,7 +87,7 @@ type
     class function IncludeTrailingSlash(const s: string): string; static;
     class function StrToBoolDef(const Value: string; DefaultValue: Boolean): Boolean; static;
     class function StripFirstWord(var s: string): string; static;
-    class function Round(Value: Extended; Decimals: Integer): double; static;
+    class function Round(Value: Extended; Decimals: Integer): single; static;
     class function IsEssentiallyZero(const Value: Single): Boolean; static;
   end;
 
@@ -205,7 +205,7 @@ begin
   Result := S1;
 end;
 
-class function TUtils.Round(Value: Extended; Decimals: Integer): double;
+class function TUtils.Round(Value: Extended; Decimals: Integer): single;
 var
   p: Extended;
 begin
