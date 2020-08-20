@@ -1,5 +1,25 @@
 ﻿unit RiggVar.FZ.Z05_TestRigg;
 
+(*
+-
+-     F
+-    * * *
+-   *   *   G
+-  *     * *   *
+- E - - - H - - - I
+-  *     * *         *
+-   *   *   *           *
+-    * *     *             *
+-     D-------A---------------B
+-              *
+-              (C) federgraph.de
+-
+*)
+
+{$ifdef FPC}
+  {$mode Delphi}
+{$endif}
+
 interface
 
 uses

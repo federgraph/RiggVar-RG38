@@ -101,7 +101,7 @@ var
   L: TRggLine;
 begin
   inherited;
-  Name := '06-Hight';
+  Name := '06-Height';
 
   { Points }
 

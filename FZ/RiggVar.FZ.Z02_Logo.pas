@@ -1,5 +1,25 @@
 ﻿unit RiggVar.FZ.Z02_Logo;
 
+(*
+-
+-     F
+-    * * *
+-   *   *   G
+-  *     * *   *
+- E - - - H - - - I
+-  *     * *         *
+-   *   *   *           *
+-    * *     *             *
+-     D-------A---------------B
+-              *
+-              (C) federgraph.de
+-
+*)
+
+{$ifdef FPC}
+  {$mode Delphi}
+{$endif}
+
 interface
 
 uses

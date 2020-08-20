@@ -1,4 +1,4 @@
-unit RiggVar.FZ.Z13_SchnittKK;
+﻿unit RiggVar.FZ.Z13_SchnittKK;
 
 interface
 
@@ -80,9 +80,11 @@ begin
 
   S1 := TRggCircle.Create('S1');
   S1.StrokeColor := claYellow;
+  S1.IsComputed := True;
 
   S2 := TRggCircle.Create('S2');
   S2.StrokeColor := claLime;
+  S2.IsComputed := True;
 
   InitDefaultPos;
 

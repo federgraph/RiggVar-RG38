@@ -6,7 +6,6 @@ uses
   System.SysUtils,
   System.Classes,
   System.UIConsts,
-  System.Generics.Collections,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 

@@ -149,7 +149,6 @@ begin
   L.Point1 := A0;
   L.Point2 := A;
   Add(L);
-  A0A := L;
 
   B0B := TRggLine.Create;
   L := B0B;
