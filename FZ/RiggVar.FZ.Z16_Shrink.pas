@@ -4,7 +4,6 @@ interface
 
 uses
   System.SysUtils,
-  System.Classes,
   System.UIConsts,
   System.Types,
   System.Math,

@@ -4,11 +4,8 @@ interface
 
 uses
   System.SysUtils,
-  System.Classes,
   System.UIConsts,
-  System.Generics.Collections,
   System.UITypes,
-  FMX.Graphics,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -161,6 +158,8 @@ begin
   FixPoint := A.Center.C;
   WantRotation := False;
   WantSort := False;
+
+  DefaultElement := C;
 end;
 
 end.

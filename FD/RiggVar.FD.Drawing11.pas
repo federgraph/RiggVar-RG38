@@ -54,7 +54,7 @@ var
   L: TRggLine;
 begin
   inherited;
-  Name := '11-TotalyAbove';
+  Name := '11-Above';
 
   { Points }
 

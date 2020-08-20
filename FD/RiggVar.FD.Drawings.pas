@@ -51,7 +51,7 @@ type
     function GetElement(Index: Integer): TRggElement;
     procedure SetName(const Value: string);
     procedure SortedDraw(g: TCanvas);
-    procedure UnSortedDraw(g: TCanvas);
+    procedure UnsortedDraw(g: TCanvas);
     function GetIsValid: Boolean;
     function GetDefaultElementIndex: Integer;
   protected
@@ -194,7 +194,7 @@ begin
     UnsortedDraw(g);
 end;
 
-procedure TRggDrawing.UnSortedDraw(g: TCanvas);
+procedure TRggDrawing.UnsortedDraw(g: TCanvas);
 var
   e: TRggElement;
 begin

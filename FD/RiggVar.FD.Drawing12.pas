@@ -1,4 +1,4 @@
-﻿unit RiggVar.FD.Drawing01;
+unit RiggVar.FD.Drawing12;
 
 interface
 
@@ -8,7 +8,7 @@ uses
   RiggVar.FD.Drawings;
 
 type
-  TRggDrawing01 = class(TRggDrawing)
+  TRggDrawing12 = class(TRggDrawing)
   public
     A0: TRggCircle;
     B0: TRggCircle;
@@ -22,7 +22,7 @@ implementation
 
 { TRggDrawing01 }
 
-procedure TRggDrawing01.InitDefaultPos;
+procedure TRggDrawing12.InitDefaultPos;
 begin
   A0.Center.X := 100;
   A0.Center.Y := 400;
@@ -41,12 +41,12 @@ begin
   B.Center.Z := 0;
 end;
 
-constructor TRggDrawing01.Create;
+constructor TRggDrawing12.Create;
 var
   L: TRggLine;
 begin
   inherited;
-  Name := '01-Quad';
+  Name := '12-Playground';
   WantSort := False;
 
   A0 := TRggCircle.Create('A0');
@@ -91,6 +91,8 @@ begin
   Add(B0);
   Add(A);
   Add(B);
+
+  DefaultElement := A;
 end;
 
 end.

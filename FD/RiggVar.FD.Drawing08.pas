@@ -44,7 +44,7 @@ var
   W: TRggArc;
 begin
   inherited;
-  Name := '08-ArcTest';
+  Name := '08-Arc';
 
   A := TRggCircle.Create;
   A.Caption := 'A';

@@ -1,4 +1,4 @@
-﻿unit RiggVar.FZ.Z13_SchnittKK;
+unit RiggVar.FZ.Z13_SchnittKK;
 
 interface
 
@@ -6,10 +6,8 @@ uses
   System.SysUtils,
   System.Classes,
   System.UIConsts,
-  System.Generics.Collections,
   System.UITypes,
   RggSchnittKK,
-  FMX.Graphics,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -30,6 +28,9 @@ type
   end;
 
 implementation
+
+uses
+  Math;
 
 { TRggDrawing13 }
 
@@ -79,11 +80,9 @@ begin
 
   S1 := TRggCircle.Create('S1');
   S1.StrokeColor := claYellow;
-  S1.IsComputed := True;
 
   S2 := TRggCircle.Create('S2');
   S2.StrokeColor := claLime;
-  S2.IsComputed := True;
 
   InitDefaultPos;
 

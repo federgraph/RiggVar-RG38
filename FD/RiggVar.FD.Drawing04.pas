@@ -50,7 +50,7 @@ var
   L: TRggLine;
 begin
   inherited;
-  Name := '04-Tetraeder';
+  Name := '04-Tetrahedron';
 
   { Points }
 

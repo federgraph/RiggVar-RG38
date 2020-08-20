@@ -3,8 +3,6 @@ unit RiggVar.FZ.Z15_SchnittGG;
 interface
 
 uses
-  System.SysUtils,
-  System.Classes,
   System.UIConsts,
   System.Math.Vectors,
   RggCalc,

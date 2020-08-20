@@ -28,7 +28,7 @@ uses
   System.Math.Vectors,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings,
-  RiggVar.FD.Drawing05,
+  RiggVar.FD.Drawing00,
   FMX.Types,
   FMX.Controls,
   FMX.Forms,
@@ -140,7 +140,7 @@ type
     procedure StackH(c: TControl);
     procedure StackV(c: TControl);
   public
-    RggDrawing05: TRggDrawing05;
+    RggDrawing00: TRggDrawing00;
     DrawCounter: Integer;
     ClickCounter: Integer;
     procedure CreateDrawings;
@@ -161,33 +161,7 @@ implementation
 {$R *.fmx}
 
 uses
-//  RiggVar.FD.Drawing01,
-//  RiggVar.FD.Drawing02,
-//  RiggVar.FD.Drawing03,
-//  RiggVar.FD.Drawing04,
-//  RiggVar.FD.Drawing05, // see uses clause in interface section
-//  RiggVar.FD.Drawing06,
-//  RiggVar.FD.Drawing07,
-//  RiggVar.FD.Drawing08,
-//  RiggVar.FD.Drawing09,
-//  RiggVar.FD.Drawing10,
-//  RiggVar.FD.Drawing11,
-  RiggVar.FZ.Z01_Viereck,
-  RiggVar.FZ.Z02_Logo,
-  RiggVar.FZ.Z03_Viergelenk,
-  RiggVar.FZ.Z04_Tetraeder,
-  { RiggVar.FZ.Z05_Rigg, }
-  RiggVar.FZ.Z06_Hoehe,
-  RiggVar.FZ.Z07_Triangle,
-  RiggVar.FZ.Z08_Arc,
-  RiggVar.FZ.Z09_Axis,
-  RiggVar.FZ.Z10_Lager,
-  RiggVar.FZ.Z11_Above,
-  RiggVar.FZ.Z12_Atan2,
-  RiggVar.FZ.Z13_SchnittKK,
-  RiggVar.FZ.Z14_SplitF,
-  RiggVar.FZ.Z15_SchnittGG,
-  RiggVar.FZ.Z16_Shrink;
+  RiggVar.FD.Registry;
 
 procedure TFormDrawing.FormShow(Sender: TObject);
 begin
@@ -203,30 +177,10 @@ end;
 
 procedure TFormDrawing.CreateDrawings;
 begin
-  RggDrawing05 := TRggDrawing05.Create;
-
+  RggDrawing00 := TRggDrawing00.Create;
   DL := TRggDrawings.Create;
-
-  DL.Add(TRggDrawing01.Create); // Viereck
-  DL.Add(TRggDrawing02.Create); // Logo
-  DL.Add(TRggDrawing03.Create); // Viergelenk
-  DL.Add(TRggDrawing04.Create); // Tetraeder
-  DL.Add(RggDrawing05); // Rigg
-  DL.Add(TRggDrawing06.Create); // Höhe
-  DL.Add(TRggDrawing07.Create); // Triangle
-  DL.Add(TRggDrawing08.Create); // Arc
-  DL.Add(TRggDrawing09.Create); // Axis
-  DL.Add(TRggDrawing10.Create); // Lager
-  DL.Add(TRggDrawing11.Create); // Above
-
-  DL.Add(TRggDrawing12.Create); // Atan2
-  DL.Add(TRggDrawing12.Create(1)); // Atan
-
-  DL.Add(TRggDrawing13.Create);  // SchnittKK
-  DL.Add(TRggDrawing14.Create);  // SplitF
-  DL.Add(TRggDrawing15.Create); // SchnitttGG
-  DL.Add(TRggDrawing16.Create); // Shrink
-
+  DL.Add(RggDrawing00);
+  TRggDrawingRegistry.Init(DL);
   InitDrawings;
 end;
 
@@ -515,7 +469,7 @@ end;
 
 procedure TFormDrawing.UpdateFromRiggBtnClick(Sender: TObject);
 begin
-  RggDrawing05.UpdateFromRigg;
+  RggDrawing00.UpdateFromRigg;
   Draw;
 end;
 

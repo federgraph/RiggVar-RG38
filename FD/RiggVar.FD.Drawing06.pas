@@ -101,7 +101,7 @@ var
   L: TRggLine;
 begin
   inherited;
-  Name := '06-Hoehe';
+  Name := '06-Hight';
 
   { Points }
 
@@ -186,6 +186,8 @@ begin
   FixPoint := A.Center.C;
   WantRotation := True;
   WantSort := True;
+
+  DefaultElement := A;
 end;
 
 end.

@@ -1,4 +1,4 @@
-﻿unit RiggVar.FD.Drawing05;
+﻿unit RiggVar.FZ.Z05_TestRigg;
 
 interface
 
@@ -81,7 +81,7 @@ var
   L: TRggLine;
 begin
   inherited;
-  Name := '05-Rigg';
+  Name := '05-Test-Rigg';
 
   DefaultShowCaption := True;
 

@@ -3,11 +3,7 @@
 interface
 
 uses
-  System.SysUtils,
-  System.Classes,
   System.UIConsts,
-  System.Generics.Collections,
-  FMX.Graphics,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -55,7 +51,7 @@ var
   L: TRggLine;
 begin
   inherited;
-  Name := '11-TotalyAbove';
+  Name := '11-Above';
 
   { Points }
 

@@ -1,4 +1,4 @@
-﻿unit RiggVar.FD.Drawing05;
+﻿unit RiggVar.FD.Drawing00;
 
 interface
 
@@ -8,8 +8,11 @@ uses
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
+{$define Rgg}
+
 type
-  TRggDrawing05 = class(TRggDrawing)
+  { This will be the Live drawing - connected to the model your real App. }
+  TRggDrawing00 = class(TRggDrawing)
   public
     A0, A: TRggCircle;
     B0, B: TRggCircle;
@@ -26,12 +29,17 @@ implementation
 
 uses
   RggTypes,
+{$ifdef Rgg}
+  RggUnit4,
+  RiggVar.App.Main,
+{$else}
   RggTestData,
+{$endif}
   RggCalc;
 
 { TRggDrawing05 }
 
-procedure TRggDrawing05.InitDefaultPos;
+procedure TRggDrawing00.InitDefaultPos;
 var
   ox, oy, g: single;
 begin
@@ -76,12 +84,12 @@ begin
   F.Center.Z := 0;
 end;
 
-constructor TRggDrawing05.Create;
+constructor TRggDrawing00.Create;
 var
   L: TRggLine;
 begin
   inherited;
-  Name := '05-Rigg';
+  Name := '00-Live-Rigg';
 
   DefaultShowCaption := True;
 
@@ -264,7 +272,7 @@ begin
   Load;
 end;
 
-procedure TRggDrawing05.Load;
+procedure TRggDrawing00.Load;
 var
   cr: TRggCircle;
 begin
@@ -317,7 +325,7 @@ begin
   end;
 end;
 
-procedure TRggDrawing05.UpdateFromRigg;
+procedure TRggDrawing00.UpdateFromRigg;
 var
 {$ifdef Rgg}
   Rigg: TRigg;

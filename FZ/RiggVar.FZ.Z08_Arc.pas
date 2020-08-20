@@ -20,7 +20,7 @@ type
 
 implementation
 
-{ TRggDrawing07 }
+{ TRggDrawing08 }
 
 procedure TRggDrawing08.InitDefaultPos;
 begin
@@ -44,7 +44,7 @@ var
   W: TRggArc;
 begin
   inherited;
-  Name := '08-ArcTest';
+  Name := '08-Arc';
 
   A := TRggCircle.Create;
   A.Caption := 'A';
