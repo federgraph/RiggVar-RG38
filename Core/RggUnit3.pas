@@ -478,25 +478,21 @@ procedure TRiggFS.Probe;
 
   function Probe(o, a, b, c, d: TRiggPoint; al, bl, cl, dl: Integer): Boolean;
   begin
-    with TetraF do
-    begin
-      d1 := rP[a] - rP[o];
-      d2 := rP[b] - rP[o];
-      d3 := rP[c] - rP[o];
-      d4 := rP[d] - rP[o];
+    TetraF.d1 := rP[a] - rP[o];
+    TetraF.d2 := rP[b] - rP[o];
+    TetraF.d3 := rP[c] - rP[o];
+    TetraF.d4 := rP[d] - rP[o];
 
-      l1 := rL[al];
-      l2 := rL[bl];
-      l3 := rL[cl];
-      l4 := rL[dl];
+    TetraF.l1 := rL[al];
+    TetraF.l2 := rL[bl];
+    TetraF.l3 := rL[cl];
+    TetraF.l4 := rL[dl];
 
-      F1 := rF[al];
-      F2 := rF[bl];
-      F3 := rF[cl];
-      F4 := rF[dl];
-
-      Result := Probe; { Aufruf von Probe in class TetraF }
-    end;
+    TetraF.F1 := rF[al];
+    TetraF.F2 := rF[bl];
+    TetraF.F3 := rF[cl];
+    TetraF.F4 := rF[dl];
+    Result := TetraF.Probe; { Aufruf von Probe in class TetraF }
   end;
 
 var
@@ -740,7 +736,7 @@ begin
       MittelPunkt1 := rPe[ooA0];
       MittelPunkt2 := rPe[ooD0];
       rPe[ooA] := SchnittPunkt1;
-      rPe[ooA].Y := rLe[11] / 2;
+      rPe[ooA].Y := -rLe[11] / 2;
       s := Bemerkung;
       s := Format(LogList_Format_String_MakeKoord, [2, s]);
       LogList.Add(s);

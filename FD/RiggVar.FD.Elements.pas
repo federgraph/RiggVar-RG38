@@ -89,6 +89,7 @@ type
     TextRadius: single;
     WantTextRect: Boolean;
     procedure TextOut(g: TCanvas; s: string);
+    procedure TextOutLeading(g: TCanvas; s: string);
   public
     Caption: string;
     ShowCaption: Boolean;
@@ -132,6 +133,7 @@ type
     procedure SetValue(const Value: single);
   public
     StartPoint: TPointF;
+    Text: string;
     constructor Create;
     procedure Save;
     procedure Reset;
@@ -255,6 +257,15 @@ type
     procedure Transform; override;
     procedure Draw(g: TCanvas); override;
     procedure Reset;
+  end;
+
+  TRggFederLine = class(TRggPolyLine)
+  private
+    LCount: Integer;
+    function RotateDegrees(ov: TPoint3D; wi: single): TPoint3D;
+  public
+    constructor Create(ACaption: string = '');
+    procedure Draw(g: TCanvas); override;
   end;
 
   TRggTriangle = class(TRggElement)
@@ -410,6 +421,31 @@ begin
     [], // [TFillTextFlag.RightToLeft],
     TTextAlign.Center,
     TTextAlign.Center);
+end;
+
+procedure TRggElement.TextOutLeading(g: TCanvas; s: string);
+var
+  R: TRectF;
+  x, y: single;
+  w, h: single;
+begin
+  w := 200;
+  h := 24;
+  x := TextCenter.X + TextRadius * cos(TextAngle);
+  y := TextCenter.Y + TextRadius * sin(TextAngle);
+  R := RectF(x, y, x + w, y + h);
+
+  { FMX }
+  if WantTextRect then
+    g.DrawRect(R, 0, 0, [], 1.0);
+  g.FillText(
+    R,
+    s,
+    false, // WordWrap
+    1.0, // Opacity
+    [], // [TFillTextFlag.RightToLeft],
+    TTextAlign.Leading,
+    TTextAlign.Leading);
 end;
 
 procedure TRggElement.Transform;
@@ -1495,7 +1531,7 @@ begin
     g.Fill.Color := claBlack;
     TextCenter := StartPoint;
     TextCenter.Offset(20, 0);
-    TextOut(g, Caption);
+    TextOutLeading(g, Text);
   end;
 end;
 
@@ -1517,6 +1553,84 @@ procedure TRggRotaLine.Param2(Delta: single);
 begin
   { swap Params, do inherited Param 1}
   inherited Param1(Delta);
+end;
+
+{ TFederLine }
+
+constructor TRggFederLine.Create(ACaption: string);
+begin
+  inherited;
+  LCount := 8;
+  SetLength(Poly, LCount);
+end;
+
+procedure TRggFederLine.Draw(g: TCanvas);
+var
+  i: Integer;
+  l: single;
+  a: single;
+  b: single;
+  vp, vq: TPointF;
+  vn, wn: TPointF;
+  v, w: TPointF;
+
+  p0, p1: TPointF;
+  vx, vy: TPoint3D;
+begin
+  vp := Point1.Center.P;
+  vq := Point2.Center.P;
+
+  v := vq - vp;
+
+  vn := v.Normalize;
+  vx := TPoint3D.Create(vn.X, vn.Y, 0);
+  vy := RotateDegrees(vx, 90);
+  wn := TPointF.Create(vy.X, vy.Y);
+
+  l := v.Length;
+  a := l / 3 / 8;
+  b := 20.0;
+
+  Poly[0] := vp;
+
+  v := vn * 8 * a;
+  p0.X := vp.X + v.X;
+  p0.Y := vp.Y + v.Y;
+  Poly[1] := p0;
+
+  v := vn * a;
+  w := wn *  b;
+  for i := 2 to LCount-3 do
+  begin
+    p0 := p0 + v;
+    if i mod 2 = 0 then
+      p1 := p0 + w
+    else
+      p1 := p0 - w;
+    Poly[i] := p1;
+  end;
+
+  p0 := p0 + v;
+  Poly[LCount-2] := p0;
+
+  Poly[LCount-1] := vq;
+
+  g.Stroke.Thickness := StrokeThickness;
+  g.Stroke.Color := StrokeColor;
+  DrawPoly(g, Poly);
+end;
+
+function TRggFederLine.RotateDegrees(ov: TPoint3D; wi: single): TPoint3D;
+var
+  a: single;
+  m: TMatrix3D;
+begin
+  a := DegToRad(DegNormalize(Abs(wi)));
+  if wi >= 0 then
+    m := TMatrix3D.CreateRotation(TPoint3D.Create(0,0,1), a)
+  else
+    m := TMatrix3D.CreateRotation(TPoint3D.Create(0,0,-1), a);
+  result := ov * m;
 end;
 
 end.

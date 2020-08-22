@@ -20,7 +20,7 @@ type
 
 implementation
 
-{ TRggDrawing07 }
+{ TRggDrawing08 }
 
 procedure TRggDrawing08.InitDefaultPos;
 begin

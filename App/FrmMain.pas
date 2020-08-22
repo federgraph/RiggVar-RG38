@@ -1861,7 +1861,7 @@ end;
 
 procedure TFormMain.KoppelBtnClick(Sender: TObject);
 begin
-  RotaForm.KoppelBtnClick(Sender);
+  Main.Koppel := not Main.Koppel;
   if Sender <> nil then
     Main.FederText.CheckState;
 end;

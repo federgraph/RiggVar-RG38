@@ -913,7 +913,7 @@ end;
 function TGetriebeFS.WantenKraftvonVorstag(WegSoll: single): single;
 { liefert Wantenspannung 3D in Abhängigkeit von der Auslenkung des Vorstags }
 begin
-  result := 0; //TrimmTab.EvalX(WegSoll);
+  result := TrimmTab.EvalX(WegSoll);
 end;
 
 function TGetriebeFS.GetVorstagNull: single;
