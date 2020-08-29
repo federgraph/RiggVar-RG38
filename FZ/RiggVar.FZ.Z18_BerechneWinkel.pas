@@ -1,4 +1,4 @@
-﻿unit RiggVar.FD.Drawing12;
+﻿unit RiggVar.FZ.Z18_BerechneWinkel;
 
 (*
 -
@@ -19,11 +19,11 @@
 interface
 
 uses
+  System.Types,
   System.SysUtils,
   System.Classes,
   System.UITypes,
   System.UIConsts,
-  System.Types,
   System.Math,
   System.Math.Vectors,
   RiggVar.FD.Chart,
@@ -33,7 +33,7 @@ uses
 type
   TAngleMode = (AngleMode1, AngleMode2, Manual);
 
-  TRggDrawingD12 = class(TRggDrawingKK)
+  TRggDrawingZ18 = class(TRggDrawingKK)
   private
     StartAngleMode: TAngleMode;
     EndAngleMode: TAngleMode;
@@ -102,9 +102,12 @@ type
     procedure ComputeStartAngle2;
     procedure ComputeEndAngle1;
     procedure ComputeEndAngle2;
+    procedure ComputeKK;
+
     procedure Btn1Click(Sender: TObject);
     procedure Btn2Click(Sender: TObject);
     procedure Btn3Click(Sender: TObject);
+
     procedure SetMsg(const Value: string);
     property Msg: string read FMsg write SetMsg;
   public
@@ -147,6 +150,9 @@ type
 
     Chart: TRggChart;
 
+    Arc: TRggBigArc;
+    KK: TRggPolyCurve;
+
     constructor Create;
     procedure InitDefaultPos; override;
     procedure Compute; override;
@@ -157,12 +163,11 @@ implementation
 
 uses
   RggTypes,
-  RggCalc,
   RggSchnittKK;
 
-{ TRggDrawingD12 }
+{ TRggDrawingZ18 }
 
-procedure TRggDrawingD12.InitDefaultPos;
+procedure TRggDrawingZ18.InitDefaultPos;
 var
   ox, oy: single;
 begin
@@ -204,12 +209,12 @@ begin
   InitLengthValues;
 end;
 
-constructor TRggDrawingD12.Create;
+constructor TRggDrawingZ18.Create;
 var
   L: TRggLine;
 begin
   inherited;
-  Name := 'D12-BerechneWinkel';
+  Name := 'Z18-BerechneWinkel';
   WantSort := False;
 
   Raster := 35;
@@ -444,6 +449,19 @@ begin
   Add(L);
   EndDC := L;
 
+  Arc := TRggBigArc.Create('ArcC0');
+  Arc.Point1 := C0;
+  Arc.Point2 := C;
+  Arc.StrokeThickness := 1;
+  Arc.StrokeColor := claPlum;
+  Add(Arc);
+
+  KK := TRggPolyCurve.Create('KK', 50);
+  KK.StrokeThickness := 3.0;
+  KK.StrokeColor := claAquamarine;
+  KK.ShowCaption := True;
+  Add(KK);
+
   Add(P0);
   Add(P);
   Add(D0);
@@ -482,7 +500,7 @@ begin
   WantMemoLines := True;
 end;
 
-procedure TRggDrawingD12.InitLengthValues;
+procedure TRggDrawingZ18.InitLengthValues;
 begin
   FrBasis := P0D0.LineLength;
   FrSalingH := PD.LineLength;
@@ -496,10 +514,11 @@ begin
   FrVorstag := VorstagDefault;
 end;
 
-procedure TRggDrawingD12.BerechneWinkel;
+procedure TRggDrawingZ18.BerechneWinkel;
 begin
   { FrVorstag gegeben, FrWinkel gesucht }
 
+  ML.Clear;
   Msg := 'ok';
   HasError := False;
 
@@ -532,7 +551,7 @@ begin
   psiDegrees := RadToDeg(psi);
 end;
 
-procedure TRggDrawingD12.UpdateGetriebe;
+procedure TRggDrawingZ18.UpdateGetriebe;
 begin
   { D }
   D.Center.X := D0.Center.X + FrMastUnten * cos(psi);
@@ -562,7 +581,7 @@ begin
     Msg := 'UpdateGetriebe - cannot compute C';
 end;
 
-procedure TRggDrawingD12.UpdateGetriebeStart;
+procedure TRggDrawingZ18.UpdateGetriebeStart;
 begin
   { StartD }
   StartD.Center.X := D0.Center.X + FrMastUnten * cos(psiStart);
@@ -592,7 +611,7 @@ begin
     Msg := 'UpdateGetriebeStart - cannot compute StartC';
 end;
 
-procedure TRggDrawingD12.UpdateGetriebeEnde;
+procedure TRggDrawingZ18.UpdateGetriebeEnde;
 begin
   { EndD }
   EndD.Center.X := D0.Center.X + FrMastUnten * cos(psiEnde);
@@ -622,7 +641,7 @@ begin
     Msg := 'UpdateGetriebeEnde - cannot compute EndC';
 end;
 
-function TRggDrawingD12.GetVorstagLaenge(psi: single): single;
+function TRggDrawingZ18.GetVorstagLaenge(psi: single): single;
 { Viergelenk P0 P D D0, Koppelpunkt C }
 var
   localD, localP, localC: TPoint3D;
@@ -655,7 +674,7 @@ begin
   result := localC.Distance(C0.Center.C);
 end;
 
-procedure TRggDrawingD12.UpdateChart;
+procedure TRggDrawingZ18.UpdateChart;
 var
   i: Integer;
   j: single;
@@ -668,7 +687,7 @@ begin
   Chart.LookForYMinMax;
 end;
 
-procedure TRggDrawingD12.Compute;
+procedure TRggDrawingZ18.Compute;
 begin
   Inc(ComputeCounter);
   ML.Clear;
@@ -693,9 +712,11 @@ begin
   UpdateGetriebe;
   UpdateGetriebeStart;
   UpdateGetriebeEnde;
+
+  ComputeKK;
 end;
 
-procedure TRggDrawingD12.ComputeStartAngle1;
+procedure TRggDrawingZ18.ComputeStartAngle1;
 var
   localC: TPoint3D;
 begin
@@ -719,7 +740,7 @@ begin
   psiStart := pi / 2 + psiStart;
 end;
 
-procedure TRggDrawingD12.ComputeStartAngle2;
+procedure TRggDrawingZ18.ComputeStartAngle2;
 var
   Test: Boolean;
   v1, v2, v: TPoint3D;
@@ -734,8 +755,8 @@ begin
     LoopCounterS := LoopCounterS + 1;
     psiStart := psiStart - DegToRad(0.5);
     UpdateGetriebeStart;
-    v1 := (D0.Center.C - StartD.Center.C).Normalize;
-    v2 := (StartD.Center.C - StartC.Center.C).Normalize;
+    v1 := (D0.Center - StartD.Center).Normalize;
+    v2 := (StartD.Center - StartC.Center).Normalize;
     v := v1.CrossProduct(v2);
     Test := abs(v.Z) < 0.01;
   until Test or (LoopCounterS = 200);
@@ -747,7 +768,7 @@ begin
   end;
 end;
 
-procedure TRggDrawingD12.ComputeEndAngle1;
+procedure TRggDrawingZ18.ComputeEndAngle1;
 var
   localC: TPoint3D;
 begin
@@ -769,7 +790,7 @@ begin
   psiEnde := pi / 2 + psiEnde;
 end;
 
-procedure TRggDrawingD12.ComputeEndAngle2;
+procedure TRggDrawingZ18.ComputeEndAngle2;
 var
   Test: Boolean;
   v1, v2, v: TPoint3D;
@@ -784,8 +805,8 @@ begin
     LoopCounterE := LoopCounterE + 1;
     psiEnde := psiEnde - DegToRad(0.5);
     UpdateGetriebeEnde;
-    v1 := (C0.Center.C - EndC.Center.C).Normalize;
-    v2 := (EndD.Center.C - EndC.Center.C).Normalize;
+    v1 := (C0.Center - EndC.Center).Normalize;
+    v2 := (EndD.Center - EndC.Center).Normalize;
     v := v1.CrossProduct(v2);
     Test := abs(v.Z) < 0.01;
   until Test or (LoopCounterE = 200);
@@ -796,7 +817,7 @@ begin
   end;
 end;
 
-procedure TRggDrawingD12.LoopForPsi;
+procedure TRggDrawingZ18.LoopForPsi;
 var
   VorstagIst: single;
   Diff: single;
@@ -830,7 +851,7 @@ begin
   end;
 end;
 
-procedure TRggDrawingD12.TestWante;
+procedure TRggDrawingZ18.TestWante;
 var
   localP0: TPoint3D;
   localD0: TPoint3D;
@@ -882,7 +903,7 @@ begin
   end;
 end;
 
-procedure TRggDrawingD12.ComputeStartAngle;
+procedure TRggDrawingZ18.ComputeStartAngle;
 begin
   case StartAngleMode of
     AngleMode1: ComputeStartAngle1;
@@ -893,7 +914,7 @@ begin
   psi := psiStart;
 end;
 
-procedure TRggDrawingD12.ComputeEndAngle;
+procedure TRggDrawingZ18.ComputeEndAngle;
 begin
   case EndAngleMode of
     AngleMode1: ComputeEndAngle1;
@@ -903,7 +924,7 @@ begin
   psiEndeDegrees := RadToDeg(psiEnde);
 end;
 
-procedure TRggDrawingD12.InitButtons(BG: TRggButtonGroup);
+procedure TRggDrawingZ18.InitButtons(BG: TRggButtonGroup);
 begin
   inherited;
   BG.Btn1.OnClick := Btn1Click;
@@ -919,34 +940,91 @@ begin
   BG.Btn3.Hint := 'AngleMode Manual';
 end;
 
-procedure TRggDrawingD12.Btn1Click(Sender: TObject);
+procedure TRggDrawingZ18.Btn1Click(Sender: TObject);
 begin
   StartAngleMode := TAngleMode.AngleMode1;
   EndAngleMode := TAngleMode.AngleMode1;
   UpdateDrawing;
 end;
 
-procedure TRggDrawingD12.Btn2Click(Sender: TObject);
+procedure TRggDrawingZ18.Btn2Click(Sender: TObject);
 begin
   StartAngleMode := TAngleMode.AngleMode2;
   EndAngleMode := TAngleMode.AngleMode2;
   UpdateDrawing;
 end;
 
-procedure TRggDrawingD12.Btn3Click(Sender: TObject);
+procedure TRggDrawingZ18.Btn3Click(Sender: TObject);
 begin
   StartAngleMode := TAngleMode.Manual;
   EndAngleMode := TAngleMode.Manual;
   UpdateDrawing;
 end;
 
-procedure TRggDrawingD12.SetMsg(const Value: string);
+procedure TRggDrawingZ18.SetMsg(const Value: string);
 begin
   FMsg := Value;
   if ML.Count < 10 then
     ML.Add(Value);
   if ML.Count > 1 then
     HasError := True;
+end;
+
+procedure TRggDrawingZ18.ComputeKK;
+var
+  psiA: single;
+  psiB: single;
+  i: Integer;
+  angle: single;
+  step: single;
+
+  localD, localP, localC: TPoint3D;
+
+  procedure  GetLocalC(psi: single);
+  { Viergelenk P0 P D D0, Koppelpunkt C }
+  begin
+    localD.X := D0.Center.X + FrMastUnten * cos(psi);
+    localD.Y := D0.Center.Y - FrMastUnten * sin(psi);
+    localD.Z := 0;
+
+    SKK.SchnittEbene := seXY;
+    SKK.Radius1 := FrWunten2D;
+    SKK.Radius2 := FrSalingH;
+    SKK.MittelPunkt1 := P0.Center.C;
+    SKK.MittelPunkt2 := localD;
+    localP := SKK.SchnittPunkt2;
+
+    if not SKK.SPVorhanden then
+    begin
+      localC := TPoint3D.Zero;
+      Exit;
+    end;
+
+    SKK.SchnittEbene := seXY;
+    SKK.Radius1 := FrMastOben;
+    SKK.Radius2 := FrWoben2D;
+    SKK.MittelPunkt1 := localD;
+    SKK.MittelPunkt2 := localP;
+    localC := SKK.SchnittPunkt1;
+
+    if not SKK.SPVorhanden then
+    begin
+      localC := TPoint3D.Zero;
+      Exit;
+    end;
+  end;
+
+begin
+  psiA := psiEnde + DegToRad(0);
+  psiB := psiStart - DegToRad(0);
+  step := (psiB - PsiA) / KK.Count;
+  for i := 0 to KK.Count-1 do
+  begin
+    angle := psiA + i * step;
+    GetLocalC(angle);
+    KK.Poly[i].X := localC.X;
+    KK.Poly[i].Y := localC.Y;
+  end;
 end;
 
 end.

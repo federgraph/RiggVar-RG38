@@ -5,9 +5,8 @@ interface
 uses
  System.Math.Vectors,
   RggCalc,
-  RggTypes,
-  RggMatrix,
-  RggPolarKar;
+  RggPolarKar,
+  RggTypes;
 
 type
   TRggGetFixPunkt = function: TRealPoint of object;
@@ -55,8 +54,6 @@ type
 
 implementation
 
-uses
-  RggVector;
 
 { TRggTransformer00 }
 

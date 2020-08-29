@@ -1,4 +1,4 @@
-unit RiggVar.FZ.Z16_Shrink;
+﻿unit RiggVar.FZ.Z16_Shrink;
 
 interface
 
@@ -12,7 +12,7 @@ uses
   RiggVar.FD.Drawings;
 
 type
-  TRggDrawing16 = class(TRggDrawingKK)
+  TRggDrawingZ16 = class(TRggDrawingKK)
   private
     ox, oy: single;
     SegmentCount: Integer;
@@ -42,9 +42,9 @@ type
 
 implementation
 
-{ TRggDrawing16 }
+{ TRggDrawingZ16 }
 
-procedure TRggDrawing16.InitDefaultPos;
+procedure TRggDrawingZ16.InitDefaultPos;
 begin
   ox := 400;
   oy := 650;
@@ -60,13 +60,13 @@ begin
   B.Save;
 end;
 
-procedure TRggDrawing16.Transform(M: TMatrix3D);
+procedure TRggDrawingZ16.Transform(M: TMatrix3D);
 begin
   inherited;
   AB.Transform;
 end;
 
-procedure TRggDrawing16.Compute;
+procedure TRggDrawingZ16.Compute;
 var
   l: single;
   d: single;
@@ -160,7 +160,7 @@ begin
   end;
 end;
 
-procedure TRggDrawing16.ComputePhi(l, s: single);
+procedure TRggDrawingZ16.ComputePhi(l, s: single);
 var
   i: Integer;
   phi: single;
@@ -184,10 +184,10 @@ begin
   end;
 end;
 
-constructor TRggDrawing16.Create;
+constructor TRggDrawingZ16.Create;
 begin
   inherited;
-  Name := '16-Shrink';
+  Name := 'Z16-Shrink';
 
   SegmentCount := 20;
   Count := SegmentCount + 1;
@@ -225,9 +225,7 @@ begin
   MT.IsComputed := True;
   Add(MT);
 
-  AB := TRggPolyLine3D.Create;
-  AB.Caption := 'AB';
-  SetLength(AB.Poly, Count);
+  AB := TRggPolyLine3D.Create('AB', Count);
   AB.StrokeThickness := 0.8;
   AB.StrokeColor := claDodgerblue;
   AB.Point1 := A;

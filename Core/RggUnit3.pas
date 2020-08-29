@@ -641,7 +641,7 @@ begin
     Exit;
   end;
   try
-    with SchnittKK do
+    with SKK do
     begin
       SchnittEbene := seXZ;
       { 1. Aufruf SchnittKK: ooP0, ooA0, ooB0 ermitteln }
@@ -670,7 +670,7 @@ begin
       Exit;
     end;
 
-    with SchnittKK do
+    with SKK do
     begin
       SchnittEbene := seXZ;
       { 2. Aufruf SchnittKK: ooC0 ermitteln }
@@ -705,7 +705,7 @@ begin
     end;
     r1 := sqrt(s1);
     r2 := sqrt(s2);
-    with SchnittKK do
+    with SKK do
     begin
       SchnittEbene := seXZ;
       { 1. Aufruf SchnittKK: Saling2d und WanteOben2d;
@@ -797,7 +797,7 @@ begin
   MakeRumpfKoord;
   rPe[ooE] := rP[ooE];
   try
-    with SchnittKK do
+    with SKK do
     begin
       SchnittEbene := seXZ;
 
@@ -1039,7 +1039,7 @@ begin
   MakeRumpfKoord;
   rPe[ooE] := rP[ooE];
   try
-    with SchnittKK do
+    with SKK do
     begin
       SchnittEbene := seXZ;
 

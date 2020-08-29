@@ -26,6 +26,7 @@ uses
   System.UIConsts,
   System.Math,
   System.Math.Vectors,
+  RiggVar.FD.TransformHelper,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings,
   RiggVar.FD.Drawing00,
@@ -49,19 +50,17 @@ uses
 {$define FMX}
 
 type
-
-  { TFormDrawing }
-
   TFormDrawing = class(TForm)
-    Memo: TMemo;
-    Image: TImage;
-    InplaceShape: TCircle;
-
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
-
+  private
+    Memo: TMemo;
+    DrawingList: TListView;
+    ElementList: TListView;
+    Image: TImage;
+    InplaceShape: TCircle;
     procedure ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
     procedure ImageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
     procedure ImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
@@ -71,7 +70,6 @@ type
     procedure InplaceShapeMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
     procedure InplaceShapeMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
     procedure InplaceShapeMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
-  private
     procedure DrawingListItemClick(const Sender: TObject; const AItem: TListViewItem);
     procedure ElementListChange(Sender: TObject);
 
@@ -80,25 +78,12 @@ type
     procedure GlobalShowCaptionBtnClick(Sender: TObject);
     procedure ToggleShowCaptionBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
-  protected
+  private
     IsRightMouseBtn: Boolean;
     MouseDown: Boolean;
     MousePos: TPointF;
-    Offset: TPointF;
-    Rotation: TPoint3D;
-    ZoomDelta: single;
-
-    NewMatrix: TMatrix3D;
-    AccuMatrix: TMatrix3D;
-
     InplaceMouseDown: Boolean;
     InplaceMousePos: TPointF;
-
-    procedure BuildMatrix(mr: TMatrix3D);
-    procedure BuildMatrixM;
-    procedure ResetTransform;
-    procedure UpdateTransform;
-    procedure InitTransform(mr: TMatrix3D);
   private
     FormShown: Boolean;
     ListboxWidth: single;
@@ -106,26 +91,34 @@ type
     CurrentDrawing: TRggDrawing;
     CurrentElement: TRggElement;
     TempList: TStringList;
-    DrawingList: TListView;
-    ElementList: TListView;
+    WantExampleDrawings: Boolean;
+    WantVerticalButtons: Boolean;
+    WantThickLines: Boolean;
     procedure InitComponentSize;
     procedure LayoutComponents;
+    procedure LayoutComponentsH;
+    procedure LayoutComponentsV;
     procedure DrawToCanvas(g: TCanvas);
     procedure CreateComponents;
     procedure InitComponentProps;
     procedure LinkComponents;
     procedure SetupMemo(MM: TMemo);
+    procedure UpdateMemo;
     procedure HandleWheel(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; var Handled: Boolean);
     procedure UpdateInplacePosition;
-    procedure Reset;
-    procedure ShowInfo;
     procedure InitDrawings;
     procedure SelectDrawing(ii: Integer);
     procedure InitElements;
     procedure SelectElement(ii: Integer);
     procedure ShowDrawingInfo;
     procedure ClearImage;
+    procedure InitSpecialButtons;
+    procedure DoOnUpdateDrawing(Sender: TObject);
+    procedure DoDrawToCanvas(Sender: TObject);
+    procedure DoShowRotation(Sender: TObject);
+    procedure ShowRotation(RotR: TPoint3D; WantClear: Boolean = True);
   protected
+    FScale: single;
     cr: TControl;
     TempR: single;
     TempB: single;
@@ -139,18 +132,46 @@ type
     procedure AnchorVertical(c: TControl);
     procedure StackH(c: TControl);
     procedure StackV(c: TControl);
-  public
-    RggDrawing00: TRggDrawing00;
+  private
+    RggDrawingD00: TRggDrawingD00;
     DrawCounter: Integer;
     ClickCounter: Integer;
     procedure CreateDrawings;
     procedure Draw;
-  public
+  private
     UpdateFromRiggBtn: TSpeedButton;
     CodeBtn: TSpeedButton;
     GlobalShowCaptionBtn: TSpeedButton;
     ToggleShowCaptionBtn: TSpeedButton;
     ResetBtn: TSpeedButton;
+
+    Btn1: TSpeedButton;
+    Btn2: TSpeedButton;
+    Btn3: TSpeedButton;
+    Btn4: TSpeedButton;
+    Btn5: TSpeedButton;
+    Btn6: TSpeedButton;
+    Btn7: TSpeedButton;
+    Btn8: TSpeedButton;
+    Btn9: TSpeedButton;
+    Btn0: TSpeedButton;
+
+    BtnA: TSpeedButton;
+    BtnB: TSpeedButton;
+    BtnC: TSpeedButton;
+    BtnD: TSpeedButton;
+    BtnE: TSpeedButton;
+    BtnF: TSpeedButton;
+
+    ButtonGroup: TRggButtonGroup;
+
+    DummyControl: TControl;
+  public
+    TH: TTransformHelper;
+    procedure SwapDrawingLists;
+    procedure SwapLayout;
+    procedure SwapThickLines;
+    procedure ShowInfo;
   end;
 
 var
@@ -161,7 +182,7 @@ implementation
 {$R *.fmx}
 
 uses
-  RiggVar.FD.Registry;
+  RiggVar.FZ.Registry;
 
 procedure TFormDrawing.FormShow(Sender: TObject);
 begin
@@ -177,9 +198,9 @@ end;
 
 procedure TFormDrawing.CreateDrawings;
 begin
-  RggDrawing00 := TRggDrawing00.Create;
+  RggDrawingD00 := TRggDrawingD00.Create;
   DL := TRggDrawings.Create;
-  DL.Add(RggDrawing00);
+  DL.Add(RggDrawingD00);
   TRggDrawingRegistry.Init(DL);
   InitDrawings;
 end;
@@ -214,6 +235,29 @@ begin
   end;
 end;
 
+procedure TFormDrawing.ShowRotation(RotR: TPoint3D; WantClear: Boolean);
+var
+  ML: TStrings;
+begin
+  ML := Memo.Lines;
+  if WantClear then
+    ML.Clear;
+  ML.Add(Format('X = %.2f', [TH.RotD.X]));
+  ML.Add(Format('Y = %.2f', [TH.RotD.Y]));
+  ML.Add(Format('Z = %.2f', [TH.RotD.Z]));
+  ML.Add('');
+end;
+
+procedure TFormDrawing.DoShowRotation(Sender: TObject);
+begin
+  ShowRotation(TH.RotR, TH.RotB);
+end;
+
+procedure TFormDrawing.DoDrawToCanvas(Sender: TObject);
+begin
+  DrawToCanvas(Image.Bitmap.Canvas);
+end;
+
 procedure TFormDrawing.FormCreate(Sender: TObject);
 begin
 {$ifdef debug}
@@ -222,6 +266,8 @@ begin
   FormatSettings.DecimalSeparator := '.';
 
   Caption := 'Rgg test and documentation drawings';
+
+  FScale := Handle.Scale;
 
   if (Screen.Width >= 1920) and (Screen.Height >= 1024) then
   begin
@@ -243,15 +289,20 @@ begin
   Margin := 10;
   Raster := 70;
 
-  ZoomDelta := 1;
-
-  ResetTransform;
+  TH := TTransformHelper.Create;
+  TH.OnDrawToCanvas := DoDrawToCanvas;
+  TH.OnShowRotation := DoShowRotation;
+  TRggDrawing.TH := TH;
 
   TempList := TStringList.Create;
 
   CreateComponents;
   InitComponentSize;
   LinkComponents;
+
+  Self.OnDestroy := FormDestroy;
+  Self.OnShow := FormShow;
+  Self.OnKeyUp := FormKeyUp;
 
   Memo.Lines.Clear;
   SetupMemo(Memo);
@@ -276,6 +327,8 @@ end;
 
 procedure TFormDrawing.FormDestroy(Sender: TObject);
 begin
+  TH.Free;
+  ButtonGroup.Free;
   DL.Free;
   Bitmap.Free;
   TempList.Free;
@@ -307,10 +360,25 @@ begin
   ElementList.ItemAppearanceObjects.FooterObjects.Text.Visible := False;
   ElementList.OnChange := ElementListChange;
 
+  Image := TImage.Create(Self);
+  Image.Parent := Self;
+  Image.OnMouseDown := ImageMouseDown;
+  Image.OnMouseMove := ImageMouseMove;
+  Image.OnMouseUp := ImageMouseUp;
+  Image.OnMouseWheel := ImageMouseWheel;
+
+  Memo := TMemo.Create(Self);
+  Memo.Parent := Self;
+
+  InplaceShape := TCircle.Create(Self);
+  InplaceShape.Parent := Self;
   InplaceShape.AutoCapture := True;
   InplaceShape.Fill.Kind := TBrushKind.None;
   InplaceShape.Width := 50;
   InplaceShape.Height := 50;
+  InplaceShape.OnMouseDown := InplaceShapeMouseDown;
+  InplaceShape.OnMouseMove := InplaceShapeMouseMove;
+  InplaceShape.OnMouseUp := InplaceShapeMouseUp;
 
   UpdateFromRiggBtn := TSpeedButton.Create(Self);
   UpdateFromRiggBtn.Parent := Self;
@@ -331,14 +399,108 @@ begin
   ResetBtn := TSpeedButton.Create(Self);
   ResetBtn.Parent := Self;
   ResetBtn.Text := 'Reset';
+
+  DummyControl := TControl.Create(Self);
+  DummyControl.Parent := Self;
+  DummyControl.Visible := False;
+  DummyControl.Width := 20;
+  DummyControl.Height := 10;
+
+  Btn1 := TSpeedButton.Create(Self);
+  Btn1.Parent := Self;
+  Btn1.Text := '-X';
+
+  Btn2 := TSpeedButton.Create(Self);
+  Btn2.Parent := Self;
+  Btn2.Text := '+X';
+
+  Btn3 := TSpeedButton.Create(Self);
+  Btn3.Parent := Self;
+  Btn3.Text := '-Y';
+
+  Btn4 := TSpeedButton.Create(Self);
+  Btn4.Parent := Self;
+  Btn4.Text := '+Y';
+
+  Btn5 := TSpeedButton.Create(Self);
+  Btn5.Parent := Self;
+  Btn5.Text := '-Z';
+
+  Btn6 := TSpeedButton.Create(Self);
+  Btn6.Parent := Self;
+  Btn6.Text := '+Z';
+
+  Btn7 := TSpeedButton.Create(Self);
+  Btn7.Parent := Self;
+  Btn7.Text := 'Btn 7';
+
+  Btn8 := TSpeedButton.Create(Self);
+  Btn8.Parent := Self;
+  Btn8.Text := 'Btn 8';
+
+  Btn9 := TSpeedButton.Create(Self);
+  Btn9.Parent := Self;
+  Btn9.Text := 'Btn 9';
+
+  Btn0 := TSpeedButton.Create(Self);
+  Btn0.Parent := Self;
+  Btn0.Text := 'Btn 0';
+
+  BtnA := TSpeedButton.Create(Self);
+  BtnA.Parent := Self;
+  BtnA.Text := 'A';
+
+  BtnB := TSpeedButton.Create(Self);
+  BtnB.Parent := Self;
+  BtnB.Text := 'B';
+
+  BtnC := TSpeedButton.Create(Self);
+  BtnC.Parent := Self;
+  BtnC.Text := 'C';
+
+  BtnD := TSpeedButton.Create(Self);
+  BtnD.Parent := Self;
+  BtnD.Text := 'D';
+
+  BtnE := TSpeedButton.Create(Self);
+  BtnE.Parent := Self;
+  BtnE.Text := 'E';
+
+  BtnF := TSpeedButton.Create(Self);
+  BtnF.Parent := Self;
+  BtnF.Text := 'F';
+
+  ButtonGroup := TRggButtonGroup.Create;
+  ButtonGroup.OnUpdateDrawing := DoOnUpdateDrawing;
+
+  ButtonGroup.Btn1 := Btn1;
+  ButtonGroup.Btn2 := Btn2;
+  ButtonGroup.Btn3 := Btn3;
+  ButtonGroup.Btn4 := Btn4;
+  ButtonGroup.Btn5 := Btn5;
+  ButtonGroup.Btn6 := Btn6;
+  ButtonGroup.Btn7 := Btn7;
+  ButtonGroup.Btn8 := Btn8;
+  ButtonGroup.Btn9 := Btn9;
+  ButtonGroup.Btn0 := Btn0;
+
+  ButtonGroup.BtnA := BtnA;
+  ButtonGroup.BtnB := BtnB;
+  ButtonGroup.BtnC := BtnC;
+  ButtonGroup.BtnD := BtnD;
+  ButtonGroup.BtnE := BtnE;
+  ButtonGroup.BtnF := BtnF;
 end;
 
 procedure TFormDrawing.FormKeyUp(Sender: TObject; var Key: Word;
   var KeyChar: Char; Shift: TShiftState);
 begin
-  if Key = VKEscape then
-  begin
-    Reset;
+  case Key of
+    vkEscape: TH.Reset;
+    vkF11: SwapLayout;
+    vkF6: SwapDrawingLists;
+    vkF3: SwapThickLines;
+    vkF1: ShowInfo;
   end;
 end;
 
@@ -385,7 +547,7 @@ begin
       begin
       CurrentElement.Param1(t * 5);
       end;
-      TRggCircle.Matrix := AccuMatrix;
+    TRggCircle.Matrix := TH.AccuMatrix;
       CurrentDrawing.Compute;
     CurrentElement.Transform;
     end;
@@ -469,27 +631,27 @@ end;
 
 procedure TFormDrawing.UpdateFromRiggBtnClick(Sender: TObject);
 begin
-  RggDrawing00.UpdateFromRigg;
+  RggDrawingD00.UpdateFromRigg;
   Draw;
 end;
 
 procedure TFormDrawing.ResetBtnClick(Sender: TObject);
 begin
   Memo.Lines.Clear;
-  Reset;
+  TH.Reset;
   ShowInfo;
 end;
 
 procedure TFormDrawing.AnchorVertical(c: TControl);
 begin
   c.Height := ClientHeight - c.Position.Y - Margin;
-  c.Anchors := c.Anchors + [TAnchorKind.akBottom];
+  c.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akBottom];
 end;
 
 procedure TFormDrawing.AnchorHorizontal(c: TControl);
 begin
   c.Width := ClientWidth - c.Position.X - Margin;
-  c.Anchors := c.Anchors + [TAnchorKind.akRight];
+  c.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akRight];
 end;
 
 procedure TFormDrawing.ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
@@ -498,7 +660,7 @@ begin
   MousePos.X := X;
   MousePos.Y := Y;
   IsRightMouseBtn := Button = TMouseButton.mbRight;
-  Rotation := TPoint3D.Zero;
+  TH.Rotation := TPoint3D.Zero;
 end;
 
 procedure TFormDrawing.ImageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
@@ -514,33 +676,33 @@ begin
   if (ssShift in Shift) or (ssMiddle in Shift) then
   begin
     if dy > 0 then
-      ZoomDelta := 1 - 0.01
+      TH.ZoomDelta := 1 - 0.01
     else
-      ZoomDelta := 1 + 0.01;
+      TH.ZoomDelta := 1 + 0.01;
   end
   else if ssCtrl in Shift then
   begin
-    Offset.X := Offset.X + dx;
-    Offset.Y := Offset.Y + dy;
+    TH.Offset.X := TH.Offset.X + dx;
+    TH.Offset.Y := TH.Offset.Y + dy;
   end
 
   else
   begin
     if IsRightMouseBtn then
     begin
-      Rotation.Z := Rotation.Z + dx * 0.005;
+      TH.Rotation.Z := TH.Rotation.Z + dx * 0.005;
     end
     else
     begin
-      Rotation.X := Rotation.X - dy * 0.005;
-      Rotation.Y := Rotation.Y + dx * 0.005;
+      TH.Rotation.X := TH.Rotation.X - dy * 0.005;
+      TH.Rotation.Y := TH.Rotation.Y + dx * 0.005;
     end;
   end;
 
   Draw;
 
-  ZoomDelta := 1;
-  Rotation := TPoint3D.Zero;
+  TH.ZoomDelta := 1;
+  TH.Rotation := TPoint3D.Zero;
   MousePos.X := X;
   MousePos.Y := Y;
 end;
@@ -570,6 +732,24 @@ begin
   GlobalShowCaptionBtn.Width := w;
   ToggleShowCaptionBtn.Width := w;
   ResetBtn.Width := w;
+
+  Btn1.Width := w;
+  Btn2.Width := w;
+  Btn3.Width := w;
+  Btn4.Width := w;
+  Btn5.Width := w;
+  Btn6.Width := w;
+  Btn7.Width := w;
+  Btn8.Width := w;
+  Btn9.Width := w;
+  Btn0.Width := w;
+
+  BtnA.Width := w;
+  BtnB.Width := w;
+  BtnC.Width := w;
+  BtnD.Width := w;
+  BtnE.Width := w;
+  BtnF.Width := w;
 
   ListboxWidth := 200;
 
@@ -618,6 +798,11 @@ end;
 
 procedure TFormDrawing.LayoutComponents;
 begin
+  LayoutComponentsH;
+end;
+
+procedure TFormDrawing.LayoutComponentsH;
+begin
   CodeBtn.Position.X := Margin;
   CodeBtn.Position.Y := Margin;
 
@@ -626,6 +811,28 @@ begin
   StackH(GlobalShowCaptionBtn);
   StackH(ToggleShowCaptionBtn);
   StackH(ResetBtn);
+
+  StackH(DummyControl);
+
+  StackH(Btn1);
+  StackH(Btn2);
+  StackH(Btn3);
+  StackH(Btn4);
+  StackH(Btn5);
+  StackH(Btn6);
+  StackH(Btn7);
+  StackH(Btn8);
+  StackH(Btn9);
+  StackH(Btn0);
+
+  StackH(DummyControl);
+
+  StackH(BtnA);
+  StackH(BtnB);
+  StackH(BtnC);
+  StackH(BtnD);
+  StackH(BtnE);
+  StackH(BtnF);
 
   cr := CodeBtn;
   StackV(Memo);
@@ -636,9 +843,56 @@ begin
   ClientWidth := Round(FMaxRight + Margin);
   ClientHeight := Round(FMaxBottom + Margin);
 
+  AnchorVertical(Memo);
   AnchorVertical(DrawingList);
   AnchorVertical(ElementList);
+end;
+
+procedure TFormDrawing.LayoutComponentsV;
+begin
+  CodeBtn.Position.X := Margin;
+  CodeBtn.Position.Y := Margin;
+
+  cr := CodeBtn;
+  StackV(UpdateFromRiggBtn);
+  StackV(GlobalShowCaptionBtn);
+  StackV(ToggleShowCaptionBtn);
+  StackV(ResetBtn);
+
+  StackV(DummyControl);
+
+  StackV(Btn1);
+  StackV(Btn2);
+  StackV(Btn3);
+  StackV(Btn4);
+  StackV(Btn5);
+  StackV(Btn6);
+  StackV(Btn7);
+  StackV(Btn8);
+  StackV(Btn9);
+  StackV(Btn0);
+
+  StackV(DummyControl);
+
+  StackV(BtnA);
+  StackV(BtnB);
+  StackV(BtnC);
+  StackV(BtnD);
+  StackV(BtnE);
+  StackV(BtnF);
+
+  cr := CodeBtn;
+  StackH(Memo);
+  StackH(DrawingList);
+  StackH(ElementList);
+  StackH(Image);
+
+  ClientWidth := Round(FMaxRight + Margin);
+  ClientHeight := Round(FMaxBottom + Margin);
+
   AnchorVertical(Memo);
+  AnchorVertical(DrawingList);
+  AnchorVertical(ElementList);
 end;
 
 procedure TFormDrawing.LinkComponents;
@@ -675,9 +929,11 @@ begin
 
   if (ii > -1) and (ii < DL.DrawingList.Count) then
   begin
-    ResetTransform;
+    TH.ResetTransform;
     CurrentDrawing := DL.DrawingList[ii];
+    TH.CurrentDrawing := CurrentDrawing;
     ShowDrawingInfo;
+    InitSpecialButtons;
     if CurrentDrawing.IsValid then
     begin
       InitElements;
@@ -739,21 +995,13 @@ begin
   if CurrentElement is TRggCircle then
   begin
     cr := CurrentElement as TRggCircle;
-    InplaceShape.Position.X := Image.Position.X + Offset.X + cr.Center.P.X - InplaceShape.Width / 2;
-    InplaceShape.Position.Y := Image.Position.Y + Offset.Y + cr.Center.P.Y - InplaceShape.Height / 2;
+    InplaceShape.Position.X := Image.Position.X + TH.Offset.X + cr.Center.P.X - InplaceShape.Width / 2;
+    InplaceShape.Position.Y := Image.Position.Y + TH.Offset.Y + cr.Center.P.Y - InplaceShape.Height / 2;
     InplaceShape.Visible := True;
     Exit;
   end;
 
   InplaceShape.Visible  := False;
-end;
-
-procedure TFormDrawing.ResetTransform;
-begin
-  TRggCircle.Matrix := TMatrix3D.Identity;
-  AccuMatrix := TMatrix3D.Identity;
-  Rotation := TPoint3D.Zero;
-  Offset := TPointF.Zero;
 end;
 
 procedure TFormDrawing.ClearImage;
@@ -773,21 +1021,13 @@ procedure TFormDrawing.Draw;
 begin
   if (Image = nil) or (Bitmap = nil) then
     Exit;
-  Inc(DrawCounter);
-
-  if CurrentDrawing.WantRotation then
-  begin
-    BuildMatrixM;
-    UpdateTransform;
-  end;
-
-  DrawToCanvas(Image.Bitmap.Canvas);
+  TH.Draw;
 end;
 
 procedure TFormDrawing.DrawToCanvas(g: TCanvas);
 begin
   { FMX }
-  g.Offset := Offset;
+  g.Offset := TH.Offset;
   if g.BeginScene then
   try
     g.Clear(claWhite);
@@ -802,50 +1042,15 @@ begin
   end;
 
   UpdateInplacePosition;
+  UpdateMemo;
 end;
 
-procedure TFormDrawing.Reset;
+procedure TFormDrawing.UpdateMemo;
 begin
-  ResetTransform;
-  CurrentDrawing.Reset;
-  Draw;
+  if CurrentDrawing.WantMemoLines then
+    Memo.Text := CurrentDrawing.ML.Text;
 end;
 
-procedure TFormDrawing.UpdateTransform;
-begin
-  AccuMatrix := AccuMatrix * NewMatrix;
-  CurrentDrawing.Transform(NewMatrix);
-end;
-
-procedure TFormDrawing.InitTransform(mr: TMatrix3D);
-begin
-  BuildMatrix(mr);
-  UpdateTransform;
-  DrawToCanvas(Image.Bitmap.Canvas);
-end;
-
-procedure TFormDrawing.BuildMatrixM;
-var
-  mx, my, mz: TMatrix3D;
-  mr: TMatrix3D;
-begin
-  mx := TMatrix3D.CreateRotationX(Rotation.X);
-  my := TMatrix3D.CreateRotationY(Rotation.Y);
-  mz := TMatrix3D.CreateRotationZ(Rotation.Z);
-  mr := mx * my * mz;
-
-  BuildMatrix(mr);
-end;
-
-procedure TFormDrawing.BuildMatrix(mr: TMatrix3D);
-var
-  mt1, mt2, ms: TMatrix3D;
-begin
-  mt1 := TMatrix3D.CreateTranslation(-CurrentDrawing.FixPoint);
-  ms := TMatrix3D.CreateScaling(TPoint3D.Create(ZoomDelta, ZoomDelta, ZoomDelta));
-  mt2 := TMatrix3D.CreateTranslation(CurrentDrawing.FixPoint);
-  NewMatrix := mt1 * mr * ms * mt2;
-end;
 
 procedure TFormDrawing.ShowInfo;
 var
@@ -857,7 +1062,7 @@ begin
   ML.Add(Format('Client = (%d, %d)', [ClientWidth, ClientHeight]));
   ML.Add(Format('Bitmap = (%d, %d)', [Bitmap.Width, Bitmap.Height]));
   ML.Add(Format('Image  = (%.1f, %.1f)', [Image.Width, Image.Height]));
-//  ML.Add(Format('Scale  = %.2f', [FScale]));
+  ML.Add(Format('Scale  = %.2f', [FScale]));
   ML.Add('');
 end;
 
@@ -873,6 +1078,82 @@ begin
     ML.Add('Invalid');
     CurrentDrawing.GetInfo(ML);
   end;
+end;
+
+procedure TFormDrawing.InitSpecialButtons;
+begin
+  if ButtonGroup = nil then
+    Exit;
+  CurrentDrawing.InitButtons(ButtonGroup);
+end;
+
+procedure TFormDrawing.DoOnUpdateDrawing(Sender: TObject);
+begin
+  CurrentDrawing.Compute;
+  Draw;
+end;
+
+procedure TFormDrawing.SwapDrawingLists;
+begin
+  CurrentDrawing := nil;
+  CurrentElement := nil;
+
+  DrawingList.Items.Clear;
+  ElementList.Items.Clear;
+
+  DL.Free;
+  DL := TRggDrawings.Create;
+
+  WantExampleDrawings := not WantExampleDrawings;
+  if WantExampleDrawings then
+    TRggDrawingRegistry.InitFD(DL)
+  else
+    TRggDrawingRegistry.InitFZ(DL);
+
+  InitDrawings;
+  SelectDrawing(0);
+end;
+
+procedure TFormDrawing.SwapLayout;
+begin
+  DrawingList.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop];
+  ElementList.Anchors  := [TAnchorKind.akLeft, TAnchorKind.akTop];
+  Memo.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop];
+
+  DrawingList.Height := 200;
+  ElementList.Height := 200;
+  Memo.Height := 200;
+
+  FMaxRight := 0;
+  FMaxBottom := 0;
+
+  WantVerticalButtons := not WantVerticalButtons;
+  if WantVerticalButtons then
+    LayoutComponentsV
+  else
+    LayoutComponentsH;
+end;
+
+procedure TFormDrawing.SwapThickLines;
+var
+  e: TRggLine;
+  st: single;
+begin
+  WantThickLines := not WantThickLines;
+
+  if WantThickLines then
+    st := 6.0
+  else
+    st := 3.0;
+
+  for e in CurrentDrawing.LineList do
+  begin
+    e.StrokeThickness := st;
+  end;
+
+  TH.Rotation := TPoint3D.Zero;
+
+  Draw;
 end;
 
 end.

@@ -149,7 +149,6 @@ type
   TIntRiggPoints = array [TRiggPoint] of TPoint3D; // TIntPoint;
   TRealRiggPoints = array [TRiggPoint] of TPoint3D;
   TMastKurve = array [0..BogenMax] of TPoint3D;
-  TRggPolyLine = array of TPoint;
 
   TRiggLvektor = array [0 .. 19] of single;
   TRiggLIndexRange = 0 .. 19;

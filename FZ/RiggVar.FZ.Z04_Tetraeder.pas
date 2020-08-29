@@ -8,7 +8,7 @@ uses
   RiggVar.FD.Drawings;
 
 type
-  TRggDrawing04 = class(TRggDrawing)
+  TRggDrawingZ04 = class(TRggDrawing)
   public
     A0: TRggCircle;
     B0: TRggCircle;
@@ -20,9 +20,9 @@ type
 
 implementation
 
-{ TRggDrawing04 }
+{ TRggDrawingZ04 }
 
-procedure TRggDrawing04.InitDefaultPos;
+procedure TRggDrawingZ04.InitDefaultPos;
 begin
   A0.Center.X := 100;
   A0.Center.Y := 100;
@@ -41,12 +41,12 @@ begin
   D0.Center.Z := 0;
 end;
 
-constructor TRggDrawing04.Create;
+constructor TRggDrawingZ04.Create;
 var
   L: TRggLine;
 begin
   inherited;
-  Name := '04-Tetraeder';
+  Name := 'Z04-Tetraeder';
 
   { Points }
 
@@ -70,43 +70,37 @@ begin
 
   { Lines }
 
-  L := TRggLine.Create;
-  L.Caption := 'A0B0';
+  L := TRggLine.Create('A0B0');
   L.StrokeColor := claDodgerblue;
   L.Point1 := A0;
   L.Point2 := B0;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'A0C0';
+  L := TRggLine.Create('A0C0');
   L.StrokeColor := claAquamarine;
   L.Point1 := A0;
   L.Point2 := C0;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'B0C0';
+  L := TRggLine.Create('B0C0');
   L.StrokeColor := claAntiquewhite;
   L.Point1 := B0;
   L.Point2 := C0;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'A0D0';
+  L := TRggLine.Create('A0D0');
   L.StrokeColor := claRed;
   L.Point1 := A0;
   L.Point2 := D0;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'B0D0';
+  L := TRggLine.Create('B0D0');
   L.StrokeColor := claGreen;
   L.Point1 := B0;
   L.Point2 := D0;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'C0D0';
+  L := TRggLine.Create('C0D0');
   L.StrokeColor := claYellow;
   L.Point1 := C0;
   L.Point2 := D0;

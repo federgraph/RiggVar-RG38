@@ -29,7 +29,7 @@ uses
   RiggVar.FD.Drawings;
 
 type
-  TRggDrawing05 = class(TRggDrawing)
+  TRggDrawingZ05 = class(TRggDrawing)
   public
     A0, A: TRggCircle;
     B0, B: TRggCircle;
@@ -49,9 +49,9 @@ uses
   RggTestData,
   RggCalc;
 
-{ TRggDrawing05 }
+{ TRggDrawingZ05 }
 
-procedure TRggDrawing05.InitDefaultPos;
+procedure TRggDrawingZ05.InitDefaultPos;
 var
   ox, oy, g: single;
 begin
@@ -96,12 +96,12 @@ begin
   F.Center.Z := 0;
 end;
 
-constructor TRggDrawing05.Create;
+constructor TRggDrawingZ05.Create;
 var
   L: TRggLine;
 begin
   inherited;
-  Name := '05-Test-Rigg';
+  Name := 'Z05-Test-Rigg';
 
   DefaultShowCaption := True;
 
@@ -140,8 +140,7 @@ begin
 
   DefaultShowCaption := False;
 
-  L := TRggLine.Create;
-  L.Caption := 'A0B0';
+  L := TRggLine.Create('A0B0');
   L.StrokeColor := claGray;
   L.Point1 := A0;
   L.Point2 := B0;
@@ -161,22 +160,19 @@ begin
 
   { --- }
 
-  L := TRggLine.Create;
-  L.Caption := 'A0D0';
+  L := TRggLine.Create('A0D0');
   L.StrokeColor := claBlack;
   L.Point1 := A0;
   L.Point2 := D0;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'B0D0';
+  L := TRggLine.Create('B0D0');
   L.StrokeColor := claBlack;
   L.Point1 := B0;
   L.Point2 := D0;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'C0D0';
+  L := TRggLine.Create('C0D0');
   L.StrokeColor := claBlack;
   L.Point1 := C0;
   L.Point2 := D0;
@@ -184,29 +180,25 @@ begin
 
   { --- }
 
-  L := TRggLine.Create;
-  L.Caption := 'A0A';
+  L := TRggLine.Create('A0A');
   L.StrokeColor := claRed;
   L.Point1 := A0;
   L.Point2 := A;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'B0B';
+  L := TRggLine.Create('B0B');
   L.StrokeColor := claGreen;
   L.Point1 := B0;
   L.Point2 := B;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'C0C';
+  L := TRggLine.Create('C0C');
   L.StrokeColor := claYellow;
   L.Point1 := C0;
   L.Point2 := C;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'D0D';
+  L := TRggLine.Create('D0D');
   L.StrokeColor := claBlue;
   L.Point1 := D0;
   L.Point2 := D;
@@ -214,22 +206,19 @@ begin
 
   { --- }
 
-  L := TRggLine.Create;
-  L.Caption := 'AC';
+  L := TRggLine.Create('AC');
   L.StrokeColor := claRed;
   L.Point1 := A;
   L.Point2 := C;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'BC';
+  L := TRggLine.Create('BC');
   L.StrokeColor := claGreen;
   L.Point1 := B;
   L.Point2 := C;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'DC';
+  L := TRggLine.Create('DC');
   L.StrokeColor := claBlue;
   L.Point1 := D;
   L.Point2 := C;
@@ -237,29 +226,25 @@ begin
 
   { --- }
 
-  L := TRggLine.Create;
-  L.Caption := 'AB';
+  L := TRggLine.Create('AB');
   L.StrokeColor := claLime;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'AD';
+  L := TRggLine.Create('AD');
   L.StrokeColor := claLime;
   L.Point1 := A;
   L.Point2 := D;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'BD';
+  L := TRggLine.Create('BD');
   L.StrokeColor := claLime;
   L.Point1 := B;
   L.Point2 := D;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'CF';
+  L := TRggLine.Create('CF');
   L.StrokeColor := claGray;
   L.Point1 := C;
   L.Point2 := F;
@@ -284,7 +269,7 @@ begin
   Load;
 end;
 
-procedure TRggDrawing05.Load;
+procedure TRggDrawingZ05.Load;
 var
   cr: TRggCircle;
 begin
@@ -337,7 +322,7 @@ begin
   end;
 end;
 
-procedure TRggDrawing05.UpdateFromRigg;
+procedure TRggDrawingZ05.UpdateFromRigg;
 var
 {$ifdef Rgg}
   Rigg: TRigg;

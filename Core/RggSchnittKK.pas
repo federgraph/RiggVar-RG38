@@ -238,13 +238,11 @@ end;
 //end;
 
 procedure TSchnittKK.Schnitt;
-//label
-//  M;
 var
-//  h3: Extended;
-  a, b, h1, h2, p, q, Entfernung: Extended;
+  a, b, h1, h2, p, q, Entfernung: single;
+  DeltaX, DeltaY: single;
+  AbsDeltaX, AbsDeltaY: single;
   DeltaNullx, DeltaNully: Boolean;
-  AbsDeltaNullx, AbsDeltaNully: Extended;
   M1M2, M1S1, KreuzProd: TPoint3D;
   M1, M2, SP: TPoint3D;
 begin
@@ -289,10 +287,12 @@ begin
     Exit;
   end;
 
-  DeltaNullx := M2.X - M1.X = 0;
-  DeltaNully := M2.Y - M1.Y = 0;
-  AbsDeltaNullx := abs(M2.X - M1.X);
-  AbsDeltaNully := abs(M2.Y - M1.Y);
+  DeltaX := M2.X - M1.X;
+  DeltaY := M2.Y - M1.Y;
+  DeltaNullx := DeltaX = 0;
+  DeltaNully := DeltaY = 0;
+  AbsDeltaX := abs(DeltaX);
+  AbsDeltaY := abs(DeltaY);
 
   { Spezialfall konzentrische Kreise }
   if DeltaNullx and DeltaNully then
@@ -303,40 +303,12 @@ begin
 
   h1 := (R1 * R1 - R2 * R2) + (M2.X * M2.X - M1.X * M1.X) + (M2.Y * M2.Y - M1.Y * M1.Y);
 
-  { Spezialfall Mittelpunkte auf gleicher Höhe }
-//  if DeltaNully then { Rechnung vermeidet Division durch Null }
-//  begin
-//    S1.X := h1 / (2 * (M2.X - M1.X));
-//    S2.X := S1.X;
-//    h3 := R1 * R1 - sqr(S1.X - M1.X);
-//    if h3 < 0 then { kein Schnittpunkt }
-//    begin
-//      S1 := TPoint3D.Zero;
-//      S2 := TPoint3D.Zero;
-//      goto M;
-//    end;
-//    if h3 = 0 then { ein Schnittpunkt bzw. zwei identische }
-//    begin
-//      S1.Y := M1.Y;
-//      S2.Y := S1.Y;
-//      sv := True;
-//      goto M;
-//    end;
-//    if h3 > 0 then { zwei verschiedene Schnittpunkte }
-//    begin
-//      S1.Y := M1.Y + sqrt(h3);
-//      S2.Y := M1.Y - sqrt(h3);
-//      sv := True;
-//      goto M;
-//    end;
-//  end; { if DeltaNully }
-
   { Rechnung im Normalfall }
 
-  if AbsDeltaNully > absDeltaNullx then
+  if AbsDeltaY > AbsDeltaX then
   begin
-    a := (-1) * (M2.X - M1.X) / (M2.Y - M1.Y);
-    b := h1 / (2 * (M2.Y - M1.Y));
+    a := - DeltaX / DeltaY;
+    b := h1 / (2 * DeltaY);
     p := 2 * (a * b - M1.X - a * M1.Y) / (1 + a * a);
     q := (M1.X * M1.X + b * b - 2 * b * M1.Y + M1.Y * M1.Y - R1 * R1) / (1 + a * a);
     h2 := p * p / 4 - q;
@@ -352,8 +324,8 @@ begin
   end
   else
   begin
-    a := (-1) * (M2.Y- M1.Y) / (M2.X - M1.X);
-    b := h1 / (2 * (M2.X - M1.X));
+    a := - DeltaY / DeltaX;
+    b := h1 / (2 * DeltaX);
     p := 2 * (a * b - M1.Y - a * M1.X) / (1 + a * a);
     q := (M1.Y * M1.Y + b * b - 2 * b * M1.X + M1.X * M1.X - R1 * R1) / (1 + a * a);
     h2 := p * p / 4 - q;
@@ -368,7 +340,6 @@ begin
     end;
   end;
 
-//M:
   Entfernung := (M2 - M1).Length;
 
   if sv = False then

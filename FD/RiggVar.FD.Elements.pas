@@ -31,6 +31,14 @@ uses
   FMX.Graphics;
 
 type
+  TRggDrawingBase = class
+  public
+    WantRotation: Boolean;
+    FixPoint: TPoint3D;
+    procedure Reset; virtual; abstract;
+    procedure Transform(M: TMatrix3D); virtual; abstract;
+  end;
+
   TLineSegmentCompareCase = (
     ccNone,
     ccNil,
@@ -64,6 +72,11 @@ type
   );
 
   TRggPoint3D = record
+    class operator Add(const APoint1, APoint2: TRggPoint3D): TRggPoint3D;
+    class operator Subtract(const APoint1, APoint2: TRggPoint3D): TRggPoint3D;
+    function Length: Single; //inline;
+    function Normalize: TPoint3D;
+
     case Integer of
       0: (V: TVectorArray;);
       1: (X: Single;
@@ -80,8 +93,10 @@ type
   private
     FStrokeColor: TAlphaColor;
     FStrokeThickness: single;
+    FStrokeDash: TStrokeDash;
     procedure SetStrokeColor(const Value: TAlphaColor);
     procedure SetStrokeThickness(const Value: single);
+    procedure SetStrokeDash(const Value: TStrokeDash);
   protected
     TypeName: string;
     TextCenter: TPointF;
@@ -115,12 +130,14 @@ type
 
     property StrokeThickness: single read FStrokeThickness write SetStrokeThickness;
     property StrokeColor: TAlphaColor read FStrokeColor write SetStrokeColor;
+    property StrokeDash: TStrokeDash read FStrokeDash write SetStrokeDash;
   end;
 
   TRggLabel = class(TRggElement)
   public
     Position: TPointF;
     Text: string;
+    IsMemoLabel: Boolean;
     constructor Create;
     function GetListCaption: string; override;
     procedure Draw(g: TCanvas); override;
@@ -130,7 +147,12 @@ type
   private
     FOriginalValue: single;
     FValue: single;
+    FScale: single;
+    FBaseValue: single;
     procedure SetValue(const Value: single);
+    function GetRelativeValue: single;
+    procedure SetScale(const Value: single);
+    procedure SetBaseValue(const Value: single);
   public
     StartPoint: TPointF;
     Text: string;
@@ -140,15 +162,21 @@ type
     procedure Param1(Delta: single); override;
     procedure Draw(g: TCanvas); override;
     property Value: single read FValue write SetValue;
+    property BaseValue: single read FBaseValue write SetBaseValue;
     property OriginalValue: single read FOriginalValue;
+    property RelativeValue: single read GetRelativeValue;
+    property Scale: single read FScale write SetScale;
   end;
 
   { TRggCircle }
 
   TRggCircle = class(TRggElement)
+  private
+    FRadius: single;
+    procedure SetRadius(const Value: single);
   protected
-    Radius: single;
     OriginalCenter: TRggPoint3D;
+    property Radius: single read FRadius write SetRadius;
   public
     Center: TRggPoint3D;
     class var
@@ -172,6 +200,34 @@ type
     function CompareZ(Q: TRggCircle): Integer;
 
     class function Compare(const Left, Right: TRggCircle): Integer;
+  end;
+
+  TRggBigCircle = class(TRggCircle)
+  public
+    constructor Create(ACaption: string = '');
+    procedure Draw(g: TCanvas); override;
+    procedure Param3(Delta: single); override;
+    property Radius;
+  end;
+
+  TRggBigArc = class(TRggElement)
+  private
+    FSweepAngle: single;
+    procedure SetSweepAngle(const Value: single);
+  public
+    Point1: TRggCircle;
+    Point2: TRggCircle;
+
+    constructor Create(ACaption: string = '');
+
+    procedure GetInfo(ML: TStrings); override;
+    function GetValid: Boolean; override;
+
+    procedure Draw(g: TCanvas); override;
+
+    procedure Param1(Delta: single); override;
+
+    property SweepAngle: single read FSweepAngle write SetSweepAngle;
   end;
 
   TRggLine = class(TRggElement)
@@ -235,6 +291,8 @@ type
   end;
 
   TRggPolyLine = class(TRggLine)
+  private
+    FCount: Integer;
   protected
     PD: TPathData;
     procedure DrawPoly(g: TCanvas; p: TPolygon);
@@ -242,9 +300,26 @@ type
   public
     Poly: TPolygon;
     ShowPoly: Boolean;
-    constructor Create(ACaption: string = '');
+    constructor Create(ACaption: string = ''); overload;
+    constructor Create(ACaption: string; ACount: Integer); overload;
     destructor Destroy; override;
     procedure Draw(g: TCanvas); override;
+    property Count: Integer read FCount;
+  end;
+
+  TRggPolyCurve = class(TRggElement)
+  private
+    FCount: Integer;
+  protected
+    PD: TPathData;
+    procedure DrawPoly(g: TCanvas; p: TPolygon);
+    procedure DrawText(g: TCanvas);
+  public
+    Poly: TPolygon;
+    constructor Create(ACaption: string; ACount: Integer); overload;
+    destructor Destroy; override;
+    procedure Draw(g: TCanvas); override;
+    property Count: Integer read FCount;
   end;
 
   TRggPolyLine3D = class(TRggPolyLine)
@@ -253,7 +328,7 @@ type
   public
     RggPoly: TRggPoly;
     WantRotation: Boolean;
-    constructor Create(ACaption: string = '');
+    constructor Create(ACaption: string; ACount: Integer);
     procedure Transform; override;
     procedure Draw(g: TCanvas); override;
     procedure Reset;
@@ -261,7 +336,6 @@ type
 
   TRggFederLine = class(TRggPolyLine)
   private
-    LCount: Integer;
     function RotateDegrees(ov: TPoint3D; wi: single): TPoint3D;
   public
     constructor Create(ACaption: string = '');
@@ -350,6 +424,7 @@ constructor TRggElement.Create;
 begin
   FStrokeThickness := 3.0;
   FStrokeColor := claRed;
+  FStrokeDash := TStrokeDash.Solid;
   TypeName := 'Element';
   TextRadius := DefaultTextRadius;
   TextAngle := DefaultTextAngle;
@@ -391,6 +466,11 @@ end;
 procedure TRggElement.SetStrokeColor(const Value: TAlphaColor);
 begin
   FStrokeColor := Value;
+end;
+
+procedure TRggElement.SetStrokeDash(const Value: TStrokeDash);
+begin
+  FStrokeDash := Value;
 end;
 
 procedure TRggElement.SetStrokeThickness(const Value: single);
@@ -476,7 +556,7 @@ begin
   Matrix := TMatrix3D.Identity;
   TypeName := 'Circle';
   StrokeThickness := 2.0;
-  Radius := 10;
+  FRadius := 10;
   Center.X := 100;
   Center.Y := 100;
   ShowCaption := DefaultShowCaption;
@@ -492,18 +572,21 @@ procedure TRggCircle.Draw(g: TCanvas);
 var
   R: TRectF;
 begin
-  R := RectF(
-    Center.X - Radius,
-    Center.Y - Radius,
-    Center.X + Radius,
-    Center.Y + Radius);
+  if Radius > 5 then
+  begin
+    R := RectF(
+      Center.X - FRadius,
+      Center.Y - FRadius,
+      Center.X + FRadius,
+      Center.Y + FRadius);
 
-  g.Fill.Color := claWhite;
-  g.FillEllipse(R, 1.0);
+    g.Fill.Color := claWhite;
+    g.FillEllipse(R, 1.0);
 
-  g.Stroke.Color := StrokeColor;
-  g.Stroke.Thickness := StrokeThickness;
-  g.DrawEllipse(R, 1.0);
+    g.Stroke.Color := StrokeColor;
+    g.Stroke.Thickness := StrokeThickness;
+    g.DrawEllipse(R, 1.0);
+  end;
 
   if ShowCaption or GlobalShowCaption then
   begin
@@ -541,6 +624,11 @@ end;
 procedure TRggCircle.Save;
 begin
   OriginalCenter := Center;
+end;
+
+procedure TRggCircle.SetRadius(const Value: single);
+begin
+  FRadius := Value;
 end;
 
 procedure TRggCircle.Transform;
@@ -613,7 +701,9 @@ procedure TRggLine.Draw(g: TCanvas);
 begin
   g.Stroke.Thickness := StrokeThickness;
   g.Stroke.Color := StrokeColor;
+  g.Stroke.Dash := StrokeDash;
   g.DrawLine(Point1.Center.P, Point2.Center.P, 1.0);
+  g.Stroke.Dash := TStrokeDash.Solid;
 
   if ShowCaption or GlobalShowCaption then
   begin
@@ -1029,8 +1119,8 @@ begin
   Angle := 30 * PI / 180;
   l := 30;
 
-  TempA.X := cos(Angle) * Point1.Radius;
-  TempA.Y := -sin(Angle) * Point1.Radius;
+  TempA.X := cos(Angle) * Point1.FRadius;
+  TempA.Y := -sin(Angle) * Point1.FRadius;
   TempB.X := TempA.X + sin(Angle) * l;
   TempB.Y := TempA.Y + cos(Angle) * l;
   TempC.X := -TempB.X;
@@ -1268,6 +1358,10 @@ begin
   h := 24;
   x := TextCenter.X;
   y := TextCenter.Y;
+
+  if IsMemoLabel then
+    h := 500;
+
   R := RectF(x, y, x + w, y + h);
 
   g.Fill.Color := StrokeColor;
@@ -1290,6 +1384,16 @@ begin
 end;
 
 { TRggPolyLine }
+
+constructor TRggPolyLine.Create(ACaption: string; ACount: Integer);
+begin
+  Create(ACaption);
+  if (ACount > 2) and (ACount < 202) then
+  begin
+    FCount := ACount;
+    SetLength(Poly, Count);
+  end;
+end;
 
 constructor TRggPolyLine.Create(ACaption: string = '');
 begin
@@ -1343,7 +1447,7 @@ end;
 
 { TRggPolyLine }
 
-constructor TRggPolyLine3D.Create(ACaption: string);
+constructor TRggPolyLine3D.Create(ACaption: string; ACount: Integer);
 begin
   inherited;
   TypeName := 'PolyLine3D';
@@ -1482,7 +1586,8 @@ constructor TRggParam.Create;
 begin
   inherited;
   TypeName := 'Param';
-  FOriginalValue := 100;
+  FScale := 1.0;
+  FOriginalValue := 400;
   FValue := FOriginalValue;
   StartPoint := TPointF.Create(10, 10);
   StrokeThickness := 2.0;
@@ -1498,6 +1603,16 @@ end;
 procedure TRggParam.Save;
 begin
   FOriginalValue := FValue;
+end;
+
+procedure TRggParam.SetBaseValue(const Value: single);
+begin
+  FBaseValue := Value;
+end;
+
+procedure TRggParam.SetScale(const Value: single);
+begin
+  FScale := Value;
 end;
 
 procedure TRggParam.SetValue(const Value: single);
@@ -1528,11 +1643,16 @@ begin
 
   if ShowCaption or GlobalShowCaption then
   begin
-    g.Fill.Color := claBlack;
+    g.Fill.Color := StrokeColor;
     TextCenter := StartPoint;
-    TextCenter.Offset(20, 0);
+    TextCenter.Offset(20, -12);
     TextOutLeading(g, Text);
   end;
+end;
+
+function TRggParam.GetRelativeValue: single;
+begin
+  result := FBaseValue + (Value - 400) * FScale;
 end;
 
 { TRggRotaLine }
@@ -1559,9 +1679,7 @@ end;
 
 constructor TRggFederLine.Create(ACaption: string);
 begin
-  inherited;
-  LCount := 8;
-  SetLength(Poly, LCount);
+  inherited Create(ACaption, 8);
 end;
 
 procedure TRggFederLine.Draw(g: TCanvas);
@@ -1600,7 +1718,7 @@ begin
 
   v := vn * a;
   w := wn *  b;
-  for i := 2 to LCount-3 do
+  for i := 2 to FCount-3 do
   begin
     p0 := p0 + v;
     if i mod 2 = 0 then
@@ -1611,9 +1729,9 @@ begin
   end;
 
   p0 := p0 + v;
-  Poly[LCount-2] := p0;
+  Poly[FCount-2] := p0;
 
-  Poly[LCount-1] := vq;
+  Poly[FCount-1] := vq;
 
   g.Stroke.Thickness := StrokeThickness;
   g.Stroke.Color := StrokeColor;
@@ -1631,6 +1749,174 @@ begin
   else
     m := TMatrix3D.CreateRotation(TPoint3D.Create(0,0,-1), a);
   result := ov * m;
+end;
+
+{ TRggPoint3D }
+
+class operator TRggPoint3D.Add(const APoint1,
+  APoint2: TRggPoint3D): TRggPoint3D;
+begin
+  Result.X := APoint1.X + APoint2.X;
+  Result.Y := APoint1.Y + APoint2.Y;
+  Result.Z := APoint1.Z + APoint2.Z;
+end;
+
+function TRggPoint3D.Length: Single;
+begin
+  result := C.Length;
+end;
+
+function TRggPoint3D.Normalize: TPoint3D;
+begin
+  result := C.Normalize;
+end;
+
+class operator TRggPoint3D.Subtract(const APoint1,
+  APoint2: TRggPoint3D): TRggPoint3D;
+begin
+  Result.X := APoint1.X - APoint2.X;
+  Result.Y := APoint1.Y - APoint2.Y;
+  Result.Z := APoint1.Z - APoint2.Z;
+end;
+
+{ TRggBigCircle }
+
+constructor TRggBigCircle.Create(ACaption: string);
+begin
+  inherited Create;
+  TypeName := 'BigCircle';
+  Caption := ACaption;
+  ShowCaption := DefaultShowCaption;
+end;
+
+procedure TRggBigCircle.Draw(g: TCanvas);
+begin
+  g.Fill.Kind := TBrushKind.None;
+  inherited;
+end;
+
+procedure TRggBigCircle.Param3(Delta: single);
+begin
+  FRadius := FRadius + Delta;
+end;
+
+{ TRggBigArc }
+
+constructor TRggBigArc.Create(ACaption: string);
+begin
+  inherited Create;
+  TypeName := 'BigArc';
+  Caption := ACaption;
+  ShowCaption := False;
+  FSweepAngle := 30;
+end;
+
+procedure TRggBigArc.Draw(g: TCanvas);
+var
+  Arrow: TRggPoint3D;
+  Angle: single;
+  StartAngle: single;
+  RadiusF: TPointF;
+begin
+  Arrow := Point2.Center - Point1.Center;
+  Angle := RadToDeg(Arrow.P.Angle(TPointF.Zero));
+  RadiusF.X := Arrow.Length;
+  RadiusF.Y := RadiusF.X;
+
+  StartAngle := Angle - SweepAngle / 2;
+  SweepAngle := SweepAngle;
+
+  g.Stroke.Color := StrokeColor;
+  g.Stroke.Thickness := StrokeThickness;
+  g.DrawArc(Point1.Center.P, RadiusF, startAngle, sweepAngle, 1.0);
+
+  if ShowCaption or GlobalShowCaption then
+  begin
+    g.Fill.Color := claBlack;
+    TextCenter := Point1.Center.P + (Point2.Center.P - Point1.Center.P) * 0.5;
+    TextOut(g, Caption);
+  end;
+end;
+
+procedure TRggBigArc.GetInfo(ML: TStrings);
+begin
+  inherited;
+  if Point1 = nil then
+    ML.Add(Caption + '.Point1 = nil');
+  if Point2 = nil then
+    ML.Add(Caption + '.Point2 = nil');
+end;
+
+function TRggBigArc.GetValid: Boolean;
+begin
+  result := inherited;
+  result := result and (Point1 <> nil);
+  result := result and (Point2 <> nil);
+end;
+
+procedure TRggBigArc.Param1(Delta: single);
+begin
+  SweepAngle := FSweepAngle + Delta;
+end;
+
+procedure TRggBigArc.SetSweepAngle(const Value: single);
+begin
+  FSweepAngle := Value;
+  if FSweepAngle < 10 then
+    FSweepAngle := 10;
+end;
+
+{ TRggPolyCurve }
+
+constructor TRggPolyCurve.Create(ACaption: string; ACount: Integer);
+begin
+  inherited Create;
+  TypeName := 'PolyCurve';
+  Caption := ACaption;
+  PD := TPathData.Create;
+  if (ACount > 2) and (ACount < 202) then
+  begin
+    FCount := ACount;
+    SetLength(Poly, Count);
+  end;
+end;
+
+destructor TRggPolyCurve.Destroy;
+begin
+  PD.Free;
+  inherited;
+end;
+
+procedure TRggPolyCurve.Draw(g: TCanvas);
+begin
+  g.Stroke.Thickness := StrokeThickness;
+  g.Stroke.Color := StrokeColor;
+  DrawPoly(g, Poly);
+  DrawText(g);
+end;
+
+procedure TRggPolyCurve.DrawText(g: TCanvas);
+begin
+  if ShowCaption or GlobalShowCaption then
+  begin
+    g.Fill.Color := claBlack;
+    TextCenter := Poly[0];
+    TextOut(g, Caption);
+  end;
+end;
+
+procedure TRggPolyCurve.DrawPoly(g: TCanvas; p: TPolygon);
+var
+  i: Integer;
+begin
+  if Length(p) = 0 then
+    Exit;
+
+  PD.Clear;
+  PD.MoveTo(p[0]);
+  for i := 1 to Length(p) - 1 do
+    PD.LineTo(p[i]);
+  g.DrawPath(PD, 1.0);
 end;
 
 end.

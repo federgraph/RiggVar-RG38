@@ -1,4 +1,4 @@
-object FormDrawing: TFormDrawing
+﻿object FormDrawing: TFormDrawing
   Left = 0
   Top = 0
   Caption = 'RGXX'
@@ -12,36 +12,4 @@ object FormDrawing: TFormDrawing
   OnKeyUp = FormKeyUp
   OnShow = FormShow
   DesignerMasterStyle = 0
-  object Image: TImage
-    MultiResBitmap = <
-      item
-      end>
-    Position.X = 248.000000000000000000
-    Position.Y = 48.000000000000000000
-    WrapMode = Original
-    OnMouseDown = ImageMouseDown
-    OnMouseMove = ImageMouseMove
-    OnMouseUp = ImageMouseUp
-    OnMouseWheel = ImageMouseWheel
-  end
-  object Memo: TMemo
-    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
-    DataDetectorTypes = []
-    Position.X = 16.000000000000000000
-    Position.Y = 120.000000000000000000
-    TabOrder = 3
-    Viewport.Width = 46.000000000000000000
-    Viewport.Height = 46.000000000000000000
-  end
-  object InplaceShape: TCircle
-    Fill.Kind = None
-    Position.X = 288.000000000000000000
-    Position.Y = 168.000000000000000000
-    Size.Width = 50.000000000000000000
-    Size.Height = 50.000000000000000000
-    Size.PlatformDefault = False
-    OnMouseDown = InplaceShapeMouseDown
-    OnMouseMove = InplaceShapeMouseMove
-    OnMouseUp = InplaceShapeMouseUp
-  end
 end

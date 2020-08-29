@@ -94,7 +94,7 @@ type
     procedure WriteToIniFile(ini: TIniFile); virtual;
   public
     LogList: TStringList;
-    SchnittKK: TSchnittKK;
+    SKK: TSchnittKK;
     TrimmTab: TTrimmTab;
     GSB: TRggFA;
     rP: TRealRiggPoints;
@@ -141,7 +141,7 @@ begin
   GSB := TRggFA.Create;
   WantLogoData := false;
   LogList := TStringList.Create;
-  SchnittKK := TSchnittKK.Create;
+  SKK := TSchnittKK.Create;
   TrimmTab := TTrimmTab.Create;
   FSalingTyp := stFest;
   FManipulatorMode := false;
@@ -153,7 +153,7 @@ end;
 destructor TGetriebe.Destroy;
 begin
   LogList.Free;
-  SchnittKK.Free;
+  SKK.Free;
   TrimmTab.Free;
   GSB.Free;
   inherited Destroy;

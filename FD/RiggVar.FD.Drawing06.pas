@@ -10,7 +10,7 @@ uses
   RiggVar.FD.Drawings;
 
 type
-  TRggDrawing06 = class(TRggDrawing)
+  TRggDrawingD06 = class(TRggDrawing)
   private
     A: TRggCircle;
     B: TRggCircle;
@@ -37,9 +37,9 @@ uses
   System.Types,
   RggCalc;
 
-{ TRggDrawing06 }
+{ TRggDrawingD06 }
 
-procedure TRggDrawing06.InitDefaultPos;
+procedure TRggDrawingD06.InitDefaultPos;
 begin
   A.Center.X := 300;
   A.Center.Y := 300;
@@ -51,7 +51,7 @@ begin
   D.Center.Y := 500;
 end;
 
-procedure TRggDrawing06.Compute;
+procedure TRggDrawingD06.Compute;
 begin
   A.Center.Z := 0;
   B.Center.Z := 0;
@@ -60,7 +60,7 @@ begin
   Compute2D;
 end;
 
-procedure TRggDrawing06.Compute2D;
+procedure TRggDrawingD06.Compute2D;
 var
   la, lb, lc: single;
   k: single;
@@ -80,7 +80,7 @@ begin
   D.Center.Y := temp.Y;
 end;
 
-procedure TRggDrawing06.Compute3D;
+procedure TRggDrawingD06.Compute3D;
 var
   la, lb, lc: single;
   k: single;
@@ -96,12 +96,12 @@ begin
   D.Center.C := C.Center.C + k * SeiteA.V3;
 end;
 
-constructor TRggDrawing06.Create;
+constructor TRggDrawingD06.Create;
 var
   L: TRggLine;
 begin
   inherited;
-  Name := '06-Height';
+  Name := 'D06-Height';
 
   { Points }
 

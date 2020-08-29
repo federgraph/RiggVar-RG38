@@ -1,4 +1,4 @@
-unit RiggVar.FZ.Z15_SchnittGG;
+﻿unit RiggVar.FZ.Z15_SchnittGG;
 
 interface
 
@@ -10,7 +10,7 @@ uses
   RiggVar.FD.Drawings;
 
 type
-  TRggDrawing15 = class(TRggDrawing)
+  TRggDrawingZ15 = class(TRggDrawing)
   public
     A: TRggCircle;
     B: TRggCircle;
@@ -24,9 +24,9 @@ type
 
 implementation
 
-{ TRggDrawing15}
+{ TRggDrawingZ15 }
 
-procedure TRggDrawing15.InitDefaultPos;
+procedure TRggDrawingZ15.InitDefaultPos;
 var
   ox, oy: single;
 begin
@@ -52,7 +52,7 @@ begin
   S.Center.C := TPoint3D.Zero;
 end;
 
-procedure TRggDrawing15.Compute;
+procedure TRggDrawingZ15.Compute;
 var
   P1, P2: TPoint3D;
   P3, P4: TPoint3D;
@@ -75,12 +75,12 @@ begin
   S.Center.Y := SP.Z;
 end;
 
-constructor TRggDrawing15.Create;
+constructor TRggDrawingZ15.Create;
 var
   L: TRggLine;
 begin
   inherited;
-  Name := '15-SchnittGG';
+  Name := 'Z15-SchnittGG';
 
   { Points }
 
@@ -106,15 +106,13 @@ begin
 
   DefaultShowCaption := False;
 
-  L := TRggLine.Create;
-  L.Caption := 'AB';
+  L := TRggLine.Create('AB');
   L.StrokeColor := claDodgerblue;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'CD';
+  L := TRggLine.Create('CD');
   L.StrokeColor := claAquamarine;
   L.Point1 := C;
   L.Point2 := D;

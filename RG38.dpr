@@ -70,7 +70,6 @@ uses
   RggMatrix in 'Graph\RggMatrix.pas',
   RggProfile in 'Graph\RggProfile.pas',
   RggCtrls in 'Graph\RggCtrls.pas',
-  RggVector in 'Graph\RggVector.pas',
   RggHull in 'Graph\RggHull.pas',
   RggTest in 'Graph\RggTest.pas',
   RggZug in 'Graph\RggZug.pas',
@@ -84,6 +83,7 @@ uses
   RggTrimmTabGraph in 'Graph\RggTrimmTabGraph.pas',
   RiggVar.Util.AppUtils in 'Util\RiggVar.Util.AppUtils.pas',
   RiggVar.Util.Logger in 'Util\RiggVar.Util.Logger.pas',
+  RiggVar.FD.Chart in 'FD\RiggVar.FD.Chart.pas',
   RiggVar.FD.Elements in 'FD\RiggVar.FD.Elements.pas',
   RiggVar.FD.Drawings in 'FD\RiggVar.FD.Drawings.pas',
   RiggVar.FD.Drawing00 in 'FD\RiggVar.FD.Drawing00.pas',
@@ -100,6 +100,8 @@ uses
   RiggVar.FD.Drawing11 in 'FD\RiggVar.FD.Drawing11.pas',
   RiggVar.FD.Drawing12 in 'FD\RiggVar.FD.Drawing12.pas',
   RiggVar.FD.Registry in 'FD\RiggVar.FD.Registry.pas',
+  RiggVar.FZ.Registry in 'FZ\RiggVar.FZ.Registry.pas',
+  RiggVar.FD.TransformHelper in 'FD\RiggVar.FD.TransformHelper.pas',
   RiggVar.FZ.Z01_Viereck in 'FZ\RiggVar.FZ.Z01_Viereck.pas',
   RiggVar.FZ.Z02_Logo in 'FZ\RiggVar.FZ.Z02_Logo.pas',
   RiggVar.FZ.Z03_Viergelenk in 'FZ\RiggVar.FZ.Z03_Viergelenk.pas',
@@ -115,7 +117,12 @@ uses
   RiggVar.FZ.Z13_SchnittKK in 'FZ\RiggVar.FZ.Z13_SchnittKK.pas',
   RiggVar.FZ.Z14_SplitF in 'FZ\RiggVar.FZ.Z14_SplitF.pas',
   RiggVar.FZ.Z15_SchnittGG in 'FZ\RiggVar.FZ.Z15_SchnittGG.pas',
-  RiggVar.FZ.Z16_Shrink in 'FZ\RiggVar.FZ.Z16_Shrink.pas';
+  RiggVar.FZ.Z16_Shrink in 'FZ\RiggVar.FZ.Z16_Shrink.pas',
+  RiggVar.FZ.Z17_Feder in 'FZ\RiggVar.FZ.Z17_Feder.pas',
+  RiggVar.FZ.Z18_BerechneWinkel in 'FZ\RiggVar.FZ.Z18_BerechneWinkel.pas',
+  RiggVar.FZ.Z19_Chart in 'FZ\RiggVar.FZ.Z19_Chart.pas',
+  RiggVar.FZ.Z20_Epsilon in 'FZ\RiggVar.FZ.Z20_Epsilon.pas',
+  RiggVar.FZ.Z22_BigArc in 'FZ\RiggVar.FZ.Z22_BigArc.pas';
 
 {$R *.res}
 

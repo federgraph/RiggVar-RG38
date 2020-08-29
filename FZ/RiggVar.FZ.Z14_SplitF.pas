@@ -1,4 +1,4 @@
-unit RiggVar.FZ.Z14_SplitF;
+﻿unit RiggVar.FZ.Z14_SplitF;
 
 interface
 
@@ -9,7 +9,7 @@ uses
   RiggVar.FD.Drawings;
 
 type
-  TRggDrawing14 = class(TRggDrawing) //(TSchnittKKDrawing)
+  TRggDrawingZ14 = class(TRggDrawing)
   public
     A: TRggCircle;
     B: TRggCircle;
@@ -37,9 +37,9 @@ type
 
 implementation
 
-{ TRggDrawing14 }
+{ TRggDrawingZ14 }
 
-procedure TRggDrawing14.InitDefaultPos;
+procedure TRggDrawingZ14.InitDefaultPos;
 var
   ox, oy: single;
 begin
@@ -55,18 +55,12 @@ begin
   B.Center.Z := 0;
 end;
 
-procedure TRggDrawing14.Compute;
+procedure TRggDrawingZ14.Compute;
 var
   ff: single;
   t: single;
   ph, pf: TPoint3D;
 begin
-//  SchnittKK.Radius1 := 500;
-//  SchnittKK.Radius2 := 500;
-//  SchnittKK.MittelPunkt1 := A.Center.C;
-//  SchnittKK.MittelPunkt2 := B.Center.C;
-//  C.Center.C := SchnittKK.SchnittPunkt2;
-
   C.Radius2 := C.Radius1;
   C.Compute;
 
@@ -86,13 +80,13 @@ begin
     F1.Center.C := C.Center.C + (B.Center.C - C.Center.C) * t;
 end;
 
-constructor TRggDrawing14.Create;
+constructor TRggDrawingZ14.Create;
 var
   L: TRggLine;
   T: TRggTriangle;
 begin
   inherited;
-  Name := '14-SplitF';
+  Name := 'Z14-SplitF';
 
   A := TRggCircle.Create;
   A.Caption := 'A';
@@ -149,9 +143,8 @@ begin
   L.Point2 := B;
   Add(L);
 
-  AC := TRggLine.Create;
+  AC := TRggLine.Create('AC');
   L := AC;
-  L.Caption := 'AC';
   L.ShowCaption := False;
   L.StrokeColor := claPlum;
   L.Point1 := A;
@@ -175,9 +168,8 @@ begin
   L.Point2 := D;
   Add(L);
 
-  CF := TRggLine.Create;
+  CF := TRggLine.Create('F');
   L := CF;
-  L.Caption := 'F';
   L.StrokeThickness := 4.0;
   L.StrokeColor := claDodgerblue;
   L.Point1 := C;

@@ -28,7 +28,7 @@ uses
   RiggVar.FD.Drawings;
 
 type
-  TRggDrawing02 = class(TRggDrawing)
+  TRggDrawingZ02 = class(TRggDrawing)
   public
     D0, D: TRggCircle;
     P0, P: TRggCircle;
@@ -39,9 +39,9 @@ type
 
 implementation
 
-{ TRggDrawing02 }
+{ TRggDrawingZ02 }
 
-procedure TRggDrawing02.InitDefaultPos;
+procedure TRggDrawingZ02.InitDefaultPos;
 var
   ox, oy, f: single;
 begin
@@ -74,12 +74,12 @@ begin
   C.Center.Z := 0;
 end;
 
-constructor TRggDrawing02.Create;
+constructor TRggDrawingZ02.Create;
 var
   L: TRggLine;
 begin
   inherited;
-  Name := '02-Logo';
+  Name := 'Z02-Logo';
   WantSort := False;
 
   D0 := TRggCircle.Create;
@@ -108,72 +108,63 @@ begin
 
   InitDefaultPos;
 
-  L := TRggLine.Create;
-  L.Caption := 'D0P0';
+  L := TRggLine.Create('D0P0');
   L.ShowCaption := False;
   L.StrokeColor := claGray;
   L.Point1 := D0;
   L.Point2 := P0;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'P0C0';
+  L := TRggLine.Create('P0C0');
   L.ShowCaption := False;
   L.StrokeColor := claGray;
   L.Point1 := P0;
   L.Point2 := C0;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'C0D0';
+  L := TRggLine.Create('C0D0');
   L.ShowCaption := False;
   L.StrokeColor := claGray;
   L.Point1 := C0;
   L.Point2 := D0;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'P0P';
+  L := TRggLine.Create('P0P');
   L.ShowCaption := False;
   L.StrokeColor := claOrangeRed;
   L.Point1 := P0;
   L.Point2 := P;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'PC';
+  L := TRggLine.Create('PC');
   L.ShowCaption := False;
   L.StrokeColor := claOrangeRed;
   L.Point1 := P;
   L.Point2 := C;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'C0C';
+  L := TRggLine.Create('C0C');
   L.ShowCaption := False;
   L.StrokeColor := claOrange;
   L.Point1 := C0;
   L.Point2 := C;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'D0D';
+  L := TRggLine.Create('D0D');
   L.ShowCaption := False;
   L.StrokeColor := claBlue;
   L.Point1 := D0;
   L.Point2 := D;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'DC';
+  L := TRggLine.Create('DC');
   L.ShowCaption := False;
   L.StrokeColor := claBlue;
   L.Point1 := D;
   L.Point2 := C;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'PD';
+  L := TRggLine.Create('PD');
   L.ShowCaption := False;
   L.StrokeColor := claLime;
   L.Point1 := P;

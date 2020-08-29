@@ -1,4 +1,4 @@
-unit RiggVar.FZ.Z12_Atan2;
+﻿unit RiggVar.FZ.Z12_Atan2;
 
 interface
 
@@ -10,7 +10,7 @@ uses
   RiggVar.FD.Drawings;
 
 type
-  TRggDrawing12 = class(TRggDrawing)
+  TRggDrawingZ12 = class(TRggDrawing)
   public
     A: TRggCircle;
     B: TRggCircle;
@@ -30,9 +30,9 @@ implementation
 uses
   Math;
 
-{ TRggDrawing12 }
+{ TRggDrawingZ12 }
 
-procedure TRggDrawing12.InitDefaultPos;
+procedure TRggDrawingZ12.InitDefaultPos;
 var
   ox, oy: single;
 begin
@@ -52,7 +52,7 @@ begin
   C.Center.Z := 0;
 end;
 
-procedure TRggDrawing12.Compute;
+procedure TRggDrawingZ12.Compute;
 var
   x, y, t: single;
   s: string;
@@ -79,7 +79,7 @@ begin
   ResultLabel.Text := s;
 end;
 
-constructor TRggDrawing12.Create(AFigure: Integer);
+constructor TRggDrawingZ12.Create(AFigure: Integer);
 var
   L: TRggLine;
   W: TRggArc;
@@ -88,10 +88,10 @@ begin
 
   Figure := AFigure;
   case AFigure of
-    0: Name := '12-ArcTan2-Demo';
-    1: Name := '12-ArcTan-Demo';
+    0: Name := 'Z12-ArcTan2-Demo';
+    1: Name := 'Z12-ArcTan-Demo';
     else
-      Name := '12-Figure-Demo';
+      Name := 'Z12-Figure-Demo';
   end;
 
   case AFigure of
@@ -120,16 +120,14 @@ begin
 
   DefaultShowCaption := False;
 
-  L := TRggLine.Create;
-  L.Caption := 'AB';
+  L := TRggLine.Create('AB');
   L.StrokeColor := claDodgerblue;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
   AB := L;
 
-  L := TRggLine.Create;
-  L.Caption := 'AC';
+  L := TRggLine.Create('AC');
   L.StrokeColor := claDodgerblue;
   L.Point1 := A;
   L.Point2 := C;
@@ -152,7 +150,7 @@ begin
   ResultLabel := TRggLabel.Create;
   ResultLabel.Caption := 'RL';
   ResultLabel.Text := FigureString;
-  ResultLabel.StrokeColor := TAlphaColors.Tomato;
+  ResultLabel.StrokeColor := claTomato;
   Add(ResultLabel);
 
   FixPoint := A.Center.C;

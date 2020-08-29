@@ -14,7 +14,7 @@ uses
   RiggVar.FD.Drawings;
 
 type
-  TRggDrawing03 = class(TRggDrawing)
+  TRggDrawingD03 = class(TRggDrawing)
   private
     Count: Integer;
     ox: single;
@@ -55,9 +55,9 @@ type
 
 implementation
 
-{ TRggDrawing03 }
+{ TRggDrawingD03 }
 
-procedure TRggDrawing03.InitDefaultPos;
+procedure TRggDrawingD03.InitDefaultPos;
 begin
   ox := 100;
   oy := 600;
@@ -83,7 +83,7 @@ begin
   C.Center.Z := 0;
 end;
 
-procedure TRggDrawing03.Compute;
+procedure TRggDrawingD03.Compute;
 var
   fs: string;
 begin
@@ -99,7 +99,7 @@ begin
   UpdateKoppelkurve;
 end;
 
-constructor TRggDrawing03.Create;
+constructor TRggDrawingD03.Create;
 var
   L: TRggLine;
   Temp: TRggCircle;
@@ -109,7 +109,7 @@ begin
 
   SchnittKK := TSchnittKK.Create;
 
-  Name := '03-Viergelenk';
+  Name := 'D03-Viergelenk';
   WantSort := False;
 
   A0 := TRggCircle.Create;
@@ -134,49 +134,43 @@ begin
 
   InitDefaultPos;
 
-  A0B0 := TRggLine.Create;
+  A0B0 := TRggLine.Create('A0B0');
   L := A0B0;
-  L.Caption := 'A0B0';
   L.StrokeColor := claGray;
   L.Point1 := A0;
   L.Point2 := B0;
   Add(L);
 
-  A0A := TRggRotaLine.Create;
+  A0A := TRggRotaLine.Create('A0A');
   L := A0A;
-  L.Caption := 'A0A';
   L.StrokeColor := claRed;
   L.Point1 := A0;
   L.Point2 := A;
   Add(L);
 
-  B0B := TRggLine.Create;
+  B0B := TRggLine.Create('B0B');
   L := B0B;
-  L.Caption := 'B0B';
   L.StrokeColor := claBlue;
   L.Point1 := B0;
   L.Point2 := B;
   Add(L);
 
-  AB := TRggLine.Create;
+  AB := TRggLine.Create('AB');
   L := AB;
-  L.Caption := 'AB';
   L.StrokeColor := claLime;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
 
-  AC := TRggLine.Create;
+  AC := TRggLine.Create('AC');
   L := AC;
-  L.Caption := 'AC';
   L.StrokeColor := claLime;
   L.Point1 := A;
   L.Point2 := C;
   Add(L);
 
-  BC := TRggLine.Create;
+  BC := TRggLine.Create('BC');
   L := BC;
-  L.Caption := 'BC';
   L.StrokeColor := claLime;
   L.Point1 := B;
   L.Point2 := C;
@@ -215,11 +209,9 @@ begin
   C.L2 := BC;
   C.InitRadius;
 
-  KK := TRggPolyLine.Create;
-  KK.Caption := 'KK';
+  KK := TRggPolyLine.Create('KK', Count);
   KK.StrokeThickness := 2.0;
   KK.StrokeColor := claOrangered;
-  SetLength(KK.Poly, Count);
   Add(KK);
 
   Temp := TRggCircle.Create;
@@ -249,13 +241,13 @@ begin
   DefaultElement := A0A;
 end;
 
-destructor TRggDrawing03.Destroy;
+destructor TRggDrawingD03.Destroy;
 begin
   SchnittKK.Free;
   inherited;
 end;
 
-procedure TRggDrawing03.UpdateKoppelkurve;
+procedure TRggDrawingD03.UpdateKoppelkurve;
 { Koppelkurve Viergelenk A0, A, B, B0 }
 var
   svar: Boolean;

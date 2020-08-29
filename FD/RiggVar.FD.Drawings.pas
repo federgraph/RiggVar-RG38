@@ -27,9 +27,37 @@ uses
   System.Math.Vectors,
   RggSchnittKK,
   FMX.Graphics,
+  FMX.StdCtrls,
+  RiggVar.FD.TransformHelper,
   RiggVar.FD.Elements;
 
 type
+  TRggButtonGroup = class
+  public
+    Btn1: TSpeedButton;
+    Btn2: TSpeedButton;
+    Btn3: TSpeedButton;
+    Btn4: TSpeedButton;
+    Btn5: TSpeedButton;
+    Btn6: TSpeedButton;
+    Btn7: TSpeedButton;
+    Btn8: TSpeedButton;
+    Btn9: TSpeedButton;
+    Btn0: TSpeedButton;
+
+    BtnA: TSpeedButton;
+    BtnB: TSpeedButton;
+    BtnC: TSpeedButton;
+    BtnD: TSpeedButton;
+    BtnE: TSpeedButton;
+    BtnF: TSpeedButton;
+
+    procedure Reset;
+
+    class var OnUpdateDrawing: TNotifyEvent;
+    class procedure UpdateDrawing;
+  end;
+
   TRggElementList = TList<TRggElement>;
   TRggCircleList = TList<TRggCircle>;
   TRggLineList = TList<TRggLine>;
@@ -44,7 +72,7 @@ type
     function Compare(const Left, Right: TRggLine): Integer;
   end;
 
-  TRggDrawing = class
+  TRggDrawing = class(TRggDrawingBase)
   private
     FName: string;
     ElementList: TRggElementList;
@@ -60,13 +88,15 @@ type
     LineComparer: IComparer<TRggLine>;
     function Find(ACaption: string): TRggCircle;
   public
-    WantRotation: Boolean;
-    FixPoint: TPoint3D;
-
     CircleList: TRggCircleList;
     LineList: TRggLineList;
 
     DefaultElement: TRggElement;
+
+    ML: TStrings;
+    WantMemoLines: Boolean;
+
+    class var TH: TTransformHelper;
 
     constructor Create;
     destructor Destroy; override;
@@ -77,19 +107,23 @@ type
 
     procedure InitItems(ML: TStrings);
     procedure WriteCode(ML: TStrings);
-    procedure Transform(M: TMatrix3D); virtual;
+    procedure Reset; override;
+    procedure Transform(M: TMatrix3D); override;
     procedure InitDefaultPos; virtual;
-    procedure Reset;
     procedure SaveAll;
     procedure Compute; virtual;
+    procedure InitButtons(BG: TRggButtonGroup); virtual;
 
     procedure Draw(g: TCanvas);
     procedure GetInfo(ML: TStrings);
+
+    procedure UpdateDrawing;
 
     property Name: string read FName write SetName;
     property Element[Index: Integer]: TRggElement read GetElement;
     property IsValid: Boolean read GetIsValid;
     property DefaultElementIndex: Integer read GetDefaultElementIndex;
+    property MemoLines: TStrings read ML;
   end;
 
   TRggDrawingList = TList<TRggDrawing>;
@@ -164,6 +198,14 @@ begin
   LineList := TRggLineList.Create;
   CircleComparer := TRggCircleComparer.Create;
   LineComparer := TRggLineComparer.Create;
+  ML := TStringList.Create;
+end;
+
+procedure TRggDrawing.InitButtons(BG: TRggButtonGroup);
+begin
+  if BG = nil then
+    Exit;
+  BG.Reset;
 end;
 
 procedure TRggDrawing.InitDefaultPos;
@@ -183,6 +225,7 @@ begin
   ElementList.Free;
   CircleList.Free;
   LineList.Free;
+  ML.Free;
   inherited;
 end;
 
@@ -202,6 +245,11 @@ begin
   begin
     e.Draw(g);
   end;
+end;
+
+procedure TRggDrawing.UpdateDrawing;
+begin
+  TRggButtonGroup.UpdateDrawing;
 end;
 
 procedure TRggDrawing.SortedDraw(g: TCanvas);
@@ -408,6 +456,71 @@ destructor TRggDrawingKK.Destroy;
 begin
   SKK.Free;
   inherited;
+end;
+
+{ TRggButtonGroup }
+
+procedure TRggButtonGroup.Reset;
+begin
+  Btn1.OnClick := nil;
+  Btn2.OnClick := nil;
+  Btn3.OnClick := nil;
+  Btn4.OnClick := nil;
+  Btn5.OnClick := nil;
+  Btn6.OnClick := nil;
+  Btn7.OnClick := nil;
+  Btn8.OnClick := nil;
+  Btn9.OnClick := nil;
+  Btn0.OnClick := nil;
+
+  BtnA.OnClick := nil;
+  BtnB.OnClick := nil;
+  BtnC.OnClick := nil;
+  BtnD.OnClick := nil;
+  BtnE.OnClick := nil;
+  BtnF.OnClick := nil;
+
+  Btn1.Text := '1';
+  Btn2.Text := '2';
+  Btn3.Text := '3';
+  Btn4.Text := '4';
+  Btn5.Text := '5';
+  Btn6.Text := '6';
+  Btn7.Text := '7';
+  Btn8.Text := '8';
+  Btn9.Text := '9';
+  Btn0.Text := '0';
+
+  BtnA.Text := 'A';
+  BtnB.Text := 'B';
+  BtnC.Text := 'C';
+  BtnD.Text := 'D';
+  BtnE.Text := 'E';
+  BtnF.Text := 'F';
+
+  Btn1.Hint := 'Btn 1';
+  Btn2.Hint := 'Btn 2';
+  Btn3.Hint := 'Btn 3';
+  Btn4.Hint := 'Btn 4';
+  Btn5.Hint := 'Btn 5';
+  Btn6.Hint := 'Btn 6';
+  Btn7.Hint := 'Btn 7';
+  Btn8.Hint := 'Btn 8';
+  Btn9.Hint := 'Btn 9';
+  Btn0.Hint := 'Btn 0';
+
+  BtnA.Hint := 'Btn A';
+  BtnB.Hint := 'Btn B';
+  BtnC.Hint := 'Btn C';
+  BtnD.Hint := 'Btn D';
+  BtnE.Hint := 'Btn E';
+  BtnF.Hint := 'Btn F';
+end;
+
+class procedure TRggButtonGroup.UpdateDrawing;
+begin
+  if Assigned(TRggButtonGroup.OnUpdateDrawing) then
+    TRggButtonGroup.OnUpdateDrawing(nil);
 end;
 
 end.

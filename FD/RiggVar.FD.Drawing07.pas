@@ -8,7 +8,7 @@ uses
   RiggVar.FD.Drawings;
 
 type
-  TRggDrawing07 = class(TRggDrawing)
+  TRggDrawingD07 = class(TRggDrawing)
   public
     A: TRggCircle;
     B: TRggCircle;
@@ -19,9 +19,9 @@ type
 
 implementation
 
-{ TRggDrawing07 }
+{ TRggDrawingD07 }
 
-procedure TRggDrawing07.InitDefaultPos;
+procedure TRggDrawingD07.InitDefaultPos;
 begin
   A.Center.X := 100;
   A.Center.Y := 400;
@@ -36,13 +36,13 @@ begin
   C.Center.Z := 0;
 end;
 
-constructor TRggDrawing07.Create;
+constructor TRggDrawingD07.Create;
 var
   L: TRggLine;
   T: TRggTriangle;
 begin
   inherited;
-  Name := '07-Triangle';
+  Name := 'D07-Triangle';
 
   A := TRggCircle.Create;
   A.Caption := 'A';
@@ -66,22 +66,19 @@ begin
   T.Point3 := C;
   Add(T);
 
-  L := TRggLine.Create;
-  L.Caption := 'AB';
+  L := TRggLine.Create('AB');
   L.StrokeColor := claAquamarine;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'AC';
+  L := TRggLine.Create('AC');
   L.StrokeColor := claDodgerblue;
   L.Point1 := A;
   L.Point2 := C;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'BC';
+  L := TRggLine.Create('BC');
   L.StrokeColor := claPlum;
   L.Point1 := B;
   L.Point2 := C;

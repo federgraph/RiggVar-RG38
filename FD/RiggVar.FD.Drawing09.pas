@@ -10,7 +10,7 @@ uses
   RiggVar.FD.Drawings;
 
 type
-  TRggDrawing09 = class(TRggDrawing)
+  TRggDrawingD09 = class(TRggDrawing)
   public
     Origin: TRggCircle;
     AX: TRggCircle;
@@ -22,9 +22,9 @@ type
 
 implementation
 
-{ TRggDrawing09 }
+{ TRggDrawingD09 }
 
-procedure TRggDrawing09.InitDefaultPos;
+procedure TRggDrawingD09.InitDefaultPos;
 var
   ox, oy, oz: single;
 begin
@@ -49,12 +49,12 @@ begin
   AZ.Center.Z := oz + 200;
 end;
 
-constructor TRggDrawing09.Create;
+constructor TRggDrawingD09.Create;
 var
   L: TRggLine;
 begin
   inherited;
-  Name := '09-Axis';
+  Name := 'D09-Axis';
 
   { Points }
 
@@ -81,22 +81,19 @@ begin
 
   DefaultShowCaption := False;
 
-  L := TRggLine.Create;
-  L.Caption := 'AX';
+  L := TRggLine.Create('AX');
   L.StrokeColor := claRed;
   L.Point1 := Origin;
   L.Point2 := AX;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'AY';
+  L := TRggLine.Create('AY');
   L.StrokeColor := claGreen;
   L.Point1 := Origin;
   L.Point2 := AY;
   Add(L);
 
-  L := TRggLine.Create;
-  L.Caption := 'AZ';
+  L := TRggLine.Create('AZ');
   L.StrokeColor := claBlue;
   L.Point1 := Origin;
   L.Point2 := AZ;

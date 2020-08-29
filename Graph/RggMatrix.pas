@@ -9,8 +9,7 @@ uses
   System.Math,
   System.Math.Vectors,
   RggTypes,
-  FMX.Graphics,
-  RggVector;
+  FMX.Graphics;
 
 const
   maxvert = 400;
@@ -53,6 +52,7 @@ type
     FixPunkt: TRiggPoint;
     Phi, Theta, Gamma, XRot, YRot, ZRot: Integer;
     constructor Create;
+    class function LookUpRa10(Index: Integer): single;
     property IncrementIndex: Integer read FIncrementIndex write SetIncrementIndex;
     property FixPunktIndex: Integer read GetFixPunktIndex write SetFixPunktIndex;
     property ZoomIndex: Integer read FZoomIndex write SetZoomIndex;
@@ -62,7 +62,7 @@ type
   end;
 
 const
-  NullVec: TPoint3D = (x: 0; y: 0; z: 0);
+//  NullVec: TPoint3D = (x: 0; y: 0; z: 0);
   xVec: TPoint3D = (x: 1; y: 0; z: 0);
   yVec: TPoint3D = (x: 0; y: 1; z: 0);
   zVec: TPoint3D = (x: 0; y: 0; z: 1);
@@ -172,6 +172,28 @@ end;
 function TRotaParams.GetZoom: single;
 begin
   result := FZoomBase * LookUpRa10(FZoomIndex);
+end;
+
+class function TRotaParams.LookUpRa10(Index: Integer): single;
+var
+  temp: single;
+begin
+  { dezimalgeometrische Reihe Ra10 }
+  temp := 1;
+  case Index of
+    1: temp := 1;
+    2: temp := 1.2;
+    3: temp := 1.6;
+    4: temp := 2;
+    5: temp := 2.5;
+    6: temp := 3.2;
+    7: temp := 4;
+    8: temp := 5;
+    9: temp := 6.3;
+    10: temp := 8;
+    11: temp := 10;
+  end;
+  result := temp;
 end;
 
 end.

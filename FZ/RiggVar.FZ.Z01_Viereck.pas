@@ -8,7 +8,7 @@ uses
   RiggVar.FD.Drawings;
 
 type
-  TRggDrawing01 = class(TRggDrawing)
+  TRggDrawingZ01 = class(TRggDrawing)
   public
     A0: TRggCircle;
     B0: TRggCircle;
@@ -20,9 +20,9 @@ type
 
 implementation
 
-{ TRggDrawing01 }
+{ TRggDrawingZ01 }
 
-procedure TRggDrawing01.InitDefaultPos;
+procedure TRggDrawingZ01.InitDefaultPos;
 begin
   A0.Center.X := 100;
   A0.Center.Y := 400;
@@ -41,12 +41,12 @@ begin
   B.Center.Z := 0;
 end;
 
-constructor TRggDrawing01.Create;
+constructor TRggDrawingZ01.Create;
 var
   L: TRggLine;
 begin
   inherited;
-  Name := '01-Viereck';
+  Name := 'Z01-Viereck';
   WantSort := False;
 
   A0 := TRggCircle.Create('A0');

@@ -14,7 +14,6 @@ uses
   FMX.Graphics,
   FMX.Objects,
   FMX.Types,
-  RggVector,
   RiggVar.RG.Graph,
   RggTypes,
   RggMatrix,
@@ -669,7 +668,7 @@ begin
 
   { Zoom }
   FZoomIndex := RotaData.ZoomIndex;
-  FZoom := FZoomBase * LookUpRa10(FZoomIndex);
+  FZoom := FZoomBase * TRotaParams.LookUpRa10(FZoomIndex);
   Transformer.Zoom := FZoom;
 
   { FixPoint }
@@ -936,7 +935,7 @@ begin
   else
     FZoomIndex := Value;
 
-  FZoom := FZoomBase * LookUpRa10(FZoomIndex);
+  FZoom := FZoomBase * TRotaParams.LookUpRa10(FZoomIndex);
   RaumGraph.Zoom := FZoom;
   Draw;
 end;

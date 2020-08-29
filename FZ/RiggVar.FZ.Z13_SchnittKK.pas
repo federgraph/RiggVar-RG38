@@ -12,8 +12,9 @@ uses
   RiggVar.FD.Drawings;
 
 type
-  TRggDrawing13 = class(TRggDrawing)
+  TRggDrawingZ13 = class(TRggDrawing)
   private
+    Radius: single;
     SchnittKK: TSchnittKK;
   public
     M1: TRggCircle;
@@ -21,6 +22,10 @@ type
     S1: TRggCircle;
     S2: TRggCircle;
     Bem: TRggLabel;
+
+    C1: TRggBigCircle;
+    C2: TRggBigCircle;
+
     constructor Create;
     destructor Destroy; override;
     procedure InitDefaultPos; override;
@@ -32,9 +37,9 @@ implementation
 uses
   Math;
 
-{ TRggDrawing13 }
+{ TRggDrawingZ13 }
 
-procedure TRggDrawing13.InitDefaultPos;
+procedure TRggDrawingZ13.InitDefaultPos;
 var
   ox, oy: single;
 begin
@@ -50,24 +55,28 @@ begin
   M2.Center.Z := 0;
 end;
 
-procedure TRggDrawing13.Compute;
+procedure TRggDrawingZ13.Compute;
 begin
   SchnittKK.SchnittEbene := seXY;
-  SchnittKK.Radius1 := 150;
-  SchnittKK.Radius2 := 150;
+  SchnittKK.Radius1 := Radius;
+  SchnittKK.Radius2 := Radius;
   SchnittKK.MittelPunkt1 := M1.Center.C;
   SchnittKK.MittelPunkt2 := M2.Center.C;
   S1.Center.C := SchnittKK.SchnittPunkt1;
   S2.Center.C := SchnittKK.SchnittPunkt2;
 
   Bem.Text := SchnittKK.Bemerkung;
+
+  C1.Center := M1.Center;
+  C2.Center := M2.Center;
 end;
 
-constructor TRggDrawing13.Create;
+constructor TRggDrawingZ13.Create;
 begin
   inherited;
-  Name := '13-SchnittKK';
+  Name := 'Z13-SchnittKK';
 
+  Radius := 150;
   SchnittKK := TSchnittKK.Create;
 
   { Points }
@@ -95,7 +104,21 @@ begin
   Bem.Text := 'Bemerkung';
   Bem.Position.X := 100;
   Bem.Position.X := 50;
-  Bem.StrokeColor := TAlphaColors.Tomato;
+  Bem.StrokeColor := claTomato;
+
+  C1 := TRggBigCircle.Create('C1');
+  C1.StrokeThickness := 1.0;
+  C1.StrokeColor := claPlum;
+  C1.Radius := Radius;
+  C1.IsComputed := True;
+  Add(C1);
+
+  C2 := TRggBigCircle.Create('C2');
+  C2.StrokeThickness := 1.0;
+  C2.StrokeColor := claDodgerblue;
+  C2.Radius := Radius;
+  C2.IsComputed := True;
+  Add(C2);
 
   Add(M1);
   Add(M2);
@@ -109,7 +132,7 @@ begin
   WantSort := False;
 end;
 
-destructor TRggDrawing13.Destroy;
+destructor TRggDrawingZ13.Destroy;
 begin
   SchnittKK.Free;
   inherited;
