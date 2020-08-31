@@ -14,7 +14,7 @@ type
     A: TRggCircle;
     B: TRggCircle;
 
-    C: TSchnittKKCircle;
+    C: TSchnittKKCircleLL;
 
     D: TRggCircle;
     E: TRggCircle;
@@ -64,11 +64,11 @@ begin
   C.Radius2 := C.Radius1;
   C.Compute;
 
-  D.Center.C := A.Center.C + (B.Center.C - A.Center.C) / 2;
+  D.Center.C := A.Center.C + (B.Center.C - A.Center.C) * 0.5;
 
   ff := 0.75 * Param.Value / Param.OriginalValue;
   F.Center.C := C.Center.C + (D.Center.C - C.Center.C) * ff;
-  E.Center.C := C.Center.C + (F.Center.C - C.Center.C) / 2;
+  E.Center.C := C.Center.C + (F.Center.C - C.Center.C) * 0.5;
 
   ph := C.Center.C - D.Center.C;
   pf := C.Center.C - F.Center.C;
@@ -98,7 +98,7 @@ begin
 
   InitDefaultPos;
 
-  C := TSchnittKKCircle.Create;
+  C := TSchnittKKCircleLL.Create;
   C.Caption := 'C';
   C.Radius1 := 500;
   C.Radius2 := C.Radius1;

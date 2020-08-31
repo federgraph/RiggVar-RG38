@@ -186,6 +186,8 @@ begin
   FixPoint := A.Center.C;
   WantRotation := True;
   WantSort := True;
+
+  DefaultElement := A;
 end;
 
 end.

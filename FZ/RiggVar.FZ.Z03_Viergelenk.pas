@@ -31,20 +31,14 @@ type
 
     A0B0: TRggLine;
     A0A: TRggLine;
-    B0B: TRggLine;
-    AB: TRggLine;
-    AC: TRggLine;
-    BC: TRggLine;
 
     LabelB: TRggLabel;
     LabelC: TRggLabel;
     LabelPhi: TRggLabel;
-    LabelPsi: TRggLabel;
 
-    KK: TRggPolyLine;
+    KK: TRggPolyCurve;
 
     Phi: TRggArc;
-    Psi: TRggArc;
 
     constructor Create;
     destructor Destroy; override;
@@ -77,10 +71,12 @@ begin
   B.Center.X := ox + 400;
   B.Center.Y := oy - 200;
   B.Center.Z := 0;
+  B.InitRadius;
 
   C.Center.X := ox + 300;
   C.Center.Y := oy - 400;
   C.Center.Z := 0;
+  C.InitRadius;
 end;
 
 procedure TRggDrawingZ03.Compute;
@@ -91,10 +87,9 @@ begin
   C.Compute;
 
   fs := '%s = %s - (%.2f, %.2f)';
-  LabelB.Text := Format(fs, [B.Caption, B.SchnittKK.Bemerkung, B.Center.X, B.Center.Y]);
-  LabelC.Text := Format(fs, [C.Caption, C.SchnittKK.Bemerkung, C.Center.X, C.Center.Y]);
+  LabelB.Text := Format(fs, [B.Caption, B.Bemerkung, B.Center.X, B.Center.Y]);
+  LabelC.Text := Format(fs, [C.Caption, C.Bemerkung, C.Center.X, C.Center.Y]);
   LabelPhi.Text := Format('%s = %.2f', [Phi.Caption, Phi.SweepAngle]);
-  LabelPsi.Text := Format('%s = %.2f', [Psi.Caption, Psi.SweepAngle]);
 
   UpdateKoppelkurve;
 end;
@@ -102,7 +97,6 @@ end;
 constructor TRggDrawingZ03.Create;
 var
   L: TRggLine;
-  Temp: TRggCircle;
 begin
   inherited;
   Count := 51;
@@ -127,10 +121,14 @@ begin
   B := TSchnittKKCircle.Create;
   B.Caption := 'B';
   B.StrokeColor := claBlue;
+  B.MP1 := A;
+  B.MP2 := B0;
 
   C := TSchnittKKCircle.Create;
   C.Caption := 'C';
-  C.StrokeColor := claBlue;
+  C.StrokeColor := claLime;
+  C.MP1 := A;
+  C.MP2 := B;
 
   InitDefaultPos;
 
@@ -149,34 +147,6 @@ begin
   Add(L);
   A0A := L;
 
-  B0B := TRggLine.Create('B0B');
-  L := B0B;
-  L.StrokeColor := claBlue;
-  L.Point1 := B0;
-  L.Point2 := B;
-  Add(L);
-
-  AB := TRggLine.Create('AB');
-  L := AB;
-  L.StrokeColor := claLime;
-  L.Point1 := A;
-  L.Point2 := B;
-  Add(L);
-
-  AC := TRggLine.Create('AC');
-  L := AC;
-  L.StrokeColor := claLime;
-  L.Point1 := A;
-  L.Point2 := C;
-  Add(L);
-
-  BC := TRggLine.Create('BC');
-  L := BC;
-  L.StrokeColor := claLime;
-  L.Point1 := B;
-  L.Point2 := C;
-  Add(L);
-
   LabelB := TRggLabel.Create;
   LabelB.Caption := 'B';
   Add(LabelB);
@@ -191,42 +161,18 @@ begin
   LabelPhi.Position.Y := LabelC.Position.Y + 30;
   Add(LabelPhi);
 
-  LabelPsi := TRggLabel.Create;
-  LabelPsi.Caption := 'Psi';
-  LabelPsi.Position.Y := LabelPhi.Position.Y + 30;
-  Add(LabelPsi);
-
-  Add(A0);
-  Add(B0);
-  Add(A);
-  Add(B);
   Add(C);
+  Add(B);
+  Add(A);
+  Add(B0);
+  Add(A0);
 
-  B.L1 := AB;
-  B.L2 := B0B;
-  B.InitRadius;
-
-  C.L1 := AC;
-  C.L2 := BC;
-  C.InitRadius;
-
-  KK := TRggPolyLine.Create('KK', Count);
+  KK := TRggPolyCurve.Create('KK', Count);
   KK.Caption := 'KK';
-  KK.StrokeThickness := 2.0;
-  KK.StrokeColor := claOrangered;
+  KK.StrokeThickness := 3.0;
+  KK.StrokeColor := claYellow;
+  KK.Opacity := 1.0;
   Add(KK);
-
-  Temp := TRggCircle.Create;
-  Temp.Caption := 'KK[0]';
-  Temp.Center.C := TPoint3D.Create(200, 100, 0);
-  KK.Point1 := Temp;
-  Add(Temp);
-
-  Temp := TRggCircle.Create;
-  Temp.Caption := Format('KK[%d]', [Count]);
-  Temp.Center.C := TPoint3D.Create(300, 100, 0);
-  KK.Point2 := Temp;
-  Add(Temp);
 
   Phi := TRggArc.Create('Phi');
   Phi.Point1 := A0;
@@ -234,12 +180,7 @@ begin
   Phi.Point3 := A;
   Add(Phi);
 
-  Psi := TRggArc.Create('pi-Psi');
-  Psi.Point1 := B0;
-  Psi.Point2 := B;
-  Psi.Point3 := A0;
-  Add(Psi);
-
+  WantSort := False;
   DefaultElement := A0A;
 end;
 
@@ -250,13 +191,12 @@ begin
 end;
 
 procedure TRggDrawingZ03.UpdateKoppelkurve;
-{ Koppelkurve Viergelenk A0, A, B, B0 }
+{ Koppelkurve: Bahn von Punkt C im Viergelenk A0, A, B, B0 }
 var
   svar: Boolean;
   i: Integer;
   phiA, phiE, phiM, psiM, WinkelStep: single;
   ooTemp: TPoint3D;
-  oooTemp: TRealRiggPoints;
 
   FrAlpha: single;
 
@@ -269,10 +209,10 @@ var
 begin
   FrBasis := A0B0.LineLength;
   FrWunten2D := A0A.LineLength;
-  FrMastUnten := B0B.LineLength;
-  FrSalingH := AB.LineLength;
-  FrWoben2D := AC.LineLength;
-  FrMastOben := BC.LineLength;
+  FrMastUnten := B.L2;
+  FrSalingH := B.L1;
+  FrWoben2D := C.L1;
+  FrMastOben := C.L2;
 
   rP[ooA0] := A0.Center.C;
   rP[ooB0] := B0.Center.C;
@@ -280,11 +220,7 @@ begin
   rP[ooB] := B.Center.C;
   rP[ooC] := C.Center.C;
 
-  oooTemp := rP; { aktuelle Koordinaten sichern }
-
   FrAlpha := arctan2((rP[ooP0].Y - rP[ooD0].Y), (rP[ooP0].X - rP[ooD0].X));
-
-//  Wanten3dTo2d;
 
   { 1. Startwinkel }
   SchnittKK.SchnittEbene := seXY;
@@ -311,10 +247,6 @@ begin
     phiE := phiE + pi / 2 + FrAlpha;
   end;
 
-//  FrAlpha := 0;
-//  phiA := 25 * PI / 180;
-//  phiE := 70 * PI / 180;
-
   { 3. Koppelkurve }
   phiA := phiA + 1 * PI / 180;
   phiE := phiE - 1 * PI / 180;
@@ -327,7 +259,7 @@ begin
     rP[ooA].Y := rP[ooA0].Y - FrWunten2D * sin(phiM - FrAlpha);
     rP[ooB].X := rP[ooB0].X + FrMastUnten * cos(psiM - FrAlpha);
     rP[ooB].Y := rP[ooB0].Y - FrMastUnten * sin(psiM - FrAlpha);
-    { Berechnung Punkt C }
+    { Punkt C }
     SchnittKK.SchnittEbene := seXY;
     SchnittKK.Radius1 := FrWoben2D;
     SchnittKK.Radius2 := FrMastOben;
@@ -338,22 +270,6 @@ begin
     KK.Poly[i].Y := rP[ooC].Y;
     phiM := phiM + WinkelStep;
   end;
-
-  rP := oooTemp; { aktuelle Koordinaten wiederherstellen }
-
-  A0.Center.C := rP[ooA0];
-  B0.Center.C := rP[ooB0];
-  A.Center.C := rP[ooA];
-  B.Center.C := rP[ooB];
-  C.Center.C := rP[ooC];
-
-  KK.Point1.Center.X := KK.Poly[0].X;
-  KK.Point1.Center.Y := KK.Poly[0].Y;
-
-  KK.Point2.Center.X := KK.Poly[Count-1].X;
-  KK.Point2.Center.Y := KK.Poly[Count-1].Y;
-
-  KK.ShowPoly := True;
 end;
 
 end.

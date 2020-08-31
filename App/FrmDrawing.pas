@@ -79,7 +79,6 @@ type
     procedure ToggleShowCaptionBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
   private
-    IsRightMouseBtn: Boolean;
     MouseDown: Boolean;
     MousePos: TPointF;
     InplaceMouseDown: Boolean;
@@ -659,7 +658,7 @@ begin
   MouseDown := True;
   MousePos.X := X;
   MousePos.Y := Y;
-  IsRightMouseBtn := Button = TMouseButton.mbRight;
+  TH.IsRightMouseBtn := Button = TMouseButton.mbRight;
   TH.Rotation := TPoint3D.Zero;
 end;
 
@@ -673,36 +672,8 @@ begin
   dx := X - MousePos.X;
   dy := Y - MousePos.Y;
 
-  if (ssShift in Shift) or (ssMiddle in Shift) then
-  begin
-    if dy > 0 then
-      TH.ZoomDelta := 1 - 0.01
-    else
-      TH.ZoomDelta := 1 + 0.01;
-  end
-  else if ssCtrl in Shift then
-  begin
-    TH.Offset.X := TH.Offset.X + dx;
-    TH.Offset.Y := TH.Offset.Y + dy;
-  end
+  TH.DoOnMouse(Shift, dx, dy);
 
-  else
-  begin
-    if IsRightMouseBtn then
-    begin
-      TH.Rotation.Z := TH.Rotation.Z + dx * 0.005;
-    end
-    else
-    begin
-      TH.Rotation.X := TH.Rotation.X - dy * 0.005;
-      TH.Rotation.Y := TH.Rotation.Y + dx * 0.005;
-    end;
-  end;
-
-  Draw;
-
-  TH.ZoomDelta := 1;
-  TH.Rotation := TPoint3D.Zero;
   MousePos.X := X;
   MousePos.Y := Y;
 end;

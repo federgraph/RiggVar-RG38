@@ -26,8 +26,8 @@ type
     A0: TRggCircle;
     B0: TRggCircle;
     A: TRggCircle;
-    B: TSchnittKKCircle;
-    C: TSchnittKKCircle;
+    B: TSchnittKKCircleLL;
+    C: TSchnittKKCircleLL;
 
     A0B0: TRggLine;
     A0A: TRggLine;
@@ -124,11 +124,11 @@ begin
   A.Caption := 'A';
   A.StrokeColor := claOrangered;
 
-  B := TSchnittKKCircle.Create;
+  B := TSchnittKKCircleLL.Create;
   B.Caption := 'B';
   B.StrokeColor := claBlue;
 
-  C := TSchnittKKCircle.Create;
+  C := TSchnittKKCircleLL.Create;
   C.Caption := 'C';
   C.StrokeColor := claBlue;
 

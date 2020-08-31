@@ -88,28 +88,24 @@ begin
   Add(L);
 
   L := TRggLine.Create('B0C0');
-  L.Caption := 'B0C0';
   L.StrokeColor := claAntiquewhite;
   L.Point1 := B0;
   L.Point2 := C0;
   Add(L);
 
   L := TRggLine.Create('A0D0');
-  L.Caption := 'A0D0';
   L.StrokeColor := claRed;
   L.Point1 := A0;
   L.Point2 := D0;
   Add(L);
 
   L := TRggLine.Create('B0D0');
-  L.Caption := 'B0D0';
   L.StrokeColor := claGreen;
   L.Point1 := B0;
   L.Point2 := D0;
   Add(L);
 
   L := TRggLine.Create('C0D0');
-  L.Caption := 'C0D0';
   L.StrokeColor := claYellow;
   L.Point1 := C0;
   L.Point2 := D0;

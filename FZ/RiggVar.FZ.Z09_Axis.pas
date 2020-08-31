@@ -28,9 +28,6 @@ type
 
 implementation
 
-uses
-  FrmDrawing;
-
 { TRggDrawingZ09 }
 
 procedure TRggDrawingZ09.InitButtons(BG: TRggButtonGroup);

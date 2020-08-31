@@ -135,8 +135,7 @@ begin
   Add(L);
   AC := L;
 
-  W := TRggArc.Create('Alpha');
-  W.Caption := 'alpha';
+  W := TRggArc.Create('alpha');
   W.StrokeColor := claAquamarine;
   W.Point1 := A;
   W.Point2 := B;

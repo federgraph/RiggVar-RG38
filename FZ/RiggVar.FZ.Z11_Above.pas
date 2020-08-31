@@ -20,7 +20,7 @@ type
 
 implementation
 
-{ TRggDrawingZ11}
+{ TRggDrawingZ11 }
 
 procedure TRggDrawingZ11.InitDefaultPos;
 var

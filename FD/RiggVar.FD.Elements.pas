@@ -94,9 +94,11 @@ type
     FStrokeColor: TAlphaColor;
     FStrokeThickness: single;
     FStrokeDash: TStrokeDash;
+    FOpacity: single;
     procedure SetStrokeColor(const Value: TAlphaColor);
     procedure SetStrokeThickness(const Value: single);
     procedure SetStrokeDash(const Value: TStrokeDash);
+    procedure SetOpacity(const Value: single);
   protected
     TypeName: string;
     TextCenter: TPointF;
@@ -128,6 +130,7 @@ type
     procedure Param7(Delta: single);
     procedure Param8(Delta: single);
 
+    property Opacity: single read FOpacity write SetOpacity;
     property StrokeThickness: single read FStrokeThickness write SetStrokeThickness;
     property StrokeColor: TAlphaColor read FStrokeColor write SetStrokeColor;
     property StrokeDash: TStrokeDash read FStrokeDash write SetStrokeDash;
@@ -389,7 +392,7 @@ type
     function CompareVV(v1, v2: TPoint3D): Integer;
   end;
 
-  TSchnittKKCircle = class(TRggCircle)
+  TSchnittKKCircleLL = class(TRggCircle)
   public
     Radius1: single;
     Radius2: single;
@@ -407,6 +410,43 @@ type
     procedure InitRadius;
   end;
 
+  TSchnittKKCircle = class(TRggCircle)
+  private
+    R1: single;
+    R2: single;
+    S1: TPoint3D;
+    S2: TPoint3D;
+    sv: Boolean;
+    NeedCalc: Boolean;
+    Bem: TBemerkungKK;
+    procedure ComputeInternal;
+    function GetBem: TBemerkungKK;
+    function GetBemerkung: string;
+    function Vorhanden: Boolean;
+    function GetL1: single;
+    function GetL2: single;
+  public
+    Radius1: single;
+    Radius2: single;
+    MP1: TRggCircle;
+    MP2: TRggCircle;
+    Counter: Integer;
+    WantS2: Boolean;
+    constructor Create(ACaption: string = '');
+    procedure GetInfo(ML: TStrings); override;
+    function GetValid: Boolean; override;
+    procedure Param1(Delta: single); override;
+    procedure Param2(Delta: single); override;
+    procedure Compute;
+    procedure InitRadius;
+    procedure Draw(g: TCanvas); override;
+    property Status: TBemerkungKK read GetBem;
+    property Bemerkung: string read GetBemerkung;
+    property SPVorhanden: Boolean read Vorhanden;
+    property L1: single read GetL1;
+    property L2: single read GetL2;
+  end;
+
 var
   GlobalShowCaption: Boolean = False;
   DefaultShowCaption: Boolean = False;
@@ -422,6 +462,7 @@ const
 
 constructor TRggElement.Create;
 begin
+  FOpacity := 1.0;
   FStrokeThickness := 3.0;
   FStrokeColor := claRed;
   FStrokeDash := TStrokeDash.Solid;
@@ -461,6 +502,11 @@ end;
 procedure TRggElement.Param3(Delta: single);
 begin
 
+end;
+
+procedure TRggElement.SetOpacity(const Value: single);
+begin
+  FOpacity := Value;
 end;
 
 procedure TRggElement.SetStrokeColor(const Value: TAlphaColor);
@@ -581,11 +627,11 @@ begin
       Center.Y + FRadius);
 
     g.Fill.Color := claWhite;
-    g.FillEllipse(R, 1.0);
+    g.FillEllipse(R, Opacity);
 
     g.Stroke.Color := StrokeColor;
     g.Stroke.Thickness := StrokeThickness;
-    g.DrawEllipse(R, 1.0);
+    g.DrawEllipse(R, Opacity);
   end;
 
   if ShowCaption or GlobalShowCaption then
@@ -702,7 +748,7 @@ begin
   g.Stroke.Thickness := StrokeThickness;
   g.Stroke.Color := StrokeColor;
   g.Stroke.Dash := StrokeDash;
-  g.DrawLine(Point1.Center.P, Point2.Center.P, 1.0);
+  g.DrawLine(Point1.Center.P, Point2.Center.P, Opacity);
   g.Stroke.Dash := TStrokeDash.Solid;
 
   if ShowCaption or GlobalShowCaption then
@@ -1037,7 +1083,7 @@ begin
 
   g.Stroke.Color := StrokeColor;
   g.Stroke.Thickness := StrokeThickness;
-  g.DrawArc(Point1.Center.P, RadiusF, startAngle, sweepAngle, 1.0);
+  g.DrawArc(Point1.Center.P, RadiusF, startAngle, sweepAngle, Opacity);
 
   if ShowCaption or GlobalShowCaption then
   begin
@@ -1145,7 +1191,7 @@ begin
   g.Stroke.Cap := TStrokeCap.Round;
   g.Stroke.Color := claGray;
   g.Stroke.Thickness := 3.0;
-  g.DrawPolygon(TempP, 1.0);
+  g.DrawPolygon(TempP, Opacity);
 
   if not FestLager then
   begin
@@ -1153,7 +1199,7 @@ begin
     o.Y := 5;
     TempB.Offset(o);
     TempC.Offset(o);
-    g.DrawLine(TempB, TempC, 1.0);
+    g.DrawLine(TempB, TempC, Opacity);
   end;
 
   TempE := TempC;
@@ -1173,7 +1219,7 @@ begin
   begin
     TempE.Offset(o);
     TempF.Offset(o);
-    g.DrawLine(TempE, TempF, 1.0);
+    g.DrawLine(TempE, TempF, Opacity);
   end;
 end;
 
@@ -1442,7 +1488,7 @@ begin
   PD.MoveTo(p[0]);
   for i := 1 to Length(p) - 1 do
     PD.LineTo(p[i]);
-  g.DrawPath(PD, 1.0);
+  g.DrawPath(PD, Opacity);
 end;
 
 { TRggPolyLine }
@@ -1513,39 +1559,39 @@ end;
 
 { TSchnittKKCircle }
 
-constructor TSchnittKKCircle.Create(ACaption: string);
+constructor TSchnittKKCircleLL.Create(ACaption: string);
 begin
   inherited;
-  TypeName := 'SKK Circle';
+  TypeName := 'SKK Circle L';
   IsComputed := True;
   Radius1 := 100;
   Radius2 := 100;
   SchnittKK := TSchnittKK.Create;
 end;
 
-destructor TSchnittKKCircle.Destroy;
+destructor TSchnittKKCircleLL.Destroy;
 begin
   SchnittKK.Free;
   inherited;
 end;
 
-procedure TSchnittKKCircle.InitRadius;
+procedure TSchnittKKCircleLL.InitRadius;
 begin
   Radius1 := L1.LineLength;
   Radius2 := L2.LineLength;
 end;
 
-procedure TSchnittKKCircle.Param1(Delta: single);
+procedure TSchnittKKCircleLL.Param1(Delta: single);
 begin
   Radius1 := Radius1 + Delta;
 end;
 
-procedure TSchnittKKCircle.Param2(Delta: single);
+procedure TSchnittKKCircleLL.Param2(Delta: single);
 begin
   Radius2 := Radius2 + Delta;
 end;
 
-procedure TSchnittKKCircle.GetInfo(ML: TStrings);
+procedure TSchnittKKCircleLL.GetInfo(ML: TStrings);
 begin
   inherited;
   if L1 = nil then
@@ -1554,14 +1600,14 @@ begin
     ML.Add(Caption + '.L2 = nil');
 end;
 
-function TSchnittKKCircle.GetValid: Boolean;
+function TSchnittKKCircleLL.GetValid: Boolean;
 begin
   result := inherited;
   result := result and (L1 <> nil);
   result := result and (L2 <> nil);
 end;
 
-procedure TSchnittKKCircle.Compute;
+procedure TSchnittKKCircleLL.Compute;
 begin
   Inc(Counter);
 
@@ -1577,7 +1623,246 @@ begin
 
   L1.Point2.Center.C := Center.C;
   L2.Point2.Center.C := Center.C;
+end;
 
+{ TSchnittKKCircle }
+
+constructor TSchnittKKCircle.Create(ACaption: string);
+begin
+  inherited;
+  TypeName := 'SKK Circle';
+  IsComputed := True;
+  Radius1 := 100;
+  Radius2 := 100;
+  NeedCalc := True;
+  WantS2 := True;
+end;
+
+procedure TSchnittKKCircle.InitRadius;
+begin
+  Radius1 := (Center - MP1.Center).Length;
+  Radius2 := (Center - MP2.Center).Length;
+end;
+
+function TSchnittKKCircle.GetBem: TBemerkungKK;
+begin
+  if NeedCalc = True then
+    ComputeInternal;
+  result := Bem;
+end;
+
+function TSchnittKKCircle.GetBemerkung: string;
+begin
+  if NeedCalc = True then
+    ComputeInternal;
+  case Bem of
+    bmKonzentrisch:
+      result := 'konzentrische Kreise';
+    bmZwei:
+      result := 'zwei Schnittpunkte';
+    bmEntfernt:
+      result := 'zwei entfernte Kreise';
+    bmEinerAussen:
+      result := 'Berührung außen';
+    bmEinerK1inK2:
+      result := 'Berührung innen, K1 in K2';
+    bmEinerK2inK1:
+      result := 'Berührung innen, K2 in K1';
+    bmK1inK2:
+      result := 'K1 innerhalb K2';
+    bmK2inK1:
+      result := 'K2 innerhalb K1';
+    bmRadiusFalsch:
+      result := 'Radius Ungültig';
+  end;
+end;
+
+procedure TSchnittKKCircle.GetInfo(ML: TStrings);
+begin
+  inherited;
+  if MP1 = nil then
+    ML.Add(Caption + '.MP1 = nil');
+  if MP2 = nil then
+    ML.Add(Caption + '.MP2 = nil');
+end;
+
+function TSchnittKKCircle.GetL1: single;
+begin
+  if NeedCalc then
+    ComputeInternal;
+  result := (Center - MP1.Center).Length;
+end;
+
+function TSchnittKKCircle.GetL2: single;
+begin
+  if NeedCalc then
+    ComputeInternal;
+  result := (Center - MP2.Center).Length;
+end;
+
+function TSchnittKKCircle.GetValid: Boolean;
+begin
+  result := inherited;
+  result := result and (MP1 <> nil);
+  result := result and (MP2 <> nil);
+end;
+
+procedure TSchnittKKCircle.Param1(Delta: single);
+begin
+  Radius1 := Radius1 + Delta;
+  NeedCalc := True;
+end;
+
+procedure TSchnittKKCircle.Param2(Delta: single);
+begin
+  Radius2 := Radius2 + Delta;
+  NeedCalc := True;
+end;
+
+function TSchnittKKCircle.Vorhanden: Boolean;
+begin
+  if NeedCalc = True then
+    ComputeInternal;
+  result := sv;
+end;
+
+procedure TSchnittKKCircle.ComputeInternal;
+var
+  a, b, h1, h2, p, q, Entfernung: single;
+  DeltaX, DeltaY: single;
+  AbsDeltaX, AbsDeltaY: single;
+  DeltaNullx, DeltaNully: Boolean;
+  M1M2, M1S1, KreuzProd: TPoint3D;
+  M1, M2, SP: TPoint3D;
+begin
+  R1 := Radius1;
+  R2 := Radius2;
+  M1 := MP1.Center.C;
+  M2 := MP2.Center.C;
+
+  NeedCalc := False;
+  sv := False;
+
+  S1 := TPoint3D.Zero;
+  S2 := TPoint3D.Zero;
+
+  { Radien sollen größer Null sein }
+  if (R1 <= 0) or (R2 <= 0) then
+  begin
+    Bem := bmRadiusFalsch;
+    Exit;
+  end;
+
+  DeltaX := M2.X - M1.X;
+  DeltaY := M2.Y - M1.Y;
+  DeltaNullx := DeltaX = 0;
+  DeltaNully := DeltaY = 0;
+  AbsDeltaX := abs(DeltaX);
+  AbsDeltaY := abs(DeltaY);
+
+  { Spezialfall konzentrische Kreise }
+  if DeltaNullx and DeltaNully then
+  begin
+    Bem := bmKonzentrisch;
+    Exit;
+  end;
+
+  h1 := (R1 * R1 - R2 * R2) + (M2.X * M2.X - M1.X * M1.X) + (M2.Y * M2.Y - M1.Y * M1.Y);
+
+  { Rechnung im Normalfall }
+
+  if AbsDeltaY > AbsDeltaX then
+  begin
+    a := - DeltaX / DeltaY;
+    b := h1 / (2 * DeltaY);
+    p := 2 * (a * b - M1.X - a * M1.Y) / (1 + a * a);
+    q := (M1.X * M1.X + b * b - 2 * b * M1.Y + M1.Y * M1.Y - R1 * R1) / (1 + a * a);
+    h2 := p * p / 4 - q;
+    if h2 >= 0 then
+    begin
+      h2 := sqrt(h2);
+      S1.X := -p / 2 + h2;
+      S2.X := -p / 2 - h2;
+      S1.Y := a * S1.X + b;
+      S2.Y := a * S2.X + b;
+      sv := True;
+    end;
+  end
+  else
+  begin
+    a := - DeltaY / DeltaX;
+    b := h1 / (2 * DeltaX);
+    p := 2 * (a * b - M1.Y - a * M1.X) / (1 + a * a);
+    q := (M1.Y * M1.Y + b * b - 2 * b * M1.X + M1.X * M1.X - R1 * R1) / (1 + a * a);
+    h2 := p * p / 4 - q;
+    if h2 >= 0 then
+    begin
+      h2 := sqrt(h2);
+      S1.Y := -p / 2 + h2;
+      S2.Y := -p / 2 - h2;
+      S1.X := a * S1.Y + b;
+      S2.X := a * S2.Y + b;
+      sv := True;
+    end;
+  end;
+
+  Entfernung := (M2 - M1).Length;
+
+  if sv = False then
+  begin
+    if Entfernung > R1 + R2 then
+      Bem := bmEntfernt
+    else if Entfernung + R1 < R2 then
+      Bem := bmK1inK2
+    else if Entfernung + R2 < R1 then
+      Bem := bmK2inK1;
+    Exit;
+  end;
+
+  if sv = True then
+  begin
+    Bem := bmZwei;
+    if Entfernung + R1 = R2 then
+      Bem := bmEinerK1inK2
+    else if Entfernung + R2 = R1 then
+      Bem := bmEinerK2inK1
+    else if Entfernung = R1 + R2 then
+      Bem := bmEinerAussen;
+  end;
+
+  { den "richtigen" SchnittPunkt ermitteln }
+  if Bem = bmZwei then
+  begin
+    M1M2 := M2 - M1;
+    M1S1 := S1 - M1;
+    KreuzProd := M1M2.CrossProduct(M1S1);
+    if KreuzProd.Z < 0 then
+    begin
+      SP := S2;
+      S2 := S1;
+      S1 := SP;
+    end;
+  end;
+end;
+
+procedure TSchnittKKCircle.Compute;
+begin
+//  if NeedCalc then
+    ComputeInternal;
+  if WantS2 then
+    Center.C := S2
+  else
+    Center.C := S1;
+end;
+
+procedure TSchnittKKCircle.Draw(g: TCanvas);
+begin
+  g.Stroke.Thickness := StrokeThickness;
+  g.Stroke.Color := StrokeColor;
+  g.DrawLine(MP1.Center.P, Center.P, Opacity);
+  g.DrawLine(MP2.Center.P, Center.P, Opacity);
+
+  inherited;
 end;
 
 { TRggParam }
@@ -1634,12 +1919,12 @@ begin
 
   g.Stroke.Thickness := 5.0;
   g.Stroke.Color := claYellow;
-  g.DrawLine(StartPoint, EndPoint, 1.0);
+  g.DrawLine(StartPoint, EndPoint, Opacity);
 
   EndPoint.X := StartPoint.X + FValue;
   g.Stroke.Thickness := 1.0;
   g.Stroke.Color := claNavy;
-  g.DrawLine(StartPoint, EndPoint, 1.0);
+  g.DrawLine(StartPoint, EndPoint, Opacity);
 
   if ShowCaption or GlobalShowCaption then
   begin
@@ -1828,7 +2113,7 @@ begin
 
   g.Stroke.Color := StrokeColor;
   g.Stroke.Thickness := StrokeThickness;
-  g.DrawArc(Point1.Center.P, RadiusF, startAngle, sweepAngle, 1.0);
+  g.DrawArc(Point1.Center.P, RadiusF, startAngle, sweepAngle, Opacity);
 
   if ShowCaption or GlobalShowCaption then
   begin
@@ -1916,7 +2201,7 @@ begin
   PD.MoveTo(p[0]);
   for i := 1 to Length(p) - 1 do
     PD.LineTo(p[i]);
-  g.DrawPath(PD, 1.0);
+  g.DrawPath(PD, Opacity);
 end;
 
 end.

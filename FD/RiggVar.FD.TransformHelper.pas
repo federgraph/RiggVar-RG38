@@ -36,7 +36,11 @@ type
 
     DrawCounter: Integer;
 
+    IsRightMouseBtn: Boolean;
+
     constructor Create;
+
+    procedure DoOnMouse(Shift: TShiftState; dx, dy: single);
 
     procedure BuildMatrix(mr: TMatrix3D);
     procedure BuildMatrixM;
@@ -44,12 +48,12 @@ type
     procedure InitTransform(mr: TMatrix3D);
     procedure UpdateTransform;
 
+    procedure GetEulerAngles; virtual;
+
     procedure Reset;
     procedure Draw;
     procedure DrawToCanvas;
     procedure ShowRotation(r: TPoint3D; b: Boolean);
-
-    procedure GetEulerAngles; virtual;
 
     property OnDrawToCanvas: TNotifyEvent read FOnDrawToCanvas write SetOnDrawToCanvas;
     property OnShowRotation: TNotifyEvent read FOnShowRotation write SetOnShowRotation;
@@ -85,11 +89,6 @@ procedure TTransformHelper.DrawToCanvas;
 begin
   if Assigned(OnDrawToCanvas) then
     FOnDrawToCanvas(self);
-end;
-
-procedure TTransformHelper.GetEulerAngles;
-begin
-
 end;
 
 procedure TTransformHelper.ShowRotation(r: TPoint3D; b: Boolean);
@@ -159,6 +158,44 @@ begin
   ms := TMatrix3D.CreateScaling(TPoint3D.Create(ZoomDelta, ZoomDelta, ZoomDelta));
   mt2 := TMatrix3D.CreateTranslation(CurrentDrawing.FixPoint);
   NewMatrix := mt1 * mr * ms * mt2;
+end;
+
+procedure TTransformHelper.GetEulerAngles;
+begin
+end;
+
+procedure TTransformHelper.DoOnMouse(Shift: TShiftState; dx, dy: single);
+begin
+  if (ssShift in Shift) or (ssMiddle in Shift) then
+  begin
+    if dy > 0 then
+      ZoomDelta := 1 - 0.01
+    else
+      ZoomDelta := 1 + 0.01;
+  end
+  else if ssCtrl in Shift then
+  begin
+    Offset.X := Offset.X + dx;
+    Offset.Y := Offset.Y + dy;
+  end
+
+  else
+  begin
+    if IsRightMouseBtn then
+    begin
+      Rotation.Z := Rotation.Z + dx * 0.005;
+    end
+    else
+    begin
+      Rotation.X := Rotation.X - dy * 0.005;
+      Rotation.Y := Rotation.Y + dx * 0.005;
+    end;
+  end;
+
+  Draw;
+
+  ZoomDelta := 1;
+  Rotation := TPoint3D.Zero;
 end;
 
 end.
