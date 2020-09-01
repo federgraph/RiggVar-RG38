@@ -63,11 +63,11 @@ type
     function Vorhanden: Boolean;
     procedure SetM1(const Value: TPointF);
     procedure SetM2(const Value: TPointF);
-//    function GetM1: TPointF;
-//    function GetM2: TPointF;
   protected
     procedure Schnitt; virtual;
   public
+    Watch1: Integer;
+    Watch2: Integer;
     property Radius1: single read R1 write SetRadius1;
     property Radius2: single read R2 write SetRadius2;
     property M1: TPointF write SetM1;
@@ -225,18 +225,6 @@ begin
   end;
 end;
 
-//function TSchnittKK.GetM1: TPointF;
-//begin
-//  result.X := Mittelpunkt1[x];
-//  result.Y := Mittelpunkt1[y];
-//end;
-//
-//function TSchnittKK.GetM2: TPointF;
-//begin
-//  result.X := Mittelpunkt2[x];
-//  result.Y := Mittelpunkt2[y];
-//end;
-
 procedure TSchnittKK.Schnitt;
 var
   a, b, h1, h2, p, q, Entfernung: single;
@@ -248,6 +236,8 @@ var
 begin
   NeedCalc := False;
   sv := False;
+  Watch1 := 0;
+  Watch2 := 0;
 
   S1 := TPoint3D.Zero;
   S2 := TPoint3D.Zero;
@@ -307,6 +297,7 @@ begin
 
   if AbsDeltaY > AbsDeltaX then
   begin
+    Watch1 := 1;
     a := - DeltaX / DeltaY;
     b := h1 / (2 * DeltaY);
     p := 2 * (a * b - M1.X - a * M1.Y) / (1 + a * a);
@@ -324,6 +315,7 @@ begin
   end
   else
   begin
+    Watch1 := 2;
     a := - DeltaY / DeltaX;
     b := h1 / (2 * DeltaX);
     p := 2 * (a * b - M1.Y - a * M1.X) / (1 + a * a);
@@ -367,11 +359,13 @@ begin
   { den "richtigen" SchnittPunkt ermitteln }
   if Bem = bmZwei then
   begin
+    Watch2 := 1;
     M1M2 := M2 - M1;
     M1S1 := S1 - M1;
     KreuzProd := M1M2.CrossProduct(M1S1);
     if KreuzProd.Z < 0 then
     begin
+      Watch2 := 2;
       SP := S2;
       S2 := S1;
       S1 := SP;

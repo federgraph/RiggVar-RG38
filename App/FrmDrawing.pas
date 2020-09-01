@@ -1022,7 +1022,6 @@ begin
     Memo.Text := CurrentDrawing.ML.Text;
 end;
 
-
 procedure TFormDrawing.ShowInfo;
 var
   ML: TStrings;

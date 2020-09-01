@@ -36,7 +36,7 @@ uses
   RiggVar.FZ.Z18_BerechneWinkel,
   RiggVar.FZ.Z19_Chart,
   RiggVar.FZ.Z20_Epsilon,
-//  RiggVar.FZ.Z21_Rotations,
+  RiggVar.FZ.Z21_Rotations,
   RiggVar.FZ.Z22_BigArc;
 
 class procedure TRggDrawingRegistry.Init(DL: TRggDrawings);
@@ -69,7 +69,7 @@ begin
   DL.Add(TRggDrawingZ18.Create); // BerechneWinkel
   DL.Add(TRggDrawingZ19.Create); // Chart
   DL.Add(TRggDrawingZ20.Create); // Epsilon
-//  DL.Add(TRggDrawingZ21.Create); // Rotations
+  DL.Add(TRggDrawingZ21.Create); // Rotations
   DL.Add(TRggDrawingZ22.Create); // BigArc
 end;
 

@@ -21,7 +21,9 @@ type
     M2: TRggCircle;
     S1: TRggCircle;
     S2: TRggCircle;
+
     Bem: TRggLabel;
+    Watch: TRggLabel;
 
     C1: TRggBigCircle;
     C2: TRggBigCircle;
@@ -66,6 +68,7 @@ begin
   S2.Center.C := SchnittKK.SchnittPunkt2;
 
   Bem.Text := SchnittKK.Bemerkung;
+  Watch.Text := Format('Watch1 = %d, Watch2 = %d', [SchnittKK.Watch1, SchnittKK.Watch2]);
 
   C1.Center := M1.Center;
   C2.Center := M2.Center;
@@ -102,9 +105,16 @@ begin
   Bem := TRggLabel.Create;
   Bem.Caption := 'Bemerkung';
   Bem.Text := 'Bemerkung';
-  Bem.Position.X := 100;
-  Bem.Position.X := 50;
+  Bem.Position.X := 20;
+  Bem.Position.Y := 20;
   Bem.StrokeColor := claTomato;
+
+  Watch := TRggLabel.Create;
+  Watch.Caption := 'Watch';
+  Watch.Text := 'Watch';
+  Watch.Position.X := 20;
+  Watch.Position.Y := 55;
+  Watch.StrokeColor := claTomato;
 
   C1 := TRggBigCircle.Create('C1');
   C1.StrokeThickness := 1.0;
@@ -126,10 +136,13 @@ begin
   Add(S2);
 
   Add(Bem);
+  Add(Watch);
 
   FixPoint := M1.Center.C;
   WantRotation := False;
   WantSort := False;
+
+  DefaultElement := M2;
 end;
 
 destructor TRggDrawingZ13.Destroy;

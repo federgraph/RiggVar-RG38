@@ -1557,12 +1557,12 @@ begin
   end;
 end;
 
-{ TSchnittKKCircle }
+{ TSchnittKKCircleLL }
 
 constructor TSchnittKKCircleLL.Create(ACaption: string);
 begin
   inherited;
-  TypeName := 'SKK Circle L';
+  TypeName := 'SKK Circle LL';
   IsComputed := True;
   Radius1 := 100;
   Radius2 := 100;
@@ -1657,23 +1657,23 @@ begin
     ComputeInternal;
   case Bem of
     bmKonzentrisch:
-      result := 'konzentrische Kreise';
+      result := 'concentric circles';
     bmZwei:
-      result := 'zwei Schnittpunkte';
+      result := 'two intersections';
     bmEntfernt:
-      result := 'zwei entfernte Kreise';
+      result := 'two distant circles';
     bmEinerAussen:
-      result := 'Berührung außen';
+      result := 'touching outside';
     bmEinerK1inK2:
-      result := 'Berührung innen, K1 in K2';
+      result := 'touching inside, C1 in C2';
     bmEinerK2inK1:
-      result := 'Berührung innen, K2 in K1';
+      result := 'touching inside, C2 in C1';
     bmK1inK2:
-      result := 'K1 innerhalb K2';
+      result := 'C1 inside C2';
     bmK2inK1:
-      result := 'K2 innerhalb K1';
+      result := 'C2 inside C1';
     bmRadiusFalsch:
-      result := 'Radius Ungültig';
+      result := 'invalid radius';
   end;
 end;
 
