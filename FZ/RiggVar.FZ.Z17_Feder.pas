@@ -3,7 +3,7 @@
 interface
 
 uses
-  System.UIConsts,
+  RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -47,19 +47,19 @@ begin
 
   A := TRggCircle.Create;
   A.Caption := 'A';
-  A.StrokeColor := claRed;
+  A.StrokeColor := TRggColors.Red;
 
   B := TRggCircle.Create;
   B.Caption := 'B';
-  B.StrokeColor := claDodgerblue;
+  B.StrokeColor := TRggColors.Dodgerblue;
 
   AB := TRggFederLine.Create;
   AB.Caption := 'AB';
   AB.Point1 := A;
   AB.Point2 := B;
   AB.ShowCaption := False;
-  AB.StrokeThickness := 2.0;
-  AB.StrokeColor := claAquamarine;
+  AB.StrokeThickness := 2;
+  AB.StrokeColor := TRggColors.Aquamarine;
 
   InitDefaultPos;
 

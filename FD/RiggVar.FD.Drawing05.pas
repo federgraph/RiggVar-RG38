@@ -23,8 +23,8 @@
 interface
 
 uses
-  System.UIConsts,
   System.Math.Vectors,
+  RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -108,31 +108,31 @@ begin
   { Points }
 
   A0 := TRggCircle.Create('A0');
-  A0.StrokeColor := claRed;
+  A0.StrokeColor := TRggColors.Red;
 
   B0 := TRggCircle.Create('B0');
-  B0.StrokeColor := claGreen;
+  B0.StrokeColor := TRggColors.Green;
 
   C0 := TRggCircle.Create('C0');
-  C0.StrokeColor := claYellow;
+  C0.StrokeColor := TRggColors.Yellow;
 
   D0 := TRggCircle.Create('D0');
-  D0.StrokeColor := claBlue;
+  D0.StrokeColor := TRggColors.Blue;
 
   A := TRggCircle.Create('A');
-  A.StrokeColor := claRed;
+  A.StrokeColor := TRggColors.Red;
 
   B := TRggCircle.Create('B');
-  B.StrokeColor := claGreen;
+  B.StrokeColor := TRggColors.Green;
 
   C := TRggCircle.Create('C');
-  C.StrokeColor := claYellow;
+  C.StrokeColor := TRggColors.Yellow;
 
   D := TRggCircle.Create('D');
-  D.StrokeColor := claBlue;
+  D.StrokeColor := TRggColors.Blue;
 
   F := TRggCircle.Create('F');
-  F.StrokeColor := claGray;
+  F.StrokeColor := TRggColors.Gray;
 
   InitDefaultPos;
 
@@ -141,19 +141,19 @@ begin
   DefaultShowCaption := False;
 
   L := TRggLine.Create('A0B0');
-  L.StrokeColor := claGray;
+  L.StrokeColor := TRggColors.Gray;
   L.Point1 := A0;
   L.Point2 := B0;
   Add(L);
 
   L := TRggLine.Create('A0C0');
-  L.StrokeColor := claGray;
+  L.StrokeColor := TRggColors.Gray;
   L.Point1 := A0;
   L.Point2 := C0;
   Add(L);
 
   L := TRggLine.Create('B0C0');
-  L.StrokeColor := claGray;
+  L.StrokeColor := TRggColors.Gray;
   L.Point1 := B0;
   L.Point2 := C0;
   Add(L);
@@ -161,19 +161,19 @@ begin
   { --- }
 
   L := TRggLine.Create('A0D0');
-  L.StrokeColor := claBlack;
+  L.StrokeColor := TRggColors.Black;
   L.Point1 := A0;
   L.Point2 := D0;
   Add(L);
 
   L := TRggLine.Create('B0D0');
-  L.StrokeColor := claBlack;
+  L.StrokeColor := TRggColors.Black;
   L.Point1 := B0;
   L.Point2 := D0;
   Add(L);
 
   L := TRggLine.Create('C0D0');
-  L.StrokeColor := claBlack;
+  L.StrokeColor := TRggColors.Black;
   L.Point1 := C0;
   L.Point2 := D0;
   Add(L);
@@ -181,25 +181,25 @@ begin
   { --- }
 
   L := TRggLine.Create('A0A');
-  L.StrokeColor := claRed;
+  L.StrokeColor := TRggColors.Red;
   L.Point1 := A0;
   L.Point2 := A;
   Add(L);
 
   L := TRggLine.Create('B0B');
-  L.StrokeColor := claGreen;
+  L.StrokeColor := TRggColors.Green;
   L.Point1 := B0;
   L.Point2 := B;
   Add(L);
 
   L := TRggLine.Create('C0C');
-  L.StrokeColor := claYellow;
+  L.StrokeColor := TRggColors.Yellow;
   L.Point1 := C0;
   L.Point2 := C;
   Add(L);
 
   L := TRggLine.Create('D0D');
-  L.StrokeColor := claBlue;
+  L.StrokeColor := TRggColors.Blue;
   L.Point1 := D0;
   L.Point2 := D;
   Add(L);
@@ -207,19 +207,19 @@ begin
   { --- }
 
   L := TRggLine.Create('AC');
-  L.StrokeColor := claRed;
+  L.StrokeColor := TRggColors.Red;
   L.Point1 := A;
   L.Point2 := C;
   Add(L);
 
   L := TRggLine.Create('BC');
-  L.StrokeColor := claGreen;
+  L.StrokeColor := TRggColors.Green;
   L.Point1 := B;
   L.Point2 := C;
   Add(L);
 
   L := TRggLine.Create('DC');
-  L.StrokeColor := claBlue;
+  L.StrokeColor := TRggColors.Blue;
   L.Point1 := D;
   L.Point2 := C;
   Add(L);
@@ -227,25 +227,25 @@ begin
   { --- }
 
   L := TRggLine.Create('AB');
-  L.StrokeColor := claLime;
+  L.StrokeColor := TRggColors.Lime;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
 
   L := TRggLine.Create('AD');
-  L.StrokeColor := claLime;
+  L.StrokeColor := TRggColors.Lime;
   L.Point1 := A;
   L.Point2 := D;
   Add(L);
 
   L := TRggLine.Create('BD');
-  L.StrokeColor := claLime;
+  L.StrokeColor := TRggColors.Lime;
   L.Point1 := B;
   L.Point2 := D;
   Add(L);
 
   L := TRggLine.Create('CF');
-  L.StrokeColor := claGray;
+  L.StrokeColor := TRggColors.Gray;
   L.Point1 := C;
   L.Point2 := F;
   Add(L);

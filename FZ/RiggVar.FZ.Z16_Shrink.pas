@@ -4,10 +4,10 @@ interface
 
 uses
   System.SysUtils,
-  System.UIConsts,
   System.Types,
   System.Math,
   System.Math.Vectors,
+  RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -37,7 +37,7 @@ type
     constructor Create;
     procedure InitDefaultPos; override;
     procedure Compute; override;
-    procedure Transform(M: TMatrix3D); override;
+    procedure Transform(AM: TMatrix3D); override;
   end;
 
 implementation
@@ -60,7 +60,7 @@ begin
   B.Save;
 end;
 
-procedure TRggDrawingZ16.Transform(M: TMatrix3D);
+procedure TRggDrawingZ16.Transform(AM: TMatrix3D);
 begin
   inherited;
   AB.Transform;
@@ -81,7 +81,7 @@ var
   alpha: single;
   Temp: TPoint3D;
 
-  p: TPointF;
+  P: TPointF;
 begin
   l := AB.LineLength;
   d := MastLength - l;
@@ -95,7 +95,7 @@ begin
     Branch := 1;
     Bem.Text := 'branch = ' + IntToStr(Branch);
     AB.StrokeThickness := 0.5;
-    AB.StrokeColor := claGray;
+    AB.StrokeColor := TRggColors.Gray;
     Exit;
   end;
 
@@ -118,8 +118,8 @@ begin
     M.Center.C := SKK.SchnittPunkt2;
     phi := arcsin(l / 2 / r);
     Branch := 2;
-    AB.StrokeThickness := 2.0;
-    AB.StrokeColor := claDodgerblue;
+    AB.StrokeThickness := 2;
+    AB.StrokeColor := TRggColors.Dodgerblue;
   end
   else
   begin
@@ -129,8 +129,8 @@ begin
     M.Center.C := SKK.SchnittPunkt2;
     phi := arcsin(l / 2 / r);
     Branch := 3;
-    AB.StrokeThickness := 0.5;
-    AB.StrokeColor := claRed;
+    AB.StrokeThickness := 1;
+    AB.StrokeColor := TRggColors.Red;
   end;
 
   deltaPhi := 2 * phi / SegmentCount;
@@ -146,11 +146,11 @@ begin
   tempPhi := -phi;
   for i := 0 to Count-1 do
   begin
-    p.X := r * cos(tempPhi);
-    p.Y := r * sin(tempPhi);
-    p := p.Rotate(alpha);
-    p := M.Center.P + p;
-    AB.Poly[i] := p;
+    P.X := r * cos(tempPhi);
+    P.Y := r * sin(tempPhi);
+    P := P.Rotate(alpha);
+    P := M.Center.P + P;
+    AB.Poly[i] := P;
     if AB.WantRotation then
     begin
       AB.RggPoly[i].P := AB.Poly[i];
@@ -197,18 +197,18 @@ begin
   { Points }
 
   A := TRggCircle.Create('A');
-  A.StrokeColor := claBlack;
+  A.StrokeColor := TRggColors.Black;
 
   B := TRggCircle.Create('B');
-  B.StrokeColor := claRed;
+  B.StrokeColor := TRggColors.Red;
 
   T := TRggCircle.Create('T');
-  T.StrokeColor := claAquamarine;
+  T.StrokeColor := TRggColors.Aquamarine;
   T.ShowCaption := False;
   T.IsComputed := True;
 
   M := TRggCircle.Create('M');
-  M.StrokeColor := claOrangeRed;
+  M.StrokeColor := TRggColors.OrangeRed;
   M.IsComputed := True;
 
   InitDefaultPos;
@@ -219,7 +219,7 @@ begin
 
   MT := TRggLine.Create('MT');
   MT.StrokeThickness := 0.5;
-  MT.StrokeColor := claRed;
+  MT.StrokeColor := TRggColors.Red;
   MT.Point1 := M;
   MT.Point2 := T;
   MT.IsComputed := True;
@@ -227,7 +227,7 @@ begin
 
   AB := TRggPolyLine3D.Create('AB', Count);
   AB.StrokeThickness := 0.8;
-  AB.StrokeColor := claDodgerblue;
+  AB.StrokeColor := TRggColors.Dodgerblue;
   AB.Point1 := A;
   AB.Point2 := B;
   Add(AB);

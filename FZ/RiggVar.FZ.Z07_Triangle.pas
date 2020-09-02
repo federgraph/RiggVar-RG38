@@ -3,7 +3,7 @@
 interface
 
 uses
-  System.UIConsts,
+  RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -46,40 +46,40 @@ begin
 
   A := TRggCircle.Create;
   A.Caption := 'A';
-  A.StrokeColor := claOrangered;
+  A.StrokeColor := TRggColors.Orangered;
 
   B := TRggCircle.Create;
   B.Caption := 'B';
-  B.StrokeColor := claDodgerblue;
+  B.StrokeColor := TRggColors.Dodgerblue;
 
   C := TRggCircle.Create;
   C.Caption := 'C';
-  C.StrokeColor := claAquamarine;
+  C.StrokeColor := TRggColors.Aquamarine;
 
   InitDefaultPos;
 
   T := TRggTriangle.Create;
   T.Caption := 'ABC';
-  T.StrokeColor := claAqua;
+  T.StrokeColor := TRggColors.Aqua;
   T.Point1 := A;
   T.Point2 := B;
   T.Point3 := C;
   Add(T);
 
   L := TRggLine.Create('AB');
-  L.StrokeColor := claAquamarine;
+  L.StrokeColor := TRggColors.Aquamarine;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
 
   L := TRggLine.Create('AC');
-  L.StrokeColor := claDodgerblue;
+  L.StrokeColor := TRggColors.Dodgerblue;
   L.Point1 := A;
   L.Point2 := C;
   Add(L);
 
   L := TRggLine.Create('BC');
-  L.StrokeColor := claPlum;
+  L.StrokeColor := TRggColors.Plum;
   L.Point1 := B;
   L.Point2 := C;
   Add(L);

@@ -3,7 +3,7 @@
 interface
 
 uses
-  System.UIConsts,
+  RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -52,56 +52,56 @@ begin
 
   A0 := TRggCircle.Create;
   A0.Caption := 'A0';
-  A0.StrokeColor := claRed;
+  A0.StrokeColor := TRggColors.Red;
 
   B0 := TRggCircle.Create;
   B0.Caption := 'B0';
-  B0.StrokeColor := claGreen;
+  B0.StrokeColor := TRggColors.Green;
 
   C0 := TRggCircle.Create;
   C0.Caption := 'C0';
-  C0.StrokeColor := claYellow;
+  C0.StrokeColor := TRggColors.Yellow;
 
   D0 := TRggCircle.Create;
   D0.Caption := 'D0';
-  D0.StrokeColor := claBlue;
+  D0.StrokeColor := TRggColors.Blue;
 
   InitDefaultPos;
 
   { Lines }
 
   L := TRggLine.Create('A0B0');
-  L.StrokeColor := claDodgerblue;
+  L.StrokeColor := TRggColors.Dodgerblue;
   L.Point1 := A0;
   L.Point2 := B0;
   Add(L);
 
   L := TRggLine.Create('A0C0');
-  L.StrokeColor := claAquamarine;
+  L.StrokeColor := TRggColors.Aquamarine;
   L.Point1 := A0;
   L.Point2 := C0;
   Add(L);
 
   L := TRggLine.Create('B0C0');
-  L.StrokeColor := claAntiquewhite;
+  L.StrokeColor := TRggColors.Antiquewhite;
   L.Point1 := B0;
   L.Point2 := C0;
   Add(L);
 
   L := TRggLine.Create('A0D0');
-  L.StrokeColor := claRed;
+  L.StrokeColor := TRggColors.Red;
   L.Point1 := A0;
   L.Point2 := D0;
   Add(L);
 
   L := TRggLine.Create('B0D0');
-  L.StrokeColor := claGreen;
+  L.StrokeColor := TRggColors.Green;
   L.Point1 := B0;
   L.Point2 := D0;
   Add(L);
 
   L := TRggLine.Create('C0D0');
-  L.StrokeColor := claYellow;
+  L.StrokeColor := TRggColors.Yellow;
   L.Point1 := C0;
   L.Point2 := D0;
   Add(L);

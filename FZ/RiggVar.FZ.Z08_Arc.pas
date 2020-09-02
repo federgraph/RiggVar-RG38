@@ -3,7 +3,7 @@
 interface
 
 uses
-  System.UIConsts,
+  RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -48,60 +48,60 @@ begin
 
   A := TRggCircle.Create;
   A.Caption := 'A';
-  A.StrokeColor := claOrangered;
+  A.StrokeColor := TRggColors.Orangered;
 
   B := TRggCircle.Create;
   B.Caption := 'B';
-  B.StrokeColor := claDodgerblue;
+  B.StrokeColor := TRggColors.Dodgerblue;
 
   C := TRggCircle.Create;
   C.Caption := 'C';
-  C.StrokeColor := claAquamarine;
+  C.StrokeColor := TRggColors.Aquamarine;
 
   InitDefaultPos;
 
   T := TRggTriangle.Create;
   T.Caption := 'ABC';
-  T.StrokeColor := claAqua;
+  T.StrokeColor := TRggColors.Aqua;
   T.Point1 := A;
   T.Point2 := B;
   T.Point3 := C;
   Add(T);
 
   L := TRggLine.Create('AB');
-  L.StrokeColor := claBlack;
+  L.StrokeColor := TRggColors.Black;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
 
   L := TRggLine.Create('AC');
-  L.StrokeColor := claGray;
+  L.StrokeColor := TRggColors.Gray;
   L.Point1 := A;
   L.Point2 := C;
   Add(L);
 
   L := TRggLine.Create('BC');
-  L.StrokeColor := claGray;
+  L.StrokeColor := TRggColors.Gray;
   L.Point1 := B;
   L.Point2 := C;
   Add(L);
 
   W := TRggArc.Create('Alpha');
-  W.StrokeColor := claRed;
+  W.StrokeColor := TRggColors.Red;
   W.Point1 := C;
   W.Point2 := B;
   W.Point3 := A;
   Add(W);
 
   W := TRggArc.Create('Beta');
-  W.StrokeColor := claBlue;
+  W.StrokeColor := TRggColors.Blue;
   W.Point1 := B;
   W.Point2 := C;
   W.Point3 := A;
   Add(W);
 
   W := TRggArc.Create('Gamma');
-  W.StrokeColor := claGreen;
+  W.StrokeColor := TRggColors.Green;
   W.Point1 := A;
   W.Point2 := B;
   W.Point3 := C;

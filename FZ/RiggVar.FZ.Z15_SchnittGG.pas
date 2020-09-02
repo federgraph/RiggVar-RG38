@@ -3,9 +3,9 @@
 interface
 
 uses
-  System.UIConsts,
   System.Math.Vectors,
   RggCalc,
+  RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -85,19 +85,19 @@ begin
   { Points }
 
   A := TRggCircle.Create('A');
-  A.StrokeColor := claYellow;
+  A.StrokeColor := TRggColors.Yellow;
 
   B := TRggCircle.Create('B');
-  B.StrokeColor := claRed;
+  B.StrokeColor := TRggColors.Red;
 
   C := TRggCircle.Create('C');
-  C.StrokeColor := claGreen;
+  C.StrokeColor := TRggColors.Green;
 
   D := TRggCircle.Create('D');
-  D.StrokeColor := claBlue;
+  D.StrokeColor := TRggColors.Blue;
 
   S := TRggCircle.Create('S');
-  S.StrokeColor := claCoral;
+  S.StrokeColor := TRggColors.Coral;
   S.IsComputed := True;
 
   InitDefaultPos;
@@ -107,13 +107,13 @@ begin
   DefaultShowCaption := False;
 
   L := TRggLine.Create('AB');
-  L.StrokeColor := claDodgerblue;
+  L.StrokeColor := TRggColors.Dodgerblue;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
 
   L := TRggLine.Create('CD');
-  L.StrokeColor := claAquamarine;
+  L.StrokeColor := TRggColors.Aquamarine;
   L.Point1 := C;
   L.Point2 := D;
   Add(L);

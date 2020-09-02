@@ -3,9 +3,10 @@
 interface
 
 uses
+  System.Types,
   System.SysUtils,
-  System.UIConsts,
   System.Math.Vectors,
+  RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -34,7 +35,6 @@ type
 implementation
 
 uses
-  System.Types,
   RggCalc;
 
 { TRggDrawingZ06 }
@@ -108,18 +108,18 @@ begin
   DefaultShowCaption := True;
 
   A := TRggCircle.Create('A');
-  A.StrokeColor := claRed;
+  A.StrokeColor := TRggColors.Red;
 
   B := TRggCircle.Create('B');
-  B.StrokeColor := claLime;
+  B.StrokeColor := TRggColors.Lime;
 
   C := TRggCircle.Create;
   C.Caption := 'C';
-  C.StrokeColor := claAqua;
+  C.StrokeColor := TRggColors.Aqua;
 
   D := TRggCircle.Create('D');
   D.ShowCaption := False;
-  D.StrokeColor := claYellow;
+  D.StrokeColor := TRggColors.Yellow;
   D.IsComputed := True;
 
   InitDefaultPos;
@@ -130,7 +130,7 @@ begin
 
   L := TRggLine.Create('a');
   L.ShowCaption := False;
-  L.StrokeColor := claWhite;
+  L.StrokeColor := TRggColors.White;
   L.StrokeThickness := 1;
   L.Point1 := C;
   L.Point2 := B;
@@ -138,7 +138,7 @@ begin
   SeiteA := L;
 
   L := TRggLine.Create('b');
-  L.StrokeColor := claLime;
+  L.StrokeColor := TRggColors.Lime;
   L.StrokeThickness := 4;
   L.Point1 := C;
   L.Point2 := A;
@@ -146,7 +146,7 @@ begin
   SeiteB := L;
 
   L := TRggLine.Create('c');
-  L.StrokeColor := claAqua;
+  L.StrokeColor := TRggColors.Aqua;
   L.StrokeThickness := 4;
   L.Point1 := B;
   L.Point2 := A;
@@ -157,14 +157,14 @@ begin
 
   L := TRggLine.Create;
   L.Caption := '(k) * a';
-  L.StrokeColor := claRed;
+  L.StrokeColor := TRggColors.Red;
   L.Point1 := C;
   L.Point2 := D;
   Add(L);
 
   L := TRggLine.Create;
   L.Caption := '(1-k) * a';
-  L.StrokeColor := claRed;
+  L.StrokeColor := TRggColors.Red;
   L.Point1 := D;
   L.Point2 := B;
   Add(L);
@@ -172,7 +172,7 @@ begin
   { --- }
 
   L := TRggLine.Create('h');
-  L.StrokeColor := claBlack;
+  L.StrokeColor := TRggColors.Black;
   L.Point1 := A;
   L.Point2 := D;
   Add(L);

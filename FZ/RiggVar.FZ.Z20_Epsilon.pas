@@ -5,10 +5,10 @@ interface
 uses
   System.SysUtils,
   System.Classes,
-  System.UIConsts,
   System.UITypes,
   System.Math.Vectors,
   RggSchnittKK,
+  RiggVar.FB.Color,
   RiggVar.FD.Chart,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
@@ -73,17 +73,17 @@ begin
   { Points }
 
   M1 := TRggCircle.Create('M1');
-  M1.StrokeColor := claRed;
+  M1.StrokeColor := TRggColors.Red;
 
   M2 := TRggCircle.Create('M2');
-  M2.StrokeColor := claBlue;
+  M2.StrokeColor := TRggColors.Blue;
 
   S1 := TRggCircle.Create('S1');
-  S1.StrokeColor := claYellow;
+  S1.StrokeColor := TRggColors.Yellow;
   S1.IsComputed := True;
 
   S2 := TRggCircle.Create('S2');
-  S2.StrokeColor := claLime;
+  S2.StrokeColor := TRggColors.Lime;
   S2.IsComputed := True;
 
   { Other Elements }
@@ -93,7 +93,7 @@ begin
   Bem.Text := 'Bemerkung';
   Bem.Position.X := 1 * Raster;
   Bem.Position.X := 50;
-  Bem.StrokeColor := TAlphaColors.Tomato;
+  Bem.StrokeColor := TRggColors.Tomato;
 
   Add(M1);
   Add(M2);
@@ -104,20 +104,20 @@ begin
 
   ParamA := TRggParam.Create;
   ParamA.Caption := 'Abstand';
-  ParamA.StrokeColor := TAlphaColors.Teal;
+  ParamA.StrokeColor := TRggColors.Teal;
   ParamA.StartPoint.Y := 3 * Raster;
   Add(ParamA);
 
   ParamR := TRggParam.Create;
   ParamR.Caption := 'Range';
-  ParamR.StrokeColor := TAlphaColors.Teal;
+  ParamR.StrokeColor := TRggColors.Teal;
   ParamR.StartPoint.Y := 5 * Raster;
   Add(ParamR);
 
   ChartX := TRggChart.Create(51);
   ChartX.Caption := 'SP.X';
-  ChartX.StrokeThickness := 1.0;
-  ChartX.StrokeColor := TAlphaColors.Dodgerblue;
+  ChartX.StrokeThickness := 1;
+  ChartX.StrokeColor := TRggColors.Dodgerblue;
   ChartX.InitDefault;
   ChartX.Box.X := 100;
   ChartX.Box.Y := 200;
@@ -129,8 +129,8 @@ begin
 
   ChartY := TRggChart.Create(51);
   ChartY.Caption := 'SP.Y';
-  ChartY.StrokeThickness := 1.0;
-  ChartY.StrokeColor := TAlphaColors.Tomato;
+  ChartY.StrokeThickness := 1;
+  ChartY.StrokeColor := TRggColors.Tomato;
   ChartY.InitDefault;
   ChartY.Box.X := 100;
   ChartY.Box.Y := 200;
@@ -153,7 +153,7 @@ procedure TRggDrawingZ20.Compute;
 var
   i: Integer;
   k: single;
-  p: TPoint3D;
+  P: TPoint3D;
   Range: single;
   StartValue: single;
 begin
@@ -174,9 +174,9 @@ begin
 
   Range := ParamR.RelativeValue;
   StartValue := -Range * 0.5;
-  p := TPoint3D.Zero;
-  p.X := StartValue;
-  p.Y := ParamA.RelativeValue;
+  P := TPoint3D.Zero;
+  P.X := StartValue;
+  P.Y := ParamA.RelativeValue;
 
   k := Range / ChartX.Count; // increment
   for i := 0 to ChartX.Count do

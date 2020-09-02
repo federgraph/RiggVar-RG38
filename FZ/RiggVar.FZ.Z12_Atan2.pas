@@ -4,8 +4,8 @@ interface
 
 uses
   System.SysUtils,
-  System.UIConsts,
   System.UITypes,
+  RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -104,15 +104,15 @@ begin
   { Points }
 
   A := TRggCircle.Create('A');
-  A.StrokeColor := claYellow;
+  A.StrokeColor := TRggColors.Yellow;
   A.IsComputed := True;
 
   B := TRggCircle.Create('B');
-  B.StrokeColor := claRed;
+  B.StrokeColor := TRggColors.Red;
   B.IsComputed := True;
 
   C := TRggCircle.Create('C');
-  C.StrokeColor := claGreen;
+  C.StrokeColor := TRggColors.Green;
 
   InitDefaultPos;
 
@@ -121,14 +121,14 @@ begin
   DefaultShowCaption := False;
 
   L := TRggLine.Create('AB');
-  L.StrokeColor := claDodgerblue;
+  L.StrokeColor := TRggColors.Dodgerblue;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
   AB := L;
 
   L := TRggLine.Create('AC');
-  L.StrokeColor := claDodgerblue;
+  L.StrokeColor := TRggColors.Dodgerblue;
   L.Point1 := A;
   L.Point2 := C;
   L.ShowCaption := True;
@@ -136,7 +136,7 @@ begin
   AC := L;
 
   W := TRggArc.Create('alpha');
-  W.StrokeColor := claAquamarine;
+  W.StrokeColor := TRggColors.Aquamarine;
   W.Point1 := A;
   W.Point2 := B;
   W.Point3 := C;
@@ -149,7 +149,7 @@ begin
   ResultLabel := TRggLabel.Create;
   ResultLabel.Caption := 'RL';
   ResultLabel.Text := FigureString;
-  ResultLabel.StrokeColor := claTomato;
+  ResultLabel.StrokeColor := TRggColors.Tomato;
   Add(ResultLabel);
 
   FixPoint := A.Center.C;

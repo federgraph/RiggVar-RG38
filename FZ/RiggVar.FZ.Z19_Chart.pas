@@ -3,7 +3,7 @@
 interface
 
 uses
-  System.UIConsts,
+  RiggVar.FB.Color,
   RiggVar.FD.Chart,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
@@ -43,17 +43,17 @@ begin
   WantSort := False;
 
   B0 := TRggCircle.Create('B0');
-  B0.StrokeColor := claBlue;
+  B0.StrokeColor := TRggColors.Blue;
 
   A := TRggCircle.Create('A');
-  A.StrokeColor := claOrangered;
+  A.StrokeColor := TRggColors.Orangered;
 
   InitDefaultPos;
 
   Chart := TRggChart.Create;
   Chart.Caption := 'Test';
-  Chart.StrokeThickness := 1.0;
-  Chart.StrokeColor := claDodgerblue;
+  Chart.StrokeThickness := 1;
+  Chart.StrokeColor := TRggColors.Dodgerblue;
   Chart.InitDefault;
   Chart.Box.X := 250;
   Chart.Box.Y := 250;

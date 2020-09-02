@@ -26,6 +26,7 @@ uses
   System.UIConsts,
   System.Math,
   System.Math.Vectors,
+  RiggVar.FB.Color,
   RggSchnittKK,
   FMX.Types,
   FMX.Graphics;
@@ -72,19 +73,23 @@ type
   );
 
   TRggPoint3D = record
+    function Rotate(const AAngle: Single): TRggPoint3D;
+    function Angle(const APoint: TRggPoint3D): single;
+    function Length: single;
+    function Normalize: TRggPoint3D;
+    class function Zero: TRggPoint3D; static;
+
     class operator Add(const APoint1, APoint2: TRggPoint3D): TRggPoint3D;
     class operator Subtract(const APoint1, APoint2: TRggPoint3D): TRggPoint3D;
-    function Length: Single; //inline;
-    function Normalize: TPoint3D;
 
     case Integer of
-      0: (V: TVectorArray;);
-      1: (X: Single;
-          Y: Single;
-          Z: Single;);
-      2: (C: TPoint3D);
-      3: (P: TPointF;
-          T: Single;);
+      0: (X: single;
+          Y: single;
+          Z: single;);
+      1: (C: TPoint3D);
+      2: (P: TPointF;
+          T: single;);
+      3: (V: TVectorArray;);
   end;
 
   TRggPoly = array of TRggPoint3D;
@@ -458,6 +463,53 @@ const
   DefaultTextAngle: single = 45 * PI / 180;
   DefaultTextRadius: single = 30.0;
 
+{ TRggPoint3D }
+
+class operator TRggPoint3D.Add(const APoint1, APoint2: TRggPoint3D): TRggPoint3D;
+begin
+  Result.X := APoint1.X + APoint2.X;
+  Result.Y := APoint1.Y + APoint2.Y;
+  Result.Z := APoint1.Z + APoint2.Z;
+end;
+
+class operator TRggPoint3D.Subtract(const APoint1, APoint2: TRggPoint3D): TRggPoint3D;
+begin
+  Result.X := APoint1.X - APoint2.X;
+  Result.Y := APoint1.Y - APoint2.Y;
+  Result.Z := APoint1.Z - APoint2.Z;
+end;
+
+function TRggPoint3D.Length: Single;
+begin
+  result := C.Length;
+end;
+
+function TRggPoint3D.Normalize: TRggPoint3D;
+begin
+  C := C.Normalize;
+  result := self;
+end;
+
+function TRggPoint3D.Rotate(const AAngle: Single): TRggPoint3D;
+var
+  Sine, Cosine: Single;
+begin
+  Sine := sin(AAngle);
+  Cosine := cos(AAngle);
+  Result.X := X * Cosine - Y * Sine;
+  Result.Y := X * Sine + Y * Cosine;
+end;
+
+function TRggPoint3D.Angle(const APoint: TRggPoint3D): single;
+begin
+  Result := Arctan2(Self.Y - APoint.Y, Self.X - APoint.X);
+end;
+
+class function TRggPoint3D.Zero: TRggPoint3D;
+begin
+  result.C := TPoint3D.Zero;
+end;
+
 { TRggBase }
 
 constructor TRggElement.Create;
@@ -470,6 +522,8 @@ begin
   TextRadius := DefaultTextRadius;
   TextAngle := DefaultTextAngle;
 end;
+
+{ TRggElement }
 
 procedure TRggElement.GetInfo(ML: TStrings);
 begin
@@ -2034,34 +2088,6 @@ begin
   else
     m := TMatrix3D.CreateRotation(TPoint3D.Create(0,0,-1), a);
   result := ov * m;
-end;
-
-{ TRggPoint3D }
-
-class operator TRggPoint3D.Add(const APoint1,
-  APoint2: TRggPoint3D): TRggPoint3D;
-begin
-  Result.X := APoint1.X + APoint2.X;
-  Result.Y := APoint1.Y + APoint2.Y;
-  Result.Z := APoint1.Z + APoint2.Z;
-end;
-
-function TRggPoint3D.Length: Single;
-begin
-  result := C.Length;
-end;
-
-function TRggPoint3D.Normalize: TPoint3D;
-begin
-  result := C.Normalize;
-end;
-
-class operator TRggPoint3D.Subtract(const APoint1,
-  APoint2: TRggPoint3D): TRggPoint3D;
-begin
-  Result.X := APoint1.X - APoint2.X;
-  Result.Y := APoint1.Y - APoint2.Y;
-  Result.Z := APoint1.Z - APoint2.Z;
 end;
 
 { TRggBigCircle }

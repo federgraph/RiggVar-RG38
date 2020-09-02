@@ -5,9 +5,9 @@ interface
 uses
   System.SysUtils,
   System.Classes,
-  System.UIConsts,
   System.UITypes,
   RggSchnittKK,
+  RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -35,9 +35,6 @@ type
   end;
 
 implementation
-
-uses
-  Math;
 
 { TRggDrawingZ13 }
 
@@ -85,17 +82,17 @@ begin
   { Points }
 
   M1 := TRggCircle.Create('M1');
-  M1.StrokeColor := claRed;
+  M1.StrokeColor := TRggColors.Red;
 
   M2 := TRggCircle.Create('M2');
-  M2.StrokeColor := claBlue;
+  M2.StrokeColor := TRggColors.Blue;
 
   S1 := TRggCircle.Create('S1');
-  S1.StrokeColor := claYellow;
+  S1.StrokeColor := TRggColors.Yellow;
   S1.IsComputed := True;
 
   S2 := TRggCircle.Create('S2');
-  S2.StrokeColor := claLime;
+  S2.StrokeColor := TRggColors.Lime;
   S2.IsComputed := True;
 
   InitDefaultPos;
@@ -107,25 +104,25 @@ begin
   Bem.Text := 'Bemerkung';
   Bem.Position.X := 20;
   Bem.Position.Y := 20;
-  Bem.StrokeColor := claTomato;
+  Bem.StrokeColor := TRggColors.Tomato;
 
   Watch := TRggLabel.Create;
   Watch.Caption := 'Watch';
   Watch.Text := 'Watch';
   Watch.Position.X := 20;
   Watch.Position.Y := 55;
-  Watch.StrokeColor := claTomato;
+  Watch.StrokeColor := TRggColors.Tomato;
 
   C1 := TRggBigCircle.Create('C1');
-  C1.StrokeThickness := 1.0;
-  C1.StrokeColor := claPlum;
+  C1.StrokeThickness := 1;
+  C1.StrokeColor := TRggColors.Plum;
   C1.Radius := Radius;
   C1.IsComputed := True;
   Add(C1);
 
   C2 := TRggBigCircle.Create('C2');
-  C2.StrokeThickness := 1.0;
-  C2.StrokeColor := claDodgerblue;
+  C2.StrokeThickness := 1;
+  C2.StrokeColor := TRggColors.Dodgerblue;
   C2.Radius := Radius;
   C2.IsComputed := True;
   Add(C2);

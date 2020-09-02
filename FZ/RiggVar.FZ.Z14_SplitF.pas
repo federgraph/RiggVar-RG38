@@ -3,8 +3,8 @@
 interface
 
 uses
-  System.UIConsts,
   System.Math.Vectors,
+  RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -90,11 +90,11 @@ begin
 
   A := TRggCircle.Create;
   A.Caption := 'A';
-  A.StrokeColor := claPlum;
+  A.StrokeColor := TRggColors.Plum;
 
   B := TRggCircle.Create;
   B.Caption := 'B';
-  B.StrokeColor := claPlum;
+  B.StrokeColor := TRggColors.Plum;
 
   InitDefaultPos;
 
@@ -102,34 +102,34 @@ begin
   C.Caption := 'C';
   C.Radius1 := 500;
   C.Radius2 := C.Radius1;
-  C.StrokeColor := claAquamarine;
+  C.StrokeColor := TRggColors.Aquamarine;
 
   D := TRggCircle.Create;
   D.Caption := 'D';
   D.ShowCaption := False;
   D.IsComputed := True;
-  D.StrokeColor := claGray;
+  D.StrokeColor := TRggColors.Gray;
 
   E := TRggCircle.Create;
   E.Caption := 'e';
   E.ShowCaption := False;
   E.IsComputed := True;
-  E.StrokeColor := claGray;
+  E.StrokeColor := TRggColors.Gray;
 
   F := TRggCircle.Create;
   F.Caption := 'f';
   F.ShowCaption := False;
   F.IsComputed := True;
-  F.StrokeColor := claGray;
+  F.StrokeColor := TRggColors.Gray;
 
   F1 := TRggCircle.Create;
   F1.Caption := 'F1';
   F1.IsComputed := True;
-  F1.StrokeColor := claGray;
+  F1.StrokeColor := TRggColors.Gray;
 
   T := TRggTriangle.Create;
   T.Caption := 'F2';
-  T.StrokeColor := claAqua;
+  T.StrokeColor := TRggColors.Aqua;
   T.Point1 := F1;
   T.Point2 := E;
   T.Point3 := F;
@@ -138,7 +138,7 @@ begin
   AB := TRggLine.Create;
   L := AB;
   L.Caption := 'l2';
-  L.StrokeColor := claAquamarine;
+  L.StrokeColor := TRggColors.Aquamarine;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
@@ -146,7 +146,7 @@ begin
   AC := TRggLine.Create('AC');
   L := AC;
   L.ShowCaption := False;
-  L.StrokeColor := claPlum;
+  L.StrokeColor := TRggColors.Plum;
   L.Point1 := A;
   L.Point2 := C;
   Add(L);
@@ -154,7 +154,7 @@ begin
   BC := TRggLine.Create;
   L := BC;
   L.Caption := 'l1';
-  L.StrokeColor := claPlum;
+  L.StrokeColor := TRggColors.Plum;
   L.Point1 := B;
   L.Point2 := C;
   Add(L);
@@ -162,16 +162,16 @@ begin
   L := TRggLine.Create;
   L.Caption := 'h';
   L.ShowCaption := False;
-  L.StrokeThickness := 1.0;
-  L.StrokeColor := claGray;
+  L.StrokeThickness := 1;
+  L.StrokeColor := TRggColors.Gray;
   L.Point1 := C;
   L.Point2 := D;
   Add(L);
 
   CF := TRggLine.Create('F');
   L := CF;
-  L.StrokeThickness := 4.0;
-  L.StrokeColor := claDodgerblue;
+  L.StrokeThickness := 4;
+  L.StrokeColor := TRggColors.Dodgerblue;
   L.Point1 := C;
   L.Point2 := F;
   Add(L);

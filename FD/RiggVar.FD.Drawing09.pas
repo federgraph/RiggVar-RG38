@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils,
   System.Classes,
-  System.UIConsts,
+  RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -60,19 +60,19 @@ begin
 
   AX := TRggCircle.Create;
   AX.Caption := 'X';
-  AX.StrokeColor := claRed;
+  AX.StrokeColor := TRggColors.Red;
 
   AY := TRggCircle.Create;
   AY.Caption := 'Y';
-  AY.StrokeColor := claGreen;
+  AY.StrokeColor := TRggColors.Green;
 
   AZ := TRggCircle.Create;
   AZ.Caption := 'Z';
-  AZ.StrokeColor := claBlue;
+  AZ.StrokeColor := TRggColors.Blue;
 
   Origin := TRggCircle.Create;
   Origin.Caption := 'Origin';
-  Origin.StrokeColor := claYellow;
+  Origin.StrokeColor := TRggColors.Yellow;
   Origin.ShowCaption := False;
 
   InitDefaultPos;
@@ -82,19 +82,19 @@ begin
   DefaultShowCaption := False;
 
   L := TRggLine.Create('AX');
-  L.StrokeColor := claRed;
+  L.StrokeColor := TRggColors.Red;
   L.Point1 := Origin;
   L.Point2 := AX;
   Add(L);
 
   L := TRggLine.Create('AY');
-  L.StrokeColor := claGreen;
+  L.StrokeColor := TRggColors.Green;
   L.Point1 := Origin;
   L.Point2 := AY;
   Add(L);
 
   L := TRggLine.Create('AZ');
-  L.StrokeColor := claBlue;
+  L.StrokeColor := TRggColors.Blue;
   L.Point1 := Origin;
   L.Point2 := AZ;
   Add(L);

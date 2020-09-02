@@ -4,12 +4,12 @@ interface
 
 uses
   System.SysUtils,
-  System.UIConsts,
   System.Math,
   System.Math.Vectors,
   RggTypes,
   RggCalc,
   RggSchnittKK,
+  RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -114,64 +114,64 @@ begin
 
   A0 := TRggCircle.Create;
   A0.Caption := 'A0';
-  A0.StrokeColor := claOrangered;
+  A0.StrokeColor := TRggColors.Orangered;
 
   B0 := TRggCircle.Create;
   B0.Caption := 'B0';
-  B0.StrokeColor := claBlue;
+  B0.StrokeColor := TRggColors.Blue;
 
   A := TRggCircle.Create;
   A.Caption := 'A';
-  A.StrokeColor := claOrangered;
+  A.StrokeColor := TRggColors.Orangered;
 
   B := TSchnittKKCircleLL.Create;
   B.Caption := 'B';
-  B.StrokeColor := claBlue;
+  B.StrokeColor := TRggColors.Blue;
 
   C := TSchnittKKCircleLL.Create;
   C.Caption := 'C';
-  C.StrokeColor := claBlue;
+  C.StrokeColor := TRggColors.Blue;
 
   InitDefaultPos;
 
   A0B0 := TRggLine.Create('A0B0');
   L := A0B0;
-  L.StrokeColor := claGray;
+  L.StrokeColor := TRggColors.Gray;
   L.Point1 := A0;
   L.Point2 := B0;
   Add(L);
 
   A0A := TRggRotaLine.Create('A0A');
   L := A0A;
-  L.StrokeColor := claRed;
+  L.StrokeColor := TRggColors.Red;
   L.Point1 := A0;
   L.Point2 := A;
   Add(L);
 
   B0B := TRggLine.Create('B0B');
   L := B0B;
-  L.StrokeColor := claBlue;
+  L.StrokeColor := TRggColors.Blue;
   L.Point1 := B0;
   L.Point2 := B;
   Add(L);
 
   AB := TRggLine.Create('AB');
   L := AB;
-  L.StrokeColor := claLime;
+  L.StrokeColor := TRggColors.Lime;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
 
   AC := TRggLine.Create('AC');
   L := AC;
-  L.StrokeColor := claLime;
+  L.StrokeColor := TRggColors.Lime;
   L.Point1 := A;
   L.Point2 := C;
   Add(L);
 
   BC := TRggLine.Create('BC');
   L := BC;
-  L.StrokeColor := claLime;
+  L.StrokeColor := TRggColors.Lime;
   L.Point1 := B;
   L.Point2 := C;
   Add(L);
@@ -210,8 +210,8 @@ begin
   C.InitRadius;
 
   KK := TRggPolyLine.Create('KK', Count);
-  KK.StrokeThickness := 2.0;
-  KK.StrokeColor := claOrangered;
+  KK.StrokeThickness := 2;
+  KK.StrokeColor := TRggColors.Orangered;
   Add(KK);
 
   Temp := TRggCircle.Create;

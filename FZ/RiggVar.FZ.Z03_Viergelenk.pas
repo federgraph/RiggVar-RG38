@@ -4,12 +4,12 @@ interface
 
 uses
   System.SysUtils,
-  System.UIConsts,
   System.Math,
   System.Math.Vectors,
   RggTypes,
   RggCalc,
   RggSchnittKK,
+  RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -108,25 +108,25 @@ begin
 
   A0 := TRggCircle.Create;
   A0.Caption := 'A0';
-  A0.StrokeColor := claOrangered;
+  A0.StrokeColor := TRggColors.Orangered;
 
   B0 := TRggCircle.Create;
   B0.Caption := 'B0';
-  B0.StrokeColor := claBlue;
+  B0.StrokeColor := TRggColors.Blue;
 
   A := TRggCircle.Create;
   A.Caption := 'A';
-  A.StrokeColor := claOrangered;
+  A.StrokeColor := TRggColors.Orangered;
 
   B := TSchnittKKCircle.Create;
   B.Caption := 'B';
-  B.StrokeColor := claBlue;
+  B.StrokeColor := TRggColors.Blue;
   B.MP1 := A;
   B.MP2 := B0;
 
   C := TSchnittKKCircle.Create;
   C.Caption := 'C';
-  C.StrokeColor := claLime;
+  C.StrokeColor := TRggColors.Lime;
   C.MP1 := A;
   C.MP2 := B;
 
@@ -134,14 +134,14 @@ begin
 
   A0B0 := TRggLine.Create('A0B0');
   L := A0B0;
-  L.StrokeColor := claGray;
+  L.StrokeColor := TRggColors.Gray;
   L.Point1 := A0;
   L.Point2 := B0;
   Add(L);
 
   A0A := TRggRotaLine.Create('A0A');
   L := A0A;
-  L.StrokeColor := claRed;
+  L.StrokeColor := TRggColors.Red;
   L.Point1 := A0;
   L.Point2 := A;
   Add(L);
@@ -169,8 +169,8 @@ begin
 
   KK := TRggPolyCurve.Create('KK', Count);
   KK.Caption := 'KK';
-  KK.StrokeThickness := 3.0;
-  KK.StrokeColor := claYellow;
+  KK.StrokeThickness := 3;
+  KK.StrokeColor := TRggColors.Yellow;
   KK.Opacity := 1.0;
   Add(KK);
 

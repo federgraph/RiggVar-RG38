@@ -30,6 +30,7 @@ uses
   RiggVar.FB.Action in 'FB\RiggVar.FB.Action.pas',
   RiggVar.FB.ActionConst in 'FB\RiggVar.FB.ActionConst.pas',
   RiggVar.FB.Classes in 'FB\RiggVar.FB.Classes.pas',
+  RiggVar.FB.Color in 'FB\RiggVar.FB.Color.pas',
   RiggVar.FB.ActionGroup in 'FB\RiggVar.FB.ActionGroup.pas',
   RiggVar.FB.ActionGroups in 'FB\RiggVar.FB.ActionGroups.pas',
   RiggVar.FB.ActionLong in 'FB\RiggVar.FB.ActionLong.pas',

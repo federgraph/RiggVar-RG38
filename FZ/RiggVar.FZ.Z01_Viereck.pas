@@ -3,7 +3,7 @@
 interface
 
 uses
-  System.UIConsts,
+  RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
@@ -50,39 +50,39 @@ begin
   WantSort := False;
 
   A0 := TRggCircle.Create('A0');
-  A0.StrokeColor := claOrangered;
+  A0.StrokeColor := TRggColors.Orangered;
 
   B0 := TRggCircle.Create('B0');
-  B0.StrokeColor := claBlue;
+  B0.StrokeColor := TRggColors.Blue;
 
   A := TRggCircle.Create('A');
-  A.StrokeColor := claOrangered;
+  A.StrokeColor := TRggColors.Orangered;
 
   B := TRggCircle.Create('B');
-  B.StrokeColor := claBlue;
+  B.StrokeColor := TRggColors.Blue;
 
   InitDefaultPos;
 
   L := TRggLine.Create('A0B0');
-  L.StrokeColor := claGray;
+  L.StrokeColor := TRggColors.Gray;
   L.Point1 := A0;
   L.Point2 := B0;
   Add(L);
 
   L := TRggLine.Create('A0A');
-  L.StrokeColor := claRed;
+  L.StrokeColor := TRggColors.Red;
   L.Point1 := A0;
   L.Point2 := A;
   Add(L);
 
   L := TRggLine.Create('B0B');
-  L.StrokeColor := claBlue;
+  L.StrokeColor := TRggColors.Blue;
   L.Point1 := B0;
   L.Point2 := B;
   Add(L);
 
   L := TRggLine.Create('AB');
-  L.StrokeColor := claLime;
+  L.StrokeColor := TRggColors.Lime;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
