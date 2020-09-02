@@ -84,7 +84,7 @@ type
 
     procedure InitLengthValues;
 
-    function GetVorstagLaenge(psi: single): single;
+    function GetVorstagLaenge(apsi: single): single;
 
     procedure BerechneWinkel;
 
@@ -518,7 +518,6 @@ procedure TRggDrawingZ18.BerechneWinkel;
 begin
   { FrVorstag gegeben, FrWinkel gesucht }
 
-  ML.Clear;
   Msg := 'ok';
   HasError := False;
 
@@ -641,13 +640,13 @@ begin
     Msg := 'UpdateGetriebeEnde - cannot compute EndC';
 end;
 
-function TRggDrawingZ18.GetVorstagLaenge(psi: single): single;
+function TRggDrawingZ18.GetVorstagLaenge(apsi: single): single;
 { Viergelenk P0 P D D0, Koppelpunkt C }
 var
   localD, localP, localC: TPoint3D;
 begin
-  localD.X := D0.Center.X + FrMastUnten * cos(psi);
-  localD.Y := D0.Center.Y - FrMastUnten * sin(psi);
+  localD.X := D0.Center.X + FrMastUnten * cos(apsi);
+  localD.Y := D0.Center.Y - FrMastUnten * sin(apsi);
   localD.Z := 0;
 
   SKK.SchnittEbene := seXY;
@@ -678,10 +677,12 @@ procedure TRggDrawingZ18.UpdateChart;
 var
   i: Integer;
   j: single;
+  k: single;
 begin
+  k := (psiEnde - psiStart) / Chart.Count;
   for i := 0 to Chart.Count do
   begin
-    j := psiStart + i * (psiEnde - psiStart) / Chart.Count;
+    j := psiStart + i * k;
     Chart.Poly[i] := GetVorstagLaenge(j);
   end;
   Chart.LookForYMinMax;
