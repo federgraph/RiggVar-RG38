@@ -18,65 +18,65 @@ class function TRggTestData.GetKoordinaten420: TRealRiggPoints;
 var
   rp: TRealRiggPoints;
 begin
-  rp[ooA].X := 2398;
-  rp[ooA].Y := -425;
-  rp[ooA].Z := 2496;
+  rp.A.X := 2398;
+  rp.A.Y := -425;
+  rp.A.Z := 2496;
 
-  rp[ooB].X := 2398;
-  rp[ooB].Y := 425;
-  rp[ooB].Z := 2496;
+  rp.B.X := 2398;
+  rp.B.Y := 425;
+  rp.B.Z := 2496;
 
-  rp[ooC].X := 2354;
-  rp[ooC].Y := 0;
-  rp[ooC].Z := 4470;
+  rp.C.X := 2354;
+  rp.C.Y := 0;
+  rp.C.Z := 4470;
 
-  rp[ooD].X := 2618;
-  rp[ooD].Y := 0;
-  rp[ooD].Z := 2488;
+  rp.D.X := 2618;
+  rp.D.Y := 0;
+  rp.D.Z := 2488;
 
-  rp[ooE].X := 2870;
-  rp[ooE].Y := 0;
-  rp[ooE].Z := 450;
+  rp.E.X := 2870;
+  rp.E.Y := 0;
+  rp.E.Z := 450;
 
-  rp[ooF].X := 2142;
-  rp[ooF].Y := 0;
-  rp[ooF].Z := 5970;
+  rp.F.X := 2142;
+  rp.F.Y := 0;
+  rp.F.Z := 5970;
 
-  rp[ooP].X := 2398;
-  rp[ooP].Y := 0;
-  rp[ooP].Z := 2496;
+  rp.P.X := 2398;
+  rp.P.Y := 0;
+  rp.P.Z := 2496;
 
-  rp[ooA0].X := 2560;
-  rp[ooA0].Y := -765;
-  rp[ooA0].Z := 430;
+  rp.A0.X := 2560;
+  rp.A0.Y := -765;
+  rp.A0.Z := 430;
 
-  rp[ooB0].X := 2560;
-  rp[ooB0].Y := 765;
-  rp[ooB0].Z := 430;
+  rp.B0.X := 2560;
+  rp.B0.Y := 765;
+  rp.B0.Z := 430;
 
-  rp[ooC0].X := 4140;
-  rp[ooC0].Y := 0;
-  rp[ooC0].Z := 340;
+  rp.C0.X := 4140;
+  rp.C0.Y := 0;
+  rp.C0.Z := 340;
 
-  rp[ooD0].X := 2870;
-  rp[ooD0].Y := 0;
-  rp[ooD0].Z := -100;
+  rp.D0.X := 2870;
+  rp.D0.Y := 0;
+  rp.D0.Z := -100;
 
-  rp[ooE0].X := 2970;
-  rp[ooE0].Y := 0;
-  rp[ooE0].Z := 450;
+  rp.E0.X := 2970;
+  rp.E0.Y := 0;
+  rp.E0.Z := 450;
 
-  rp[ooF0].X := -30;
-  rp[ooF0].Y := 0;
-  rp[ooF0].Z := 300;
+  rp.F0.X := -30;
+  rp.F0.Y := 0;
+  rp.F0.Z := 300;
 
-  rp[ooP0].X := 2560;
-  rp[ooP0].Y := 0;
-  rp[ooP0].Z := 430;
+  rp.P0.X := 2560;
+  rp.P0.Y := 0;
+  rp.P0.Z := 430;
 
-  rp[ooM].X := 0;
-  rp[ooM].Y := 0;
-  rp[ooM].Z := 0;
+  rp.M.X := 0;
+  rp.M.Y := 0;
+  rp.M.Z := 0;
 
   result := rp;
 end;

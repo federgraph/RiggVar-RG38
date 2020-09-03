@@ -320,7 +320,7 @@ begin
     begin
       if i in IndexAuswahlP then
       Add(Format('  rP[%s] %8.2f %8.2f %8.2f  (%s)',
-      [KoordTexte[i], rP[i].X, rP[i].Y, rP[i].Z, KoordLabels[i]]));
+      [KoordTexte[i], rP.V[i].X, rP.V[i].Y, rP.V[i].Z, KoordLabels[i]]));
     end;
     Add('');
   end;
@@ -340,7 +340,7 @@ begin
     begin
       if i in IndexAuswahlP then
       Add(Format('  rPe[%s] %8.2f %8.2f %8.2f  (%s)',
-      [KoordTexte[i], rPe[i].X, rPe[i].Y, rPe[i].Z, KoordLabels[i]]));
+      [KoordTexte[i], rPe.V[i].X, rPe.V[i].Y, rPe.V[i].Z, KoordLabels[i]]));
     end;
     Add('');
   end;
@@ -359,7 +359,7 @@ begin
     begin
       if i in IndexAuswahlP then
       Add(Format('  %s  %8.2f %8.2f %8.2f  (%s)',
-      [KoordTexte[i], rPe[i].X-rP[i].X, rPe[i].Y-rP[i].Y, rPe[i].Z-rP[i].Z,
+      [KoordTexte[i], rPe.V[i].X-rP.V[i].X, rPe.V[i].Y-rP.V[i].Y, rPe.V[i].Z-rP.V[i].Z,
       KoordLabels[i]]));
     end;
     Add('');

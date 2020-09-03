@@ -343,7 +343,7 @@ var
 
   procedure Temp(oo: TRiggPoint);
   begin
-    p := rP[oo];
+    p := rP.V[oo];
     t := p - q;
     s := KoordTexteXML[oo];
     cr := Find(s);
@@ -360,7 +360,7 @@ begin
 {$else}
   rP := TRggTestData.GetKoordinaten420;
 {$endif}
-  q := rP[ooD0];
+  q := rP.V[ooD0];
 
   try
     Temp(ooA0);

@@ -454,7 +454,7 @@ end;
 procedure TRggMain.SetFixPoint(const Value: TRiggPoint);
 begin
   FFixPoint := Value;
-  FixPunkt := Rigg.rP[Value];
+  FixPunkt := Rigg.rP.V[Value];
   if StrokeRigg <> nil then
     StrokeRigg.FixPoint := Value;
 end;
@@ -675,7 +675,7 @@ begin
       Rigg.BiegeUndNeigeC(FactArray.MastfallF0C.Ist, Value);
 
     fpD0X:
-      Rigg.rP[ooD0].X := Round(Value);
+      Rigg.rP.D0.X := Round(Value);
   end;
 end;
 
@@ -914,7 +914,7 @@ begin
   FactArray.MastfallF0C.Ist := Rigg.RealTrimm[tiMastfallF0C];
   FactArray.MastfallF0F.Ist := Rigg.RealTrimm[tiMastfallF0F];
   FactArray.Biegung.Ist := Rigg.RealTrimm[tiBiegungS];
-  FactArray.D0X.Ist := Rigg.rP[ooD0].X;
+  FactArray.D0X.Ist := Rigg.rP.D0.X;
 
   FactArray.T1.Ist := 650;
   FactArray.T2.Ist := 150;
@@ -1022,13 +1022,13 @@ begin
       fpSalingW:
         sb.Ist := arctan2(Rigg.RealGlied[fpSalingH] * 2, Rigg.RealGlied[fpSalingA]) * 180 / pi;
       fpMastfallF0C:
-        sb.Ist := (Rigg.rP[ooF0] - Rigg.rP[ooC]).Length;
+        sb.Ist := (Rigg.rP.F0 - Rigg.rP.C).Length;
       fpMastfallF0F:
-        sb.Ist := (Rigg.rP[ooF0] - Rigg.rP[ooF]).Length;
+        sb.Ist := (Rigg.rP.F0 - Rigg.rP.F).Length;
       fpBiegung:
         sb.Ist := Rigg.hd;
       fpD0X:
-        sb.Ist := Rigg.rP[ooD0].X;
+        sb.Ist := Rigg.rP.D0.X;
     end;
   end;
 
@@ -1053,7 +1053,7 @@ begin
       Rigg.UpdateGetriebe;
       if Rigg.GetriebeOK then
       begin
-        result := (Rigg.rP[ooF0] - Rigg.rP[ooF]).Length; // - 5000;
+        result := Rigg.rP.F0.Distance(Rigg.rP.F);
         UpdateFactArrayFromRigg;
       end
       else
@@ -1088,7 +1088,7 @@ begin
   FactArray.MastfallF0C.Ist := Rigg.RealTrimm[tiMastfallF0C];
   FactArray.MastfallF0F.Ist := Rigg.RealTrimm[tiMastfallF0F];
   FactArray.Biegung.Ist := Rigg.RealTrimm[tiBiegungS];
-  FactArray.D0X.Ist := Rigg.rP[ooD0].X;
+  FactArray.D0X.Ist := Rigg.rP.D0.X;
 
   fd.F0C := Round(FactArray.MastfallF0C.Ist);
   fd.F0F := Round(FactArray.MastfallF0F.Ist);
@@ -1522,7 +1522,7 @@ var
 begin
   if StrokeRigg <> nil then
   begin
-    pf := Rigg.rP[ooF];
+    pf := Rigg.rP.F;
 
     IndexG := 13;
     IndexH := 40;
@@ -1559,7 +1559,7 @@ begin
   ML.Clear;
   if StrokeRigg <> nil then
   begin
-    pf := Rigg.rP[ooF];
+    pf := Rigg.rP.F;
 
     bm := BogenMax;
     l := Rigg.rL[15] + Rigg.rL[16];

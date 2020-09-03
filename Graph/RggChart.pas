@@ -762,18 +762,18 @@ begin
         if yavMastfallF0F in YAchseSet then
         begin
           j := YAchseRecordList[yavMastfallF0F].ArrayIndex;
-          af[p,j,i] := (Rigg.rP[ooF0] - Rigg.rP[ooF]).Length;
+          af[p,j,i] := (Rigg.rP.F0 - Rigg.rP.F).Length;
         end;
         if yavMastfallF0C in YAchseSet then
         begin
           j := YAchseRecordList[yavMastfallF0C].ArrayIndex;
-          af[p,j,i] := (Rigg.rP[ooF0] - Rigg.rP[ooC]).Length;
+          af[p,j,i] := (Rigg.rP.F0 - Rigg.rP.C).Length;
         end;
         if yavAuslenkungC in YAchseSet then
         begin
           j := YAchseRecordList[yavAuslenkungC].ArrayIndex;
           if PunktOK then
-            af[p,j,i] := (Rigg.rP[ooC] - Rigg.rPe[ooC]).Length
+            af[p,j,i] := (Rigg.rP.C - Rigg.rPe.C).Length
           else
             af[p,j,i] := 0;
         end;
@@ -1270,12 +1270,12 @@ begin
     Add('Rumpf: Koordinaten (x,y,z) [mm]');
     with Rigg do
     begin
-      Add(Format('  A0(%g,%g,%g)', [rP[ooA0].X, rP[ooA0].Y, rP[ooA0].Z]));
-      Add(Format('  B0(%g,%g,%g)', [rP[ooB0].X, rP[ooB0].Y, rP[ooB0].Z]));
-      Add(Format('  C0(%g,%g,%g)', [rP[ooC0].X, rP[ooC0].Y, rP[ooC0].Z]));
-      Add(Format('  D0(%g,%g,%g)', [rP[ooD0].X, rP[ooD0].Y, rP[ooD0].Z]));
-      Add(Format('  E0(%g,%g,%g)', [rP[ooE0].X, rP[ooE0].Y, rP[ooE0].Z]));
-      Add(Format('  F0(%g,%g,%g)', [rP[ooF0].X, rP[ooF0].Y, rP[ooF0].Z]));
+      Add(Format('  A0(%g,%g,%g)', [rP.A0.X, rP.A0.Y, rP.A0.Z]));
+      Add(Format('  B0(%g,%g,%g)', [rP.B0.X, rP.B0.Y, rP.B0.Z]));
+      Add(Format('  C0(%g,%g,%g)', [rP.C0.X, rP.C0.Y, rP.C0.Z]));
+      Add(Format('  D0(%g,%g,%g)', [rP.D0.X, rP.D0.Y, rP.D0.Z]));
+      Add(Format('  E0(%g,%g,%g)', [rP.E0.X, rP.E0.Y, rP.E0.Z]));
+      Add(Format('  F0(%g,%g,%g)', [rP.F0.X, rP.F0.Y, rP.F0.Z]));
     end;
     { Mast }
     Add('');

@@ -824,7 +824,7 @@ var
 begin
   FKoordinaten := Value;
   for oo := Low(TRiggPoint) to High(TRiggPoint) do
-    Verts[oo].Point := FKoordinaten[oo];
+    Verts[oo].Point := FKoordinaten.V[oo];
 
   for ee := Low(TRiggEdge) to High(TRiggEdge) do
     Edges[ee].Update;

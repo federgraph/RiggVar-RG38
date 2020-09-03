@@ -159,7 +159,7 @@ begin
   if Assigned(Transformer) then
   begin
     for i := Low(TRiggPoint) to High(TRiggPoint) do
-      RPT[i] := Transformer.TransformPoint(rP[i]);
+      RPT.V[i] := Transformer.TransformPoint(rP.V[i]);
     for j := 0 to BogenMax do
       MKT[j] := Transformer.TransformPoint(Kurve[j]);
 
@@ -175,61 +175,61 @@ begin
   AchseYT := Transformer.TransformPoint(AchseY);
   AchseZT := Transformer.TransformPoint(AchseZ);
 
-  A0 := RPT[ooA0];
-  B0 := RPT[ooB0];
-  C0 := RPT[ooC0];
-  D0 := RPT[ooD0];
-  E0 := RPT[ooE0];
-  F0 := RPT[ooF0];
-  P0 := RPT[ooP0];
+  A0 := RPT.A0;
+  B0 := RPT.B0;
+  C0 := RPT.C0;
+  D0 := RPT.D0;
+  E0 := RPT.E0;
+  F0 := RPT.F0;
+  P0 := RPT.P0;
 
-  A := RPT[ooA];
-  B := RPT[ooB];
-  C := RPT[ooC];
-  D := RPT[ooD];
-  E := RPT[ooE];
-  F := RPT[ooF];
-  P := RPT[ooP];
+  A := RPT.A;
+  B := RPT.B;
+  C := RPT.C;
+  D := RPT.D;
+  E := RPT.E;
+  F := RPT.F;
+  P := RPT.P;
 
-  M := RPT[ooM];
+  M := RPT.M;
 
   { Es wurde nicht nur rotiert,
     sondern bereits auch verschoben und skaliert }
 
   with RaumGraphData do
   begin
-    xA0 := RPT[ooA0].X;
-    yA0 := RPT[ooA0].Z;
-    xB0 := RPT[ooB0].X;
-    yB0 := RPT[ooB0].Z;
-    xC0 := RPT[ooC0].X;
-    yC0 := RPT[ooC0].Z;
-    xD0 := RPT[ooD0].X;
-    yD0 := RPT[ooD0].Z;
-    xE0 := RPT[ooE0].X;
-    yE0 := RPT[ooE0].Z;
-    xF0 := RPT[ooF0].X;
-    yF0 := RPT[ooF0].Z;
+    xA0 := RPT.A0.X;
+    yA0 := RPT.A0.Z;
+    xB0 := RPT.B0.X;
+    yB0 := RPT.B0.Z;
+    xC0 := RPT.C0.X;
+    yC0 := RPT.C0.Z;
+    xD0 := RPT.D0.X;
+    yD0 := RPT.D0.Z;
+    xE0 := RPT.E0.X;
+    yE0 := RPT.E0.Z;
+    xF0 := RPT.F0.X;
+    yF0 := RPT.F0.Z;
 
-    xA := RPT[ooA].X;
-    yA := RPT[ooA].Z;
-    xB := RPT[ooB].X;
-    yB := RPT[ooB].Z;
-    xC := RPT[ooC].X;
-    yC := RPT[ooC].Z;
-    xD := RPT[ooD].X;
-    yD := RPT[ooD].Z;
-    xE := RPT[ooE].X;
-    yE := RPT[ooE].Z;
-    xF := RPT[ooF].X;
-    yF := RPT[ooF].Z;
+    xA := RPT.A.X;
+    yA := RPT.A.Z;
+    xB := RPT.B.X;
+    yB := RPT.B.Z;
+    xC := RPT.C.X;
+    yC := RPT.C.Z;
+    xD := RPT.D.X;
+    yD := RPT.D.Z;
+    xE := RPT.E.X;
+    yE := RPT.E.Z;
+    xF := RPT.F.X;
+    yF := RPT.F.Z;
 
-    xP0 := RPT[ooP0].X;
-    yP0 := RPT[ooP0].Z;
-    xP := RPT[ooP].X;
-    yP := RPT[ooP].Z;
-    xM := RPT[ooM].X;
-    yM := RPT[ooM].Z;
+    xP0 := RPT.P0.X;
+    yP0 := RPT.P0.Z;
+    xP := RPT.P.X;
+    yP := RPT.P.Z;
+    xM := RPT.M.X;
+    yM := RPT.M.Z;
     xN := AchseNT.X;
     yN := AchseNT.Z;
 
@@ -297,7 +297,7 @@ procedure TRaumGraph.UpdateZugProps;
 var
   cr: TRaumGraphProps;
 begin
-  BogenIndexD := FindBogenIndexOf(rP[ooD]);
+  BogenIndexD := FindBogenIndexOf(rP.D);
 
   cr := RaumGraphProps;
 

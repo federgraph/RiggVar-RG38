@@ -831,7 +831,7 @@ end;
 
 function TRotaForm.OnGetFixPunkt: TRealPoint;
 begin
-  result := RPN[FFixPoint];
+  result := RPN.V[FFixPoint];
 end;
 
 procedure TRotaForm.ToggleRenderOption(const fa: Integer);

@@ -272,40 +272,38 @@ begin
   FrWoben2D := AC.LineLength;
   FrMastOben := BC.LineLength;
 
-  rP[ooA0] := A0.Center.C;
-  rP[ooB0] := B0.Center.C;
-  rP[ooA] := A.Center.C;
-  rP[ooB] := B.Center.C;
-  rP[ooC] := C.Center.C;
+  rP.A0 := A0.Center.C;
+  rP.B0 := B0.Center.C;
+  rP.A := A.Center.C;
+  rP.B := B.Center.C;
+  rP.C := C.Center.C;
 
   oooTemp := rP; { aktuelle Koordinaten sichern }
 
-  FrAlpha := arctan2((rP[ooP0].Y - rP[ooD0].Y), (rP[ooP0].X - rP[ooD0].X));
-
-//  Wanten3dTo2d;
+  FrAlpha := arctan2((rP.P0.Y - rP.D0.Y), (rP.P0.X - rP.D0.X));
 
   { 1. Startwinkel }
   SchnittKK.SchnittEbene := seXY;
   SchnittKK.Radius1 := FrWunten2D + FrSalingH;
   SchnittKK.Radius2 := FrMastUnten;
-  SchnittKK.MittelPunkt1 := rP[ooA0];
-  SchnittKK.MittelPunkt2 := rP[ooB0];
+  SchnittKK.MittelPunkt1 := rP.A0;
+  SchnittKK.MittelPunkt2 := rP.B0;
   ooTemp := SchnittKK.SchnittPunkt2;
-  phiA := arctan2((rP[ooA0].X - ooTemp.X), (rP[ooA0].Y - ooTemp.Y));
+  phiA := arctan2((rP.A0.X - ooTemp.X), (rP.A0.Y - ooTemp.Y));
   phiA := phiA + pi / 2 + FrAlpha;
 
   { 2. Endwinkel }
   SchnittKK.SchnittEbene := seXY;
   SchnittKK.Radius1 := FrWunten2D;
   SchnittKK.Radius2 := FrSalingH + FrMastUnten;
-  SchnittKK.MittelPunkt1 := rP[ooA0];
-  SchnittKK.MittelPunkt2 := rP[ooB0];
+  SchnittKK.MittelPunkt1 := rP.A0;
+  SchnittKK.MittelPunkt2 := rP.B0;
   ooTemp := SchnittKK.SchnittPunkt2;
   if SchnittKK.Status = bmK1inK2 then
     phiE := FrAlpha + DegToRad(130)
   else
   begin
-    phiE := arctan2((rP[ooA0].X - ooTemp.X), (rP[ooA0].Y - ooTemp.Y));
+    phiE := arctan2((rP.A0.X - ooTemp.X), (rP.A0.Y - ooTemp.Y));
     phiE := phiE + pi / 2 + FrAlpha;
   end;
 
@@ -317,29 +315,29 @@ begin
   for i := 0 to Count-1 do
   begin
     psiM := PsiVonPhi(phiM, FrBasis, FrWunten2D, FrSalingH, FrMastUnten, svar);
-    rP[ooA].X := rP[ooA0].X + FrWunten2D * cos(phiM - FrAlpha);
-    rP[ooA].Y := rP[ooA0].Y - FrWunten2D * sin(phiM - FrAlpha);
-    rP[ooB].X := rP[ooB0].X + FrMastUnten * cos(psiM - FrAlpha);
-    rP[ooB].Y := rP[ooB0].Y - FrMastUnten * sin(psiM - FrAlpha);
+    rP.A.X := rP.A0.X + FrWunten2D * cos(phiM - FrAlpha);
+    rP.A.Y := rP.A0.Y - FrWunten2D * sin(phiM - FrAlpha);
+    rP.B.X := rP.B0.X + FrMastUnten * cos(psiM - FrAlpha);
+    rP.B.Y := rP.B0.Y - FrMastUnten * sin(psiM - FrAlpha);
     { Berechnung Punkt C }
     SchnittKK.SchnittEbene := seXY;
     SchnittKK.Radius1 := FrWoben2D;
     SchnittKK.Radius2 := FrMastOben;
-    SchnittKK.MittelPunkt1 := rP[ooA];
-    SchnittKK.MittelPunkt2 := rP[ooB];
-    rP[ooC] := SchnittKK.SchnittPunkt2;
-    KK.Poly[i].X := rP[ooC].X;
-    KK.Poly[i].Y := rP[ooC].Y;
+    SchnittKK.MittelPunkt1 := rP.A;
+    SchnittKK.MittelPunkt2 := rP.B;
+    rP.C := SchnittKK.SchnittPunkt2;
+    KK.Poly[i].X := rP.C.X;
+    KK.Poly[i].Y := rP.C.Y;
     phiM := phiM + WinkelStep;
   end;
 
   rP := oooTemp; { aktuelle Koordinaten wiederherstellen }
 
-  A0.Center.C := rP[ooA0];
-  B0.Center.C := rP[ooB0];
-  A.Center.C := rP[ooA];
-  B.Center.C := rP[ooB];
-  C.Center.C := rP[ooC];
+  A0.Center.C := rP.A0;
+  B0.Center.C := rP.B0;
+  A.Center.C := rP.A;
+  B.Center.C := rP.B;
+  C.Center.C := rP.C;
 
   KK.Point1.Center.X := KK.Poly[0].X;
   KK.Point1.Center.Y := KK.Poly[0].Y;

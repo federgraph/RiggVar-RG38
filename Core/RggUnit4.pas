@@ -264,7 +264,7 @@ begin
   with RealTrimm do
    begin
     { Mastfall }
-    MastfallF0F := (rP[ooF0] - rP[ooF]).Length; { in mm }
+    MastfallF0F := rP.F0.Distance(rP.F); { in mm }
     { Vorstagspannung }
     if abs(rF[14]) < 32000 then
       SpannungV := rF[14] { in N }
@@ -280,7 +280,7 @@ begin
     { Biegung am Controller }
     BiegungC := he; { in mm }
     { "Elastizität" }
-    FlexWert := (rP[ooC] - rPe[ooC]).Length; { in mm }
+    FlexWert := rP.C.Distance(rPe.C); { in mm }
   end;
 end;
 
@@ -290,10 +290,10 @@ var
 begin
   temp := 0;
   case Index of
-    tiMastfallF0F: temp := (rP[ooF0] - rP[ooF]).Length;
-    tiMastfallF0C: temp := (rP[ooF0] - rP[ooC]).Length;
+    tiMastfallF0F: temp := rP.F0.Distance(rP.F);
+    tiMastfallF0C: temp := rP.F0.Distance(rP.C);
     tiVorstagDiff: temp := VorstagDiff;
-    tiVorstagDiffE: temp := (rPe[ooC0] - rPe[ooC]).Length - rL[14];
+    tiVorstagDiffE: temp := rPe.C0.Distance(rPe.C) - rL[14];
     tiSpannungW: temp := SpannungW;
     tiSpannungV:
       begin
@@ -309,32 +309,32 @@ begin
     end;
     tiBiegungS: temp := hd;
     tiBiegungC: temp := he;
-    tiFlexWert: temp := (rP[ooC] - rPe[ooC]).Length; { in mm }
+    tiFlexWert: temp := rP.C.Distance(rPe.C); { in mm }
   end;
   result := temp;
 end;
 
 procedure TRigg.SaveToFederData(fd: TRggData);
 begin
-  fd.A0X := Round(rP[ooA0].X);
-  fd.A0Y := Round(rP[ooA0].Y);
-  fd.A0Z := Round(rP[ooA0].Z);
+  fd.A0X := Round(rP.A0.X);
+  fd.A0Y := Round(rP.A0.Y);
+  fd.A0Z := Round(rP.A0.Z);
 
-  fd.C0X := Round(rP[ooC0].X);
-  fd.C0Y := Round(rP[ooC0].Y);
-  fd.C0Z := Round(rP[ooC0].Z);
+  fd.C0X := Round(rP.C0.X);
+  fd.C0Y := Round(rP.C0.Y);
+  fd.C0Z := Round(rP.C0.Z);
 
-  fd.D0X := Round(rP[ooD0].X);
-  fd.D0Y := Round(rP[ooD0].Y);
-  fd.D0Z := Round(rP[ooD0].Z);
+  fd.D0X := Round(rP.D0.X);
+  fd.D0Y := Round(rP.D0.Y);
+  fd.D0Z := Round(rP.D0.Z);
 
-  fd.E0X := Round(rP[ooE0].X);
-  fd.E0Y := Round(rP[ooE0].Y);
-  fd.E0Z := Round(rP[ooE0].Z);
+  fd.E0X := Round(rP.E0.X);
+  fd.E0Y := Round(rP.E0.Y);
+  fd.E0Z := Round(rP.E0.Z);
 
-  fd.F0X := Round(rP[ooF0].X);
-  fd.F0Y := Round(rP[ooF0].Y);
-  fd.F0Z := Round(rP[ooF0].Z);
+  fd.F0X := Round(rP.F0.X);
+  fd.F0Y := Round(rP.F0.Y);
+  fd.F0Z := Round(rP.F0.Z);
 
   fd.MU := Round(FrMastUnten);
   fd.MO := Round(FrMastOben);
@@ -394,31 +394,31 @@ begin
   { Rumpf: Koordinaten }
 
   //rP := Doc.iP;
-  rP[ooA0].X := fd.A0X;
-  rP[ooA0].Y := -fd.A0Y;
-  rP[ooA0].Z := fd.A0Z;
-  rP[ooB0].X := fd.A0X;
-  rP[ooB0].Y := fd.A0Y;
-  rP[ooB0].Z := fd.A0Z;
-  rP[ooC0].X := fd.C0X;
-  rP[ooC0].Y := fd.C0Y;
-  rP[ooC0].Z := fd.C0Z;
-  rP[ooD0].X := fd.D0X;
-  rP[ooD0].Y := fd.D0Y;
-  rP[ooD0].Z := fd.D0Z;
-  rP[ooE0].X := fd.E0X;
-  rP[ooE0].Y := fd.E0Y;
-  rP[ooE0].Z := fd.E0Z;
-  rP[ooF0].X := fd.F0X;
-  rP[ooF0].Y := fd.F0Y;
-  rP[ooF0].Z := fd.F0Z;
-  rP[ooP0].X := fd.A0X;
-  rP[ooP0].Y := 0;
-  rP[ooP0].Z := fd.A0Z;
+  rP.A0.X := fd.A0X;
+  rP.A0.Y := -fd.A0Y;
+  rP.A0.Z := fd.A0Z;
+  rP.B0.X := fd.A0X;
+  rP.B0.Y := fd.A0Y;
+  rP.B0.Z := fd.A0Z;
+  rP.C0.X := fd.C0X;
+  rP.C0.Y := fd.C0Y;
+  rP.C0.Z := fd.C0Z;
+  rP.D0.X := fd.D0X;
+  rP.D0.Y := fd.D0Y;
+  rP.D0.Z := fd.D0Z;
+  rP.E0.X := fd.E0X;
+  rP.E0.Y := fd.E0Y;
+  rP.E0.Z := fd.E0Z;
+  rP.F0.X := fd.F0X;
+  rP.F0.Y := fd.F0Y;
+  rP.F0.Z := fd.F0Z;
+  rP.P0.X := fd.A0X;
+  rP.P0.Y := 0;
+  rP.P0.Z := fd.A0Z;
 
-  rP[ooP].X := fd.A0X;
-  rP[ooP].Y := 0;
-  rP[ooP].Z := fd.A0Z;
+  rP.P.X := fd.A0X;
+  rP.P.Y := 0;
+  rP.P.Z := fd.A0Z;
 
   { Festigkeitswerte }
 //  rEA := Doc.rEA;

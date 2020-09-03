@@ -146,8 +146,31 @@ type
     ooM
     );
 
-  TIntRiggPoints = array [TRiggPoint] of TPoint3D; // TIntPoint;
-  TRealRiggPoints = array [TRiggPoint] of TPoint3D;
+//  TIntRiggPoints = array [TRiggPoint] of TPoint3D; // TIntPoint;
+//  TRealRiggPoints = array [TRiggPoint] of TPoint3D;
+  TRealRiggPoints = record
+    case Integer of
+      0: (V: array [TRiggPoint] of TPoint3D);
+      1: (
+        N0: TPoint3D;
+        A0: TPoint3D;
+        B0: TPoint3D;
+        C0: TPoint3D;
+        D0: TPoint3D;
+        E0: TPoint3D;
+        F0: TPoint3D;
+        P0: TPoint3D;
+        A: TPoint3D;
+        B: TPoint3D;
+        C: TPoint3D;
+        D: TPoint3D;
+        E: TPoint3D;
+        F: TPoint3D;
+        P: TPoint3D;
+        M: TPoint3D;)
+
+  end;
+
   TMastKurve = array [0..BogenMax] of TPoint3D;
 
   TRiggLvektor = array [0 .. 19] of single;

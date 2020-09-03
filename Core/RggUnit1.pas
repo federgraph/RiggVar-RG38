@@ -157,55 +157,41 @@ begin
     Exit;
   end;
 
-  rP[ooA] := SKK.AnglePointXZ(rP[ooA0], FrWunten2D, FrPhi - FrAlpha);
-  rP[ooA].Y := -FrSalingA / 2;
+  rP.A := SKK.AnglePointXZ(rP.A0, FrWunten2D, FrPhi - FrAlpha);
+  rP.A.Y := -FrSalingA / 2;
 
-  rP[ooB] := rP[ooA];
-  rP[ooB].Y := -rP[ooA].Y;
+  rP.B := rP.A;
+  rP.B.Y := -rP.A.Y;
 
-  rP[ooP] := rP[ooA];
-  rP[ooP].Y := 0;
+  rP.P := rP.A;
+  rP.P.Y := 0;
 
-  rP[ooD].X := rP[ooD0].X + FrMastUnten * cos(FrPsi - FrAlpha);
-  rP[ooD].Y := 0;
-  rP[ooD].Z := rP[ooD0].Z + FrMastUnten * sin(FrPsi - FrAlpha);
+  rP.D := SKK.AnglePointXZ(rP.D0, FrMastUnten, FrPsi - FrAlpha);
 
-  rP[ooC] := SKK.IntersectionXZ1(rP[ooA], rP[ooD], FrWoben2D, FrMastOben);
+  rP.C := SKK.IntersectionXZ1(rP.A, rP.D, FrWoben2D, FrMastOben);
 
-  FrVorstag := (rP[ooC0] - rP[ooC]).Length;
+  FrVorstag := rP.C0.Distance(rP.C);
   FrSalingL := sqrt(sqr(FrSalingH) + sqr(FrSalingA / 2));
   Rest;
 end;
 
 procedure TGetriebeFS.Rest;
-//var
-//  i: TRiggPoint;
-//  j: TKoord;
 begin
   { Berechnung Punkt ooE }
-  rP[ooE].X := rP[ooE0].X - FrController;
-  rP[ooE].Y := 0;
-  rP[ooE].Z := rP[ooE0].Z;
+  rP.E.X := rP.E0.X - FrController;
+  rP.E.Y := 0;
+  rP.E.Z := rP.E0.Z;
 
   { Berechnung Punkt ooF, ooM }
-  BerechneF; { virtuelle Methode }
+  BerechneF; { virtual }
   BerechneM;
-
-  { zweite Hälfte von iP füllen }
-//  for i := ooA to ooP do
-//  begin
-//    for j := x to z do
-//    begin
-//      iP[i, j] := rP[i, j];
-//    end;
-//  end;
 end;
 
 procedure TGetriebeFS.BerechneF;
 begin
   { Berechnung Punkt F - Masttop }
-  FrEpsilon := pi / 2 - SKK.AngleXZ(rP[ooC], rP[ooD]);
-  rP[ooF] := SKK.AnglePointXZ(rP[ooD], FrMastLength - FrMastUnten, FrEpsilon);
+  FrEpsilon := pi / 2 - SKK.AngleXZ(rP.C, rP.D);
+  rP.F := SKK.AnglePointXZ(rP.D, FrMastLength - FrMastUnten, FrEpsilon);
 end;
 
 procedure TGetriebeFS.BerechneM;
@@ -213,11 +199,11 @@ var
   ooTemp: TPoint3D;
   a, t: single;
 begin
-  a := (rp[ooF0] - rp[ooF]).Length;
+  a := rp.F0.Distance(rp.F);
   t := (a - MastfallVorlauf) / a;
-  ooTemp := rp[ooF] - rp[ooF0];
-  ooTemp := rp[ooF0] + ooTemp * t;
-  rp[ooM] := ooTemp;
+  ooTemp := rp.F - rp.F0;
+  ooTemp := rp.F0 + ooTemp * t;
+  rp.M := ooTemp;
 end;
 
 procedure TGetriebeFS.BerechneWinkel;
@@ -232,10 +218,10 @@ var
   function VorstagLaenge(psi: single): single;
   { Viergelenk P0 P D D0, Koppelpunkt C }
   begin
-    rP[ooD] := SKK.AnglePointXZ(rP[ooD0], FrMastUnten, psi - FrAlpha);
-    rP[ooP] := SKK.IntersectionXZ1(rP[ooP0], rP[ooD], FrWunten2D, FrSalingH);
-    rP[ooC] := SKK.IntersectionXZ1(rP[ooP], rP[ooD], FrWoben2D, FrMastOben);
-    Result := (rP[ooC0] - rP[ooC]).Length;
+    rP.D := SKK.AnglePointXZ(rP.D0, FrMastUnten, psi - FrAlpha);
+    rP.P := SKK.IntersectionXZ1(rP.P0, rP.D, FrWunten2D, FrSalingH);
+    rP.C := SKK.IntersectionXZ1(rP.P, rP.D, FrWoben2D, FrMastOben);
+    Result := rP.C0.Distance(rP.C);
   end;
 
 begin
@@ -245,20 +231,20 @@ begin
   { 1. Startwinkel ermitteln }
   { Durchbiegung Null, Mast gerade,
     linke Totlage für Winkel psi im Viergelenk D0 D C C0 }
-  localC := SKK.IntersectionXZ1(rP[ooD0], rP[ooC0], FrMastUnten + FrMastOben, FrVorstag);
+  localC := SKK.IntersectionXZ1(rP.D0, rP.C0, FrMastUnten + FrMastOben, FrVorstag);
 
-  psiStart := SKK.AngleXZM(rP[ooD0], localC);
+  psiStart := SKK.AngleXZM(rP.D0, localC);
   psiStart := pi / 2 + psiStart + FrAlpha;
 
   { Test, ob Wante locker bei Mast gerade und Vorstaglänge = FrVorstag.
     Ermittlung der Koordinaten für diesen Fall. }
   FrPsi := psiStart;
 
-  rP[ooC] := localC;
-  rP[ooD] := SKK.AnglePointXZ(rP[ooD0], FrMastUnten, FrPsi - FrAlpha);
-  rP[ooP] := SKK.IntersectionXZ1(rP[ooD], rP[ooC], FrSalingH, FrWoben2D);
+  rP.C := localC;
+  rP.D := SKK.AnglePointXZ(rP.D0, FrMastUnten, FrPsi - FrAlpha);
+  rP.P := SKK.IntersectionXZ1(rP.D, rP.C, FrSalingH, FrWoben2D);
 
-  FrWanteZulang := (rP[ooP0] - rP[ooP]).Length + (rP[ooP] - rP[ooC]).Length - (FrWunten2D + FrWoben2D);
+  FrWanteZulang := rP.P0.Distance(rP.P) + rP.P.Distance(rP.C) - (FrWunten2D + FrWoben2D);
   if FrWanteZulang < 0 then
   begin
     FGetriebeOK := False;
@@ -273,8 +259,8 @@ begin
     begin
       { Suchbereich erweitern, wenn Durchbiegung negativ
         für psi = psiStart im VierGelenk P0 P D D0 }
-      ooTemp1 := rP[ooD] - rP[ooD0];
-      ooTemp2 := rP[ooC] - rP[ooD];
+      ooTemp1 := rP.D - rP.D0;
+      ooTemp2 := rP.C - rP.D;
       localC := ooTemp1.CrossProduct(ooTemp2);
       if (localC.Y > 0) then
         psiStart := psiStart + DegToRad(45);
@@ -282,8 +268,8 @@ begin
 
     { 2. Endwinkel ermitteln - Mastoben parallel zu Vorstag
       rechte Totlage für Winkel psi im Viergelenk D0 D C C0 }
-    localC := SKK.IntersectionXZ1(rP[ooD0], rP[ooC0], FrMastUnten, FrVorstag - FrMastOben);
-    psiEnde := SKK.AngleXZM(rP[ooD0], localC);
+    localC := SKK.IntersectionXZ1(rP.D0, rP.C0, FrMastUnten, FrVorstag - FrMastOben);
+    psiEnde := SKK.AngleXZM(rP.D0, localC);
     psiEnde := pi / 2 + psiEnde + FrAlpha;
 
     { 3. Winkel ermitteln, für den gilt: VorstagIst gleich FrVorstag }
@@ -310,10 +296,10 @@ begin
   end;
 
   { aktualisieren }
-  rP[ooA] := rP[ooP];
-  rP[ooA].Y := -FrSalingA / 2;
-  rP[ooB] := rP[ooP];
-  rP[ooB].Y := -rP[ooA].Y;
+  rP.A := rP.P;
+  rP.A.Y := -FrSalingA / 2;
+  rP.B := rP.P;
+  rP.B.Y := -rP.A.Y;
   { We actually want PhiVonPsi, but we can use function PsiVonPhi;
     imagine we are looking from behind - the mechanism appears mirrored,
     angle Psi needs to be transformed back and forth,
@@ -351,17 +337,17 @@ begin
   Wanten3dTo2d;
 
   { 1. Startwinkel }
-  ooTemp := SKK.IntersectionXZ1(rP[ooP0], rP[ooD0], FrWunten2D + FrSalingH, FrMastUnten);
-  phiA := SKK.AngleXZM(rP[ooP0], ooTemp);
+  ooTemp := SKK.IntersectionXZ1(rP.P0, rP.D0, FrWunten2D + FrSalingH, FrMastUnten);
+  phiA := SKK.AngleXZM(rP.P0, ooTemp);
   phiA := phiA + pi / 2 + FrAlpha;
 
   { 2. Endwinkel }
-  ooTemp := SKK.IntersectionXZ1(rP[ooP0], rP[ooD0], FrWunten2D, FrSalingH + FrMastUnten);
+  ooTemp := SKK.IntersectionXZ1(rP.P0, rP.D0, FrWunten2D, FrSalingH + FrMastUnten);
   if SKK.Status = bmK1inK2 then
     phiE := FrAlpha + DegToRad(130)
   else
   begin
-    phiE := SKK.AngleXZM(rP[ooP0], ooTemp);
+    phiE := SKK.AngleXZM(rP.P0, ooTemp);
     phiE := phiE + pi / 2 + FrAlpha;
   end;
 
@@ -373,15 +359,15 @@ begin
   for i := 0 to 100 do
   begin
     psiM := PsiVonPhi(phiM, FrBasis, FrWunten2D, FrSalingH, FrMastUnten, svar);
-    rP[ooP].X := rP[ooP0].X + FrWunten2D * cos(phiM - FrAlpha);
-    rP[ooP].Z := rP[ooP0].Z + FrWunten2D * sin(phiM - FrAlpha);
-    rP[ooD].X := rP[ooD0].X + FrMastUnten * cos(psiM - FrAlpha);
-    rP[ooD].Z := rP[ooD0].Z + FrMastUnten * sin(psiM - FrAlpha);
+    rP.P.X := rP.P0.X + FrWunten2D * cos(phiM - FrAlpha);
+    rP.P.Z := rP.P0.Z + FrWunten2D * sin(phiM - FrAlpha);
+    rP.D.X := rP.D0.X + FrMastUnten * cos(psiM - FrAlpha);
+    rP.D.Z := rP.D0.Z + FrMastUnten * sin(psiM - FrAlpha);
     { Berechnung Punkt C }
-    rP[ooC] := SKK.IntersectionXZ1(rP[ooP], rP[ooD], FrWoben2D, FrMastOben);
-    Result[i].X := rP[ooC].X;
+    rP.C := SKK.IntersectionXZ1(rP.P, rP.D, FrWoben2D, FrMastOben);
+    Result[i].X := rP.C.X;
     Result[i].Y := 0;
-    Result[i].Z := rP[ooC].Z;
+    Result[i].Z := rP.C.Z;
     phiM := phiM + WinkelStep;
   end;
 
@@ -401,15 +387,15 @@ procedure TGetriebeFS.MakeSalingHBiggerFS(SalingHplus: single);
 begin
   FrSalingH := SalingHplus;
 
-  rP[ooP] := SKK.IntersectionXZ1(rP[ooD], rP[ooC], FrSalingH, FrWoben2D);
-  FrWunten2D := (rP[ooP] - rP[ooP0]).Length;
+  rP.P := SKK.IntersectionXZ1(rP.D, rP.C, FrSalingH, FrWoben2D);
+  FrWunten2D := rP.P.Distance(rP.P0);
 
   { aktualisieren }
-  rP[ooA] := rP[ooP];
-  rP[ooA].Y := -FrSalingA / 2;
-  rP[ooB] := rP[ooP];
-  rP[ooB].Y := -FrSalingA / 2;
-  FrPhi := SKK.AngleXZM(rP[ooA0], rP[ooA]);
+  rP.A := rP.P;
+  rP.A.Y := -FrSalingA / 2;
+  rP.B := rP.P;
+  rP.B.Y := -FrSalingA / 2;
+  FrPhi := SKK.AngleXZM(rP.A0, rP.A);
   FrPhi := FrAlpha + pi / 2 + FrPhi;
   FrWinkel := FrPhi - FrAlpha;
   FrSalingL := sqrt(sqr(FrSalingH) + sqr(FrSalingA / 2));
@@ -431,18 +417,18 @@ var
   function WobenIstVonPsi(psi: single): single;
   begin
     { Berechnungen im Vierelenk D0 D C C0 }
-    rP[ooD] := SKK.AnglePointXZ(rP[ooD0], FrMastUnten, psi - FrAlpha);
-    rP[ooC] := SKK.IntersectionXZ1(rP[ooD], rP[ooC0], FrMastOben, FrVorstag);
+    rP.D := SKK.AnglePointXZ(rP.D0, FrMastUnten, psi - FrAlpha);
+    rP.C := SKK.IntersectionXZ1(rP.D, rP.C0, FrMastOben, FrVorstag);
 
-    WStrich := (rP[ooA0] - rP[ooC]).Length;
-    Basis := (rP[ooA0] - rP[ooD]).Length;
+    WStrich := rP.A0.Distance(rP.C);
+    Basis := rP.A0.Distance(rP.D);
 
     { weiter mit Koordinatentransformation, ebenes Trapez A0, A, C, D }
     TempD := TPoint3D.Zero;
     TempD.X := Basis;
     TempC := SKK.IntersectionXZ1(TPoint3D.Zero, TempD, WStrich, FrMastOben);
     TempA := SKK.IntersectionXZ1(TPoint3D.Zero, TempD, FrWunten3D, FrSalingL);
-    Result := (TempA - TempC).Length;
+    Result := TempA.Distance(TempC);
   end;
 
 begin
@@ -450,13 +436,13 @@ begin
 
   { Vorstag gegeben, Winkel numerisch ermitteln! }
   { Startwinkel }
-  Temp := SKK.IntersectionXZ1(rP[ooD0], rP[ooC0], FrMastUnten, FrVorstag - FrMastOben);
-  psiStart := SKK.AngleXZM(rP[ooD0], Temp);
+  Temp := SKK.IntersectionXZ1(rP.D0, rP.C0, FrMastUnten, FrVorstag - FrMastOben);
+  psiStart := SKK.AngleXZM(rP.D0, Temp);
   psiStart := psiStart + pi / 2 + FrAlpha + DegToRad(0.1);
 
   { Endwinkel }
-  Temp := SKK.IntersectionXZ1(rP[ooD0], rP[ooC0], FrMastUnten + FrMastOben, FrVorstag);
-  psiEnde := SKK.AngleXZM(rP[ooD0], Temp);
+  Temp := SKK.IntersectionXZ1(rP.D0, rP.C0, FrMastUnten + FrMastOben, FrVorstag);
+  psiEnde := SKK.AngleXZM(rP.D0, Temp);
   psiEnde := pi / 2 + psiEnde + FrAlpha;
   psiEnde2 := psiEnde + DegToRad(50);
 
@@ -518,29 +504,29 @@ begin
   SchnittGG(TPoint3D.Zero, TempC, TempD, TempA, temp);
   { Temp enthält jetzt den Schnittpunkt der Diagonalen }
   W1Strich := temp.Length;
-  Saling1L := (TempD - temp).Length;
+  Saling1L := TempD.Distance(temp);
 
   { weiter räumlich: }
   Skalar := W1Strich / WStrich;
-  temp := rP[ooC] - rP[ooA0];
+  temp := rP.C - rP.A0;
   temp := temp * Skalar;
-  temp := rP[ooA0] + temp;
+  temp := rP.A0 + temp;
   { Temp enthält jetzt den räumlichen Schnittpunkt der Diagonalen }
 
   { Berechnung Punkt ooA }
   Skalar := FrSalingL / Saling1L;
-  temp := temp - rP[ooD];
+  temp := temp - rP.D;
   temp := temp * Skalar;
-  rP[ooA] := rP[ooD] + temp;
+  rP.A := rP.D + temp;
 
   { aktualisieren }
-  rP[ooP] := rP[ooA];
-  rP[ooP].Y := 0;
-  rP[ooB] := rP[ooA];
-  rP[ooB].Y := -rP[ooA].Y;
-  FrSalingA := 2 * rP[ooB].Y;
-  FrSalingH := (rP[ooP] - rP[ooD]).Length;
-  FrPhi := SKK.AngleXZM(rP[ooP0], rP[ooP]);
+  rP.P := rP.A;
+  rP.P.Y := 0;
+  rP.B := rP.A;
+  rP.B.Y := -rP.A.Y;
+  FrSalingA := 2 * rP.B.Y;
+  FrSalingH := rP.P.Distance(rP.D);
+  FrPhi := SKK.AngleXZM(rP.P0, rP.P);
   FrPhi := pi / 2 + FrPhi + FrAlpha;
   FrWinkel := FrPhi - FrAlpha;
   Rest;
@@ -556,8 +542,8 @@ begin
   { Punkte D, C und F schon bekannt, FrWoben3d bleibt erhalten }
   FrSalingL := SalingLplus;
 
-  WStrich := (rP[ooA0] - rP[ooC]).Length;
-  Basis := (rP[ooA0] - rP[ooD]).Length;
+  WStrich := rP.A0.Distance(rP.C);
+  Basis := rP.A0.Distance(rP.D);
   { weiter mit Koordinatentransformation, ebenes Trapez A0, A, C, D }
   { Berechnung TempD }
   TempD := TPoint3D.Zero;
@@ -573,32 +559,32 @@ begin
   SchnittGG(TPoint3D.Zero, TempC, TempD, TempA, temp);
   { Temp enthält jetzt den Schnittpunkt der Diagonalen }
   W1Strich := temp.Length;
-  Saling1L := (TempD - temp).Length;
+  Saling1L := TempD.Distance(temp);
 
   { weiter räumlich: }
   Skalar := W1Strich / WStrich;
-  temp := rP[ooC] - rP[ooA0];
+  temp := rP.C - rP.A0;
   temp := temp * Skalar;
-  temp := rP[ooA0] + temp;
+  temp := rP.A0 + temp;
   { Temp enthält jetzt den räumlichen Schnittpunkt der Diagonalen }
 
   { Berechnung Punkt ooA }
   Skalar := FrSalingL / Saling1L;
-  temp := temp - rP[ooD];
+  temp := temp - rP.D;
   temp := temp * Skalar;
-  rP[ooA] := rP[ooD] + temp;
+  rP.A := rP.D + temp;
 
   { FrWunten3d ermitteln und aktualisieren }
-  FrWunten3D := TempA.Length; { bzw. (rP[ooA0] - rP[ooA]).Length }
-  rP[ooP] := rP[ooA];
-  rP[ooP].Y := 0;
-  rP[ooB] := rP[ooA];
-  rP[ooB].Y := -rP[ooA].Y;
-  FrPhi := SKK.AngleXZM(rP[ooA0], rP[ooA]);
+  FrWunten3D := TempA.Length;
+  rP.P := rP.A;
+  rP.P.Y := 0;
+  rP.B := rP.A;
+  rP.B.Y := -rP.A.Y;
+  FrPhi := SKK.AngleXZM(rP.A0, rP.A);
   FrPhi := pi / 2 + FrPhi + FrAlpha;
   FrWinkel := FrPhi - FrAlpha;
-  FrSalingA := 2 * rP[ooB].Y;
-  FrSalingH := (rP[ooP] - rP[ooD]).Length;
+  FrSalingA := 2 * rP.B.Y;
+  FrSalingH := rP.P.Distance(rP.D);
   FrController := FiControllerAnschlag;
 end;
 
@@ -609,33 +595,33 @@ var
   Skalar: single;
 begin
   ResetStatus;
-  rP[ooC] := SKK.IntersectionXZ1(rP[ooD0], rP[ooC0], FrMastUnten + FrMastOben, FrVorstag);
-  FrWunten2D := (rP[ooP0] - rP[ooC]).Length - FrWoben2D;
+  rP.C := SKK.IntersectionXZ1(rP.D0, rP.C0, FrMastUnten + FrMastOben, FrVorstag);
+  FrWunten2D := rP.P0.Distance(rP.C) - FrWoben2D;
   { Punkt P }
   Skalar := FrWoben2D / (FrWunten2D + FrWoben2D);
-  rP[ooP].X := rP[ooC].X - Skalar * (rP[ooC].X - rP[ooP0].X);
-  rP[ooP].Y := 0;
-  rP[ooP].Z := rP[ooC].Z - Skalar * (rP[ooC].Z - rP[ooP0].Z);
+  rP.P.X := rP.C.X - Skalar * (rP.C.X - rP.P0.X);
+  rP.P.Y := 0;
+  rP.P.Z := rP.C.Z - Skalar * (rP.C.Z - rP.P0.Z);
   { Punkte A, B }
-  rP[ooA] := rP[ooP];
-  rP[ooA].Y := Skalar * rP[ooA0].Y;
-  rP[ooB] := rP[ooA];
-  rP[ooB].Y := -rP[ooA].Y;
+  rP.A := rP.P;
+  rP.A.Y := Skalar * rP.A0.Y;
+  rP.B := rP.A;
+  rP.B.Y := -rP.A.Y;
   { Punkt D }
-  temp := rP[ooC] - rP[ooD0];
+  temp := rP.C - rP.D0;
   Skalar := FrMastUnten / (FrMastUnten + FrMastOben);
   temp.X := Skalar * temp.X;
   { Temp[y] := 0; }
   temp.Z := Skalar * temp.Z;
-  rP[ooD] := rP[ooD0] + temp;
+  rP.D := rP.D0 + temp;
   { aktualisieren }
-  FrSalingH := (rP[ooP] - rP[ooD]).Length;
-  FrSalingA := 2 * rP[ooB].Y;
-  FrSalingL := (rP[ooA] - rP[ooD]).Length;
-  FrPhi := SKK.AngleXZM(rP[ooP0], rP[ooP]);
+  FrSalingH := rP.P.Distance(rP.D);
+  FrSalingA := 2 * rP.B.Y;
+  FrSalingL := rP.A.Distance(rP.D);
+  FrPhi := SKK.AngleXZM(rP.P0, rP.P);
   FrPhi := pi / 2 + FrPhi + FrAlpha;
   FrWinkel := FrPhi - FrAlpha;
-  FrPsi := SKK.AngleXZM(rP[ooD0], rP[ooD]);
+  FrPsi := SKK.AngleXZM(rP.D0, rP.D);
   FrPsi := pi / 2 + FrPsi + FrAlpha;
   Wanten2dTo3d;
   Rest;
@@ -653,18 +639,18 @@ begin
   Skalar := FrWunten3D / (FrWoben3D + FrWunten3D);
   TempWunten2d := TempW * Skalar;
   TempWoben2d := TempW * (1 - Skalar);
-  rP[ooC] := SKK.IntersectionXZ1(rP[ooP0], rP[ooC0], TempWunten2d + TempWoben2d, FrVorstag);
+  rP.C := SKK.IntersectionXZ1(rP.P0, rP.C0, TempWunten2d + TempWoben2d, FrVorstag);
 
   { wenn die Wanten nicht straff sind: }
-  if (rP[ooD0] - rP[ooC]).Length > FrMastUnten + FrMastOben then
+  if rP.D0.Distance(rP.C) > FrMastUnten + FrMastOben then
   begin
-    rP[ooC] := SKK.IntersectionXZ1(rP[ooD0], rP[ooC0], FrMastUnten + FrMastOben, FrVorstag);
-    temp := rP[ooC]- rP[ooD0];
+    rP.C := SKK.IntersectionXZ1(rP.D0, rP.C0, FrMastUnten + FrMastOben, FrVorstag);
+    temp := rP.C- rP.D0;
     Skalar := FrMastUnten / (FrMastUnten + FrMastOben);
     temp.X := Skalar * temp.X;
     temp.Z := Skalar * temp.Z;
-    rP[ooD] := rP[ooD0] + temp;
-    FrWanteZulang := FrWunten3D + FrWoben3D - (rP[ooC] - rP[ooA0]).Length;
+    rP.D := rP.D0 + temp;
+    FrWanteZulang := FrWunten3D + FrWoben3D - rP.C.Distance(rP.A0);
     FGetriebeOK := False;
     Include(FGetriebeStatus, gsWanteZulang);
   end
@@ -672,27 +658,27 @@ begin
   { wenn die Wanten straff sind: }
   else
   begin
-    rP[ooD] := SKK.IntersectionXZ1(rP[ooC], rP[ooD0], FrMastOben, FrMastUnten);
+    rP.D := SKK.IntersectionXZ1(rP.C, rP.D0, FrMastOben, FrMastUnten);
   end;
 
   { Punkt P }
   Skalar := FrWoben2D / (FrWunten2D + FrWoben2D);
-  rP[ooP].X := rP[ooC].X - Skalar * (rP[ooC].X - rP[ooP0].X);
-  rP[ooP].Y := 0;
-  rP[ooP].Z := rP[ooC].Z - Skalar * (rP[ooC].Z - rP[ooP0].Z);
+  rP.P.X := rP.C.X - Skalar * (rP.C.X - rP.P0.X);
+  rP.P.Y := 0;
+  rP.P.Z := rP.C.Z - Skalar * (rP.C.Z - rP.P0.Z);
   { Punkte A, B }
-  rP[ooA] := rP[ooP];
-  rP[ooA].Y := Skalar * rP[ooA0].Y;
-  rP[ooB] := rP[ooA];
-  rP[ooB].Y := -rP[ooA].Y;
+  rP.A := rP.P;
+  rP.A.Y := Skalar * rP.A0.Y;
+  rP.B := rP.A;
+  rP.B.Y := -rP.A.Y;
   { aktualisieren }
-  FrSalingH := (rP[ooP] - rP[ooD]).Length;
-  FrSalingA := 2 * rP[ooB].Y;
-  FrSalingL := (rP[ooA] - rP[ooD]).Length;
-  FrPhi := SKK.AngleXZM(rP[ooP0], rP[ooP]);
+  FrSalingH := rP.P.Distance(rP.D);
+  FrSalingA := 2 * rP.B.Y;
+  FrSalingL := rP.A.Distance(rP.D);
+  FrPhi := SKK.AngleXZM(rP.P0, rP.P);
   FrPhi := pi / 2 + FrPhi + FrAlpha;
   FrWinkel := FrPhi - FrAlpha;
-  FrPsi := SKK.AngleXZM(rP[ooD0], rP[ooD]);
+  FrPsi := SKK.AngleXZM(rP.D0, rP.D);
   FrPsi := pi / 2 + FrPsi + FrAlpha;
   { Wanten2dTo3d; Wantenlängen3d bleiben unverändert }
   Rest;
@@ -750,8 +736,8 @@ begin
             { 2. Aufruf SchnittKK: TempP ermitteln }
             Radius1 := FrWunten2D;
             Radius2 := Temp.Length; { Temp unter 1. ermittelt }
-            MittelPunkt1 := rP[ooP0];
-            MittelPunkt2 := rP[ooD0];
+            MittelPunkt1 := rP.P0;
+            MittelPunkt2 := rP.D0;
             TempP := SchnittPunkt1;
             TempP.Y := 0;
             s := Bemerkung;
@@ -762,7 +748,7 @@ begin
             Radius1 := FrSalingH;
             Radius2 := FrMastUnten;
             MittelPunkt1 := TempP;
-            MittelPunkt2 := rP[ooD0];
+            MittelPunkt2 := rP.D0;
             TempD := SchnittPunkt1;
             TempD.Y := 0;
             s := Bemerkung;
@@ -780,7 +766,7 @@ begin
             s := Format(LogList_Format_String_GetVorstagNullFest, [4, s]);
             LogList.Add(s);
 
-            result := (rP[ooC0] - TempC).Length;
+            result := rP.C0.Distance(TempC);
           end;
 
         stDrehbar:
@@ -799,7 +785,7 @@ begin
             s := Format(LogList_Format_String_GetVorstagNullDrehbar, [1, s]);
             LogList.Add(s);
 
-            Radius1 := (rP[ooD0] - rP[ooA0]).Length;
+            Radius1 := rP.D0.Distance(rP.A0);
             Radius2 := FrWunten3D;
             MittelPunkt1 := TPoint3D.Zero;
             MittelPunkt2 := TempP;
@@ -809,20 +795,20 @@ begin
             s := Format(LogList_Format_String_GetVorstagNullDrehbar, [2, s]);
             LogList.Add(s);
 
-            WStrich := (Temp - TempC).Length;
-            WStrich2d := sqrt(sqr(WStrich) - sqr(rP[ooA0].Y));
+            WStrich := Temp.Distance(TempC);
+            WStrich2d := sqrt(sqr(WStrich) - sqr(rP.A0.Y));
 
             Radius1 := WStrich2d;
             Radius2 := FrMastUnten + FrMastOben;
-            MittelPunkt1 := rP[ooP0];
-            MittelPunkt2 := rP[ooD0];
+            MittelPunkt1 := rP.P0;
+            MittelPunkt2 := rP.D0;
             TempC := SchnittPunkt1;
             TempC.Y := 0;
             s := Bemerkung;
             s := Format(LogList_Format_String_GetVorstagNullDrehbar, [3, s]);
             LogList.Add(s);
 
-            result := (rP[ooC0] - TempC).Length;
+            result := rP.C0.Distance(TempC);
           end;
 
         stOhneStarr, stOhneBiegt:
@@ -830,14 +816,14 @@ begin
             { 1. Aufruf SchnittKK: Wante2d und Mast; TempC ermitteln }
             Radius1 := FrWunten2D + FrWoben2D;
             Radius2 := FrMastUnten + FrMastOben;
-            MittelPunkt1 := rP[ooP0];
-            MittelPunkt2 := rP[ooD0];
+            MittelPunkt1 := rP.P0;
+            MittelPunkt2 := rP.D0;
             TempC := SchnittPunkt1;
             TempC.Y := 0;
             s := Bemerkung;
             s := Format(LogList_Format_String_GetVorstagNullOhne, [1, s]);
             LogList.Add(s);
-            result := (rP[ooC0] - TempC).Length;
+            result := rP.C0.Distance(TempC);
           end;
       end;
     end;
@@ -874,12 +860,12 @@ var
   delta: single;
   w: single;
 begin
-  oldF := rp[ooF];
-  oldC := rp[ooC];
-  oldD := rp[ooD];
-  D0 := rp[ooD0];
-  D0F := (rp[ooD0] - rp[ooF]).Length;
-  D0C := (rp[ooD0] - rp[ooC]).Length;
+  oldF := rp.F;
+  oldC := rp.C;
+  oldD := rp.D;
+  D0 := rp.D0;
+  D0F := rp.D0.Distance(rp.F);
+  D0C := rp.D0.Distance(rp.C);
   D0D := FrMastUnten;
 
   { compute new Point F }
@@ -890,14 +876,14 @@ begin
     SchnittEbene := seXZ;
     Radius1 := newF0F;
     Radius2 := D0F; // unchanged
-    MittelPunkt1 := rP[ooF0];
-    MittelPunkt2 := rP[ooD0];
-    rP[ooF] := SchnittPunkt1;
+    MittelPunkt1 := rP.F0;
+    MittelPunkt2 := rP.D0;
+    rP.F := SchnittPunkt1;
   end;
 
   { compute new Points C and D }
 
-  newF := rp[ooF];
+  newF := rp.F;
   oldPsi := Pi/2 - SKK.AngleXZ(oldF, D0);
   newPsi := Pi/2 - SKK.AngleXZ(newF, D0);
   delta := newPsi - oldPsi;
@@ -914,12 +900,12 @@ begin
   newD.Y := 0;
   newD.Z := D0.Z + D0D * sin(w);
 
-  rp[ooC] := newC;
-  rp[ooD] := newD;
+  rp.C := newC;
+  rp.D := newD;
 
   { continue as in original BiegeUndNeigeF }
 
-  FrVorstag := (rP[ooC0] - rP[ooC]).Length;
+  FrVorstag := rP.C0.Distance(rP.C);
 
   case SalingTyp of
     stFest:
@@ -958,16 +944,16 @@ begin
   KorrekturF(Biegung, k1, k2, k3, tempBeta, tempGamma); { virtuelle Methode }
 
   { 2. Berechnung Punkt F mit Mastfall }
-  rP[ooF] := SKK.IntersectionXZ1(rP[ooF0], rP[ooD0], Mastfall + FrMastfallVorlauf, k3);
+  rP.F := SKK.IntersectionXZ1(rP.F0, rP.D0, Mastfall + FrMastfallVorlauf, k3);
 
   { 3. psi, D, und C ermitteln }
-  FrPsi := SKK.AngleXZM(rP[ooD0], rP[ooF]);
+  FrPsi := SKK.AngleXZM(rP.D0, rP.F);
   FrPsi := pi / 2 + FrPsi + FrAlpha - tempBeta;
 
-  rP[ooD] := SKK.AnglePointXZ(rP[ooD0], FrMastUnten, FrPsi - FrAlpha);
-  rP[ooC] := SKK.AnglePointXZ(rP[ooD], FrMastOben, FrPsi - FrAlpha + tempGamma);
+  rP.D := SKK.AnglePointXZ(rP.D0, FrMastUnten, FrPsi - FrAlpha);
+  rP.C := SKK.AnglePointXZ(rP.D, FrMastOben, FrPsi - FrAlpha + tempGamma);
 
-  FrVorstag := (rP[ooC0] - rP[ooC]).Length;
+  FrVorstag := rP.C0.Distance(rP.C);
 
   { 4. restliche Aktualisierungen vornehmen }
   case SalingTyp of
@@ -988,10 +974,10 @@ begin
   BiegeUndNeigeF1(TrimmSoll.Mastfall, TrimmSoll.BiegungS);
 
   { 4. Startwert für FrSalingH ermitteln }
-  ooTemp := (rP[ooC] - rP[ooP0]).Normalize;
+  ooTemp := (rP.C - rP.P0).Normalize;
   ooTemp := ooTemp * FrWoben2D;
-  rP[ooP] := rP[ooC] + ooTemp;
-  SalingHStart := (rP[ooP] - rP[ooD]).Length;
+  rP.P := rP.C + ooTemp;
+  SalingHStart := rP.P.Distance(rP.D);
   FrSalingH := Trunc(SalingHStart) + 1; { FiSalingH garantiert größer }
 
   { 5. restliche Aktualisierungen in MakeSalingHBiggerFS vornehmen! }
@@ -1006,10 +992,10 @@ begin
   BiegeUndNeigeF1(TrimmSoll.Mastfall, TrimmSoll.BiegungS);
 
   { Startwert für SalingL ermitteln }
-  ooTemp := (rP[ooC] - rP[ooA0]).Normalize;
+  ooTemp := (rP.C - rP.A0).Normalize;
   ooTemp := ooTemp * FrWoben3D;
-  rP[ooA] := rP[ooC] + ooTemp;
-  SalingLStart := (rP[ooA] - rP[ooD]).Length;
+  rP.A := rP.C + ooTemp;
+  SalingLStart := rP.A.Distance(rP.D);
   FrSalingL := Trunc(SalingLStart) + 1; { FiSalingL dann garantiert größer! }
 
   { restliche Aktualisierungen in MakeSalingLBiggerDS vornehmen }
@@ -1030,16 +1016,16 @@ begin
   k2 := sqrt((sqr(FrMastOben) - sqr(Biegung)));
   tempAlpha := arctan2(Biegung, k1);
 
-  rP[ooC] := SKK.IntersectionXZ1(rP[ooF0], rP[ooD0], MastfallC, k1 + k2);
+  rP.C := SKK.IntersectionXZ1(rP.F0, rP.D0, MastfallC, k1 + k2);
 
   { psi und Punkt D }
-  FrPsi := SKK.AngleXZM(rP[ooD0], rP[ooC]);
+  FrPsi := SKK.AngleXZM(rP.D0, rP.C);
   FrPsi := pi / 2 + FrPsi + FrAlpha - tempAlpha;
 
-  rP[ooD] := SKK.AnglePointXZ(rP[ooD0], FrMastUnten, FrPsi - FrAlpha);
+  rP.D := SKK.AnglePointXZ(rP.D0, FrMastUnten, FrPsi - FrAlpha);
 
   { Vorstag }
-  FrVorstag := (rP[ooC0] - rP[ooC]).Length;
+  FrVorstag := rP.C0.Distance(rP.C);
 
   { Punkt F, M }
   BerechneF;

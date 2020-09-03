@@ -414,7 +414,7 @@ begin
   FU2 := 0;
   GetWantenSpannung;
   { 1. Wantenkraft3Dto2D; FB ermitteln }
-  h := (rP[ooP0] - rP[ooP]).Length;
+  h := rP.P0.Distance(rP.P);
   l2 := rL[6] - rL[11]; { PüttingAbstand - SalingAbstand }
   alpha := arctan2(l2 / 2, h);
   FBekannt := WantenSpannung * cos(alpha) * 2; { Wantenspannung2d }
@@ -422,11 +422,11 @@ begin
     stFest, stDrehbar:
     begin
       { Gleichgewicht am Punkt ooP }
-      {         KM       KU1      KU2      KB        FU1  FU2  FB  }
-      SolveKG21(rP[ooP], rP[ooD], rP[ooC], rP[ooP0], FU1, FU2, FBekannt);
+      {         KM    KU1   KU2   KB     FU1  FU2  FB  }
+      SolveKG21(rP.P, rP.D, rP.C, rP.P0, FU1, FU2, FBekannt);
       { Winkel alpha2 ermitteln }
-      Gamma := pi / 2 - SKK.AngleXZ(rP[ooC], rP[ooD0]);
-      delta2 := SKK.AngleZXM(rP[ooA], rP[ooD]);
+      Gamma := pi / 2 - SKK.AngleXZ(rP.C, rP.D0);
+      delta2 := SKK.AngleZXM(rP.A, rP.D);
       Beta := Gamma - pi / 2;
       alpha2 := Beta + delta2;
       F1 := 0;
@@ -437,8 +437,8 @@ begin
     stOhneBiegt:
     begin
       { Gleichgewicht am Punkt ooC }
-      {         KM       KU1       KU2       KB        FU1  FU2  FB  }
-      SolveKG21(rP[ooC], rP[ooD0], rP[ooC0], rP[ooP0], FU1, FU2, FBekannt);
+      {         KM    KU1    KU2    KB     FU1  FU2  FB  }
+      SolveKG21(rP.C, rP.D0, rP.C0, rP.P0, FU1, FU2, FBekannt);
       F1 := 0;
       F2 := 0;
       FA := 0;
@@ -687,12 +687,12 @@ begin
           KU1 Knoten der zur 1. unbekannten Stabkraft FU1 gehört
           KU2 Knoten der zur 2. unbekannten Stabkraft FU2 gehört
           KB  Knoten der zur bekannten Stabkraft FB gehört
-                KM       KU1       KU2      KB        FU1  FU2  FB *)
-      SolveKG21(rP[ooC], rP[ooC0], rP[ooP], rP[ooD0], FU1, FU2, FB);
+                KM    KU1    KU2   KB     FU1  FU2  FB *)
+      SolveKG21(rP.C, rP.C0, rP.P, rP.D0, FU1, FU2, FB);
 
       FB := FU2;
-      {         KM       KU1      KU2       KB       FU1  FU2  FB  }
-      SolveKG21(rP[ooP], rP[ooD], rP[ooP0], rP[ooC], FU1, FU2, FB);
+      {         KM    KU1   KU2    KB    FU1  FU2  FB  }
+      SolveKG21(rP.P, rP.D, rP.P0, rP.C, FU1, FU2, FB);
         result := FU1; { selbe Einheit wie FB }
     end;
   end;
@@ -830,30 +830,30 @@ begin
   case SalingTyp of
     stFest, stDrehbar, stOhneBiegt:
     begin
-      SchnittGG(rP[ooD0], rP[ooC], rP[ooP], rP[ooD], SPSaling);
-      SchnittGG(rP[ooD0], rP[ooC], rP[ooE], rP[ooE0], SPController);
-      ld := (rP[ooD0] - SPSaling).Length;
-      le := (rP[ooD0] - SPController).Length;
+      SchnittGG(rP.D0, rP.C, rP.P, rP.D, SPSaling);
+      SchnittGG(rP.D0, rP.C, rP.E, rP.E0, SPController);
+      ld := rP.D0.Distance(SPSaling);
+      le := rP.D0.Distance(SPController);
       lc := rL[0];
-      EC := (rP[ooC] - rP[ooE]).Length;
+      EC := rP.C.Distance(rP.E);
       hd := Hoehe(lc - 0.0001, rL[16], rL[15], k2);
       he := Hoehe(lc - 0.0001, rL[18], EC, k1);
-      if SPSaling.X - rP[ooD].X > 0 then
+      if SPSaling.X - rP.D.X > 0 then
         hd := -hd;
-      if SPController.X - rP[ooE].X > 0 then
+      if SPController.X - rP.E.X > 0 then
         he := -he;
     end;
 
     stOhneStarr:
     begin
-      SchnittGG(rP[ooD0], rP[ooC], rP[ooE], rP[ooE0], SPController);
+      SchnittGG(rP.D0, rP.C, rP.E, rP.E0, SPController);
       ld := rL[16];
-      le := (rP[ooD0] - SPController).Length;
+      le := rP.D0.Distance(SPController);
       lc := rL[0];
-      EC := (rP[ooC] - rP[ooE]).Length;
+      EC := rP.C.Distance(rP.E);
       hd := 0; { Null gesetzt, da nicht relevant }
       he := Hoehe(lc - 0.0001, rL[18], EC, k1);
-      if SPController.X - rP[ooE].X > 0 then
+      if SPController.X - rP.E.X > 0 then
         he := -he;
     end;
   end;
@@ -867,9 +867,9 @@ begin
   case SalingTyp of
     stFest, stDrehbar:
     begin
-      Gamma := pi / 2 - SKK.AngleXZ(rP[ooC], rP[ooD0]);
-      delta1 := SKK.AngleZXM(rP[ooE], rP[ooC0]);
-      delta2 := SKK.AngleZXM(rP[ooA], rP[ooD]);
+      Gamma := pi / 2 - SKK.AngleXZ(rP.C, rP.D0);
+      delta1 := SKK.AngleZXM(rP.E, rP.C0);
+      delta2 := SKK.AngleZXM(rP.A, rP.D);
       Beta := Gamma - pi / 2;
       alpha1 := Beta + delta1;
       alpha2 := Beta + delta2;
@@ -877,8 +877,8 @@ begin
 
     stOhneStarr, stOhneBiegt:
     begin
-      Gamma := pi / 2 - SKK.AngleXZ(rP[ooC], rP[ooD0]);
-      delta1 := SKK.AngleZXM(rP[ooE], rP[ooC0]);
+      Gamma := pi / 2 - SKK.AngleXZ(rP.C, rP.D0);
+      delta1 := SKK.AngleZXM(rP.E, rP.C0);
       delta2 := 0; { Null gesetzt, da nicht relevant }
       Beta := Gamma - pi / 2;
       alpha1 := Beta + delta1;
@@ -965,26 +965,26 @@ end;
 procedure TMast.Abstaende;
 begin
   { Abstände ermitteln }
-  rL[0] := (rP[ooD0] - rP[ooC]).Length;
-  rL[1] := (rP[ooD0] - rP[ooC0]).Length;
-  rL[2] := (rP[ooB0] - rP[ooC0]).Length;
-  rL[3] := (rP[ooA0] - rP[ooC0]).Length;
-  rL[4] := (rP[ooB0] - rP[ooD0]).Length;
-  rL[5] := (rP[ooA0] - rP[ooD0]).Length;
-  rL[6] := (rP[ooA0] - rP[ooB0]).Length;
-  rL[7] := (rP[ooB0] - rP[ooB]).Length;
-  rL[8] := (rP[ooA0] - rP[ooA]).Length;
-  rL[9] := (rP[ooB] - rP[ooD]).Length;
-  rL[10] := (rP[ooA] - rP[ooD]).Length;
-  rL[11] := (rP[ooA] - rP[ooB]).Length;
-  rL[12] := (rP[ooB] - rP[ooC]).Length;
-  rL[13] := (rP[ooA] - rP[ooC]).Length;
-  rL[14] := (rP[ooC0] - rP[ooC]).Length;
-  rL[15] := (rP[ooC] - rP[ooD]).Length;
-  rL[16] := (rP[ooD0] - rP[ooD]).Length;
-  rL[17] := (rP[ooD] - rP[ooE]).Length;
-  rL[18] := (rP[ooD0] - rP[ooE]).Length;
-  rL[19] := (rP[ooE0] - rP[ooE]).Length;
+  rL[0] := rP.D0.Distance(rP.C);
+  rL[1] := rP.D0.Distance(rP.C0);
+  rL[2] := rP.B0.Distance(rP.C0);
+  rL[3] := rP.A0.Distance(rP.C0);
+  rL[4] := rP.B0.Distance(rP.D0);
+  rL[5] := rP.A0.Distance(rP.D0);
+  rL[6] := rP.A0.Distance(rP.B0);
+  rL[7] := rP.B0.Distance(rP.B);
+  rL[8] := rP.A0.Distance(rP.A);
+  rL[9] := rP.B.Distance(rP.D);
+  rL[10] := rP.A.Distance(rP.D);
+  rL[11] := rP.A.Distance(rP.B);
+  rL[12] := rP.B.Distance(rP.C);
+  rL[13] := rP.A.Distance(rP.C);
+  rL[14] := rP.C0.Distance(rP.C);
+  rL[15] := rP.C.Distance(rP.D);
+  rL[16] := rP.D0.Distance(rP.D);
+  rL[17] := rP.D.Distance(rP.E);
+  rL[18] := rP.D0.Distance(rP.E);
+  rL[19] := rP.E0.Distance(rP.E);
 end;
 
 procedure TMast.BerechneF;
@@ -993,8 +993,8 @@ begin
   { Berechnung Punkt F - Masttop }
   SchnittKraefte;
   GetEpsilon;
-  FrEpsilon := pi / 2 - SKK.AngleXZ(rP[ooC], rP[ooD0]) - epsB;
-  rP[ooF] := SKK.AnglePointXZ(rP[ooC], FrMastEnde, FrEpsilon);
+  FrEpsilon := pi / 2 - SKK.AngleXZ(rP.C, rP.D0) - epsB;
+  rP.F := SKK.AnglePointXZ(rP.C, FrMastEnde, FrEpsilon);
 end;
 
 procedure TMast.KorrekturF(tempH, k1, k2: single; var k3, Beta, Gamma: single);
@@ -1021,7 +1021,7 @@ procedure TMast.GetMastPositionE;
 var
   PositionEStrich: single;
 begin
-  MastPositionE := rP[ooE].X - rP[ooD0].X;
+  MastPositionE := rP.E.X - rP.D0.X;
   if not ControllerFree then
     Exit;
   PositionEStrich := -le * sin(Beta) + BiegungE * cos(Beta);

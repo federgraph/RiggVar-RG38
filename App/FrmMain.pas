@@ -1542,7 +1542,7 @@ begin
     ControllerGraph.ControllerTyp := Rigg.ControllerTyp;
     ControllerGraph.ControllerPos := Round(Main.ParamValue[fpController]);
     ControllerGraph.ParamXE := Rigg.MastPositionE;
-    ControllerGraph.ParamXE0 := Round(Rigg.rP[ooE0].X - Rigg.rP[ooD0].X);
+    ControllerGraph.ParamXE0 := Round(Rigg.rP.E0.X - Rigg.rP.D0.X);
     ControllerGraph.EdgePos := Round(Rigg.GSB.Find(fpController).Min);
 
     ControllerGraph.Draw(TFigure.dtController);

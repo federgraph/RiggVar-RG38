@@ -161,9 +161,9 @@ begin
   begin
     k := Round(100 / BogenMax * j);
     tempL := j * L / BogenMax;
-    FMastKurve[j].X := FRigg.rP[ooD0].X - tempL * temp1 + Value[k] * temp2;
+    FMastKurve[j].X := FRigg.rP.D0.X - tempL * temp1 + Value[k] * temp2;
     FMastKurve[j].Y := 0;
-    FMastKurve[j].Z := FRigg.rP[ooD0].Z + tempL * temp3 + Value[k] * temp4;
+    FMastKurve[j].Z := FRigg.rP.D0.Z + tempL * temp3 + Value[k] * temp4;
   end;
 end;
 

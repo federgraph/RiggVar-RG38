@@ -225,44 +225,44 @@ begin
       GSB.WPowerOS.Max := ReadInteger(S, 'WPowerOS', Round(GSB.WPowerOS.Max));
 
       S := 'Koordinaten Rumpf';
-      iP[ooA0].X := ReadInteger(S, 'A0x', Round(iP[ooA0].X));
-      iP[ooA0].Y := ReadInteger(S, 'A0y', Round(iP[ooA0].Y));
-      iP[ooA0].Z := ReadInteger(S, 'A0z', Round(iP[ooA0].Z));
-      iP[ooB0].X := ReadInteger(S, 'B0x', Round(iP[ooB0].X));
-      iP[ooB0].Y := ReadInteger(S, 'B0y', Round(iP[ooB0].Y));
-      iP[ooB0].Z := ReadInteger(S, 'B0z', Round(iP[ooB0].Z));
-      iP[ooC0].X := ReadInteger(S, 'C0x', Round(iP[ooC0].X));
-      iP[ooC0].Y := ReadInteger(S, 'C0y', Round(iP[ooC0].Y));
-      iP[ooC0].Z := ReadInteger(S, 'C0z', Round(iP[ooC0].Z));
-      iP[ooD0].X := ReadInteger(S, 'D0x', Round(iP[ooD0].X));
-      iP[ooD0].Y := ReadInteger(S, 'D0y', Round(iP[ooD0].Y));
-      iP[ooD0].Z := ReadInteger(S, 'D0z', Round(iP[ooD0].Z));
-      iP[ooE0].X := ReadInteger(S, 'E0x', Round(iP[ooE0].X));
-      iP[ooE0].Y := ReadInteger(S, 'E0y', Round(iP[ooE0].Y));
-      iP[ooE0].Z := ReadInteger(S, 'E0z', Round(iP[ooE0].Z));
-      iP[ooF0].X := ReadInteger(S, 'F0x', Round(iP[ooF0].X));
-      iP[ooF0].Y := ReadInteger(S, 'F0y', Round(iP[ooF0].Y));
-      iP[ooF0].Z := ReadInteger(S, 'F0z', Round(iP[ooF0].Z));
+      iP.A0.X := ReadInteger(S, 'A0x', Round(iP.A0.X));
+      iP.A0.Y := ReadInteger(S, 'A0y', Round(iP.A0.Y));
+      iP.A0.Z := ReadInteger(S, 'A0z', Round(iP.A0.Z));
+      iP.B0.X := ReadInteger(S, 'B0x', Round(iP.B0.X));
+      iP.B0.Y := ReadInteger(S, 'B0y', Round(iP.B0.Y));
+      iP.B0.Z := ReadInteger(S, 'B0z', Round(iP.B0.Z));
+      iP.C0.X := ReadInteger(S, 'C0x', Round(iP.C0.X));
+      iP.C0.Y := ReadInteger(S, 'C0y', Round(iP.C0.Y));
+      iP.C0.Z := ReadInteger(S, 'C0z', Round(iP.C0.Z));
+      iP.D0.X := ReadInteger(S, 'D0x', Round(iP.D0.X));
+      iP.D0.Y := ReadInteger(S, 'D0y', Round(iP.D0.Y));
+      iP.D0.Z := ReadInteger(S, 'D0z', Round(iP.D0.Z));
+      iP.E0.X := ReadInteger(S, 'E0x', Round(iP.E0.X));
+      iP.E0.Y := ReadInteger(S, 'E0y', Round(iP.E0.Y));
+      iP.E0.Z := ReadInteger(S, 'E0z', Round(iP.E0.Z));
+      iP.F0.X := ReadInteger(S, 'F0x', Round(iP.F0.X));
+      iP.F0.Y := ReadInteger(S, 'F0y', Round(iP.F0.Y));
+      iP.F0.Z := ReadInteger(S, 'F0z', Round(iP.F0.Z));
 
       S := 'Koordinaten Rigg';
-      iP[ooA].X := ReadInteger(S, 'Ax', Round(iP[ooA].X));
-      iP[ooA].Y := ReadInteger(S, 'Ay', Round(iP[ooA].Y));
-      iP[ooA].Z := ReadInteger(S, 'Az', Round(iP[ooA].Z));
-      iP[ooB].X := ReadInteger(S, 'Bx', Round(iP[ooB].X));
-      iP[ooB].Y := ReadInteger(S, 'By', Round(iP[ooB].Y));
-      iP[ooB].Z := ReadInteger(S, 'Bz', Round(iP[ooB].Z));
-      iP[ooC].X := ReadInteger(S, 'Cx', Round(iP[ooC].X));
-      iP[ooC].Y := ReadInteger(S, 'Cy', Round(iP[ooC].Y));
-      iP[ooC].Z := ReadInteger(S, 'Cz', Round(iP[ooC].Z));
-      iP[ooD].X := ReadInteger(S, 'Dx', Round(iP[ooD].X));
-      iP[ooD].Y := ReadInteger(S, 'Dy', Round(iP[ooD].Y));
-      iP[ooD].Z := ReadInteger(S, 'Dz', Round(iP[ooD].Z));
-      iP[ooE].X := ReadInteger(S, 'Ex', Round(iP[ooE].X));
-      iP[ooE].Y := ReadInteger(S, 'Ey', Round(iP[ooE].Y));
-      iP[ooE].Z := ReadInteger(S, 'Ez', Round(iP[ooE].Z));
-      iP[ooF].X := ReadInteger(S, 'Fx', Round(iP[ooF].X));
-      iP[ooF].Y := ReadInteger(S, 'Fy', Round(iP[ooF].Y));
-      iP[ooF].Z := ReadInteger(S, 'Fz', Round(iP[ooF].Z));
+      iP.A.X := ReadInteger(S, 'Ax', Round(iP.A.X));
+      iP.A.Y := ReadInteger(S, 'Ay', Round(iP.A.Y));
+      iP.A.Z := ReadInteger(S, 'Az', Round(iP.A.Z));
+      iP.B.X := ReadInteger(S, 'Bx', Round(iP.B.X));
+      iP.B.Y := ReadInteger(S, 'By', Round(iP.B.Y));
+      iP.B.Z := ReadInteger(S, 'Bz', Round(iP.B.Z));
+      iP.C.X := ReadInteger(S, 'Cx', Round(iP.C.X));
+      iP.C.Y := ReadInteger(S, 'Cy', Round(iP.C.Y));
+      iP.C.Z := ReadInteger(S, 'Cz', Round(iP.C.Z));
+      iP.D.X := ReadInteger(S, 'Dx', Round(iP.D.X));
+      iP.D.Y := ReadInteger(S, 'Dy', Round(iP.D.Y));
+      iP.D.Z := ReadInteger(S, 'Dz', Round(iP.D.Z));
+      iP.E.X := ReadInteger(S, 'Ex', Round(iP.E.X));
+      iP.E.Y := ReadInteger(S, 'Ey', Round(iP.E.Y));
+      iP.E.Z := ReadInteger(S, 'Ez', Round(iP.E.Z));
+      iP.F.X := ReadInteger(S, 'Fx', Round(iP.F.X));
+      iP.F.Y := ReadInteger(S, 'Fy', Round(iP.F.Y));
+      iP.F.Z := ReadInteger(S, 'Fz', Round(iP.F.Z));
 
       S := 'EA';
       for i := 0 to 19 do
@@ -355,44 +355,44 @@ begin
       WriteInteger(S, 'WPowerOS', Round(GSB.WPowerOS.Max));
 
       S := 'Koordinaten Rumpf';
-      WriteInteger(S, 'A0x', Round(iP[ooA0].X));
-      WriteInteger(S, 'A0y', Round(iP[ooA0].Y));
-      WriteInteger(S, 'A0z', Round(iP[ooA0].Z));
-      WriteInteger(S, 'B0x', Round(iP[ooB0].X));
-      WriteInteger(S, 'B0y', Round(iP[ooB0].Y));
-      WriteInteger(S, 'B0z', Round(iP[ooB0].Z));
-      WriteInteger(S, 'C0x', Round(iP[ooC0].X));
-      WriteInteger(S, 'C0y', Round(iP[ooC0].Y));
-      WriteInteger(S, 'C0z', Round(iP[ooC0].Z));
-      WriteInteger(S, 'D0x', Round(iP[ooD0].X));
-      WriteInteger(S, 'D0y', Round(iP[ooD0].Y));
-      WriteInteger(S, 'D0z', Round(iP[ooD0].Z));
-      WriteInteger(S, 'E0x', Round(iP[ooE0].X));
-      WriteInteger(S, 'E0y', Round(iP[ooE0].Y));
-      WriteInteger(S, 'E0z', Round(iP[ooE0].Z));
-      WriteInteger(S, 'F0x', Round(iP[ooF0].X));
-      WriteInteger(S, 'F0y', Round(iP[ooF0].Y));
-      WriteInteger(S, 'F0z', Round(iP[ooF0].Z));
+      WriteInteger(S, 'A0x', Round(iP.A0.X));
+      WriteInteger(S, 'A0y', Round(iP.A0.Y));
+      WriteInteger(S, 'A0z', Round(iP.A0.Z));
+      WriteInteger(S, 'B0x', Round(iP.B0.X));
+      WriteInteger(S, 'B0y', Round(iP.B0.Y));
+      WriteInteger(S, 'B0z', Round(iP.B0.Z));
+      WriteInteger(S, 'C0x', Round(iP.C0.X));
+      WriteInteger(S, 'C0y', Round(iP.C0.Y));
+      WriteInteger(S, 'C0z', Round(iP.C0.Z));
+      WriteInteger(S, 'D0x', Round(iP.D0.X));
+      WriteInteger(S, 'D0y', Round(iP.D0.Y));
+      WriteInteger(S, 'D0z', Round(iP.D0.Z));
+      WriteInteger(S, 'E0x', Round(iP.E0.X));
+      WriteInteger(S, 'E0y', Round(iP.E0.Y));
+      WriteInteger(S, 'E0z', Round(iP.E0.Z));
+      WriteInteger(S, 'F0x', Round(iP.F0.X));
+      WriteInteger(S, 'F0y', Round(iP.F0.Y));
+      WriteInteger(S, 'F0z', Round(iP.F0.Z));
 
       S := 'Koordinaten Rigg';
-      WriteInteger(S, 'Ax', Round(iP[ooA].X));
-      WriteInteger(S, 'Ay', Round(iP[ooA].Y));
-      WriteInteger(S, 'Az', Round(iP[ooA].Z));
-      WriteInteger(S, 'Bx', Round(iP[ooB].X));
-      WriteInteger(S, 'By', Round(iP[ooB].Y));
-      WriteInteger(S, 'Bz', Round(iP[ooB].Z));
-      WriteInteger(S, 'Cx', Round(iP[ooC].X));
-      WriteInteger(S, 'Cy', Round(iP[ooC].Y));
-      WriteInteger(S, 'Cz', Round(iP[ooC].Z));
-      WriteInteger(S, 'Dx', Round(iP[ooD].X));
-      WriteInteger(S, 'Dy', Round(iP[ooD].Y));
-      WriteInteger(S, 'Dz', Round(iP[ooD].Z));
-      WriteInteger(S, 'Ex', Round(iP[ooE].X));
-      WriteInteger(S, 'Ey', Round(iP[ooE].Y));
-      WriteInteger(S, 'Ez', Round(iP[ooE].Z));
-      WriteInteger(S, 'Fx', Round(iP[ooF].X));
-      WriteInteger(S, 'Fy', Round(iP[ooF].Y));
-      WriteInteger(S, 'Fz', Round(iP[ooF].Z));
+      WriteInteger(S, 'Ax', Round(iP.A.X));
+      WriteInteger(S, 'Ay', Round(iP.A.Y));
+      WriteInteger(S, 'Az', Round(iP.A.Z));
+      WriteInteger(S, 'Bx', Round(iP.B.X));
+      WriteInteger(S, 'By', Round(iP.B.Y));
+      WriteInteger(S, 'Bz', Round(iP.B.Z));
+      WriteInteger(S, 'Cx', Round(iP.C.X));
+      WriteInteger(S, 'Cy', Round(iP.C.Y));
+      WriteInteger(S, 'Cz', Round(iP.C.Z));
+      WriteInteger(S, 'Dx', Round(iP.D.X));
+      WriteInteger(S, 'Dy', Round(iP.D.Y));
+      WriteInteger(S, 'Dz', Round(iP.D.Z));
+      WriteInteger(S, 'Ex', Round(iP.E.X));
+      WriteInteger(S, 'Ey', Round(iP.E.Y));
+      WriteInteger(S, 'Ez', Round(iP.E.Z));
+      WriteInteger(S, 'Fx', Round(iP.F.X));
+      WriteInteger(S, 'Fy', Round(iP.F.Y));
+      WriteInteger(S, 'Fz', Round(iP.F.Z));
 
       S := 'EA';
       for i := 0 to 19 do
@@ -442,34 +442,34 @@ begin
   FiReserved := 0;
 
   { Rumpf: Koordinaten }
-  iP[ooA0].X := 2560; { Pütting Stbd }
-  iP[ooA0].Y := -765;
-  iP[ooA0].Z := 430;
+  iP.A0.X := 2560; { Pütting Stbd }
+  iP.A0.Y := -765;
+  iP.A0.Z := 430;
 
-  iP[ooB0].X := 2560; { Püttinge Bb }
-  iP[ooB0].Y := 765;
-  iP[ooB0].Z := 430;
+  iP.B0.X := 2560; { Püttinge Bb }
+  iP.B0.Y := 765;
+  iP.B0.Z := 430;
 
-  iP[ooC0].X := 4140; { Vorstag }
-  iP[ooC0].Y := 0;
-  iP[ooC0].Z := 340;
+  iP.C0.X := 4140; { Vorstag }
+  iP.C0.Y := 0;
+  iP.C0.Z := 340;
 
-  iP[ooD0].X := 2870; { Mastfuß }
-  iP[ooD0].Y := 0;
-  iP[ooD0].Z := -100;
+  iP.D0.X := 2870; { Mastfuß }
+  iP.D0.Y := 0;
+  iP.D0.Z := -100;
 
-  iP[ooE0].X := 2970; { Controller }
-  iP[ooE0].Y := 0;
-  iP[ooE0].Z := 450;
+  iP.E0.X := 2970; { Controller }
+  iP.E0.Y := 0;
+  iP.E0.Z := 450;
 
-  iP[ooF0].X := -30; { Spiegel }
-  iP[ooF0].Y := 0;
-  iP[ooF0].Z := 300;
+  iP.F0.X := -30; { Spiegel }
+  iP.F0.Y := 0;
+  iP.F0.Z := 300;
 
-  iP[ooP0] := iP[ooA0];
-  iP[ooP0].Y := 0;
+  iP.P0 := iP.A0;
+  iP.P0.Y := 0;
 
-  { iP[ooA]..iP[ooF] werden hier nicht gefüllt! }
+  { iP.A]..iP.F] werden hier nicht gefüllt! }
 
   { Festigkeitswerte }
   rEA[0] := EAgross;
@@ -587,34 +587,34 @@ begin
   FiReserved := 0;
 
   { RumpfKoordinaten in mm }
-  iP[ooA0].X := 30 * f + ox; { Pütting Stbd }
-  iP[ooA0].Y := -40 * f;
-  iP[ooA0].Z := 40 * f + oz;
+  iP.A0.X := 30 * f + ox; { Pütting Stbd }
+  iP.A0.Y := -40 * f;
+  iP.A0.Z := 40 * f + oz;
 
-  iP[ooB0].X := 30 * f + ox;
-  iP[ooB0].Y := 40 * f;
-  iP[ooB0].Z := 40 * f + oz;
+  iP.B0.X := 30 * f + ox;
+  iP.B0.Y := 40 * f;
+  iP.B0.Z := 40 * f + oz;
 
-  iP[ooC0].X := 150 * f + ox;
-  iP[ooC0].Y := 0;
-  iP[ooC0].Z := 40 * f + oz;
+  iP.C0.X := 150 * f + ox;
+  iP.C0.Y := 0;
+  iP.C0.Z := 40 * f + oz;
 
-  iP[ooD0].X := 80 * f + ox;
-  iP[ooD0].Y := 0;
-  iP[ooD0].Z := 10 * f + oz;
+  iP.D0.X := 80 * f + ox;
+  iP.D0.Y := 0;
+  iP.D0.Z := 10 * f + oz;
 
-  iP[ooE0].X := 85 * f + ox;
-  iP[ooE0].Y := 0;
-  iP[ooE0].Z := 50 * f + oz;
+  iP.E0.X := 85 * f + ox;
+  iP.E0.Y := 0;
+  iP.E0.Z := 50 * f + oz;
 
-  iP[ooF0].X := -85 * f + ox;
-  iP[ooF0].Y := 0;
-  iP[ooF0].Z := 40 * f + oz;
+  iP.F0.X := -85 * f + ox;
+  iP.F0.Y := 0;
+  iP.F0.Z := 40 * f + oz;
 
-  iP[ooP0] := iP[ooA0];
-  iP[ooP0].Y := 0;
+  iP.P0 := iP.A0;
+  iP.P0.Y := 0;
 
-  { iP[ooA]..iP[ooF] werden hier nicht gefüllt! }
+  { iP.A]..iP.F] werden hier nicht gefüllt! }
 
   { Festigkeitswerte }
   rEA[0] := EAgross;
@@ -777,45 +777,45 @@ begin
     Add('');
 
     Add('[Koordinaten Rumpf]');
-    Add(Format('A0x=%d', [iP[ooA0].X]));
-    Add(Format('A0y=%d', [iP[ooA0].Y]));
-    Add(Format('A0z=%d', [iP[ooA0].Z]));
-    Add(Format('B0x=%d', [iP[ooB0].X]));
-    Add(Format('B0y=%d', [iP[ooB0].Y]));
-    Add(Format('B0z=%d', [iP[ooB0].Z]));
-    Add(Format('C0x=%d', [iP[ooC0].X]));
-    Add(Format('C0y=%d', [iP[ooC0].Y]));
-    Add(Format('C0z=%d', [iP[ooC0].Z]));
-    Add(Format('D0x=%d', [iP[ooD0].X]));
-    Add(Format('D0y=%d', [iP[ooD0].Y]));
-    Add(Format('D0z=%d', [iP[ooD0].Z]));
-    Add(Format('E0x=%d', [iP[ooE0].X]));
-    Add(Format('E0y=%d', [iP[ooE0].Y]));
-    Add(Format('E0z=%d', [iP[ooE0].Z]));
-    Add(Format('F0x=%d', [iP[ooF0].X]));
-    Add(Format('F0y=%d', [iP[ooF0].Y]));
-    Add(Format('F0z=%d', [iP[ooF0].Z]));
+    Add(Format('A0x=%d', [iP.A0.X]));
+    Add(Format('A0y=%d', [iP.A0.Y]));
+    Add(Format('A0z=%d', [iP.A0.Z]));
+    Add(Format('B0x=%d', [iP.B0.X]));
+    Add(Format('B0y=%d', [iP.B0.Y]));
+    Add(Format('B0z=%d', [iP.B0.Z]));
+    Add(Format('C0x=%d', [iP.C0.X]));
+    Add(Format('C0y=%d', [iP.C0.Y]));
+    Add(Format('C0z=%d', [iP.C0.Z]));
+    Add(Format('D0x=%d', [iP.D0.X]));
+    Add(Format('D0y=%d', [iP.D0.Y]));
+    Add(Format('D0z=%d', [iP.D0.Z]));
+    Add(Format('E0x=%d', [iP.E0.X]));
+    Add(Format('E0y=%d', [iP.E0.Y]));
+    Add(Format('E0z=%d', [iP.E0.Z]));
+    Add(Format('F0x=%d', [iP.F0.X]));
+    Add(Format('F0y=%d', [iP.F0.Y]));
+    Add(Format('F0z=%d', [iP.F0.Z]));
     Add('');
 
     Add('[Koordinaten Rigg]');
-    Add(Format('Ax=%d', [iP[ooA].X]));
-    Add(Format('Ay=%d', [iP[ooA].Y]));
-    Add(Format('Az=%d', [iP[ooA].Z]));
-    Add(Format('Bx=%d', [iP[ooB].X]));
-    Add(Format('By=%d', [iP[ooB].Y]));
-    Add(Format('Bz=%d', [iP[ooB].Y]));
-    Add(Format('Cx=%d', [iP[ooC].X]));
-    Add(Format('Cy=%d', [iP[ooC].Y]));
-    Add(Format('Cz=%d', [iP[ooC].Z]));
-    Add(Format('Dx=%d', [iP[ooD].X]));
-    Add(Format('Dy=%d', [iP[ooD].Y]));
-    Add(Format('Dz=%d', [iP[ooD].Z]));
-    Add(Format('Ex=%d', [iP[ooE].X]));
-    Add(Format('Ey=%d', [iP[ooE].Y]));
-    Add(Format('Ez=%d', [iP[ooE].Z]));
-    Add(Format('Fx=%d', [iP[ooF].X]));
-    Add(Format('Fy=%d', [iP[ooF].Y]));
-    Add(Format('Fz=%d', [iP[ooF].Z]));
+    Add(Format('Ax=%d', [iP.A.X]));
+    Add(Format('Ay=%d', [iP.A.Y]));
+    Add(Format('Az=%d', [iP.A.Z]));
+    Add(Format('Bx=%d', [iP.B.X]));
+    Add(Format('By=%d', [iP.B.Y]));
+    Add(Format('Bz=%d', [iP.B.Y]));
+    Add(Format('Cx=%d', [iP.C.X]));
+    Add(Format('Cy=%d', [iP.C.Y]));
+    Add(Format('Cz=%d', [iP.C.Z]));
+    Add(Format('Dx=%d', [iP.D.X]));
+    Add(Format('Dy=%d', [iP.D.Y]));
+    Add(Format('Dz=%d', [iP.D.Z]));
+    Add(Format('Ex=%d', [iP.E.X]));
+    Add(Format('Ey=%d', [iP.E.Y]));
+    Add(Format('Ez=%d', [iP.E.Z]));
+    Add(Format('Fx=%d', [iP.F.X]));
+    Add(Format('Fy=%d', [iP.F.Y]));
+    Add(Format('Fz=%d', [iP.F.Z]));
     Add('');
 
     Add('[EA]');
@@ -888,9 +888,9 @@ begin
       c := b.AddChild('Koord');
       c.SetAttribute('ID', KoordTexteXML[rp]);
       c.SetAttribute('Label', XMLKoordLabels[rp]);
-      c.SetAttribute('x', IntToStr(Round(iP[rp].X)));
-      c.SetAttribute('y', IntToStr(Round(iP[rp].Y)));
-      c.SetAttribute('z', IntToStr(Round(iP[rp].Z)));
+      c.SetAttribute('x', IntToStr(Round(iP.V[rp].X)));
+      c.SetAttribute('y', IntToStr(Round(iP.V[rp].Y)));
+      c.SetAttribute('z', IntToStr(Round(iP.V[rp].Z)));
     end;
 
     b := a.AddChild('Rumpf');
@@ -899,9 +899,9 @@ begin
       c := b.AddChild('Koord');
       c.SetAttribute('ID', KoordTexteXML[rp]);
       c.SetAttribute('Label', XMLKoordLabels[rp]);
-      c.SetAttribute('x', IntToStr(Round(iP[rp].X)));
-      c.SetAttribute('y', IntToStr(Round(iP[rp].Y)));
-      c.SetAttribute('z', IntToStr(Round(iP[rp].Z)));
+      c.SetAttribute('x', IntToStr(Round(iP.V[rp].X)));
+      c.SetAttribute('y', IntToStr(Round(iP.V[rp].Y)));
+      c.SetAttribute('z', IntToStr(Round(iP.V[rp].Z)));
     end;
 
     { Mast: Abmessungen in mm }
