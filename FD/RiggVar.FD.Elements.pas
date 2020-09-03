@@ -77,6 +77,7 @@ type
     function Angle(const APoint: TRggPoint3D): single;
     function Length: single;
     function Normalize: TRggPoint3D;
+    function Distance(const APoint: TRggPoint3D): single;
     class function Zero: TRggPoint3D; static;
 
     class operator Add(const APoint1, APoint2: TRggPoint3D): TRggPoint3D;
@@ -505,6 +506,11 @@ begin
   Result := Arctan2(Self.Y - APoint.Y, Self.X - APoint.X);
 end;
 
+function TRggPoint3D.Distance(const APoint: TRggPoint3D): single;
+begin
+  Result := (Self - APoint).Length;
+end;
+
 class function TRggPoint3D.Zero: TRggPoint3D;
 begin
   result.C := TPoint3D.Zero;
@@ -635,7 +641,7 @@ end;
 
 procedure TRggElement.Param7(Delta: single);
 begin
-  TextAngle := TextAngle + Delta * PI / 180;
+  TextAngle := TextAngle + DegToRad(Delta);
 end;
 
 procedure TRggElement.Param8(Delta: single);
@@ -744,7 +750,7 @@ begin
   ML.Add(Format('cr.Center.Z := %.2f;', [Center.Z]));
 
   if TextAngle <> DefaultTextAngle then
-    ML.Add(Format('cr.TextAngle := %.2f;', [TextAngle  * 180 / PI]));
+    ML.Add(Format('cr.TextAngle := %.2f;', [RadToDeg(TextAngle)]));
   if TextRadius <> DefaultTextRadius then
     ML.Add(Format('cr.TextRadius := %.2f;', [TextRadius]));
 
@@ -835,7 +841,7 @@ var
   alpha: single;
 begin
   { rotate line around Point2 }
-  alpha := -Delta * PI / 180 / 5;
+  alpha := DegToRad(-Delta / 5);
 
   Point2.OriginalCenter.P := Point1.Center.P + V2.Rotate(alpha);
   Point2.Center := Point2.OriginalCenter;
@@ -1117,8 +1123,8 @@ var
   sweepAngle: single;
   s: string;
 begin
-  Angle2 := Point2.Center.P.Angle(Point1.Center.P) * 180 / PI;
-  Angle3 := Point3.Center.P.Angle(Point1.Center.P) * 180 / PI;
+  Angle2 := RadToDeg(Point2.Center.P.Angle(Point1.Center.P));
+  Angle3 := RadToDeg(Point3.Center.P.Angle(Point1.Center.P));
 
   startAngle := Angle3;
   sweepAngle := (Angle2 - Angle3);
@@ -1142,7 +1148,7 @@ begin
   if ShowCaption or GlobalShowCaption then
   begin
     g.Fill.Color := claBlack;
-    TextAngle := (startAngle + sweepAngle / 2) * PI / 180;
+    TextAngle := DegToRad(startAngle + sweepAngle / 2);
     TextRadius := Radius * FTextRadiusFactor;
     TextCenter := Point1.Center.P;
     TextOut(g, s);
@@ -1165,8 +1171,8 @@ var
   Angle2, Angle3: single;
   sweepAngle: single;
 begin
-  Angle2 := Point2.Center.P.Angle(Point1.Center.P) * 180 / PI;
-  Angle3 := Point3.Center.P.Angle(Point1.Center.P) * 180 / PI;
+  Angle2 := RadToDeg(Point2.Center.P.Angle(Point1.Center.P));
+  Angle3 := RadToDeg(Point3.Center.P.Angle(Point1.Center.P));
 
   sweepAngle := (Angle2 - Angle3);
   result := sweepAngle;
@@ -1216,7 +1222,7 @@ var
   TempP: TPolygon;
   i: Integer;
 begin
-  Angle := 30 * PI / 180;
+  Angle := DegToRad(30);
   l := 30;
 
   TempA.X := cos(Angle) * Point1.FRadius;

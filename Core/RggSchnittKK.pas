@@ -60,6 +60,7 @@ type
     function GetSchnittPunkt2: TPoint3D;
     function GetBem: TBemerkungKK;
     function GetBemerkung: string;
+    function GetRemark: string;
     function Vorhanden: Boolean;
     procedure SetM1(const Value: TPointF);
     procedure SetM2(const Value: TPointF);
@@ -68,6 +69,16 @@ type
   public
     Watch1: Integer;
     Watch2: Integer;
+
+    function AngleXZM(P1, P2: TPoint3D): single;
+    function AngleXZ(P1, P2: TPoint3D): single;
+    function AngleZXM(P1, P2: TPoint3D): single;
+    function AngleZX(P1, P2: TPoint3D): single;
+    function AnglePointXZ(P: TPoint3D; R: single; AngleInRad: single): TPoint3D;
+    function IntersectionXZ1(AM1, AM2: TPoint3D; AR1, AR2: single): TPoint3D;
+    function IntersectionXZ2(AM1, AM2: TPoint3D; AR1, AR2: single): TPoint3D;
+    function IntersectionXZ(ASelector: Integer; AM1, AM2: TPoint3D; AR1, AR2: single): TPoint3D;
+
     property Radius1: single read R1 write SetRadius1;
     property Radius2: single read R2 write SetRadius2;
     property M1: TPointF write SetM1;
@@ -77,6 +88,7 @@ type
     property SchnittPunkt1: TPoint3D read GetSchnittPunkt1;
     property SchnittPunkt2: TPoint3D read GetSchnittPunkt2;
     property Status: TBemerkungKK read GetBem;
+    property Remark: string read GetRemark;
     property Bemerkung: string read GetBemerkung;
     property SPVorhanden: Boolean read Vorhanden;
     property SchnittEbene: TSchnittEbene read Ebene write Ebene;
@@ -153,7 +165,7 @@ end;
 
 procedure TSchnittKK.SetMittelPunkt1(Value: TPoint3D);
 begin
-//  if not Value.EqualsTo(FM1) then
+  { if not Value.EqualsTo(FM1) then }
   if (Value.X <> FM1.X) or (Value.Y <> FM1.Y) or (Value.Z <> FM1.Z) then
   begin
     FM1 := Value;
@@ -163,7 +175,7 @@ end;
 
 procedure TSchnittKK.SetMittelPunkt2(Value: TPoint3D);
 begin
-//  if not Value.EqualsTo(FM2) then
+  { if not Value.EqualsTo(FM2) then }
   if (Value.X <> FM2.X) or (Value.Y <> FM2.Y) or (Value.Z <> FM2.Z) then
   begin
     FM2 := Value;
@@ -512,6 +524,80 @@ begin
   end
   else
     inherited Schnitt;
+end;
+
+function TSchnittKK.GetRemark: string;
+begin
+  case Status of
+    bmKonzentrisch:
+      result := 'concentric circles';
+    bmZwei:
+      result := 'two intersections';
+    bmEntfernt:
+      result := 'two distant circles';
+    bmEinerAussen:
+      result := 'touching outside';
+    bmEinerK1inK2:
+      result := 'touching inside, C1 in C2';
+    bmEinerK2inK1:
+      result := 'touching inside, C2 in C1';
+    bmK1inK2:
+      result := 'C1 inside C2';
+    bmK2inK1:
+      result := 'C2 inside C1';
+    bmRadiusFalsch:
+      result := 'invalid radius';
+  end;
+end;
+
+function TSchnittKK.IntersectionXZ(ASelector: Integer; AM1, AM2: TPoint3D; AR1, AR2: single): TPoint3D;
+begin
+  SchnittEbene := seXZ;
+  Radius1 := AR1;
+  Radius2 := AR2;
+  MittelPunkt1 := AM1;
+  MittelPunkt2 := AM2;
+  if ASelector = 2 then
+    result := SchnittPunkt2
+  else
+    result := SchnittPunkt1
+end;
+
+function TSchnittKK.IntersectionXZ1(AM1, AM2: TPoint3D; AR1, AR2: single): TPoint3D;
+begin
+  result := IntersectionXZ(1, AM1, AM2, AR1, AR2);
+end;
+
+function TSchnittKK.IntersectionXZ2(AM1, AM2: TPoint3D; AR1, AR2: single): TPoint3D;
+begin
+  result := IntersectionXZ(2, AM1, AM2, AR1, AR2);
+end;
+
+function TSchnittKK.AnglePointXZ(P: TPoint3D; R, AngleInRad: single): TPoint3D;
+begin
+  result.X := P.X + R * cos(AngleInRad);
+  result.Z := P.Z + R * sin(AngleInRad);
+  result.Y := 0;
+end;
+
+function TSchnittKK.AngleXZM(P1, P2: TPoint3D): single;
+begin
+  result := arctan2(P1.X - P2.X, P2.Z - P1.Z);
+end;
+
+function TSchnittKK.AngleXZ(P1, P2: TPoint3D): single;
+begin
+  result := arctan2(P1.X - P2.X, P1.Z - P2.Z);
+end;
+
+function TSchnittKK.AngleZXM(P1, P2: TPoint3D): single;
+begin
+  result := arctan2(P1.Z - P2.Z, P2.X - P1.X);
+end;
+
+function TSchnittKK.AngleZX(P1, P2: TPoint3D): single;
+begin
+  result := arctan2(P1.Z - P2.Z, P1.X - P2.X);
 end;
 
 end.

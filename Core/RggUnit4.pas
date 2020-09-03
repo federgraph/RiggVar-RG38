@@ -21,6 +21,7 @@ interface
 uses
   System.SysUtils,
   System.Classes,
+  System.Math,
   System.Math.Vectors,
   RggStrings,
   RggTypes,
@@ -518,28 +519,28 @@ begin
 
   ML.Add('');
   ML.Add('Winkel:');
-  ML.Add(Format('  phi       = %6.2f Grad', [Phi * 180 / pi]));
-  ML.Add(Format('  psi       = %6.2f Grad', [psi * 180 / pi]));
-  ML.Add(Format('  alpha     = %6.2f Grad', [alpha * 180 / pi]));
-  ML.Add(Format('  phi-alpha = %6.2f Grad (Mast-Neigung)', [(Phi-alpha)*180/pi]));
-  ML.Add(Format('  psi-alpha = %6.2f Grad (Wanten-Neigung)', [(psi-alpha)*180/pi]));
+  ML.Add(Format('  phi       = %6.2f Grad', [RadToDeg(Phi)]));
+  ML.Add(Format('  psi       = %6.2f Grad', [RadToDeg(psi)]));
+  ML.Add(Format('  alpha     = %6.2f Grad', [RadToDeg(alpha)]));
+  ML.Add(Format('  phi-alpha = %6.2f Grad (Mast-Neigung)', [RadToDeg(Phi-alpha)]));
+  ML.Add(Format('  psi-alpha = %6.2f Grad (Wanten-Neigung)', [RadToDeg(psi-alpha)]));
 
   ML.Add('');
   ML.Add('MastWinkel:');
-  ML.Add(Format('  epsB = %6.2f Grad', [epsB * 180 / pi]));
-  ML.Add(Format('  eps2 = %6.2f Grad', [eps2 * 180 / pi]));
-  ML.Add(Format('  eps1 = %6.2f Grad', [eps1 * 180 / pi]));
-  ML.Add(Format('  epsA = %6.2f Grad', [epsA * 180 / pi]));
-  ML.Add(Format('  Epsilon  = %6.2f Grad', [epsilon * 180 / pi]));
+  ML.Add(Format('  epsB = %6.2f Grad', [RadToDeg(epsB)]));
+  ML.Add(Format('  eps2 = %6.2f Grad', [RadToDeg(eps2)]));
+  ML.Add(Format('  eps1 = %6.2f Grad', [RadToDeg(eps1)]));
+  ML.Add(Format('  epsA = %6.2f Grad', [RadToDeg(epsA)]));
+  ML.Add(Format('  Epsilon  = %6.2f Grad', [RadToDeg(epsilon)]));
 
   ML.Add('');
   ML.Add('SchnittWinkel:');
-  ML.Add(Format('  alpha1 = %6.2f Grad', [alpha1 * 180 / pi]));
-  ML.Add(Format('  alpha2 = %6.2f Grad', [alpha2 * 180 / pi]));
-  ML.Add(Format('  delta1 = %6.2f Grad', [delta1 * 180 / pi]));
-  ML.Add(Format('  delta2 = %6.2f Grad', [delta2 * 180 / pi]));
-  ML.Add(Format('  gamma  = %6.2f Grad', [gamma * 180 / pi]));
-  ML.Add(Format('  beta   = %6.2f Grad', [beta * 180 / pi]));
+  ML.Add(Format('  alpha1 = %6.2f Grad', [RadToDeg(alpha1)]));
+  ML.Add(Format('  alpha2 = %6.2f Grad', [RadToDeg(alpha2)]));
+  ML.Add(Format('  delta1 = %6.2f Grad', [RadToDeg(delta1)]));
+  ML.Add(Format('  delta2 = %6.2f Grad', [RadToDeg(delta2)]));
+  ML.Add(Format('  gamma  = %6.2f Grad', [RadToDeg(gamma)]));
+  ML.Add(Format('  beta   = %6.2f Grad', [RadToDeg(beta)]));
 
   if not WantAll then
     Exit;

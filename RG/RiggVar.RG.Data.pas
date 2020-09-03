@@ -348,7 +348,7 @@ begin
   SLMax := 600;
 
   SWMin := 0;
-  SWPos := Round(ArcTan2(SHPos, SAPos / 2) * 180 / Pi);
+  SWPos := Round(RadToDeg(ArcTan2(SHPos, SAPos / 2)));
   SWMax := 89;
 
   { Vorstag (C0C), or forestay, headstay }
@@ -420,7 +420,7 @@ begin
 //  SB.SH.Max = 300;
 //
 //  SB.SWMin := 0;
-//  SB.SWPos := Round(ArcTan2(SHPos, SAPos / 2) * 180 / Pi);
+//  SB.SWPos := Round(RadToDeg(ArcTan2(SHPos, SAPos / 2)));
 //  SB.SWMax := 89;
 //
 //  SB.SL.Min = 450;
@@ -966,9 +966,9 @@ procedure TRggData.ProcessW;
 begin
   if (l3 > 0) and (w3 > 0) then
   begin
-    h3 := l3 * sin(w3 * pi / 180);
+    h3 := l3 * sin(RadToDeg(w3));
     SHPos := Round(h2 + h3);
-    SAPos := Round(2 * (l3 * cos(w3 * pi / 180) + l2));
+    SAPos := Round(2 * (l3 * cos(RadToDeg(w3)) + l2));
   end;
 end;
 

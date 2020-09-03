@@ -19,6 +19,7 @@
 interface
 
 uses
+  System.Math,
   RggTypes;
 
 type
@@ -111,7 +112,7 @@ begin
   KY := InitY;
   FX := BelastungX;
   FY := BelastungY;
-  P := Phi * pi / 180;
+  P := DegToRad(Phi);
   FS1 := ClearVektorS;
 end;
 
@@ -270,9 +271,9 @@ begin
       { 1. neue Richtung aus Vektor holen. }
       case j of
         0:
-          PORad := PO1[l] * pi / 180; { Richtung in Rad }
+          PORad := DegToRad(PO1[l]);
         1:
-          PORad := PO2[l] * pi / 180; { Richtung in Rad }
+          PORad := DegToRad(PO2[l]);
       end;
 
       { 2. FW nur mit Kraft "1" auf Knoten l belasten. }

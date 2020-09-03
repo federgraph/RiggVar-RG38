@@ -553,29 +553,13 @@ end;
 
 procedure TRggDrawingZ18.UpdateGetriebe;
 begin
-  { D }
-  D.Center.X := D0.Center.X + FrMastUnten * cos(psi);
-  D.Center.Y := D0.Center.Y - FrMastUnten * sin(psi);
-  D.Center.Z := 0;
-
-  { P }
-  SKK.SchnittEbene := seXY;
-  SKK.Radius1 := FrWunten2D;
-  SKK.Radius2 := FrSalingH;
-  SKK.MittelPunkt1 := P0.Center.C;
-  SKK.MittelPunkt2 := D.Center.C;
-  P.Center.C := SKK.SchnittPunkt2;
+  D.Center.C := SKK.AnglePoint(D0.Center, FrMastUnten, psi);
+  P.Center.C := SKK.Intersection2(P0.Center, D.Center, FrWunten2D, FrSalingH);
 
   if not SKK.SPVorhanden then
     Msg := 'UpdateGetriebe - cannot compute P';
 
-  { C }
-  SKK.SchnittEbene := seXY;
-  SKK.Radius1 := FrWoben2D;
-  SKK.Radius2 := FrMastOben;
-  SKK.MittelPunkt1:= P.Center.C;
-  SKK.MittelPunkt2:= D.Center.C;
-  C.Center.C := SKK.SchnittPunkt2;
+  C.Center.C := SKK.Intersection2(P.Center, D.Center, FrWoben2D, FrMastOben);
 
   if not SKK.SPVorhanden then
     Msg := 'UpdateGetriebe - cannot compute C';
@@ -583,29 +567,14 @@ end;
 
 procedure TRggDrawingZ18.UpdateGetriebeStart;
 begin
-  { StartD }
-  StartD.Center.X := D0.Center.X + FrMastUnten * cos(psiStart);
-  StartD.Center.Y := D0.Center.Y - FrMastUnten * sin(psiStart);
-  StartD.Center.Z := 0;
-
-  { StartP }
-  SKK.SchnittEbene := seXY;
-  SKK.Radius1 := FrWunten2D;
-  SKK.Radius2 := FrSalingH;
-  SKK.MittelPunkt1 := P0.Center.C;
-  SKK.MittelPunkt2 := StartD.Center.C;
-  StartP.Center.C := SKK.SchnittPunkt2;
+  StartD.Center.C := SKK.AnglePoint(D0.Center, FrMastUnten, psiStart);
+  StartP.Center.C := SKK.Intersection2(P0.Center, StartD.Center, FrWunten2D, FrSalingH);
 
   if not SKK.SPVorhanden then
     Msg := 'UpdateGetriebeStart - cannot compute StartP';
 
   { StartC }
-  SKK.SchnittEbene := seXY;
-  SKK.Radius1 := FrWoben2D;
-  SKK.Radius2 := FrMastOben;
-  SKK.MittelPunkt1:= StartP.Center.C;
-  SKK.MittelPunkt2:= StartD.Center.C;
-  StartC.Center.C := SKK.SchnittPunkt2;
+  StartC.Center.C := SKK.Intersection2(StartP.Center, StartD.Center, FrWoben2D, FrMastOben);
 
   if not SKK.SPVorhanden then
     Msg := 'UpdateGetriebeStart - cannot compute StartC';
@@ -613,29 +582,13 @@ end;
 
 procedure TRggDrawingZ18.UpdateGetriebeEnde;
 begin
-  { EndD }
-  EndD.Center.X := D0.Center.X + FrMastUnten * cos(psiEnde);
-  EndD.Center.Y := D0.Center.Y - FrMastUnten * sin(psiEnde);
-  EndD.Center.Z := 0;
-
-  { EndP }
-  SKK.SchnittEbene := seXY;
-  SKK.Radius1 := FrWunten2D;
-  SKK.Radius2 := FrSalingH;
-  SKK.MittelPunkt1 := P0.Center.C;
-  SKK.MittelPunkt2 := EndD.Center.C;
-  EndP.Center.C := SKK.SchnittPunkt2;
+  EndD.Center.C := SKK.AnglePoint(D0.Center, FrMastUnten, psiEnde);
+  EndP.Center.C := SKK.Intersection2(P0.Center, EndD.Center, FrWunten2D, FrSalingH);
 
   if not SKK.SPVorhanden then
     Msg := 'UpdateGetriebeEnde - cannot compute EndC';
 
-  { EndC }
-  SKK.SchnittEbene := seXY;
-  SKK.Radius1 := FrWoben2D;
-  SKK.Radius2 := FrMastOben;
-  SKK.MittelPunkt1:= EndP.Center.C;
-  SKK.MittelPunkt2:= EndD.Center.C;
-  EndC.Center.C := SKK.SchnittPunkt2;
+  EndC.Center.C := SKK.Intersection2(EndP.Center, EndD.Center, FrWoben2D, FrMastOben);
 
   if not SKK.SPVorhanden then
     Msg := 'UpdateGetriebeEnde - cannot compute EndC';
@@ -646,31 +599,17 @@ function TRggDrawingZ18.GetVorstagLaenge(apsi: single): single;
 var
   localD, localP, localC: TPoint3D;
 begin
-  localD.X := D0.Center.X + FrMastUnten * cos(apsi);
-  localD.Y := D0.Center.Y - FrMastUnten * sin(apsi);
-  localD.Z := 0;
-
-  SKK.SchnittEbene := seXY;
-  SKK.Radius1 := FrWunten2D;
-  SKK.Radius2 := FrSalingH;
-  SKK.MittelPunkt1 := P0.Center.C;
-  SKK.MittelPunkt2 := localD;
-  localP := SKK.SchnittPunkt2;
+  localD := SKK.AnglePoint(D0.Center, FrMastUnten, apsi);
+  localP := SKK.Intersection2(P0.Center.C, localD, FrWunten2D, FrSalingH);
 
   if not SKK.SPVorhanden then
     Msg := 'GetVorstagLänge - cannot compute localP';
 
-  SKK.SchnittEbene := seXY;
-  SKK.Radius1 := FrMastOben;
-  SKK.Radius2 := FrWoben2D;
-  SKK.MittelPunkt1 := localD;
-  SKK.MittelPunkt2 := localP;
-  localC := SKK.SchnittPunkt1;
+  localC := SKK.Intersection1(localD, localP, FrMastOben, FrWoben2D);
 
   if not SKK.SPVorhanden then
     Msg := 'GetVorstagLänge - cannot compute localC';
 
-  { result := (localC - C0.Center.C).Length; }
   result := localC.Distance(C0.Center.C);
 end;
 
@@ -725,12 +664,7 @@ begin
   { 1. Startwinkel ermitteln - Durchbiegung Null, Mast gerade,
     linke Totlage für Winkel psi im Viergelenk D0 D C C0 }
 
-  SKK.SchnittEbene := seXY;
-  SKK.Radius1 := FrMastUnten + FrMastOben;
-  SKK.Radius2 := FrVorstag;
-  SKK.MittelPunkt1 := D0.Center.C;
-  SKK.MittelPunkt2 := C0.Center.C;
-  localC := SKK.SchnittPunkt2;
+  localC := SKK.Intersection2(D0.Center, C0.Center, FrMastUnten + FrMastOben, FrVorstag);
 
   if not SKK.SPVorhanden then
   begin
@@ -738,8 +672,7 @@ begin
     HasError := True;
   end;
 
-  psiStart := arctan2( (D0.Center.X - localC.X), (D0.Center.Y - localC.Y) );
-  psiStart := pi / 2 + psiStart;
+  psiStart := SKK.OuterAngle(D0.Center.C, localC);
 end;
 
 procedure TRggDrawingZ18.ComputeStartAngle2;
@@ -776,20 +709,14 @@ var
 begin
   { 2. Endwinkel ermitteln - MastOben parallel zu Vorstag
     rechte Totlage für Winkel psi im Viergelenk D0 D C C0 }
-  SKK.SchnittEbene := seXY;
-  SKK.Radius1 := FrMastUnten;
-  SKK.Radius2 := FrVorstag - FrMastOben;
-  SKK.MittelPunkt1 := D0.Center.C;
-  SKK.MittelPunkt2 := C0.Center.C;
-  localC := SKK.SchnittPunkt2;
+  localC := SKK.Intersection2(D0.Center, C0.Center, FrMastUnten, FrVorstag - FrMastOben);
 
   if not SKK.SPVorhanden then
   begin
     Msg := 'ComputeEndAngle1 - cannot compute LocalC';
   end;
 
-  psiEnde := arctan2((D0.Center.X - localC.X), (D0.Center.Y - localC.Y));
-  psiEnde := pi / 2 + psiEnde;
+  psiEnde := SKK.OuterAngle(D0.Center.C, localC);
 end;
 
 procedure TRggDrawingZ18.ComputeEndAngle2;
@@ -867,34 +794,11 @@ begin
   localP0 := P0.Center.C;
   localC0 := C0.Center.C;
 
-  with SKK do
-  begin
-    SchnittEbene := seXY;
-    Radius1 := FrMastUnten + FrMastOben;
-    Radius2 := FrVorstag;
-    MittelPunkt1 := localD0;
-    MittelPunkt2 := localC0;
-    tempC := SchnittPunkt2;
-  end;
+  tempC := SKK.Intersection2(localD0, localC0, FrMastUnten + FrMastOben, FrVorstag);
+  localPsi := SKK.OuterAngle(localD0, tempC);
+  tempD := SKK.AnglePoint(D0.Center, FrMastUnten, localPsi);
+  tempP := SKK.Intersection1(tempD, tempC, FrSalingH, FrWoben2D);
 
-  localPsi := arctan2((localD0.X - tempC.X), (tempC.Y - localD0.Y));
-  localPsi := pi / 2 + localPsi;
-
-  tempD.X := localD0.X + FrMastUnten * cos(localPsi);
-  tempD.Y := localD0.Z - FrMastUnten * sin(localPsi);
-  tempD.Z := 0;
-
-  with SKK do
-  begin
-    SchnittEbene := seXZ;
-    Radius1 := FrSalingH;
-    Radius2 := FrWoben2D;
-    MittelPunkt1 := tempD;
-    MittelPunkt2 := tempC;
-    tempP := SchnittPunkt1;
-  end;
-
-  { WDiff := (tempP - localP0).Length + (tempC - tempP).Length - (FrWunten2D + FrWoben2D); }
   WDiff := tempP.Distance(localP0) + tempC.Distance(tempP) - (FrWunten2D + FrWoben2D);
   if WDiff < 0 then
   begin
@@ -985,16 +889,8 @@ var
   procedure  GetLocalC(psi: single);
   { Viergelenk P0 P D D0, Koppelpunkt C }
   begin
-    localD.X := D0.Center.X + FrMastUnten * cos(psi);
-    localD.Y := D0.Center.Y - FrMastUnten * sin(psi);
-    localD.Z := 0;
-
-    SKK.SchnittEbene := seXY;
-    SKK.Radius1 := FrWunten2D;
-    SKK.Radius2 := FrSalingH;
-    SKK.MittelPunkt1 := P0.Center.C;
-    SKK.MittelPunkt2 := localD;
-    localP := SKK.SchnittPunkt2;
+    localD := SKK.AnglePoint(D0.Center, FrMastUnten, psi);
+    localP := SKK.Intersection2(P0.Center.C, localD, FrWUnten2D, FrSalingH);
 
     if not SKK.SPVorhanden then
     begin
@@ -1002,12 +898,7 @@ var
       Exit;
     end;
 
-    SKK.SchnittEbene := seXY;
-    SKK.Radius1 := FrMastOben;
-    SKK.Radius2 := FrWoben2D;
-    SKK.MittelPunkt1 := localD;
-    SKK.MittelPunkt2 := localP;
-    localC := SKK.SchnittPunkt1;
+    localC := SKK.Intersection1(localD, localP, FrMastOben, FrWoben2D);
 
     if not SKK.SPVorhanden then
     begin

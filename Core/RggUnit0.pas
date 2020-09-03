@@ -297,9 +297,9 @@ begin
   SD.SalingH := FrSalingH;
   SD.SalingA := FrSalingA;
   SD.SalingL := FrSalingL;
-  SD.SalingW := arctan2(FrSalingA / 2, FrSalingH) * 180 / pi;
-  SD.WantenWinkel := tempWW * 180 / pi;
-  SD.KraftWinkel := tempWS * 180 / pi;
+  SD.SalingW := RadToDeg(arctan2(FrSalingA / 2, FrSalingH));
+  SD.WantenWinkel := RadToDeg(tempWW);
+  SD.KraftWinkel := RadToDeg(tempWS);
 
   result := SD;
 end;
@@ -307,14 +307,14 @@ end;
 procedure TGetriebe.IntGliederToReal;
 begin
   { Integer Glieder have been eliminated. }
-  FrWinkel := FWinkelDegrees * pi / 180;
+  FrWinkel := DegToRad(FWinkelDegrees);
   FrMastEnde := FrMastLength - FrMastOben - FrMastUnten;
 end;
 
 procedure TGetriebe.RealGliederToInt;
 begin
   { Integer Glieder have been eliminated. }
-  FWinkelDegrees := FrWinkel * 180 / pi;
+  FWinkelDegrees := RadToDeg(FrWinkel);
   FrMastLength := FrMastUnten + FrMastOben + FrMastEnde;
 end;
 
@@ -511,7 +511,7 @@ begin
   FrSalingA := 80 * f; { Abstand der Salingnocken }
   FrSalingL := Round(sqrt(sqr(FrSalingH) + sqr(FrSalingA / 2)));
   FrVorstag := Round(sqrt(288) * 10 * f); { Vorstaglänge }
-  FWinkelDegrees := Round(90 + arctan2(1, 3) * 180 / pi); { Winkel Wunten }
+  FWinkelDegrees := Round(90 + RadToDeg(arctan2(1, 3))); { Winkel Wunten }
   FWPowerOS := 1000; { angenommene Wantenspannung 3d }
 
   { RumpfKoordinaten in mm }
@@ -595,7 +595,7 @@ begin
   { Rumpflängen }
   FrPuettingA := rP[ooB0].Y - rP[ooA0].Y;
   FrBasis := (rP[ooD0] - rP[ooP0]).Length;
-  FrAlpha := arctan2((rP[ooP0].Z - rP[ooD0].Z), (rP[ooD0].X - rP[ooP0].X));
+  FrAlpha := SKK.AngleZXM(rP[ooP0], rP[ooD0]);
 end;
 
 procedure TGetriebe.WriteToIniFile(ini: TIniFile);

@@ -5,6 +5,7 @@ interface
 uses
   System.SysUtils,
   System.UITypes,
+  System.Math,
   RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
@@ -26,9 +27,6 @@ type
   end;
 
 implementation
-
-uses
-  Math;
 
 { TRggDrawingZ12 }
 
@@ -61,13 +59,13 @@ begin
   y := C.Center.Y - A.Center.Y;
 
   case Figure of
-    0: t := arctan2(y, x) * 180 / PI;
+    0: t := RadToDeg(arctan2(y, x));
     1:
     begin
       if abs(x) < 0.001 then
         t := 0
       else
-        t := arctan(y / x) * 180 / PI;
+        t := RadToDeg(arctan(y / x));
     end;
 
     else

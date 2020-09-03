@@ -100,6 +100,7 @@ uses
   RiggVar.FD.Drawing10 in 'FD\RiggVar.FD.Drawing10.pas',
   RiggVar.FD.Drawing11 in 'FD\RiggVar.FD.Drawing11.pas',
   RiggVar.FD.Drawing12 in 'FD\RiggVar.FD.Drawing12.pas',
+  RiggVar.FD.SchnittKK in 'FD\RiggVar.FD.SchnittKK.pas',
   RiggVar.FD.Registry in 'FD\RiggVar.FD.Registry.pas',
   RiggVar.FZ.Registry in 'FZ\RiggVar.FZ.Registry.pas',
   RiggVar.FD.TransformHelper in 'FD\RiggVar.FD.TransformHelper.pas',

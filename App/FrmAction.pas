@@ -91,6 +91,7 @@ type
     procedure ClearMappings;
     procedure UpdateVars(fa: Integer);
     procedure UpdateCaseBtnCaption;
+    procedure SetupListView(LV: TListView; Color: TAlphaColor);
   end;
 
 var
@@ -150,6 +151,11 @@ begin
   ListViewDetails.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akBottom];
   ListViewG.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akBottom];
   ListViewGroups.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akBottom];
+
+  SetupListView(ListViewS, TAlphaColors.Tomato);
+  SetupListView(ListViewDetails, TAlphaColors.Black);
+  SetupListView(ListViewG, TAlphaColors.Teal);
+  SetupListView(ListViewGroups, TAlphaColors.DodgerBlue);
 
   ListGroups;
 
@@ -476,6 +482,18 @@ begin
     CaseBtn.Text := 'aA'
   else
     CaseBtn.Text := 'aa';
+end;
+
+procedure TFormAction.SetupListView(LV: TListView; Color: TAlphaColor);
+begin
+  LV.ItemAppearanceName := 'ListItem';
+  LV.ItemAppearance.ItemHeight := 24;
+  LV.ItemAppearanceObjects.ItemObjects.Accessory.Visible := False;
+  LV.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'Consolas';
+  LV.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
+  LV.ItemAppearanceObjects.ItemObjects.Text.TextColor := Color;
+  LV.ItemAppearanceObjects.HeaderObjects.Text.Visible := False;
+  LV.ItemAppearanceObjects.FooterObjects.Text.Visible := False;
 end;
 
 end.

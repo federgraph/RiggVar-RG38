@@ -165,15 +165,13 @@ var
   i: Integer;
   phi: single;
   u, v: single;
-  d: single;
 begin
   u := l / (l-s);
-  d := PI / 180;
   ComputedPhi := 0;
   Counter := 0;
   for i := 1 to 200 do
   begin
-    phi := i * d;
+    phi := DegToRad(i);
     v := phi - u * sin(phi);
     if v > 0 then
     begin

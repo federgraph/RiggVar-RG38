@@ -776,10 +776,8 @@ begin
     end;
 
     { Berechnung für Punkt ooF - Masttop }
-    gammaE := pi / 2 - arctan2((rPe[ooC].X - rPe[ooD0].X), (rPe[ooC].Z - rPe[ooD0].Z));
-    rPe[ooF].X := rPe[ooD0].X + FrMastLength * cos(gammaE);
-    rPe[ooF].Y := 0;
-    rPe[ooF].Z := rPe[ooD0].Z + FrMastLength * sin(gammaE);
+    gammaE := pi / 2 - SKK.AngleXZ(rPe[ooC], rPe[ooD0]);
+    rPe[ooF] := SKK.AnglePointXZ(rPe[ooD0], FrMastLength, gammaE);
 
   except
     on E: EMathError do
@@ -887,11 +885,8 @@ begin
       rPe[ooB].Y := -rPe[ooA].Y;
 
       { Berechnung für Punkt ooF - Masttop }
-      gammaE := pi / 2 - arctan2((rPe[ooC].X - rPe[ooD0].X),
-        (rPe[ooC].Z - rPe[ooD0].Z));
-      rPe[ooF].X := rPe[ooD0].X + FrMastLength * cos(gammaE);
-      rPe[ooF].Y := 0;
-      rPe[ooF].Z := rPe[ooD0].Z + FrMastLength * sin(gammaE);
+      gammaE := pi / 2 - SKK.AngleXZ(rPe[ooC], rPe[ooD0]);
+      rPe[ooF] := SKK.AnglePointXZ(rPe[ooD0], FrMastLength, gammaE);
     end;
 
   except
@@ -1078,10 +1073,8 @@ begin
     rPe[ooB].Y := -rPe[ooA].Y;
 
     { Berechnung für Punkt ooF - Masttop }
-    gammaE := pi / 2 - arctan2((rPe[ooC].X - rPe[ooD0].X), (rPe[ooC].Z - rPe[ooD0].Z));
-    rPe[ooF].X := rPe[ooD0].X + FrMastLength * cos(gammaE);
-    rPe[ooF].Y := 0;
-    rPe[ooF].Z := rPe[ooD0].Z + FrMastLength * sin(gammaE);
+    gammaE := pi / 2 - SKK.AngleXZ(rPe[ooC], rPe[ooD0]);
+    rPe[ooF] := SKK.AnglePointXZ(rPe[ooD0], FrMastLength, gammaE);
 
   except
     on E: EMathError do

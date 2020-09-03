@@ -6,6 +6,7 @@ uses
   System.SysUtils,
   System.Classes,
   System.UITypes,
+  System.Math,
   System.Math.Vectors,
   RggSchnittKK,
   RiggVar.FB.Color,
@@ -36,9 +37,6 @@ type
   end;
 
 implementation
-
-uses
-  Math;
 
 { TRggDrawingZ20 }
 
@@ -174,15 +172,15 @@ begin
 
   Range := ParamR.RelativeValue;
   StartValue := -Range * 0.5;
-  P := TPoint3D.Zero;
   P.X := StartValue;
   P.Y := ParamA.RelativeValue;
+  P.Z := 0;
 
-  k := Range / ChartX.Count; // increment
+  k := Range / ChartX.Count;
   for i := 0 to ChartX.Count do
   begin
-    p.X := StartValue + i * k;
-    SKK.MittelPunkt2 := p;
+    P.X := StartValue + i * k;
+    SKK.MittelPunkt2 := P;
     ChartX.Poly[i] := SKK.SchnittPunkt1.X;
     ChartY.Poly[i] := SKK.SchnittPunkt1.Y;
   end;

@@ -333,21 +333,27 @@ begin
 end;
 
 procedure TSchnittGGEx.SetE1(const Value: double);
+var
+  t: double;
 begin
   if (Value >= -89) and (Value < 89) then
   begin
-    FH1 := cos(Value * PI / 180);
-    FV1 := sin(Value * PI / 180);
+    t := DegToRad(Value);
+    FH1 := cos(t);
+    FV1 := sin(t);
     SetR1(FR1);
   end;
 end;
 
 procedure TSchnittGGEx.SetE2(const Value: double);
+var
+  t: double;
 begin
   if (Value >= -89) and (Value <= 89) then
   begin
-    FH2 := cos(Value * PI / 180);
-    FV2 := sin(Value * PI / 180);
+    t := DegToRad(Value);
+    FH2 := cos(t);
+    FV2 := sin(t);
     SetR2(FR2);
   end;
 end;

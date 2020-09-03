@@ -425,8 +425,8 @@ begin
       {         KM       KU1      KU2      KB        FU1  FU2  FB  }
       SolveKG21(rP[ooP], rP[ooD], rP[ooC], rP[ooP0], FU1, FU2, FBekannt);
       { Winkel alpha2 ermitteln }
-      Gamma := pi / 2 - arctan2((rP[ooC].X - rP[ooD0].X), (rP[ooC].Z - rP[ooD0].Z));
-      delta2 := arctan2((rP[ooA].Z - rP[ooD].Z), (rP[ooD].X - rP[ooA].X));
+      Gamma := pi / 2 - SKK.AngleXZ(rP[ooC], rP[ooD0]);
+      delta2 := SKK.AngleZXM(rP[ooA], rP[ooD]);
       Beta := Gamma - pi / 2;
       alpha2 := Beta + delta2;
       F1 := 0;
@@ -867,9 +867,9 @@ begin
   case SalingTyp of
     stFest, stDrehbar:
     begin
-      Gamma := pi / 2 - arctan2((rP[ooC].X - rP[ooD0].X), (rP[ooC].Z - rP[ooD0].Z));
-      delta1 := arctan2((rP[ooE].Z - rP[ooC0].Z), (rP[ooC0].X - rP[ooE].X));
-      delta2 := arctan2((rP[ooA].Z - rP[ooD].Z), (rP[ooD].X - rP[ooA].X));
+      Gamma := pi / 2 - SKK.AngleXZ(rP[ooC], rP[ooD0]);
+      delta1 := SKK.AngleZXM(rP[ooE], rP[ooC0]);
+      delta2 := SKK.AngleZXM(rP[ooA], rP[ooD]);
       Beta := Gamma - pi / 2;
       alpha1 := Beta + delta1;
       alpha2 := Beta + delta2;
@@ -877,8 +877,8 @@ begin
 
     stOhneStarr, stOhneBiegt:
     begin
-      Gamma := pi / 2 - arctan2((rP[ooC].X - rP[ooD0].X), (rP[ooC].Z - rP[ooD0].Z));
-      delta1 := arctan2((rP[ooE].Z - rP[ooC0].Z), (rP[ooC0].X - rP[ooE].X));
+      Gamma := pi / 2 - SKK.AngleXZ(rP[ooC], rP[ooD0]);
+      delta1 := SKK.AngleZXM(rP[ooE], rP[ooC0]);
       delta2 := 0; { Null gesetzt, da nicht relevant }
       Beta := Gamma - pi / 2;
       alpha1 := Beta + delta1;
@@ -993,10 +993,8 @@ begin
   { Berechnung Punkt F - Masttop }
   SchnittKraefte;
   GetEpsilon;
-  FrEpsilon := pi / 2 - arctan2((rP[ooC].X - rP[ooD0].X), (rP[ooC].Z - rP[ooD0].Z)) - epsB;
-  rP[ooF].X := rP[ooC].X + FrMastEnde * cos(FrEpsilon);
-  rP[ooF].Y := 0;
-  rP[ooF].Z := rP[ooC].Z + FrMastEnde * sin(FrEpsilon);
+  FrEpsilon := pi / 2 - SKK.AngleXZ(rP[ooC], rP[ooD0]) - epsB;
+  rP[ooF] := SKK.AnglePointXZ(rP[ooC], FrMastEnde, FrEpsilon);
 end;
 
 procedure TMast.KorrekturF(tempH, k1, k2: single; var k3, Beta, Gamma: single);

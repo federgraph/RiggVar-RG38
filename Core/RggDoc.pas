@@ -643,7 +643,7 @@ begin
   { Grenzwerte und Istwerte }
 
   GSB.Controller.Ist := 100; { Controllerposition bzw. Abstand E0-E }
-  GSB.Winkel.Ist := Round(90 + arctan2(1, 3) * 180 / pi);
+  GSB.Winkel.Ist := Round(90 + RadToDeg(arctan2(1, 3)));
   { Winkel der unteren Wantabschnitte Winkel in Grad }
   GSB.Vorstag.Ist := Round(sqrt(288) * 10 * f);
   GSB.Wante.Ist := Round((sqrt(40) + sqrt(56)) * 10 * f);

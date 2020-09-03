@@ -115,6 +115,14 @@ begin
   SL := TStringList.Create;
 
   ListView.Align := TAlignLayout.Left;
+  ListView.ItemAppearanceName := 'ListItem';
+  ListView.ItemAppearance.ItemHeight := 24;
+  ListView.ItemAppearanceObjects.ItemObjects.Accessory.Visible := False;
+  ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'Consolas';
+  ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
+  ListView.ItemAppearanceObjects.ItemObjects.Text.TextColor := TAlphaColors.Dodgerblue;
+  ListView.ItemAppearanceObjects.HeaderObjects.Text.Visible := False;
+  ListView.ItemAppearanceObjects.FooterObjects.Text.Visible := False;
 
   Memo.Align := TAlignLayout.Client;
   Memo.ControlType := TControlType.Styled;

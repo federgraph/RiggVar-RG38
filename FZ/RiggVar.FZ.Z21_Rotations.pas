@@ -8,7 +8,6 @@ uses
   System.Classes,
   System.Math,
   System.Math.Vectors,
-//  RiggVar.FD.RotationHelper,
   RiggVar.FB.Color,
   RiggVar.FD.TransformHelper,
   RiggVar.FD.Elements,
@@ -134,7 +133,7 @@ end;
 
 procedure TRggDrawingZ21.Btn1Click(Sender: TObject);
 begin
-  TH.Rotation.X := 10 * PI / 180;
+  TH.Rotation.X := DegToRad(10);
   TH.Rotation.Y := 0;
   TH.Rotation.Z := 0;
   TH.Draw;
@@ -143,7 +142,7 @@ end;
 
 procedure TRggDrawingZ21.Btn2Click(Sender: TObject);
 begin
-  TH.Rotation.X := -10 * PI / 180;
+  TH.Rotation.X := DegToRad(-10);
   TH.Rotation.Y := 0;
   TH.Rotation.Z := 0;
   TH.Draw;
@@ -153,7 +152,7 @@ end;
 procedure TRggDrawingZ21.Btn3Click(Sender: TObject);
 begin
   TH.Rotation.X := 0;
-  TH.Rotation.Y := 10 * PI / 180;
+  TH.Rotation.Y := DegToRad(10);
   TH.Rotation.Z:= 0;
   TH.Draw;
   TH.GetEulerAngles;
@@ -162,7 +161,7 @@ end;
 procedure TRggDrawingZ21.Btn4Click(Sender: TObject);
 begin
   TH.Rotation.X := 0;
-  TH.Rotation.Y := -10 * PI / 180;
+  TH.Rotation.Y := DegToRad(-10);
   TH.Rotation.Z:= 0;
   TH.Draw;
   TH.GetEulerAngles;
@@ -172,7 +171,7 @@ procedure TRggDrawingZ21.Btn5Click(Sender: TObject);
 begin
   TH.Rotation.X := 0;
   TH.Rotation.Y := 0;
-  TH.Rotation.Z := 10 * PI / 180;
+  TH.Rotation.Z := DegToRad(10);
   TH.Draw;
   TH.GetEulerAngles;
 end;
@@ -181,7 +180,7 @@ procedure TRggDrawingZ21.Btn6Click(Sender: TObject);
 begin
   TH.Rotation.X := 0;
   TH.Rotation.Y := 0;
-  TH.Rotation.Z := -10 * PI / 180;
+  TH.Rotation.Z := DegToRad(-10);
   TH.Draw;
   TH.GetEulerAngles;
 end;

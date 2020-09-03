@@ -302,20 +302,16 @@ begin
   SchnittKK.MittelPunkt2 := rP[ooB0];
   ooTemp := SchnittKK.SchnittPunkt2;
   if SchnittKK.Status = bmK1inK2 then
-    phiE := FrAlpha + 130 * pi / 180
+    phiE := FrAlpha + DegToRad(130)
   else
   begin
     phiE := arctan2((rP[ooA0].X - ooTemp.X), (rP[ooA0].Y - ooTemp.Y));
     phiE := phiE + pi / 2 + FrAlpha;
   end;
 
-//  FrAlpha := 0;
-//  phiA := 25 * PI / 180;
-//  phiE := 70 * PI / 180;
-
   { 3. Koppelkurve }
-  phiA := phiA + 1 * PI / 180;
-  phiE := phiE - 1 * PI / 180;
+  phiA := phiA + DegToRad(1);
+  phiE := phiE - DegToRad(1);
   WinkelStep := (phiE - phiA) / (Count-1);
   phiM := phiA;
   for i := 0 to Count-1 do

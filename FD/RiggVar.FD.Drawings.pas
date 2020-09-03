@@ -29,7 +29,8 @@ uses
   FMX.Graphics,
   FMX.StdCtrls,
   RiggVar.FD.TransformHelper,
-  RiggVar.FD.Elements;
+  RiggVar.FD.Elements,
+  RiggVar.FD.SchnittKK;
 
 type
   TRggButtonGroup = class
@@ -139,7 +140,7 @@ type
 
   TRggDrawingKK = class(TRggDrawing)
   protected
-    SKK: TSchnittKK;
+    SKK: TRggSchnittKK;
   public
     constructor Create;
     destructor Destroy; override;
@@ -448,7 +449,7 @@ end;
 constructor TRggDrawingKK.Create;
 begin
   inherited;
-  SKK := TSchnittKK.Create;
+  SKK := TRggSchnittKK.Create;
   SKK.SchnittEbene := TSchnittEbene.seXY;
 end;
 
