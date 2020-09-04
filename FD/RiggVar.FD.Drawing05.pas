@@ -16,8 +16,8 @@
 -
 *)
 
-{$ifdef FPC}
-  {$mode Delphi}
+{$ifdef fpc}
+  {$mode delphi}
 {$endif}
 
 interface
@@ -46,8 +46,7 @@ implementation
 
 uses
   RggTypes,
-  RggTestData,
-  RggCalc;
+  RggTestData;
 
 { TRggDrawingD05 }
 
@@ -327,7 +326,7 @@ var
 {$ifdef Rgg}
   Rigg: TRigg;
 {$endif}
-  rP: TRealRiggPoints;
+  rP: TRiggPoints;
   cr: TRggCircle;
   t, p, q: TPoint3D;
   s: string;

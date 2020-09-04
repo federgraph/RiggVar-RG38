@@ -214,7 +214,7 @@ begin
 
   { --- }
 
-  L := TRggLine.Create('AB');
+  L := TRggLine.Create('AC');
   L.StrokeColor := claRed;
   L.Point1 := A;
   L.Point2 := C;
@@ -335,7 +335,7 @@ var
 {$ifdef Rgg}
   Rigg: TRigg;
 {$endif}
-  rP: TRealRiggPoints;
+  rP: TRiggPoints;
   cr: TRggCircle;
   t, p, q: TPoint3D;
   s: string;

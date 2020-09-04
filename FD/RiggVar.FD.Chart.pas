@@ -138,7 +138,7 @@ begin
     LineToPoint := P;
     for i := 1 to LNr do
     begin
-      tempX := Box.Width * (i / LNr);
+      tempX := Box.Width * i / LNr;
       tempY := Box.Height - Box.Height * (Poly[i] - Ymin) / (Ymax - Ymin);
       P.X := Box.X + tempX;
       P.Y := Box.Y + tempY;

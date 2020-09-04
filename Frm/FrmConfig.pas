@@ -181,7 +181,7 @@ type
     FTempList: TStringList;
 
     FGSB: TRggFA;
-    FiP: TRealRiggPoints;
+    FiP: TRiggPoints;
     FRumpfCell: TPoint;
 
     FCanSelectDummy: Boolean;
@@ -786,13 +786,13 @@ var
 begin
   OKBtn :=  TButton.Create(Self);
   OKBtn.Parent := Self;
-  OKBtn.Text := OKBtnCaption; //'OK';
+  OKBtn.Text := OKBtnCaption;
   OKBtn.ModalResult := 1;
 
   CancelBtn := TButton.Create(Self);
   CancelBtn.Parent := Self;
   CancelBtn.Cancel := True;
-  CancelBtn.Text := CancelBtnCaption; //'Abbrechen';
+  CancelBtn.Text := CancelBtnCaption;
   CancelBtn.Default := True;
   CancelBtn.ModalResult := 2;
 

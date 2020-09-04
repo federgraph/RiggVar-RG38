@@ -21,7 +21,7 @@ type
     FViewPoint: TViewPoint;
     FRiggLED: Boolean;
     procedure SetKoppel(const Value: Boolean);
-    procedure SetKoordinaten(const Value: TRealRiggPoints);
+    procedure SetKoordinaten(const Value: TRiggPoints);
     procedure SetSalingTyp(const Value: TSalingTyp);
     procedure SetControllerTyp(const Value: TControllerTyp);
     procedure SetViewPoint(const Value: TViewPoint);
@@ -30,10 +30,10 @@ type
     procedure SetRiggLED(const Value: Boolean);
   protected
     BogenIndexD: Integer;
-    function FindBogenIndexOf(P: TRealPoint): Integer;
-    function GetFreshRiggPoints: TRealRiggPoints;
+    function FindBogenIndexOf(P: TPoint3D): Integer;
+    function GetFreshRiggPoints: TRiggPoints;
   public
-    rP: TRealRiggPoints;
+    rP: TRiggPoints;
     Kurve: TMastKurve;
 
     constructor Create;
@@ -43,9 +43,9 @@ type
     procedure SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
     procedure SetMastKurve(const Value: TMastKurve);
     procedure SetKoppelKurve(const Value: TKoordLine);
-    function GetMastKurvePoint(const Index: Integer): TRealPoint;
+    function GetMastKurvePoint(const Index: Integer): TPoint3D;
 
-    property Koordinaten: TRealRiggPoints read rP write SetKoordinaten;
+    property Koordinaten: TRiggPoints read rP write SetKoordinaten;
     property KoppelKurve: TKoordLine read FKoppelKurve write SetKoppelKurve;
     property Koppel: Boolean read FKoppel write SetKoppel;
     property ControllerTyp: TControllerTyp read FControllerTyp write SetControllerTyp;
@@ -65,7 +65,7 @@ begin
   FControllerTyp := ctOhne;
 end;
 
-procedure TBootGraph.SetKoordinaten(const Value: TRealRiggPoints);
+procedure TBootGraph.SetKoordinaten(const Value: TRiggPoints);
 begin
   rP := Value;
   GrafikOK := True;
@@ -144,17 +144,17 @@ begin
   RaumGraphProps.Gestrichelt := Value;
 end;
 
-function TBootGraph.GetMastKurvePoint(const Index: Integer): TRealPoint;
+function TBootGraph.GetMastKurvePoint(const Index: Integer): TPoint3D;
 begin
   if (Index >= 0) and (Index < Length(Kurve)) then
     result := Kurve[Index]
   else
   begin
-    result := TRealPoint.Zero;
+    result := TPoint3D.Zero;
   end;
 end;
 
-function TBootGraph.FindBogenIndexOf(P: TRealPoint): Integer;
+function TBootGraph.FindBogenIndexOf(P: TPoint3D): Integer;
 var
   i, j: Integer;
   MinIndex: Integer;
@@ -176,7 +176,7 @@ begin
   result := MinIndex;
 end;
 
-function TBootGraph.GetFreshRiggPoints: TRealRiggPoints;
+function TBootGraph.GetFreshRiggPoints: TRiggPoints;
 var
   i: TRiggPoint;
 begin
@@ -191,7 +191,7 @@ var
   IniFile: TIniFile;
   S: string;
   i: TRiggPoint;
-  iP: TRealRiggPoints;
+  iP: TRiggPoints;
 begin
   iP := GetFreshRiggPoints;
   IniFile := TIniFile.Create(FileName);

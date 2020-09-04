@@ -20,7 +20,7 @@ type
     ox: single;
     oy: single;
     SchnittKK: TSchnittKK;
-    rP: TRealRiggPoints;
+    rP: TRiggPoints;
     procedure UpdateKoppelkurve;
   public
     A0: TRggCircle;

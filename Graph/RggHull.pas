@@ -253,12 +253,6 @@ begin
     else
       g.Stroke.Color := claSilver;
 
-    { Farbe bestimmen, Varinate 2 }
-    // if Coloriert then
-    //   g.Pen.Color := GetColor(i)
-    // else
-    //   g.Pen.Color := clBtnFace;
-
     g.Stroke.Thickness := 1.0;
 
     { Linie zeichnen }
@@ -276,7 +270,7 @@ var
   c: TConArray;
   v: TVertArrayI;
   StartPoint, EndPoint: TPointF;
-  rp1, rp2: TRealPoint;
+  rp1, rp2: TPoint3D;
   cla: TAlphaColor;
   s: string;
 begin
@@ -649,7 +643,7 @@ var
   end;
 
   { local procedure }
-  procedure GetInteger(var IntValue: Integer);
+  procedure GetInteger(out IntValue: Integer);
   begin
     Zeile := Trim(Zeile);
     Wort := TUtils.StripFirstWord(Zeile);

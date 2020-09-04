@@ -16,8 +16,8 @@
 -
 *)
 
-{$ifdef FPC}
-  {$mode Delphi}
+{$ifdef fpc}
+  {$mode delphi}
 {$endif}
 
 interface
@@ -323,10 +323,7 @@ end;
 
 procedure TRggDrawingZ05.UpdateFromRigg;
 var
-{$ifdef Rgg}
-  Rigg: TRigg;
-{$endif}
-  rP: TRealRiggPoints;
+  rP: TRiggPoints;
   cr: TRggCircle;
   t, p, q: TPoint3D;
   s: string;
@@ -345,12 +342,7 @@ var
   end;
 begin
   f := 1 / 12;
-{$ifdef Rgg}
-  Rigg := Main.Rigg;
-  rP := Rigg.rP;
-{$else}
   rP := TRggTestData.GetKoordinaten420;
-{$endif}
   q := rP.D0;
 
   try

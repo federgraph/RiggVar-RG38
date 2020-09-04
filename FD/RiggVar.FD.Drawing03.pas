@@ -20,7 +20,7 @@ type
     ox: single;
     oy: single;
     SchnittKK: TSchnittKK;
-    rP: TRealRiggPoints;
+    rP: TRiggPoints;
     procedure UpdateKoppelkurve;
   public
     A0: TRggCircle;
@@ -254,7 +254,7 @@ var
   i: Integer;
   phiA, phiE, phiM, psiM, WinkelStep: single;
   ooTemp: TPoint3D;
-  oooTemp: TRealRiggPoints;
+  oooTemp: TRiggPoints;
 
   FrAlpha: single;
 

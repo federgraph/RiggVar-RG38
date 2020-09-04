@@ -276,22 +276,22 @@ type
     function IsTotallyAbove(Other: TRggLine): Boolean;
     function IsTotallyBelow(Other: TRggLine): Boolean;
     function IsSame(Other: TRggLine): Boolean;
-    function HasVisibleCrossing(SP: TRealPoint): Boolean;
-    function ComputeSPY(SP: TRealPoint): single;
+    function HasVisibleCrossing(SP: TPoint3D): Boolean;
+    function ComputeSPY(SP: TPoint3D): single;
     procedure ReportData(ML: TStrings);
   end;
 
   TRggLinePair = record
     L1: TRggLine;
     L2: TRggLine;
-    SP: TRealPoint;
+    SP: TPoint3D;
     function HasCommonPoint: Boolean;
     function CompareCommon: Integer;
     function IsParallel: Boolean;
     function DoesNotHaveVisibleCrossing: Boolean;
     function CompareSPY: Integer;
     procedure ReportData(ML: TStrings);
-    function CompareVV(v1, v2: TRealPoint): Integer;
+    function CompareVV(v1, v2: TPoint3D): Integer;
   end;
 
 implementation
@@ -314,10 +314,6 @@ end;
 function TRggPoint.IsEqual(B: TRggPoint): Boolean;
 begin
   result := P.EqualsTo(B.P);
-//  result :=
-//    (P[x] = B.P[x]) and
-//    (P[y] = B.P[y]) and
-//    (P[z] = B.P[z]);
 end;
 
 { TRggLine }
@@ -349,66 +345,70 @@ begin
     (B.P.Y > Other.B.P.Y);
 end;
 
-function TRggLine.HasVisibleCrossing(SP: TRealPoint): Boolean;
+function TRggLine.HasVisibleCrossing(SP: TPoint3D): Boolean;
 var
-  vSP: TRealPoint;
-  vAB: TRealPoint; // Rgg Vector 3D
+  vSP: TPoint3D;
+  vAB: TPoint3D;
 
-  vABxz: TVector;
-  vSPxz: TVector; // Delphi 2D Vectors
-  lengthABxz, lengthSPxz: single;
-  RatioSPtoAB, g: single;
+  vABxz: TPoint3D;
+  vSPxz: TPoint3D;
+  lABxz: single;
+  lSPxz: single;
+  RatioSPtoAB: single;
+  g: single;
 begin
   result := False;
 
   vSP := SP - A.P;
   vAB := B.P - A.P;
 
-  vABxz := TVector.Create(vAB.X, vAB.Z);
-  lengthABxz := vABxz.Length;
+  vABxz := Point3D(vAB.X, 0, vAB.Z);
+  lABxz := vABxz.Length;
 
-  vSPxz := TVector.Create(vSP.X, vSP.Z);
-  lengthSPxz := vSPxz.Length;
+  vSPxz := Point3D(vSP.X, 0, vSP.Z);
+  lSPxz := vSPxz.Length;
 
-  if lengthABxz < Eps then
+  if lABxz < Eps then
   begin
     Exit;
   end;
 
-  RatioSPtoAB := lengthSPxz / lengthABxz;
+  RatioSPtoAB := lSPxz / lABxz;
 
   g := Abs(RatioSPtoAB);
 
   result := (g > Eps) and (g < 1-Eps);
 end;
 
-function TRggLine.ComputeSPY(SP: TRealPoint): single;
+function TRggLine.ComputeSPY(SP: TPoint3D): single;
 var
-  vSP: TRealPoint;
-  vAB: TRealPoint;
+  vSP: TPoint3D;
+  vAB: TPoint3D;
 
-  vABxz: TPointF;
-  vSPxz: TPointF;
-  lengthABxz, lengthSPxz: single;
-  RatioSPtoAB, g: single;
+  vABxz: TPoint3D;
+  vSPxz: TPoint3D;
+  lABxz: single;
+  lSPxz: single;
+  RatioSPtoAB: single;
+  g: single;
 begin
   result := (A.P.Y + B.P.Y) / 2;
 
   vSP := SP - A.P;
   vAB := B.P - A.P;
 
-  vABxz := TPointF.Create(vAB.X, vAB.Z);
-  lengthABxz := vABxz.Length;
+  vABxz := Point3D(vAB.X, 0, vAB.Z);
+  lABxz := vABxz.Length;
 
-  vSPxz := TPointF.Create(vSP.X, vSP.Z);
-  lengthSPxz := vSPxz.Length;
+  vSPxz := Point3D(vSP.X, 0, vSP.Z);
+  lSPxz := vSPxz.Length;
 
-  if lengthABxz < Eps then
+  if lABxz < Eps then
   begin
     Exit;
   end;
 
-  RatioSPtoAB := lengthSPxz / lengthABxz;
+  RatioSPtoAB := lSPxz / lABxz;
 
   g := RatioSPtoAB;
 
@@ -426,7 +426,7 @@ begin
 end;
 
 procedure TRggLine.ReportData(ML: TStrings);
-  procedure AddPoint(LN, PN: string; P: TRealPoint);
+  procedure AddPoint(LN, PN: string; P: TPoint3D);
   begin
     ML.Add(Format('%s [%s] = (%.2f, %.2f, %.2f)', [PN, LN, P.X, P.Y, P.Z]));
   end;
@@ -437,7 +437,7 @@ end;
 
 { TRggLinePair }
 
-function TRggLinePair.CompareVV(v1, v2: TRealPoint): Integer;
+function TRggLinePair.CompareVV(v1, v2: TPoint3D): Integer;
 var
   m1, m2: TPoint3D;
   r: single;
@@ -455,7 +455,7 @@ end;
 
 function TRggLinePair.CompareCommon: Integer;
 var
-  v1, v2: TRealPoint;
+  v1, v2: TPoint3D;
 begin
   result := 0;
   if L1.A.IsEqual(L2.A) then
@@ -508,7 +508,7 @@ begin
 end;
 
 procedure TRggLinePair.ReportData(ML: TStrings);
-  procedure AddPoint(LN, PN: string; P: TRealPoint);
+  procedure AddPoint(LN, PN: string; P: TPoint3D);
   begin
     ML.Add(Format('%s [%s] = (%.2f, %.2f, %.2f)', [PN, LN, P.X, P.Y, P.Z]));
   end;

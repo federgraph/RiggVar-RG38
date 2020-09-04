@@ -3,13 +3,13 @@
 interface
 
 uses
- System.Math.Vectors,
+  System.Math.Vectors,
   RggCalc,
   RggPolarKar,
   RggTypes;
 
 type
-  TRggGetFixPunkt = function: TRealPoint of object;
+  TRggGetFixPunkt = function: TPoint3D of object;
 
   { Base version with OnGetFixPunkt }
   TRggTransformer00 = class
@@ -17,8 +17,8 @@ type
     Updated: Boolean;
     FFixPoint: TRiggPoint;
     FZoom: single;
-    FFixPunkt: TRealPoint;
-    FTransformedFixPunkt: TRealPoint;
+    FFixPunkt: TPoint3D;
+    FTransformedFixPunkt: TPoint3D;
     FOnGetFixPunkt: TRggGetFixPunkt;
     procedure SetFixPoint(const Value: TRiggPoint);
     procedure SetZoom(const Value: single);
@@ -28,17 +28,17 @@ type
     constructor Create;
     property Zoom: single read FZoom write SetZoom;
     property FixPoint: TRiggPoint read FFixPoint write SetFixPoint;
-    property TransformedFixPunkt: TRealPoint read FTransformedFixPunkt;
+    property TransformedFixPunkt: TPoint3D read FTransformedFixPunkt;
     property OnGetFixPunkt: TRggGetFixPunkt read FOnGetFixPunkt write SetOnGetFixPunkt;
   end;
 
   { not used, FixPunkt not acessible }
   TRggTransformer01 = class(TRggTransformer00)
   protected
-    procedure SetFixPunkt(const Value: TRealPoint);
+    procedure SetFixPunkt(const Value: TPoint3D);
   public
     procedure UpdateTransformedFixPunkt;
-    property FixPunkt: TRealPoint read FFixPunkt write SetFixPunkt;
+    property FixPunkt: TPoint3D read FFixPunkt write SetFixPunkt;
   end;
 
   { version with TMatrix3D }
@@ -47,7 +47,7 @@ type
     procedure BuildMatrix;
   public
     mat3D: TMatrix3D;
-    function TransformPoint(p: TRealPoint): TRealPoint;
+    function TransformPoint(p: TPoint3D): TPoint3D;
   end;
 
   TRggTransformer = TRggTransformer3D;
@@ -82,7 +82,7 @@ end;
 
 { TRggTransformer01 }
 
-procedure TRggTransformer01.SetFixPunkt(const Value: TRealPoint);
+procedure TRggTransformer01.SetFixPunkt(const Value: TPoint3D);
 begin
   FFixPunkt := Value;
   Updated := False;
@@ -127,7 +127,7 @@ begin
   mat3D := mat3D * ms;
 end;
 
-function TRggTransformer3D.TransformPoint(p: TRealPoint): TRealPoint;
+function TRggTransformer3D.TransformPoint(p: TPoint3D): TPoint3D;
 var
   p1, p2: TPoint3D;
 begin

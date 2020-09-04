@@ -23,25 +23,25 @@ type
   TRaumGraph = class(TBootGraph)
   protected
     { original definition of Achsen }
-    AchseN: TRealPoint;
-    AchseX: TRealPoint;
-    AchseY: TRealPoint;
-    AchseZ: TRealPoint;
+    AchseN: TPoint3D;
+    AchseX: TPoint3D;
+    AchseY: TPoint3D;
+    AchseZ: TPoint3D;
 
     { transformed coordinates Achsen }
-    AchseNT: TRealPoint;
-    AchseXT: TRealPoint;
-    AchseYT: TRealPoint;
-    AchseZT: TRealPoint;
+    AchseNT: TPoint3D;
+    AchseXT: TPoint3D;
+    AchseYT: TPoint3D;
+    AchseZT: TPoint3D;
 
     { transformed coordinates of Rigg }
-    A0, B0, C0, D0, E0, F0, P0: TRealPoint;
-    A,  B,  C,  D,  E,  F,  P:  TRealPoint;
-    M, N: TRealPoint;
+    A0, B0, C0, D0, E0, F0, P0: TPoint3D;
+    A,  B,  C,  D,  E,  F,  P:  TPoint3D;
+    M, N: TPoint3D;
   protected
     Zug3D: TZug3DBase; // injected via constructor
   private
-    function GetFixPunkt: TRealPoint;
+    function GetFixPunkt: TPoint3D;
     function GetStrokeWidthS: single;
   protected
     procedure UpdateZugProps;
@@ -75,7 +75,7 @@ type
 
     function GetChecked(fa: Integer): Boolean;
     procedure GetPlotList(ML: TStrings); override;
-    property FixPunkt: TRealPoint read GetFixPunkt;
+    property FixPunkt: TPoint3D read GetFixPunkt;
 
     property WantRenderH: Boolean read WantRumpf write WantRumpf;
     property StrokeWidthS: single read GetStrokeWidthS;
@@ -151,8 +151,8 @@ procedure TRaumGraph.Update2;
 var
   i: TRiggPoint;
   j: Integer;
-  RPT: TRealRiggPoints;
-  MKT: array [0 .. BogenMax] of TRealPoint;
+  RPT: TRiggPoints;
+  MKT: array [0 .. BogenMax] of TPoint3D;
   KKT: TKoordLine;
 begin
   { Graph drehen }
@@ -270,7 +270,7 @@ begin
   Zug3D.DrawToCanvas(g);
 end;
 
-function TRaumGraph.GetFixPunkt: TRealPoint;
+function TRaumGraph.GetFixPunkt: TPoint3D;
 begin
   result := Transformer.TransformedFixPunkt;
 end;

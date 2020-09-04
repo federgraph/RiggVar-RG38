@@ -72,7 +72,6 @@ uses
   RggProfile in 'Graph\RggProfile.pas',
   RggCtrls in 'Graph\RggCtrls.pas',
   RggHull in 'Graph\RggHull.pas',
-  RggTest in 'Graph\RggTest.pas',
   RggZug in 'Graph\RggZug.pas',
   RggTransformer in 'Graph\RggTransformer.pas',
   RggSaling3Eck in 'Core\RggSaling3Eck.pas',

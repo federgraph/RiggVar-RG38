@@ -762,18 +762,18 @@ begin
         if yavMastfallF0F in YAchseSet then
         begin
           j := YAchseRecordList[yavMastfallF0F].ArrayIndex;
-          af[p,j,i] := (Rigg.rP.F0 - Rigg.rP.F).Length;
+          af[p,j,i] := Rigg.rP.F0.Distance(Rigg.rP.F);
         end;
         if yavMastfallF0C in YAchseSet then
         begin
           j := YAchseRecordList[yavMastfallF0C].ArrayIndex;
-          af[p,j,i] := (Rigg.rP.F0 - Rigg.rP.C).Length;
+          af[p,j,i] := Rigg.rP.F0.Distance(Rigg.rP.C);
         end;
         if yavAuslenkungC in YAchseSet then
         begin
           j := YAchseRecordList[yavAuslenkungC].ArrayIndex;
           if PunktOK then
-            af[p,j,i] := (Rigg.rP.C - Rigg.rPe.C).Length
+            af[p,j,i] := Rigg.rP.C.Distance(Rigg.rPe.C)
           else
             af[p,j,i] := 0;
         end;

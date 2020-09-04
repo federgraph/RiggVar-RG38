@@ -8,15 +8,15 @@ uses
 type
   TRggTestData = class
   public
-    class function GetKoordinaten420: TRealRiggPoints; static;
+    class function GetKoordinaten420: TRiggPoints; static;
     class function GetMastKurve420: TMastKurve; static;
   end;
 
 implementation
 
-class function TRggTestData.GetKoordinaten420: TRealRiggPoints;
+class function TRggTestData.GetKoordinaten420: TRiggPoints;
 var
-  rp: TRealRiggPoints;
+  rp: TRiggPoints;
 begin
   rp.A.X := 2398;
   rp.A.Y := -425;

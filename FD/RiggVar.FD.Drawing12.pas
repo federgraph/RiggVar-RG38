@@ -384,7 +384,7 @@ begin
 
   L := TRggLine.Create('StartC0C');
   L.ShowCaption := False;
-  L.StrokeThickness := 1.0;
+  L.StrokeThickness := 1;
   L.StrokeColor := colorStart;
   L.Point1 := C0;
   L.Point2 := StartC;
@@ -394,7 +394,7 @@ begin
 
   L := TRggLine.Create('StartD0D');
   L.ShowCaption := False;
-  L.StrokeThickness := 1.0;
+  L.StrokeThickness := 1;
   L.StrokeColor := colorStart;
   L.Point1 := D0;
   L.Point2 := StartD;
@@ -404,7 +404,7 @@ begin
 
   L := TRggLine.Create('StartDC');
   L.ShowCaption := False;
-  L.StrokeThickness := 1.0;
+  L.StrokeThickness := 1;
   L.StrokeColor := colorStart;
   L.Point1 := StartD;
   L.Point2 := StartC;
@@ -416,7 +416,7 @@ begin
 
   L := TRggLine.Create('EndC0C');
   L.ShowCaption := False;
-  L.StrokeThickness := 1.0;
+  L.StrokeThickness := 1;
   L.StrokeColor := colorEnde;
   L.Point1 := C0;
   L.Point2 := EndC;
@@ -426,7 +426,7 @@ begin
 
   L := TRggLine.Create('EndD0D');
   L.ShowCaption := False;
-  L.StrokeThickness := 1.0;
+  L.StrokeThickness := 1;
   L.StrokeColor := colorEnde;
   L.Point1 := D0;
   L.Point2 := EndD;
@@ -436,7 +436,7 @@ begin
 
   L := TRggLine.Create('EndDC');
   L.ShowCaption := False;
-  L.StrokeThickness := 1.0;
+  L.StrokeThickness := 1;
   L.StrokeColor := colorEnde;
   L.Point1 := EndD;
   L.Point2 := EndC;
@@ -460,7 +460,7 @@ begin
 
   Chart := TRggChart.Create;
   Chart.Caption := 'Test';
-  Chart.StrokeThickness := 1.0;
+  Chart.StrokeThickness := 1;
   Chart.StrokeColor := TRggColors.Dodgerblue;
   Chart.InitDefault;
   Chart.Box.X := 250;

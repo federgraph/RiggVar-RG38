@@ -25,8 +25,8 @@ type
     Name: string;
     Edge: TDisplayEdge;
     ItemType: TDisplayItemType;
-    P1: TRealPoint;
-    P2: TRealPoint;
+    P1: TPoint3D;
+    P2: TPoint3D;
 
     StrokeWidth: single;
     StrokeColor: TAlphaColor;
@@ -98,9 +98,9 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure Clear;
-    procedure Ellipse(const Name: string; EdgeName: TDisplayEdge; P1, P2: TRealPoint; CenterPoint: TPointF; Radius: single = 10);
-    procedure Line(const Name: string; EdgeName: TDisplayEdge; P1, P2: TRealPoint; A, B: TPointF; Color: TAlphaColor);
-    procedure PolyLine(const Name: string; EdgeName: TDisplayEdge; P1, P2: TRealPoint; A: TPolygon; Color: TAlphaColor);
+    procedure Ellipse(const Name: string; EdgeName: TDisplayEdge; P1, P2: TPoint3D; CenterPoint: TPointF; Radius: single = 10);
+    procedure Line(const Name: string; EdgeName: TDisplayEdge; P1, P2: TPoint3D; A, B: TPointF; Color: TAlphaColor);
+    procedure PolyLine(const Name: string; EdgeName: TDisplayEdge; P1, P2: TPoint3D; A: TPolygon; Color: TAlphaColor);
     procedure Draw(Canvas: TCanvas);
     procedure Draw1(Canvas: TCanvas);
     procedure Draw2(Canvas: TCanvas);
@@ -562,7 +562,7 @@ begin
   result.Assign(DI);
 end;
 
-procedure TRggDisplayList.Ellipse(const Name: string; EdgeName: TDisplayEdge; P1, P2: TRealPoint; CenterPoint: TPointF; Radius: single = 10);
+procedure TRggDisplayList.Ellipse(const Name: string; EdgeName: TDisplayEdge; P1, P2: TPoint3D; CenterPoint: TPointF; Radius: single = 10);
 var
   cr: TDisplayItem;
 begin
@@ -579,7 +579,7 @@ begin
   cr.Radius := Radius;
 end;
 
-procedure TRggDisplayList.Line(const Name: string; EdgeName: TDisplayEdge; P1, P2: TRealPoint; A, B: TPointF; Color: TAlphaColor);
+procedure TRggDisplayList.Line(const Name: string; EdgeName: TDisplayEdge; P1, P2: TPoint3D; A, B: TPointF; Color: TAlphaColor);
 var
   cr: TDisplayItem;
 begin
@@ -603,7 +603,7 @@ begin
   end;
 end;
 
-procedure TRggDisplayList.PolyLine(const Name: string; EdgeName: TDisplayEdge; P1, P2: TRealPoint; A: TPolygon; Color: TAlphaColor);
+procedure TRggDisplayList.PolyLine(const Name: string; EdgeName: TDisplayEdge; P1, P2: TPoint3D; A: TPolygon; Color: TAlphaColor);
 var
   cr: TDisplayItem;
 begin

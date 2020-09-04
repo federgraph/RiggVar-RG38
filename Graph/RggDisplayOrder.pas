@@ -43,7 +43,7 @@ type
   public
     oo: TRiggPoint;
     Name: string;
-    Point: TRealPoint;
+    Point: TPoint3D;
     constructor Create(o: TRiggPoint);
   end;
 
@@ -154,8 +154,8 @@ type
   TRggFrame = class
   private
     FEdgeCount: Integer;
-    FKoordinaten: TRealRiggPoints;
-    procedure SetKoordinaten(const Value: TRealRiggPoints);
+    FKoordinaten: TRiggPoints;
+    procedure SetKoordinaten(const Value: TRiggPoints);
     procedure InitStructure;
     procedure PlaceEdges;
     procedure PlaceSalingTetra(Index: Integer);
@@ -199,7 +199,7 @@ type
 
     procedure Report(ML: TStrings);
 
-    property Koordinaten: TRealRiggPoints read FKoordinaten write SetKoordinaten;
+    property Koordinaten: TRiggPoints read FKoordinaten write SetKoordinaten;
     property EdgeCount: Integer read FEdgeCount;
   end;
 
@@ -339,7 +339,7 @@ procedure TRggEdge.Update;
 begin
   V1 :=  Vert1.Point;
   V2 := Vert2.Point;
-  Direction := (V2-V1).Normalize;
+  Direction := (V2 - V1).Normalize;
 end;
 
 { TRggFace }
@@ -816,7 +816,7 @@ begin
   SalingTetra.Init(Self);
 end;
 
-procedure TRggFrame.SetKoordinaten(const Value: TRealRiggPoints);
+procedure TRggFrame.SetKoordinaten(const Value: TRiggPoints);
 var
   oo: TRiggPoint;
   ee: TRiggEdge;

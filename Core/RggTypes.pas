@@ -38,8 +38,6 @@ var
   TKR: Integer = TranskreisRadius;
 
 type
-  TRealPoint = TPoint3D;
-
   EFileFormatError = class(Exception);
 
   TGraphRadio = (
@@ -122,10 +120,7 @@ type
   TChartLine = array [0 .. CLMax] of single;
   TChartLineData = array [0 .. CPMax] of single;
 
-  TKoord = (x, y, z);
-//  TRealPoint = array [TKoord] of single;
   TKoordLine = array [0 .. 100] of TPoint3D;
-//  TIntPoint = TPoint3D;
 
   TRiggPoint = (
     ooN0,
@@ -146,9 +141,7 @@ type
     ooM
     );
 
-//  TIntRiggPoints = array [TRiggPoint] of TPoint3D; // TIntPoint;
-//  TRealRiggPoints = array [TRiggPoint] of TPoint3D;
-  TRealRiggPoints = record
+  TRiggPoints = record
     case Integer of
       0: (V: array [TRiggPoint] of TPoint3D);
       1: (
@@ -168,7 +161,6 @@ type
         F: TPoint3D;
         P: TPoint3D;
         M: TPoint3D;)
-
   end;
 
   TMastKurve = array [0..BogenMax] of TPoint3D;

@@ -13,9 +13,9 @@ type
     procedure SetSalingTyp(const Value: TSalingTyp);
     procedure SetControllerTyp(const Value: TControllerTyp);
 
-    procedure SetKoordinaten(const Value: TRealRiggPoints);
-    procedure SetKoordinatenE(const Value: TRealRiggPoints);
-    procedure SetKoordinatenR(const Value: TRealRiggPoints);
+    procedure SetKoordinaten(const Value: TRiggPoints);
+    procedure SetKoordinatenE(const Value: TRiggPoints);
+    procedure SetKoordinatenR(const Value: TRiggPoints);
     procedure SetMastKurve(const Value: TMastKurve);
     procedure SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
     procedure SetKoppelKurve(const Value: TKoordLine);
@@ -40,9 +40,9 @@ type
 
     procedure Draw;
 
-    property Koordinaten: TRealRiggPoints write SetKoordinaten;
-    property KoordinatenE: TRealRiggPoints write SetKoordinatenE;
-    property KoordinatenR: TRealRiggPoints write SetKoordinatenR;
+    property Koordinaten: TRiggPoints write SetKoordinaten;
+    property KoordinatenE: TRiggPoints write SetKoordinatenE;
+    property KoordinatenR: TRiggPoints write SetKoordinatenR;
     property KoppelKurve: TKoordLine write SetKoppelKurve;
     property MastKurve: TMastKurve write SetMastKurve;
     property WanteGestrichelt: Boolean write SetWanteGestrichelt;
@@ -74,12 +74,12 @@ type
     FMastKurve: TMastKurve;
     FGrauZeichnen: Boolean;
     FKoppelKurve: TKoordLine;
-    FKoordinaten: TRealRiggPoints;
+    FKoordinaten: TRiggPoints;
     FBtnBlauDown: Boolean;
     FRiggLED: Boolean;
     FSofortBerechnen: Boolean;
-    FKoordinatenR: TRealRiggPoints;
-    FKoordinatenE: TRealRiggPoints;
+    FKoordinatenR: TRiggPoints;
+    FKoordinatenE: TRiggPoints;
     FKoppel: Boolean;
     procedure SetBogen(const Value: Boolean);
     procedure SetWanteGestrichelt(const Value: Boolean);
@@ -93,8 +93,8 @@ type
     procedure SetGrauZeichnen(const Value: Boolean);
     procedure SetRiggLED(const Value: Boolean);
     procedure SetSofortBerechnen(const Value: Boolean);
-    procedure SetKoordinatenE(const Value: TRealRiggPoints);
-    procedure SetKoordinatenR(const Value: TRealRiggPoints);
+    procedure SetKoordinatenE(const Value: TRiggPoints);
+    procedure SetKoordinatenR(const Value: TRiggPoints);
     procedure SetKoppel(const Value: Boolean);
   public
     WantRenderH: Boolean;
@@ -105,7 +105,7 @@ type
 
     constructor Create(rgg: TRigg);
 
-    procedure SetKoordinaten(const Value: TRealRiggPoints);
+    procedure SetKoordinaten(const Value: TRiggPoints);
     procedure SetKoppelKurve(const Value: TKoordLine);
     procedure SetMastKurve(const Value: TMastKurve);
     procedure SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
@@ -116,9 +116,9 @@ type
 
     procedure Draw;
 
-    property Koordinaten: TRealRiggPoints read FKoordinaten write SetKoordinaten;
-    property KoordinatenE: TRealRiggPoints read FKoordinatenE write SetKoordinatenE;
-    property KoordinatenR: TRealRiggPoints read FKoordinatenR write SetKoordinatenR;
+    property Koordinaten: TRiggPoints read FKoordinaten write SetKoordinaten;
+    property KoordinatenE: TRiggPoints read FKoordinatenE write SetKoordinatenE;
+    property KoordinatenR: TRiggPoints read FKoordinatenR write SetKoordinatenR;
     property KoppelKurve: TKoordLine read FKoppelKurve write SetKoppelKurve;
     property MastKurve: TMastKurve read FMastKurve write SetMastKurve;
     property WanteGestrichelt: Boolean read FWanteGestrichelt write SetWanteGestrichelt;
@@ -232,17 +232,17 @@ begin
   FHullVisible := Value;
 end;
 
-procedure TDummyStrokeRigg.SetKoordinaten(const Value: TRealRiggPoints);
+procedure TDummyStrokeRigg.SetKoordinaten(const Value: TRiggPoints);
 begin
   FKoordinaten := Value;
 end;
 
-procedure TDummyStrokeRigg.SetKoordinatenE(const Value: TRealRiggPoints);
+procedure TDummyStrokeRigg.SetKoordinatenE(const Value: TRiggPoints);
 begin
   FKoordinatenE := Value;
 end;
 
-procedure TDummyStrokeRigg.SetKoordinatenR(const Value: TRealRiggPoints);
+procedure TDummyStrokeRigg.SetKoordinatenR(const Value: TRiggPoints);
 begin
   FKoordinatenR := Value;
 end;

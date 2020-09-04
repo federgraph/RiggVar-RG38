@@ -48,7 +48,7 @@ type
     Mat: TMatrix3D;
     constructor Create;
     destructor Destroy; override;
-    function Rotiere(Punkt: TRealPoint): TRealPoint;
+    function Rotiere(Punkt: TPoint3D): TPoint3D;
     procedure Reset;
     procedure GetAngle(var wx, wy, wz: single);
     procedure GetAngle1(Sender: TObject; var wx, wy, wz: single);
@@ -298,7 +298,7 @@ begin
   FValid := True;
 end;
 
-function TPolarKar.Rotiere(Punkt: TRealPoint): TRealPoint;
+function TPolarKar.Rotiere(Punkt: TPoint3D): TPoint3D;
 begin
   if FValid = False then
     GetMat;

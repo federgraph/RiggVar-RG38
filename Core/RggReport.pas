@@ -59,9 +59,9 @@ type
     procedure AusgabeRL(rL: TRiggLvektor);
     procedure AusgabeRLE(rLe: TRiggLvektor);
     procedure AusgabeDiffL(rL, rLe: TRiggLvektor);
-    procedure AusgabeRP(rP: TRealRiggPoints);
-    procedure AusgabeRPE(rPe: TRealRiggPoints);
-    procedure AusgabeDiffP(rP, rPe: TRealRiggPoints);
+    procedure AusgabeRP(rP: TRiggPoints);
+    procedure AusgabeRPE(rPe: TRiggPoints);
+    procedure AusgabeDiffP(rP, rPe: TRiggPoints);
     procedure AusgabeRF(rF: TRiggLvektor);
     procedure AusgabeWinkel(alpha, alpha1, alpha2, beta, gamma,
       delta1, delta2, epsilon, phi, psi: single);
@@ -306,7 +306,7 @@ begin
   end;
 end;
 
-procedure TRiggReport.AusgabeRP(rP: TRealRiggPoints);
+procedure TRiggReport.AusgabeRP(rP: TRiggPoints);
 var
   i: TRiggPoint;
 begin
@@ -326,7 +326,7 @@ begin
   end;
 end;
 
-procedure TRiggReport.AusgabeRPE(rPe: TRealRiggPoints);
+procedure TRiggReport.AusgabeRPE(rPe: TRiggPoints);
 var
   i: TRiggPoint;
 begin
@@ -346,7 +346,7 @@ begin
   end;
 end;
 
-procedure TRiggReport.AusgabeDiffP(rP, rPe: TRealRiggPoints);
+procedure TRiggReport.AusgabeDiffP(rP, rPe: TRiggPoints);
 var
   i: TRiggPoint;
 begin

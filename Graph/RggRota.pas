@@ -26,11 +26,11 @@ uses
 type
   TRotaForm = class(TInterfacedObject, IStrokeRigg)
   private
-    RPN: TRealRiggPoints;
-    RPE: TRealRiggPoints;
-    RPR: TRealRiggPoints;
+    RPN: TRiggPoints;
+    RPE: TRiggPoints;
+    RPR: TRiggPoints;
     SkipOnceFlag: Boolean;
-    function OnGetFixPunkt: TRealPoint;
+    function OnGetFixPunkt: TPoint3D;
     procedure DrawToCanvasEx(g: TCanvas);
     procedure DrawToCanvas(g: TCanvas);
     procedure DrawToImage(g: TCanvas);
@@ -100,9 +100,9 @@ type
     procedure DoTrans;
   public
     { interface IStrokeRigg }
-    procedure SetKoordinaten(const Value: TRealRiggPoints);
-    procedure SetKoordinatenE(const Value: TRealRiggPoints);
-    procedure SetKoordinatenR(const Value: TRealRiggPoints);
+    procedure SetKoordinaten(const Value: TRiggPoints);
+    procedure SetKoordinatenE(const Value: TRiggPoints);
+    procedure SetKoordinatenR(const Value: TRiggPoints);
     procedure SetMastKurve(const Value: TMastKurve);
     procedure SetKoppelKurve(const Value: TKoordLine);
 
@@ -122,7 +122,7 @@ type
     procedure SetSofortBerechnen(const Value: Boolean);
 
     procedure SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
-    function GetMastKurvePoint(const Index: Integer): TRealPoint;
+    function GetMastKurvePoint(const Index: Integer): TPoint3D;
     procedure ToggleRenderOption(const fa: Integer);
     function QueryRenderOption(const fa: Integer): Boolean;
   public
@@ -185,9 +185,9 @@ type
     property HullVisible: Boolean write SetHullVisible;
     property SalingTyp: TSalingTyp write SetSalingTyp;
     property ControllerTyp: TControllerTyp write SetControllerTyp;
-    property Koordinaten: TRealRiggPoints write SetKoordinaten;
-    property KoordinatenE: TRealRiggPoints write SetKoordinatenE;
-    property KoordinatenR: TRealRiggPoints write SetKoordinatenR;
+    property Koordinaten: TRiggPoints write SetKoordinaten;
+    property KoordinatenE: TRiggPoints write SetKoordinatenE;
+    property KoordinatenR: TRiggPoints write SetKoordinatenR;
     property MastKurve: TMastKurve write SetMastKurve;
     property KoppelKurve: TKoordLine write SetKoppelKurve;
     property WanteGestrichelt: Boolean read FWanteGestrichelt write SetWanteGestrichelt;
@@ -739,8 +739,8 @@ begin
   SavedYPos := FYPos;
 
   FTranslation :=
-    (Abs(NullPunktOffset.x - X) < TransKreisRadius) and
-    (Abs(NullPunktOffset.y - Y) < TransKreisRadius);
+    (Abs(NullPunktOffset.x - X) < TKR) and
+    (Abs(NullPunktOffset.y - Y) < TKR);
 end;
 
 procedure TRotaForm.PaintBox3DMouseMove(Sender: TObject;
@@ -829,7 +829,7 @@ begin
   Draw;
 end;
 
-function TRotaForm.OnGetFixPunkt: TRealPoint;
+function TRotaForm.OnGetFixPunkt: TPoint3D;
 begin
   result := RPN.V[FFixPoint];
 end;
@@ -862,7 +862,7 @@ begin
   end;
 end;
 
-function TRotaForm.GetMastKurvePoint(const Index: Integer): TRealPoint;
+function TRotaForm.GetMastKurvePoint(const Index: Integer): TPoint3D;
 begin
   result := RaumGraph.GetMastKurvePoint(Index);
 end;
@@ -889,17 +889,17 @@ begin
   RaumGraph.ControllerTyp := Value;
 end;
 
-procedure TRotaForm.SetKoordinaten(const Value: TRealRiggPoints);
+procedure TRotaForm.SetKoordinaten(const Value: TRiggPoints);
 begin
   RPN := Value;
 end;
 
-procedure TRotaForm.SetKoordinatenE(const Value: TRealRiggPoints);
+procedure TRotaForm.SetKoordinatenE(const Value: TRiggPoints);
 begin
   RPE := Value;
 end;
 
-procedure TRotaForm.SetKoordinatenR(const Value: TRealRiggPoints);
+procedure TRotaForm.SetKoordinatenR(const Value: TRiggPoints);
 begin
   RPR := Value;
 end;

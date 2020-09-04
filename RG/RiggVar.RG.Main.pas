@@ -142,7 +142,7 @@ type
   TRggMain = class(TRggTrimm)
   private
     FFixPoint: TRiggPoint;
-    FixPunkt: TRealPoint;
+    FixPunkt: TPoint3D;
     FViewPoint: TViewPoint;
     FVisible: Boolean;
 
@@ -1515,8 +1515,8 @@ end;
 procedure TRggMain.DoBiegungGF;
 var
   a, b, c, k, h: single;
-  pf: TRealPoint;
-  kg, kh: TRealPoint;
+  pf: TPoint3D;
+  kg, kh: TPoint3D;
   IndexG: Integer;
   IndexH: Integer;
 begin
@@ -1549,9 +1549,9 @@ end;
 procedure TRggMain.DebugBiegungGF(ML: TStrings);
 var
   a, b, c, k, h: single;
-  pf: TRealPoint;
-  kg: TRealPoint;
-  kh: TRealPoint;
+  pf: TPoint3D;
+  kg: TPoint3D;
+  kh: TPoint3D;
   bm, l: single;
   t: single;
   IndexG, IndexD, IndexH, IndexC: single;

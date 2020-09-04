@@ -82,7 +82,7 @@ type
     FiControllerAnschlag: Integer;
     FiReserved: Integer;
     { Rumpf: Koordinaten in mm }
-    iP: TRealRiggPoints; { Array enthält auch die Riggkoordinaten }
+    iP: TRiggPoints; { Array enthält auch die Riggkoordinaten }
     { Festigkeitswerte }
     rEA: TRiggLvektor; { N }
     EI: single; { Nmm^2 }
