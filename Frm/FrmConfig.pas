@@ -312,12 +312,12 @@ begin
   FMastMassList.Add(Format(fs, [MastComboTextTop, FiMastTop]));
 
   fs := '%s=%.6g';
-  FElementList.Add(Format(fs, [ComboTextSpreader, FEAarray[7]]));
-  FElementList.Add(Format(fs, [ComboTextVorstag, FEAarray[14]]));
-  FElementList.Add(Format(fs, [ComboTextMast, FEAarray[0]]));
-  FElementList.Add(Format(fs, [ComboTextSpreader, FEAarray[9]]));
-  FElementList.Add(Format(fs, [ComboTextSpreaderConnection, FEAarray[11]]));
-  FElementList.Add(Format(fs, [ComboTextHullRods, FEAarray[1]]));
+  FElementList.Add(Format(fs, [ComboTextSpreader, FEAarray.B0B]));
+  FElementList.Add(Format(fs, [ComboTextVorstag, FEAarray.C0C]));
+  FElementList.Add(Format(fs, [ComboTextMast, FEAarray.D0C]));
+  FElementList.Add(Format(fs, [ComboTextSpreader, FEAarray.BD]));
+  FElementList.Add(Format(fs, [ComboTextSpreaderConnection, FEAarray.AB]));
+  FElementList.Add(Format(fs, [ComboTextHullRods, FEAarray.C0D0]));
 
   FTrimmList.Add(ControllerString);
   FTrimmList.Add(WinkelString);
@@ -528,29 +528,29 @@ begin
 
   if s = ComboTextHullRods then
   begin
-    FEAarray[1] := c;
-    FEAarray[2] := c;
-    FEAarray[3] := c;
-    FEAarray[4] := c;
-    FEAarray[5] := c;
-    FEAarray[6] := c;
+    FEAarray.C0D0 := c;
+    FEAarray.B0C0 := c;
+    FEAarray.A0C0 := c;
+    FEAarray.B0D0 := c;
+    FEAarray.A0D0 := c;
+    FEAarray.A0B0 := c;
   end
   else if s = ComboTextWanten then
   begin
-    FEAarray[7] := c;
-    FEAarray[8] := c;
-    FEAarray[12] := c;
-    FEAarray[13] := c;
+    FEAarray.B0B := c;
+    FEAarray.A0A := c;
+    FEAarray.BC := c;
+    FEAarray.AC := c;
   end
   else if s = ComboTextVorstag then
-    FEAarray[14] := c
+    FEAarray.C0C := c
   else if s = ComboTextSpreader then
   begin
-    FEAarray[9] := c;
-    FEAarray[10] := c;
+    FEAarray.BD := c;
+    FEAarray.AD := c;
   end
   else if s = ComboTextSpreaderConnection then
-    FEAarray[11] := c;
+    FEAarray.AB := c;
 
   FElementList.Values[s] := EAEdit.Text;
 end;

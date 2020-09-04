@@ -1022,9 +1022,9 @@ begin
       fpSalingW:
         sb.Ist := arctan2(Rigg.RealGlied[fpSalingH] * 2, Rigg.RealGlied[fpSalingA]) * 180 / pi;
       fpMastfallF0C:
-        sb.Ist := (Rigg.rP.F0 - Rigg.rP.C).Length;
+        sb.Ist := Rigg.rP.F0.Distance(Rigg.rP.C);
       fpMastfallF0F:
-        sb.Ist := (Rigg.rP.F0 - Rigg.rP.F).Length;
+        sb.Ist := Rigg.rP.F0.Distance(Rigg.rP.F);
       fpBiegung:
         sb.Ist := Rigg.hd;
       fpD0X:
@@ -1530,9 +1530,9 @@ begin
     kg := StrokeRigg.GetMastKurvePoint(IndexG);
     kh := StrokeRigg.GetMastKurvePoint(IndexH);
 
-    a := (kg - pf).Length;
-    b := (pf - kh).Length;
-    c := (kh - kg).Length;
+    a := kg.Distance(pf);
+    b := pf.Distance(kh);
+    c := kh.Distance(kg);
 
     h := Hoehe(a-0.00001, b, c, k);
 
@@ -1562,7 +1562,7 @@ begin
     pf := Rigg.rP.F;
 
     bm := BogenMax;
-    l := Rigg.rL[15] + Rigg.rL[16];
+    l := Rigg.rL.DC + Rigg.rL.D0D;
 
     ML.Add('');
     t := 1160;
@@ -1572,7 +1572,7 @@ begin
     ML.Add('IndexG := 13;');
 
     ML.Add('');
-    t := Rigg.rL[16];
+    t := Rigg.rL.D0D;
     ML.Add(Format('D = Rigg.rL[16] = %.2f', [t]));
     IndexD := bm * t / l;
     ML.Add(Format('iD = %.2f', [IndexD]));
@@ -1596,9 +1596,9 @@ begin
     kg := StrokeRigg.GetMastKurvePoint(Round(IndexG));
     kh := StrokeRigg.GetMastKurvePoint(Round(IndexH));
 
-    a := (kg - pf).Length;
-    b := (pf - kh).Length;
-    c := (kh - kg).Length;
+    a := kg.Distance(pf);
+    b := pf.Distance(kh);
+    c := kh.Distance(kg);
 
     ML.Add('');
     h := Hoehe(a-0.00001, b, c, k);
@@ -1710,29 +1710,21 @@ begin
 
   c := Round(Value);
 
-//  { Rumpflängen }
-//  EA[1] := c;
-//  EA[2] := c;
-//  EA[3] := c;
-//  EA[4] := c;
-//  EA[5] := c;
-//  EA[6] := c;
-
   { Wanten }
-  EA[7] := c;
-  EA[8] := c;
-  EA[12] := c;
-  EA[13] := c;
+  EA.B0B := c;
+  EA.A0A := c;
+  EA.BC := c;
+  EA.AC := c;
 
   { Vorstag }
-  EA[14] := c;
+  EA.C0C := c;
 
   { Saling }
-  EA[9] := c;
-  EA[10] := c;
+  EA.BD := c;
+  EA.AD := c;
 
   { Saling-Verbindung }
-  EA[11] := c;
+  EA.AB := c;
 
   Rigg.EA := EA;
 end;
@@ -1747,28 +1739,12 @@ begin
   c := Round(Value);
 
   { Rumpflängen }
-  EA[1] := c;
-  EA[2] := c;
-  EA[3] := c;
-  EA[4] := c;
-  EA[5] := c;
-  EA[6] := c;
-
-//  { Wanten }
-//  EA[7] := c;
-//  EA[8] := c;
-//  EA[12] := c;
-//  EA[13] := c;
-//
-//  { Vorstag }
-//  EA[14] := c;
-//
-//  { Saling }
-//  EA[9] := c;
-//  EA[10] := c;
-//
-//  { Saling-Verbindung }
-//  EA[11] := c;
+  EA.C0D0 := c;
+  EA.B0C0 := c;
+  EA.A0C0 := c;
+  EA.B0D0 := c;
+  EA.A0D0 := c;
+  EA.A0B0 := c;
 
   Rigg.EA := EA;
 end;

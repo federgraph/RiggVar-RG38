@@ -415,7 +415,7 @@ begin
   GetWantenSpannung;
   { 1. Wantenkraft3Dto2D; FB ermitteln }
   h := rP.P0.Distance(rP.P);
-  l2 := rL[6] - rL[11]; { PüttingAbstand - SalingAbstand }
+  l2 := rL.A0B0 - rL.AB; { PüttingAbstand - SalingAbstand }
   alpha := arctan2(l2 / 2, h);
   FBekannt := WantenSpannung * cos(alpha) * 2; { Wantenspannung2d }
   case SalingTyp of
@@ -834,10 +834,10 @@ begin
       SchnittGG(rP.D0, rP.C, rP.E, rP.E0, SPController);
       ld := rP.D0.Distance(SPSaling);
       le := rP.D0.Distance(SPController);
-      lc := rL[0];
+      lc := rL.D0C;
       EC := rP.C.Distance(rP.E);
-      hd := Hoehe(lc - 0.0001, rL[16], rL[15], k2);
-      he := Hoehe(lc - 0.0001, rL[18], EC, k1);
+      hd := Hoehe(lc - 0.0001, rL.D0D, rL.DC, k2);
+      he := Hoehe(lc - 0.0001, rL.D0E, EC, k1);
       if SPSaling.X - rP.D.X > 0 then
         hd := -hd;
       if SPController.X - rP.E.X > 0 then
@@ -847,12 +847,12 @@ begin
     stOhneStarr:
     begin
       SchnittGG(rP.D0, rP.C, rP.E, rP.E0, SPController);
-      ld := rL[16];
+      ld := rL.D0D;
       le := rP.D0.Distance(SPController);
-      lc := rL[0];
+      lc := rL.D0C;
       EC := rP.C.Distance(rP.E);
       hd := 0; { Null gesetzt, da nicht relevant }
-      he := Hoehe(lc - 0.0001, rL[18], EC, k1);
+      he := Hoehe(lc - 0.0001, rL.D0E, EC, k1);
       if SPController.X - rP.E.X > 0 then
         he := -he;
     end;
@@ -965,26 +965,26 @@ end;
 procedure TMast.Abstaende;
 begin
   { Abstände ermitteln }
-  rL[0] := rP.D0.Distance(rP.C);
-  rL[1] := rP.D0.Distance(rP.C0);
-  rL[2] := rP.B0.Distance(rP.C0);
-  rL[3] := rP.A0.Distance(rP.C0);
-  rL[4] := rP.B0.Distance(rP.D0);
-  rL[5] := rP.A0.Distance(rP.D0);
-  rL[6] := rP.A0.Distance(rP.B0);
-  rL[7] := rP.B0.Distance(rP.B);
-  rL[8] := rP.A0.Distance(rP.A);
-  rL[9] := rP.B.Distance(rP.D);
-  rL[10] := rP.A.Distance(rP.D);
-  rL[11] := rP.A.Distance(rP.B);
-  rL[12] := rP.B.Distance(rP.C);
-  rL[13] := rP.A.Distance(rP.C);
-  rL[14] := rP.C0.Distance(rP.C);
-  rL[15] := rP.C.Distance(rP.D);
-  rL[16] := rP.D0.Distance(rP.D);
-  rL[17] := rP.D.Distance(rP.E);
-  rL[18] := rP.D0.Distance(rP.E);
-  rL[19] := rP.E0.Distance(rP.E);
+  rL.V[0] := rP.D0.Distance(rP.C);
+  rL.V[1] := rP.D0.Distance(rP.C0);
+  rL.V[2] := rP.B0.Distance(rP.C0);
+  rL.V[3] := rP.A0.Distance(rP.C0);
+  rL.V[4] := rP.B0.Distance(rP.D0);
+  rL.V[5] := rP.A0.Distance(rP.D0);
+  rL.V[6] := rP.A0.Distance(rP.B0);
+  rL.V[7] := rP.B0.Distance(rP.B);
+  rL.V[8] := rP.A0.Distance(rP.A);
+  rL.V[9] := rP.B.Distance(rP.D);
+  rL.V[10] := rP.A.Distance(rP.D);
+  rL.V[11] := rP.A.Distance(rP.B);
+  rL.V[12] := rP.B.Distance(rP.C);
+  rL.V[13] := rP.A.Distance(rP.C);
+  rL.V[14] := rP.C0.Distance(rP.C);
+  rL.V[15] := rP.C.Distance(rP.D);
+  rL.V[16] := rP.D0.Distance(rP.D);
+  rL.V[17] := rP.D.Distance(rP.E);
+  rL.V[18] := rP.D0.Distance(rP.E);
+  rL.V[19] := rP.E0.Distance(rP.E);
 end;
 
 procedure TMast.BerechneF;

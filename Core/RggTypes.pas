@@ -165,8 +165,34 @@ type
 
   TMastKurve = array [0..BogenMax] of TPoint3D;
 
-  TRiggLvektor = array [0 .. 19] of single;
   TRiggLIndexRange = 0 .. 19;
+  TRiggLvektor = record
+    class function AbstandName(Index: TRiggLIndexRange): string; static;
+    case Integer of
+      0: (V: array [0 .. 19] of single);
+      1: (
+        D0C: single; // Mast
+        C0D0: single; // Vorstag - Mastfuß
+        B0C0: single; // Pütting Bb - Vorstag
+        A0C0: single; // Pütting Stb - Vorstag
+        B0D0: single; // Pütting Bb - Mastfuß
+        A0D0: single; // Pütting Stb - Mastfuß
+        A0B0: single; // Püttingabstand
+        B0B: single; // Wante unten Bb
+        A0A: single; // Wante unten Stb
+        BD: single; // Saling Bb
+        AD: single; // Saling Stb
+        AB: single; // Saling-Verbindung
+        BC: single; // Wante oben Bb
+        AC: single; // Wante oben Stb
+        C0C: single; // Vorstag
+        DC: single; // Mast Oben
+        D0D: single; // Mast Unten
+        ED: single;
+        D0E: single;
+        E0E: single; // Controller
+      );
+  end;
 
   TTrimm = record
     Mastfall: Integer;
@@ -546,6 +572,35 @@ begin
     result := ooE
   else if s = 'F' then
     result := ooF;
+end;
+
+{ TRiggLrecord }
+
+class function TRiggLvektor.AbstandName(Index: TRiggLIndexRange): string;
+begin
+
+  case Index of
+    0: result := 'D0C Mast';
+    1: result := 'C0D0 Vorstag - Mastfuß';
+    2: result := 'B0C0 Pütting Bb - Vorstag';
+    3: result := 'A0C0 Pütting Stb - Vorstag';
+    4: result := 'B0D0 Pütting Bb - Mastfuß';
+    5: result := 'A0D0 Pütting Stb - Mastfuß';
+    6: result := 'A0B0 Püttingabstand';
+    7: result := 'B0B Wante unten Bb';
+    8: result := 'A0A Wante unten Stb';
+    9: result := 'BD Saling Bb';
+    10: result := 'AD Saling Stb';
+    11: result := 'AB Saling-Verbindung';
+    12: result := 'BC Wante oben Bb';
+    13: result := 'AC Wante oben Stb';
+    14: result := 'C0C Vorstag';
+    15: result := 'DC';
+    16: result := 'D0D';
+    17: result := 'ED';
+    18: result := 'D0E';
+    19: result := 'E0E Controller';
+  end;
 end;
 
 end.

@@ -269,7 +269,7 @@ begin
       begin
         S1 := IntToStr(i);
         S2 := ReadString(S, S1, '100000');
-        rEA[i] := StrToFloat(S2);
+        rEA.V[i] := StrToFloat(S2);
       end;
     end;
   finally
@@ -398,7 +398,7 @@ begin
       for i := 0 to 19 do
       begin
         S1 := IntToStr(i);
-        S2 := Format('%.6g', [rEA[i]]);
+        S2 := Format('%.6g', [rEA.V[i]]);
         WriteString(S, S1, S2);
       end;
     end;
@@ -472,26 +472,26 @@ begin
   { iP.A]..iP.F] werden hier nicht gefüllt! }
 
   { Festigkeitswerte }
-  rEA[0] := EAgross;
-  rEA[1] := EARumpf;
-  rEA[2] := EARumpf;
-  rEA[3] := EARumpf;
-  rEA[4] := EARumpf;
-  rEA[5] := EARumpf;
-  rEA[6] := EARumpf;
-  rEA[7] := 13 * EModulStahl;
-  rEA[8] := 13 * EModulStahl;
-  rEA[9] := EAgross;
-  rEA[10] := EAgross;
-  rEA[11] := EASaling;
-  rEA[12] := 13 * EModulStahl;
-  rEA[13] := 13 * EModulStahl;
-  rEA[14] := 13 * EModulStahl;
-  rEA[15] := EAgross;
-  rEA[16] := EAgross;
-  rEA[17] := EAgross;
-  rEA[18] := EAgross;
-  rEA[19] := EAgross;
+  rEA.D0C := EAgross;
+  rEA.C0D0 := EARumpf;
+  rEA.B0C0 := EARumpf;
+  rEA.A0C0 := EARumpf;
+  rEA.B0D0 := EARumpf;
+  rEA.A0D0 := EARumpf;
+  rEA.A0B0 := EARumpf;
+  rEA.B0B := 13 * EModulStahl;
+  rEA.A0A := 13 * EModulStahl;
+  rEA.BD := EAgross;
+  rEA.AD := EAgross;
+  rEA.AB := EASaling;
+  rEA.BC := 13 * EModulStahl;
+  rEA.AC := 13 * EModulStahl;
+  rEA.C0C := 13 * EModulStahl;
+  rEA.DC := EAgross;
+  rEA.D0D := EAgross;
+  rEA.ED := EAgross;
+  rEA.D0E := EAgross;
+  rEA.E0E := EAgross;
 
   EI := 14.7E9; { Nmm^2 }
 
@@ -617,26 +617,26 @@ begin
   { iP.A]..iP.F] werden hier nicht gefüllt! }
 
   { Festigkeitswerte }
-  rEA[0] := EAgross;
-  rEA[1] := EARumpf;
-  rEA[2] := EARumpf;
-  rEA[3] := EARumpf;
-  rEA[4] := EARumpf;
-  rEA[5] := EARumpf;
-  rEA[6] := EARumpf;
-  rEA[7] := 13 * EModulStahl;
-  rEA[8] := 13 * EModulStahl;
-  rEA[9] := EAgross;
-  rEA[10] := EAgross;
-  rEA[11] := EASaling;
-  rEA[12] := 13 * EModulStahl;
-  rEA[13] := 13 * EModulStahl;
-  rEA[14] := 13 * EModulStahl;
-  rEA[15] := EAgross;
-  rEA[16] := EAgross;
-  rEA[17] := EAgross;
-  rEA[18] := EAgross;
-  rEA[19] := EAgross;
+  rEA.D0C := EAgross;
+  rEA.C0D0 := EARumpf;
+  rEA.B0C0 := EARumpf;
+  rEA.A0C0 := EARumpf;
+  rEA.B0D0 := EARumpf;
+  rEA.A0D0 := EARumpf;
+  rEA.A0B0 := EARumpf;
+  rEA.B0B := 13 * EModulStahl;
+  rEA.A0A := 13 * EModulStahl;
+  rEA.BD := EAgross;
+  rEA.AD := EAgross;
+  rEA.AB := EASaling;
+  rEA.BC := 13 * EModulStahl;
+  rEA.AC := 13 * EModulStahl;
+  rEA.C0C := 13 * EModulStahl;
+  rEA.DC := EAgross;
+  rEA.D0D := EAgross;
+  rEA.ED := EAgross;
+  rEA.D0E := EAgross;
+  rEA.E0E := EAgross;
 
   EI := 14.7E9; { Nmm^2 }
 
@@ -822,7 +822,7 @@ begin
     for i := 0 to 19 do
     begin
       S1 := IntToStr(i);
-      S2 := Format('%.6g', [rEA[i]]);
+      S2 := Format('%.6g', [rEA.V[i]]);
       Add(Format('%s=%s', [S1, S2]));
     end;
     Add('');
@@ -943,7 +943,7 @@ begin
       begin
         c := b.AddChild('EA');
         c.SetAttribute('Stab', IntToStr(i));
-        c.SetAttribute('Value', Format('%.6g', [rEA[i]]));
+        c.SetAttribute('Value', Format('%.6g', [rEA.V[i]]));
       end;
       b := a.AddChild('Biegung');
       c := b.AddChild('EI');

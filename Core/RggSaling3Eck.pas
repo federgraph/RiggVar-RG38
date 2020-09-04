@@ -21,7 +21,6 @@ interface
 uses
   System.Math,
   RggTypes,
-  RggCalc,
   RggUnit4;
 
 type

@@ -28,7 +28,6 @@ uses
   RggStrings,
   RggScroll,
   RggTypes,
-  RggCalc,
   RggSchnittKK,
   RggTrimmTab;
 

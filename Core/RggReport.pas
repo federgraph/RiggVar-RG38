@@ -264,7 +264,7 @@ begin
     begin
       if i in IndexAuswahlL then
       Add(Format('  rL[%2d] %10.3f  (%s)',
-      [i, rL[i], AbstandLabels[i]]));
+      [i, rL.V[i], AbstandLabels[i]]));
     end;
     Add('');
   end;
@@ -282,7 +282,7 @@ begin
     begin
       if i in IndexAuswahlL then
       Add(Format('  rLe[%2d]  %10.3f  (%s)',
-      [i, rLe[i], AbstandLabels[i]]));
+      [i, rLe.V[i], AbstandLabels[i]]));
     end;
     Add('');
   end;
@@ -300,7 +300,7 @@ begin
     begin
       if i in IndexAuswahlL then
       Add(Format('  %2d %10.3f  (%s)',
-      [i, (rLe[i]-rL[i]), AbstandLabels[i]]));
+      [i, (rLe.V[i]-rL.V[i]), AbstandLabels[i]]));
     end;
     Add('');
   end;
@@ -378,7 +378,7 @@ begin
     begin
       if i in IndexAuswahlL then
       Add(Format('  rF[%2d] %10.0f  (%s)',
-      [Ord(i), rF[i], AbstandLabels[i]]));
+      [Ord(i), rF.V[i], AbstandLabels[i]]));
     end;
     Add('');
   end;

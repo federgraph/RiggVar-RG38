@@ -22,8 +22,7 @@ uses
   System.Types,
   System.Math,
   System.Math.Vectors,
-  RggTypes,
-  RggCalc;
+  RggTypes;
 
 type
   TBemerkungKK = (

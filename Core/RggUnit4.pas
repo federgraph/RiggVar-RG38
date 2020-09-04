@@ -27,7 +27,6 @@ uses
   RggTypes,
   RggUnit3,
   RggDoc,
-  RggCalc,
   RiggVar.RG.Data;
 
 type
@@ -266,13 +265,13 @@ begin
     { Mastfall }
     MastfallF0F := rP.F0.Distance(rP.F); { in mm }
     { Vorstagspannung }
-    if abs(rF[14]) < 32000 then
-      SpannungV := rF[14] { in N }
+    if abs(rF.C0C) < 32000 then
+      SpannungV := rF.C0C { in N }
     else
     begin
-      if rF[14] > 32000 then
+      if rF.C0C > 32000 then
         SpannungV := 32000;
-      if rF[14] < -32000 then
+      if rF.C0C < -32000 then
         SpannungV := -32000;
     end;
     { Biegung an den Salingen }
@@ -293,17 +292,17 @@ begin
     tiMastfallF0F: temp := rP.F0.Distance(rP.F);
     tiMastfallF0C: temp := rP.F0.Distance(rP.C);
     tiVorstagDiff: temp := VorstagDiff;
-    tiVorstagDiffE: temp := rPe.C0.Distance(rPe.C) - rL[14];
+    tiVorstagDiffE: temp := rPe.C0.Distance(rPe.C) - rL.C0C;
     tiSpannungW: temp := SpannungW;
     tiSpannungV:
       begin
-        if abs(rF[14]) < 32000 then
-          temp := rF[14] { in N }
+        if abs(rF.C0C) < 32000 then
+          temp := rF.C0C { in N }
         else
         begin
-          if rF[14] > 32000 then
+          if rF.C0C > 32000 then
             temp := 32000;
-          if rF[14] < -32000 then
+          if rF.C0C < -32000 then
             temp := -32000;
       end;
     end;
@@ -505,7 +504,7 @@ begin
 
   ML.Add('Trimm:');
   ML.Add(Format('  Mastfall F0F     = %8.1f cm', [Trimm.Mastfall / 10]));
-  ML.Add(Format('  Vorstagspannung  = %8.1f N', [rF[14]]));
+  ML.Add(Format('  Vorstagspannung  = %8.1f N', [rF.C0C]));
   ML.Add(Format('  Durchbiegung hd  = %8.1f cm', [hd / 10]));
 
   ML.Add('');
@@ -589,7 +588,7 @@ begin
   if temp > 10 then
     ML.Add('Mastbiegung zu groß.');
 
-  temp := rF[14]; { Vorstagspannung in N }
+  temp := rF.C0C; { Vorstagspannung in N }
   if temp < 800 then
     ML.Add('Vorstagspannung zu gering.');
   if temp > 2000 then

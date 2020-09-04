@@ -747,96 +747,96 @@ begin
         begin
           j := YAchseRecordList[yavVorstagSpannung].ArrayIndex;
           if PunktOK then
-            af[p,j,i] := Rigg.rF[14]
+            af[p, j, i] := Rigg.rF.C0C
           else
-            af[p,j,i] := 0;
+            af[p, j, i] := 0;
         end;
         if yavWantenSpannung in YAchseSet then
         begin
           j := YAchseRecordList[yavWantenSpannung].ArrayIndex;
           if PunktOK then
-            af[p,j,i] := Rigg.rF[8]
+            af[p, j, i] := Rigg.rF.A0A
           else
-            af[p,j,i] := 0;
+            af[p, j, i] := 0;
         end;
         if yavMastfallF0F in YAchseSet then
         begin
           j := YAchseRecordList[yavMastfallF0F].ArrayIndex;
-          af[p,j,i] := Rigg.rP.F0.Distance(Rigg.rP.F);
+          af[p, j, i] := Rigg.rP.F0.Distance(Rigg.rP.F);
         end;
         if yavMastfallF0C in YAchseSet then
         begin
           j := YAchseRecordList[yavMastfallF0C].ArrayIndex;
-          af[p,j,i] := Rigg.rP.F0.Distance(Rigg.rP.C);
+          af[p, j, i] := Rigg.rP.F0.Distance(Rigg.rP.C);
         end;
         if yavAuslenkungC in YAchseSet then
         begin
           j := YAchseRecordList[yavAuslenkungC].ArrayIndex;
           if PunktOK then
-            af[p,j,i] := Rigg.rP.C.Distance(Rigg.rPe.C)
+            af[p, j, i] := Rigg.rP.C.Distance(Rigg.rPe.C)
           else
-            af[p,j,i] := 0;
+            af[p, j, i] := 0;
         end;
         if yavDurchbiegungHD in YAchseSet then
         begin
           j := YAchseRecordList[yavDurchbiegungHD].ArrayIndex;
-          af[p,j,i] := Rigg.hd;
+          af[p, j, i] := Rigg.hd;
         end;
         if yavRF00 in YAchseSet then
         begin
           j := YAchseRecordList[yavRF00].ArrayIndex;
           if PunktOK then
-            af[p,j,i] := Rigg.rF[0]
+            af[p, j, i] := Rigg.rF.D0C
           else
-            af[p,j,i] := 0;
+            af[p, j, i] := 0;
         end;
         if yavRF01 in YAchseSet then
         begin
           j := YAchseRecordList[yavRF01].ArrayIndex;
           if PunktOK then
-            af[p,j,i] := Rigg.rF[1]
+            af[p, j, i] := Rigg.rF.C0D0
           else
-            af[p,j,i] := 0;
+            af[p, j, i] := 0;
         end;
         if yavRF03 in YAchseSet then
         begin
           j := YAchseRecordList[yavRF03].ArrayIndex;
           if PunktOK then
-            af[p,j,i] := Rigg.rF[3]
+            af[p, j, i] := Rigg.rF.A0C0
           else
-            af[p,j,i] := 0;
+            af[p, j, i] := 0;
         end;
         if yavRF05 in YAchseSet then
         begin
           j := YAchseRecordList[yavRF05].ArrayIndex;
           if PunktOK then
-            af[p,j,i] := Rigg.rF[5]
+            af[p, j, i] := Rigg.rF.A0D0
           else
-            af[p,j,i] := 0;
+            af[p, j, i] := 0;
         end;
         if yavRF10 in YAchseSet then
         begin
           j := YAchseRecordList[yavRF10].ArrayIndex;
           if PunktOK then
-            af[p,j,i] := Rigg.rF[10]
+            af[p, j, i] := Rigg.rF.AD
           else
-            af[p,j,i] := 0;
+            af[p, j, i] := 0;
         end;
         if yavRF11 in YAchseSet then
         begin
           j := YAchseRecordList[yavRF11].ArrayIndex;
           if PunktOK then
-            af[p,j,i] := Rigg.rF[11]
+            af[p, j, i] := Rigg.rF.AB
           else
-            af[p,j,i] := 0;
+            af[p, j, i] := 0;
         end;
         if yavRF13 in YAchseSet then
         begin
           j := YAchseRecordList[yavRF13].ArrayIndex;
           if PunktOK then
-            af[p,j,i] := Rigg.rF[13]
+            af[p, j, i] := Rigg.rF.AC
           else
-            af[p,j,i] := 0;
+            af[p, j, i] := 0;
         end;
       end;
     end;
