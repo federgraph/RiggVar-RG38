@@ -189,10 +189,8 @@ procedure THullGraph0.Transform;
 var
   i, j: Integer;
   x, y, z: single;
-  FMat: TMatrix3D;
   P: TPoint3D;
 begin
-  FMat := Transformer.mat3D;
   for j := nvert downto 0 do
   begin
     i := j * 3;
@@ -200,7 +198,7 @@ begin
     y := vert[i + 1];
     z := vert[i + 2];
 
-    P := TPoint3D.Create(x, y, z) * FMat;
+    P := TPoint3D.Create(x, y, z) * Transformer.Matrix;
 
     tvert[i + 0] := Round(P.X);
     tvert[i + 1] := Round(P.Y);

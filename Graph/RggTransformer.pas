@@ -3,6 +3,7 @@
 interface
 
 uses
+  System.Types,
   System.Math.Vectors,
   RggCalc,
   RggPolarKar,
@@ -11,8 +12,11 @@ uses
 type
   TRggGetFixPunkt = function: TPoint3D of object;
 
-  { Base version with OnGetFixPunkt }
-  TRggTransformer00 = class
+  TRggTransformer = class
+  private
+    FOffset: TPointF;
+    procedure SetOffset(AValue: TPointF);
+    procedure BuildMatrix;
   protected
     Updated: Boolean;
     FFixPoint: TRiggPoint;
@@ -25,77 +29,52 @@ type
     procedure SetOnGetFixPunkt(const Value: TRggGetFixPunkt);
   public
     Rotator: TPolarKar; // injected, not owned
+    Matrix: TMatrix3D;
+    WantOffset: Boolean;
+    function TransformPoint(p: TPoint3D): TPoint3D;
     constructor Create;
     property Zoom: single read FZoom write SetZoom;
     property FixPoint: TRiggPoint read FFixPoint write SetFixPoint;
+    property Offset: TPointF read FOffset write SetOffset;
     property TransformedFixPunkt: TPoint3D read FTransformedFixPunkt;
     property OnGetFixPunkt: TRggGetFixPunkt read FOnGetFixPunkt write SetOnGetFixPunkt;
   end;
 
-  { not used, FixPunkt not acessible }
-  TRggTransformer01 = class(TRggTransformer00)
-  protected
-    procedure SetFixPunkt(const Value: TPoint3D);
-  public
-    procedure UpdateTransformedFixPunkt;
-    property FixPunkt: TPoint3D read FFixPunkt write SetFixPunkt;
-  end;
-
-  { version with TMatrix3D }
-  TRggTransformer3D = class(TRggTransformer00)
-  private
-    procedure BuildMatrix;
-  public
-    mat3D: TMatrix3D;
-    function TransformPoint(p: TPoint3D): TPoint3D;
-  end;
-
-  TRggTransformer = TRggTransformer3D;
-
 implementation
 
 
-{ TRggTransformer00 }
+{ TRggTransformer }
 
-constructor TRggTransformer00.Create;
+constructor TRggTransformer.Create;
 begin
   FFixPoint := ooD0;
   FZoom := 0.05;
 end;
 
-procedure TRggTransformer00.SetFixPoint(const Value: TRiggPoint);
+procedure TRggTransformer.SetOffset(AValue: TPointF);
+begin
+  FOffset := AValue;
+  Updated := False;
+end;
+
+procedure TRggTransformer.SetFixPoint(const Value: TRiggPoint);
 begin
   FFixPoint := Value;
   Updated := False;
 end;
 
-procedure TRggTransformer00.SetOnGetFixPunkt(const Value: TRggGetFixPunkt);
+procedure TRggTransformer.SetOnGetFixPunkt(const Value: TRggGetFixPunkt);
 begin
   FOnGetFixPunkt := Value;
 end;
 
-procedure TRggTransformer00.SetZoom(const Value: single);
+procedure TRggTransformer.SetZoom(const Value: single);
 begin
   FZoom := Value;
   Updated := False;
 end;
 
-{ TRggTransformer01 }
-
-procedure TRggTransformer01.SetFixPunkt(const Value: TPoint3D);
-begin
-  FFixPunkt := Value;
-  Updated := False;
-end;
-
-procedure TRggTransformer01.UpdateTransformedFixPunkt;
-begin
-  FTransformedFixPunkt := Rotator.Rotiere(FFixPunkt);
-end;
-
-{ TRggTransformer3D }
-
-procedure TRggTransformer3D.BuildMatrix;
+procedure TRggTransformer.BuildMatrix;
 var
   pt: TPoint3D;
   ps: TPoint3D;
@@ -121,13 +100,24 @@ begin
 
   mr := Rotator.Mat;
 
-  mat3D := TMatrix3D.Identity;
-  mat3D := mat3D * mr;
-  mat3D := mat3D * mt;
-  mat3D := mat3D * ms;
+  Matrix := TMatrix3D.Identity;
+  Matrix := Matrix * mr;
+  Matrix := Matrix * mt;
+  Matrix := Matrix * ms;
+
+  if WantOffset then
+  begin
+    pt := TPoint3D.Create(
+      Offset.X,
+      0,
+      -Offset.Y
+    );
+    mt := TMatrix3D.CreateTranslation(pt);
+    Matrix := Matrix * mt;
+  end;
 end;
 
-function TRggTransformer3D.TransformPoint(p: TPoint3D): TPoint3D;
+function TRggTransformer.TransformPoint(p: TPoint3D): TPoint3D;
 var
   p1, p2: TPoint3D;
 begin
@@ -135,7 +125,7 @@ begin
     BuildMatrix;
 
   p1 := TPoint3D.Create(p.X, p.Y, p.Z);
-  p2 := p1 * mat3D;
+  p2 := p1 * Matrix;
   result.X := p2.X;
   result.Y := p2.Y;
   result.Z := p2.Z;
