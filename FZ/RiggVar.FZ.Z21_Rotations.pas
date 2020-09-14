@@ -191,45 +191,45 @@ begin
 end;
 
 procedure TRggDrawingZ21.Btn8Click(Sender: TObject);
-//var
-//  RotR: TPoint3D;
-//  mr: TMatrix3D;
+var
+  RotR: TPoint3D;
+  mr: TMatrix3D;
 begin
-//  RotR := TH.RotationHelper.EulerAnglesFromMatrix(TH.AccuMatrix);
-//  TH.Reset;
-//  TH.Rotation := RotR;
-//
-//  if WantRotation then
-//  begin
-//    mr := TH.RotationHelper.EulerAnglesToMatrix(TH.Rotation.X, TH.Rotation.Y, TH.Rotation.Z);
-//    TH.BuildMatrix(mr);
-//    TH.UpdateTransform;
-//  end;
-//
-//  TH.DrawToCanvas;
-//  TH.ShowRotation(TH.Rotation, False);
-//  TH.GetEulerAngles;
+  RotR := TH.RotationHelper.EulerAnglesFromMatrix(TH.AccuMatrix);
+  TH.Reset;
+  TH.Rotation := RotR;
+
+  if WantRotation then
+  begin
+    mr := TH.RotationHelper.EulerAnglesToMatrix(TH.Rotation.X, TH.Rotation.Y, TH.Rotation.Z);
+    TH.BuildMatrix(mr);
+    TH.UpdateTransform;
+  end;
+
+  TH.DrawToCanvas;
+  TH.ShowRotation(TH.Rotation, False);
+  TH.GetEulerAngles;
 end;
 
 procedure TRggDrawingZ21.Btn9Click(Sender: TObject);
-//var
-//  RotR: TPoint3D;
-//  M: TMatrix3D;
+var
+  RotR: TPoint3D;
+  M: TMatrix3D;
 begin
-//  RotR := TH.RotationHelper.GetRotationInfoHPB(TH.AccuMatrix);
-//  TH.Reset;
-//  TH.Rotation := RotR;
-//
-//  if WantRotation then
-//  begin
-//    M := TMatrix3D.CreateRotationHeadingPitchBank(TH.Rotation.X, TH.Rotation.Y, TH.Rotation.Z);
-//    TH.BuildMatrix(M);
-//    TH.UpdateTransform;
-//  end;
-//
-//  TH.DrawToCanvas;
-//  TH.ShowRotation(TH.Rotation, False);
-//  TH.GetEulerAngles;
+  RotR := TH.RotationHelper.GetRotationInfoHPB(TH.AccuMatrix);
+  TH.Reset;
+  TH.Rotation := RotR;
+
+  if WantRotation then
+  begin
+    M := TMatrix3D.CreateRotationHeadingPitchBank(TH.Rotation.X, TH.Rotation.Y, TH.Rotation.Z);
+    TH.BuildMatrix(M);
+    TH.UpdateTransform;
+  end;
+
+  TH.DrawToCanvas;
+  TH.ShowRotation(TH.Rotation, False);
+  TH.GetEulerAngles;
 end;
 
 procedure TRggDrawingZ21.Btn0Click(Sender: TObject);

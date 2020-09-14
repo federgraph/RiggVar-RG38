@@ -35,6 +35,8 @@ type
   TRggDrawingBase = class
   public
     WantRotation: Boolean;
+    WheelFlag: Boolean;
+    InplaceFlag: Boolean;
     FixPoint: TPoint3D;
     procedure Reset; virtual; abstract;
     procedure Transform(M: TMatrix3D); virtual; abstract;
@@ -184,9 +186,9 @@ type
     FRadius: single;
     procedure SetRadius(const Value: single);
   protected
-    OriginalCenter: TRggPoint3D;
     property Radius: single read FRadius write SetRadius;
   public
+    OriginalCenter: TRggPoint3D;
     Center: TRggPoint3D;
     class var
       Matrix: TMatrix3D;
@@ -197,6 +199,7 @@ type
     procedure Save;
     procedure Reset;
     procedure Transform; override;
+    procedure TransformI;
     procedure WriteCode(ML: TStrings);
 
     procedure Draw(g: TCanvas); override;
@@ -204,6 +207,9 @@ type
     procedure Param1(Delta: single); override;
     procedure Param2(Delta: single); override;
     procedure Param3(Delta: single); override;
+
+    procedure Param1I(Delta: single);
+    procedure Param2I(Delta: single);
 
     function IsEqual(B: TRggCircle): Boolean;
     function CompareZ(Q: TRggCircle): Integer;
@@ -714,6 +720,18 @@ begin
   Center := OriginalCenter;
 end;
 
+procedure TRggCircle.Param1I(Delta: single);
+begin
+  Center.X := Center.X + Delta;
+  OriginalCenter := Center;
+end;
+
+procedure TRggCircle.Param2I(Delta: single);
+begin
+  Center.Y := Center.Y + Delta;
+  OriginalCenter := Center;
+end;
+
 procedure TRggCircle.Param3(Delta: single);
 begin
   OriginalCenter.Z := OriginalCenter.Z + Delta;
@@ -740,6 +758,11 @@ end;
 procedure TRggCircle.Transform;
 begin
   Center.C := Center.C * Matrix;
+end;
+
+procedure TRggCircle.TransformI;
+begin
+  OriginalCenter.C := OriginalCenter.C * Matrix;
 end;
 
 procedure TRggCircle.WriteCode(ML: TStrings);

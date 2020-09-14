@@ -5,7 +5,6 @@ interface
 uses
   System.Types,
   System.Math.Vectors,
-  RggCalc,
   RggPolarKar,
   RggTypes;
 

@@ -1,9 +1,10 @@
-﻿object FormDrawing: TFormDrawing
+object FormDrawing: TFormDrawing
   Left = 0
   Top = 0
   Caption = 'RGXX'
   ClientHeight = 480
   ClientWidth = 640
+  Position = Designed
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]

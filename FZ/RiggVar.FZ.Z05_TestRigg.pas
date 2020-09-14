@@ -266,6 +266,8 @@ begin
   WantSort := True;
 
   Load;
+
+  DefaultElement := D;
 end;
 
 procedure TRggDrawingZ05.Load;
@@ -273,47 +275,47 @@ var
   cr: TRggCircle;
 begin
   try
-    cr := Find('A0');
+    cr := A0;
     cr.Center.X := 235.42;
     cr.Center.Y := 552.60;
     cr.Center.Z := -164.01;
 
-    cr := Find('B0');
+    cr := B0;
     cr.Center.X := 142.15;
     cr.Center.Y := 589.33;
     cr.Center.Z := 54.05;
 
-    cr := Find('C0');
+    cr := C0;
     cr.Center.X := 520.27;
     cr.Center.Y := 606.96;
     cr.Center.Z := 80.73;
 
-    cr := Find('D0');
+    cr := D0;
     cr.Center.X := 323.92;
     cr.Center.Y := 674.45;
     cr.Center.Z := -14.62;
 
-    cr := Find('A');
+    cr := A;
     cr.Center.X := 174.48;
     cr.Center.Y := 374.22;
     cr.Center.Z := -127.01;
 
-    cr := Find('B');
+    cr := B;
     cr.Center.X := 104.53;
     cr.Center.Y := 401.77;
     cr.Center.Z := 36.54;
 
-    cr := Find('C');
+    cr := C;
     cr.Center.X := 200.72;
     cr.Center.Y := 217.03;
     cr.Center.Z := 9.74;
 
-    cr := Find('D');
+    cr := D;
     cr.Center.X := 250.00;
     cr.Center.Y := 400.00;
     cr.Center.Z := 0.00;
 
-    cr := Find('F');
+    cr := F;
     cr.Center.X := 151.44;
     cr.Center.Y := 34.07;
     cr.Center.Z := 19.49;
@@ -358,7 +360,7 @@ begin
   except
   end;
 
-  FixPoint := Find('D').Center.C;
+  FixPoint := D.Center.C;
 end;
 
 end.

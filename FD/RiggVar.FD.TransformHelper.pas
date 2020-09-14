@@ -7,6 +7,7 @@ uses
   System.Classes,
   System.Math,
   System.Math.Vectors,
+  RiggVar.FD.RotationHelper,
   RiggVar.FD.Elements;
 
 type
@@ -19,6 +20,8 @@ type
   public
     NewMatrix: TMatrix3D;
     AccuMatrix: TMatrix3D;
+
+    RotationHelper: TRotationHelper;
 
     DirX: TPoint3D;
     DirY: TPoint3D;
@@ -39,6 +42,7 @@ type
     IsRightMouseBtn: Boolean;
 
     constructor Create;
+    destructor Destroy; override;
 
     procedure DoOnMouse(Shift: TShiftState; dx, dy: single);
 
@@ -47,6 +51,9 @@ type
     procedure ResetTransform;
     procedure InitTransform(mr: TMatrix3D);
     procedure UpdateTransform;
+    function BuildMatrixG(NewFixPoint: TPoint3D): TMatrix3D;
+    function BuildMatrixF: TMatrix3D;
+    function BuildMatrixI: TMatrix3D;
 
     procedure GetEulerAngles; virtual;
 
@@ -69,7 +76,14 @@ begin
   DirY := TPoint3D.Create(0, 1, 0);
   DirZ := TPoint3D.Create(0, 0, 1);
 
+  RotationHelper := TRotationHelper.Create;
   ResetTransform;
+end;
+
+destructor TTransformHelper.Destroy;
+begin
+  RotationHelper.Free;
+  inherited;
 end;
 
 procedure TTransformHelper.Draw;
@@ -97,6 +111,85 @@ begin
   RotB := b;
   if Assigned(OnShowRotation) then
     FOnShowRotation(self);
+end;
+
+function TTransformHelper.BuildMatrixG(NewFixPoint: TPoint3D): TMatrix3D;
+var
+  mx, my, mz: TMatrix3D;
+  mr: TMatrix3D;
+  ra: TPoint3D;
+begin
+  if CurrentDrawing.WantRotation then
+  begin
+    ra := RotationHelper.EulerAnglesFromMatrix(AccuMatrix);
+
+    { Variante 1 }
+//    mr := RotationHelper.EulerAnglesToMatrix(ra.X, ra.Y, ra.Z);
+
+    { Variante 2 }
+    mx := TMatrix3D.CreateRotationX(ra.X);
+    my := TMatrix3D.CreateRotationY(ra.Y);
+    mz := TMatrix3D.CreateRotationZ(ra.Z);
+    mr := mx * my * mz;
+
+    CurrentDrawing.FixPoint := NewFixPoint;
+
+    BuildMatrix(mr);
+    result := NewMatrix;
+    NewMatrix := TMatrix3D.Identity;
+  end
+  else
+  begin
+    result := TMatrix3D.Identity;
+  end;
+end;
+
+function TTransformHelper.BuildMatrixF: TMatrix3D;
+var
+  mr: TMatrix3D;
+  ra: TPoint3D;
+begin
+  if CurrentDrawing.WantRotation then
+  begin
+    ra := RotationHelper.EulerAnglesFromMatrix(AccuMatrix);
+    mr := RotationHelper.EulerAnglesToMatrix(ra.X, ra.Y, ra.Z);
+
+    BuildMatrix(mr);
+    result := NewMatrix;
+    NewMatrix := TMatrix3D.Identity;
+  end
+  else
+  begin
+    result := TMatrix3D.Identity;
+  end;
+end;
+
+function TTransformHelper.BuildMatrixI: TMatrix3D;
+var
+//  mx, my, mz: TMatrix3D;
+  mr: TMatrix3D;
+  ra: TPoint3D;
+begin
+  if CurrentDrawing.WantRotation then
+  begin
+    ra := RotationHelper.EulerAnglesFromMatrix(AccuMatrix);
+    mr := RotationHelper.EulerAnglesToMatrix(ra.X, ra.Y, ra.Z);
+
+//    mx := TMatrix3D.CreateRotationX(ra.X);
+//    my := TMatrix3D.CreateRotationY(ra.Y);
+//    mz := TMatrix3D.CreateRotationZ(ra.Z);
+//    mr := mx * my * mz;
+
+    mr := mr.Transpose;
+
+    BuildMatrix(mr);
+    result := NewMatrix;
+    NewMatrix := TMatrix3D.Identity;
+  end
+  else
+  begin
+    result := TMatrix3D.Identity;
+  end;
 end;
 
 procedure TTransformHelper.UpdateTransform;
@@ -162,6 +255,9 @@ end;
 
 procedure TTransformHelper.GetEulerAngles;
 begin
+  RotR := RotationHelper.EulerAnglesFromMatrix(AccuMatrix);
+  RotD := RotationHelper.RotD(RotR);
+  ShowRotation(RotR, True);
 end;
 
 procedure TTransformHelper.DoOnMouse(Shift: TShiftState; dx, dy: single);
