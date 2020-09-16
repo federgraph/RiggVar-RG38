@@ -32,6 +32,7 @@ uses
   FMX.EditBox,
   FMX.SpinBox;
 
+{.$define WantIniFile}
 type
 
   { TFormConfig }
@@ -187,6 +188,8 @@ type
     FCanSelectDummy: Boolean;
 
     procedure GetKeyList(Source, Dest: TStringList);
+    procedure FillIniListsWithDefault;
+    function FillIniListsFromFile: Boolean;
     procedure FillIniLists;
     procedure FillRiggLists;
     procedure LoadInifileCombos;
@@ -216,6 +219,7 @@ implementation
 {$R *.fmx}
 
 uses
+  RiggVar.App.Main,
   RiggVar.RG.Def;
 
 procedure TFormConfig.FormCreate(Sender: TObject);
@@ -280,7 +284,11 @@ end;
 procedure TFormConfig.Init(ARigg: TRigg);
 begin
   Rigg := ARigg;
+
+{$ifdef WantIniFile}
+  if not MainConst.MustBeSandboxed then
   IniFileName := ChangeFileExt(ParamStr(0), '.ini');
+{$endif}
 
   SelectInitialCell;
 
@@ -329,14 +337,10 @@ begin
   FTrimmList.Add(SalingLString);
 end;
 
-procedure TFormConfig.FillIniLists;
-var
-  ML: TStrings;
+function TFormConfig.FillIniListsFromFile: Boolean;
 begin
-  FMastTypList.Clear;
-  FQuerschnittList.Clear;
-  FMaterialList.Clear;
-
+  result := False;
+{$ifdef WantIniFile}
   if FileExists(InifileName) then
   begin
     LoadFromIniFile;
@@ -350,11 +354,32 @@ begin
     IniMemo.Lines.Clear;
     IniMemo.Lines.LoadFromFile(InifileName);
 
-    Exit;
+    result := True;
+  end;
+{$endif}
+end;
+
+procedure TFormConfig.FillIniLists;
+begin
+  FMastTypList.Clear;
+  FQuerschnittList.Clear;
+  FMaterialList.Clear;
+
+  if not MainConst.MustBeSandboxed then
+  begin
+    if FillIniListsFromFile then
+    begin
+      Exit; { done }
+    end;
   end;
 
-  { wenn Inifile nicht existiert dann Standardwerte laden }
+  FillIniListsWithDefault;
+end;
 
+procedure TFormConfig.FillIniListsWithDefault;
+var
+  ML: TStrings;
+begin
   { EI in Nm^2 }
   ML := FMastTypList;
   ML.Add('PD=14700');
@@ -464,9 +489,12 @@ begin
 end;
 
 procedure TFormConfig.LoadFromIniFile;
+{$ifdef WantIniFile}
 var
   IniFile: TMemIniFile;
+{$endif}
 begin
+{$ifdef WantIniFile}
   IniFile := TMemIniFile.Create(IniFileName);
   try
     FMaterialList.Clear;
@@ -478,17 +506,23 @@ begin
   finally
     IniFile.Free;
   end;
+{$endif}
 end;
 
 procedure TFormConfig.WriteToIniFile;
 begin
+{$ifdef WantIniFile}
   IniMemo.Lines.SaveToFile(InifileName);
+{$endif}
 end;
 
 procedure TFormConfig.LoadItemClick(Sender: TObject);
+{$ifdef WantIniFile}
 var
   s: string;
+{$endif}
 begin
+{$ifdef WantIniFile}
   if FileExists(InifileName) then
   begin
     LoadFromIniFile;
@@ -500,8 +534,9 @@ begin
   begin
     s := ExtractFileName(InifileName);
     s := s + MsgStr_NotFound;
-//    MessageDlg(s, mtInformation, [mbOK], 0);
+    { MessageDlg(s, mtInformation, [mbOK], 0); }
   end;
+{$endif}
 end;
 
 procedure TFormConfig.StoreItemClick(Sender: TObject);
@@ -1026,10 +1061,12 @@ begin
   SaveIniBtn := TButton.Create(Self);
   SaveIniBtn.Parent := ts;
   SaveIniBtn.Text := SaveIniBtnCaption; // 'Speichern';
+  SaveIniBtn.Enabled := IniFileName <> '';
 
   LoadIniBtn := TButton.Create(Self);
   LoadIniBtn.Parent := ts;
   LoadIniBtn.Text := LoadIniBtnCaption; // 'Laden';
+  LoadIniBtn.Enabled := IniFileName <> '';
 end;
 
 procedure TFormConfig.InitGrid;

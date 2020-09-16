@@ -405,8 +405,6 @@ begin
   TrimmText.BringToFront;
   SpeedPanel.BringToFront;
 
-  InitHelpText;
-
   TL := TStringList.Create;
   Main.UpdateTrimm0;
   ShowTrimm;
@@ -638,6 +636,8 @@ begin
 
     SetupListboxItems(ParamListbox, claAqua);
     SetupListboxItems(ReportListbox, claAquamarine);
+
+    InitHelpText;
 
     UpdateSpeedButtonDown;
     UpdateReport;
@@ -948,7 +948,7 @@ begin
     faShowConfig: ConfigBtnClick(nil);
     faShowTrimmTab: TrimmTabBtnClick(nil);
 
-    faToggleSandboxed: IsSandboxed := not IsSandboxed;
+    faToggleSandboxed: MainVar.IsSandboxed := MainConst.MustBeSandboxed or (not MainVar.IsSandboxed);
     faToggleAllProps: AllProps := not AllProps;
     faToggleAllTags: ReportManager.XmlAllTags := not ReportManager.XmlAllTags;
 
@@ -1093,18 +1093,20 @@ begin
   HL.Add('  h    - toggle help');
   HL.Add('  r    - toggle Report');
   HL.Add('');
-  HL.Add('Select current param with Button:');
+  HL.Add('Select current parameter:');
+  HL.Add('  with Button, Key, or in ListBox');
   HL.Add('');
   HL.Add('Change param value with Wheel!');
   HL.Add('  Shift-Wheel = small step');
   HL.Add('  Ctrl-Wheel  = bigger step');
   HL.Add('');
-  HL.Add('Another Test: change Format of Window.');
+  HL.Add('Goto stored Trimm');
   HL.Add('  1..8, 0 - Trimm selection');
+  HL.Add('Change Format of Window');
   HL.Add('  l, p, s - Landscape, Portrait, Square');
   HL.Add('');
-  HL.Add('Window Status:');
-  HL.Add(Format('  Client-W-H = (%d, %d)', [ClientWidth, ClientHeight]));
+  HL.Add('Window-Info:');
+  HL.Add(Format('  Initial-Client-W-H = (%d, %d)', [ClientWidth, ClientHeight]));
   HL.Add(Format('  Handle.Scale = %.1f', [Handle.Scale]));
 
   HelpText.Text := HL.Text;
@@ -1873,7 +1875,7 @@ begin
     Exit;
 
   case fa of
-    faToggleSandboxed: result := IsSandboxed;
+    faToggleSandboxed: result := MainVar.IsSandboxed;
     faToggleAllProps: result := AllProps;
     faToggleAllTags: result := ReportManager.XmlAllTags;
 

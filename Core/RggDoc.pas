@@ -113,6 +113,7 @@ type
 implementation
 
 uses
+  RiggVar.App.Main,
   RiggVar.RG.Def,
   RiggVar.FB.Classes;
 
@@ -135,7 +136,15 @@ end;
 
 procedure TRggDocument.SaveToFile(FileName: string);
 begin
-  WriteToIniFile(FileName);
+  { The intention is to never call this method in FR38!
+    But please double check again, convince yourself,
+    with Ctrl-Shift-Enter on 'SaveToFile'. }
+  if not MainConst.MustBeSandboxed then
+  begin
+    { This is how it used to be. }
+    WriteToIniFile(FileName);
+    { How should that be done in the future, if at all? }
+  end;
 end;
 
 procedure TRggDocument.LoadFromIniFile(FileName: string);

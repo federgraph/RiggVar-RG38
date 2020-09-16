@@ -100,12 +100,26 @@ begin
   sb := AddSpeedBtn('SandboxedBtn', BtnGroupSpace);
   SandboxedBtn := sb;
   sb.Text := 'SB';
-  sb.Hint := 'Sandboxed';
-  sb.StaysPressed := True;
-  sb.IsPressed := False;
-  sb.OnClick := SandboxedBtnClick;
-  sb.Tag := faToggleSandboxed;
-  InitSpeedButton(sb);
+  if MainConst.MustBeSandboxed then
+  begin
+    sb.Hint := 'Sandboxed (Store)';
+    sb.StaysPressed := True;
+    sb.IsPressed := True;
+    sb.OnClick := nil;
+    sb.Tag := faNoop;
+    InitSpeedButton(sb);
+    sb.Enabled := False;
+  end
+  else
+  begin
+    sb.Hint := 'Sandboxed';
+    sb.StaysPressed := True;
+    sb.IsPressed := False;
+    sb.OnClick := SandboxedBtnClick;
+    sb.Tag := faToggleSandboxed;
+    InitSpeedButton(sb);
+  end;
+
 
   BtnColorValue := clvProp;
 
@@ -268,7 +282,8 @@ end;
 
 procedure TActionSpeedBarRG01.SandboxedBtnClick(Sender: TObject);
 begin
-  Main.ActionHandler.Execute(faToggleSandboxed);
+  if not MainConst.MustBeSandboxed then
+    Main.ActionHandler.Execute(faToggleSandboxed);
 end;
 
 procedure TActionSpeedBarRG01.AllTagsBtnClick(Sender: TObject);
@@ -303,7 +318,7 @@ end;
 
 procedure TActionSpeedBarRG01.UpdateSpeedButtonDown;
 begin
-  SandboxedBtn.IsPressed := IsSandboxed;
+  SandboxedBtn.IsPressed := MainConst.MustBeSandboxed or MainVar.IsSandboxed;
   AllPropsBtn.IsPressed := FormMain.AllProps;
   AllTagsBtn.IsPressed := FormMain.ReportManager.XMLAllTags;
 end;

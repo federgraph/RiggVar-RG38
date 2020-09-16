@@ -260,7 +260,7 @@ begin
   MemoActionList.AddMemoAction('Help Text', HelpText);
 
 {$ifdef MSWINDOWS}
-  MemoActionList.AddMemoAction('Help Text for IO', HelpTextForIO);
+//  MemoActionList.AddMemoAction('Help Text for IO', HelpTextForIO);
   MemoActionList.AddMemoAction('Write Shortcuts', WriteShortcuts);
 //  MemoActionList.AddMemoAction('Device Report', DeviceReportBtnClick);
 

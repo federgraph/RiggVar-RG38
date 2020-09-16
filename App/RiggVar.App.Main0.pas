@@ -334,8 +334,8 @@ begin
   i := ColorScheme;
   Dec(i);
   if (i < 1) then
-    i := ColorSchemeCount;
-  if i > ColorSchemeCount then
+    i := MainConst.ColorSchemeCount;
+  if i > MainConst.ColorSchemeCount then
     i := 1;
 
   MainVar.ColorScheme.SchemeDefault := i;
@@ -353,8 +353,8 @@ begin
   i := ColorScheme;
   Inc(i);
   if (i < 1) then
-    i := ColorSchemeCount;
-  if i > ColorSchemeCount then
+    i := MainConst.ColorSchemeCount;
+  if i > MainConst.ColorSchemeCount then
     i := 1;
 
   MainVar.ColorScheme.SchemeDefault := i;

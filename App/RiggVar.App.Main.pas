@@ -31,13 +31,18 @@ var
 type
   MainConst = class
   const
+    ColorSchemeCount = 7;
     DefaultBtnFontSize = 24;
     TrackbarFrequency = 0.1;
+    MustBeSandboxed: Boolean = false;
+    TrimmFileName = 'Trimm-File.txt';
+    TrimmFileNameAuto = 'Trimm-File-Auto.txt';
   end;
 
   MainVar = class
   public
   class var
+    IsSandboxed: Boolean;
     RG: Boolean;
     AppIsClosing: Boolean;
     ShowDebugData: Boolean;
@@ -51,21 +56,13 @@ type
     class constructor Create;
   end;
 
-var
-  IsSandboxed: Boolean = false;
-
-const
-  ColorSchemeCount = 7;
-
-  TrimmFileName = 'Trimm-File.txt';
-  TrimmFileNameAuto = 'Trimm-File-Auto.txt';
-
 implementation
 
 { MainVars }
 
 class constructor MainVar.Create;
 begin
+  IsSandboxed := false;
   ColorScheme := TColorScheme.Create(5);
   Raster := 70;
 end;

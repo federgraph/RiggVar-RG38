@@ -299,14 +299,14 @@ procedure TMain1.ReadTrimmFile0;
 var
   fp, sTrimmFileAuto, sTrimmFile: string;
 begin
-  if not IsSandBoxed then
+  if not MainVar.IsSandBoxed then
   begin
     Logger.Info('in ReadTrimmFile0');
     fp := GetTrimmFilePath;
     if fp <> '' then
     begin
-      sTrimmFile := fp + TrimmFileName;
-      sTrimmFileAuto := fp + TrimmFileNameAuto;
+      sTrimmFile := fp + MainConst.TrimmFileName;
+      sTrimmFileAuto := fp + MainConst.TrimmFileNameAuto;
       if FileExists(sTrimmFile) then
       begin
         DoReadTrimmFile(sTrimmFile);
@@ -338,7 +338,7 @@ begin
 { By default you try and load the 'manually edited' Trimm-File.txt; }
 { this should make sense on the Desktop, }
 { or on any device where you have access to the Documents folder. }
-  fn := TrimmFileName;
+  fn := MainConst.TrimmFileName;
 
 { Maybe you want to have the same behaviour on Windows and iOS }
 { for debugging purpose only... }
@@ -358,7 +358,7 @@ begin
 {$endif}
 
   s := fp + fn;
-  if IsSandboxed then
+  if MainVar.IsSandboxed then
   begin
     s := FormMain.GetOpenFileName(fp, fn);
   end;
@@ -373,11 +373,11 @@ procedure TMain1.ReadTrimmFileAuto;
 var
   fp, fn: string;
 begin
-  if not IsSandboxed then
+  if not MainVar.IsSandboxed then
   begin
     Logger.Info('in ReadTrimmFileAuto');
     fp := GetTrimmFilePath;
-    fn := TrimmFileNameAuto;
+    fn := MainConst.TrimmFileNameAuto;
     if (fp <> '') and (fn <> '') then
       DoReadTrimmFile(fp + fn);
   end;
@@ -443,10 +443,10 @@ var
 begin
   Logger.Info('in SaveTrimmFileAuto');
   fp := GetTrimmFilePath;
-  fn := TrimmFileNameAuto;
+  fn := MainConst.TrimmFileNameAuto;
 
   s := fp + fn;
-  if IsSandboxed then
+  if MainVar.IsSandboxed then
   begin
     s := FormMain.GetSaveFileName(fp, fn);
   end;
@@ -700,7 +700,7 @@ begin
   ML.Add('  ColorScheme = ' + IntToStr(MainVar.ColorScheme.Scheme));
   ML.Add('  Scale = ' + FloatToStr(Scale));
   ML.Add('  Retina = ' + BoolStr[IsRetina]);
-  ML.Add('  Sandboxed = ' + BoolStr[IsSandboxed]);
+  ML.Add('  Sandboxed = ' + BoolStr[MainVar.IsSandboxed]);
   ML.Add('  WantOnResize = ' + BoolStr[MainVar.WantOnResize]);
   ML.Add('  ResizeCounter = ' + IntToStr(ResizeCounter));
   ML.Add(Format('  ClientSize = (%d, %d)', [MainVar.ClientWidth, MainVar.ClientHeight]));
