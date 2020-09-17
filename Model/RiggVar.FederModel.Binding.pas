@@ -87,7 +87,7 @@ begin
   SL.Add('see federgraph''s GitHub repository: RiggVar-RG38');
   SL.Add('');
   SL.Add('Still wanted:');
-  SL.Add('  Better "hull data" and "frimm file". ');
+  SL.Add('  Better "hull data" and "trimm file". ');
 
 {$ifdef MSWINDOWS}
   SL.Add('');

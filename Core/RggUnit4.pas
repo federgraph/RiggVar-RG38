@@ -316,7 +316,7 @@ end;
 procedure TRigg.SaveToFederData(fd: TRggData);
 begin
   fd.A0X := Round(rP.A0.X);
-  fd.A0Y := Round(rP.A0.Y);
+  fd.A0Y := -Round(rP.A0.Y);
   fd.A0Z := Round(rP.A0.Z);
 
   fd.C0X := Round(rP.C0.X);
