@@ -1799,7 +1799,7 @@ begin
   for i := 0 to LB.Items.Count - 1 do
   begin
     cr := LB.ItemByIndex(i);
-    cr.Tag := cla;
+    cr.Tag := NativeInt(cla);
     cr.StyledSettings := cr.StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Size];
     cr.OnApplyStyleLookup := ListboxItemStyleLookup;
 
@@ -1817,7 +1817,7 @@ begin
   if Assigned(T) then
   begin
     T.Font.Size := 14;
-    T.TextSettings.FontColor := cr.Tag;
+    T.TextSettings.FontColor := Cardinal(cr.Tag);
   end;
 end;
 
