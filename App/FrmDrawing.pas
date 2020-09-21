@@ -128,6 +128,7 @@ type
     Raster: single;
     Bitmap: TBitmap;
     procedure RecordMax;
+    procedure AnchorReset(c: TControl);
     procedure AnchorH(c: TControl);
     procedure AnchorV(c: TControl);
     procedure AnchorHV(c: TControl);
@@ -664,23 +665,31 @@ begin
   ShowInfo;
 end;
 
+procedure TFormDrawing.AnchorReset(c: TControl);
+begin
+  c.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop];
+end;
+
 procedure TFormDrawing.AnchorV(c: TControl);
 begin
   c.Height := ClientHeight - c.Position.Y - Margin;
-  c.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akBottom];
+//  c.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akBottom];
+  c.Anchors := c.Anchors + [TAnchorKind.akBottom];
 end;
 
 procedure TFormDrawing.AnchorH(c: TControl);
 begin
   c.Width := ClientWidth - c.Position.X - Margin;
-  c.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akRight];
+//  c.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akRight];
+  c.Anchors := c.Anchors + [TAnchorKind.akRight];
 end;
 
 procedure TFormDrawing.AnchorHV(c: TControl);
 begin
   c.Width := ClientWidth - c.Position.X - Margin;
   c.Height := ClientHeight - c.Position.Y - Margin;
-  c.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akRight, TAnchorKind.akBottom];
+//  c.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akRight, TAnchorKind.akBottom];
+  c.Anchors := c.Anchors + [TAnchorKind.akRight, TAnchorKind.akBottom];
 end;
 
 procedure TFormDrawing.ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
@@ -863,6 +872,10 @@ begin
   ClientWidth := Round(FMaxRight + Margin);
   ClientHeight := Round(FMaxBottom + Margin);
 
+  AnchorReset(DrawingList);
+  AnchorReset(ElementList);
+  AnchorReset(Memo);
+
   AnchorV(DrawingList);
   AnchorV(ElementList);
   AnchorHV(Memo);
@@ -909,6 +922,10 @@ begin
 
   ClientWidth := Round(FMaxRight + Margin);
   ClientHeight := Round(FMaxBottom + Margin);
+
+  AnchorReset(DrawingList);
+  AnchorReset(ElementList);
+  AnchorReset(Memo);
 
   AnchorV(DrawingList);
   AnchorV(ElementList);
@@ -1117,7 +1134,10 @@ begin
   ML.Add(Format('Client = (%d, %d)', [ClientWidth, ClientHeight]));
   ML.Add(Format('Bitmap = (%d, %d)', [Bitmap.Width, Bitmap.Height]));
   ML.Add(Format('Image  = (%.1f, %.1f)', [Image.Width, Image.Height]));
-  ML.Add(Format('Scale  = %.2f', [FScale]));
+  ML.Add(Format('Memo.P = (%.1f, %.1f)', [Memo.Position.X, Memo.Position.Y]));
+  ML.Add(Format('Memo S = (%.1f, %.1f)', [Memo.Width, Memo.Height]));
+  ML.Add(Format('DL-WH  = (%.1f, %.1f)', [DrawingList.Width, DrawingList.Height]));
+  ML.Add(Format('FScale = %.2f', [FScale]));
   ML.Add('');
 end;
 
