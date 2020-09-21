@@ -37,8 +37,6 @@ type
     RotR: TPoint3D;
     RotB: Boolean;
 
-    DrawCounter: Integer;
-
     IsRightMouseBtn: Boolean;
 
     constructor Create;
@@ -88,8 +86,6 @@ end;
 
 procedure TTransformHelper.Draw;
 begin
-  Inc(DrawCounter);
-
   if CurrentDrawing.WantRotation then
   begin
     BuildMatrixM;

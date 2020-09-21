@@ -1075,8 +1075,10 @@ var
 begin
   if CurrentElement is TRggCircle then
   begin
+    Inc(DrawCounter);
     cr := CurrentElement as TRggCircle;
     ML.Clear;
+    ML.Add('DrawCounter = ' + IntToStr(DrawCounter));
     ML.Add(cr.Caption + '.OriginalCenter:');
     ShowPoint3D(cr.OriginalCenter.C, False);
     ML.Add(cr.Caption + '.Center:');
