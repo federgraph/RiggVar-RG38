@@ -5,6 +5,7 @@ interface
 {$define Rigg19}
 
 uses
+  RiggVar.FD.Image,
   System.SysUtils,
   System.Classes,
   System.Types,
@@ -163,7 +164,7 @@ type
     function SingleDraw: Boolean;
   public
     IsUp: Boolean;
-    Image: TImage; // injected
+    Image: TOriginalImage; // injected
 
     HullGraph: THullGraph0;
     RaumGraph: TRaumGraph;
@@ -809,6 +810,7 @@ begin
     DrawToImage(Image.Bitmap.Canvas);
     if Assigned(OnAfterDraw) then
       OnAfterDraw(Self);
+    Image.Repaint;
   end;
 end;
 

@@ -3,6 +3,7 @@
 interface
 
 uses
+  RiggVar.FD.Image,
   System.SysUtils,
   System.Classes,
   System.Types,
@@ -25,10 +26,9 @@ type
 
   TChartGraph = class(TChartModel)
   private
-    FImage: TImage; // injected, not owned
-    FBitmap: TBitmap; // owned, created in InitBitmap
+    FImage: TOriginalImage; // injected, not owned
     procedure InitBitmap;
-    procedure SetImage(const Value: TImage);
+    procedure SetImage(const Value: TOriginalImage);
   private
     Box: TRggBox;
     Raster: Integer;
@@ -44,7 +44,7 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure Draw; override;
-    property Image: TImage read FImage write SetImage;
+    property Image: TOriginalImage read FImage write SetImage;
   end;
 
 implementation
@@ -77,25 +77,17 @@ end;
 
 destructor TChartGraph.Destroy;
 begin
-  FBitmap.Free;
   Box.Free;
   inherited;
 end;
 
 procedure TChartGraph.InitBitmap;
 begin
-  if FBitmap <> nil then
-  begin
-    FBitmap.Free;
-  end;
-  FBitmap := TBitmap.Create(Width, Height);
-  Image.Bitmap := FBitmap;
-  Image.WrapMode := TImageWrapMode.Original;
   Image.Width := Width;
   Image.Height := Height;
 end;
 
-procedure TChartGraph.SetImage(const Value: TImage);
+procedure TChartGraph.SetImage(const Value: TOriginalImage);
 begin
   FImage := Value;
   InitBitmap;
@@ -103,7 +95,7 @@ end;
 
 procedure TChartGraph.Draw;
 begin
-  if (Image <> nil) and (FBitmap <> nil) then
+  if (Image <> nil) then
   begin
     DrawToCanvas(Image.Bitmap.Canvas);
   end;

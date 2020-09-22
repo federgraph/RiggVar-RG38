@@ -7,6 +7,7 @@
 interface
 
 uses
+  RiggVar.FD.Image,
   System.SysUtils,
   System.Classes,
   System.Types,
@@ -46,7 +47,7 @@ type
     MemoLabel: TLabel;
     Memo: TMemo;
 
-    Image: TImage;
+    Image: TOriginalImage;
 
     X1Label: TLabel;
     Y1Label: TLabel;
@@ -116,6 +117,8 @@ procedure TFormTrimmTab.FormCreate(Sender: TObject);
 begin
   Margin := 10;
 
+  FTrimmTabGraph := TTrimmTabGraph.Create;
+
   CreateComponents;
   InitComponentSize;
   InitComponentProps;
@@ -123,7 +126,6 @@ begin
   InitTabOrder;
 
   LayoutComponents;
-  FTrimmTabGraph := TTrimmTabGraph.Create;
   FTrimmTabGraph.Image := Image;
 end;
 
@@ -467,7 +469,7 @@ begin
   X2Label := TLabel.Create(Self);
   Y2Label := TLabel.Create(Self);
   Memo := TMemo.Create(Self);
-  Image := TImage.Create(Self);
+  Image := TOriginalImage.Create(Self, FTrimmTabGraph.Width, FTrimmTabGraph.Height);
   W1SpinBox := TSpinBox.Create(Self);
   K1SpinBox := TSpinBox.Create(Self);
   W2Edit := TEdit.Create(Self);
@@ -593,6 +595,7 @@ procedure TFormTrimmTab.DrawTrimmTab;
 begin
   FTrimmTabelle.UpdateGraphModel(FTrimmTabGraph.Model);
   FTrimmTabGraph.Draw;
+  Image.Repaint;
 end;
 
 procedure TFormTrimmTab.RecordMax;

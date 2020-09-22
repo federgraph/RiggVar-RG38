@@ -23,6 +23,7 @@ uses
   RiggVar.RG.Report,
   RiggVar.FB.SpeedBar,
   RiggVar.RG.Graph,
+  RiggVar.FD.Image,
   RggTypes,
   RggUnit4,
   System.SysUtils,
@@ -210,18 +211,17 @@ type
     property ViewPoint: TViewPoint read FViewPoint write SetViewPoint;
     property IsUp: Boolean read GetIsUp write SetIsUp;
   public
-    Bitmap: TBitmap;
-    Image: TImage;
+    Image: TOriginalImage;
     ImagePositionX: single;
     ImagePositionY: single;
     TextPositionX: single;
     TextPositionY: single;
   public
-    SalingImage: TImage;
+    SalingImage: TOriginalImage;
     SalingGraph: TSalingGraph;
-    ControllerImage: TImage;
+    ControllerImage: TOriginalImage;
     ControllerGraph: TSalingGraph;
-    ChartImage: TImage;
+    ChartImage: TOriginalImage;
     ChartGraph: TChartGraph;
     procedure InitSalingGraph;
     procedure InitControllerGraph;
@@ -455,7 +455,6 @@ begin
   Main := nil;
 
   Image.Free;
-  Bitmap.Free;
 
   SalingGraph.Free;
   ControllerGraph.Free;
@@ -703,8 +702,8 @@ begin
 
     Image.Position.X := 0;
     Image.Position.Y := 0;
-    Image.Width := Bitmap.Width;
-    Image.Height := Bitmap.Height;
+    Image.Width := 1024;
+    Image.Height := 800;
     Image.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop];
   end
   else
@@ -1325,12 +1324,8 @@ begin
   ReportListbox.Parent := Self;
   ReportListbox.Opacity := OpacityValue;
 
-  Bitmap := TBitmap.Create(1024, 768);
-
-  Image := TImage.Create(Self);
+  Image := TOriginalImage.Create(Self, 1024, 800);
   Image.Parent := Self;
-  Image.Bitmap := Bitmap;
-  Image.WrapMode := TImageWrapMode.Original;
 
   ComponentsCreated := True;
 end;
@@ -1489,7 +1484,7 @@ end;
 
 procedure TFormMain.InitSalingGraph;
 begin
-  SalingImage := TImage.Create(Self);
+  SalingImage := TOriginalImage.Create(Self, 453, 220);
   SalingImage.Parent := Self;
   SalingImage.HitTest := False;
   SalingImage.Visible := False;
@@ -1518,7 +1513,7 @@ end;
 
 procedure TFormMain.InitControllerGraph;
 begin
-  ControllerImage := TImage.Create(Self);
+  ControllerImage := TOriginalImage.Create(Self, 453, 220);
   ControllerImage.Parent := Self;
   ControllerImage.HitTest := False;
   ControllerImage.Visible := False;
@@ -1548,12 +1543,13 @@ begin
     ControllerGraph.EdgePos := Round(Rigg.GSB.Find(fpController).Min);
 
     ControllerGraph.Draw(TFigure.dtController);
+    ControllerImage.Repaint;
   end;
 end;
 
 procedure TFormMain.InitChartGraph;
 begin
-  ChartImage := TImage.Create(Self);
+  ChartImage := TOriginalImage.Create(Self, 650, 400);
   ChartImage.Parent := Self;
   ChartImage.HitTest := False;
   ChartImage.Visible := False;
@@ -1569,6 +1565,7 @@ begin
   if IsUp and ChartImage.Visible then
   begin
     ChartGraph.SuperCalc;
+    ChartImage.Repaint;
   end;
 end;
 

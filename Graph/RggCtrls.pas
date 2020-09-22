@@ -3,6 +3,7 @@
 interface
 
 uses
+  RiggVar.FD.Image,
   System.SysUtils,
   System.Classes,
   System.Types,
@@ -39,10 +40,9 @@ type
     FHeight: Integer;
     procedure ClearBackground(g: TCanvas);
   private
-    FImage: TImage; // injected, not owned
-    FBitmap: TBitmap; // owned, created in InitBitmap
+    FImage: TOriginalImage; // injected, not owned
     procedure InitBitmap;
-    procedure SetImage(const Value: TImage);
+    procedure SetImage(const Value: TOriginalImage);
   private
     SavedMatrix: TMatrix;
     NewMatrix: TMatrix;
@@ -81,11 +81,10 @@ type
     SalingHOffset: Integer; { Abstand Hinterkante Mast zur neutrale Faser in mm }
 
     constructor Create;
-    destructor Destroy; override;
 
     procedure Draw(f: TFigure);
 
-    property Image: TImage read FImage write SetImage;
+    property Image: TOriginalImage read FImage write SetImage;
   end;
 
 implementation
@@ -115,26 +114,13 @@ begin
   SalingL := 1000;
 end;
 
-destructor TSalingGraph.Destroy;
-begin
-  FBitmap.Free;
-  inherited;
-end;
-
 procedure TSalingGraph.InitBitmap;
 begin
-  if FBitmap <> nil then
-  begin
-    FBitmap.Free;
-  end;
-  FBitmap := TBitmap.Create(Width, Height);
-  Image.Bitmap := FBitmap;
-  Image.WrapMode := TImageWrapMode.Original;
   Image.Width := Width;
   Image.Height := Height;
 end;
 
-procedure TSalingGraph.SetImage(const Value: TImage);
+procedure TSalingGraph.SetImage(const Value: TOriginalImage);
 begin
   FImage := Value;
   InitBitmap;
@@ -714,7 +700,7 @@ end;
 
 procedure TSalingGraph.Draw(f: TFigure);
 begin
-  if (Image <> nil) and (FBitmap <> nil) then
+  if (Image <> nil) then
   begin
     Figure := f;
     DrawToCanvas(Image.Bitmap.Canvas);

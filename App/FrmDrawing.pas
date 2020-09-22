@@ -30,6 +30,7 @@ uses
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings,
   RiggVar.FD.Drawing00,
+  RiggVar.FD.Image,
   FMX.Types,
   FMX.Controls,
   FMX.Forms,
@@ -59,7 +60,7 @@ type
     Memo: TMemo;
     DrawingList: TListView;
     ElementList: TListView;
-    Image: TImage;
+    Image: TOriginalImage;
     InplaceShape: TCircle;
     procedure ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
     procedure ImageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
@@ -126,7 +127,6 @@ type
     FMaxBottom: single;
     Margin: single;
     Raster: single;
-    Bitmap: TBitmap;
     procedure RecordMax;
     procedure AnchorReset(c: TControl);
     procedure AnchorH(c: TControl);
@@ -323,15 +323,8 @@ begin
 
   CreateDrawings;
 
-  Bitmap := TBitmap.Create(Round(800 * FScale), Round(800 * FScale));
-
-  Bitmap.Clear(claWhite);
-
-  Image.Width := Bitmap.Width;
-  Image.Height := Bitmap.Height;
-
-  Image.Bitmap := Bitmap;
-  Image.WrapMode := TImageWrapMode.Original;
+  Image.Width := 800;
+  Image.Height := 800;
 
   GlobalShowCaptionBtn.StaysPressed := True;
   GlobalShowCaptionBtn.IsPressed := GlobalShowCaption;
@@ -344,7 +337,6 @@ begin
   TH.Free;
   ButtonGroup.Free;
   DL.Free;
-  Bitmap.Free;
   TempList.Free;
 end;
 
@@ -374,7 +366,7 @@ begin
   ElementList.ItemAppearanceObjects.FooterObjects.Text.Visible := False;
   ElementList.OnChange := ElementListChange;
 
-  Image := TImage.Create(Self);
+  Image := TOriginalImage.Create(Self, 800, 800);
   Image.Parent := Self;
   Image.OnMouseDown := ImageMouseDown;
   Image.OnMouseMove := ImageMouseMove;
@@ -673,14 +665,12 @@ end;
 procedure TFormDrawing.AnchorV(c: TControl);
 begin
   c.Height := ClientHeight - c.Position.Y - Margin;
-//  c.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akBottom];
   c.Anchors := c.Anchors + [TAnchorKind.akBottom];
 end;
 
 procedure TFormDrawing.AnchorH(c: TControl);
 begin
   c.Width := ClientWidth - c.Position.X - Margin;
-//  c.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akRight];
   c.Anchors := c.Anchors + [TAnchorKind.akRight];
 end;
 
@@ -688,7 +678,6 @@ procedure TFormDrawing.AnchorHV(c: TControl);
 begin
   c.Width := ClientWidth - c.Position.X - Margin;
   c.Height := ClientHeight - c.Position.Y - Margin;
-//  c.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akRight, TAnchorKind.akBottom];
   c.Anchors := c.Anchors + [TAnchorKind.akRight, TAnchorKind.akBottom];
 end;
 
@@ -1070,18 +1059,19 @@ procedure TFormDrawing.ClearImage;
 var
   g: TCanvas;
 begin
-  if (Image = nil) or (Bitmap = nil) then
+  if (Image = nil) then
     Exit;
   DrawCounter := 0;
   g := Image.Bitmap.Canvas;
   g.BeginScene;
   g.Clear(claAliceblue);
   g.EndScene;
+  Image.Repaint;
 end;
 
 procedure TFormDrawing.Draw;
 begin
-  if (Image = nil) or (Bitmap = nil) then
+  if (Image = nil) then
     Exit;
   TH.Draw;
 end;
@@ -1119,6 +1109,7 @@ begin
 
   UpdateInplacePosition;
   UpdateMemo;
+  Image.Repaint;
 end;
 
 procedure TFormDrawing.UpdateMemo;
@@ -1132,12 +1123,12 @@ begin
   ML.Add('Width and Height:');
   ML.Add(Format('Form   = (%d, %d)', [Width, Height]));
   ML.Add(Format('Client = (%d, %d)', [ClientWidth, ClientHeight]));
-  ML.Add(Format('Bitmap = (%d, %d)', [Bitmap.Width, Bitmap.Height]));
+  ML.Add(Format('Bitmap = (%d, %d)', [Image.Bitmap.Width, Image.Bitmap.Height]));
   ML.Add(Format('Image  = (%.1f, %.1f)', [Image.Width, Image.Height]));
-  ML.Add(Format('Memo.P = (%.1f, %.1f)', [Memo.Position.X, Memo.Position.Y]));
-  ML.Add(Format('Memo S = (%.1f, %.1f)', [Memo.Width, Memo.Height]));
-  ML.Add(Format('DL-WH  = (%.1f, %.1f)', [DrawingList.Width, DrawingList.Height]));
-  ML.Add(Format('FScale = %.2f', [FScale]));
+  ML.Add(Format('Memo   = (%.1f, %.1f)', [Memo.Width, Memo.Height]));
+  ML.Add(Format('DL     = (%.1f, %.1f)', [DrawingList.Width, DrawingList.Height]));
+  ML.Add(Format('Scale  = %.2f', [FScale]));
+  ML.Add(Format('ISS    = %.2f', [Image.ScreenScale]));
   ML.Add('');
 end;
 

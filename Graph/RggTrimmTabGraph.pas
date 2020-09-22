@@ -1,8 +1,9 @@
-unit RggTrimmTabGraph;
+﻿unit RggTrimmTabGraph;
 
 interface
 
 uses
+  RiggVar.FD.Image,
   System.SysUtils,
   System.Classes,
   System.Types,
@@ -24,10 +25,9 @@ type
     FHeight: Integer;
     procedure ClearBackground(g: TCanvas);
   private
-    FImage: TImage; // injected, not owned
-    FBitmap: TBitmap; // owned, created in InitBitmap
+    FImage: TOriginalImage; // injected, not owned
     procedure InitBitmap;
-    procedure SetImage(const Value: TImage);
+    procedure SetImage(const Value: TOriginalImage);
   protected
     SavedMatrix: TMatrix;
     NewMatrix: TMatrix;
@@ -54,7 +54,7 @@ type
     destructor Destroy; override;
     procedure DrawToCanvas(g: TCanvas);
     procedure Draw;
-    property Image: TImage read FImage write SetImage;
+    property Image: TOriginalImage read FImage write SetImage;
   end;
 
 implementation
@@ -80,7 +80,6 @@ destructor TTrimmTabGraph.Destroy;
 begin
   PD.Free;
   Model.Free;
-  FBitmap.Free;
   inherited;
 end;
 
@@ -248,18 +247,11 @@ end;
 
 procedure TTrimmTabGraph.InitBitmap;
 begin
-  if FBitmap <> nil then
-  begin
-    FBitmap.Free;
-  end;
-  FBitmap := TBitmap.Create(Width, Height);
-  Image.Bitmap := FBitmap;
-  Image.WrapMode := TImageWrapMode.Original;
   Image.Width := Width;
   Image.Height := Height;
 end;
 
-procedure TTrimmTabGraph.SetImage(const Value: TImage);
+procedure TTrimmTabGraph.SetImage(const Value: TOriginalImage);
 begin
   FImage := Value;
   InitBitmap;
@@ -331,7 +323,7 @@ end;
 
 procedure TTrimmTabGraph.Draw;
 begin
-  if (Image <> nil) and (FBitmap <> nil) then
+  if (Image <> nil) then
   begin
     DrawToCanvas(Image.Bitmap.Canvas);
   end;
