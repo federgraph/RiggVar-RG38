@@ -1,4 +1,4 @@
-unit RiggVar.FD.Image;
+﻿unit RiggVar.FD.Image;
 
 interface
 
@@ -28,22 +28,25 @@ type
   private
     FCurrentBitmap: TBitmap;
     FNominalSize: TSize;
-    FMultiResBitmap: TBitmapCollection;
+    BitmapCollection: TBitmapCollection;
     FScaleChangedId: Integer;
-    FScreenScale: Single;
+    FSS: Single;
     function GetBitmap: TBitmap;
     function ItemForCurrentScale: TBitmap;
     procedure ScaleChangedHandler(const Sender: TObject; const Msg: TMessage);
-    procedure UpdateCurrentBitmap;
   protected
     procedure Paint; override;
   public
+    IR: TRectF;
+    R1: TRectF;
+    R2: TRectF;
+    { Use reintroduce when you want to hide an inherited virtual method with a new one. }
     constructor Create(AOwner: TComponent; AWidth: Integer; AHeight: Integer); reintroduce;
     destructor Destroy; override;
     property Bitmap: TBitmap read GetBitmap;
   public
     property Scale;
-    property ScreenScale: single read FScreenScale;
+    property ScreenScale: single read FSS;
   end;
 
 implementation
@@ -57,7 +60,7 @@ constructor TOriginalImage.Create(AOwner: TComponent; AWidth: Integer; AHeight: 
 begin
   inherited Create(AOwner);
   FNominalSize := TSize.Create(AWidth, AHeight);
-  FMultiResBitmap := TBitmapCollection.Create(FNominalSize);
+  BitmapCollection := TBitmapCollection.Create(FNominalSize);
   SetAcceptsControls(False);
   FScaleChangedId := TMessageManager.DefaultManager.SubscribeToMessage(TScaleChangedMessage, ScaleChangedHandler);
 end;
@@ -65,23 +68,28 @@ end;
 destructor TOriginalImage.Destroy;
 begin
   TMessageManager.DefaultManager.Unsubscribe(TScaleChangedMessage, FScaleChangedId);
-  FMultiResBitmap.Free;
+  BitmapCollection.Free;
   inherited;
+end;
+
+procedure TOriginalImage.ScaleChangedHandler(const Sender: TObject; const Msg: TMessage);
+begin
+  Repaint;
 end;
 
 function TOriginalImage.ItemForCurrentScale: TBitmap;
 begin
   if Scene <> nil then
-    FScreenScale := Scene.GetSceneScale
+    FSS := Scene.GetSceneScale
   else
-    FScreenScale := 1.0;
+    FSS := 1.0;
 
-  if FScreenScale < 1 then
-    FScreenScale := 1.0;
+  if FSS < 1 then
+    FSS := 1.0;
 
-  result := FMultiResBitmap.ItemByScale(FScreenScale);
+  result := BitmapCollection.ItemByScale(FSS);
   if result = nil then
-    result := FMultiResBitmap.Add(FScreenScale);
+    result := BitmapCollection.Add(FSS);
 end;
 
 function TOriginalImage.GetBitmap: TBitmap;
@@ -89,26 +97,25 @@ begin
   result := ItemForCurrentScale;
 end;
 
-procedure TOriginalImage.UpdateCurrentBitmap;
-begin
-  FCurrentBitmap := GetBitmap;
-end;
-
 procedure TOriginalImage.Paint;
 var
-  IR: TRectF;
+  LR: TRectF;
 begin
-  UpdateCurrentBitmap;
+  FCurrentBitmap := GetBitmap;
   if FCurrentBitmap <> nil then
   begin
-    IntersectRect(IR, LocalRect, FCurrentBitmap.BoundsF);
-    Canvas.DrawBitmap(FCurrentBitmap, IR, IR, 1.0, True);
-  end;
-end;
+    R1 := LocalRect;
+//    R2 := FCurrentBitmap.BoundsF;
+    R2 := TRectF.Create(R1.Left, R1.Top, R1.Left + FCurrentBitmap.Width, R1.Top + FCurrentBitmap.Height);
 
-procedure TOriginalImage.ScaleChangedHandler(const Sender: TObject; const Msg: TMessage);
-begin
-  Repaint;
+    LR := TRectF.Create(R1.Left * FSS, R1.Top * FSS, R1.Right * FSS, R1.Bottom * FSS);
+    IntersectRect(IR, LR, R2);
+
+    R1 := TRectF.Create(0, 0, IR.Width, IR.Height);
+    R2 := TRectF.Create(R2.Left, R2.Top, R2.Left + IR.Width / FSS, R2.Top + IR.Height / FSS);
+
+    Canvas.DrawBitmap(FCurrentBitmap, R1, R2, 1.0, True);
+  end;
 end;
 
 { TBitmapCollection }

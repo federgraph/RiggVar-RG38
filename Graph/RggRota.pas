@@ -133,6 +133,8 @@ type
     procedure UpdateMatrixText;
     procedure DrawMatrix(g: TCanvas);
   private
+    FScale: single;
+    BitmapScalingMatrix: TMatrix;
     BitmapWidth: single;
     BitmapHeight: single;
     EraseBK: Boolean;
@@ -414,8 +416,12 @@ begin
   g.Offset := PointF(NullpunktOffset.X, NullpunktOffset.Y);
   { needs to be outside of BeginScene, EndScene, otherwise dancing Legend/Matrix }
 
+  FScale := Image.Scene.GetSceneScale;
+  BitmapScalingMatrix := TMatrix.CreateScaling(FScale, FScale);
+
   if g.BeginScene then
   try
+    g.SetMatrix(BitmapScalingMatrix);
     g.Stroke.Cap := TStrokeCap.Round;
     g.Stroke.Join := TStrokeJoin.Round;
     if WantOverlayedRiggs then

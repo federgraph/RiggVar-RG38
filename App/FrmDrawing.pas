@@ -127,6 +127,8 @@ type
     FMaxBottom: single;
     Margin: single;
     Raster: single;
+    BitmapWidth: Integer;
+    BitmapHeight: Integer;
     procedure RecordMax;
     procedure AnchorReset(c: TControl);
     procedure AnchorH(c: TControl);
@@ -273,6 +275,8 @@ begin
   Caption := 'Rgg test and documentation drawings';
 
   FScale := Handle.Scale;
+  BitmapWidth := 800;
+  BitmapHeight := 800;
 
   if (Screen.Width >= 1920) and (Screen.Height >= 1024) then
   begin
@@ -323,8 +327,8 @@ begin
 
   CreateDrawings;
 
-  Image.Width := 800;
-  Image.Height := 800;
+  Image.Width := BitmapWidth;
+  Image.Height := BitmapHeight;
 
   GlobalShowCaptionBtn.StaysPressed := True;
   GlobalShowCaptionBtn.IsPressed := GlobalShowCaption;
@@ -366,7 +370,7 @@ begin
   ElementList.ItemAppearanceObjects.FooterObjects.Text.Visible := False;
   ElementList.OnChange := ElementListChange;
 
-  Image := TOriginalImage.Create(Self, 800, 800);
+  Image := TOriginalImage.Create(Self, BitmapWidth, BitmapHeight);
   Image.Parent := Self;
   Image.OnMouseDown := ImageMouseDown;
   Image.OnMouseMove := ImageMouseMove;
@@ -665,20 +669,20 @@ end;
 procedure TFormDrawing.AnchorV(c: TControl);
 begin
   c.Height := ClientHeight - c.Position.Y - Margin;
-  c.Anchors := c.Anchors + [TAnchorKind.akBottom];
+  c.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akBottom];
 end;
 
 procedure TFormDrawing.AnchorH(c: TControl);
 begin
   c.Width := ClientWidth - c.Position.X - Margin;
-  c.Anchors := c.Anchors + [TAnchorKind.akRight];
+  c.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akRight];
 end;
 
 procedure TFormDrawing.AnchorHV(c: TControl);
 begin
   c.Width := ClientWidth - c.Position.X - Margin;
   c.Height := ClientHeight - c.Position.Y - Margin;
-  c.Anchors := c.Anchors + [TAnchorKind.akRight, TAnchorKind.akBottom];
+  c.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akRight, TAnchorKind.akBottom];
 end;
 
 procedure TFormDrawing.ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
@@ -821,6 +825,11 @@ end;
 
 procedure TFormDrawing.LayoutComponentsH;
 begin
+  AnchorReset(Image);
+  AnchorReset(DrawingList);
+  AnchorReset(ElementList);
+  AnchorReset(Memo);
+
   CodeBtn.Position.X := Margin;
   CodeBtn.Position.Y := Margin;
 
@@ -861,17 +870,19 @@ begin
   ClientWidth := Round(FMaxRight + Margin);
   ClientHeight := Round(FMaxBottom + Margin);
 
-  AnchorReset(DrawingList);
-  AnchorReset(ElementList);
-  AnchorReset(Memo);
-
   AnchorV(DrawingList);
   AnchorV(ElementList);
+  AnchorV(Image);
   AnchorHV(Memo);
 end;
 
 procedure TFormDrawing.LayoutComponentsV;
 begin
+  AnchorReset(Image);
+  AnchorReset(DrawingList);
+  AnchorReset(ElementList);
+  AnchorReset(Memo);
+
   CodeBtn.Position.X := Margin;
   CodeBtn.Position.Y := Margin;
 
@@ -912,13 +923,10 @@ begin
   ClientWidth := Round(FMaxRight + Margin);
   ClientHeight := Round(FMaxBottom + Margin);
 
-  AnchorReset(DrawingList);
-  AnchorReset(ElementList);
-  AnchorReset(Memo);
-
   AnchorV(DrawingList);
   AnchorV(ElementList);
   AnchorV(Memo);
+  AnchorHV(Image);
 end;
 
 procedure TFormDrawing.LinkComponents;
@@ -1096,6 +1104,7 @@ begin
   g.Offset := TH.Offset;
   if g.BeginScene then
   try
+    g.SetMatrix(TMatrix.CreateScaling(FScale, FScale));
     g.Clear(claWhite);
     g.Fill.Color := claYellow;
     g.Stroke.Color := claAqua;
@@ -1129,6 +1138,9 @@ begin
   ML.Add(Format('DL     = (%.1f, %.1f)', [DrawingList.Width, DrawingList.Height]));
   ML.Add(Format('Scale  = %.2f', [FScale]));
   ML.Add(Format('ISS    = %.2f', [Image.ScreenScale]));
+  ML.Add(Format('R1     = (%.1f, %.1f)', [Image.R1.Width, Image.R1.Height]));
+  ML.Add(Format('R2     = (%.1f, %.1f)', [Image.R2.Width, Image.R2.Height]));
+  ML.Add(Format('IR     = (%.1f, %.1f)', [Image.IR.Width, Image.IR.Height]));
   ML.Add('');
 end;
 

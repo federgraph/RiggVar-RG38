@@ -23,7 +23,6 @@ type
     { Fixed Width and Height }
     FWidth: Integer;
     FHeight: Integer;
-    procedure ClearBackground(g: TCanvas);
   private
     FImage: TOriginalImage; // injected, not owned
     procedure InitBitmap;
@@ -31,7 +30,6 @@ type
   protected
     SavedMatrix: TMatrix;
     NewMatrix: TMatrix;
-    TempMatrix: TMatrix;
     procedure BeginTransform(g: TCanvas);
     procedure EndTransform(g: TCanvas);
     procedure DrawGraph(g: TCanvas);
@@ -96,7 +94,11 @@ var
     ha: TTextAlign = TTextAlign.Leading;
     va: TTextAlign = TTextAlign.Leading);
   begin
-    R := RectF(PosX, PosY, PosX + w, PosY + h);
+    R := RectF(
+      PosX * FScale,
+      PosY * FScale,
+      (PosX + w) * FScale,
+      (PosY + h) * FScale);
     g.FillText(
       R,
       s,
@@ -115,7 +117,7 @@ begin
   g.Stroke.Color := claNull;
   g.Fill.Color := claBlack;
   g.Font.Family := 'Consolas';
-  g.Font.Size := 14;
+  g.Font.Size := 14 * FScale;
 
   { Texte }
   PosX := Margin;
@@ -174,7 +176,7 @@ begin
   { Radius }
   R.Left := 0;
   R.Top := 0;
-  R.Bottom := Round(4 * FScale);
+  R.Bottom := Round(4);
   R.Right := R.Bottom;
   RadiusX := R.Right - R.Left;
   RadiusY := R.Bottom - R.Top;
@@ -258,26 +260,10 @@ begin
 end;
 
 procedure TTrimmTabGraph.BeginTransform(g: TCanvas);
-var
-  ScaleX: single;
-  ScaleY: single;
-  OriginX: single;
-  OriginY: single;
 begin
-  OriginX := 0;
-  OriginY := FHeight;
-
-  ScaleX := 1.0;
-  ScaleY := -1.0;
-
   SavedMatrix := g.Matrix;
-  NewMatrix := TMatrix.Identity;
-
-  TempMatrix := TMatrix.CreateScaling(ScaleX, ScaleY);
-  NewMatrix := NewMatrix * TempMatrix;
-  TempMatrix := TMatrix.CreateTranslation(OriginX, OriginY);
-  NewMatrix := NewMatrix * TempMatrix;
-
+  NewMatrix := TMatrix.CreateScaling(FScale, -FScale);
+  NewMatrix := NewMatrix * TMatrix.CreateTranslation(0, FHeight * FScale);
   g.SetMatrix(NewMatrix);
 end;
 
@@ -286,31 +272,14 @@ begin
   g.SetMatrix(SavedMatrix);
 end;
 
-procedure TTrimmTabGraph.ClearBackground(g: TCanvas);
-var
-  R: TRectF;
-begin
-  g.Clear(claNull);
-  if Image = nil then
-  begin
-    g.Clear(BackgroundColor);
-  end
-  else
-  begin
-    R := RectF(0, 0, Width, Height);
-    g.Fill.Color := BackgroundColor;
-    g.FillRect(R, 0, 0, [], ImageOpacity);
-  end;
-end;
-
 procedure TTrimmTabGraph.DrawToCanvas(g: TCanvas);
 begin
   Inc(DrawCounter);
   if g.BeginScene then
   try
-    ClearBackground(g);
     BeginTransform(g);
     try
+      g.Clear(BackgroundColor);
       DrawGraph(g);
     finally
       EndTransform(g);

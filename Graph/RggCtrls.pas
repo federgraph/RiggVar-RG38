@@ -89,6 +89,9 @@ type
 
 implementation
 
+uses
+  RiggVar.App.Main;
+
 constructor TSalingGraph.Create;
 begin
   inherited;
@@ -618,9 +621,9 @@ begin
   SavedMatrix := g.Matrix;
   NewMatrix := TMatrix.Identity;
 
-  TempMatrix := TMatrix.CreateScaling(PaintboxZoom, PaintboxZoom);
+  TempMatrix := TMatrix.CreateScaling(PaintboxZoom * Main.Scale, PaintboxZoom * Main.Scale);
   NewMatrix := NewMatrix * TempMatrix;
-  TempMatrix := TMatrix.CreateTranslation(OriginX, OriginY);
+  TempMatrix := TMatrix.CreateTranslation(OriginX * Main.Scale, OriginY * Main.Scale);
   NewMatrix := NewMatrix * TempMatrix;
 
   g.SetMatrix(NewMatrix);
@@ -636,9 +639,9 @@ begin
   Inc(DrawCounter);
   if g.BeginScene then
   try
-    ClearBackground(g);
     BeginTransform(g);
     try
+      ClearBackground(g);
       case Figure of
         dtTest: DrawTestFigure(g);
         dtSalingDetail: DrawSalingDetail(g);

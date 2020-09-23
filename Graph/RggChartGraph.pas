@@ -9,6 +9,7 @@ uses
   System.Types,
   System.UITypes,
   System.UIConsts,
+  System.Math.Vectors,
   FMX.Types,
   FMX.Graphics,
   FMX.StdCtrls,
@@ -50,6 +51,7 @@ type
 implementation
 
 uses
+  RiggVar.App.Main,
   RggTypes;
 
 { TChartGraph }
@@ -105,6 +107,7 @@ procedure TChartGraph.DrawToCanvas(g: TCanvas);
 begin
   if g.BeginScene then
   try
+    g.SetMatrix(TMatrix.CreateScaling(Main.Scale, Main.Scale));
     g.Clear(claNull);
     DrawLegend(g);
     DrawChart(g);
