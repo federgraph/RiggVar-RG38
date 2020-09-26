@@ -65,8 +65,8 @@ type
     procedure ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
     procedure ImageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
     procedure ImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
-
     procedure ImageMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; var Handled: Boolean);
+    procedure ImageScreenScaleChanged(Sender: TObject);
 
     procedure InplaceShapeMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
     procedure InplaceShapeMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
@@ -80,6 +80,9 @@ type
     procedure GlobalShowCaptionBtnClick(Sender: TObject);
     procedure ToggleShowCaptionBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
+    procedure InitScreenPos;
+    procedure InitScreenPos1;
+    procedure InitScreenPos2;
   private
     MouseDown: Boolean;
     MousePos: TPointF;
@@ -88,6 +91,7 @@ type
   private
     FormShown: Boolean;
     ListboxWidth: single;
+    MemoWidth: single;
     DL: TRggDrawings;
     CurrentDrawing: TRggDrawing;
     CurrentElement: TRggElement;
@@ -96,6 +100,7 @@ type
     WantVerticalButtons: Boolean;
     WantThickLines: Boolean;
     procedure InitComponentSize;
+    procedure UpdateLayout(Horz: Boolean);
     procedure LayoutComponents;
     procedure LayoutComponentsH;
     procedure LayoutComponentsV;
@@ -119,6 +124,9 @@ type
     procedure DoShowRotation(Sender: TObject);
     procedure ShowPoint3D(P: TPoint3D; WantClear: Boolean = True);
   protected
+    FAdjustW: Integer;
+    FAdjustH: Integer;
+    FScreenPosID: Integer;
     FScale: single;
     cr: TControl;
     TempR: single;
@@ -136,6 +144,8 @@ type
     procedure AnchorHV(c: TControl);
     procedure StackH(c: TControl);
     procedure StackV(c: TControl);
+    procedure AdjustWH;
+    procedure ResetLayout;
   private
     RggDrawingD00: TRggDrawingD00;
     DrawCounter: Integer;
@@ -278,30 +288,7 @@ begin
   BitmapWidth := 800;
   BitmapHeight := 800;
 
-  if (Screen.Width >= 1920) and (Screen.Height >= 1024) then
-  begin
-    { Normal HD screen }
-    Left := 200;
-    Top := 50;
-    if FScale = 1.0 then
-    begin
-      Width := 1000;
-      Height := 960;
-    end
-    else
-    begin
-      Width := 1540;
-      Height := 860;
-    end;
-  end
-  else
-  begin
-    { On Microsoft Surface Tablet }
-    Left := 0;
-    Top := 0;
-    Width := 1000;
-    Height := 700;
-  end;
+  InitScreenPos;
 
   Margin := 10;
   Raster := 70;
@@ -376,6 +363,7 @@ begin
   Image.OnMouseMove := ImageMouseMove;
   Image.OnMouseUp := ImageMouseUp;
   Image.OnMouseWheel := ImageMouseWheel;
+  Image.OnScreenScaleChaned := ImageScreenScaleChanged;
 
   Memo := TMemo.Create(Self);
   Memo.Parent := Self;
@@ -513,6 +501,12 @@ begin
     vkF3: SwapThickLines;
     vkF1: ShowInfo;
   end;
+
+  if KeyChar = 'h' then
+    UpdateLayout(True);
+
+  if KeyChar = 'v' then
+    UpdateLayout(False);
 end;
 
 procedure TFormDrawing.ImageMouseWheel(Sender: TObject; Shift: TShiftState;
@@ -755,6 +749,7 @@ begin
   BtnF.Width := w;
 
   ListboxWidth := 200;
+  MemoWidth := 220;
 
   DrawingList.Width := ListboxWidth;
   DrawingList.Height := 300;
@@ -762,7 +757,7 @@ begin
   ElementList.Width := ListboxWidth;
   ElementList.Height := 100;
 
-  Memo.Width := 220;
+  Memo.Width := MemoWidth;
 end;
 
 procedure TFormDrawing.InplaceShapeMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
@@ -825,10 +820,7 @@ end;
 
 procedure TFormDrawing.LayoutComponentsH;
 begin
-  AnchorReset(Image);
-  AnchorReset(DrawingList);
-  AnchorReset(ElementList);
-  AnchorReset(Memo);
+  ResetLayout;
 
   CodeBtn.Position.X := Margin;
   CodeBtn.Position.Y := Margin;
@@ -867,8 +859,7 @@ begin
   StackH(Image);
   StackH(Memo);
 
-  ClientWidth := Round(FMaxRight + Margin);
-  ClientHeight := Round(FMaxBottom + Margin);
+  AdjustWH;
 
   AnchorV(DrawingList);
   AnchorV(ElementList);
@@ -878,10 +869,7 @@ end;
 
 procedure TFormDrawing.LayoutComponentsV;
 begin
-  AnchorReset(Image);
-  AnchorReset(DrawingList);
-  AnchorReset(ElementList);
-  AnchorReset(Memo);
+  ResetLayout;
 
   CodeBtn.Position.X := Margin;
   CodeBtn.Position.Y := Margin;
@@ -920,13 +908,50 @@ begin
   StackH(Memo);
   StackH(Image);
 
-  ClientWidth := Round(FMaxRight + Margin);
-  ClientHeight := Round(FMaxBottom + Margin);
+  AdjustWH;
 
   AnchorV(DrawingList);
   AnchorV(ElementList);
   AnchorV(Memo);
   AnchorHV(Image);
+end;
+
+procedure TFormDrawing.AdjustWH;
+var
+  w, h: Integer;
+begin
+  w := Round(FMaxRight + Margin);
+  h := Round(FMaxBottom + Margin);
+
+  if (Left + w) * FSCale > Screen.WorkAreaWidth then
+  begin
+    Width := Round((Screen.WorkAreaWidth - Left) / FScale);
+    FAdjustW := 1;
+  end
+  else
+  begin
+    ClientWidth := w;
+    FAdjustW := 2;
+    if (Left + w) * FSCale > Screen.WorkAreaWidth - (Width - ClientWidth) then
+    begin
+      Width := Round((Screen.WorkAreaWidth - Left) / FScale);
+    end
+  end;
+
+  if (Top + h) * FScale > Screen.WorkAreaHeight then
+  begin
+    Height := Round((Screen.WorkAreaHeight - Top) / FScale);
+    FAdjustH := 1;
+  end
+  else
+  begin
+    ClientHeight := h;
+    FAdjustH := 2;
+    if (Top + h) * FScale > Screen.WorkAreaHeight - (Height - ClientHeight) then
+    begin
+      Height := Round((Screen.WorkAreaHeight - Top) / FScale);
+    end;
+  end;
 end;
 
 procedure TFormDrawing.LinkComponents;
@@ -1087,6 +1112,7 @@ end;
 procedure TFormDrawing.DrawToCanvas(g: TCanvas);
 var
   cr: TRggCircle;
+  ss: single;
 begin
   if CurrentElement is TRggCircle then
   begin
@@ -1101,10 +1127,11 @@ begin
   end;
 
   { FMX }
+  ss := Image.Scene.GetSceneScale;
   g.Offset := TH.Offset;
   if g.BeginScene then
   try
-    g.SetMatrix(TMatrix.CreateScaling(FScale, FScale));
+    g.SetMatrix(TMatrix.CreateScaling(ss, ss));
     g.Clear(claWhite);
     g.Fill.Color := claYellow;
     g.Stroke.Color := claAqua;
@@ -1129,15 +1156,19 @@ end;
 
 procedure TFormDrawing.ShowInfo;
 begin
-  ML.Add('Width and Height:');
-  ML.Add(Format('Form   = (%d, %d)', [Width, Height]));
+  ML.Add('W and H:');
+  ML.Add(Format('PosID  = %d, %d, %d', [FScreenPosID, FAdjustW, FAdjustH]));
+  ML.Add(Format('Screen = (%d, %d)', [Screen.Width, Screen.Height]));
+  ML.Add(Format('WA     = (%d, %d)', [Screen.WorkAreaWidth, Screen.WorkAreaHeight]));
+  ML.Add(Format('FormLT = (%d, %d)', [Left, Top]));
+  ML.Add(Format('FormWH = (%d, %d)', [Width, Height]));
   ML.Add(Format('Client = (%d, %d)', [ClientWidth, ClientHeight]));
   ML.Add(Format('Bitmap = (%d, %d)', [Image.Bitmap.Width, Image.Bitmap.Height]));
   ML.Add(Format('Image  = (%.1f, %.1f)', [Image.Width, Image.Height]));
   ML.Add(Format('Memo   = (%.1f, %.1f)', [Memo.Width, Memo.Height]));
   ML.Add(Format('DL     = (%.1f, %.1f)', [DrawingList.Width, DrawingList.Height]));
   ML.Add(Format('Scale  = %.2f', [FScale]));
-  ML.Add(Format('ISS    = %.2f', [Image.ScreenScale]));
+  ML.Add(Format('ImgSS  = %.2f', [Image.ScreenScale]));
   ML.Add(Format('R1     = (%.1f, %.1f)', [Image.R1.Width, Image.R1.Height]));
   ML.Add(Format('R2     = (%.1f, %.1f)', [Image.R2.Width, Image.R2.Height]));
   ML.Add(Format('IR     = (%.1f, %.1f)', [Image.IR.Width, Image.IR.Height]));
@@ -1189,19 +1220,31 @@ begin
   SelectDrawing(0);
 end;
 
-procedure TFormDrawing.SwapLayout;
+procedure TFormDrawing.ResetLayout;
 begin
-  DrawingList.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop];
-  ElementList.Anchors  := [TAnchorKind.akLeft, TAnchorKind.akTop];
-  Memo.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop];
+  AnchorReset(Image);
+  AnchorReset(DrawingList);
+  AnchorReset(ElementList);
+  AnchorReset(Memo);
 
+  DrawingList.Width := ListboxWidth;
   DrawingList.Height := 200;
+
+  ElementList.Height := ListboxWidth;
   ElementList.Height := 200;
+
+  Image.Width := BitmapWidth;
+  Image.Height := BitmapHeight;
+
+  Memo.Width := MemoWidth;
   Memo.Height := 200;
 
   FMaxRight := 0;
   FMaxBottom := 0;
+end;
 
+procedure TFormDrawing.SwapLayout;
+begin
   WantVerticalButtons := not WantVerticalButtons;
   if WantVerticalButtons then
     LayoutComponentsV
@@ -1252,6 +1295,75 @@ begin
     cr := CurrentElement as TRggCircle;
     CurrentDrawing.FixPoint := cr.Center.C;
   end;
+end;
+
+procedure TFormDrawing.InitScreenPos;
+begin
+  if FScale = 1.0 then
+    InitScreenPos1
+  else
+    InitScreenPos2;
+end;
+
+procedure TFormDrawing.InitScreenPos1;
+begin
+  if (Screen.Width >= 1920) and (Screen.Height >= 1024) then
+  begin
+    { Normal HD screen with FScale = 1.0 }
+    Left := 200;
+    Top := 50;
+    Width := 1000;
+    Height := 960;
+    FScreenPosID := 1;
+  end
+  else
+  begin
+    { smaller screen at }
+    Left := 20;
+    Top := 20;
+    Width := 1000;
+    Height := 700;
+    FScreenPosID := 2;
+  end;
+end;
+
+procedure TFormDrawing.InitScreenPos2;
+begin
+  if (Screen.Width >= FScale * 1920) and (Screen.Height >= FScale * 1024) then
+  begin
+    Left := 200;
+    Top := 50;
+    Width := 1540;
+    Height := 860;
+    FScreenPosID := 3;
+  end
+  else
+  begin
+    { Microsoft Surface Tablet with FScale = 2.0 }
+    Left := 0;
+    Top := 0;
+    Width := 1350; { maximal 2736 div 2 = 1368 }
+    Height := 750; { maximal 1744 div 2 = 872 based on Screen.WorkAreaHeight }
+    FScreenPosID := 4;
+  end;
+end;
+
+procedure TFormDrawing.UpdateLayout(Horz: Boolean);
+begin
+  if Horz then
+    LayoutComponentsH
+  else
+    LayoutComponentsV;
+
+  UpdateInplacePosition;
+
+  ML.Clear;
+  ShowInfo;
+end;
+
+procedure TFormDrawing.ImageScreenScaleChanged(Sender: TObject);
+begin
+  Draw;
 end;
 
 end.

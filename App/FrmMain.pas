@@ -69,6 +69,9 @@ type
     procedure GotoNormal;
     procedure GotoPortrait;
     procedure GotoSquare;
+    procedure InitScreenPos;
+    procedure InitScreenPos1;
+    procedure InitScreenPos2;
   private
     FScale: single;
     FWantResizeNormalizing: Boolean;
@@ -292,24 +295,7 @@ begin
   Application.OnException := ApplicationEventsException;
 
   FormMain := self;
-  if (Screen.Width >= 1920) and (Screen.Height >= 1024) then
-  begin
-    { Tested on normal HD screen }
-    Left := 100;
-    Top := 30;
-    Width := 1700;
-    Height := 960;
-    ReportMemoWidth := 480;
-  end
-  else
-  begin
-    { Tested on Microsoft Surface Tablet }
-    Left := 20;
-    Top := 30;
-    Width := 1336;
-    Height := 800;
-    ReportMemoWidth := 320;
-  end;
+  InitScreenPos;
 
   Margin := 2;
   Raster := MainVar.Raster;
@@ -1915,6 +1901,56 @@ begin
     AForm.Width := Screen.Width - AForm.Left - 20;
   if AForm.Top + AForm.Height > Screen.Height then
     AForm.Height := Screen.Width - AForm.Top - 20;
+end;
+
+procedure TFormMain.InitScreenPos;
+begin
+  if FScale = 1.0 then
+    InitScreenPos1
+  else
+    InitScreenPos2;
+end;
+
+procedure TFormMain.InitScreenPos1;
+begin
+  if (Screen.Width >= 1920) and (Screen.Height >= 1024) then
+  begin
+    { normal HD screen }
+    Left := 100;
+    Top := 30;
+    Width := 1700;
+    Height := 960;
+    ReportMemoWidth := 480;
+  end
+  else
+  begin
+    Left := 20;
+    Top := 30;
+    Width := 1336;
+    Height := 800;
+    ReportMemoWidth := 320;
+  end;
+end;
+
+procedure TFormMain.InitScreenPos2;
+begin
+  if (Screen.Width >= FScale * 1920) and (Screen.Height >= FScale * 1024) then
+  begin
+    Left := 100;
+    Top := 30;
+    Width := 1700;
+    Height := 960;
+    ReportMemoWidth := 480;
+  end
+  else
+  begin
+    { Tested on Microsoft Surface Tablet with FScale = 2.0 }
+    Left := 20;
+    Top := 30;
+    Width := 1336;
+    Height := 800;
+    ReportMemoWidth := 320;
+  end;
 end;
 
 procedure TFormMain.MemoBtnClick(Sender: TObject);

@@ -5,7 +5,6 @@ interface
 uses
   System.Types,
   System.Classes,
-  System.Messaging,
   System.Generics.Collections,
   FMX.Controls,
   FMX.Graphics;
@@ -29,11 +28,13 @@ type
     FCurrentBitmap: TBitmap;
     FNominalSize: TSize;
     BitmapCollection: TBitmapCollection;
-    FScaleChangedId: Integer;
     FSS: Single;
+    FOnScreenScaleChaned: TNotifyEvent;
+    ScreenScaleHasChanged: Boolean;
     function GetBitmap: TBitmap;
     function ItemForCurrentScale: TBitmap;
-    procedure ScaleChangedHandler(const Sender: TObject; const Msg: TMessage);
+    procedure SetOnScreenScaleChaned(const Value: TNotifyEvent);
+    procedure NotifyScreenScaleChanged;
   protected
     procedure Paint; override;
   public
@@ -47,12 +48,10 @@ type
   public
     property Scale;
     property ScreenScale: single read FSS;
+    property OnScreenScaleChaned: TNotifyEvent read FOnScreenScaleChaned write SetOnScreenScaleChaned;
   end;
 
 implementation
-
-uses
-  FMX.Forms;
 
 { TOriginalImage }
 
@@ -62,30 +61,30 @@ begin
   FNominalSize := TSize.Create(AWidth, AHeight);
   BitmapCollection := TBitmapCollection.Create(FNominalSize);
   SetAcceptsControls(False);
-  FScaleChangedId := TMessageManager.DefaultManager.SubscribeToMessage(TScaleChangedMessage, ScaleChangedHandler);
 end;
 
 destructor TOriginalImage.Destroy;
 begin
-  TMessageManager.DefaultManager.Unsubscribe(TScaleChangedMessage, FScaleChangedId);
   BitmapCollection.Free;
   inherited;
 end;
 
-procedure TOriginalImage.ScaleChangedHandler(const Sender: TObject; const Msg: TMessage);
-begin
-  Repaint;
-end;
-
 function TOriginalImage.ItemForCurrentScale: TBitmap;
+var
+  t: single;
 begin
   if Scene <> nil then
-    FSS := Scene.GetSceneScale
+    t := Scene.GetSceneScale
   else
-    FSS := 1.0;
+    t := 1.0;
+  if t < 1 then
+    t := 1.0;
 
-  if FSS < 1 then
-    FSS := 1.0;
+  if t <> FSS then
+  begin
+    FSS := t;
+    ScreenScaleHasChanged := True
+  end;
 
   result := BitmapCollection.ItemByScale(FSS);
   if result = nil then
@@ -116,6 +115,23 @@ begin
 
     Canvas.DrawBitmap(FCurrentBitmap, R1, R2, 1.0, True);
   end;
+
+  if ScreenScaleHasChanged then
+  begin
+    ScreenScaleHasChanged := False;
+    NotifyScreenScaleChanged;
+  end;
+end;
+
+procedure TOriginalImage.NotifyScreenScaleChanged;
+begin
+  if Assigned(FOnScreenScaleChaned) then
+    FOnScreenScaleChaned(Self);
+end;
+
+procedure TOriginalImage.SetOnScreenScaleChaned(const Value: TNotifyEvent);
+begin
+  FOnScreenScaleChaned := Value;
 end;
 
 { TBitmapCollection }
