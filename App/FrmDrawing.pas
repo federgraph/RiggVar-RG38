@@ -363,7 +363,7 @@ begin
   Image.OnMouseMove := ImageMouseMove;
   Image.OnMouseUp := ImageMouseUp;
   Image.OnMouseWheel := ImageMouseWheel;
-  Image.OnScreenScaleChaned := ImageScreenScaleChanged;
+  Image.OnScreenScaleChanged := ImageScreenScaleChanged;
 
   Memo := TMemo.Create(Self);
   Memo.Parent := Self;

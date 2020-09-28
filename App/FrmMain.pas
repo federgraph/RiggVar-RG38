@@ -214,6 +214,8 @@ type
     property ViewPoint: TViewPoint read FViewPoint write SetViewPoint;
     property IsUp: Boolean read GetIsUp write SetIsUp;
   public
+    BitmapWidth: Integer;
+    BitmapHeight: Integer;
     Image: TOriginalImage;
     ImagePositionX: single;
     ImagePositionY: single;
@@ -304,6 +306,9 @@ begin
 
   SpeedPanelHeight := Raster;
   ListboxWidth := 200;
+
+  BitmapWidth := 1024;
+  BitmapHeight := 800;
 
   CreateComponents;
 
@@ -688,8 +693,8 @@ begin
 
     Image.Position.X := 0;
     Image.Position.Y := 0;
-    Image.Width := 1024;
-    Image.Height := 800;
+    Image.Width := BitmapWidth;
+    Image.Height := BitmapHeight;
     Image.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop];
   end
   else
@@ -1310,7 +1315,7 @@ begin
   ReportListbox.Parent := Self;
   ReportListbox.Opacity := OpacityValue;
 
-  Image := TOriginalImage.Create(Self, 1024, 800);
+  Image := TOriginalImage.Create(Self, BitmapWidth, BitmapHeight);
   Image.Parent := Self;
 
   ComponentsCreated := True;

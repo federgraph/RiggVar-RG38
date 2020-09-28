@@ -29,11 +29,11 @@ type
     FNominalSize: TSize;
     BitmapCollection: TBitmapCollection;
     FSS: Single;
-    FOnScreenScaleChaned: TNotifyEvent;
+    FOnScreenScaleChanged: TNotifyEvent;
     ScreenScaleHasChanged: Boolean;
     function GetBitmap: TBitmap;
     function ItemForCurrentScale: TBitmap;
-    procedure SetOnScreenScaleChaned(const Value: TNotifyEvent);
+    procedure SetOnScreenScaleChanged(const Value: TNotifyEvent);
     procedure NotifyScreenScaleChanged;
   protected
     procedure Paint; override;
@@ -48,7 +48,7 @@ type
   public
     property Scale;
     property ScreenScale: single read FSS;
-    property OnScreenScaleChaned: TNotifyEvent read FOnScreenScaleChaned write SetOnScreenScaleChaned;
+    property OnScreenScaleChanged: TNotifyEvent read FOnScreenScaleChanged write SetOnScreenScaleChanged;
   end;
 
 implementation
@@ -125,13 +125,13 @@ end;
 
 procedure TOriginalImage.NotifyScreenScaleChanged;
 begin
-  if Assigned(FOnScreenScaleChaned) then
-    FOnScreenScaleChaned(Self);
+  if Assigned(FOnScreenScaleChanged) then
+    FOnScreenScaleChanged(Self);
 end;
 
-procedure TOriginalImage.SetOnScreenScaleChaned(const Value: TNotifyEvent);
+procedure TOriginalImage.SetOnScreenScaleChanged(const Value: TNotifyEvent);
 begin
-  FOnScreenScaleChaned := Value;
+  FOnScreenScaleChanged := Value;
 end;
 
 { TBitmapCollection }
