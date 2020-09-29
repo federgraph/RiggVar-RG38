@@ -91,6 +91,7 @@ type
     FTrimmTabelle: TTrimmTab;
     FTabellenTyp: TTabellenTyp;
     FTabChanging: Boolean;
+   procedure ImageScreenScaleChanged(Sender: TObject);
     procedure DrawTrimmTab;
     procedure CheckTabelle;
     procedure CreateComponents;
@@ -451,6 +452,7 @@ begin
   EvalOptionBtn.OnClick := EvalOptionBtnClick;
 
   Image.OnMouseDown := ImageMouseDown;
+  Image.OnScreenScaleChanged := ImageScreenScaleChanged;
 
   W1SpinBox.OnChange := Kraft1EditChange;
   K1SpinBox.OnChange := Kraft1EditChange;
@@ -589,6 +591,11 @@ begin
   CancelBtn.Text := 'Abbrechen';
   CancelBtn.Default := True;
   CancelBtn.ModalResult := 2;
+end;
+
+procedure TFormTrimmTab.ImageScreenScaleChanged(Sender: TObject);
+begin
+  DrawTrimmTab;
 end;
 
 procedure TFormTrimmTab.DrawTrimmTab;

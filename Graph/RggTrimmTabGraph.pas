@@ -1,4 +1,4 @@
-﻿unit RggTrimmTabGraph;
+unit RggTrimmTabGraph;
 
 interface
 
@@ -260,10 +260,13 @@ begin
 end;
 
 procedure TTrimmTabGraph.BeginTransform(g: TCanvas);
+var
+  ss: single;
 begin
+  ss := Image.Scene.GetSceneScale;
   SavedMatrix := g.Matrix;
-  NewMatrix := TMatrix.CreateScaling(FScale, -FScale);
-  NewMatrix := NewMatrix * TMatrix.CreateTranslation(0, FHeight * FScale);
+  NewMatrix := TMatrix.CreateScaling(ss, -ss);
+  NewMatrix := NewMatrix * TMatrix.CreateTranslation(0, FHeight * ss);
   g.SetMatrix(NewMatrix);
 end;
 

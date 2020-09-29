@@ -280,9 +280,9 @@ begin
       InitAC(cl, 3, faViewpointA, cla);
       InitAC(cl, 4, faViewpointT, cla);
       InitAC(cl, 5, faActionPageP, claYellow);
-      InitAC(cl, 6, faNoop, cla);
-      InitAC(cl, 7, faNoop, cla);
-      InitAC(cl, 8, faNoop, cla); //faPan
+      InitAC(cl, 6, faToggleChartGraph, claCornflowerblue);
+      InitAC(cl, 7, faToggleControllerGraph, claCornflowerblue);
+      InitAC(cl, 8, faToggleSalingGraph, claCornflowerblue);
 
       cl := BottomLeft;
       cla := claParam;
@@ -296,13 +296,13 @@ begin
       InitAC(cl, 8, faMastfallF0C, cla);
 
       cl := BottomRight;
-      cla := claWhite;
-      InitAC(cl, 1, faSalingTypFest, claOption);
-      InitAC(cl, 2, faSalingTypDrehbar, claOption);
-      InitAC(cl, 3, faSalingTypOhne, claOption);
-      InitAC(cl, 4, faSalingTypOhneStarr, claOption);
-      InitAC(cl, 5, faNoop, cla);
-      InitAC(cl, 6, faNoop, cla);
+      cla := claOption;
+      InitAC(cl, 1, faSalingTypFest, cla);
+      InitAC(cl, 2, faSalingTypDrehbar, cla);
+      InitAC(cl, 3, faSalingTypOhne, cla);
+      InitAC(cl, 4, faSalingTypOhneStarr, cla);
+      InitAC(cl, 5, faRggZoomOut, claBeige);
+      InitAC(cl, 6, faRggZoomIn, claBeige);
     end;
 
     4:
@@ -350,46 +350,6 @@ begin
 
     5:
     begin
-      cla := claWhite;
-      cl := TopLeft;
-      //InitAC(cl, 1, faActionPageM, claYellow);
-      InitAC(cl, 2, faMemeGotoLandscape, claPlum);
-      InitAC(cl, 3, faMemeGotoSquare, claPlum);
-      InitAC(cl, 4, faMemeGotoPortrait, claPlum);
-      InitAC(cl, 5, faNoop, claPlum);
-      InitAC(cl, 6, faNoop, cla);
-
-      cl := TopRight;
-      InitAC(cl, 1, faMemeFormat0, cla);
-      InitAC(cl, 2, faMemeFormat1, claWhite);
-      InitAC(cl, 3, faMemeFormat2, cla);
-      InitAC(cl, 4, faMemeFormat3, cla);
-      //InitAC(cl, 5, faActionPageP, claYellow);
-      InitAC(cl, 6, faMemeFormat4, cla);
-      InitAC(cl, 7, faMemeFormat5, cla);
-      InitAC(cl, 8, faNoop, cla);
-
-      cl := BottomLeft;
-      InitAC(cl, 1, faMemeFormat6, cla);
-      InitAC(cl, 2, faMemeFormat7, cla);
-      InitAC(cl, 3, faMemeFormat8, cla);
-      InitAC(cl, 4, faNoop, cla);
-      InitAC(cl, 5, faNoop, cla);
-      InitAC(cl, 6, faMemeFormat9, cla);
-      InitAC(cl, 7, faNoop, cla);
-      InitAC(cl, 8, faNoop, cla);
-
-      cl := BottomRight;
-      InitAC(cl, 1, faCycleColorSchemeM, cla);
-      InitAC(cl, 2, faCycleColorSchemeP, cla);
-      InitAC(cl, 3, faNoop, cla);
-      InitAC(cl, 4, faNoop, cla);
-      InitAC(cl, 5, faNoop, cla);
-      InitAC(cl, 6, faNoop, cla);
-    end;
-
-    6:
-    begin
       cla := claGoldenrod;
       cl := TopLeft;
       //InitAC(cl, 1, faActionPageM, claYellow);
@@ -427,6 +387,46 @@ begin
       InitAC(cl, 4, faReportDebugReport, claGoldenrod);
       InitAC(cl, 5, faReportReadme, claGoldenrod);
       InitAC(cl, 6, faReportNone, claGoldenrod);
+    end;
+
+    6:
+    begin
+      cla := claWhite;
+      cl := TopLeft;
+      //InitAC(cl, 1, faActionPageM, claYellow);
+      InitAC(cl, 2, faMemeGotoLandscape, claPlum);
+      InitAC(cl, 3, faMemeGotoSquare, claPlum);
+      InitAC(cl, 4, faMemeGotoPortrait, claPlum);
+      InitAC(cl, 5, faNoop, claPlum);
+      InitAC(cl, 6, faNoop, cla);
+
+      cl := TopRight;
+      InitAC(cl, 1, faMemeFormat0, cla);
+      InitAC(cl, 2, faMemeFormat1, claWhite);
+      InitAC(cl, 3, faMemeFormat2, cla);
+      InitAC(cl, 4, faMemeFormat3, cla);
+      //InitAC(cl, 5, faActionPageP, claYellow);
+      InitAC(cl, 6, faMemeFormat4, cla);
+      InitAC(cl, 7, faMemeFormat5, cla);
+      InitAC(cl, 8, faNoop, cla);
+
+      cl := BottomLeft;
+      InitAC(cl, 1, faMemeFormat6, cla);
+      InitAC(cl, 2, faMemeFormat7, cla);
+      InitAC(cl, 3, faMemeFormat8, cla);
+      InitAC(cl, 4, faNoop, cla);
+      InitAC(cl, 5, faNoop, cla);
+      InitAC(cl, 6, faMemeFormat9, cla);
+      InitAC(cl, 7, faNoop, cla);
+      InitAC(cl, 8, faNoop, cla);
+
+      cl := BottomRight;
+      InitAC(cl, 1, faCycleColorSchemeM, cla);
+      InitAC(cl, 2, faCycleColorSchemeP, cla);
+      InitAC(cl, 3, faNoop, cla);
+      InitAC(cl, 4, faNoop, cla);
+      InitAC(cl, 5, faNoop, cla);
+      InitAC(cl, 6, faNoop, cla);
     end;
 
     7:

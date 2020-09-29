@@ -177,6 +177,7 @@ type
     destructor Destroy; override;
     procedure Init;
     procedure Draw;
+    procedure ImageScreenScaleChanged(Sender: TObject);
 
     procedure RotateZ(Delta: single);
     procedure Zoom(Delta: single);
@@ -255,6 +256,7 @@ begin
   Image.OnMouseDown := PaintBox3DMouseDown;
   Image.OnMouseMove := PaintBox3DMouseMove;
   Image.OnMouseUp := PaintBox3DMouseUp;
+  Image.OnScreenScaleChanged := ImageScreenScaleChanged;
 
   InitGraph;
   InitRaumGraph;
@@ -807,6 +809,11 @@ begin
   FXpos := SavedXpos - (MouseDownX - x);
   FYpos := SavedYpos - (MouseDownY - y);
   DoTrans;
+end;
+
+procedure TRotaForm.ImageScreenScaleChanged(Sender: TObject);
+begin
+  Draw;
 end;
 
 procedure TRotaForm.Draw;

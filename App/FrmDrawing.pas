@@ -918,38 +918,45 @@ end;
 
 procedure TFormDrawing.AdjustWH;
 var
+  ss: single;
   w, h: Integer;
+  d: TDisplay;
+  wa: TRect;
 begin
+  ss := Handle.Scale;
   w := Round(FMaxRight + Margin);
   h := Round(FMaxBottom + Margin);
 
-  if (Left + w) * FSCale > Screen.WorkAreaWidth then
+  d := Screen.DisplayFromForm(self);
+  wa := d.WorkArea;
+
+  if (Left + w) * ss > wa.Right then
   begin
-    Width := Round((Screen.WorkAreaWidth - Left) / FScale);
+    Width := Round((wa.Right - Left) / ss);
     FAdjustW := 1;
   end
   else
   begin
     ClientWidth := w;
     FAdjustW := 2;
-    if (Left + w) * FSCale > Screen.WorkAreaWidth - (Width - ClientWidth) then
+    if (Left + w) * ss > wa.Right - (Width - ClientWidth) then
     begin
-      Width := Round((Screen.WorkAreaWidth - Left) / FScale);
+      Width := Round((wa.Right - Left) / ss);
     end
   end;
 
-  if (Top + h) * FScale > Screen.WorkAreaHeight then
+  if (Top + h) * ss > wa.Bottom then
   begin
-    Height := Round((Screen.WorkAreaHeight - Top) / FScale);
+    Height := Round((wa.Bottom - Top) / ss);
     FAdjustH := 1;
   end
   else
   begin
     ClientHeight := h;
     FAdjustH := 2;
-    if (Top + h) * FScale > Screen.WorkAreaHeight - (Height - ClientHeight) then
+    if (Top + h) * ss > wa.Bottom - (Height - ClientHeight) then
     begin
-      Height := Round((Screen.WorkAreaHeight - Top) / FScale);
+      Height := Round((wa.Bottom - Top) / ss);
     end;
   end;
 end;
@@ -997,7 +1004,7 @@ begin
     begin
       InitElements;
       CurrentDrawing.Compute;
-    Draw;
+      Draw;
       ElementList.ItemIndex := CurrentDrawing.DefaultElementIndex;
       SelectElement(CurrentDrawing.DefaultElementIndex);
     end
@@ -1167,7 +1174,7 @@ begin
   ML.Add(Format('Image  = (%.1f, %.1f)', [Image.Width, Image.Height]));
   ML.Add(Format('Memo   = (%.1f, %.1f)', [Memo.Width, Memo.Height]));
   ML.Add(Format('DL     = (%.1f, %.1f)', [DrawingList.Width, DrawingList.Height]));
-  ML.Add(Format('Scale  = %.2f', [FScale]));
+  ML.Add(Format('Scale  = %.2f', [Handle.Scale]));
   ML.Add(Format('ImgSS  = %.2f', [Image.ScreenScale]));
   ML.Add(Format('R1     = (%.1f, %.1f)', [Image.R1.Width, Image.R1.Height]));
   ML.Add(Format('R2     = (%.1f, %.1f)', [Image.R2.Width, Image.R2.Height]));

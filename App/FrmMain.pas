@@ -643,8 +643,9 @@ begin
   //   Exit;
 
   { will be done via Resize and UpdateTouch }
-  //MainVar.ClientWidth := ClientWidth;
-  //MainVar.ClientHeight := ClientHeight;
+//  MainVar.ClientWidth := ClientWidth;
+//  MainVar.ClientHeight := ClientHeight;
+  { 10.3.3. ClientHeight not (yet) correct when moving form between monitors }
 
   if (Main <> nil) and Main.IsUp then
   begin

@@ -89,9 +89,6 @@ type
 
 implementation
 
-uses
-  RiggVar.App.Main;
-
 constructor TSalingGraph.Create;
 begin
   inherited;
@@ -542,6 +539,7 @@ var
   OriginX: single;
   OriginY: single;
   Zoom: single;
+  ss: single;
 begin
   w := Width;
   h := Height;
@@ -616,14 +614,15 @@ begin
     end;
   end;
 
+  ss := Image.Scene.GetSceneScale;
   PaintboxZoom := w / NewExtent;
 
   SavedMatrix := g.Matrix;
   NewMatrix := TMatrix.Identity;
 
-  TempMatrix := TMatrix.CreateScaling(PaintboxZoom * Main.Scale, PaintboxZoom * Main.Scale);
+  TempMatrix := TMatrix.CreateScaling(PaintboxZoom * ss, PaintboxZoom * ss);
   NewMatrix := NewMatrix * TempMatrix;
-  TempMatrix := TMatrix.CreateTranslation(OriginX * Main.Scale, OriginY * Main.Scale);
+  TempMatrix := TMatrix.CreateTranslation(OriginX * ss, OriginY * ss);
   NewMatrix := NewMatrix * TempMatrix;
 
   g.SetMatrix(NewMatrix);

@@ -45,6 +45,7 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure Draw; override;
+    procedure ImageScreenScaleChanged(Sender: TObject);
     property Image: TOriginalImage read FImage write SetImage;
   end;
 
@@ -93,6 +94,12 @@ procedure TChartGraph.SetImage(const Value: TOriginalImage);
 begin
   FImage := Value;
   InitBitmap;
+  Image.OnScreenScaleChanged := ImageScreenScaleChanged;
+end;
+
+procedure TChartGraph.ImageScreenScaleChanged(Sender: TObject);
+begin
+  Draw;
 end;
 
 procedure TChartGraph.Draw;
@@ -104,10 +111,13 @@ begin
 end;
 
 procedure TChartGraph.DrawToCanvas(g: TCanvas);
+var
+  ss: single;
 begin
+  ss := Image.Scene.GetSceneScale;
   if g.BeginScene then
   try
-    g.SetMatrix(TMatrix.CreateScaling(Main.Scale, Main.Scale));
+    g.SetMatrix(TMatrix.CreateScaling(ss, ss));
     g.Clear(claNull);
     DrawLegend(g);
     DrawChart(g);
@@ -223,7 +233,7 @@ var
 
   procedure TextRect(s: string; ha, va: TTextAlign);
   begin
-     R := RectF(PosX, PosY, PosX + w, PosY + h);
+    R := RectF(PosX, PosY, PosX + w, PosY + h);
     if WantTextRect then
       g.DrawRect(R, 0, 0, [], 1.0);
     g.FillText(
