@@ -368,7 +368,7 @@ begin
     else
       StrokeRigg.Koppel := FKoppel;
 
-//    StrokeRigg.Bogen := FBogen;
+    StrokeRigg.Bogen := FBogen;
 
     StrokeRigg.Koordinaten := Rigg.rP;
     StrokeRigg.KoordinatenE := Rigg.rPe;

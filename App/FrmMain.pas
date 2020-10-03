@@ -649,6 +649,7 @@ begin
 
   if (Main <> nil) and Main.IsUp then
   begin
+    MainVar.Scale := Handle.Scale;
     Inc(Main.ResizeCounter);
     Main.UpdateTouch;
     Main.UpdateText;
@@ -1845,7 +1846,8 @@ end;
 
 procedure TFormMain.BogenBtnClick(Sender: TObject);
 begin
-  RotaForm.BogenBtnClick(Sender);
+//  RotaForm.BogenBtnClick(Sender);
+  Main.Bogen := not Main.Bogen;
   if Sender <> nil then
     Main.FederText.CheckState;
 end;

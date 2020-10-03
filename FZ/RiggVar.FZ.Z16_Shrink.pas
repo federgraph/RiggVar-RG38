@@ -55,7 +55,7 @@ begin
   A.Save;
 
   B.Center.X := ox;
-  B.Center.Y := oy - 500;
+  B.Center.Y := oy - 440;
   B.Center.Z := 0;
   B.Save;
 end;

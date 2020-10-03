@@ -131,6 +131,7 @@ type
 
   TRggDrawings = class
   public
+    UseDarkColorScheme: Boolean;
     DrawingList: TRggDrawingList;
     constructor Create;
     destructor Destroy; override;
@@ -192,6 +193,7 @@ end;
 
 constructor TRggDrawing.Create;
 begin
+  Colors.GoLight;
   FName := 'Empty Drawing';
   DefaultShowCaption := True;
   ElementList := TRggElementList.Create;
@@ -397,8 +399,20 @@ end;
 { TRggDrawings }
 
 procedure TRggDrawings.Add(Value: TRggDrawing);
+var
+  e: TRggElement;
 begin
-  DrawingList.Add(Value)
+  DrawingList.Add(Value);
+
+  if UseDarkColorScheme then
+    Value.Colors.GoDark
+  else
+    Value.Colors.GoLight;
+
+  for e in Value.ElementList do
+  begin
+    e.Drawing := Value;
+  end;
 end;
 
 constructor TRggDrawings.Create;

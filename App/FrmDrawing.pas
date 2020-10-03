@@ -253,10 +253,7 @@ begin
 end;
 
 procedure TFormDrawing.ShowPoint3D(P: TPoint3D; WantClear: Boolean);
-var
-  ML: TStrings;
 begin
-  ML := Memo.Lines;
   if WantClear then
     ML.Clear;
   ML.Add(Format('X = %.2f', [P.X]));
@@ -1072,8 +1069,8 @@ begin
   if CurrentElement is TRggCircle then
   begin
     cr := CurrentElement as TRggCircle;
-    InplaceShape.Position.X := Image.Position.X + TH.Offset.X + cr.Center.P.X - InplaceShape.Width / 2;
-    InplaceShape.Position.Y := Image.Position.Y + TH.Offset.Y + cr.Center.P.Y - InplaceShape.Height / 2;
+    InplaceShape.Position.X := Image.Position.X + TH.Offset.X + cr.Center.X - InplaceShape.Width / 2;
+    InplaceShape.Position.Y := Image.Position.Y + TH.Offset.Y + cr.Center.Y - InplaceShape.Height / 2;
     InplaceShape.Visible := True;
 
     if CurrentDrawing.InplaceFlag then
@@ -1133,6 +1130,9 @@ begin
     ShowPoint3D(cr.Center.C, False);
   end;
 
+  UpdateInplacePosition;
+  UpdateMemo;
+
   { FMX }
   ss := Image.Scene.GetSceneScale;
   g.Offset := TH.Offset;
@@ -1150,8 +1150,6 @@ begin
     g.EndScene;
   end;
 
-  UpdateInplacePosition;
-  UpdateMemo;
   Image.Repaint;
 end;
 

@@ -39,6 +39,12 @@ type
     C0, C: TRggCircle;
     D0, D: TRggCircle;
     F: TRggCircle;
+
+    rP_D0: TPoint3D;
+    OffsetX: single;
+    OffsetY: single;
+    InitialZoom: single;
+
     constructor Create;
     procedure InitDefaultPos; override;
     procedure Load;
@@ -110,6 +116,9 @@ var
 begin
   inherited;
   Name := 'D00-Live-Rigg';
+  OffsetX := 400;
+  OffsetY := 640;
+  InitialZoom := 0.09;
 
   DefaultShowCaption := True;
 
@@ -336,24 +345,20 @@ var
   Rigg: TRigg;
 {$endif}
   rP: TRiggPoints;
-  cr: TRggCircle;
   t, p, q: TPoint3D;
   s: string;
-  f: single;
 
-  procedure Temp(oo: TRiggPoint);
+  procedure Temp(cr: TRggCircle; oo: TRiggPoint);
   begin
     p := rP.V[oo];
     t := p - q;
     s := KoordTexteXML[oo];
-    cr := Find(s);
-    cr.Center.X := 400 + t.X * f;
-    cr.Center.Y := 700 - t.Z * f;
-    cr.Center.Z := t.Y * f;
+    cr.Center.X := OffsetX + t.X * InitialZoom;
+    cr.Center.Y := OffsetY - t.Z * InitialZoom;
+    cr.Center.Z := t.Y * InitialZoom;
     cr.Save;
   end;
 begin
-  f := 1 / 12;
 {$ifdef Rgg}
   Rigg := Main.Rigg;
   rP := Rigg.rP;
@@ -361,17 +366,18 @@ begin
   rP := TRggTestData.GetKoordinaten420;
 {$endif}
   q := rP.V[ooD0];
+  rP_D0 := q;
 
   try
-    Temp(ooA0);
-    Temp(ooB0);
-    Temp(ooC0);
-    Temp(ooD0);
-    Temp(ooA);
-    Temp(ooB);
-    Temp(ooC);
-    Temp(ooD);
-    Temp(ooF);
+    Temp(A0, ooA0);
+    Temp(B0, ooB0);
+    Temp(C0, ooC0);
+    Temp(D0, ooD0);
+    Temp(A, ooA);
+    Temp(B, ooB);
+    Temp(C, ooC);
+    Temp(D, ooD);
+    Temp(F, ooF);
   except
   end;
 

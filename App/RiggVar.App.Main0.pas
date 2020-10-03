@@ -71,7 +71,6 @@ type
     ActionTest: TActionTest;
     FederBinding: TFederBinding;
 
-    Scale: single;
     IsRetina: Boolean;
 
     constructor Create;
@@ -137,8 +136,7 @@ uses
 constructor TMain0.Create;
 begin
   inherited;
-  Scale := MainVar.Scale;
-  IsRetina := Scale > 1;
+  IsRetina := MainVar.Scale > 1;
 
   ActionGroupList := TActionGroupList.Create;
   ActionTest := TActionTest.Create;

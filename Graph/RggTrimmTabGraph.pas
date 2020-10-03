@@ -1,4 +1,4 @@
-unit RggTrimmTabGraph;
+﻿unit RggTrimmTabGraph;
 
 interface
 
@@ -23,6 +23,7 @@ type
     { Fixed Width and Height }
     FWidth: Integer;
     FHeight: Integer;
+    FScreenScale: single;
   private
     FImage: TOriginalImage; // injected, not owned
     procedure InitBitmap;
@@ -45,7 +46,6 @@ type
     Poly: TPolygon;
     PD: TPathData;
   public
-    FScale: single;
     Model: TTrimmTabGraphModel;
     DrawCounter: Integer;
     constructor Create;
@@ -62,7 +62,7 @@ uses
 
 constructor TTrimmTabGraph.Create;
 begin
-  FScale := Main.Scale;
+  FScreenScale := 1.0;
   PD := TPathData.Create;
   SetLength(Poly, 101);
   Model := TTrimmTabGraphModel.Create;
@@ -95,10 +95,10 @@ var
     va: TTextAlign = TTextAlign.Leading);
   begin
     R := RectF(
-      PosX * FScale,
-      PosY * FScale,
-      (PosX + w) * FScale,
-      (PosY + h) * FScale);
+      PosX * FScreenScale,
+      PosY * FScreenScale,
+      (PosX + w) * FScreenScale,
+      (PosY + h) * FScreenScale);
     g.FillText(
       R,
       s,
@@ -117,7 +117,7 @@ begin
   g.Stroke.Color := claNull;
   g.Fill.Color := claBlack;
   g.Font.Family := 'Consolas';
-  g.Font.Size := 14 * FScale;
+  g.Font.Size := 14 * FScreenScale;
 
   { Texte }
   PosX := Margin;
@@ -260,13 +260,11 @@ begin
 end;
 
 procedure TTrimmTabGraph.BeginTransform(g: TCanvas);
-var
-  ss: single;
 begin
-  ss := Image.Scene.GetSceneScale;
+  FScreenScale := Image.Scene.GetSceneScale;
   SavedMatrix := g.Matrix;
-  NewMatrix := TMatrix.CreateScaling(ss, -ss);
-  NewMatrix := NewMatrix * TMatrix.CreateTranslation(0, FHeight * ss);
+  NewMatrix := TMatrix.CreateScaling(FScreenScale, -FScreenScale);
+  NewMatrix := NewMatrix * TMatrix.CreateTranslation(0, FHeight * FScreenScale);
   g.SetMatrix(NewMatrix);
 end;
 

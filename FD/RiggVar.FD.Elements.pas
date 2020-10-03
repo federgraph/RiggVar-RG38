@@ -32,12 +32,20 @@ uses
   FMX.Graphics;
 
 type
+  TRggColorScheme = record
+    TextColor: TAlphaColor;
+    BackgroundColor: TAlphaColor;
+    procedure GoDark;
+    procedure GoLight;
+  end;
+
   TRggDrawingBase = class
   public
     WantRotation: Boolean;
     WheelFlag: Boolean;
     InplaceFlag: Boolean;
     FixPoint: TPoint3D;
+    Colors: TRggColorScheme;
     procedure Reset; virtual; abstract;
     procedure Transform(M: TMatrix3D); virtual; abstract;
   end;
@@ -121,6 +129,8 @@ type
     SpecialDraw: Boolean;
     Painted: Boolean;
     IsComputed: Boolean;
+    Visible: Boolean;
+    Drawing: TRggDrawingBase;
 
     constructor Create;
 
@@ -338,6 +348,8 @@ type
   end;
 
   TRggPolyLine3D = class(TRggPolyLine)
+  private
+    procedure UpdateCount;
   protected
     TransformedPoly: TPolygon;
   public
@@ -528,7 +540,7 @@ constructor TRggElement.Create;
 begin
   FOpacity := 1.0;
   FStrokeThickness := 3.0;
-  FStrokeColor := claRed;
+  FStrokeColor := TRggColors.Red;
   FStrokeDash := TStrokeDash.Solid;
   TypeName := 'Element';
   TextRadius := DefaultTextRadius;
@@ -692,7 +704,7 @@ begin
       Center.X + FRadius,
       Center.Y + FRadius);
 
-    g.Fill.Color := claWhite;
+    g.Fill.Color := Drawing.Colors.BackgroundColor;
     g.FillEllipse(R, Opacity);
 
     g.Stroke.Color := StrokeColor;
@@ -702,7 +714,7 @@ begin
 
   if ShowCaption or GlobalShowCaption then
   begin
-    g.Fill.Color := claBlack;
+    g.Fill.Color := Drawing.Colors.TextColor;
     TextCenter := Center.P;
     TextOut(g, Caption);
   end;
@@ -808,6 +820,7 @@ begin
   TypeName := 'Line';
   Caption := ACaption;
   ShowCaption := DefaultShowCaption;
+  Visible := True;
 end;
 
 procedure TRggLine.GetInfo(ML: TStrings);
@@ -828,6 +841,9 @@ end;
 
 procedure TRggLine.Draw(g: TCanvas);
 begin
+  if not Visible then
+    Exit;
+
   g.Stroke.Thickness := StrokeThickness;
   g.Stroke.Color := StrokeColor;
   g.Stroke.Dash := StrokeDash;
@@ -836,7 +852,7 @@ begin
 
   if ShowCaption or GlobalShowCaption then
   begin
-    g.Fill.Color := claBlack;
+    g.Fill.Color := Drawing.Colors.TextColor;
     TextCenter := Point1.Center.P + (Point2.Center.P - Point1.Center.P) * 0.5;
     TextOut(g, Caption);
   end;
@@ -1170,7 +1186,7 @@ begin
 
   if ShowCaption or GlobalShowCaption then
   begin
-    g.Fill.Color := claBlack;
+    g.Fill.Color := Drawing.Colors.TextColor;
     TextAngle := DegToRad(startAngle + sweepAngle / 2);
     TextRadius := Radius * FTextRadiusFactor;
     TextCenter := Point1.Center.P;
@@ -1272,7 +1288,7 @@ begin
 
   g.Stroke.Join := TStrokeJoin.Round;
   g.Stroke.Cap := TStrokeCap.Round;
-  g.Stroke.Color := claGray;
+  g.Stroke.Color := TRggColors.Gray;
   g.Stroke.Thickness := 3.0;
   g.DrawPolygon(TempP, Opacity);
 
@@ -1554,7 +1570,7 @@ procedure TRggPolyLine.DrawText(g: TCanvas);
 begin
   if ShowCaption or GlobalShowCaption then
   begin
-    g.Fill.Color := claBlack;
+    g.Fill.Color := Drawing.Colors.TextColor;
     TextCenter := Point1.Center.P + (Point2.Center.P - Point1.Center.P) * 0.5;
     TextOut(g, Caption);
   end;
@@ -1580,12 +1596,27 @@ constructor TRggPolyLine3D.Create(ACaption: string; ACount: Integer);
 begin
   inherited;
   TypeName := 'PolyLine3D';
+  UpdateCount;
+end;
+
+procedure TRggPolyLine3D.UpdateCount;
+var
+  l: Integer;
+begin
+  l := Length(Poly);
+  if Length(RggPoly) <> l then
+    SetLength(RggPoly, l);
+  if Length(TransformedPoly) <> l then
+    SetLength(TransformedPoly, l);
 end;
 
 procedure TRggPolyLine3D.Draw(g: TCanvas);
 var
   i: Integer;
 begin
+  if not Visible then
+    Exit;
+
   if not WantRotation then
   begin
     inherited;
@@ -1610,18 +1641,13 @@ end;
 procedure TRggPolyLine3D.Transform;
 var
   i: Integer;
-  l: Integer;
 begin
   if not WantRotation then
     Exit;
 
-  l := Length(Poly);
-  if Length(RggPoly) <> l then
-    SetLength(RggPoly, l);
-  if Length(TransformedPoly) <> l then
-    SetLength(TransformedPoly, l);
+  Assert(FCount = Length(RggPoly));
 
-  for i := 0 to l - 1 do
+  for i := 0 to FCount - 1 do
   begin
     RggPoly[i].C := RggPoly[i].C * TRggCircle.Matrix;
   end;
@@ -1959,7 +1985,7 @@ begin
   FValue := FOriginalValue;
   StartPoint := TPointF.Create(10, 10);
   StrokeThickness := 2.0;
-  StrokeColor := claGray;
+  StrokeColor := TRggColors.Gray;
   ShowCaption := True;
 end;
 
@@ -2001,12 +2027,12 @@ begin
   EndPoint.X := StartPoint.X + FOriginalValue;
 
   g.Stroke.Thickness := 5.0;
-  g.Stroke.Color := claYellow;
+  g.Stroke.Color := TRggColors.Yellow;
   g.DrawLine(StartPoint, EndPoint, Opacity);
 
   EndPoint.X := StartPoint.X + FValue;
   g.Stroke.Thickness := 1.0;
-  g.Stroke.Color := claNavy;
+  g.Stroke.Color := TRggColors.Navy;
   g.DrawLine(StartPoint, EndPoint, Opacity);
 
   if ShowCaption or GlobalShowCaption then
@@ -2172,7 +2198,7 @@ begin
 
   if ShowCaption or GlobalShowCaption then
   begin
-    g.Fill.Color := claBlack;
+    g.Fill.Color := Drawing.Colors.TextColor;
     TextCenter := Point1.Center.P + (Point2.Center.P - Point1.Center.P) * 0.5;
     TextOut(g, Caption);
   end;
@@ -2239,7 +2265,7 @@ procedure TRggPolyCurve.DrawText(g: TCanvas);
 begin
   if ShowCaption or GlobalShowCaption then
   begin
-    g.Fill.Color := claBlack;
+    g.Fill.Color := Drawing.Colors.TextColor;
     TextCenter := Poly[0];
     TextOut(g, Caption);
   end;
@@ -2257,6 +2283,20 @@ begin
   for i := 1 to Length(p) - 1 do
     PD.LineTo(p[i]);
   g.DrawPath(PD, Opacity);
+end;
+
+{ TRggColorScheme }
+
+procedure TRggColorScheme.GoDark;
+begin
+  TextColor := TRggColors.White;
+  BackgroundColor := TRggColors.Color333333;
+end;
+
+procedure TRggColorScheme.GoLight;
+begin
+  TextColor := TRggColors.Black;
+  BackgroundColor := TRggColors.White;
 end;
 
 end.

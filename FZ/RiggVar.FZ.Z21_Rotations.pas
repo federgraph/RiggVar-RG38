@@ -32,6 +32,7 @@ type
     procedure BtnDClick(Sender: TObject);
     procedure BtnEClick(Sender: TObject);
     procedure BtnFClick(Sender: TObject);
+    procedure DoGlobalRotation(aRotX, aRotY, aRotZ: single);
   public
     Origin: TRggCircle;
     AX: TRggCircle;
@@ -131,58 +132,44 @@ begin
   WantSort := True;
 end;
 
-procedure TRggDrawingZ21.Btn1Click(Sender: TObject);
+procedure TRggDrawingZ21.DoGlobalRotation(aRotX, aRotY, aRotZ: single);
 begin
-  TH.Rotation.X := DegToRad(10);
-  TH.Rotation.Y := 0;
-  TH.Rotation.Z := 0;
+  TH.Rotation.X := DegToRad(aRotX);
+  TH.Rotation.Y := DegToRad(aRotY);
+  TH.Rotation.Z := DegToRad(aRotZ);
   TH.Draw;
   TH.GetEulerAngles;
+  TH.Rotation := TPoint3D.Zero;
+end;
+
+procedure TRggDrawingZ21.Btn1Click(Sender: TObject);
+begin
+  DoGlobalRotation(10, 0, 0);
 end;
 
 procedure TRggDrawingZ21.Btn2Click(Sender: TObject);
 begin
-  TH.Rotation.X := DegToRad(-10);
-  TH.Rotation.Y := 0;
-  TH.Rotation.Z := 0;
-  TH.Draw;
-  TH.GetEulerAngles;
+  DoGlobalRotation(-10, 0, 0);
 end;
 
 procedure TRggDrawingZ21.Btn3Click(Sender: TObject);
 begin
-  TH.Rotation.X := 0;
-  TH.Rotation.Y := DegToRad(10);
-  TH.Rotation.Z:= 0;
-  TH.Draw;
-  TH.GetEulerAngles;
+  DoGlobalRotation(0, 10, 0);
 end;
 
 procedure TRggDrawingZ21.Btn4Click(Sender: TObject);
 begin
-  TH.Rotation.X := 0;
-  TH.Rotation.Y := DegToRad(-10);
-  TH.Rotation.Z:= 0;
-  TH.Draw;
-  TH.GetEulerAngles;
+  DoGlobalRotation(0, -10, 0);
 end;
 
 procedure TRggDrawingZ21.Btn5Click(Sender: TObject);
 begin
-  TH.Rotation.X := 0;
-  TH.Rotation.Y := 0;
-  TH.Rotation.Z := DegToRad(10);
-  TH.Draw;
-  TH.GetEulerAngles;
+  DoGlobalRotation(0, 0, 10);
 end;
 
 procedure TRggDrawingZ21.Btn6Click(Sender: TObject);
 begin
-  TH.Rotation.X := 0;
-  TH.Rotation.Y := 0;
-  TH.Rotation.Z := DegToRad(-10);
-  TH.Draw;
-  TH.GetEulerAngles;
+  DoGlobalRotation(0, 0, 10);
 end;
 
 procedure TRggDrawingZ21.Btn7Click(Sender: TObject);
