@@ -16,6 +16,7 @@ uses
 type
   TRggDrawingZ21 = class(TRggDrawing)
   private
+    IsDark: Boolean;
     LAX: TRggLine;
     LAY: TRggLine;
     LAZ: TRggLine;
@@ -36,6 +37,10 @@ type
     procedure BtnEClick(Sender: TObject);
     procedure BtnFClick(Sender: TObject);
     procedure DoGlobalRotation(aRotX, aRotY, aRotZ: single);
+    procedure RotaQuo(aRotX, aRotY, aRotZ: single);
+    procedure RotaMat(aRotX, aRotY, aRotZ: single);
+    procedure RotaHPB(aRotX, aRotY, aRotZ: single);
+    procedure RotaYPR(aRotX, aRotY, aRotZ: single);
   public
     Origin: TRggCircle;
     AX: TRggCircle;
@@ -45,6 +50,7 @@ type
     procedure InitDefaultPos; override;
     procedure InitButtons(BG: TRggButtonGroup); override;
     procedure GoDark; override;
+    procedure GoLight; override;
   end;
 
 implementation
@@ -176,12 +182,16 @@ end;
 
 procedure TRggDrawingZ21.Btn6Click(Sender: TObject);
 begin
-  DoGlobalRotation(0, 0, 10);
+  DoGlobalRotation(0, 0, -10);
 end;
 
 procedure TRggDrawingZ21.Btn7Click(Sender: TObject);
 begin
-//  FormDrawing.SwapThickLines;
+  if not IsDark then
+    GoDark
+  else
+    GoLight;
+  TH.DrawToCanvas
 end;
 
 procedure TRggDrawingZ21.Btn8Click(Sender: TObject);
@@ -201,8 +211,8 @@ begin
   end;
 
   TH.DrawToCanvas;
-  TH.ShowRotation(TH.Rotation, False);
   TH.GetEulerAngles;
+  TH.ShowRotation(TH.RotationHelper.RotD(TH.Rotation), False);
   TH.Rotation := TPoint3D.Zero;
 end;
 
@@ -223,120 +233,61 @@ begin
   end;
 
   TH.DrawToCanvas;
-  TH.ShowRotation(TH.Rotation, False);
   TH.GetEulerAngles;
+  TH.ShowRotation(TH.RotationHelper.RotD(TH.Rotation), False);
   TH.Rotation := TPoint3D.Zero;
 end;
 
 procedure TRggDrawingZ21.Btn0Click(Sender: TObject);
-//var
-//  RotR: TPoint3D;
-//  Q: TQuaternion3D;
-begin
-//  Q := TQuaternion3D.Create(TH.AccuMatrix);
-//  RotR := TH.RotationHelper.EulerAnglesFromQuaternion(Q);
-//  TH.Reset;
-//  TH.Rotation := RotR;
-//
-//  if WantRotation then
-//  begin
-//    TH.BuildMatrix(Q);
-//    TH.UpdateTransform;
-//  end;
-//
-//  TH.DrawToCanvas;
-//  TH.ShowRotation(TH.Rotation, False);
-//  TH.GetEulerAngles;
-end;
-
-procedure TRggDrawingZ21.BtnAClick(Sender: TObject);
 var
-  x, y, z: single;
-  mx, my, mz: TMatrix3D;
-  mr: TMatrix3D;
+  RotR: TPoint3D;
+  Q: TQuaternion3D;
 begin
-  { Rotation um globale Achsen }
-
-  x := DegToRad(10);
-  y := DegToRad(20);
-  z := DegToRad(30);
-
-  mx := TMatrix3D.CreateRotationX(x);
-  my := TMatrix3D.CreateRotationY(y);
-  mz := TMatrix3D.CreateRotationZ(z);
-
-  mr := mx * my * mz;
-
+  Q := TQuaternion3D.Create(TH.AccuMatrix);
+  RotR := TH.RotationHelper.EulerAnglesFromQuaternion(Q);
   TH.Reset;
-  TH.InitTransform(mr);
+  TH.Rotation := RotR;
+
+  if WantRotation then
+  begin
+    TH.BuildMatrix(Q);
+    TH.UpdateTransform;
+  end;
+
+  TH.DrawToCanvas;
+  TH.GetEulerAngles;
+  TH.ShowRotation(TH.RotationHelper.RotD(TH.Rotation), False);
   TH.Rotation := TPoint3D.Zero;
 end;
 
-procedure TRggDrawingZ21.BtnBClick(Sender: TObject);
-var
-  x, y, z: single;
-  Q: TQuaternion3D;
+procedure TRggDrawingZ21.BtnAClick(Sender: TObject);
 begin
-  { Rotation um lokale Achsen ? }
+  RotaMat(10, 20, 30);
+end;
 
-  x := DegToRad(10);
-  y := DegToRad(20);
-  z := DegToRad(30);
-
-  Q := TQuaternion3D.Identity;
-  if x <> 0 then
-    Q := Q * TQuaternion3D.Create(TH.DirX, x);
-  if y <> 0 then
-    Q := Q * TQuaternion3D.Create(TH.DirY, y);
-  if z <> 0 then
-    Q := Q * TQuaternion3D.Create(TH.DirZ, z);
-
-  TH.Reset;
-  TH.InitTransform(Q);
+procedure TRggDrawingZ21.BtnBClick(Sender: TObject);
+begin
+  RotaQuo(10, 20, 30);
 end;
 
 procedure TRggDrawingZ21.BtnCClick(Sender: TObject);
-var
-  x, y, z: single;
-  mr: TMatrix3D;
 begin
-  { Rotation um ? }
-
-  x := DegToRad(10);
-  y := DegToRad(20);
-  z := DegToRad(30);
-
-  mr := TMatrix3D.CreateRotationHeadingPitchBank(x, y, z);
-
-  TH.Reset;
-  TH.InitTransform(mr);
+  RotaHPB(10, 20, 30);
 end;
 
 procedure TRggDrawingZ21.BtnDClick(Sender: TObject);
-var
-  x, y, z: single;
-  mr: TMatrix3D;
 begin
-  { Rotation um ? }
-
-  x := DegToRad(10);
-  y := DegToRad(20);
-  z := DegToRad(30);
-
-  mr := TMatrix3D.CreateRotationYawPitchRoll(x, y, z);
-
-  TH.Reset;
-  TH.InitTransform(mr);
+  RotaYPR(10, 20, 30);
 end;
 
 procedure TRggDrawingZ21.BtnEClick(Sender: TObject);
 begin
-  TH.GetEulerAngles;
+  RotaQuo(10, 10, 0);
 end;
 
 procedure TRggDrawingZ21.BtnFClick(Sender: TObject);
 begin
-//  FormDrawing.ShowInfo;
+  TH.GetEulerAngles;
 end;
 
 procedure TRggDrawingZ21.InitButtons(BG: TRggButtonGroup);
@@ -369,20 +320,132 @@ begin
 
   BG.Btn5.Text := '-Z';
   BG.Btn6.Text := '+Z';
+
+  BG.Btn7.Hint := 'Toggle Color Scheme';
+  BG.Btn8.Hint := 'Test EulerAnglesToMatrix';
+  BG.Btn9.Hint := 'Test GetRotationInfoHPB';
+  BG.Btn0.Hint := 'Test EulerAnglesFromQuaternion';
+
+  BG.BtnA.Hint := 'RotaMat 10-20-30';
+  BG.BtnB.Hint := 'RotaQuo 10-20-30';
+  BG.BtnC.Hint := 'RotaHPB 10-20-30';
+  BG.BtnD.Hint := 'RotaYPR 10-20-30';
+  BG.BtnE.Hint := 'RotaQuo 10-10';
+  BG.BtnF.Hint := 'TH.GetEulerAngles;';
+end;
+
+procedure TRggDrawingZ21.GoLight;
+begin
+  inherited;
+  IsDark := False;
+  AX.StrokeColor := TRggColors.Red;
+  AY.StrokeColor := TRggColors.Green;
+  AZ.StrokeColor := TRggColors.Blue;
+
+  Origin.StrokeColor := TRggColors.Orange;
+
+  LAX.StrokeColor := TRggColors.Red;
+  LAY.StrokeColor := TRggColors.Green;
+  LAZ.StrokeColor := TRggColors.Blue;
 end;
 
 procedure TRggDrawingZ21.GoDark;
 begin
   inherited;
+  IsDark := True;
   AX.StrokeColor := TRggColors.Orangered;
   AY.StrokeColor := TRggColors.Seagreen;
   AZ.StrokeColor := TRggColors.DodgerBlue;
 
-  Origin.StrokeColor := TRggColors.Yellow;
+  Origin.StrokeColor := TRggColors.Goldenrod;
 
   LAX.StrokeColor := TRggColors.Orangered;
   LAY.StrokeColor := TRggColors.Seagreen;
   LAZ.StrokeColor := TRggColors.Dodgerblue;
+end;
+
+procedure TRggDrawingZ21.RotaMat(aRotX, aRotY, aRotZ: single);
+var
+  x, y, z: single;
+  mx, my, mz: TMatrix3D;
+  mr: TMatrix3D;
+begin
+  { Rotation um globale Achsen }
+
+  x := DegToRad(aRotX);
+  y := DegToRad(aRotY);
+  z := DegToRad(aRotZ);
+
+  mx := TMatrix3D.CreateRotationX(x);
+  my := TMatrix3D.CreateRotationY(y);
+  mz := TMatrix3D.CreateRotationZ(z);
+
+  mr := mx * my * mz;
+
+  TH.Reset;
+  TH.InitTransform(mr);
+  TH.Rotation := TPoint3D.Zero;
+  TH.GetEulerAngles;
+end;
+
+procedure TRggDrawingZ21.RotaQuo(aRotX, aRotY, aRotZ: single);
+var
+  x, y, z: single;
+  Q: TQuaternion3D;
+begin
+  { Rotation um lokale Achsen ? }
+
+  x := DegToRad(aRotX);
+  y := DegToRad(aRotY);
+  z := DegToRad(aRotZ);
+
+  Q := TQuaternion3D.Identity;
+  if x <> 0 then
+    Q := Q * TQuaternion3D.Create(TH.DirX, x);
+  if y <> 0 then
+    Q := Q * TQuaternion3D.Create(TH.DirY, y);
+  if z <> 0 then
+    Q := Q * TQuaternion3D.Create(TH.DirZ, z);
+
+  TH.Reset;
+  TH.InitTransform(Q);
+  TH.GetEulerAngles;
+end;
+
+procedure TRggDrawingZ21.RotaHPB(aRotX, aRotY, aRotZ: single);
+var
+  x, y, z: single;
+  mr: TMatrix3D;
+begin
+  { Rotation um ? }
+
+  x := DegToRad(aRotX);
+  y := DegToRad(aRotY);
+  z := DegToRad(aRotZ);
+
+  mr := TMatrix3D.CreateRotationHeadingPitchBank(x, y, z);
+
+  TH.Reset;
+  TH.InitTransform(mr);
+  TH.GetEulerAngles;
+end;
+
+procedure TRggDrawingZ21.RotaYPR(aRotX, aRotY, aRotZ: single);
+var
+  x, y, z: single;
+  mr: TMatrix3D;
+begin
+  { Rotation um ? }
+
+  x := DegToRad(aRotX);
+  y := DegToRad(aRotY);
+  z := DegToRad(aRotZ);
+
+  mr := TMatrix3D.CreateRotationYawPitchRoll(x, y, z);
+
+  TH.Reset;
+  TH.InitTransform(mr);
+  TH.GetEulerAngles;
 end;
 
 end.

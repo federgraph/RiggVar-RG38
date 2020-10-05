@@ -253,7 +253,7 @@ procedure TTransformHelper.GetEulerAngles;
 begin
   RotR := RotationHelper.EulerAnglesFromMatrix(AccuMatrix);
   RotD := RotationHelper.RotD(RotR);
-  ShowRotation(RotR, True);
+  ShowRotation(RotD, True);
 end;
 
 procedure TTransformHelper.DoOnMouse(Shift: TShiftState; dx, dy: single);

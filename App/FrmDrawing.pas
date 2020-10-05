@@ -150,6 +150,7 @@ type
     RggDrawingD00: TRggDrawingD00;
     DrawCounter: Integer;
     ClickCounter: Integer;
+    ShowPointCounter: Integer;
     procedure CreateDrawings;
     procedure Draw;
   private
@@ -256,6 +257,8 @@ procedure TFormDrawing.ShowPoint3D(P: TPoint3D; WantClear: Boolean);
 begin
   if WantClear then
     ML.Clear;
+  Inc(ShowPointCounter);
+  ML.Add(Format('C = %d', [ShowPointCounter]));
   ML.Add(Format('X = %.2f', [P.X]));
   ML.Add(Format('Y = %.2f', [P.Y]));
   ML.Add(Format('Z = %.2f', [P.Z]));
