@@ -16,7 +16,6 @@ uses
 type
   TRggDrawingZ21 = class(TRggDrawing)
   private
-    IsDark: Boolean;
     LAX: TRggLine;
     LAY: TRggLine;
     LAZ: TRggLine;
@@ -187,6 +186,7 @@ end;
 
 procedure TRggDrawingZ21.Btn7Click(Sender: TObject);
 begin
+  { UseDarkColorScheme := not UseDarkColorScheme }
   if not IsDark then
     GoDark
   else
@@ -337,7 +337,6 @@ end;
 procedure TRggDrawingZ21.GoLight;
 begin
   inherited;
-  IsDark := False;
   AX.StrokeColor := TRggColors.Red;
   AY.StrokeColor := TRggColors.Green;
   AZ.StrokeColor := TRggColors.Blue;
@@ -352,7 +351,6 @@ end;
 procedure TRggDrawingZ21.GoDark;
 begin
   inherited;
-  IsDark := True;
   AX.StrokeColor := TRggColors.Orangered;
   AY.StrokeColor := TRggColors.Seagreen;
   AZ.StrokeColor := TRggColors.DodgerBlue;

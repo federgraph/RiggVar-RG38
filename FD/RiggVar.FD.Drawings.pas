@@ -83,6 +83,7 @@ type
     procedure UnsortedDraw(g: TCanvas);
     function GetIsValid: Boolean;
     function GetDefaultElementIndex: Integer;
+    procedure SetUseDarkColorScheme(const Value: Boolean);
   protected
     WantSort: Boolean;
     CircleComparer: IComparer<TRggCircle>;
@@ -127,6 +128,7 @@ type
     property IsValid: Boolean read GetIsValid;
     property DefaultElementIndex: Integer read GetDefaultElementIndex;
     property MemoLines: TStrings read ML;
+    property UseDarkColorScheme: Boolean read IsDark write SetUseDarkColorScheme;
   end;
 
   TRggDrawingList = TList<TRggDrawing>;
@@ -257,6 +259,24 @@ begin
   TRggButtonGroup.UpdateDrawing;
 end;
 
+procedure TRggDrawing.SetUseDarkColorScheme(const Value: Boolean);
+begin
+  if IsDark <> Value then
+  begin
+    IsDark := Value;
+    if Value then
+    begin
+      Colors.GoDark;
+      GoDark
+    end
+    else
+    begin
+      Colors.GoLight;
+      GoLight;
+    end;
+  end;
+end;
+
 procedure TRggDrawing.SortedDraw(g: TCanvas);
 var
   cr: TRggCircle;
@@ -328,12 +348,12 @@ end;
 
 procedure TRggDrawing.GoDark;
 begin
-
+  IsDark := True;
 end;
 
 procedure TRggDrawing.GoLight;
 begin
-
+  IsDark := False;
 end;
 
 procedure TRggDrawing.GetInfo(ML: TStrings);

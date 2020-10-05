@@ -186,6 +186,7 @@ type
     TH: TTransformHelper;
     procedure SwapDrawingLists;
     procedure SwapLayout;
+    procedure SwapColorScheme;
     procedure SwapThickLines;
     procedure ShowInfo;
     procedure DoReset;
@@ -500,6 +501,7 @@ begin
     vkF6: SwapDrawingLists;
     vkF3: SwapThickLines;
     vkF1: ShowInfo;
+    vkF2: SwapColorScheme;
   end;
 
   if KeyChar = 'h' then
@@ -1004,6 +1006,7 @@ begin
     begin
       InitElements;
       CurrentDrawing.Compute;
+      CurrentDrawing.UseDarkColorScheme := DL.UseDarkColorScheme;
       Draw;
       ElementList.ItemIndex := CurrentDrawing.DefaultElementIndex;
       SelectElement(CurrentDrawing.DefaultElementIndex);
@@ -1142,7 +1145,7 @@ begin
   if g.BeginScene then
   try
     g.SetMatrix(TMatrix.CreateScaling(ss, ss));
-    g.Clear(claWhite);
+    g.Clear(CurrentDrawing.Colors.BackgroundColor);
     g.Fill.Color := claYellow;
     g.Stroke.Color := claAqua;
     g.Stroke.Thickness := 1.0;
@@ -1258,6 +1261,23 @@ begin
     LayoutComponentsV
   else
     LayoutComponentsH;
+
+  Draw;
+end;
+
+procedure TFormDrawing.SwapColorScheme;
+begin
+  DL.UseDarkColorScheme := not DL.UseDarkColorScheme;
+  CurrentDrawing.UseDarkColorScheme := DL.UseDarkColorScheme;
+
+  if DL.UseDarkColorScheme then
+  begin
+    InplaceShape.Stroke.Color := claAntiquewhite;
+  end
+  else
+  begin
+    InplaceShape.Stroke.Color := claBlack;
+  end;
 
   Draw;
 end;

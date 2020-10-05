@@ -75,6 +75,7 @@ type
     procedure Load;
     procedure UpdateFromRigg;
     procedure GoDark; override;
+    procedure GoLight; override;
   end;
 
 implementation
@@ -417,6 +418,46 @@ begin
   end;
 
   FixPoint := D.Center.C;
+end;
+
+procedure TRggDrawingZ05.GoLight;
+begin
+  inherited;
+  A0.StrokeColor := TRggColors.Red;
+  B0.StrokeColor := TRggColors.Green;
+  C0.StrokeColor := TRggColors.Yellow;
+  D0.StrokeColor := TRggColors.Blue;
+
+  A.StrokeColor := TRggColors.Red;
+  B.StrokeColor := TRggColors.Green;
+  C.StrokeColor := TRggColors.Yellow;
+  D.StrokeColor := TRggColors.Blue;
+
+  F.StrokeColor := TRggColors.Gray;
+
+  A0B0.StrokeColor := TRggColors.Gray;
+  A0C0.StrokeColor := TRggColors.Gray;
+  B0C0.StrokeColor := TRggColors.Gray;
+  A0D0.StrokeColor := TRggColors.Gray;
+
+  B0D0.StrokeColor := TRggColors.Black;
+  C0D0.StrokeColor := TRggColors.Black;
+
+  A0A.StrokeColor := TRggColors.Red;
+  B0B.StrokeColor := TRggColors.Green;
+  C0C.StrokeColor := TRggColors.Yellow;
+  D0D.StrokeColor := TRggColors.Blue;
+
+  AC.StrokeColor := TRggColors.Red;
+  BC.StrokeColor := TRggColors.Green;
+
+  DC.StrokeColor := TRggColors.Blue;
+
+  AB.StrokeColor := TRggColors.Lime;
+  AD.StrokeColor := TRggColors.Lime;
+  BD.StrokeColor := TRggColors.Lime;
+
+  CF.StrokeColor := TRggColors.Dodgerblue;
 end;
 
 procedure TRggDrawingZ05.GoDark;

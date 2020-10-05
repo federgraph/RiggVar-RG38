@@ -46,6 +46,7 @@ type
     InplaceFlag: Boolean;
     FixPoint: TPoint3D;
     Colors: TRggColorScheme;
+    IsDark: Boolean;
     procedure Reset; virtual; abstract;
     procedure Transform(M: TMatrix3D); virtual; abstract;
   end;
