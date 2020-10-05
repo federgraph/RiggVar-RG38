@@ -19,6 +19,7 @@ type
     constructor Create;
     procedure InitDefaultPos; override;
     procedure Compute; override;
+    procedure GoDark; override;
   end;
 
 implementation
@@ -80,6 +81,14 @@ begin
 
   Chart.Box.Width := Round(t.X);
   Chart.Box.Height := Round(t.Y);
+end;
+
+procedure TRggDrawingZ19.GoDark;
+begin
+  inherited;
+  B0.StrokeColor := TRggColors.Cyan;
+  A.StrokeColor := TRggColors.Orangered;
+  Chart.StrokeColor := TRggColors.Dodgerblue;
 end;
 
 end.

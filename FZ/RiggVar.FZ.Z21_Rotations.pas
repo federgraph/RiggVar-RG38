@@ -16,6 +16,9 @@ uses
 type
   TRggDrawingZ21 = class(TRggDrawing)
   private
+    LAX: TRggLine;
+    LAY: TRggLine;
+    LAZ: TRggLine;
     procedure Btn0Click(Sender: TObject);
     procedure Btn1Click(Sender: TObject);
     procedure Btn2Click(Sender: TObject);
@@ -41,6 +44,7 @@ type
     constructor Create;
     procedure InitDefaultPos; override;
     procedure InitButtons(BG: TRggButtonGroup); override;
+    procedure GoDark; override;
   end;
 
 implementation
@@ -109,18 +113,21 @@ begin
   L.Point1 := Origin;
   L.Point2 := AX;
   Add(L);
+  LAX := L;
 
   L := TRggLine.Create('AY');
   L.StrokeColor := TRggColors.Green;
   L.Point1 := Origin;
   L.Point2 := AY;
   Add(L);
+  LAY := L;
 
   L := TRggLine.Create('AZ');
   L.StrokeColor := TRggColors.Blue;
   L.Point1 := Origin;
   L.Point2 := AZ;
   Add(L);
+  LAZ := L;
 
   Add(Origin);
   Add(AX);
@@ -196,6 +203,7 @@ begin
   TH.DrawToCanvas;
   TH.ShowRotation(TH.Rotation, False);
   TH.GetEulerAngles;
+  TH.Rotation := TPoint3D.Zero;
 end;
 
 procedure TRggDrawingZ21.Btn9Click(Sender: TObject);
@@ -217,6 +225,7 @@ begin
   TH.DrawToCanvas;
   TH.ShowRotation(TH.Rotation, False);
   TH.GetEulerAngles;
+  TH.Rotation := TPoint3D.Zero;
 end;
 
 procedure TRggDrawingZ21.Btn0Click(Sender: TObject);
@@ -260,6 +269,7 @@ begin
 
   TH.Reset;
   TH.InitTransform(mr);
+  TH.Rotation := TPoint3D.Zero;
 end;
 
 procedure TRggDrawingZ21.BtnBClick(Sender: TObject);
@@ -359,6 +369,20 @@ begin
 
   BG.Btn5.Text := '-Z';
   BG.Btn6.Text := '+Z';
+end;
+
+procedure TRggDrawingZ21.GoDark;
+begin
+  inherited;
+  AX.StrokeColor := TRggColors.Orangered;
+  AY.StrokeColor := TRggColors.Seagreen;
+  AZ.StrokeColor := TRggColors.DodgerBlue;
+
+  Origin.StrokeColor := TRggColors.Yellow;
+
+  LAX.StrokeColor := TRggColors.Orangered;
+  LAY.StrokeColor := TRggColors.Seagreen;
+  LAZ.StrokeColor := TRggColors.Dodgerblue;
 end;
 
 end.

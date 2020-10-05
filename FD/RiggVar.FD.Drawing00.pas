@@ -16,8 +16,8 @@
 -
 *)
 
-{$ifdef FPC}
-  {$mode Delphi}
+{$ifdef fpc}
+  {$mode delphi}
 {$endif}
 
 interface
@@ -33,6 +33,27 @@ uses
 type
   { This will be the Live drawing - connected to the model your real App. }
   TRggDrawingD00 = class(TRggDrawing)
+  private
+    A0B0: TRggLine;
+    A0C0: TRggLine;
+    B0C0: TRggLine;
+    A0D0: TRggLine;
+
+    B0D0: TRggLine;
+    C0D0: TRggLine;
+
+    A0A: TRggLine;
+    B0B: TRggLine;
+    C0C: TRggLine;
+
+    CF: TRggLine;
+
+    AC: TRggLine;
+    BC: TRggLine;
+
+    AB: TRggLine;
+    AD: TRggLine;
+    BD: TRggLine;
   public
     A0, A: TRggCircle;
     B0, B: TRggCircle;
@@ -40,15 +61,24 @@ type
     D0, D: TRggCircle;
     F: TRggCircle;
 
+    D0D: TRggLine;
+    DC: TRggLine;
+
     rP_D0: TPoint3D;
     OffsetX: single;
     OffsetY: single;
     InitialZoom: single;
 
+    OffsetXDefault: single;
+    OffsetYDefault: single;
+    InitialZoomDefault: single;
+
     constructor Create;
     procedure InitDefaultPos; override;
     procedure Load;
     procedure UpdateFromRigg;
+    procedure GoDark; override;
+    procedure GoLight; override;
   end;
 
 implementation
@@ -116,9 +146,14 @@ var
 begin
   inherited;
   Name := 'D00-Live-Rigg';
-  OffsetX := 400;
-  OffsetY := 640;
-  InitialZoom := 0.09;
+
+  OffsetXDefault := 400;
+  OffsetYDefault := 640;
+  InitialZoomDefault := 0.09;
+
+  OffsetX := OffsetXDefault;
+  OffsetY := OffsetYDefault;
+  InitialZoom := InitialZoomDefault;
 
   DefaultShowCaption := True;
 
@@ -162,18 +197,21 @@ begin
   L.Point1 := A0;
   L.Point2 := B0;
   Add(L);
+  A0B0 := L;
 
   L := TRggLine.Create('A0C0');
   L.StrokeColor := claGray;
   L.Point1 := A0;
   L.Point2 := C0;
   Add(L);
+  A0C0 := L;
 
   L := TRggLine.Create('B0C0');
   L.StrokeColor := claGray;
   L.Point1 := B0;
   L.Point2 := C0;
   Add(L);
+  B0C0 := L;
 
   { --- }
 
@@ -182,18 +220,21 @@ begin
   L.Point1 := A0;
   L.Point2 := D0;
   Add(L);
+  A0D0 := L;
 
   L := TRggLine.Create('B0D0');
   L.StrokeColor := claBlack;
   L.Point1 := B0;
   L.Point2 := D0;
   Add(L);
+  B0D0 := L;
 
   L := TRggLine.Create('C0D0');
   L.StrokeColor := claBlack;
   L.Point1 := C0;
   L.Point2 := D0;
   Add(L);
+  C0D0 := L;
 
   { --- }
 
@@ -202,24 +243,28 @@ begin
   L.Point1 := A0;
   L.Point2 := A;
   Add(L);
+  A0A := L;
 
   L := TRggLine.Create('B0B');
   L.StrokeColor := claGreen;
   L.Point1 := B0;
   L.Point2 := B;
   Add(L);
+  B0B := L;
 
   L := TRggLine.Create('C0C');
   L.StrokeColor := claYellow;
   L.Point1 := C0;
   L.Point2 := C;
   Add(L);
+  C0C := L;
 
   L := TRggLine.Create('D0D');
   L.StrokeColor := claBlue;
   L.Point1 := D0;
   L.Point2 := D;
   Add(L);
+  D0D := L;
 
   { --- }
 
@@ -228,18 +273,21 @@ begin
   L.Point1 := A;
   L.Point2 := C;
   Add(L);
+  AC := L;
 
   L := TRggLine.Create('BC');
   L.StrokeColor := claGreen;
   L.Point1 := B;
   L.Point2 := C;
   Add(L);
+  BC := L;
 
   L := TRggLine.Create('DC');
   L.StrokeColor := claBlue;
   L.Point1 := D;
   L.Point2 := C;
   Add(L);
+  DC := L;
 
   { --- }
 
@@ -248,24 +296,28 @@ begin
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
+  AB := L;
 
   L := TRggLine.Create('AD');
   L.StrokeColor := claLime;
   L.Point1 := A;
   L.Point2 := D;
   Add(L);
+  AD := L;
 
   L := TRggLine.Create('BD');
   L.StrokeColor := claLime;
   L.Point1 := B;
   L.Point2 := D;
   Add(L);
+  BD := L;
 
   L := TRggLine.Create('CF');
   L.StrokeColor := claGray;
   L.Point1 := C;
   L.Point2 := F;
   Add(L);
+  CF := L;
 
   Add(A0);
   Add(B0);
@@ -291,47 +343,47 @@ var
   cr: TRggCircle;
 begin
   try
-    cr := Find('A0');
+    cr := A0;
     cr.Center.X := 235.42;
     cr.Center.Y := 552.60;
     cr.Center.Z := -164.01;
 
-    cr := Find('B0');
+    cr := B0;
     cr.Center.X := 142.15;
     cr.Center.Y := 589.33;
     cr.Center.Z := 54.05;
 
-    cr := Find('C0');
+    cr := C0;
     cr.Center.X := 520.27;
     cr.Center.Y := 606.96;
     cr.Center.Z := 80.73;
 
-    cr := Find('D0');
+    cr := D0;
     cr.Center.X := 323.92;
     cr.Center.Y := 674.45;
     cr.Center.Z := -14.62;
 
-    cr := Find('A');
+    cr := A;
     cr.Center.X := 174.48;
     cr.Center.Y := 374.22;
     cr.Center.Z := -127.01;
 
-    cr := Find('B');
+    cr := B;
     cr.Center.X := 104.53;
     cr.Center.Y := 401.77;
     cr.Center.Z := 36.54;
 
-    cr := Find('C');
+    cr := C;
     cr.Center.X := 200.72;
     cr.Center.Y := 217.03;
     cr.Center.Z := 9.74;
 
-    cr := Find('D');
+    cr := D;
     cr.Center.X := 250.00;
     cr.Center.Y := 400.00;
     cr.Center.Z := 0.00;
 
-    cr := Find('F');
+    cr := F;
     cr.Center.X := 151.44;
     cr.Center.Y := 34.07;
     cr.Center.Z := 19.49;
@@ -381,7 +433,87 @@ begin
   except
   end;
 
-  FixPoint := Find('D').Center.C;
+  FixPoint := D.Center.C;
+end;
+
+procedure TRggDrawingD00.GoLight;
+begin
+  inherited;
+  A0.StrokeColor := claRed;
+  B0.StrokeColor := claGreen;
+  C0.StrokeColor := claYellow;
+  D0.StrokeColor := claBlue;
+
+  A.StrokeColor := claRed;
+  B.StrokeColor := claGreen;
+  C.StrokeColor := claYellow;
+  D.StrokeColor := claBlue;
+
+  F.StrokeColor := claGray;
+
+  A0B0.StrokeColor := claGray;
+  A0C0.StrokeColor := claGray;
+  B0C0.StrokeColor := claGray;
+  A0D0.StrokeColor := claGray;
+
+  B0D0.StrokeColor := claBlack;
+  C0D0.StrokeColor := claBlack;
+
+  A0A.StrokeColor := claRed;
+  B0B.StrokeColor := claGreen;
+  C0C.StrokeColor := claYellow;
+  D0D.StrokeColor := claBlue;
+
+  AC.StrokeColor := claRed;
+  BC.StrokeColor := claGreen;
+
+  DC.StrokeColor := claBlue;
+
+  AB.StrokeColor := claLime;
+  AD.StrokeColor := claLime;
+  BD.StrokeColor := claLime;
+
+  CF.StrokeColor := claDodgerblue;
+end;
+
+procedure TRggDrawingD00.GoDark;
+begin
+  inherited;
+  A0.StrokeColor := claRed;
+  B0.StrokeColor := claGreen;
+  C0.StrokeColor := claYellow;
+  D0.StrokeColor := claBlue;
+
+  A.StrokeColor := claRed;
+  B.StrokeColor := claGreen;
+  C.StrokeColor := claYellow;
+  D.StrokeColor := claDodgerblue;
+
+  F.StrokeColor := claGray;
+
+  A0B0.StrokeColor := claGray;
+  A0C0.StrokeColor := claGray;
+  B0C0.StrokeColor := claGray;
+
+  A0D0.StrokeColor := claCyan;
+  B0D0.StrokeColor := claCyan;
+  C0D0.StrokeColor := claCyan;
+
+  A0A.StrokeColor := claRed;
+  B0B.StrokeColor := claGreen;
+  C0C.StrokeColor := claYellow;
+  D0D.StrokeColor := claDodgerblue;
+
+  AC.StrokeColor := claRed;
+  BC.StrokeColor := claGreen;
+
+  DC.StrokeColor := claDodgerblue;
+
+  AB.StrokeColor := claLime;
+  AD.StrokeColor := claLime;
+  BD.StrokeColor := claLime;
+
+  CF.StrokeColor := claCyan;
 end;
 
 end.

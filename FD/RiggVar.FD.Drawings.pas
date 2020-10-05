@@ -114,6 +114,8 @@ type
     procedure SaveAll;
     procedure Compute; virtual;
     procedure InitButtons(BG: TRggButtonGroup); virtual;
+    procedure GoDark; virtual;
+    procedure GoLight; virtual;
 
     procedure Draw(g: TCanvas);
     procedure GetInfo(ML: TStrings);
@@ -324,6 +326,16 @@ begin
   end;
 end;
 
+procedure TRggDrawing.GoDark;
+begin
+
+end;
+
+procedure TRggDrawing.GoLight;
+begin
+
+end;
+
 procedure TRggDrawing.GetInfo(ML: TStrings);
 var
   e: TRggElement;
@@ -405,9 +417,15 @@ begin
   DrawingList.Add(Value);
 
   if UseDarkColorScheme then
-    Value.Colors.GoDark
+  begin
+    Value.Colors.GoDark;
+    Value.GoDark;
+  end
   else
+  begin
     Value.Colors.GoLight;
+    Value.GoLight;
+  end;
 
   for e in Value.ElementList do
   begin
