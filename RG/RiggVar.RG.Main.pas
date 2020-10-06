@@ -310,6 +310,8 @@ begin
   FSofortBerechnen := False;
   FBtnGrauDown := True;
   FBtnBlauDown := False;
+  FBogen := True;
+  FKoppel := False;
 
   FGraphRadio := gSimple;
 

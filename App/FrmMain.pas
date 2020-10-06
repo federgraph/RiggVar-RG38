@@ -1846,7 +1846,6 @@ end;
 
 procedure TFormMain.BogenBtnClick(Sender: TObject);
 begin
-//  RotaForm.BogenBtnClick(Sender);
   Main.Bogen := not Main.Bogen;
   if Sender <> nil then
     Main.FederText.CheckState;
@@ -1883,8 +1882,8 @@ begin
     faToggleUseDisplayList: result := RotaForm.UseDisplayList;
     faToggleUseQuickSort: result := RotaForm.RaumGraph.DL.UseQuickSort;
 
-    faRggBogen: result := RotaForm.Bogen;
-    faRggKoppel: result := RotaForm.RaumGraph.Koppel;
+    faRggBogen: result := Main.Bogen;
+    faRggKoppel: result := Main.Koppel;
 
     faSofortBtn: result := Main.SofortBerechnen;
     faGrauBtn: result := Main.BtnGrauDown;
