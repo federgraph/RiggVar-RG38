@@ -35,6 +35,7 @@ type
   TRggColorScheme = record
     TextColor: TAlphaColor;
     BackgroundColor: TAlphaColor;
+    LabelColor: TAlphaColor;
     procedure GoDark;
     procedure GoLight;
   end;
@@ -1510,8 +1511,8 @@ begin
 
   R := RectF(x, y, x + w, y + h);
 
-  g.Fill.Color := StrokeColor;
-  g.Stroke.Color := TAlphaColors.Red;
+  g.Fill.Color := Drawing.Colors.LabelColor;
+  g.Stroke.Color := Drawing.Colors.LabelColor;
 
   g.FillText(
     R,
@@ -2292,12 +2293,14 @@ procedure TRggColorScheme.GoDark;
 begin
   TextColor := TRggColors.White;
   BackgroundColor := TRggColors.Color333333;
+  LabelColor := TRggColors.Antiquewhite;
 end;
 
 procedure TRggColorScheme.GoLight;
 begin
   TextColor := TRggColors.Black;
   BackgroundColor := TRggColors.White;
+  LabelColor := TRggColors.Plum;
 end;
 
 end.

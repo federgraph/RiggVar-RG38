@@ -436,16 +436,7 @@ var
 begin
   DrawingList.Add(Value);
 
-  if UseDarkColorScheme then
-  begin
-    Value.Colors.GoDark;
-    Value.GoDark;
-  end
-  else
-  begin
-    Value.Colors.GoLight;
-    Value.GoLight;
-  end;
+  Value.UseDarkColorScheme := UseDarkColorScheme;
 
   for e in Value.ElementList do
   begin
