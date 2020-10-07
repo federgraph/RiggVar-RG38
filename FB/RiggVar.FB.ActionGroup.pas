@@ -392,8 +392,7 @@ faHullMeshOff];
 
 ActionGroupEmptyLastLine: TActionGroup = [
 faELLOn,
-faELLOff
-];
+faELLOff];
 
 ActionGroupHelp: TActionGroup = [
 faCycleHelpM,

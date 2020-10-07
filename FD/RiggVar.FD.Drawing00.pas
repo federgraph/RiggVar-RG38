@@ -29,6 +29,7 @@ uses
   RiggVar.FD.Drawings;
 
 {$define Rgg}
+{.$define WantPoly}
 
 type
   { This will be the Live drawing - connected to the model your real App. }
@@ -64,6 +65,11 @@ type
     D0D: TRggLine;
     DC: TRggLine;
 
+{$ifdef WantPoly}
+    MK: TRggPolyLine3D;
+    KK: TRggPolyLine3D;
+{$endif}
+
     rP_D0: TPoint3D;
     OffsetX: single;
     OffsetY: single;
@@ -76,6 +82,7 @@ type
     constructor Create;
     procedure InitDefaultPos; override;
     procedure Load;
+    procedure Transform(AM: TMatrix3D); override;
     procedure UpdateFromRigg;
     procedure GoDark; override;
     procedure GoLight; override;
@@ -319,6 +326,26 @@ begin
   Add(L);
   CF := L;
 
+{$ifdef WantPoly}
+  KK := TRggPolyLine3D.Create('KK', High(TKoordLine) + 1);
+  KK.StrokeThickness := 1;
+  KK.StrokeColor := claYellow;
+  KK.Point1 := D;
+  KK.Point2 := C;
+  KK.ShowPoly := True;
+  KK.WantRotation := True;
+  Add(KK);
+
+  MK := TRggPolyLine3D.Create('MK', BogenMax + 1);
+  MK.StrokeThickness := 2;
+  MK.StrokeColor := claDodgerblue;
+  MK.Point1 := D0;
+  MK.Point2 := C;
+  MK.ShowPoly := True;
+  MK.WantRotation := True;
+  Add(MK);
+{$endif}
+
   Add(A0);
   Add(B0);
   Add(C0);
@@ -436,6 +463,15 @@ begin
   FixPoint := D.Center.C;
 end;
 
+procedure TRggDrawingD00.Transform(AM: TMatrix3D);
+begin
+  inherited;
+{$ifdef WantPoly}
+  MK.Transform;
+  KK.Transform;
+{$endif}
+end;
+
 procedure TRggDrawingD00.GoLight;
 begin
   inherited;
@@ -474,6 +510,11 @@ begin
   BD.StrokeColor := claLime;
 
   CF.StrokeColor := claDodgerblue;
+
+{$ifdef WantPoly}
+  KK.StrokeColor := claYellow;
+  MK.StrokeColor := claDodgerblue;
+{$endif}
 end;
 
 procedure TRggDrawingD00.GoDark;
@@ -514,6 +555,11 @@ begin
   BD.StrokeColor := claLime;
 
   CF.StrokeColor := claCyan;
+
+{$ifdef WantPoly}
+  KK.StrokeColor := claYellow;
+  MK.StrokeColor := claDodgerblue;
+{$endif}
 end;
 
 end.

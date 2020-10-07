@@ -18,6 +18,8 @@
 
 interface
 
+{.$define WantD00}
+
 uses
   System.SysUtils,
   System.Types,
@@ -29,7 +31,9 @@ uses
   RiggVar.FD.TransformHelper,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings,
+{$ifdef WantD00}
   RiggVar.FD.Drawing00,
+{$endif}
   RiggVar.FD.Image,
   FMX.Types,
   FMX.Controls,
@@ -75,7 +79,9 @@ type
     procedure DrawingListItemClick(const Sender: TObject; const AItem: TListViewItem);
     procedure ElementListChange(Sender: TObject);
 
+{$ifdef WantD00}
     procedure UpdateFromRiggBtnClick(Sender: TObject);
+{$endif}
     procedure CodeBtnClick(Sender: TObject);
     procedure GlobalShowCaptionBtnClick(Sender: TObject);
     procedure ToggleShowCaptionBtnClick(Sender: TObject);
@@ -147,14 +153,18 @@ type
     procedure AdjustWH;
     procedure ResetLayout;
   private
+{$ifdef WantD00}
     RggDrawingD00: TRggDrawingD00;
+{$endif}
     DrawCounter: Integer;
     ClickCounter: Integer;
     ShowPointCounter: Integer;
     procedure CreateDrawings;
     procedure Draw;
   private
+{$ifdef WantD00}
     UpdateFromRiggBtn: TSpeedButton;
+{$endif}
     CodeBtn: TSpeedButton;
     GlobalShowCaptionBtn: TSpeedButton;
     ToggleShowCaptionBtn: TSpeedButton;
@@ -217,9 +227,11 @@ end;
 
 procedure TFormDrawing.CreateDrawings;
 begin
-  RggDrawingD00 := TRggDrawingD00.Create;
   DL := TRggDrawings.Create;
+{$ifdef WantD00}
+  RggDrawingD00 := TRggDrawingD00.Create;
   DL.Add(RggDrawingD00);
+{$endif}
   TRggDrawingRegistry.Init(DL);
   InitDrawings;
 end;
@@ -380,9 +392,11 @@ begin
   InplaceShape.OnMouseUp := InplaceShapeMouseUp;
   InplaceShape.OnMouseWheel := ImageMouseWheel;
 
+{$ifdef WantD00}
   UpdateFromRiggBtn := TSpeedButton.Create(Self);
   UpdateFromRiggBtn.Parent := Self;
   UpdateFromRiggBtn.Text := 'UFR';
+{$endif}
 
   CodeBtn := TSpeedButton.Create(Self);
   CodeBtn.Parent := Self;
@@ -644,11 +658,13 @@ begin
   end;
 end;
 
+{$ifdef WantD00}
 procedure TFormDrawing.UpdateFromRiggBtnClick(Sender: TObject);
 begin
   RggDrawingD00.UpdateFromRigg;
   Draw;
 end;
+{$endif}
 
 procedure TFormDrawing.ResetBtnClick(Sender: TObject);
 begin
@@ -713,7 +729,9 @@ end;
 
 procedure TFormDrawing.InitComponentProps;
 begin
-  UpdateFromRiggBtn.Hint := 'Update Drawing 05 from Rigg-Data';
+{$ifdef WantD00}
+  UpdateFromRiggBtn.Hint := 'Update Drawing 00 from Rigg-Data';
+{$endif}
   ToggleShowCaptionBtn.Hint := 'toggle ShowCaption for RggElement';
   GlobalShowCaptionBtn.Hint := 'toggle global ShowCaption';
   CodeBtn.Hint := 'write Code to Memo';
@@ -726,7 +744,9 @@ var
 begin
   w := 40;
 
+{$ifdef WantD00}
   UpdateFromRiggBtn.Width := w;
+{$endif}
   CodeBtn.Width := w;
   GlobalShowCaptionBtn.Width := w;
   ToggleShowCaptionBtn.Width := w;
@@ -828,7 +848,9 @@ begin
   CodeBtn.Position.Y := Margin;
 
   cr := CodeBtn;
+{$ifdef WantD00}
   StackH(UpdateFromRiggBtn);
+{$endif}
   StackH(GlobalShowCaptionBtn);
   StackH(ToggleShowCaptionBtn);
   StackH(ResetBtn);
@@ -877,7 +899,9 @@ begin
   CodeBtn.Position.Y := Margin;
 
   cr := CodeBtn;
+{$ifdef WantD00}
   StackV(UpdateFromRiggBtn);
+{$endif}
   StackV(GlobalShowCaptionBtn);
   StackV(ToggleShowCaptionBtn);
   StackV(ResetBtn);
@@ -965,7 +989,9 @@ end;
 
 procedure TFormDrawing.LinkComponents;
 begin
+{$ifdef WantD00}
   UpdateFromRiggBtn.OnClick := UpdateFromRiggBtnClick;
+{$endif}
   CodeBtn.OnClick := CodeBtnClick;
   GlobalShowCaptionBtn.OnClick := GlobalShowCaptionBtnClick;
   ToggleShowCaptionBtn.OnClick := ToggleShowCaptionBtnClick;
