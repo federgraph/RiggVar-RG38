@@ -21,8 +21,8 @@ interface
 uses
   RiggVar.RG.Def,
   RiggVar.RG.Report,
+  RiggVar.RG.Rota,
   RiggVar.FB.SpeedBar,
-  RiggVar.RG.Graph,
   RiggVar.FD.Image,
   RggTypes,
   RggUnit4,
@@ -31,7 +31,6 @@ uses
   System.Types,
   System.UITypes,
   System.UIConsts,
-  RggRota, //RiggVar.FD.Rota,
   RggCtrls,
   RggChartGraph,
   FMX.Platform,
@@ -197,7 +196,6 @@ type
     procedure HandleAction(fa: Integer);
   public
     RotaForm: TRotaForm;
-    StrokeRigg: IStrokeRigg;
     procedure HandleSegment(fa: Integer);
   public
     Rigg: TRigg;
@@ -325,14 +323,9 @@ begin
   Main.IsUp := True;
 
   RotaForm := TRotaForm.Create;
-  StrokeRigg := RotaForm;
-  Main.StrokeRigg := RotaForm;
   RotaForm.Image := Image;
   RotaForm.Init;
-  RotaForm.ViewPoint := vp3D;
-  RotaForm.ZoomIndex := 8;
-  RotaForm.FixPoint := ooD0;
-  { Set initial translation in RotatForm, FXPos and FYPos, default. }
+  RotaForm.SwapRota(1);
 
   { Params }
   Main.Param := fpVorstag;
@@ -445,6 +438,7 @@ begin
   SalingGraph.Free;
   ControllerGraph.Free;
   ChartGraph.Free;
+  RotaForm.Free;
 end;
 
 procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
@@ -1019,7 +1013,7 @@ begin
     's': fa := faMemeGotoSquare;
 
     't': fa := faToggleFontColor;
-    'T': fa := FaToggleSpeedPanel;
+    'T': fa := faToggleSpeedPanel;
 
     'u': fa := faToggleDataText;
     'U': fa := faToggleDiffText;

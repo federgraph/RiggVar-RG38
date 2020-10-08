@@ -50,7 +50,7 @@ faActionPage6: result := 'faActionPage6';
 faShowMemo: result := 'faShowMemo';
 faShowActions: result := 'faShowActions';
 faShowOptions: result := 'faShowOptions';
-faShowDrawings: result := 'faShowActions';
+faShowDrawings: result := 'faShowDrawings';
 faShowConfig: result := 'faShowConfig';
 faShowTrimmTab: result := 'faShowTrimmTab';
 faShowKreis: result := 'faShowKreis';
@@ -367,6 +367,20 @@ faMemeFormat8: result := 'faMemeFormat8';
 faMemeFormat9: result := 'faMemeFormat9';
 
 (*
+{ DropTarget }
+faToggleDropTarget: result := 'faToggleDropTarget';
+
+{ Language }
+faToggleLanguage: result := 'faToggleLanguage';
+
+{ CopyPaste }
+faSave: result := 'faSave';
+faLoad: result := 'faLoad';
+faOpen: result := 'faOpen';
+faCopy: result := 'faCopy';
+faPaste: result := 'faPaste';
+faShare: result := 'faShare';
+
 { ViewType }
 faToggleViewType: result := 'faToggleViewType';
 faViewTypeOrtho: result := 'faViewTypeOrtho';
@@ -388,12 +402,6 @@ faLabelBatchP: result := 'faLabelBatchP';
 faLabelTextP: result := 'faLabelTextP';
 faLabelTextM: result := 'faLabelTextM';
 
-{ Texture Param }
-faParamT1: result := 'faParamT1';
-faParamT2: result := 'faParamT2';
-faParamT3: result := 'faParamT3';
-faParamT4: result := 'faParamT4';
-
 { LastLine }
 faELLOn: result := 'faELLOn';
 faELLOff: result := 'faELLOff';
@@ -404,7 +412,6 @@ faCycleHelpP: result := 'faCycleHelpP';
 faHelpCycle: result := 'faHelpCycle';
 faHelpList: result := 'faHelpList';
 faHelpHome: result := 'faHelpHome';
-faToggleLanguage: result := 'faToggleLanguage';
 
 { Format }
 faFormatLandscape: result := 'faFormatLandscape';
@@ -445,14 +452,6 @@ faRandomBlack: result := 'faRandomBlack';
 faBitmapEscape: result := 'faBitmapEscape';
 faToggleContour: result := 'faToggleContour';
 
-{ CopyPaste }
-faSave: result := 'faSave';
-faLoad: result := 'faLoad';
-faOpen: result := 'faOpen';
-faCopy: result := 'faCopy';
-faPaste: result := 'faPaste';
-faShare: result := 'faShare';
-
 { CopyImage }
 faCopyScreenshot: result := 'faCopyScreenshot';
 faCopyBitmap: result := 'faCopyBitmap';
@@ -468,9 +467,6 @@ faPngCopyOff: result := 'faPngCopyOff';
 faToggleNoCopy: result := 'faToggleNoCopy';
 faNoCopyOn: result := 'faNoCopyOn';
 faNoCopyOff: result := 'faNoCopyOff';
-
-{ Input }
-faToggleDropTarget: result := 'faToggleDropTarget';
 
 { RggHullMesh }
 faHullMesh: result := 'faHullMesh';

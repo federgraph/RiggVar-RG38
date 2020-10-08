@@ -57,6 +57,7 @@ uses
   RiggVar.RG.Graph in 'RG\RiggVar.RG.Graph.pas',
   RiggVar.RG.Main in 'RG\RiggVar.RG.Main.pas',
   RiggVar.RG.Report in 'RG\RiggVar.RG.Report.pas',
+  RiggVar.RG.Rota in 'RG\RiggVar.RG.Rota.pas',
   RiggVar.RG.Speed01 in 'RG\RiggVar.RG.Speed01.pas',
   RiggVar.RG.Speed02 in 'RG\RiggVar.RG.Speed02.pas',
   RiggVar.RG.Speed03 in 'RG\RiggVar.RG.Speed03.pas',

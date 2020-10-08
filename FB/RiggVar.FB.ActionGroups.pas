@@ -123,8 +123,13 @@ begin
   {Meme }
   AddSpecial(ActionGroupMemeFormat, 'MemeFormat');
 
-  { Rgg3D }
 (*
+  { Promoted vond Rgg3D }
+  AddSpecial(ActionGroupDropTarget, 'DropTarget');
+  AddSpecial(ActionGroupLanguage, 'Language');
+  AddSpecial(ActionGroupCopyPaste, 'CopyPaste');
+
+  { Rgg3D }
   AddSpecial(ActionGroupViewType, 'ViewType');
   AddSpecial(ActionGroupViewFlags, 'ViewFlags');
   AddSpecial(ActionGroupEmptyLastLine, 'LastLine');
@@ -134,10 +139,8 @@ begin
   AddSpecial(ActionGroupViewOptions, 'ViewOptions');
   AddSpecial(ActionGroupReset, 'Reset');
   AddSpecial(ActionGroupBitmapCycle, 'BitmapCycle');
-  AddSpecial(ActionGroupCopyPaste, 'CopyPaste');
   AddSpecial(ActionGroupCopyImage, 'CopyImage');
   AddSpecial(ActionGroupCopyOptions, 'CopyOptions');
-  AddSpecial(ActionGroupInput, 'Input');
   AddSpecial(ActionGroupRggHullMesh, 'RggHullMesh');
 *)
 

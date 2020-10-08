@@ -25,7 +25,7 @@ uses
   RggTransformer;
 
 type
-  TRotaForm = class(TInterfacedObject, IStrokeRigg)
+  TRotaForm1 = class(TInterfacedObject, IStrokeRigg)
   private
     RPN: TRiggPoints;
     RPE: TRiggPoints;
@@ -184,6 +184,7 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure Init;
+    procedure Swap;
     procedure Draw;
     procedure ImageScreenScaleChanged(Sender: TObject);
 
@@ -235,7 +236,7 @@ uses
 
 { TRotaForm }
 
-constructor TRotaForm.Create;
+constructor TRotaForm1.Create;
 begin
   KeepInsideItemChecked := True;
   BitmapWidth := 1024;
@@ -248,7 +249,7 @@ begin
   }
 end;
 
-destructor TRotaForm.Destroy;
+destructor TRotaForm1.Destroy;
 begin
   Image := nil;
   RaumGraph.Free;
@@ -258,7 +259,7 @@ begin
   inherited;
 end;
 
-procedure TRotaForm.Init;
+procedure TRotaForm1.Init;
 begin
   FDrawAlways := True;
   AlwaysShowAngle := False;
@@ -269,11 +270,6 @@ begin
 //  FXPos := -260;
 //  FYPos := 0;
 
-  Image.OnMouseDown := PaintBox3DMouseDown;
-  Image.OnMouseMove := PaintBox3DMouseMove;
-  Image.OnMouseUp := PaintBox3DMouseUp;
-  Image.OnScreenScaleChanged := ImageScreenScaleChanged;
-
   InitGraph;
   InitRaumGraph;
   InitHullGraph;
@@ -281,7 +277,15 @@ begin
   SetViewPoint(FViewPoint);
 end;
 
-procedure TRotaForm.InitGraph;
+procedure TRotaForm1.Swap;
+begin
+  Image.OnMouseDown := PaintBox3DMouseDown;
+  Image.OnMouseMove := PaintBox3DMouseMove;
+  Image.OnMouseUp := PaintBox3DMouseUp;
+  Image.OnScreenScaleChanged := ImageScreenScaleChanged;
+end;
+
+procedure TRotaForm1.InitGraph;
 begin
   Rotator := TPolarKar.Create;
   Rotator.OnCalcAngle := Rotator.GetAngle2;
@@ -291,7 +295,7 @@ begin
   Transformer.OnGetFixPunkt := OnGetFixPunkt;
 end;
 
-procedure TRotaForm.InitRaumGraph;
+procedure TRotaForm1.InitRaumGraph;
 begin
   RaumGraph := TRaumGraph.Create(TZug3D.Create);
   RaumGraph.Transformer := Transformer;
@@ -301,13 +305,13 @@ begin
   RaumGraph.Bogen := FBogen;
 end;
 
-procedure TRotaForm.InitHullGraph;
+procedure TRotaForm1.InitHullGraph;
 begin
   HullGraph := THullGraph0.Create;
   HullGraph.Transformer := Transformer;
 end;
 
-procedure TRotaForm.UpdateGraphFromTestData;
+procedure TRotaForm1.UpdateGraphFromTestData;
 begin
   RaumGraph.Salingtyp := stFest;
   RaumGraph.ControllerTyp := ctOhne;
@@ -317,7 +321,7 @@ begin
   Draw;
 end;
 
-procedure TRotaForm.InitRotaData;
+procedure TRotaForm1.InitRotaData;
 
   function GetMatrix(Theta, Xrot: single): TMatrix3D;
   begin
@@ -374,7 +378,7 @@ begin
   end;
 end;
 
-procedure TRotaForm.UpdateMatrixText;
+procedure TRotaForm1.UpdateMatrixText;
 var
   m4x4: TMatrix3D;
 begin
@@ -384,7 +388,7 @@ begin
   MatrixTextW := Format('%8.4f %8.4f %8.4f',[m4x4.m31, m4x4.m32, m4x4.m33]);
 end;
 
-procedure TRotaForm.DrawMatrix(g: TCanvas);
+procedure TRotaForm1.DrawMatrix(g: TCanvas);
 var
   R: TRectF;
   tx: single;
@@ -424,7 +428,7 @@ begin
   TextOut(tx, oy + 2 * th, MatrixTextW);
 end;
 
-procedure TRotaForm.DrawToImage(g: TCanvas);
+procedure TRotaForm1.DrawToImage(g: TCanvas);
 begin
   Painted := False;
 
@@ -460,7 +464,7 @@ begin
   Painted := True;
 end;
 
-procedure TRotaForm.DrawToCanvasEx(g: TCanvas);
+procedure TRotaForm1.DrawToCanvasEx(g: TCanvas);
 begin
   if SingleDraw then
   begin
@@ -501,7 +505,7 @@ begin
   end;
 end;
 
-procedure TRotaForm.DrawToCanvas(g: TCanvas);
+procedure TRotaForm1.DrawToCanvas(g: TCanvas);
 begin
   if SkipOnceFlag then
   begin
@@ -539,7 +543,7 @@ begin
   g.Fill.Color := TAlphaColors.Null;
 end;
 
-procedure TRotaForm.DoTrans;
+procedure TRotaForm1.DoTrans;
 begin
   UpdateMinMax;
 
@@ -556,7 +560,7 @@ begin
     EraseBK := True;
 end;
 
-procedure TRotaForm.UpdateMinMax;
+procedure TRotaForm1.UpdateMinMax;
 begin
   if KeepInsideItemChecked then
   begin
@@ -578,78 +582,78 @@ begin
   end;
 end;
 
-procedure TRotaForm.ZoomInBtnClick(Sender: TObject);
+procedure TRotaForm1.ZoomInBtnClick(Sender: TObject);
 begin
   ZoomIndex := FZoomIndex + 1;
 end;
 
-procedure TRotaForm.ZoomOutBtnClick(Sender: TObject);
+procedure TRotaForm1.ZoomOutBtnClick(Sender: TObject);
 begin
   ZoomIndex := FZoomIndex - 1;
 end;
 
-procedure TRotaForm.SetBtnBlauDown(const Value: Boolean);
+procedure TRotaForm1.SetBtnBlauDown(const Value: Boolean);
 begin
   FBtnBlauDown := Value;
 end;
 
-procedure TRotaForm.SetBtnGrauDown(const Value: Boolean);
+procedure TRotaForm1.SetBtnGrauDown(const Value: Boolean);
 begin
   FBtnGrauDown := Value;
 end;
 
-procedure TRotaForm.SetFixPoint(const Value: TRiggPoint);
+procedure TRotaForm1.SetFixPoint(const Value: TRiggPoint);
 begin
   FFixPoint := Value;
   RaumGraph.FixPoint := FixPoint;
   Draw;
 end;
 
-procedure TRotaForm.SetGrauZeichnen(const Value: Boolean);
+procedure TRotaForm1.SetGrauZeichnen(const Value: Boolean);
 begin
   FGrauZeichnen := Value;
 end;
 
-procedure TRotaForm.SetHullVisible(const Value: Boolean);
+procedure TRotaForm1.SetHullVisible(const Value: Boolean);
 begin
   RumpfItemChecked := Value;
   Draw;
 end;
 
-procedure TRotaForm.SetRiggLED(const Value: Boolean);
+procedure TRotaForm1.SetRiggLED(const Value: Boolean);
 begin
   FRiggLED := Value;
   RaumGraph.RiggLED := Value;
 end;
 
-procedure TRotaForm.SetSofortBerechnen(const Value: Boolean);
+procedure TRotaForm1.SetSofortBerechnen(const Value: Boolean);
 begin
   FSofortBerechnen := Value;
 end;
 
-procedure TRotaForm.SetUseQuickSort(const Value: Boolean);
+procedure TRotaForm1.SetUseQuickSort(const Value: Boolean);
 begin
   FUseQuickSort := Value;
   RaumGraph.DL.UseQuickSort := True;
 end;
 
-procedure TRotaForm.SetOnAfterDraw(const Value: TNotifyEvent);
+procedure TRotaForm1.SetOnAfterDraw(const Value: TNotifyEvent);
 begin
   FOnAfterDraw := Value;
 end;
 
-procedure TRotaForm.SetOnBeforeDraw(const Value: TNotifyEvent);
+procedure TRotaForm1.SetOnBeforeDraw(const Value: TNotifyEvent);
 begin
   FOnBeforeDraw := Value;
 end;
 
-procedure TRotaForm.RumpfBtnClick(Sender: TObject);
+procedure TRotaForm1.RumpfBtnClick(Sender: TObject);
 begin
   RumpfItemChecked := not RumpfItemChecked;
   Draw;
 end;
 
-procedure TRotaForm.PaintBtnClick(Sender: TObject);
+procedure TRotaForm1.PaintBtnClick(Sender: TObject);
 begin
   PaintItemChecked := not PaintItemChecked;
   if not PaintItemChecked then
@@ -657,26 +661,26 @@ begin
   Draw;
 end;
 
-procedure TRotaForm.UseDisplayListBtnClick(Sender: TObject);
+procedure TRotaForm1.UseDisplayListBtnClick(Sender: TObject);
 begin
   UseDisplayList := not UseDisplayList;
   Draw;
 end;
 
-procedure TRotaForm.UseQuickSortBtnClick(Sender: TObject);
+procedure TRotaForm1.UseQuickSortBtnClick(Sender: TObject);
 begin
   RaumGraph.DL.UseQuickSort := not RaumGraph.DL.UseQuickSort;
   RaumGraph.Update;
   Draw;
 end;
 
-procedure TRotaForm.BogenBtnClick(Sender: TObject);
+procedure TRotaForm1.BogenBtnClick(Sender: TObject);
 begin
   Bogen := not Bogen;
   Draw;
 end;
 
-procedure TRotaForm.SetViewPoint(const Value: TViewPoint);
+procedure TRotaForm1.SetViewPoint(const Value: TViewPoint);
 begin
   if not IsUp then
     Exit;
@@ -713,7 +717,7 @@ begin
   Draw;
 end;
 
-procedure TRotaForm.PositionSaveItemClick(Sender: TObject);
+procedure TRotaForm1.PositionSaveItemClick(Sender: TObject);
 begin
   case FViewPoint of
     vpSeite: RotaData := RotaData1;
@@ -738,26 +742,26 @@ begin
   end;
 end;
 
-procedure TRotaForm.PositionResetItemClick(Sender: TObject);
+procedure TRotaForm1.PositionResetItemClick(Sender: TObject);
 begin
   InitRotaData;
   SetViewPoint(FViewPoint);
 end;
 
-procedure TRotaForm.KeepInsideItemClick(Sender: TObject);
+procedure TRotaForm1.KeepInsideItemClick(Sender: TObject);
 begin
   KeepInsideItemChecked := not KeepInsideItemChecked;
   if KeepInsideItemChecked then
     Draw;
 end;
 
-procedure TRotaForm.KoppelBtnClick(Sender: TObject);
+procedure TRotaForm1.KoppelBtnClick(Sender: TObject);
 begin
   RaumGraph.Koppel := not RaumGraph.Koppel;
   Draw;
 end;
 
-procedure TRotaForm.PaintBox3DMouseDown(Sender: TObject;
+procedure TRotaForm1.PaintBox3DMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: single);
 begin
   MouseDown := True;
@@ -774,7 +778,7 @@ begin
     (Abs(NullPunktOffset.y - Y) < TKR);
 end;
 
-procedure TRotaForm.PaintBox3DMouseMove(Sender: TObject;
+procedure TRotaForm1.PaintBox3DMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: single);
 var
   wx, wy, wz: single;
@@ -807,7 +811,7 @@ begin
   end;
 end;
 
-procedure TRotaForm.PaintBox3DMouseUp(Sender: TObject;
+procedure TRotaForm1.PaintBox3DMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: single);
 begin
   MouseDown := False;
@@ -816,7 +820,7 @@ begin
   Draw;
 end;
 
-procedure TRotaForm.Rotate(Phi, Theta, Gamma, xrot, yrot, zrot: single);
+procedure TRotaForm1.Rotate(Phi, Theta, Gamma, xrot, yrot, zrot: single);
 begin
   Rotator.DeltaPhi := Phi;
   Rotator.DeltaTheta := Theta;
@@ -826,19 +830,19 @@ begin
   Rotator.ZRot := Zrot;
 end;
 
-procedure TRotaForm.Translate(x, y: single);
+procedure TRotaForm1.Translate(x, y: single);
 begin
   FXpos := SavedXpos - (MouseDownX - x);
   FYpos := SavedYpos - (MouseDownY - y);
   DoTrans;
 end;
 
-procedure TRotaForm.ImageScreenScaleChanged(Sender: TObject);
+procedure TRotaForm1.ImageScreenScaleChanged(Sender: TObject);
 begin
   Draw;
 end;
 
-procedure TRotaForm.Draw;
+procedure TRotaForm1.Draw;
 begin
   if IsUp then
   begin
@@ -849,29 +853,29 @@ begin
   end;
 end;
 
-procedure TRotaForm.DrawAlwaysItemClick(Sender: TObject);
+procedure TRotaForm1.DrawAlwaysItemClick(Sender: TObject);
 begin
   FDrawAlways := not FDrawAlways;
 end;
 
-procedure TRotaForm.LegendBtnClick(Sender: TObject);
+procedure TRotaForm1.LegendBtnClick(Sender: TObject);
 begin
   LegendItemChecked := not LegendItemChecked;
   Draw;
 end;
 
-procedure TRotaForm.MatrixItemClick(Sender: TObject);
+procedure TRotaForm1.MatrixItemClick(Sender: TObject);
 begin
   MatrixItemChecked := not MatrixItemChecked;
   Draw;
 end;
 
-function TRotaForm.OnGetFixPunkt: TPoint3D;
+function TRotaForm1.OnGetFixPunkt: TPoint3D;
 begin
   result := RPN.V[FFixPoint];
 end;
 
-procedure TRotaForm.ToggleRenderOption(const fa: Integer);
+procedure TRotaForm1.ToggleRenderOption(const fa: Integer);
 begin
   case fa of
     faWantRenderE: RaumGraph.WantRenderE := not RaumGraph.WantRenderP;
@@ -882,7 +886,7 @@ begin
   end;
 end;
 
-function TRotaForm.QueryRenderOption(const fa: Integer): Boolean;
+function TRotaForm1.QueryRenderOption(const fa: Integer): Boolean;
 begin
   case fa of
     faWantRenderE: result := RaumGraph.WantRenderE;
@@ -899,87 +903,87 @@ begin
   end;
 end;
 
-function TRotaForm.GetMastKurvePoint(const Index: Integer): TPoint3D;
+function TRotaForm1.GetMastKurvePoint(const Index: Integer): TPoint3D;
 begin
   result := RaumGraph.GetMastKurvePoint(Index);
 end;
 
-procedure TRotaForm.SetMastLineData(const Value: TLineDataR100; L,
+procedure TRotaForm1.SetMastLineData(const Value: TLineDataR100; L,
   Beta: single);
 begin
   RaumGraph.SetMastLineData(Value, L, Beta);
 end;
 
-procedure TRotaForm.SetSalingTyp(const Value: TSalingTyp);
+procedure TRotaForm1.SetSalingTyp(const Value: TSalingTyp);
 begin
   RaumGraph.SalingTyp := Value;
 end;
 
-procedure TRotaForm.SetBogen(const Value: Boolean);
+procedure TRotaForm1.SetBogen(const Value: Boolean);
 begin
   FBogen := Value;
   RaumGraph.Bogen := Value;
 end;
 
-procedure TRotaForm.SetControllerTyp(const Value: TControllerTyp);
+procedure TRotaForm1.SetControllerTyp(const Value: TControllerTyp);
 begin
   RaumGraph.ControllerTyp := Value;
 end;
 
-procedure TRotaForm.SetDarkMode(const Value: Boolean);
+procedure TRotaForm1.SetDarkMode(const Value: Boolean);
 begin
   FDarkMode := Value;
 end;
 
-procedure TRotaForm.SetKoordinaten(const Value: TRiggPoints);
+procedure TRotaForm1.SetKoordinaten(const Value: TRiggPoints);
 begin
   RPN := Value;
 end;
 
-procedure TRotaForm.SetKoordinatenE(const Value: TRiggPoints);
+procedure TRotaForm1.SetKoordinatenE(const Value: TRiggPoints);
 begin
   RPE := Value;
 end;
 
-procedure TRotaForm.SetKoordinatenR(const Value: TRiggPoints);
+procedure TRotaForm1.SetKoordinatenR(const Value: TRiggPoints);
 begin
   RPR := Value;
 end;
 
-procedure TRotaForm.SetKoppel(const Value: Boolean);
+procedure TRotaForm1.SetKoppel(const Value: Boolean);
 begin
   FKoppel := Value;
   RaumGraph.Koppel := Value;
 end;
 
-procedure TRotaForm.SetKoppelKurve(const Value: TKoordLine);
+procedure TRotaForm1.SetKoppelKurve(const Value: TKoordLine);
 begin
   RaumGraph.SetKoppelKurve(Value);
 end;
 
-procedure TRotaForm.SetMastKurve(const Value: TMastKurve);
+procedure TRotaForm1.SetMastKurve(const Value: TMastKurve);
 begin
   RaumGraph.SetMastKurve(Value);
 end;
 
-procedure TRotaForm.SetWanteGestrichelt(const Value: Boolean);
+procedure TRotaForm1.SetWanteGestrichelt(const Value: Boolean);
 begin
   FWanteGestrichelt := Value;
   RaumGraph.WanteGestrichelt := Value;
 end;
 
-procedure TRotaForm.SetWantLineColors(const Value: Boolean);
+procedure TRotaForm1.SetWantLineColors(const Value: Boolean);
 begin
   FWantLineColors := Value;
   RaumGraph.DL.WantLineColors := Value;
 end;
 
-procedure TRotaForm.SetWantOverlayedRiggs(const Value: Boolean);
+procedure TRotaForm1.SetWantOverlayedRiggs(const Value: Boolean);
 begin
   FWantOverlayedRiggs := Value;
 end;
 
-procedure TRotaForm.SetZoomIndex(const Value: Integer);
+procedure TRotaForm1.SetZoomIndex(const Value: Integer);
 begin
   if (Value < 1) then
     FZoomIndex := 1
@@ -993,20 +997,20 @@ begin
   Draw;
 end;
 
-procedure TRotaForm.Zoom(Delta: single);
+procedure TRotaForm1.Zoom(Delta: single);
 begin
   FZoom := FZoom + FZoom * FZoomBase * Delta * 0.3;
   RaumGraph.Zoom := FZoom;
   Draw;
 end;
 
-procedure TRotaForm.RotateZ(Delta: single);
+procedure TRotaForm1.RotateZ(Delta: single);
 begin
   Rotate(0, 0, 0, 0, 0, Delta);
   Draw;
 end;
 
-procedure TRotaForm.UpdateDisplayListForBoth(WithKoord: Boolean);
+procedure TRotaForm1.UpdateDisplayListForBoth(WithKoord: Boolean);
 begin
   if not UseDisplayList then
     Exit;
@@ -1031,7 +1035,7 @@ begin
     OnBeforeDraw(Self);
 end;
 
-procedure TRotaForm.DrawHullNormal(g: TCanvas);
+procedure TRotaForm1.DrawHullNormal(g: TCanvas);
 begin
   if RumpfItemChecked
     and not UseDisplayList
@@ -1043,7 +1047,7 @@ begin
   end;
 end;
 
-function TRotaForm.SingleDraw: Boolean;
+function TRotaForm1.SingleDraw: Boolean;
 begin
   result := True;
 
@@ -1072,12 +1076,12 @@ begin
   end;
 end;
 
-function TRotaForm.GetChecked(fa: Integer): Boolean;
+function TRotaForm1.GetChecked(fa: Integer): Boolean;
 begin
   result := RaumGraph.GetChecked(fa);
 end;
 
-procedure TRotaForm.SetChecked(fa: Integer; Value: Boolean);
+procedure TRotaForm1.SetChecked(fa: Integer; Value: Boolean);
 begin
   RaumGraph.SetChecked(fa, Value);
 end;
