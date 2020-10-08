@@ -73,6 +73,7 @@ type
     procedure UpdateDisplayList;
     procedure DrawToCanvas(g: TCanvas); override;
 
+    procedure SetChecked(fa: Integer; Value: Boolean);
     function GetChecked(fa: Integer): Boolean;
     procedure GetPlotList(ML: TStrings); override;
     property FixPunkt: TPoint3D read GetFixPunkt;
@@ -475,6 +476,20 @@ begin
     faRggKoppel: result := Koppel;
     else
       result := False;
+  end;
+end;
+
+procedure TRaumGraph.SetChecked(fa: Integer; Value: Boolean);
+begin
+  case fa of
+    faToggleSegmentF: WantFixPunkt := Value;
+    faToggleSegmentR: WantRumpf := Value;
+    faToggleSegmentS: WantSaling := Value;
+    faToggleSegmentM: WantMast := Value;
+    faToggleSegmentV: WantVorstag := Value;
+    faToggleSegmentW: WantWante := Value;
+    faToggleSegmentC: WantController := Value;
+    faToggleSegmentA: WantAchsen := Value;
   end;
 end;
 

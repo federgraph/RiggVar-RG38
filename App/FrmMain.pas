@@ -31,10 +31,7 @@ uses
   System.Types,
   System.UITypes,
   System.UIConsts,
-  RggDisplayTypes,
-  RggDisplay,
-  RggRaumGraph,
-  RggRota,
+  RggRota, //RiggVar.FD.Rota,
   RggCtrls,
   RggChartGraph,
   FMX.Platform,
@@ -199,7 +196,6 @@ type
     function GetChecked(fa: Integer): Boolean;
     procedure HandleAction(fa: Integer);
   public
-    DL: TRggDisplayList;
     RotaForm: TRotaForm;
     StrokeRigg: IStrokeRigg;
     procedure HandleSegment(fa: Integer);
@@ -333,7 +329,6 @@ begin
   Main.StrokeRigg := RotaForm;
   RotaForm.Image := Image;
   RotaForm.Init;
-  DL := RotaForm.RaumGraph.DL;
   RotaForm.ViewPoint := vp3D;
   RotaForm.ZoomIndex := 8;
   RotaForm.FixPoint := ooD0;
@@ -761,6 +756,7 @@ end;
 procedure TFormMain.UpdateBackgroundColor(AColor: TAlphaColor);
 begin
   Self.Fill.Color := AColor;
+  RotaForm.BackgroundColor := AColor;
 end;
 
 procedure TFormMain.Reset;
@@ -1399,31 +1395,19 @@ begin
 end;
 
 procedure TFormMain.LineColorBtnClick(Sender: TObject);
-var
-  b: Boolean;
 begin
-  b := not DL.WantLineColors;
-  DL.WantLineColors := b;
+  RotaForm.WantLineColors := not RotaForm.WantLineColors;
   UpdateSpeedButtonDown;
   RotaForm.Draw;
 end;
 
 procedure TFormMain.HandleSegment(fa: Integer);
 var
-  rg: TRaumGraph;
+  b: Boolean;
 begin
-  rg := RotaForm.RaumGraph;
-
-  case fa of
-    faToggleSegmentF: rg.WantFixpunkt := not rg.WantFixPunkt;
-    faToggleSegmentM: rg.WantMast:= not rg.WantMast;
-    faToggleSegmentW: rg.WantWante:= not rg.WantWante;
-    faToggleSegmentV: rg.WantVorstag := not rg.WantVorstag;
-    faToggleSegmentS: rg.WantSaling := not rg.WantSaling;
-    faToggleSegmentR: rg.WantRumpf := not rg.WantRumpf;
-    faToggleSegmentC: rg.WantController := not rg.WantController;
-    faToggleSegmentA: rg.WantAchsen := not rg.WantAchsen;
-  end;
+  b := RotaForm.GetChecked(fa);
+  b := not b;
+  RotaForm.SetChecked(fa, b);
 
   RotaForm.Draw;
 end;
@@ -1874,13 +1858,13 @@ begin
     faButtonFrameReport: result := WantButtonFrameReport;
     faChartRect..faChartReset: result := ChartGraph.GetChecked(fa);
     faReportNone..faReportReadme: result := ReportManager.GetChecked(fa);
-    faToggleSegmentF..faToggleSegmentA: result := RotaForm.RaumGraph.GetChecked(fa);
+    faToggleSegmentF..faToggleSegmentA: result := RotaForm.GetChecked(fa);
 
-    faToggleLineColor: result := DL.WantLineColors;
+    faToggleLineColor: result := RotaForm.WantLineColors;
     faToggleShowLegend: result := RotaForm.LegendItemChecked;
 
     faToggleUseDisplayList: result := RotaForm.UseDisplayList;
-    faToggleUseQuickSort: result := RotaForm.RaumGraph.DL.UseQuickSort;
+    faToggleUseQuickSort: result := RotaForm.UseQuickSort;
 
     faRggBogen: result := Main.Bogen;
     faRggKoppel: result := Main.Koppel;
@@ -2097,6 +2081,8 @@ begin
 
   SalingGraph.BackgroundColor := MainVar.ColorScheme.claBackground;
   UpdateSalingGraph;
+
+  RotaForm.DarkMode := SpeedPanel.DarkMode;
 end;
 
 procedure TFormMain.SuperSimpleBtnClick(Sender: TObject);
@@ -2138,7 +2124,7 @@ procedure TFormMain.SuperDisplayBtnClick(Sender: TObject);
 begin
   RotaForm.UseDisplayList := True;
   RotaForm.WantOverlayedRiggs := False;
-  RotaForm.RaumGraph.DL.UseQuickSort := False;
+  RotaForm.UseQuickSort := False;
   Main.GraphRadio := gDisplay;
 end;
 
@@ -2146,7 +2132,7 @@ procedure TFormMain.SuperQuickBtnClick(Sender: TObject);
 begin
   RotaForm.UseDisplayList := True;
   RotaForm.WantOverlayedRiggs := False;
-  RotaForm.RaumGraph.DL.UseQuickSort := True;
+  RotaForm.UseQuickSort := True;
   Main.GraphRadio := gQuick;
 end;
 

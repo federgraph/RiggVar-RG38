@@ -154,6 +154,10 @@ type
     FWanteGestrichelt: Boolean;
     FBogen: Boolean;
     FKoppel: Boolean;
+    FWantLineColors: Boolean;
+    FDarkMode: Boolean;
+    FWantOverlayedRiggs: Boolean;
+    FUseQuickSort: Boolean;
     procedure InitGraph;
     procedure InitRaumGraph;
     procedure InitHullGraph;
@@ -164,6 +168,10 @@ type
     procedure SetOnBeforeDraw(const Value: TNotifyEvent);
     procedure SetOnAfterDraw(const Value: TNotifyEvent);
     function SingleDraw: Boolean;
+    procedure SetWantLineColors(const Value: Boolean);
+    procedure SetDarkMode(const Value: Boolean);
+    procedure SetWantOverlayedRiggs(const Value: Boolean);
+    procedure SetUseQuickSort(const Value: Boolean);
   public
     IsUp: Boolean;
     Image: TOriginalImage; // injected
@@ -171,7 +179,7 @@ type
     HullGraph: THullGraph0;
     RaumGraph: TRaumGraph;
     UseDisplayList: Boolean;
-    WantOverlayedRiggs: Boolean;
+    BackgroundColor: TAlphaColor;
 
     constructor Create;
     destructor Destroy; override;
@@ -181,6 +189,9 @@ type
 
     procedure RotateZ(Delta: single);
     procedure Zoom(Delta: single);
+
+    function GetChecked(fa: Integer): Boolean;
+    procedure SetChecked(fa: Integer; Value: Boolean);
 
     property ZoomIndex: Integer read FZoomIndex write SetZoomIndex;
     property ViewPoint: TViewPoint read FViewPoint write SetViewPoint;
@@ -206,6 +217,11 @@ type
 
     property OnBeforeDraw: TNotifyEvent read FOnBeforeDraw write SetOnBeforeDraw;
     property OnAfterDraw: TNotifyEvent read FOnAfterDraw write SetOnAfterDraw;
+
+    property WantOverlayedRiggs: Boolean read FWantOverlayedRiggs write SetWantOverlayedRiggs;
+    property WantLineColors: Boolean read FWantLineColors write SetWantLineColors;
+    property DarkMode: Boolean read FDarkMode write SetDarkMode;
+    property UseQuickSort: Boolean read FUseQuickSort write SetUseQuickSort;
   end;
 
 implementation
@@ -611,6 +627,12 @@ begin
   FSofortBerechnen := Value;
 end;
 
+procedure TRotaForm.SetUseQuickSort(const Value: Boolean);
+begin
+  FUseQuickSort := Value;
+  RaumGraph.DL.UseQuickSort := True;
+end;
+
 procedure TRotaForm.SetOnAfterDraw(const Value: TNotifyEvent);
 begin
   FOnAfterDraw := Value;
@@ -904,6 +926,11 @@ begin
   RaumGraph.ControllerTyp := Value;
 end;
 
+procedure TRotaForm.SetDarkMode(const Value: Boolean);
+begin
+  FDarkMode := Value;
+end;
+
 procedure TRotaForm.SetKoordinaten(const Value: TRiggPoints);
 begin
   RPN := Value;
@@ -939,6 +966,17 @@ procedure TRotaForm.SetWanteGestrichelt(const Value: Boolean);
 begin
   FWanteGestrichelt := Value;
   RaumGraph.WanteGestrichelt := Value;
+end;
+
+procedure TRotaForm.SetWantLineColors(const Value: Boolean);
+begin
+  FWantLineColors := Value;
+  RaumGraph.DL.WantLineColors := Value;
+end;
+
+procedure TRotaForm.SetWantOverlayedRiggs(const Value: Boolean);
+begin
+  FWantOverlayedRiggs := Value;
 end;
 
 procedure TRotaForm.SetZoomIndex(const Value: Integer);
@@ -1032,6 +1070,16 @@ begin
     { ok, MultiDraw, draw relaxed position in gray }
     result := False;
   end;
+end;
+
+function TRotaForm.GetChecked(fa: Integer): Boolean;
+begin
+  result := RaumGraph.GetChecked(fa);
+end;
+
+procedure TRotaForm.SetChecked(fa: Integer; Value: Boolean);
+begin
+  RaumGraph.SetChecked(fa, Value);
 end;
 
 end.

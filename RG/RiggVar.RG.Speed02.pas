@@ -70,7 +70,6 @@ uses
   FrmMain,
   RiggVar.App.Main,
   RggTypes,
-  RggRaumGraph,
   RiggVar.FB.ActionConst;
 
 { TActionSpeedBarRG02 }
@@ -127,7 +126,7 @@ procedure TActionSpeedBarRG02.UpdateSpeedButtonDown;
 begin
   UseDisplayListBtn.IsPressed := FormMain.RotaForm.UseDisplayList;
 
-  UseQuickSortBtn.IsPressed := FormMain.RotaForm.RaumGraph.DL.UseQuickSort;
+  UseQuickSortBtn.IsPressed := FormMain.RotaForm.UseQuickSort;
   LegendBtn.IsPressed := FormMain.RotaForm.LegendItemChecked;
   LineColorBtn.IsPressed := Main.GetChecked(faToggleLineColor);
 
