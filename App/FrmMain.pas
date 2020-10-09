@@ -2025,7 +2025,7 @@ begin
   if FormDrawing <> nil then
   begin
     FormDrawing.DisposeOf;
-    FormAction := nil;
+    FormDrawing := nil;
   end;
   if FormMemo <> nil then
   begin

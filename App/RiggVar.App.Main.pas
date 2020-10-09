@@ -62,6 +62,7 @@ implementation
 
 class constructor MainVar.Create;
 begin
+  RG := True;
   IsSandboxed := false;
   ColorScheme := TColorScheme.Create(5);
   Raster := 70;
