@@ -1,4 +1,4 @@
-object FormMain: TFormMain
+﻿object FormMain: TFormMain
   Left = 90
   Top = 60
   Caption = 'RGXX'
@@ -14,7 +14,5 @@ object FormMain: TFormMain
   OnMouseWheel = FormMouseWheel
   OnResize = FormResize
   OnShow = FormShow
-  Left = 90
-  Top = 60
   DesignerMasterStyle = 0
 end

@@ -947,9 +947,9 @@ function TFormMain.GetActionFromKey(Key: Word): Integer;
 begin
   result := faNoop;
   case Key of
-    vkF12: ; // result := faMemeSaveBitmap;
-    vkC: ; // result := faMemeCopyBitmap;
-    vkV: ; // result := faMemePasteBitmap;
+    vkF12: ;
+    vkC: ;
+    vkV: ;
   end;
 end;
 
@@ -1091,6 +1091,7 @@ begin
   HL.Add(Format('  Initial-Client-W-H = (%d, %d)', [ClientWidth, ClientHeight]));
   HL.Add(Format('  Handle.Scale = %.1f', [Handle.Scale]));
 
+  if HelpText <> nil then
   HelpText.Text := HL.Text;
 
   HL.Free;

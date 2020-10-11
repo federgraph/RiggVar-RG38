@@ -18,6 +18,8 @@
 
 interface
 
+{.$define WantDriverTest}
+
 uses
   System.SysUtils,
   System.Types,
@@ -95,7 +97,9 @@ implementation
 
 uses
   RiggVar.App.Main,
-//  RiggVar.Util.DriverTest,
+{$ifdef WantDriverTest}
+  RiggVar.Util.DriverTest,
+{$endif}
   FrmMain;
 
 {$R *.fmx}
@@ -203,10 +207,13 @@ procedure TFormMemo.DeviceReportBtnClick(Sender: TObject);
 begin
   MemoBeginUpdate;
   Memo.Lines.Clear;
+{$ifdef WantDriverTest}
+  if not Assigned(DeviceCheck) then
+    DeviceCheck := TDeviceCheck.Create;
+  DeviceCheck.GetDeviceReport(Memo.Lines);
+{$else}
   Memo.Lines.Add('DeviceReport not implemented');
-//  if not Assigned(DeviceCheck) then
-//    DeviceCheck := TDeviceCheck.Create;
-//  DeviceCheck.GetDeviceReport(Memo.Lines);
+{$endif}
   MemoEndUpdate;
 end;
 
@@ -262,7 +269,9 @@ begin
 {$ifdef MSWINDOWS}
 //  MemoActionList.AddMemoAction('Help Text for IO', HelpTextForIO);
   MemoActionList.AddMemoAction('Write Shortcuts', WriteShortcuts);
-//  MemoActionList.AddMemoAction('Device Report', DeviceReportBtnClick);
+{$if WantDriverTest}
+  MemoActionList.AddMemoAction('Device Report', DeviceReportBtnClick);
+{$endif}
 
   MemoActionList.AddMemoAction('Action Test', ActionTestBtnClick);
   MemoActionList.AddMemoAction('Write Action Const', WriteActionConstBtnClick);

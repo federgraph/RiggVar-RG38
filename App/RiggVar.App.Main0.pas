@@ -122,11 +122,7 @@ implementation
 
 uses
   FrmMain,
-  FMX.Platform,
   RiggVar.App.Main,
-  RiggVar.RG.Def,
-  RiggVar.FB.ActionShort,
-  RiggVar.FB.ActionLong,
   RiggVar.FederModel.Keyboard01,
   RiggVar.FederModel.ActionMapPhone,
   RiggVar.FederModel.ActionMapTablet;
