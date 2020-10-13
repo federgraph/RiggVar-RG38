@@ -14,5 +14,7 @@
   OnMouseWheel = FormMouseWheel
   OnResize = FormResize
   OnShow = FormShow
+  Left = 90
+  Top = 60
   DesignerMasterStyle = 0
 end

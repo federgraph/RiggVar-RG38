@@ -88,6 +88,8 @@ type
     WantSort: Boolean;
     CircleComparer: IComparer<TRggCircle>;
     LineComparer: IComparer<TRggLine>;
+    SortedCircleList: TRggCircleList;
+    SortedLineList: TRggLineList;
     function Find(ACaption: string): TRggCircle;
   public
     CircleList: TRggCircleList;
@@ -205,6 +207,8 @@ begin
   LineList := TRggLineList.Create;
   CircleComparer := TRggCircleComparer.Create;
   LineComparer := TRggLineComparer.Create;
+  SortedCircleList := TRggCircleList.Create;
+  SortedLineList := TRggLineList.Create;
   ML := TStringList.Create;
 end;
 
@@ -232,6 +236,8 @@ begin
   ElementList.Free;
   CircleList.Free;
   LineList.Free;
+  SortedCircleList.Free;
+  SortedLineList.Free;
   ML.Free;
   inherited;
 end;
@@ -294,7 +300,7 @@ begin
     end;
   end;
 
-  for cl in LineList do
+  for cl in SortedLineList do
   begin
     cl.Draw(g);
     cl.Point1.Draw(g);
@@ -303,7 +309,7 @@ begin
     cl.Point2.Painted := True;
   end;
 
-  for cr in CircleList do
+  for cr in SortedCircleList do
   begin
     if not cr.Painted then
       cr.Draw(g);
@@ -381,12 +387,25 @@ begin
 end;
 
 procedure TRggDrawing.SortElements;
+var
+  i: Integer;
 begin
   if WantSort then
   begin
     TRggLine.ResetCounter;
-    CircleList.Sort(CircleComparer);
-    LineList.Sort(LineComparer);
+
+    SortedCircleList.Clear;
+    for i := 0 to CircleList.Count-1 do
+      SortedCircleList.Add(CircleList[i]);
+    SortedCircleList.Sort(CircleComparer);
+
+    SortedLineList.Clear;
+    for i := 0 to LineList.Count-1 do
+    begin
+      if LineList[i].Visible then
+        SortedLineList.Add(LineList[i]);
+    end;
+    SortedLineList.Sort(LineComparer);
   end;
 end;
 

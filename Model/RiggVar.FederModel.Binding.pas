@@ -174,7 +174,7 @@ begin
   SL.Add('Taste q : ');
   SL.Add('Taste Q : faToggleUseQuickSort');
   SL.Add('');
-  SL.Add('Taste r : faMemeToggleRepor');
+  SL.Add('Taste r : faMemeToggleReport');
   SL.Add('Taste R : faReadTrimmFile');
   SL.Add('');
   SL.Add('Taste s : faMemeGotsSquare');

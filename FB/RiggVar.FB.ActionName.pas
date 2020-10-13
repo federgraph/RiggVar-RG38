@@ -366,6 +366,10 @@ faMemeFormat7: result := 'faMemeFormat7';
 faMemeFormat8: result := 'faMemeFormat8';
 faMemeFormat9: result := 'faMemeFormat9';
 
+faRotaForm1: result := 'faRotaForm1';
+faRotaForm2: result := 'faRotaForm2';
+faRotaForm3: result := 'faRotaForm3';
+
 (*
 { DropTarget }
 faToggleDropTarget: result := 'faToggleDropTarget';

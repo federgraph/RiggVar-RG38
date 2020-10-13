@@ -24,6 +24,8 @@ uses
   RiggVar.RG.Rota,
   RiggVar.FB.SpeedBar,
   RiggVar.FD.Image,
+  RggCtrls,
+  RggChartGraph,
   RggTypes,
   RggUnit4,
   System.SysUtils,
@@ -31,8 +33,6 @@ uses
   System.Types,
   System.UITypes,
   System.UIConsts,
-  RggCtrls,
-  RggChartGraph,
   FMX.Platform,
   FMX.Graphics,
   FMX.Types,
@@ -77,6 +77,8 @@ type
     procedure HandleShowHint(Sender: TObject);
     procedure Flash(s: string);
     procedure Reset;
+    procedure InitRiggAndMain;
+    procedure ShowZOrder;
   protected
     RL: TStrings;
     TL: TStrings;
@@ -272,6 +274,22 @@ begin
     Main.Logger.Info(E.Message);
 end;
 
+procedure TFormMain.InitRiggAndMain;
+begin
+  Rigg := TRigg.Create;
+  Rigg.ControllerTyp := ctOhne;
+
+  Main := TMain.Create(Rigg);
+  Main.Logger.Verbose := True;
+  Main.InitLogo; // sets WantLogoData to true
+  Main.Init420; // resets WantLogoData to false
+
+  Main.Trimm := 1;
+
+  Main.InitText;
+  Main.IsUp := True;
+end;
+
 procedure TFormMain.FormCreate(Sender: TObject);
 begin
 {$ifdef Debug}
@@ -309,18 +327,7 @@ begin
   SetupListbox(ParamListbox);
   SetupListbox(ReportListbox);
 
-  Rigg := TRigg.Create;
-  Rigg.ControllerTyp := ctOhne;
-
-  Main := TMain.Create(Rigg);
-  Main.Logger.Verbose := True;
-  Main.InitLogo; // sets WantLogoData to true
-  Main.Init420; // resets WantLogoData to false
-
-  Main.Trimm := 1;
-
-  Main.InitText;
-  Main.IsUp := True;
+  InitRiggAndMain;
 
   RotaForm := TRotaForm.Create;
   RotaForm.Image := Image;
@@ -438,6 +445,7 @@ begin
   SalingGraph.Free;
   ControllerGraph.Free;
   ChartGraph.Free;
+
   RotaForm.Free;
 end;
 
@@ -1038,13 +1046,13 @@ begin
     '!': ;
     '"': ;
 
-    '=': ; //fa := faActionPageE;
-    '?': ; //fa := faActionPageX;
+    '=': ;
+    '?': ;
 
     '+': fa := faActionPageP;
     '*': fa := faActionPageM;
 
-    '#': ;
+    '#': ShowZOrder;
 
     else fa := faNoop;
 
@@ -1274,24 +1282,30 @@ begin
   OpacityValue := 1.0;
 
   HintText := TText.Create(Self);
+  HintText.Name := 'HintText';
   SetupText(HintText);
 
   HelpText := TText.Create(Self);
+  HelpText.Name := 'HelpText';
   SetupText(HelpText);
 
   ReportText := TText.Create(Self);
+  ReportText.Name := 'ReportText';
   SetupText(ReportText);
 
   TrimmText := TText.Create(Self);
+  TrimmText.Name := 'TrimmText';
   SetupText(TrimmText);
 
   SpeedPanel1 := TActionSpeedBarRG01.Create(Self);
+  SpeedPanel1.Name := 'SpeedPanel1';
   SpeedPanel1.Parent := Self;
   SpeedPanel1.ShowHint := True;
   SpeedPanel1.Visible := False;
   SpeedPanel1.Opacity := OpacityValue;
 
   SpeedPanel2 := TActionSpeedBarRG03.Create(Self);
+  SpeedPanel2.Name := 'SpeedPanel2';
   SpeedPanel2.Parent := Self;
   SpeedPanel2.ShowHint := True;
   SpeedPanel2.Visible := False;
@@ -1301,14 +1315,17 @@ begin
   SpeedPanel.Visible := True;
 
   ParamListbox := TListbox.Create(Self);
+  ParamListbox.Name := 'ParamListbox';
   ParamListbox.Parent := Self;
   ParamListbox.Opacity := OpacityValue;
 
   ReportListbox := TListbox.Create(Self);
+  ReportListbox.Name := 'ReportListbox';
   ReportListbox.Parent := Self;
   ReportListbox.Opacity := OpacityValue;
 
   Image := TOriginalImage.Create(Self, BitmapWidth, BitmapHeight);
+  Image.Name := 'Image';
   Image.Parent := Self;
 
   ComponentsCreated := True;
@@ -1368,19 +1385,22 @@ begin
   ReportListbox.Height := ClientHeight - ReportListbox.Position.Y - Raster - Margin;
   ReportListbox.Anchors := ReportListbox.Anchors + [TAnchorKind.akBottom];
 
-  Image.Position.Y := TrimmText.Position.Y;
-  Image.Position.X := TrimmText.Position.X + ListboxWidth + Margin;
+  ImagePositionX := TrimmText.Position.X + ListboxWidth + Margin;
+  ImagePositionY := TrimmText.Position.Y;
+
+  Image.Position.X := ImagePositionX;
+  Image.Position.Y := ImagePositionY;
   Image.Width := ClientWidth - Image.Position.X - Raster - Margin;
   Image.Height := ClientHeight - Image.Position.Y - Raster - Margin;
   Image.Anchors := Image.Anchors + [TAnchorKind.akRight, TAnchorKind.akBottom];
   ImagePositionX := Image.Position.X;
   ImagePositionY := Image.Position.Y;
 
-  HintText.Position.X := Image.Position.X + 150;
-  HintText.Position.Y := Image.Position.Y;
+  HintText.Position.X := ImagePositionX + 150;
+  HintText.Position.Y := ImagePositionY;
 
-  HelpText.Position.X := Image.Position.X + 150;
-  HelpText.Position.Y := Image.Position.Y + 30 + Margin;
+  HelpText.Position.X := ImagePositionX + 150;
+  HelpText.Position.Y := ImagePositionY + 30 + Margin;
 
   ReportText.Position.X := HelpText.Position.X;
   ReportText.Position.Y := HelpText.Position.Y;
@@ -1457,6 +1477,7 @@ end;
 procedure TFormMain.InitSalingGraph;
 begin
   SalingImage := TOriginalImage.Create(Self, 453, 220);
+  SalingImage.Name := 'SalingImage';
   SalingImage.Parent := Self;
   SalingImage.HitTest := False;
   SalingImage.Visible := False;
@@ -1486,6 +1507,7 @@ end;
 procedure TFormMain.InitControllerGraph;
 begin
   ControllerImage := TOriginalImage.Create(Self, 453, 220);
+  ControllerImage.Name := 'ControllerImage';
   ControllerImage.Parent := Self;
   ControllerImage.HitTest := False;
   ControllerImage.Visible := False;
@@ -1522,6 +1544,7 @@ end;
 procedure TFormMain.InitChartGraph;
 begin
   ChartImage := TOriginalImage.Create(Self, 650, 400);
+  ChartImage.Name := 'ChartImage';
   ChartImage.Parent := Self;
   ChartImage.HitTest := False;
   ChartImage.Visible := False;
@@ -1874,6 +1897,10 @@ begin
     faToggleSalingGraph: result := SalingImage.IsVisible;
     faToggleControllerGraph: result := ControllerImage.IsVisible;
     faToggleMatrixText: result := RotaForm.MatrixItemChecked;
+
+    faRotaForm1: result := RotaForm.Current = 1;
+    faRotaForm2: result := RotaForm.Current = 2;
+    faRotaForm3: result := RotaForm.Current = 3;
   end;
 end;
 
@@ -2129,6 +2156,27 @@ begin
   RotaForm.WantOverlayedRiggs := False;
   RotaForm.UseQuickSort := True;
   Main.GraphRadio := gQuick;
+end;
+
+procedure TFormMain.ShowZOrder;
+var
+  i: Integer;
+  o: TFMXObject;
+  c: TControl;
+  ML: TStrings;
+begin
+  ML := TStringList.Create;
+  for i := 0 to Self.ChildrenCount-1 do
+  begin
+    o := Self.Children.Items[i];
+    if o is TControl then
+    begin
+      c := o as TControl;
+      ML.Add(Format('%2d - %s: %s', [i, c.Name, c.ClassName]));
+    end;
+  end;
+  HelpText.Text := ML.Text;
+  ML.Free;
 end;
 
 end.

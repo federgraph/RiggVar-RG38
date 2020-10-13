@@ -1,5 +1,6 @@
 ﻿*.dproj
-
+Deploy/
+Office/
 OSX64/
 
 AndroidManifest.template.xml

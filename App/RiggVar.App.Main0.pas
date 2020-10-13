@@ -59,8 +59,6 @@ type
     ActionHandler: IFederActionHandler;
     ActionHelper: TActionHelper;
 
-    IsOrthoProjection: Boolean;
-
     FederText1: TFederTouch;
     FederText2: TFederTouchPhone;
 
@@ -99,6 +97,7 @@ type
     procedure UpdateTouch;
 
     procedure UpdateText(ClearFlash: Boolean = False); override;
+    procedure UpdateOnParamValueChanged; override;
 
     procedure PlusOne;
     procedure PlusTen;
@@ -144,7 +143,9 @@ begin
 
   TTouchBtn.WantHint := True;
   FederText1 := TFederTouch.Create(nil);
+  FederText1.Name := 'FederText1';
   FederText2 := TFederTouchPhone.Create(nil);
+  FederText2.Name := 'FederText2';
   FederKeyboard := TFederKeyboard01.Create;
   FederBinding := TFederBinding.Create;
 
@@ -463,7 +464,6 @@ begin
   begin
     Main.DoSmallWheel(WheelDelta);
   end;
-  FormMain.UpdateOnParamValueChanged;
 end;
 
 procedure TMain0.PlusOne;
@@ -474,6 +474,11 @@ end;
 procedure TMain0.PlusTen;
 begin
   DoMouseWheel([ssCtrl], 1);
+end;
+
+procedure TMain0.UpdateOnParamValueChanged;
+begin
+  FormMain.UpdateOnParamValueChanged;
 end;
 
 end.

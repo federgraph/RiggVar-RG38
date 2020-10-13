@@ -42,8 +42,9 @@ type
 
   TRggRigg = class
   public
-    Rigg: TRigg;
     IsUp: Boolean;
+    Rigg: TRigg;
+    StrokeRigg: IStrokeRigg; // injected
   end;
 
   TRggText = class(TRggRigg)
@@ -56,6 +57,7 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure UpdateText(ClearFlash: Boolean = False); virtual;
+    procedure UpdateOnParamValueChanged; virtual;
     property FLText: string read GetFLText;
   end;
 
@@ -69,6 +71,7 @@ type
 
   TRggWheel = class(TRggParam)
   protected
+    FAction: TFederAction;
     FactArray: TRggFA; // not owned, cached from Rigg
     function GetBigStep: single;
     function GetSmallStep: single;
@@ -81,8 +84,6 @@ type
     destructor Destroy; override;
 
     procedure DoWheel(Delta: single);
-    procedure DoZoom(Delta: single);
-    procedure DoRotation(Delta: single);
 
     procedure DoBigWheelRG(Delta: single);
     procedure DoSmallWheelRG(Delta: single);
@@ -142,7 +143,6 @@ type
   TRggMain = class(TRggTrimm)
   private
     FFixPoint: TRiggPoint;
-    FixPunkt: TPoint3D;
     FViewPoint: TViewPoint;
     FVisible: Boolean;
 
@@ -195,10 +195,11 @@ type
     procedure SetKoppel(const Value: Boolean);
     procedure SetHullVisible(const Value: Boolean);
   protected
-    FAction: TFederAction;
     procedure InitFactArray;
     procedure RggSpecialDoOnTrackBarChange; override;
   public
+    FixPunkt: TPoint3D;
+
     MinValCaption: string;
     MaxValCaption: string;
     IstValCaption: string;
@@ -208,7 +209,6 @@ type
 
     Demo: Boolean;
 
-    StrokeRigg: IStrokeRigg; // injected
     ChartGraph: TChartModel;
 
     RiggLED: Boolean;
@@ -289,8 +289,7 @@ type
 implementation
 
 uses
-  FMX.PlatForm,
-  FrmMain;
+  FMX.PlatForm;
 
 const
   tfs = '%-3s %s %8s %6s';
@@ -1249,7 +1248,7 @@ begin
   end;
 
   ParamValue[Param] := ParamValue[Param];
-  FormMain.UpdateOnParamValueChanged;
+  UpdateOnParamValueChanged;
 end;
 
 procedure TRggMain.InitSalingTyp(fa: Integer);
@@ -1473,18 +1472,8 @@ end;
 
 procedure TRggWheel.DoWheel(Delta: single);
 begin
-//  RggTrackbar.Value := RggTrackbar.Value + Delta; // --> UpdateGraph;
   RggTrackbar.Delta := Delta;
-end;
-
-procedure TRggWheel.DoRotation(Delta: single);
-begin
-  UpdateText;
-end;
-
-procedure TRggWheel.DoZoom(Delta: single);
-begin
-  UpdateText;
+  UpdateOnParamValueChanged;
 end;
 
 procedure TRggMain.ViewportChanged(Sender: TObject);
@@ -1765,7 +1754,7 @@ begin
   FTrimm := Value;
   LoadTrimm(CurrentTrimm);
   InitSalingTyp(faSalingTypFest);
-  FormMain.UpdateOnParamValueChanged;
+  UpdateOnParamValueChanged;
 end;
 
 constructor TRggTrimm.Create;
@@ -1950,6 +1939,11 @@ begin
     cbs.SetClipboard(FL.Text);
     Logger.Info('in CopyText ( check clipboard )');
   end;
+end;
+
+procedure TRggText.UpdateOnParamValueChanged;
+begin
+
 end;
 
 procedure TRggText.UpdateText(ClearFlash: Boolean);

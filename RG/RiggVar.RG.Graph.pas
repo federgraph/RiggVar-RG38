@@ -37,6 +37,9 @@ type
     function GetMastKurvePoint(const Index: Integer): TPoint3D;
     procedure ToggleRenderOption(const fa: Integer);
     function QueryRenderOption(const fa: Integer): Boolean;
+    procedure UpdateHullTexture;
+    procedure UpdateCameraX(Delta: single);
+    procedure UpdateCameraY(Delta: single);
 
     procedure Draw;
 
@@ -113,6 +116,9 @@ type
 
     procedure ToggleRenderOption(const fa: Integer);
     function QueryRenderOption(const fa: Integer): Boolean;
+    procedure UpdateHullTexture;
+    procedure UpdateCameraX(Delta: single);
+    procedure UpdateCameraY(Delta: single);
 
     procedure Draw;
 
@@ -266,6 +272,21 @@ begin
     faWantRenderE: WantRenderE := not WantRenderE;
     faWantRenderS: WantRenderS := not WantRenderS;
   end;
+end;
+
+procedure TDummyStrokeRigg.UpdateCameraX(Delta: single);
+begin
+
+end;
+
+procedure TDummyStrokeRigg.UpdateCameraY(Delta: single);
+begin
+
+end;
+
+procedure TDummyStrokeRigg.UpdateHullTexture;
+begin
+
 end;
 
 procedure TDummyStrokeRigg.Draw;

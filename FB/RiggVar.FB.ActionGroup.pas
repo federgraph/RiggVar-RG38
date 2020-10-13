@@ -67,6 +67,9 @@ faParamValuePlus10,
 faParamValueMinus10];
 
 ActionGroupForms: TActionGroup = [
+faRotaForm1,
+faRotaForm2,
+faRotaForm3,
 faShowMemo,
 faShowActions,
 faShowOptions,
@@ -375,6 +378,21 @@ faParamT3,
 faParamT4];
 
 (*
+
+ActionGroupDropTarget: TActionGroup = [
+faToggleDropTarget];
+
+ActionGroupLanguage: TActionGroup = [
+faToggleLanguage];
+
+ActionGroupCopyPaste: TActionGroup = [
+faSave,
+faLoad,
+faOpen,
+faCopy,
+faPaste,
+faShare];
+
 ActionGroupViewOptions: TActionGroup = [
 faToggleMoveMode,
 faLinearMove,
@@ -399,28 +417,13 @@ faCycleHelpM,
 faCycleHelpP,
 faHelpCycle,
 faHelpList,
-faHelpHome,
-faToggleLanguage];
-
-ActionGroupCopyPaste: TActionGroup = [
-faSave,
-faLoad,
-faOpen,
-faCopy,
-faPaste,
-faShare];
+faHelpHome];
 
 ActionGroupCopyImage: TActionGroup = [
 
 faCopyScreenshot,
 faCopyBitmap,
 faCopyBitmap3D];
-
-ActionGroupTextureImport: TActionGroup = [
-faToggleDropTarget];
-
-ActionGroupInput: TActionGroup = [
-faToggleDropTarget];
 
 ActionGroupBitmapCycle: TActionGroup = [
 faCycleBitmapM,

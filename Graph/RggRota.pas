@@ -126,6 +126,9 @@ type
     function GetMastKurvePoint(const Index: Integer): TPoint3D;
     procedure ToggleRenderOption(const fa: Integer);
     function QueryRenderOption(const fa: Integer): Boolean;
+    procedure UpdateHullTexture;
+    procedure UpdateCameraX(Delta: single);
+    procedure UpdateCameraY(Delta: single);
   public
     MatrixTextU: string;
     MatrixTextV: string;
@@ -1084,6 +1087,21 @@ end;
 procedure TRotaForm1.SetChecked(fa: Integer; Value: Boolean);
 begin
   RaumGraph.SetChecked(fa, Value);
+end;
+
+procedure TRotaForm1.UpdateHullTexture;
+begin
+
+end;
+
+procedure TRotaForm1.UpdateCameraX(Delta: single);
+begin
+
+end;
+
+procedure TRotaForm1.UpdateCameraY(Delta: single);
+begin
+
 end;
 
 end.

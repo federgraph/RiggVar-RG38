@@ -362,6 +362,10 @@ begin
     faParamT2: result := 'Param T2';
     faParamT3: result := 'Param T3';
     faParamT4: result := 'Param T4';
+
+    faRotaForm1: result := 'use RotaFrom 1';
+    faRotaForm2: result := 'use RotaFrom 2';
+    faRotaForm3: result := 'use RotaFrom 3';
   end;
 end;
 

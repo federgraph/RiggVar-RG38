@@ -2,11 +2,14 @@
 
 interface
 
+{$define UseImage}
+{.$define UseViewport}
+
 {$define WantRotaForm1}
 {.$define WantRotaForm2}
+{.$define WantRotaForm3}
 
 uses
-  System.UITypes,
   RggTypes,
   RiggVar.RG.Graph,
 {$ifdef WantRotaForm1}
@@ -15,7 +18,14 @@ uses
 {$ifdef WantRotaForm2}
   RiggVar.FD.Rota,
 {$endif}
-  RiggVar.FD.Image;
+{$ifdef WantRotaForm3}
+  FMX.Viewport3D,
+  RiggVar.App.Rota,
+{$endif}
+{$ifdef UseImage }
+  RiggVar.FD.Image,
+{$endif}
+  System.UITypes;
 
 type
   TRotaForm = class
@@ -50,8 +60,17 @@ type
     RotaForm2: TRotaForm2;
     StrokeRigg2: IStrokeRigg;
 {$endif}
+{$ifdef WantRotaForm3}
+    RotaForm3: TRotaForm3;
+    StrokeRigg3: IStrokeRigg;
+{$endif}
 
+{$ifdef UseImage}
     Image: TOriginalImage;
+{$endif}
+{$ifdef WantRotaForm3}
+    Viewport: TViewport3D;
+{$endif}
 
     constructor Create;
     destructor Destroy; override;
@@ -66,6 +85,7 @@ type
     procedure UseQuickSortBtnClick(Sender: TObject);
     procedure MatrixItemClick(Sender: TObject);
 
+    procedure HandleAction(fa: Integer);
     function GetChecked(fa: Integer): Boolean;
     procedure SetChecked(fa: Integer; Value: Boolean);
 
@@ -73,6 +93,7 @@ type
     procedure Draw;
 
     procedure SwapRota(Selected: Integer);
+    procedure DoOnIdle;
 
     property IsUp: Boolean read FIsUp write SetIsUp;
     property BackgroundColor: TAlphaColor read FBackgroundColor write SetBackgroundColor;
@@ -84,11 +105,13 @@ type
     property WantOverlayedRiggs: Boolean read FWantOverlayedRiggs write SetWantOverlayedRiggs;
     property ViewPoint: TViewPoint read FViewPoint write SetViewPoint;
     property DarkMode: Boolean read FDarkMode write SetDarkMode;
+    property Current: Integer read FCurrent;
   end;
 
 implementation
 
 uses
+  FrmMain,
   RiggVar.App.Main;
 
 { TRotaFormContainer }
@@ -105,11 +128,21 @@ begin
   StrokeRigg2 := RotaForm2;
 {$endif}
 
+{$ifdef WantRotaForm3}
+  RotaForm3 := TRotaForm3.Create;
+  StrokeRigg3 := RotaForm3;
+{$endif}
+
   FCurrent := 1;
 end;
 
 destructor TRotaForm.Destroy;
 begin
+{$ifdef WantRotaForm3}
+  RotaForm3.Frame3D.Camera.FG := nil;
+  RotaForm3.Frame3D.FG := nil;
+{$endif}
+
   inherited;
   { RotaForm instances are automatically freed
     when StrokeRigg instances go out of scope. }
@@ -127,16 +160,10 @@ begin
   RotaForm2.Init;
 {$endif}
 
-  case FCurrent of
-{$ifdef WantRotaForm1}
-    1: RotaForm1.Swap;
+{$ifdef WantRotaForm3}
+  RotaForm3.Viewport := Viewport;
+  RotaForm3.Init;
 {$endif}
-{$ifdef WantRotaForm2}
-    2: RotaForm2.Swap;
-{$endif}
-    else
-      ;
-  end;
 
 {$ifdef WantRotaForm1}
   RotaForm1.ViewPoint := vp3D;
@@ -149,6 +176,12 @@ begin
   RotaForm2.ZoomIndex := 8;
   RotaForm2.FixPoint := ooD0;
 {$endif}
+
+{$ifdef WantRotaForm3}
+  RotaForm3.ViewPoint := vpSeite;
+//  RotaForm3.ZoomIndex := 8;
+  RotaForm3.FixPoint := ooD0;
+{$endif}
 end;
 
 procedure TRotaForm.Draw;
@@ -159,6 +192,9 @@ begin
 {$endif}
 {$ifdef WantRotaForm2}
     2: RotaForm2.Draw;
+{$endif}
+{$ifdef WantRotaForm3}
+    3: RotaForm3.Draw;
 {$endif}
     else
       ;
@@ -174,8 +210,27 @@ begin
 {$ifdef WantRotaForm2}
     2: result := RotaForm2.GetChecked(fa);
 {$endif}
+{$ifdef WantRotaForm3}
+    3: result := RotaForm3.GetChecked(fa);
+{$endif}
     else
       result := false;
+  end;
+end;
+
+procedure TRotaForm.HandleAction(fa: Integer);
+begin
+  case FCurrent of
+    0: ;
+{$ifdef WantRotaForm1}
+//    1: RotaForm1.HandleAction(fa);
+{$endif}
+{$ifdef WantRotaForm2}
+//    2: RotaForm2.HandleAction(fa);
+{$endif}
+{$ifdef WantRotaForm3}
+    3: RotaForm3.HandleAction(fa);
+{$endif}
   end;
 end;
 
@@ -187,6 +242,9 @@ begin
 {$endif}
 {$ifdef WantRotaForm2}
     2: RotaForm2.LegendBtnClick(Sender);
+{$endif}
+{$ifdef WantRotaForm3}
+    3: ;
 {$endif}
     else
       ;
@@ -202,6 +260,9 @@ begin
 {$ifdef WantRotaForm2}
     2: RotaForm2.MatrixItemClick(Sender);
 {$endif}
+{$ifdef WantRotaForm3}
+    3: ;
+{$endif}
     else
       ;
   end;
@@ -211,10 +272,17 @@ procedure TRotaForm.RotateZ(delta: single);
 begin
   case FCurrent of
 {$ifdef WantRotaForm1}
-    1: RotaForm1.RotateZ(delta);
+    1: RotaForm1.RotateZ(delta * 0.3);
 {$endif}
 {$ifdef WantRotaForm2}
-    2: RotaForm2.RotateZ(delta);
+    2: RotaForm2.RotateZ(delta * 0.3);
+{$endif}
+{$ifdef WantRotaForm3}
+    3:
+    begin
+      RotaForm3.RotateZ(Delta);
+      //Main.UpdateText;
+    end;
 {$endif}
     else
       ;
@@ -231,6 +299,9 @@ begin
 {$ifdef WantRotaForm2}
     2: RotaForm2.BackgroundColor := Value;
 {$endif}
+{$ifdef WantRotaForm3}
+    3: RotaForm3.BackgroundColor := Value;
+{$endif}
     else
       ;
   end;
@@ -244,6 +315,9 @@ begin
 {$endif}
 {$ifdef WantRotaForm2}
     2: RotaForm2.SetChecked(fa, Value);
+{$endif}
+{$ifdef WantRotaForm3}
+    3: ;
 {$endif}
     else
       ;
@@ -260,6 +334,9 @@ begin
 {$ifdef WantRotaForm2}
     2: RotaForm2.DarkMode := Value;
 {$endif}
+{$ifdef WantRotaForm3}
+    3: RotaForm3.DarkMode := Value;
+{$endif}
     else
       ;
   end;
@@ -274,6 +351,9 @@ begin
 {$ifdef WantRotaForm2}
   RotaForm2.IsUp := Value;
 {$endif}
+{$ifdef WantRotaForm3}
+//  RotaForm3.IsUp := Value;
+{$endif}
 end;
 
 procedure TRotaForm.SetLegendItemChecked(const Value: Boolean);
@@ -285,6 +365,9 @@ begin
 {$endif}
 {$ifdef WantRotaForm2}
     2: RotaForm2.LegendItemChecked := Value;
+{$endif}
+{$ifdef WantRotaForm3}
+    3: ;
 {$endif}
     else
       ;
@@ -301,6 +384,9 @@ begin
 {$ifdef WantRotaForm2}
     2: RotaForm2.MatrixItemChecked := Value;
 {$endif}
+{$ifdef WantRotaForm3}
+    3: ;
+{$endif}
     else
       ;
   end;
@@ -315,6 +401,9 @@ begin
 {$endif}
 {$ifdef WantRotaForm2}
     2: RotaForm2.UseDisplayList := Value;
+{$endif}
+{$ifdef WantRotaForm3}
+    3: ;
 {$endif}
     else
       ;
@@ -331,6 +420,9 @@ begin
 {$ifdef WantRotaForm2}
     2: RotaForm2.UseQuickSort := Value;
 {$endif}
+{$ifdef WantRotaForm3}
+    3: ;
+{$endif}
     else
       ;
   end;
@@ -345,6 +437,9 @@ begin
 {$endif}
 {$ifdef WantRotaForm2}
     2: RotaForm2.ViewPoint := Value;
+{$endif}
+{$ifdef WantRotaForm3}
+    3: RotaForm3.ViewPoint := Value;
 {$endif}
     else
       ;
@@ -361,6 +456,9 @@ begin
 {$ifdef WantRotaForm2}
     2: RotaForm2.WantLineColors := Value;
 {$endif}
+{$ifdef WantRotaForm3}
+    3: ;
+{$endif}
     else
       ;
   end;
@@ -376,6 +474,9 @@ begin
 {$ifdef WantRotaForm2}
     2: RotaForm2.WantOverlayedRiggs := Value;
 {$endif}
+{$ifdef WantRotaForm3}
+    3: ;
+{$endif}
     else
       ;
   end;
@@ -389,6 +490,9 @@ begin
 {$endif}
 {$ifdef WantRotaForm2}
     2: RotaForm2.UseDisplayListBtnClick(Sender);
+{$endif}
+{$ifdef WantRotaForm3}
+    3: ;
 {$endif}
     else
       ;
@@ -404,6 +508,9 @@ begin
 {$ifdef WantRotaForm2}
     2: RotaForm2.UseQuickSortBtnClick(Sender);
 {$endif}
+{$ifdef WantRotaForm3}
+    3: ;
+{$endif}
     else
       ;
   end;
@@ -417,6 +524,9 @@ begin
 {$endif}
 {$ifdef WantRotaForm2}
     2: RotaForm2.Zoom(delta);
+{$endif}
+{$ifdef WantRotaForm3}
+    3: RotaForm3.Zoom(delta);
 {$endif}
     else
       ;
@@ -432,6 +542,9 @@ begin
 {$ifdef WantRotaForm2}
     2: RotaForm2.ZoomInBtnClick(Sender);
 {$endif}
+{$ifdef WantRotaForm3}
+    3: ;
+{$endif}
     else
       ;
   end;
@@ -446,6 +559,9 @@ begin
 {$ifdef WantRotaForm2}
     2: RotaForm2.ZoomOutBtnClick(Sender);
 {$endif}
+{$ifdef WantRotaForm3}
+    3: ;
+{$endif}
     else
       ;
   end;
@@ -459,7 +575,13 @@ begin
     begin
       FCurrent := 1;
       Main.StrokeRigg := RotaForm1;
+{$ifdef UseViewport}
+      Viewport.Visible := False;
+{$endif}
+      Image.Visible := True;
       RotaForm1.Swap;
+      Main.FederText1.Parent := FormMain;
+      Main.FederText2.Parent := FormMain;
     end;
 {$endif}
 
@@ -468,11 +590,42 @@ begin
     begin
       FCurrent := 2;
       Main.StrokeRigg := RotaForm2;
+{$ifdef UseViewport}
+      Viewport.Visible := False;
+{$endif}
+      Image.Visible := True;
       RotaForm2.Swap;
+      Main.FederText1.Parent := FormMain;
+      Main.FederText2.Parent := FormMain;
+    end;
+{$endif}
+
+{$ifdef WantRotaForm3}
+    3:
+    begin
+      FCurrent := 3;
+      Main.StrokeRigg := RotaForm3;
+      Viewport.Visible := True;
+{$ifdef UseImage}
+      Image.Visible := False;
+{$endif}
+      Main.FederText1.Parent := Viewport;
+      Main.FederText2.Parent := Viewport;
+      Viewport.SetFocus;
     end;
 {$endif}
 
   end;
+
+  Main.UpdateStrokeRigg;
+  Draw;
+end;
+
+procedure TRotaForm.DoOnIdle;
+begin
+{$ifdef WantRotaForm3}
+  RotaForm3.Frame3D.DoOnIdle;
+{$endif}
 end;
 
 end.
