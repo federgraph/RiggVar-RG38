@@ -378,7 +378,6 @@ faParamT3,
 faParamT4];
 
 (*
-
 ActionGroupDropTarget: TActionGroup = [
 faToggleDropTarget];
 

@@ -29,7 +29,7 @@ uses
   RiggVar.FD.Drawings;
 
 {$define Rgg}
-{.$define WantPoly}
+{$define WantPoly}
 
 type
   { This will be the Live drawing - connected to the model your real App. }

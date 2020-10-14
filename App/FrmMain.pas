@@ -376,7 +376,6 @@ begin
 
   HintText.TextSettings.FontColor := claYellow;
 
-  HelpText.BringToFront;
   HelpText.TextSettings.FontColor := claWhite;
   HelpText.Visible := False;
 
@@ -386,10 +385,11 @@ begin
   TrimmText.TextSettings.FontColor := claBeige;
   TrimmText.Visible := True;
 
-  HintText.BringToFront;
-  ReportText.BringToFront;
-  TrimmText.BringToFront;
-  SpeedPanel.BringToFront;
+//  HintText.BringToFront;
+//  HelpText.BringToFront;
+//  ReportText.BringToFront;
+//  TrimmText.BringToFront;
+//  SpeedPanel.BringToFront;
 
   TL := TStringList.Create;
   Main.UpdateTrimm0;
@@ -942,6 +942,9 @@ begin
     faToggleAllProps: AllProps := not AllProps;
     faToggleAllTags: ReportManager.XmlAllTags := not ReportManager.XmlAllTags;
 
+    faRotaForm1: RotaForm.SwapRota(1);
+    faRotaForm2: RotaForm.SwapRota(2);
+
     else
     begin
       { do nothing }
@@ -1046,8 +1049,8 @@ begin
     '!': ;
     '"': ;
 
-    '=': ;
-    '?': ;
+    '=': RotaForm.SwapRota(1);
+    '?': RotaForm.SwapRota(2);
 
     '+': fa := faActionPageP;
     '*': fa := faActionPageM;

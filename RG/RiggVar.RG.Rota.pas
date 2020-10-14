@@ -6,7 +6,7 @@ interface
 {.$define UseViewport}
 
 {$define WantRotaForm1}
-{.$define WantRotaForm2}
+{$define WantRotaForm2}
 {.$define WantRotaForm3}
 
 uses

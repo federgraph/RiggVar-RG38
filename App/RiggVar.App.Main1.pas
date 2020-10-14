@@ -704,7 +704,6 @@ begin
   ML.Add('  WantOnResize = ' + BoolStr[MainVar.WantOnResize]);
   ML.Add('  ResizeCounter = ' + IntToStr(ResizeCounter));
   ML.Add(Format('  ClientSize = (%d, %d)', [MainVar.ClientWidth, MainVar.ClientHeight]));
-  ML.Add(Format('  Image.Size = (%d, %d)', [Round(FormMain.Image.Width), Round(FormMain.Image.Height)]));
   ML.Add('---');
   ML.Add(Format('  A = %6.2f', [Main.Rigg.Temp1]));
   ML.Add(Format('  B = %6.2f', [Main.Rigg.Temp2]));

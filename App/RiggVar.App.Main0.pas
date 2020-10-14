@@ -45,6 +45,7 @@ type
   private
     FTouch: Integer;
     procedure InitRaster;
+    function GetIsDesktop: Boolean;
     function GetIsLandscape: Boolean;
     function GetIsPortrait: Boolean;
     function GetColorScheme: Integer;
@@ -103,6 +104,7 @@ type
     procedure PlusTen;
     procedure DoMouseWheel(Shift: TShiftState; WheelDelta: Integer);
 
+    property IsDesktop: Boolean read GetIsDesktop;
     property IsPhone: Boolean read GetIsPhone;
     property IsLandscape: Boolean read GetIsLandscape;
     property IsPortrait: Boolean read GetIsPortrait;
@@ -246,6 +248,11 @@ begin
     InitTouch;
     FederText.UpdateShape;
   end;
+end;
+
+function TMain0.GetIsDesktop: Boolean;
+begin
+  result := not Main.IsPhone;
 end;
 
 function TMain0.GetIsLandscape: Boolean;
