@@ -172,9 +172,9 @@ begin
 {$endif}
 
 {$ifdef WantRotaForm2}
-  RotaForm2.ViewPoint := vp3D;
-  RotaForm2.ZoomIndex := 8;
-  RotaForm2.FixPoint := ooD0;
+//  RotaForm2.ViewPoint := vp3D;
+//  RotaForm2.ZoomIndex := 8;
+//  RotaForm2.FixPoint := ooD0;
 {$endif}
 
 {$ifdef WantRotaForm3}
@@ -272,10 +272,10 @@ procedure TRotaForm.RotateZ(delta: single);
 begin
   case FCurrent of
 {$ifdef WantRotaForm1}
-    1: RotaForm1.RotateZ(delta * 0.3);
+    1: RotaForm1.RotateZ(delta);
 {$endif}
 {$ifdef WantRotaForm2}
-    2: RotaForm2.RotateZ(delta * 0.3);
+    2: RotaForm2.RotateZ(delta);
 {$endif}
 {$ifdef WantRotaForm3}
     3:
@@ -543,7 +543,7 @@ begin
     2: RotaForm2.ZoomInBtnClick(Sender);
 {$endif}
 {$ifdef WantRotaForm3}
-    3: ;
+    3: RotaForm3.Zoom(1.0);
 {$endif}
     else
       ;
@@ -560,7 +560,7 @@ begin
     2: RotaForm2.ZoomOutBtnClick(Sender);
 {$endif}
 {$ifdef WantRotaForm3}
-    3: ;
+    3: RotaForm3.Zoom(-1.0);
 {$endif}
     else
       ;

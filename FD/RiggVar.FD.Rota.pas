@@ -404,7 +404,7 @@ end;
 
 procedure TRotaForm2.Zoom(delta: single);
 begin
-  TH.DoOnMouse([ssShift], delta, -delta);
+  TH.DoOnMouse([ssShift], delta, -delta * 0.3);
 end;
 
 procedure TRotaForm2.ZoomInBtnClick(Sender: TObject);
@@ -464,12 +464,12 @@ end;
 
 procedure TRotaForm2.UpdateCameraX(Delta: single);
 begin
-
+  TH.DoOnMouse([ssCtrl], Delta, 0);
 end;
 
 procedure TRotaForm2.UpdateCameraY(Delta: single);
 begin
-
+  TH.DoOnMouse([ssCtrl], 0, -Delta);
 end;
 
 procedure TRotaForm2.UpdateFromRiggBtnClick(Sender: TObject);
@@ -553,7 +553,7 @@ begin
   if g.BeginScene then
   try
     g.Clear(claNull);
-    g.SetMatrix(TMatrix.CreateTranslation(ss, ss));
+    g.SetMatrix(TMatrix.CreateScaling(ss, ss));
     g.Fill.Color := claYellow;
     g.Stroke.Color := claAqua;
     g.Stroke.Thickness := 1.0;

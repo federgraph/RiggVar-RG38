@@ -448,7 +448,7 @@ end;
 
 procedure TMain0.DoTouchbarTop(Delta: single);
 begin
-  FormMain.RotaForm.RotateZ(Delta * 0.3);
+  FormMain.RotaForm.RotateZ(Delta);
 end;
 
 procedure TMain0.DoTouchbarRight(Delta: single);

@@ -400,6 +400,9 @@ begin
     faBiegung: Param := fpBiegung;
     faMastfussD0X: Param := fpD0X;
 
+    faParamT1: Param := fpT1;
+    faParamT2: Param := fpT2;
+
     faParamAPW: Param := fpAPW;
     faParamEAH: Param := fpEAH;
     faParamEAR: Param := fpEAR;
@@ -550,6 +553,11 @@ begin
     begin
       Rigg.Reset;
       UpdateGetriebe;
+    end;
+
+    fpT1, fpT2:
+    begin
+      Draw;
     end;
 
     fpAPW:
@@ -759,6 +767,7 @@ end;
 
 procedure TRggMain.SetParam(Value: TFederParam);
 begin
+  FAction := faNoop;
   if Demo then
   begin
     InitFactArray;
@@ -991,6 +1000,8 @@ begin
     FactArray.Biegung.Min := 0;
     FactArray.Biegung.Max := 500;
 
+    FactArray.T1.Save;
+    FactArray.T2.Save;
     FactArray.ResetVolatile;
   end;
 end;
@@ -1157,6 +1168,8 @@ begin
   FactArray.Biegung.Min := 0;
   FactArray.Biegung.Max := 500;
 
+  FactArray.T1.Save;
+  FactArray.T2.Save;
   FactArray.ResetVolatile;
 
   SetParam(FParam);
@@ -1437,6 +1450,16 @@ end;
 
 procedure TRggWheel.TrackBarChange(Sender: TObject);
 begin
+  if FParam = fpT1 then
+  begin
+    FactArray.T1.Ist := Round(RggTrackbar.Value);
+    StrokeRigg.UpdateHullTexture;
+  end
+  else if FParam = fpT2 then
+  begin
+    FactArray.T2.Ist := Round(RggTrackbar.Value);
+    StrokeRigg.UpdateHullTexture;
+  end;
   RggSpecialDoOnTrackBarChange;
 end;
 
@@ -1452,22 +1475,36 @@ procedure TRggWheel.DoSmallWheelRG(Delta: single);
 var
   f: single;
 begin
-  f := GetSmallStep;
-  if Delta > 0 then
-    DoWheel(f)
+  if FAction = faPan then
+  begin
+    StrokeRigg.UpdateCameraX(Delta);
+  end
   else
-    DoWheel(-f);
+  begin
+    f := GetSmallStep;
+    if Delta > 0 then
+      DoWheel(f)
+    else
+      DoWheel(-f);
+  end;
 end;
 
 procedure TRggWheel.DoBigWheelRG(Delta: single);
 var
   f: single;
 begin
-  f := GetBigStep;
-  if Delta > 0 then
-    DoWheel(f)
+  if FAction = faPan then
+  begin
+    StrokeRigg.UpdateCameraY(Delta);
+  end
   else
-    DoWheel(-f);
+  begin
+    f := GetBigStep;
+    if Delta > 0 then
+      DoWheel(f)
+    else
+      DoWheel(-f);
+  end;
 end;
 
 procedure TRggWheel.DoWheel(Delta: single);
@@ -1485,7 +1522,7 @@ end;
 function TRggWheel.GetBigStep: single;
 begin
   case FParam of
-    fpWante: result := 5;
+    fpWante: result := 2;
     fpWinkel: result := 1;
     fpSalingW: result := 1;
     else

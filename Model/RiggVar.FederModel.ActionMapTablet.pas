@@ -72,7 +72,7 @@ const
   claSample = claCyan;
   claOption = claBeige;
 
-  PageCountRG = 9;
+  PageCountRG = 5;
 
 constructor TActionMapTablet.Create;
 begin
@@ -213,7 +213,7 @@ begin
       cla := claWhite;
       InitAC(cl, 1, faCycleColorSchemeM, cla);
       InitAC(cl, 2, faCycleColorSchemeP, cla);
-      InitAC(cl, 3, faToggleSpeedPanel, cla);
+      InitAC(cl, 3, faToggleSpeedPanel, claPlum);
       InitAC(cl, 4, faShowDrawings, claForm);
       InitAC(cl, 5, faMemoryRecallBtn, cla);
       InitAC(cl, 6, faMemoryBtn, cla);
@@ -275,10 +275,10 @@ begin
 
       cl := TopRight;
       cla := claWhite;
-      InitAC(cl, 1, faViewpoint3, cla);
-      InitAC(cl, 2, faViewpointS, cla);
-      InitAC(cl, 3, faViewpointA, cla);
-      InitAC(cl, 4, faViewpointT, cla);
+      InitAC(cl, 1, faViewpointS, cla);
+      InitAC(cl, 2, faViewpointA, cla);
+      InitAC(cl, 3, faViewpointT, cla);
+      InitAC(cl, 4, faViewpoint3, cla);
       InitAC(cl, 5, faActionPageP, claYellow);
       InitAC(cl, 6, faToggleChartGraph, claCornflowerblue);
       InitAC(cl, 7, faToggleControllerGraph, claCornflowerblue);
@@ -318,14 +318,14 @@ begin
 
       cl := TopRight;
       cla := claWhite;
-      InitAC(cl, 1, faViewpoint3, cla);
-      InitAC(cl, 2, faViewpointS, cla);
-      InitAC(cl, 3, faViewpointA, cla);
-      InitAC(cl, 4, faViewpointT, cla);
+      InitAC(cl, 1, faViewpointS, cla);
+      InitAC(cl, 2, faViewpointA, cla);
+      InitAC(cl, 3, faViewpointT, cla);
+      InitAC(cl, 4, faViewpoint3, cla);
       InitAC(cl, 5, faActionPageP, claYellow);
       InitAC(cl, 6, faNoop, cla);
       InitAC(cl, 7, faNoop, cla);
-      InitAC(cl, 8, faNoop, cla);
+      InitAC(cl, 8, faPan, cla);
 
       cl := BottomLeft;
       cla := claSample;

@@ -606,6 +606,10 @@ begin
     faParamEAR: result := Param = fpEAR;
     faParamEI: result := Param = fpEI;
 
+    faParamT1: result := Param = fpT1;
+    faParamT2: result := Param = fpT2;
+    faPan: result := Action = faPan;
+
     faFixpointA0: result := FixPoint = ooA0;
     faFixpointA: result := FixPoint = ooA;
     faFixpointB0: result := FixPoint = ooB0;

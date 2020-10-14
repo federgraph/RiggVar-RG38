@@ -606,7 +606,7 @@ procedure TFormMain.FormMouseWheel(Sender: TObject; Shift: TShiftState;
 begin
   if (ssShift in Shift) or (ssCtrl in Shift) then
   begin
-    Main.DoMouseWheel(Shift, WheelDelta);
+    Main.DoMouseWheel(Shift, WheelDelta div 120);
     Handled := True;
   end;
 end;
@@ -945,6 +945,12 @@ begin
     faRotaForm1: RotaForm.SwapRota(1);
     faRotaForm2: RotaForm.SwapRota(2);
 
+    faPan:
+    begin
+      Main.SetParameter(faPan);
+      ShowTrimm;
+    end
+
     else
     begin
       { do nothing }
@@ -1103,7 +1109,7 @@ begin
   HL.Add(Format('  Handle.Scale = %.1f', [Handle.Scale]));
 
   if HelpText <> nil then
-  HelpText.Text := HL.Text;
+    HelpText.Text := HL.Text;
 
   HL.Free;
 end;

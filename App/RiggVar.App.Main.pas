@@ -34,7 +34,7 @@ type
     ColorSchemeCount = 7;
     DefaultBtnFontSize = 24;
     TrackbarFrequency = 0.1;
-    MustBeSandboxed: Boolean = false;
+    MustBeSandboxed: Boolean = true;
     TrimmFileName = 'Trimm-File.txt';
     TrimmFileNameAuto = 'Trimm-File-Auto.txt';
   end;
@@ -63,7 +63,7 @@ implementation
 class constructor MainVar.Create;
 begin
   RG := True;
-  IsSandboxed := false;
+  IsSandboxed := true;
   ColorScheme := TColorScheme.Create(5);
   Raster := 70;
 end;

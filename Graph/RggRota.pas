@@ -1009,7 +1009,7 @@ end;
 
 procedure TRotaForm1.RotateZ(Delta: single);
 begin
-  Rotate(0, 0, 0, 0, 0, Delta);
+  Rotate(0, 0, 0, 0, 0, Delta * 0.3);
   Draw;
 end;
 
@@ -1096,12 +1096,14 @@ end;
 
 procedure TRotaForm1.UpdateCameraX(Delta: single);
 begin
-
+  FXPos := FXPos + Delta * 5;
+  Draw;
 end;
 
 procedure TRotaForm1.UpdateCameraY(Delta: single);
 begin
-
+  FYPos := FYPos - Delta * 5;
+  Draw;
 end;
 
 end.
