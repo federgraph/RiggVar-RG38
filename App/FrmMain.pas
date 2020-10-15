@@ -92,10 +92,10 @@ type
     procedure ShowTrimm;
     procedure ShowTrimmData;
   public
-    FWantButtonFrameReport: Boolean;
+    FWantButtonReport: Boolean;
     procedure UpdateReport;
     procedure UpdateBackgroundColor(AColor: TAlphaColor);
-    property WantButtonFrameReport: Boolean read FWantButtonFrameReport;
+    property WantButtonReport: Boolean read FWantButtonReport;
   public
     OpenDialog: TOpenDialog;
     SaveDialog: TSaveDialog;
@@ -490,7 +490,7 @@ begin
 
   RL.Clear;
 
-  if WantButtonFrameReport then
+  if WantButtonReport then
   begin
     Main.FederText.Report(RL);
     ReportText.Text := RL.Text;
@@ -854,7 +854,7 @@ begin
   case fa of
     faToggleSpeedPanel: ToggleSpeedPanel;
 
-    faMemeToggleHelp:
+    faToggleHelp:
     begin
       HelpText.Visible := not HelpText.Visible;
       ReportText.Visible := False;
@@ -864,7 +864,7 @@ begin
     faMemeGotoPortrait: GotoPortrait;
     faMemeGotoSquare: GotoSquare;
 
-    faMemeToggleReport:
+    faToggleReport:
     begin
       Flash(HelpCaptionText);
       HelpText.Visible := False;
@@ -887,9 +887,9 @@ begin
       UpdateFormat(750, 1000)
     end;
 
-    faButtonFrameReport:
+    faToggleButtonReport:
     begin
-      FWantButtonFrameReport := not WantButtonFrameReport;
+      FWantButtonReport := not WantButtonReport;
       UpdateReport;
     end;
 
@@ -1003,8 +1003,8 @@ begin
     'g': ;
     'G': ;
 
-    'h': fa := faMemeToggleHelp; // fa := faSalingH;
-    'H': fa := faSalingH; // fa := faHull;
+    'h': fa := faToggleHelp;
+    'H': fa := faSalingH;
 
     'i': fa := faWheelRight;
     'I': fa := faWheelLeft;
@@ -1024,7 +1024,7 @@ begin
     'n': ;
     'N': ;
 
-    'r': fa := faMemeToggleReport;
+    'r': fa := faToggleReport;
     'R': fa := faReadTrimmFile;
 
     'o': fa := faWoben;
@@ -1886,9 +1886,9 @@ begin
     faToggleAllProps: result := AllProps;
     faToggleAllTags: result := ReportManager.XmlAllTags;
 
-    faMemeToggleHelp: result := HelpText.Visible;
-    faMemeToggleReport: result := ReportText.Visible;
-    faButtonFrameReport: result := WantButtonFrameReport;
+    faToggleHelp: result := HelpText.Visible;
+    faToggleReport: result := ReportText.Visible;
+    faToggleButtonReport: result := WantButtonReport;
     faChartRect..faChartReset: result := ChartGraph.GetChecked(fa);
     faReportNone..faReportReadme: result := ReportManager.GetChecked(fa);
     faToggleSegmentF..faToggleSegmentA: result := RotaForm.GetChecked(fa);

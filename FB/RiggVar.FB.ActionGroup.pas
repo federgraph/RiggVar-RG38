@@ -298,9 +298,9 @@ ActionGroupMemeFormat: TActionGroup = [
   faMemeFormat9];
 
 ActionGroupRggSonstiges: TActionGroup = [
-  faMemeToggleHelp,
-  faMemeToggleReport,
-  faButtonFrameReport,
+  faToggleHelp,
+  faToggleReport,
+  faToggleButtonReport,
   faToggleFontColor,
   faToggleSandboxed,
   faToggleSpeedPanel,

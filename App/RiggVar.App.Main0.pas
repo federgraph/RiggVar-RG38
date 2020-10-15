@@ -400,9 +400,9 @@ begin
     Exit;
 
   case fa of
-    faMemeToggleHelp: result := F.HelpText.Visible;
-    faMemeToggleReport: result := F.ReportText.Visible;
-    faButtonFrameReport: result := F.WantButtonFrameReport;
+    faToggleHelp: result := F.HelpText.Visible;
+    faToggleReport: result := F.ReportText.Visible;
+    faToggleButtonReport: result := F.WantButtonReport;
     faChartRect..faChartReset: result := F.ChartGraph.GetChecked(fa);
     faReportNone..faReportReadme: result := F.ReportManager.GetChecked(fa);
 

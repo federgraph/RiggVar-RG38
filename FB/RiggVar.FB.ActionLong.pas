@@ -161,15 +161,15 @@ begin
     faTouchTablet: result := 'Touch Tablet';
     faTouchPhone: result := 'Touch Phone';
 
-    faButtonFrameReport: result := 'Button Frame Report';
+    faToggleButtonReport: result := 'Button Frame Report';
 
     faParamValuePlus1: result := 'Param Value + 1';
     faParamValueMinus1: result := 'Param Value - 1';
     faParamValuePlus10: result := 'Param Value + 10';
     faParamValueMinus10: result := 'Param Value - 10';
 
-    faMemeToggleHelp: result := 'Toggle Help Text';
-    faMemeToggleReport: result := 'Toggle Report';
+    faToggleHelp: result := 'Toggle Help Text';
+    faToggleReport: result := 'Toggle Report';
 
     faMemeGotoLandscape: result := 'Goto Landscape';
     faMemeGotoSquare: result := 'Goto Square';

@@ -285,9 +285,9 @@ faToggleDebugText = 203;
 faUpdateReportText = 204;
 
 { RggSonstiges }
-faMemeToggleHelp = 205;
-faMemeToggleReport = 206;
-faButtonFrameReport = 207;
+faToggleHelp = 205;
+faToggleReport = 206;
+faToggleButtonReport = 207;
 faToggleFontColor = 208;
 faToggleSandboxed = 209;
 faToggleSpeedPanel = 210;

@@ -767,6 +767,7 @@ end;
 
 procedure TRggMain.SetParam(Value: TFederParam);
 begin
+  { make sure the 'pseudo-param' faPan gets cancelled }
   FAction := faNoop;
   if Demo then
   begin

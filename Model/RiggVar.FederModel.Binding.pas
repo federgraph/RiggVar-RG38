@@ -83,7 +83,6 @@ begin
   SL.Add('Info about Trimm 420 App');
   SL.Add('');
   SL.Add('see www.federgraph.de');
-  SL.Add('project source has GPL 3.0 license');
   SL.Add('see federgraph''s GitHub repository: RiggVar-RG38');
   SL.Add('');
   SL.Add('Still wanted:');
@@ -144,7 +143,7 @@ begin
   SL.Add('Taste g : ');
   SL.Add('Taste G : ');
   SL.Add('');
-  SL.Add('Taste h : faMemeToggleHelp');
+  SL.Add('Taste h : faToggleHelp');
   SL.Add('Taste H : faSalingH');
   SL.Add('');
   SL.Add('Taste i : faWheelRight');
@@ -174,7 +173,7 @@ begin
   SL.Add('Taste q : ');
   SL.Add('Taste Q : faToggleUseQuickSort');
   SL.Add('');
-  SL.Add('Taste r : faMemeToggleReport');
+  SL.Add('Taste r : faToggleReport');
   SL.Add('Taste R : faReadTrimmFile');
   SL.Add('');
   SL.Add('Taste s : faMemeGotsSquare');

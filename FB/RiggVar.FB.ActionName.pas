@@ -281,9 +281,9 @@ faToggleDebugText: result := 'faToggleDebugText';
 faUpdateReportText: result := 'faUpdateReportText';
 
 { RggSonstiges }
-faMemeToggleHelp: result := 'faMemeToggleHelp';
-faMemeToggleReport: result := 'faMemeToggleReport';
-faButtonFrameReport: result := 'faButtonFrameReport';
+faToggleHelp: result := 'faToggleHelp';
+faToggleReport: result := 'faToggleReport';
+faToggleButtonReport: result := 'faToggleButtonReport';
 faToggleFontColor: result := 'faToggleFontColor';
 faToggleSandboxed: result := 'faToggleSandboxed';
 faToggleSpeedPanel: result := 'faToggleSpeedPanel';

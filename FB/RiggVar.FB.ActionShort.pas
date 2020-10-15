@@ -163,10 +163,10 @@ begin
     faTouchPhone: result := 'pho';
     faTouchDesk: result := 'dsk';
 
-    faButtonFrameReport: result := 'bfr';
+    faToggleButtonReport: result := 'bfr';
 
-    faMemeToggleHelp: result := 'h';
-    faMemeToggleReport: result := 'r';
+    faToggleHelp: result := 'h';
+    faToggleReport: result := 'r';
 
     faMemeGotoLandscape: result := '[L]';
     faMemeGotoSquare: result := '[S]';
