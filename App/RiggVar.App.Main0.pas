@@ -90,10 +90,6 @@ type
     procedure CycleColorSchemeP; virtual;
     procedure ToggleDarkMode;
 
-    procedure BlackText;
-    procedure GrayText;
-    procedure WhiteText;
-
     procedure InitTouch;
     procedure UpdateTouch;
 
@@ -170,24 +166,6 @@ begin
   FederBinding.Free;
 
   inherited;
-end;
-
-procedure TMain0.BlackText;
-begin
-  MainVar.ColorScheme.BlackText;
-  FederText.UpdateColorScheme;
-end;
-
-procedure TMain0.WhiteText;
-begin
-  MainVar.ColorScheme.WhiteText;
-  FederText.UpdateColorScheme;
-end;
-
-procedure TMain0.GrayText;
-begin
-  MainVar.ColorScheme.GrayText;
-  FederText.UpdateColorScheme;
 end;
 
 procedure TMain0.InitFederText(ft: TFederTouch0);
@@ -287,8 +265,6 @@ begin
   begin
     MainVar.ColorScheme.Scheme := Value;
     MainVar.ColorScheme.Init(Value);
-    if MainVar.ColorScheme.claBackground = claNull then
-      BlackText;
     FormMain.UpdateBackgroundColor(MainVar.ColorScheme.claBackground);
     FederText.UpdateColorScheme;
   end;

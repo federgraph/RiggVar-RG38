@@ -127,7 +127,7 @@ begin
     faShowDiagE: result := 'DE';
     faShowDiagQ: result := 'DQ';
 
-    faShowChart: result := 'CF'; // old ChartForm
+    faShowChart: result := 'CF';
     faShowText: result := 'TA';
 
     faWheelLeft: result := 'wl';
@@ -351,10 +351,6 @@ begin
     faParamRZ: result := 'rz';
     faParamCZ: result := 'cz';
 
-    faBlackText: result := 'btx';
-    faGrayText: result := 'gtx';
-    faWhiteText: result := 'wtx';
-
     faParamAPW: result := 'APW';
     faParamEAH: result := 'EAH';
     faParamEAR: result := 'EAR';
@@ -369,6 +365,44 @@ begin
     faRotaForm2: result := 'RF2';
     faRotaForm3: result := 'RF3';
 
+    faReset: result := 'res';
+    faResetPosition: result := 'rpo';
+    faResetRotation: result := 'rro';
+    faResetZoom: result := 'rzo';
+
+    faToggleLanguage: result := 'lan';
+
+    faToggleDropTarget: result := 'tdt';
+
+    faSave: result := 'sav';
+    faLoad: result := 'loa';
+    faOpen: result := 'ope';
+    faCopy: result := '^c';
+    faPaste: result := '^v';
+    faShare: result := 'sha';
+
+    faToggleMoveMode: result := 'mm';
+    faLinearMove: result := 'lmm';
+    faExpoMove: result := 'emm';
+
+    faCycleBitmapM: result := 'b-';
+    faCycleBitmapP: result := 'b+';
+
+    faRandom: result := 'ran';
+    faRandomWhite: result := 'rcw';
+    faRandomBlack: result := 'rcb';
+
+    faBitmapEscape: result := 'be';
+
+    faToggleContour: result := 'ct';
+
+    faToggleViewType: result := 'vt';
+    faViewTypeOrtho: result := 'vto';
+    faViewTypePerspective: result := 'vtp';
+
+    faHullMesh: result := 'hm';
+    faHullMeshOn: result := 'hm1';
+    faHullMeshOff: result := 'hm0';
   end;
 end;
 

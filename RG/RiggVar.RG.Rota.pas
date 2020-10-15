@@ -223,10 +223,10 @@ begin
   case FCurrent of
     0: ;
 {$ifdef WantRotaForm1}
-//    1: RotaForm1.HandleAction(fa);
+    1: RotaForm1.HandleAction(fa);
 {$endif}
 {$ifdef WantRotaForm2}
-//    2: RotaForm2.HandleAction(fa);
+    2: RotaForm2.HandleAction(fa);
 {$endif}
 {$ifdef WantRotaForm3}
     3: RotaForm3.HandleAction(fa);

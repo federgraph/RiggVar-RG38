@@ -114,7 +114,7 @@ begin
   SL.Add('Tip: Use space bar instead of Enter in left List.');
 SL.Add('');
   SL.Add('ToDo: Update manually written shortcut list.');
-  SL.Add('--- old manually written key binding report below ---');
+  SL.Add('--- manually written key binding report below ---');
   SL.Add('');
   InitNormalKeys(SL);
   SL.Add('');

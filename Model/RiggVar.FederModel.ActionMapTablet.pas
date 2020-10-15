@@ -318,14 +318,14 @@ begin
 
       cl := TopRight;
       cla := claWhite;
-      InitAC(cl, 1, faViewpointS, cla);
-      InitAC(cl, 2, faViewpointA, cla);
-      InitAC(cl, 3, faViewpointT, cla);
-      InitAC(cl, 4, faViewpoint3, cla);
+      InitAC(cl, 1, faReset, cla);
+      InitAC(cl, 2, faResetPosition, cla);
+      InitAC(cl, 3, faResetRotation, cla);
+      InitAC(cl, 4, faResetZoom, cla);
       InitAC(cl, 5, faActionPageP, claYellow);
-      InitAC(cl, 6, faNoop, cla);
-      InitAC(cl, 7, faNoop, cla);
-      InitAC(cl, 8, faPan, cla);
+      InitAC(cl, 6, faRotaForm1, claForm);
+      InitAC(cl, 7, faRotaForm2, claForm);
+      InitAC(cl, 8, faNoop, cla);
 
       cl := BottomLeft;
       cla := claSample;
@@ -343,7 +343,7 @@ begin
       InitAC(cl, 1, faUpdateTrimm0, claSample);
       InitAC(cl, 2, faCopyAndPaste, claSample);
       InitAC(cl, 3, faNoop, cla);
-      InitAC(cl, 4, faNoop, cla);
+      InitAC(cl, 4, faPan, claPlum);
       InitAC(cl, 5, faDemo, cla);
       InitAC(cl, 6, faRggHull, claOption);
     end;
@@ -550,6 +550,47 @@ begin
       InitAC(cl, 4, faNoop, cla);
       InitAC(cl, 5, faNoop, cla);
       InitAC(cl, 6, faNoop, cla);
+    end;
+
+    10:
+    begin
+      cla := claWhite;
+      cl := TopLeft;
+      //InitAC(cl, 1, faActionPageM, claYellow);
+      InitAC(cl, 2, faNoop, cla);
+      InitAC(cl, 3, faNoop, cla);
+      InitAC(cl, 4, faNoop, cla);
+      InitAC(cl, 5, faNoop, cla);
+      InitAC(cl, 6, faNoop, cla);
+
+      cl := TopRight;
+      InitAC(cl, 1, faNoop, cla);
+      InitAC(cl, 2, faNoop, cla);
+      InitAC(cl, 3, faNoop, cla);
+      InitAC(cl, 4, faNoop, cla);
+      //InitAC(cl, 5, faActionPageP, claYellow);
+      InitAC(cl, 6, faNoop, cla);
+      InitAC(cl, 7, faNoop, cla);
+      InitAC(cl, 8, faNoop, cla);
+
+      cl := BottomLeft;
+      InitAC(cl, 1, faToggleViewType, cla);
+      InitAC(cl, 2, faToggleContour, cla);
+      InitAC(cl, 3, faBitmapEscape, cla);
+      InitAC(cl, 4, faNoop, cla);
+      InitAC(cl, 5, faNoop, cla);
+      InitAC(cl, 6, faNoop, cla);
+      InitAC(cl, 7, faParamT1, cla);
+      InitAC(cl, 8, faParamT2, cla);
+
+      cla := claWhite;
+      cl := BottomRight;
+      InitAC(cl, 1, faCycleColorSchemeM, cla);
+      InitAC(cl, 2, faCycleColorSchemeP, cla);
+      InitAC(cl, 3, faCycleBitmapM, cla);
+      InitAC(cl, 4, faCycleBitmapP, cla);
+      InitAC(cl, 5, faRandomWhite, cla);
+      InitAC(cl, 6, faRandomBlack, cla);
     end;
 
   end;

@@ -339,10 +339,6 @@ begin
     faPlusOne: result := 'Plus One';
     faPlusTen: result := 'Plus Ten';
 
-    faBlackText: result := 'Black Text';
-    faGrayText: result := 'Gray Text';
-    faWhiteText: result := 'White Text';
-
     faPan: result := 'Pan';
 
     faParamORX: result := 'Param OrthoRot X';
@@ -366,6 +362,106 @@ begin
     faRotaForm1: result := 'use RotaFrom 1';
     faRotaForm2: result := 'use RotaFrom 2';
     faRotaForm3: result := 'use RotaFrom 3';
+
+    faReset: result := 'Reset';
+    faResetPosition: result := 'Reset Position';
+    faResetRotation: result := 'Reset Rotation';
+    faResetZoom: result := 'Reset Zoom';
+
+    faToggleLanguage: result := 'Toggle Language';
+
+    faToggleDropTarget: result := 'Drop target';
+
+    faSave: result := 'Save';
+    faLoad: result := 'Load';
+    faOpen: result := 'Open';
+    faCopy: result := 'Copy';
+    faPaste: result := 'Paste';
+    faShare: result := 'Share';
+
+//    faFormatLandscape: result := '[Landscape]';
+//    faFormatPortrait: result := '[Portrait]';
+//    faFormatIPhoneLandscape: result := '[IPhone Landscape]';
+//    faFormatIPhonePortrait: result := '[IPhone Portrait]';
+//
+//    faCopyScreenshot: result := 'Copy Screenshot';
+//    faCopyBitmap: result := 'Copy Bitmap';
+//    faCopyBitmap3D: result := 'Copy 3D Bitmap';
+
+    faRandom: result := 'Random Param Values';
+    faRandomWhite: result := 'random colors white rings';
+    faRandomBlack: result := 'random colors black rings';
+    faBitmapEscape: result := 'Enter outer cycle';
+
+    faToggleContour: result := 'Toggle contour rings';
+
+    faToggleViewType: result := 'Toggle view type';
+    faViewTypeOrtho: result := 'Set view type to orthographic';
+    faViewTypePerspective: result := 'Set view type to perspective';
+
+//    faLabelTextP: result := 'LabelText plus';
+//    faLabelTextM: result := 'LabelText minus';
+//
+//    faLabelBatchP: result := 'cycle label batch +';
+//    faLabelBatchM: result := 'cycle label batch -';
+//
+//    faToggleZoom: result := 'Toggle tile zoom';
+//
+//    faToggleHardCopy: result := 'Toggle Hard Copy';
+//    faHardCopyOn: result := 'Hard Copy On';
+//    faHardCopyOff: result := 'Hard Copy Off';
+//
+//    faTogglePngCopy: result := 'Toggle Png Copy';
+//    faPngCopyOn: result := 'Png Copy On';
+//    faPngCopyOff: result := 'Png Copy Off';
+//
+//    faToggleNoCopy: result := 'Toggle No Copy';
+//    faNoCopyOn: result := 'No Copy On';
+//    faNoCopyOff: result := 'No Copy Off';
+//
+//    faIconSize016: result := 'Icon Size 16';
+//    faIconSize032: result := 'Icon Size 32';
+//    faIconSize048: result := 'Icon Size 48';
+//    faIconSize064: result := 'Icon Size 64';
+//    faIconSize096: result := 'Icon Size 96';
+//    faIconSize128: result := 'Icon Size 128';
+//    faIconSize256: result := 'Icon Size 256';
+//    faIconSize512: result := 'Icon Size 512';
+//    faIconSize640: result := 'Icon Size 640';
+//    faIconSize960: result := 'Icon Size 960';
+//    faIconSize01K: result := 'Icon Size 1024';
+
+    faHullMesh :result := 'toggle hull mesh';
+    faHullMeshOn :result := 'hull mesh on';
+    faHullMeshOff :result := 'hull mesh off';
+
+//    faHelpCycle: result := 'Help Cycle';
+//    faHelpList: result := 'Help Listing';
+//
+//    faELLOn: result := 'Empty Last Line On';
+//    faELLOff: result := 'Empty Last Line Off';
+//
+//    faToggleMapK: result := 'Togg Map K';
+//    faMapKOn: result := 'Map K On';
+//    faMapKOff: result := 'Map K Off';
+//
+//    faToggleTouchMenu: result := 'Touch menu';
+//    faToggleEquationText: result := 'Equation text visibility';
+//    faTogglePrimeText: result := 'Primary text visibility';
+//    faToggleSecondText: result := 'Secondary text visibility';
+//    faToggleLabelText: result := 'Label text visibility';
+//
+//    faToggleBMap: result := 'Big map';
+
+    faToggleMoveMode: result := 'Toggle move mode';
+    faLinearMove: result := 'Linear move';
+    faExpoMove: result := 'Exponential move';
+
+//    faHelpHome: result := 'Help home';
+//    faCycleHelpP: result := 'cycle help text +';
+//    faCycleHelpM: result := 'cycle help text -';
+    faCycleBitmapP: result := 'cycle bitmap +';
+    faCycleBitmapM: result := 'cycle bitmap -';
   end;
 end;
 

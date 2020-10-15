@@ -112,6 +112,8 @@ type
     constructor Create;
     destructor Destroy; override;
 
+    procedure HandleAction(fa: Integer);
+
     procedure Init;
     procedure Swap;
     procedure RotateZ(delta: single);
@@ -404,17 +406,24 @@ end;
 
 procedure TRotaForm2.Zoom(delta: single);
 begin
-  TH.DoOnMouse([ssShift], delta, -delta * 0.3);
+  { only the sign of param dy will be uses }
+  TH.DoOnMouse([ssShift], 0, -delta);
 end;
 
 procedure TRotaForm2.ZoomInBtnClick(Sender: TObject);
 begin
-
+  { TH.DoOnMouse([ssShift], 0, -1); }
+  TH.ZoomDelta := 1 + 0.1;
+  TH.Draw;
+  TH.ZoomDelta := 1;
 end;
 
 procedure TRotaForm2.ZoomOutBtnClick(Sender: TObject);
 begin
-
+  { TH.DoOnMouse([ssShift], 0, 1); }
+  TH.ZoomDelta := 1 - 0.1;
+  TH.Draw;
+  TH.ZoomDelta := 1;
 end;
 
 constructor TRotaForm2.Create;
@@ -673,6 +682,17 @@ end;
 
 procedure TRotaForm2.ImageScreenScaleChanged(Sender: TObject);
 begin
+  Draw;
+end;
+
+procedure TRotaForm2.HandleAction(fa: Integer);
+begin
+  case fa of
+    faReset: ;
+    faResetPosition: ;
+    faResetRotation: ;
+    faResetZoom: ;
+  end;
   Draw;
 end;
 

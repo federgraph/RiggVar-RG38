@@ -80,7 +80,7 @@ begin
 
   GroupNames := TStringList.Create;
 
-  { App }
+ { App }
   AddSpecial(ActionGroupEmptyAction, 'EmptyAction');
   AddSpecial(ActionGroupPages, 'Pages');
   AddSpecial(ActionGroupForms, 'Forms');
@@ -120,30 +120,18 @@ begin
   { SK }
   AddSpecial(ActionGroupCircles, 'Circles');
 
-  {Meme }
+  { Meme }
   AddSpecial(ActionGroupMemeFormat, 'MemeFormat');
 
-(*
-  { Promoted vond Rgg3D }
+  { RotaForm3 }
+  AddSpecial(ActionGroupReset, 'Reset');
   AddSpecial(ActionGroupDropTarget, 'DropTarget');
   AddSpecial(ActionGroupLanguage, 'Language');
   AddSpecial(ActionGroupCopyPaste, 'CopyPaste');
-
-  { Rgg3D }
   AddSpecial(ActionGroupViewType, 'ViewType');
-  AddSpecial(ActionGroupViewFlags, 'ViewFlags');
-  AddSpecial(ActionGroupEmptyLastLine, 'LastLine');
-  AddSpecial(ActionGroupHelp, 'Help');
-  AddSpecial(ActionGroupFormat, 'Format');
-  AddSpecial(ActionGroupIconSize, 'IconSize');
   AddSpecial(ActionGroupViewOptions, 'ViewOptions');
-  AddSpecial(ActionGroupReset, 'Reset');
   AddSpecial(ActionGroupBitmapCycle, 'BitmapCycle');
-  AddSpecial(ActionGroupCopyImage, 'CopyImage');
-  AddSpecial(ActionGroupCopyOptions, 'CopyOptions');
-  AddSpecial(ActionGroupRggHullMesh, 'RggHullMesh');
-*)
-
+  AddSpecial(ActionGroupHullMesh, 'HullMesh');
 end;
 
 function TActionGroupList.GetGroup(fa: Integer): Integer;

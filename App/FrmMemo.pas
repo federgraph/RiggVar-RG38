@@ -264,11 +264,11 @@ begin
   MemoActionList.AddMemoAction('Show Trimm File', WriteTrimmFile);
   MemoActionList.AddMemoAction('Show Hull Points', WriteHullPoints);
   MemoActionList.AddMemoAction('Info Text', InfoText);
-  MemoActionList.AddMemoAction('Help Text', HelpText);
+  MemoActionList.AddMemoAction('Manual Shortcuts', HelpText);
 
 {$ifdef MSWINDOWS}
 //  MemoActionList.AddMemoAction('Help Text for IO', HelpTextForIO);
-  MemoActionList.AddMemoAction('Write Shortcuts', WriteShortcuts);
+  MemoActionList.AddMemoAction('Auto Shortcuts', WriteShortcuts);
 {$if WantDriverTest}
   MemoActionList.AddMemoAction('Device Report', DeviceReportBtnClick);
 {$endif}

@@ -945,6 +945,11 @@ begin
     faRotaForm1: RotaForm.SwapRota(1);
     faRotaForm2: RotaForm.SwapRota(2);
 
+    faReset,
+    faResetPosition,
+    faResetRotation,
+    faResetZoom: RotaForm.HandleAction(fa);
+
     faPan:
     begin
       Main.SetParameter(faPan);
@@ -965,8 +970,9 @@ begin
   result := faNoop;
   case Key of
     vkF12: ;
-    vkC: ;
-    vkV: ;
+//    vkC: result := faCopyTrimmItem;
+//    vkV: result := faPasteTrimmItem;
+    VKEscape: result := faReset;
   end;
 end;
 

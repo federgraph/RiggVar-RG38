@@ -186,6 +186,9 @@ type
 
     constructor Create;
     destructor Destroy; override;
+
+    procedure HandleAction(fa: Integer);
+
     procedure Init;
     procedure Swap;
     procedure Draw;
@@ -1104,6 +1107,16 @@ procedure TRotaForm1.UpdateCameraY(Delta: single);
 begin
   FYPos := FYPos - Delta * 5;
   Draw;
+end;
+
+procedure TRotaForm1.HandleAction(fa: Integer);
+begin
+  case fa of
+    faReset: ;
+    faResetPosition: ;
+    faResetRotation: ;
+    faResetZoom: ;
+  end;
 end;
 
 end.

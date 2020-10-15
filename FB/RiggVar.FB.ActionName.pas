@@ -88,9 +88,6 @@ faParamValueMinus10: result := 'faParamValueMinus10';
 { ColorScheme }
 faCycleColorSchemeM: result := 'faCycleColorSchemeM';
 faCycleColorSchemeP: result := 'faCycleColorSchemeP';
-faBlackText: result := 'faBlackText';
-faGrayText: result := 'faGrayText';
-faWhiteText: result := 'faWhiteText';
 
 { FederText }
 faToggleAllText: result := 'faToggleAllText';
@@ -370,7 +367,12 @@ faRotaForm1: result := 'faRotaForm1';
 faRotaForm2: result := 'faRotaForm2';
 faRotaForm3: result := 'faRotaForm3';
 
-(*
+{ Reset }
+faReset: result := 'faReset';
+faResetPosition: result := 'faResetPosition';
+faResetRotation: result := 'faResetRotation';
+faResetZoom: result := 'faResetZoom';
+
 { DropTarget }
 faToggleDropTarget: result := 'faToggleDropTarget';
 
@@ -390,62 +392,10 @@ faToggleViewType: result := 'faToggleViewType';
 faViewTypeOrtho: result := 'faViewTypeOrtho';
 faViewTypePerspective: result := 'faViewTypePerspective';
 
-{ ViewFlags }
-faToggleBMap: result := 'faToggleBMap';
-faToggleZoom: result := 'faToggleZoom';
-faToggleMapK: result := 'faToggleMapK';
-faMapKOn: result := 'faMapKOn';
-faMapKOff: result := 'faMapKOff';
-faToggleTouchMenu: result := 'faToggleTouchMenu';
-faToggleEquationText: result := 'faToggleEquationText';
-faTogglePrimeText: result := 'faTogglePrimeText';
-faToggleSecondText: result := 'faToggleSecondText';
-faToggleLabelText: result := 'faToggleLabelText';
-faLabelBatchM: result := 'faLabelBatchM';
-faLabelBatchP: result := 'faLabelBatchP';
-faLabelTextP: result := 'faLabelTextP';
-faLabelTextM: result := 'faLabelTextM';
-
-{ LastLine }
-faELLOn: result := 'faELLOn';
-faELLOff: result := 'faELLOff';
-
-{ Help }
-faCycleHelpM: result := 'faCycleHelpM';
-faCycleHelpP: result := 'faCycleHelpP';
-faHelpCycle: result := 'faHelpCycle';
-faHelpList: result := 'faHelpList';
-faHelpHome: result := 'faHelpHome';
-
-{ Format }
-faFormatLandscape: result := 'faFormatLandscape';
-faFormatPortrait: result := 'faFormatPortrait';
-faFormatIPhoneLandscape: result := 'faFormatIPhoneLandscape';
-faFormatIPhonePortrait: result := 'faFormatIPhonePortrait';
-
-{ IconSize }
-faIconSize016: result := 'faIconSize016';
-faIconSize032: result := 'faIconSize032';
-faIconSize048: result := 'faIconSize048';
-faIconSize064: result := 'faIconSize064';
-faIconSize096: result := 'faIconSize096';
-faIconSize128: result := 'faIconSize128';
-faIconSize256: result := 'faIconSize256';
-faIconSize512: result := 'faIconSize512';
-faIconSize640: result := 'faIconSize640';
-faIconSize960: result := 'faIconSize960';
-faIconSize01K: result := 'faIconSize01K';
-
 { ViewOptions }
 faToggleMoveMode: result := 'faToggleMoveMode';
 faLinearMove: result := 'faLinearMove';
 faExpoMove: result := 'faExpoMove';
-
-{ Reset }
-faReset: result := 'faReset';
-faResetPosition: result := 'faResetPosition';
-faResetRotation: result := 'faResetRotation';
-faResetZoom: result := 'faResetZoom';
 
 { BitmapCycle }
 faCycleBitmapM: result := 'faCycleBitmapM';
@@ -456,27 +406,10 @@ faRandomBlack: result := 'faRandomBlack';
 faBitmapEscape: result := 'faBitmapEscape';
 faToggleContour: result := 'faToggleContour';
 
-{ CopyImage }
-faCopyScreenshot: result := 'faCopyScreenshot';
-faCopyBitmap: result := 'faCopyBitmap';
-faCopyBitmap3D: result := 'faCopyBitmap3D';
-
-{ CopyOptions }
-faToggleHardCopy: result := 'faToggleHardCopy';
-faHardCopyOn: result := 'faHardCopyOn';
-faHardCopyOff: result := 'faHardCopyOff';
-faTogglePngCopy: result := 'faTogglePngCopy';
-faPngCopyOn: result := 'faPngCopyOn';
-faPngCopyOff: result := 'faPngCopyOff';
-faToggleNoCopy: result := 'faToggleNoCopy';
-faNoCopyOn: result := 'faNoCopyOn';
-faNoCopyOff: result := 'faNoCopyOff';
-
 { RggHullMesh }
 faHullMesh: result := 'faHullMesh';
 faHullMeshOn: result := 'faHullMeshOn';
 faHullMeshOff: result := 'faHullMeshOff';
-*)
 
     else
       result := '??';
@@ -484,3 +417,4 @@ faHullMeshOff: result := 'faHullMeshOff';
 end;
 
 end.
+
