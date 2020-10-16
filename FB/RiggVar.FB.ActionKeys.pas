@@ -23,7 +23,7 @@ type
     KTH: TKeyTestHelper;
     function GetKeys: Boolean;
     procedure GetKey(Name: string; Value: Word);
-    procedure TestKey(Name: string; Value: Word);
+    procedure TestKey(Name: string; Value: Word; Shift: TShiftState = []);
     procedure TestKeys;
     procedure GetSC(fa: Integer; ML: TStrings);
   public
@@ -189,13 +189,13 @@ begin
 
   KTH.Shift := [ssShift];
 
-  TestKey('Shift + vkLeft', vkLeft);
-  TestKey('Shift + vkRight', vkRight);
-  TestKey('Shift + vkUp', vkUp);
-  TestKey('Shift + vkDown', vkDown);
+  TestKey('Shift + vkLeft', vkLeft, KTH.Shift);
+  TestKey('Shift + vkRight', vkRight, KTH.Shift);
+  TestKey('Shift + vkUp', vkUp, KTH.Shift);
+  TestKey('Shift + vkDown', vkDown, KTH.Shift);
 
-  TestKey('Shift + vkEscape', vkEscape);
-  TestKey('Shift + vkSpace', vkSpace);
+  TestKey('Shift + vkEscape', vkEscape, KTH.Shift);
+  TestKey('Shift + vkSpace', vkSpace, KTH.Shift);
 end;
 
 procedure TFederKeyboard.TestKeys;
@@ -211,11 +211,11 @@ begin
   end;
 end;
 
-procedure TFederKeyboard.TestKey(Name: string; Value: Word);
+procedure TFederKeyboard.TestKey(Name: string; Value: Word; Shift: TShiftState);
 var
   fa2: TFederAction;
 begin
-  fa2 := KeyUpAction(Value, KTH.KeyChar, []);
+  fa2 := KeyUpAction(Value, KTH.KeyChar, Shift);
   if KTH.fat = fa2 then
   begin
     KTH.ML.Add(TestName + ' ' + Name);

@@ -298,6 +298,8 @@ ActionGroupMemeFormat: TActionGroup = [
   faMemeFormat9];
 
 ActionGroupRggSonstiges: TActionGroup = [
+  faShowZOrder,
+  faShowHelp,
   faToggleHelp,
   faToggleReport,
   faToggleButtonReport,

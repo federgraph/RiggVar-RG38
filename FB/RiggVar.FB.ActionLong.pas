@@ -462,6 +462,9 @@ begin
 //    faCycleHelpM: result := 'cycle help text -';
     faCycleBitmapP: result := 'cycle bitmap +';
     faCycleBitmapM: result := 'cycle bitmap -';
+
+    faShowZOrder: result := 'Show Z-Order';
+    faShowHelp: result := 'Show Help';
   end;
 end;
 

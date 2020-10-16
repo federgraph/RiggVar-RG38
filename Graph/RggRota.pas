@@ -1112,11 +1112,41 @@ end;
 procedure TRotaForm1.HandleAction(fa: Integer);
 begin
   case fa of
-    faReset: ;
-    faResetPosition: ;
-    faResetRotation: ;
-    faResetZoom: ;
+    faReset:
+    begin
+      ViewPoint := FViewPoint;
+    end;
+
+    faResetPosition:
+    begin
+      FXPos := 0;
+      FYPos := 0;
+    end;
+
+    faResetRotation:
+    begin
+      Rotator.Matrix := RotaData.Matrix;
+      Rotator.GetAngle(FPhi, FTheta, FGamma);
+    end;
+
+    faResetZoom:
+    begin
+      FZoomIndex := RotaData.ZoomIndex;
+      FZoom := FZoomBase * TRotaParams.LookUpRa10(FZoomIndex);
+      Transformer.Zoom := FZoom;
+    end;
+
+    else
+      Exit;
   end;
+
+  FIncrementT := RotaData.IncrementT;
+  FIncrementW := RotaData.IncrementW;
+
+  RaumGraph.Update;
+  HullGraph.Update;
+  EraseBK := True;
+  Draw;
 end;
 
 end.

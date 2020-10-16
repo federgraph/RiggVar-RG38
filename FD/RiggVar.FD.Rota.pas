@@ -46,12 +46,6 @@ type
     FFixpoint: TRiggPoint;
     FDarkMode: Boolean;
     FBackgroundColor: TAlphaColor;
-    FLegendItemChecked: Boolean;
-    FWantLIneColors: Boolean;
-    FUseDisplayList: Boolean;
-    FUseQuickSort: Boolean;
-    FMatrixItemChecked: Boolean;
-    FWantOverlayedRiggs: Boolean;
     procedure SetFixpoint(const Value: TRiggPoint);
     procedure SetViewpoint(const Value: TViewpoint);
     procedure SetBogen(const Value: Boolean);
@@ -77,12 +71,6 @@ type
     procedure RotaHelper(aRotX, aRotY, aRotZ, aOffsetY, aRelativeZoom: single);
     procedure SetDarkMode(const Value: Boolean);
     procedure SetBackgroundColor(const Value: TAlphaColor);
-    procedure SetLegendItemChecked(const Value: Boolean);
-    procedure SetWantLIneColors(const Value: Boolean);
-    procedure SetUseDisplayList(const Value: Boolean);
-    procedure SetUseQuickSort(const Value: Boolean);
-    procedure SetMatrixItemChecked(const Value: Boolean);
-    procedure SetWantOverlayedRiggs(const Value: Boolean);
   protected
     MouseDown: Boolean;
     MousePos: TPointF;
@@ -121,11 +109,6 @@ type
     procedure ZoomInBtnClick(Sender: TObject);
     procedure ZoomOutBtnClick(Sender: TObject);
 
-    procedure LegendBtnClick(Sender: TObject);
-    procedure UseDisplayListBtnClick(Sender: TObject);
-    procedure UseQuickSortBtnClick(Sender: TObject);
-    procedure MatrixItemClick(Sender: TObject);
-
     function GetChecked(fa: Integer): Boolean;
     procedure SetChecked(fa: Integer; Value: Boolean);
 
@@ -162,13 +145,6 @@ type
     property GrauZeichnen: Boolean write SetGrauZeichnen;
     property BtnGrauDown: Boolean write SetBtnGrauDown;
     property BtnBlauDown: Boolean write SetBtnBlauDown;
-
-    property LegendItemChecked: Boolean read FLegendItemChecked write SetLegendItemChecked;
-    property WantLineColors: Boolean read FWantLineColors write SetWantLineColors;
-    property UseDisplayList: Boolean read FUseDisplayList write SetUseDisplayList;
-    property UseQuickSort: Boolean read FUseQuickSort write SetUseQuickSort;
-    property MatrixItemChecked: Boolean read FMatrixItemChecked write SetMatrixItemChecked;
-    property WantOverlayedRiggs: Boolean read FWantOverlayedRiggs write SetWantOverlayedRiggs;
   end;
 
 implementation
@@ -620,56 +596,6 @@ begin
   TH.InitTransform(mr);
 end;
 
-procedure TRotaForm2.SetLegendItemChecked(const Value: Boolean);
-begin
-  FLegendItemChecked := Value;
-end;
-
-procedure TRotaForm2.SetMatrixItemChecked(const Value: Boolean);
-begin
-  FMatrixItemChecked := Value;
-end;
-
-procedure TRotaForm2.SetUseDisplayList(const Value: Boolean);
-begin
-  FUseDisplayList := Value;
-end;
-
-procedure TRotaForm2.SetUseQuickSort(const Value: Boolean);
-begin
-  FUseQuickSort := Value;
-end;
-
-procedure TRotaForm2.SetWantLineColors(const Value: Boolean);
-begin
-  FWantLIneColors := Value;
-end;
-
-procedure TRotaForm2.SetWantOverlayedRiggs(const Value: Boolean);
-begin
-  FWantOverlayedRiggs := Value;
-end;
-
-procedure TRotaForm2.LegendBtnClick(Sender: TObject);
-begin
-
-end;
-
-procedure TRotaForm2.MatrixItemClick(Sender: TObject);
-begin
-
-end;
-
-procedure TRotaForm2.UseDisplayListBtnClick(Sender: TObject);
-begin
-
-end;
-
-procedure TRotaForm2.UseQuickSortBtnClick(Sender: TObject);
-begin
-
-end;
-
 function TRotaForm2.GetChecked(fa: Integer): Boolean;
 begin
   result := False;
@@ -686,14 +612,41 @@ begin
 end;
 
 procedure TRotaForm2.HandleAction(fa: Integer);
+var
+  aRotX, aRotY, aRotZ: single;
+  aOffsetY: single;
+  aRelativeZoom: single;
 begin
+  aRotX := 0;
+  aRotY := 0;
+  aRotZ := 0;
+  aOffsetY := 0;
+  aRelativeZoom := 1;
+
   case fa of
-    faReset: ;
+    faReset:
+    begin
+      case FViewpoint of
+        vpAchtern: aRotY := 90;
+        vpTop:
+        begin
+          aRotX := -90;
+          aOffsetY := 400;
+          aRelativeZoom := 3.0;
+        end;
+        vp3D:
+        begin
+          aRotX := -80;
+          aOffsetY := 300;
+          aRelativeZoom := 2.5;
+        end;
+      end;
+      RotaHelper(aRotX, aRotY, aRotZ, aOffsetY, aRelativeZoom);
+    end;
     faResetPosition: ;
     faResetRotation: ;
     faResetZoom: ;
   end;
-  Draw;
 end;
 
 end.

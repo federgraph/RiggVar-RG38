@@ -47,7 +47,8 @@ uses
   FMX.Dialogs,
   FMX.Edit,
   FMX.Surfaces,
-  FMX.Layouts;
+  FMX.Layouts,
+  FMX.Controls.Presentation;
 
 {$define FMX}
 
@@ -79,7 +80,9 @@ type
     procedure Reset;
     procedure InitRiggAndMain;
     procedure ShowZOrder;
+    procedure ShowHelp;
   protected
+    HL: TStringList;
     RL: TStrings;
     TL: TStrings;
     procedure InitHelpText;
@@ -192,7 +195,7 @@ type
   public
     procedure UpdateColorScheme;
     procedure LayoutComponents;
-    function GetActionFromKey(Key: Word): Integer;
+    function GetActionFromKey(Shift: TShiftState; Key: Word): Integer;
     function GetActionFromKeyChar(KeyChar: char): Integer;
     function GetChecked(fa: Integer): Boolean;
     procedure HandleAction(fa: Integer);
@@ -350,6 +353,7 @@ begin
   end;
 
   { Reports }
+  HL := TStringList.Create;
   RL := TStringList.Create;
   ReportManager := TRggReportManager.Create(RL);
   ReportManager.CurrentReport := rgDiffText;
@@ -384,12 +388,6 @@ begin
 
   TrimmText.TextSettings.FontColor := claBeige;
   TrimmText.Visible := True;
-
-//  HintText.BringToFront;
-//  HelpText.BringToFront;
-//  ReportText.BringToFront;
-//  TrimmText.BringToFront;
-//  SpeedPanel.BringToFront;
 
   TL := TStringList.Create;
   Main.UpdateTrimm0;
@@ -435,6 +433,7 @@ begin
 
   TL.Free;
   RL.Free;
+  HL.Free;
   ReportManager.Free;
 
   Main.Free;
@@ -453,7 +452,7 @@ procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
 var
   fa: Integer;
 begin
-  fa := GetActionFromKey(Key);
+  fa := GetActionFromKey(Shift, Key);
   if fa = faNoop then
     fa := GetActionFromKeyChar(KeyChar);
 
@@ -954,7 +953,10 @@ begin
     begin
       Main.SetParameter(faPan);
       ShowTrimm;
-    end
+    end;
+
+    faShowHelp: ShowHelp;
+    faShowZOrder: ShowZOrder;
 
     else
     begin
@@ -965,14 +967,20 @@ begin
   UpdateSpeedButtonDown;
 end;
 
-function TFormMain.GetActionFromKey(Key: Word): Integer;
+function TFormMain.GetActionFromKey(Shift: TShiftState; Key: Word): Integer;
 begin
   result := faNoop;
   case Key of
-    vkF12: ;
+    vkF12: result := faMemeGotoSquare;
 //    vkC: result := faCopyTrimmItem;
 //    vkV: result := faPasteTrimmItem;
-    VKEscape: result := faReset;
+    VKEscape:
+    begin
+      if Shift = [ssShift] then
+        result := faResetPosition
+      else
+        result := faReset;
+    end;
   end;
 end;
 
@@ -1058,16 +1066,17 @@ begin
     '8': fa := faLogo;
     '9': ;
 
-    '!': ;
-    '"': ;
+    '!': fa := faRotaForm1;
+    '"': fa := faRotaForm2;
+    '§': fa := faRotaForm3;
 
-    '=': RotaForm.SwapRota(1);
-    '?': RotaForm.SwapRota(2);
+    '=': fa := faShowZOrder;
+    '?': fa := faShowHelp;
 
     '+': fa := faActionPageP;
     '*': fa := faActionPageM;
 
-    '#': ShowZOrder;
+    '#': fa := faActionPage4;
 
     else fa := faNoop;
 
@@ -1089,11 +1098,8 @@ begin
 end;
 
 procedure TFormMain.InitHelpText;
-var
-  HL: TStringList;
 begin
-  HL := TStringList.Create;
-
+  HL.Clear;
   HL.Add('Toggle Text with Keys:');
   HL.Add('  h    - toggle help');
   HL.Add('  r    - toggle Report');
@@ -1116,8 +1122,6 @@ begin
 
   if HelpText <> nil then
     HelpText.Text := HL.Text;
-
-  HL.Free;
 end;
 
 function TFormMain.GetOpenFileName(dn, fn: string): string;
@@ -2192,6 +2196,16 @@ begin
   end;
   HelpText.Text := ML.Text;
   ML.Free;
+
+  HelpText.Visible := True;
+  ReportText.Visible := False;
+end;
+
+procedure TFormMain.ShowHelp;
+begin
+  HelpText.Text := HL.Text;
+  HelpText.Visible := True;
+  ReportText.Visible := False;
 end;
 
 end.

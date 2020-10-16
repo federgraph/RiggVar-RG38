@@ -403,6 +403,9 @@ begin
     faHullMesh: result := 'hm';
     faHullMeshOn: result := 'hm1';
     faHullMeshOff: result := 'hm0';
+
+    faShowZOrder: result := 'sz';
+    faShowHelp: result := 'sh';
   end;
 end;
 

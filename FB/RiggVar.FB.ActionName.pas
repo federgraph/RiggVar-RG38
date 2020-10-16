@@ -411,6 +411,9 @@ faHullMesh: result := 'faHullMesh';
 faHullMeshOn: result := 'faHullMeshOn';
 faHullMeshOff: result := 'faHullMeshOff';
 
+faShowZOrder: result := 'faShowZOrder';
+faShowHelp: result := 'faShowHelp';
+
     else
       result := '??';
   end;

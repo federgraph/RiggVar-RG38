@@ -411,7 +411,10 @@ faHullMesh = 303;
 faHullMeshOn = 304;
 faHullMeshOff = 305;
 
-faMax = 306;
+faShowZOrder = 306;
+faShowHelp = 307;
+
+faMax = 308;
 
 ParamsRange = [
   faParamT1 .. faParamT2,

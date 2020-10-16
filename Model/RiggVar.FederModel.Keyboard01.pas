@@ -48,7 +48,7 @@ function TFederKeyboard01.KeyUpAction(var Key: Word; var KeyChar: Char; Shift: T
 var
   fa: Integer;
 begin
-  fa := FormMain.GetActionFromKey(Key);
+  fa := FormMain.GetActionFromKey(Shift, Key);
   if fa = faNoop then
     fa := FormMain.GetActionFromKeyChar(KeyChar);
   result := fa;

@@ -377,6 +377,11 @@ begin
 
     faActionPageM: CycleToolSet(-1);
     faActionPageP: CycleToolSet(1);
+    faActionPage1: FederText.ActionPage := 1;
+    faActionPage2: FederText.ActionPage := 2;
+    faActionPage3: FederText.ActionPage := 3;
+    faActionPage4: FederText.ActionPage := 4;
+    faActionPage5: FederText.ActionPage := 5;
 
     faCycleColorSchemeM: CycleColorSchemeM;
     faCycleColorSchemeP: CycleColorSchemeP;

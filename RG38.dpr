@@ -22,7 +22,6 @@ uses
   RggUnit2 in 'Core\RggUnit2.pas',
   RggUnit3 in 'Core\RggUnit3.pas',
   RggUnit4 in 'Core\RggUnit4.pas',
-  RggSchnittGG in 'Core\RggSchnittGG.pas',
   RggStrings in 'Core\RggStrings.pas',
   RiggVar.App.Main in 'App\RiggVar.App.Main.pas',
   RiggVar.App.Main0 in 'App\RiggVar.App.Main0.pas',
