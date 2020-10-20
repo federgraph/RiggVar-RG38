@@ -172,10 +172,10 @@ begin
   Add(FX);
 
   A0 := TRggCircle.Create('A0');
-  A0.StrokeColor := claRed;
+  A0.StrokeColor := claGreen;
 
   B0 := TRggCircle.Create('B0');
-  B0.StrokeColor := claGreen;
+  B0.StrokeColor := claRed;
 
   C0 := TRggCircle.Create('C0');
   C0.StrokeColor := claYellow;
@@ -184,10 +184,10 @@ begin
   D0.StrokeColor := claBlue;
 
   A := TRggCircle.Create('A');
-  A.StrokeColor := claRed;
+  A.StrokeColor := claGreen;
 
   B := TRggCircle.Create('B');
-  B.StrokeColor := claGreen;
+  B.StrokeColor := claRed;
 
   C := TRggCircle.Create('C');
   C.StrokeColor := claYellow;
