@@ -133,7 +133,7 @@ begin
   Add(AY);
   Add(AZ);
 
-  FixPoint := Origin.Center.C;
+  FixPoint3D := Origin.Center.C;
   WantRotation := True;
   WantSort := True;
 end;

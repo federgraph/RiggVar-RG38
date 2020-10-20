@@ -140,7 +140,7 @@ begin
 
   InitDefaultPos;
 
-  FixPoint := M1.Center.C;
+  FixPoint3D := M1.Center.C;
   WantRotation := False;
   WantSort := False;
 

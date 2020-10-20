@@ -46,6 +46,23 @@ type
     FFixpoint: TRiggPoint;
     FDarkMode: Boolean;
     FBackgroundColor: TAlphaColor;
+
+    FKoordinaten: TRiggPoints;
+    FKoppelKurve: TKoordLine;
+    FMastLinie: TLineDataR100;
+    FMastLinieL: single;
+    FMastLinieB: single;
+
+    procedure UpdateRiggKoords;
+    procedure UpdateKoppelKurve;
+    procedure UpdateMastLinie;
+    procedure MoveToFX;
+    procedure Rota3D;
+    procedure RotaSeite;
+    procedure RotaAchtern;
+    procedure RotaTop;
+    procedure RotaHelper(aRotX, aRotY, aRotZ, aOffsetY, aRelativeZoom: single);
+
     procedure SetFixpoint(const Value: TRiggPoint);
     procedure SetViewpoint(const Value: TViewpoint);
     procedure SetBogen(const Value: Boolean);
@@ -64,11 +81,6 @@ type
     procedure SetSalingTyp(const Value: TSalingTyp);
     procedure SetSofortBerechnen(const Value: Boolean);
     procedure SetWanteGestrichelt(const Value: Boolean);
-    procedure Rota3D;
-    procedure RotaSeite;
-    procedure RotaAchtern;
-    procedure RotaTop;
-    procedure RotaHelper(aRotX, aRotY, aRotZ, aOffsetY, aRelativeZoom: single);
     procedure SetDarkMode(const Value: Boolean);
     procedure SetBackgroundColor(const Value: TAlphaColor);
   protected
@@ -87,14 +99,12 @@ type
 
     procedure DoReset;
     procedure ResetBtnClick(Sender: TObject);
-    procedure UpdateFromRiggBtnClick(Sender: TObject);
 
     procedure ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
     procedure ImageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
     procedure ImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
   public
     Image: TOriginalImage;
-    ZoomIndex: Integer;
     IsUp: Boolean;
 
     constructor Create;
@@ -123,6 +133,7 @@ type
     procedure UpdateHullTexture;
     procedure UpdateCameraX(Delta: single);
     procedure UpdateCameraY(Delta: single);
+    procedure DoOnUpdateStrokeRigg;
 
     property BackgroundColor: TAlphaColor read FBackgroundColor write SetBackgroundColor;
     property DarkMode: Boolean read FDarkMode write SetDarkMode;
@@ -176,7 +187,7 @@ begin
   Image.OnMouseDown := ImageMouseDown;
   Image.OnMouseMove := ImageMouseMove;
   Image.OnMouseUp := ImageMouseUp;
-//  Image.OnMouseWheel := ImageMouseWheel;
+//  Image.OnMouseWheel := ImageMouseWheel; { FormMain.FormMouseWheel used }
   Image.OnScreenScaleChanged := ImageScreenScaleChanged;
 end;
 
@@ -233,42 +244,6 @@ begin
   Draw;
 end;
 
-procedure TRotaForm2.SetFixpoint(const Value: TRiggPoint);
-var
-  cr: TRggCircle;
-begin
-  FFixpoint := Value;
-
-  if CurrentDrawing = nil then
-    Exit;
-
-  cr := nil;
-  case Value of
-    ooN0: ;
-    ooA0: cr := RD.A0;
-    ooB0: cr := RD.B0;
-    ooC0: cr := RD.C0;
-    ooD0: cr := RD.D0;
-//    ooE0: cr := RggDrawingD00.E0;
-//    ooF0: cr := RggDrawingD00.F0;
-    ooP0: ;
-    ooA: cr := RD.A;
-    ooB: cr := RD.B;
-    ooC: cr := RD.C;
-    ooD: cr := RD.D;
-    ooE: ;
-    ooF: cr := RD.F;
-    ooP: ;
-    ooM: ;
-  end;
-
-  if cr <> nil then
-  begin
-    CurrentDrawing.FixPoint := cr.Center.C;
-  end;
-
-end;
-
 procedure TRotaForm2.SetGrauZeichnen(const Value: Boolean);
 begin
 
@@ -280,8 +255,7 @@ end;
 
 procedure TRotaForm2.SetKoordinaten(const Value: TRiggPoints);
 begin
-  RD.UpdateFromRigg;
-  RD.Transform(TH.AccuMatrix);
+  FKoordinaten := Value;
 end;
 
 procedure TRotaForm2.SetKoordinatenE(const Value: TRiggPoints);
@@ -301,22 +275,8 @@ begin
 end;
 
 procedure TRotaForm2.SetKoppelKurve(const Value: TKoordLine);
-var
-  i: Integer;
-  p: TPoint3D;
 begin
-  if RD.KK = nil then
-    Exit;
-
-  p := RD.rP_D0;
-
-  for i := 0 to 100 do
-  begin
-    RD.KK.RggPoly[i].X := RD.OffsetX + (Value[i].X - p.X) * RD.InitialZoom;
-    RD.KK.RggPoly[i].Y := RD.OffsetY - (Value[i].Z - p.Z) * RD.InitialZoom;
-    RD.KK.RggPoly[i].Z := 0;
-  end;
-  RD.KK.Transform;
+  FKoppelKurve := Value;
 end;
 
 procedure TRotaForm2.SetMastKurve(const Value: TMastKurve);
@@ -325,23 +285,10 @@ begin
 end;
 
 procedure TRotaForm2.SetMastLineData(const Value: TLineDataR100; L, Beta: single);
-var
-  temp1, temp2, temp3, temp4, tempL: single;
-  j, k: Integer;
 begin
-  temp1 := cos(pi / 2 + Beta);
-  temp2 := cos(beta);
-  temp3 := sin(pi / 2 + Beta);
-  temp4 := sin(beta);
-  for j := 0 to BogenMax do
-  begin
-    k := Round(100 / BogenMax * j);
-    tempL := j * L / BogenMax;
-    RD.MK.RggPoly[j].X := RD.OffsetX + (tempL * temp1 + Value[k] * temp2) * RD.InitialZoom;
-    RD.MK.RggPoly[j].Y := RD.OffsetY - (tempL * temp3 + Value[k] * temp4) * RD.InitialZoom;
-    RD.MK.RggPoly[j].Z := 0;
-  end;
-  RD.MK.Transform;
+  FMastLinie := Value;
+  FMastLinieL := L;
+  FMastLinieB := Beta;
 end;
 
 procedure TRotaForm2.SetRiggLED(const Value: Boolean);
@@ -411,7 +358,6 @@ begin
 
   TH := TTransformHelper.Create;
   TH.OnDrawToCanvas := DoDrawToCanvas;
-//  TH.OnShowRotation := DoShowRotation;
 
   CurrentDrawing := RD;
   TH.CurrentDrawing := CurrentDrawing;
@@ -457,12 +403,6 @@ begin
   TH.DoOnMouse([ssCtrl], 0, -Delta);
 end;
 
-procedure TRotaForm2.UpdateFromRiggBtnClick(Sender: TObject);
-begin
-  RD.UpdateFromRigg;
-  Draw;
-end;
-
 procedure TRotaForm2.UpdateHullTexture;
 begin
 
@@ -470,32 +410,8 @@ end;
 
 procedure TRotaForm2.ResetBtnClick(Sender: TObject);
 begin
-//  Memo.Lines.Clear;
   DoReset;
-//  ShowInfo;
 end;
-
-//procedure TRotaForm.SwapThickLines;
-//var
-//  e: TRggLine;
-//  st: single;
-//begin
-//  WantThickLines := not WantThickLines;
-//
-//  if WantThickLines then
-//    st := 6.0
-//  else
-//    st := 3.0;
-//
-//  for e in CurrentDrawing.LineList do
-//  begin
-//    e.StrokeThickness := st;
-//  end;
-//
-//  TH.Rotation := TPoint3D.Zero;
-//
-//  Draw;
-//end;
 
 destructor TRotaForm2.Destroy;
 begin
@@ -537,8 +453,8 @@ begin
   g.Offset := TH.Offset;
   if g.BeginScene then
   try
-    g.Clear(claNull);
     g.SetMatrix(TMatrix.CreateScaling(ss, ss));
+    g.Clear(claNull);
     g.Fill.Color := claYellow;
     g.Stroke.Color := claAqua;
     g.Stroke.Thickness := 1.0;
@@ -563,12 +479,12 @@ end;
 
 procedure TRotaForm2.RotaTop;
 begin
-  RotaHelper(-90, 0, 0, 400, 3.0)
+  RotaHelper(-90, 0, 0, 0, 3.0)
 end;
 
 procedure TRotaForm2.Rota3D;
 begin
-  RotaHelper(-80, 0, 0, 300, 2.5)
+  RotaHelper(-80, 0, 0, 0, 2.5)
 end;
 
 procedure TRotaForm2.RotaHelper(aRotX, aRotY, aRotZ, aOffsetY, aRelativeZoom: single);
@@ -592,7 +508,10 @@ begin
   RD.OffsetX := RD.OffsetXDefault;
   RD.OffsetY := RD.OffsetYDefault + aOffsetY;
   RD.InitialZoom := RD.InitialZoomDefault * aRelativeZoom;
-  Main.UpdateStrokeRigg;
+
+  RD.ViewpointFlag := True;
+  DoOnUpdateStrokeRigg;
+
   TH.InitTransform(mr);
 end;
 
@@ -631,13 +550,13 @@ begin
         vpTop:
         begin
           aRotX := -90;
-          aOffsetY := 400;
+          aOffsetY := 0;
           aRelativeZoom := 3.0;
         end;
         vp3D:
         begin
           aRotX := -80;
-          aOffsetY := 300;
+          aOffsetY := 0;
           aRelativeZoom := 2.5;
         end;
       end;
@@ -647,6 +566,87 @@ begin
     faResetRotation: ;
     faResetZoom: ;
   end;
+end;
+
+procedure TRotaForm2.UpdateKoppelKurve;
+var
+  i: Integer;
+  p: TPoint3D;
+begin
+  p := RD.rP_FX;
+  for i := 0 to 100 do
+  begin
+    RD.KK.RggPoly[i].X := RD.OffsetX + (FKoppelKurve[i].X - p.X) * RD.InitialZoom;
+    RD.KK.RggPoly[i].Y := RD.OffsetY - (FKoppelKurve[i].Z - p.Z) * RD.InitialZoom;
+    RD.KK.RggPoly[i].Z := 0;
+  end;
+  if not RD.ViewpointFlag then
+    RD.KK.Transform;
+end;
+
+procedure TRotaForm2.UpdateMastLinie;
+var
+  temp1, temp2, temp3, temp4, tempL: single;
+  j, k: Integer;
+  p: TPoint3D;
+begin
+  p :=  RD.rP_FX - RD.rP_D0;
+  temp1 := cos(pi / 2 + FMastLinieB);
+  temp2 := cos(FMastLinieB);
+  temp3 := sin(pi / 2 + FMastLinieB);
+  temp4 := sin(FMastLinieB);
+  for j := 0 to BogenMax do
+  begin
+    k := Round(100 / BogenMax * j);
+    tempL := j * FMastLinieL / BogenMax;
+    RD.MK.RggPoly[j].X := RD.OffsetX + (tempL * temp1 + FMastLinie[k] * temp2 - p.X) * RD.InitialZoom;
+    RD.MK.RggPoly[j].Y := RD.OffsetY - (tempL * temp3 + FMastLinie[k] * temp4 - p.Z) * RD.InitialZoom;
+    RD.MK.RggPoly[j].Z := -p.Y * RD.InitialZoom;
+  end;
+  if not RD.ViewpointFlag then
+    RD.MK.Transform;
+end;
+
+procedure TRotaForm2.UpdateRiggKoords;
+begin
+  RD.UpdateFromRigg;
+  if not RD.ViewpointFlag then
+    RD.Transform(TH.AccuMatrix);
+end;
+
+procedure TRotaForm2.DoOnUpdateStrokeRigg;
+begin
+  RD.Koordinaten := FKoordinaten;
+  RD.FixPoint := FFixPoint;
+
+  UpdateRiggKoords;
+  UpdateKoppelKurve;
+  UpdateMastLinie;
+
+  RD.ViewpointFlag := False;
+end;
+
+procedure TRotaForm2.SetFixpoint(const Value: TRiggPoint);
+begin
+  FFixPoint := Value;
+  RD.FixPoint := FFixPoint;
+  RD.UpdateFX;
+  TH.DrawToCanvas;
+  MoveToFX;
+end;
+
+procedure TRotaForm2.MoveToFX;
+var
+  mr: TMatrix3D;
+  ra: TPoint3D;
+begin
+  RD.ViewpointFlag := True;
+  DoOnUpdateStrokeRigg;
+
+  ra := TH.RotationHelper.EulerAnglesFromMatrix(TH.AccuMatrix);
+  mr := TH.RotationHelper.EulerAnglesToMatrix(ra.X, ra.Y, ra.Z);
+  TH.ResetTransform;
+  TH.InitTransform(mr);
 end;
 
 end.

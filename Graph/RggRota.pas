@@ -188,6 +188,8 @@ type
     destructor Destroy; override;
 
     procedure HandleAction(fa: Integer);
+    function GetChecked(fa: Integer): Boolean;
+    procedure SetChecked(fa: Integer; Value: Boolean);
 
     procedure Init;
     procedure Swap;
@@ -197,8 +199,7 @@ type
     procedure RotateZ(Delta: single);
     procedure Zoom(Delta: single);
 
-    function GetChecked(fa: Integer): Boolean;
-    procedure SetChecked(fa: Integer; Value: Boolean);
+    procedure DoOnUpdateStrokeRigg;
 
     property ZoomIndex: Integer read FZoomIndex write SetZoomIndex;
     property ViewPoint: TViewPoint read FViewPoint write SetViewPoint;
@@ -1147,6 +1148,11 @@ begin
   HullGraph.Update;
   EraseBK := True;
   Draw;
+end;
+
+procedure TRotaForm1.DoOnUpdateStrokeRigg;
+begin
+
 end;
 
 end.

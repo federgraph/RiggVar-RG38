@@ -67,7 +67,7 @@ begin
   Add(B);
   Add(AB);
 
-  FixPoint := A.Center.C;
+  FixPoint3D := A.Center.C;
   WantRotation := False;
   WantSort := False;
 

@@ -124,7 +124,7 @@ begin
   Add(D);
   Add(S);
 
-  FixPoint := A.Center.C;
+  FixPoint3D := A.Center.C;
   WantRotation := False;
   WantSort := False;
   DefaultElement := D;

@@ -183,7 +183,7 @@ begin
   Add(C);
   Add(D);
 
-  FixPoint := A.Center.C;
+  FixPoint3D := A.Center.C;
   WantRotation := True;
   WantSort := True;
 

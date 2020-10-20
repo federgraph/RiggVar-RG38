@@ -322,7 +322,7 @@ begin
 
   Add(F);
 
-  FixPoint := D.Center.C;
+  FixPoint3D := D.Center.C;
   WantRotation := True;
   WantSort := True;
 
@@ -417,7 +417,7 @@ begin
   except
   end;
 
-  FixPoint := D.Center.C;
+  FixPoint3D := D.Center.C;
 end;
 
 procedure TRggDrawingZ05.GoLight;

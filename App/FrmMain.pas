@@ -156,13 +156,17 @@ type
     ReportMemoWidth: Integer;
     SpeedPanelHeight: Integer;
     SpeedPanel: TActionSpeedBar;
-    SpeedPanel1: TActionSpeedBar;
-    SpeedPanel2: TActionSpeedBar;
+    SpeedPanel01: TActionSpeedBar;
+    SpeedPanel02: TActionSpeedBar;
+    SpeedPanel03: TActionSpeedBar;
+    SpeedPanel04: TActionSpeedBar;
     procedure InitSpeedButtons;
     procedure LayoutSpeedPanel(SP: TActionSpeedBar);
     procedure UpdateSpeedButtonDown;
     procedure UpdateSpeedButtonEnabled;
     procedure ToggleSpeedPanel;
+    procedure SwapSpeedPanel(Value: Integer);
+    procedure SwapRota(Value: Integer);
   public
     procedure ChartImageBtnClick(Sender: TObject);
     procedure SalingImageBtnClick(Sender: TObject);
@@ -261,6 +265,7 @@ uses
   RiggVar.RG.Speed01,
   RiggVar.RG.Speed02,
   RiggVar.RG.Speed03,
+  RiggVar.RG.Speed04,
   RiggVar.App.Main,
   RiggVar.FB.ActionConst,
   RiggVar.FB.Classes;
@@ -425,6 +430,8 @@ begin
   UpdateSpeedButtonDown;
   UpdateSpeedButtonEnabled;
   UpdateColorScheme;
+
+  SwapSpeedPanel(RotaForm.Current);
 end;
 
 procedure TFormMain.FormDestroy(Sender: TObject);
@@ -941,8 +948,8 @@ begin
     faToggleAllProps: AllProps := not AllProps;
     faToggleAllTags: ReportManager.XmlAllTags := not ReportManager.XmlAllTags;
 
-    faRotaForm1: RotaForm.SwapRota(1);
-    faRotaForm2: RotaForm.SwapRota(2);
+    faRotaForm1: SwapRota(1);
+    faRotaForm2: SwapRota(2);
 
     faReset,
     faResetPosition,
@@ -1316,22 +1323,35 @@ begin
   TrimmText.Name := 'TrimmText';
   SetupText(TrimmText);
 
-  SpeedPanel1 := TActionSpeedBarRG01.Create(Self);
-  SpeedPanel1.Name := 'SpeedPanel1';
-  SpeedPanel1.Parent := Self;
-  SpeedPanel1.ShowHint := True;
-  SpeedPanel1.Visible := False;
-  SpeedPanel1.Opacity := OpacityValue;
+  SpeedPanel01 := TActionSpeedBarRG01.Create(Self);
+  SpeedPanel01.Name := 'SpeedPanel01';
+  SpeedPanel01.Parent := Self;
+  SpeedPanel01.ShowHint := True;
+  SpeedPanel01.Visible := False;
+  SpeedPanel01.Opacity := OpacityValue;
 
-  SpeedPanel2 := TActionSpeedBarRG03.Create(Self);
-  SpeedPanel2.Name := 'SpeedPanel2';
-  SpeedPanel2.Parent := Self;
-  SpeedPanel2.ShowHint := True;
-  SpeedPanel2.Visible := False;
-  SpeedPanel2.Opacity := OpacityValue;
+  SpeedPanel02 := TActionSpeedBarRG02.Create(Self);
+  SpeedPanel02.Name := 'SpeedPanel02';
+  SpeedPanel02.Parent := Self;
+  SpeedPanel02.ShowHint := True;
+  SpeedPanel02.Visible := False;
+  SpeedPanel02.Opacity := OpacityValue;
 
-  SpeedPanel := SpeedPanel2;
-  SpeedPanel.Visible := True;
+  SpeedPanel03 := TActionSpeedBarRG03.Create(Self);
+  SpeedPanel03.Name := 'SpeedPanel03';
+  SpeedPanel03.Parent := Self;
+  SpeedPanel03.ShowHint := True;
+  SpeedPanel03.Visible := False;
+  SpeedPanel03.Opacity := OpacityValue;
+
+  SpeedPanel04 := TActionSpeedBarRG04.Create(Self);
+  SpeedPanel04.Name := 'SpeedPanel04';
+  SpeedPanel04.Parent := Self;
+  SpeedPanel04.ShowHint := True;
+  SpeedPanel04.Visible := False;
+  SpeedPanel04.Opacity := OpacityValue;
+
+  SpeedPanel := SpeedPanel01;
 
   ParamListbox := TListbox.Create(Self);
   ParamListbox.Name := 'ParamListbox';
@@ -1352,12 +1372,23 @@ end;
 
 procedure TFormMain.ToggleSpeedPanel;
 begin
+  if SpeedPanel = SpeedPanel01 then
+    SwapSpeedPanel(RotaForm.Current)
+  else
+    SwapSpeedPanel(0);
+end;
+
+procedure TFormMain.SwapSpeedPanel(Value: Integer);
+begin
   SpeedPanel.Visible := False;
 
-  if SpeedPanel = SpeedPanel1 then
-    SpeedPanel := SpeedPanel2
-  else
-    SpeedPanel := SpeedPanel1;
+    case Value of
+      1: SpeedPanel := SpeedPanel03;
+      2: SpeedPanel := SpeedPanel04;
+      3: SpeedPanel := SpeedPanel04;
+      else
+        SpeedPanel := SpeedPanel01;
+    end;
 
   SpeedPanel.Visible := True;
   SpeedPanel.UpdateSpeedButtonEnabled;
@@ -1385,8 +1416,10 @@ begin
   { Then it only 'works' if these values are big enough, }
   { so that computed values for Height and Width are > 0 }
 
-  LayoutSpeedPanel(SpeedPanel1);
-  LayoutSpeedPanel(SpeedPanel2);
+  LayoutSpeedPanel(SpeedPanel01);
+  LayoutSpeedPanel(SpeedPanel02);
+  LayoutSpeedPanel(SpeedPanel03);
+  LayoutSpeedPanel(SpeedPanel04);
 
   TrimmText.Position.X := Raster + Margin;
   TrimmText.Position.Y := 2 * Raster + Margin;
@@ -2083,10 +2116,17 @@ end;
 
 procedure TFormMain.InitSpeedButtons;
 begin
-  if SpeedPanel1 <> nil then
-    SpeedPanel1.InitSpeedButtons;
-  if SpeedPanel2 <> nil then
-    SpeedPanel2.InitSpeedButtons;
+  if SpeedPanel01 <> nil then
+    SpeedPanel01.InitSpeedButtons;
+
+  if SpeedPanel02 <> nil then
+    SpeedPanel02.InitSpeedButtons;
+
+  if SpeedPanel03 <> nil then
+    SpeedPanel03.InitSpeedButtons;
+
+  if SpeedPanel04 <> nil then
+    SpeedPanel04.InitSpeedButtons;
 end;
 
 procedure TFormMain.UpdateSpeedButtonDown;
@@ -2206,6 +2246,12 @@ begin
   HelpText.Text := HL.Text;
   HelpText.Visible := True;
   ReportText.Visible := False;
+end;
+
+procedure TFormMain.SwapRota(Value: Integer);
+begin
+  RotaForm.SwapRota(Value);
+  SwapSpeedPanel(RotaForm.Current);
 end;
 
 end.

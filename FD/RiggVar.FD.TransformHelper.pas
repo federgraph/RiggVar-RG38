@@ -49,7 +49,7 @@ type
     procedure ResetTransform;
     procedure InitTransform(mr: TMatrix3D);
     procedure UpdateTransform;
-    function BuildMatrixG(NewFixPoint: TPoint3D): TMatrix3D;
+    function BuildMatrixG(NewFixPoint3D: TPoint3D): TMatrix3D;
     function BuildMatrixF: TMatrix3D;
     function BuildMatrixI: TMatrix3D;
 
@@ -109,7 +109,7 @@ begin
     FOnShowRotation(self);
 end;
 
-function TTransformHelper.BuildMatrixG(NewFixPoint: TPoint3D): TMatrix3D;
+function TTransformHelper.BuildMatrixG(NewFixPoint3D: TPoint3D): TMatrix3D;
 var
   mx, my, mz: TMatrix3D;
   mr: TMatrix3D;
@@ -128,7 +128,7 @@ begin
     mz := TMatrix3D.CreateRotationZ(ra.Z);
     mr := mx * my * mz;
 
-    CurrentDrawing.FixPoint := NewFixPoint;
+    CurrentDrawing.FixPoint3D := NewFixPoint3D;
 
     BuildMatrix(mr);
     result := NewMatrix;
@@ -243,9 +243,9 @@ procedure TTransformHelper.BuildMatrix(mr: TMatrix3D);
 var
   mt1, mt2, ms: TMatrix3D;
 begin
-  mt1 := TMatrix3D.CreateTranslation(-CurrentDrawing.FixPoint);
+  mt1 := TMatrix3D.CreateTranslation(-CurrentDrawing.FixPoint3D);
   ms := TMatrix3D.CreateScaling(TPoint3D.Create(ZoomDelta, ZoomDelta, ZoomDelta));
-  mt2 := TMatrix3D.CreateTranslation(CurrentDrawing.FixPoint);
+  mt2 := TMatrix3D.CreateTranslation(CurrentDrawing.FixPoint3D);
   NewMatrix := mt1 * mr * ms * mt2;
 end;
 

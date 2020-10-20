@@ -150,7 +150,7 @@ begin
   ResultLabel.StrokeColor := TRggColors.Tomato;
   Add(ResultLabel);
 
-  FixPoint := A.Center.C;
+  FixPoint3D := A.Center.C;
   WantRotation := False;
   WantSort := False;
 

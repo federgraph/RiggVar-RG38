@@ -261,7 +261,7 @@ begin
 
   Add(F);
 
-  FixPoint := D.Center.C;
+  FixPoint3D := D.Center.C;
   WantRotation := True;
   WantSort := True;
 
@@ -366,7 +366,7 @@ begin
   except
   end;
 
-  FixPoint := Find('D').Center.C;
+  FixPoint3D := Find('D').Center.C;
 end;
 
 end.

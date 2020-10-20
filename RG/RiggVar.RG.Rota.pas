@@ -172,14 +172,12 @@ begin
 {$endif}
 
 {$ifdef WantRotaForm2}
-//  RotaForm2.ViewPoint := vp3D;
-//  RotaForm2.ZoomIndex := 8;
-//  RotaForm2.FixPoint := ooD0;
+  RotaForm2.ViewPoint := vp3D;
+  RotaForm2.FixPoint := ooD;
 {$endif}
 
 {$ifdef WantRotaForm3}
-  RotaForm3.ViewPoint := vpSeite;
-//  RotaForm3.ZoomIndex := 8;
+  RotaForm3.ViewPoint := vp3D;
   RotaForm3.FixPoint := ooD0;
 {$endif}
 end;

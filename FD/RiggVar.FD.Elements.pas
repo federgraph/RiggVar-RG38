@@ -45,7 +45,8 @@ type
     WantRotation: Boolean;
     WheelFlag: Boolean;
     InplaceFlag: Boolean;
-    FixPoint: TPoint3D;
+    ViewpointFlag: Boolean;
+    FixPoint3D: TPoint3D;
     Colors: TRggColorScheme;
     IsDark: Boolean;
     procedure Reset; virtual; abstract;
@@ -191,8 +192,6 @@ type
     property Scale: single read FScale write SetScale;
   end;
 
-  { TRggCircle }
-
   TRggCircle = class(TRggElement)
   private
     FRadius: single;
@@ -235,6 +234,12 @@ type
     procedure Draw(g: TCanvas); override;
     procedure Param3(Delta: single); override;
     property Radius;
+  end;
+
+  TRggFixpointCircle = class(TRggCircle)
+  public
+    constructor Create(ACaption: string = '');
+    procedure Draw(g: TCanvas); override;
   end;
 
   TRggBigArc = class(TRggElement)
@@ -2301,6 +2306,30 @@ begin
   TextColor := TRggColors.Black;
   BackgroundColor := TRggColors.White;
   LabelColor := TRggColors.Plum;
+end;
+
+{ TRggFixpointCircle }
+
+constructor TRggFixpointCircle.Create(ACaption: string);
+begin
+  inherited;
+  TypeName := 'Circle';
+  ShowCaption := False;
+  IsComputed := True;
+end;
+
+procedure TRggFixpointCircle.Draw(g: TCanvas);
+var
+  R: TRectF;
+begin
+  R := RectF(
+    Center.X - FRadius,
+    Center.Y - FRadius,
+    Center.X + FRadius,
+    Center.Y + FRadius);
+
+  g.Fill.Color := TRggColors.Plum;
+  g.FillEllipse(R, Opacity);
 end;
 
 end.

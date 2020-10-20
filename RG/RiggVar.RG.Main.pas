@@ -367,17 +367,19 @@ begin
     if Rigg.SalingTyp > stDrehbar then
       StrokeRigg.Koppel := False
     else
-      StrokeRigg.Koppel := FKoppel;
+      StrokeRigg.Koppel := Koppel;
 
-    StrokeRigg.Bogen := FBogen;
+    StrokeRigg.Bogen := Bogen;
+    // if (FParam <> fpWinkel) then StrokeRigg.Bogen := False;
+
+    StrokeRigg.WanteGestrichelt := not Rigg.GetriebeOK;
 
     StrokeRigg.Koordinaten := Rigg.rP;
     StrokeRigg.KoordinatenE := Rigg.rPe;
     StrokeRigg.SetKoppelKurve(Rigg.KoppelKurve);
     StrokeRigg.SetMastLineData(Rigg.MastLinie, Rigg.lc, Rigg.beta);
 
-    StrokeRigg.WanteGestrichelt := not Rigg.GetriebeOK;
-//    StrokeRigg.Bogen := (FParam <> fpWinkel);
+    StrokeRigg.DoOnUpdateStrokeRigg;
   end;
 end;
 

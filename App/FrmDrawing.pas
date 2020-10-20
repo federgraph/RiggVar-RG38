@@ -548,12 +548,15 @@ begin
     if CurrentElement is TRggCircle then
     begin
       cr := CurrentElement as TRggCircle;
+      { remember that Fixpoint needs to be updated later, after drawing. }
       CurrentDrawing.WheelFlag := True;
+      { transform only this point using the acumulated matrix }
       TRggCircle.Matrix := TH.AccuMatrix;
       cr.Transform;
     end;
   end;
 
+  { this will transform all points using incremental NewMatrix }
   Draw;
 end;
 
@@ -773,7 +776,7 @@ begin
   if dy < -dt then
     dy := -dt;
 
-  { InplaceShap.Position is updated in DrawToCanvas }
+  { InplaceShape.Position is updated in DrawToCanvas }
 
   cr.Param1I(dx);
   cr.Param2I(dy);
@@ -1011,7 +1014,6 @@ var
   cr: TRggCircle;
 begin
   Inc(ClickCounter);
-//  Caption := IntToStr(ClickCounter);
 
   if CurrentDrawing = nil then
     Exit;
@@ -1022,7 +1024,7 @@ begin
     if CurrentElement is TRggCircle then
     begin
       cr := CurrentElement as TRggCircle;
-      CurrentDrawing.FixPoint := cr.Center.C;
+      CurrentDrawing.FixPoint3D := cr.Center.C;
       TH.AccuMatrix := TH.BuildMatrixF;
       cr.Matrix := TH.BuildMatrixI;
       cr.Save;
@@ -1062,7 +1064,7 @@ begin
 
     if CurrentDrawing.WheelFlag then
     begin
-      CurrentDrawing.FixPoint := cr.Center.C;
+      CurrentDrawing.FixPoint3D := cr.Center.C;
     end;
 
     CurrentDrawing.InplaceFlag := False;
@@ -1297,7 +1299,7 @@ begin
   if CurrentElement is TRggCircle then
   begin
     cr := CurrentElement as TRggCircle;
-    CurrentDrawing.FixPoint := cr.Center.C;
+    CurrentDrawing.FixPoint3D := cr.Center.C;
   end;
 end;
 

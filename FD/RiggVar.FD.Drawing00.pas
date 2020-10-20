@@ -23,12 +23,12 @@
 interface
 
 uses
+  RggTypes,
   System.UIConsts,
   System.Math.Vectors,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
 
-{$define Rgg}
 {$define WantPoly}
 
 type
@@ -70,7 +70,9 @@ type
     KK: TRggPolyLine3D;
 {$endif}
 
+    Koordinaten: TRiggPoints;
     rP_D0: TPoint3D;
+    rP_FX: TPoint3D;
     OffsetX: single;
     OffsetY: single;
     InitialZoom: single;
@@ -79,25 +81,24 @@ type
     OffsetYDefault: single;
     InitialZoomDefault: single;
 
+    FixPoint: TRiggPoint;
+    FX: TRggFixpointCircle;
+
     constructor Create;
     procedure InitDefaultPos; override;
     procedure Load;
     procedure Transform(AM: TMatrix3D); override;
-    procedure UpdateFromRigg;
     procedure GoDark; override;
     procedure GoLight; override;
+
+    function GetFixRggCircle: TRggCircle;
+    procedure UpdateFromRigg;
+    procedure UpdateFX;
   end;
 
 implementation
 
 uses
-  RggTypes,
-{$ifdef Rgg}
-  RggUnit4,
-  RiggVar.App.Main,
-{$else}
-  RggTestData,
-{$endif}
   RggCalc;
 
 { TRggDrawingD00 }
@@ -154,8 +155,8 @@ begin
   inherited;
   Name := 'D00-Live-Rigg';
 
-  OffsetXDefault := 400;
-  OffsetYDefault := 640;
+  OffsetXDefault := 540;
+  OffsetYDefault := 420;
   InitialZoomDefault := 0.09;
 
   OffsetX := OffsetXDefault;
@@ -165,6 +166,10 @@ begin
   DefaultShowCaption := True;
 
   { Points }
+
+  FX := TRggFixpointCircle.Create;
+  FX.Caption := 'Fixpoint';
+  Add(FX);
 
   A0 := TRggCircle.Create('A0');
   A0.StrokeColor := claRed;
@@ -358,7 +363,9 @@ begin
 
   Add(F);
 
-  FixPoint := D.Center.C;
+  FixPoint3D := D.Center.C;
+  FixPoint := ooD;
+
   WantRotation := True;
   WantSort := True;
 
@@ -416,51 +423,6 @@ begin
     cr.Center.Z := 19.49;
   except
   end;
-end;
-
-procedure TRggDrawingD00.UpdateFromRigg;
-var
-{$ifdef Rgg}
-  Rigg: TRigg;
-{$endif}
-  rP: TRiggPoints;
-  t, p, q: TPoint3D;
-  s: string;
-
-  procedure Temp(cr: TRggCircle; oo: TRiggPoint);
-  begin
-    p := rP.V[oo];
-    t := p - q;
-    s := KoordTexteXML[oo];
-    cr.Center.X := OffsetX + t.X * InitialZoom;
-    cr.Center.Y := OffsetY - t.Z * InitialZoom;
-    cr.Center.Z := t.Y * InitialZoom;
-    cr.Save;
-  end;
-begin
-{$ifdef Rgg}
-  Rigg := Main.Rigg;
-  rP := Rigg.rP;
-{$else}
-  rP := TRggTestData.GetKoordinaten420;
-{$endif}
-  q := rP.V[ooD0];
-  rP_D0 := q;
-
-  try
-    Temp(A0, ooA0);
-    Temp(B0, ooB0);
-    Temp(C0, ooC0);
-    Temp(D0, ooD0);
-    Temp(A, ooA);
-    Temp(B, ooB);
-    Temp(C, ooC);
-    Temp(D, ooD);
-    Temp(F, ooF);
-  except
-  end;
-
-  FixPoint := D.Center.C;
 end;
 
 procedure TRggDrawingD00.Transform(AM: TMatrix3D);
@@ -560,6 +522,71 @@ begin
   KK.StrokeColor := claYellow;
   MK.StrokeColor := claDodgerblue;
 {$endif}
+end;
+
+function TRggDrawingD00.GetFixRggCircle: TRggCircle;
+var
+  cr: TRggCircle;
+begin
+  cr := D;
+  case FixPoint of
+    ooN0: ;
+    ooA0: cr := A0;
+    ooB0: cr := B0;
+    ooC0: cr := C0;
+    ooD0: cr := D0;
+//    ooE0: cr := E0;
+//    ooF0: cr := F0;
+    ooP0: ;
+    ooA: cr := A;
+    ooB: cr := B;
+    ooC: cr := C;
+    ooD: cr := D;
+//    ooE: cr := E;
+    ooF: cr := F;
+//    ooP: cr := P;
+//    ooM: cr := M;
+  end;
+  result := cr;
+end;
+
+procedure TRggDrawingD00.UpdateFromRigg;
+var
+  t: TPoint3D;
+
+  procedure Temp(cr: TRggCircle; oo: TRiggPoint);
+  begin
+    t := Koordinaten.V[oo] - rP_FX;
+    cr.Center.X := OffsetX + t.X * InitialZoom;
+    cr.Center.Y := OffsetY - t.Z * InitialZoom;
+    cr.Center.Z := t.Y * InitialZoom;
+    cr.Save;
+  end;
+begin
+  rP_D0 := Koordinaten.V[ooD0];
+  rP_FX := Koordinaten.V[FixPoint];
+
+    Temp(A0, ooA0);
+    Temp(B0, ooB0);
+    Temp(C0, ooC0);
+    Temp(D0, ooD0);
+    Temp(A, ooA);
+    Temp(B, ooB);
+    Temp(C, ooC);
+    Temp(D, ooD);
+    Temp(F, ooF);
+
+  UpdateFX;
+end;
+
+procedure TRggDrawingD00.UpdateFX;
+var
+  cr: TRggCircle;
+begin
+  cr := GetFixRggCircle;
+  FixPoint3D := cr.Center.C;
+  FX.OriginalCenter := cr.OriginalCenter;
+  FX.Center := cr.Center;
 end;
 
 end.

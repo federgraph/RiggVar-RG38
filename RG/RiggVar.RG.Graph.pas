@@ -43,6 +43,8 @@ type
 
     procedure Draw;
 
+    procedure DoOnUpdateStrokeRigg;
+
     property Koordinaten: TRiggPoints write SetKoordinaten;
     property KoordinatenE: TRiggPoints write SetKoordinatenE;
     property KoordinatenR: TRiggPoints write SetKoordinatenR;
@@ -121,6 +123,8 @@ type
     procedure UpdateCameraY(Delta: single);
 
     procedure Draw;
+
+    procedure DoOnUpdateStrokeRigg;
 
     property Koordinaten: TRiggPoints read FKoordinaten write SetKoordinaten;
     property KoordinatenE: TRiggPoints read FKoordinatenE write SetKoordinatenE;
@@ -315,6 +319,11 @@ begin
     else
       result := False;
   end;
+end;
+
+procedure TDummyStrokeRigg.DoOnUpdateStrokeRigg;
+begin
+
 end;
 
 end.
