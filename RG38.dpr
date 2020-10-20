@@ -61,6 +61,7 @@ uses
   RiggVar.RG.Speed02 in 'RG\RiggVar.RG.Speed02.pas',
   RiggVar.RG.Speed03 in 'RG\RiggVar.RG.Speed03.pas',
   RiggVar.RG.Speed04 in 'RG\RiggVar.RG.Speed04.pas',
+  RiggVar.RG.Speed05 in 'RG\RiggVar.RG.Speed05.pas',
   RiggVar.RG.Track in 'RG\RiggVar.RG.Track.pas',
   RggDisplay in 'Graph\RggDisplay.pas',
   RggPolarKar in 'Graph\RggPolarKar.pas',

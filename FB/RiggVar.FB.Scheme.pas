@@ -31,15 +31,10 @@ type
     SchemeDefault: Integer;
     claBackground: TAlphaColor;
 
-    claLabelText: TAlphaColor;
-    claSampleText: TAlphaColor;
-    claOptionText: TAlphaColor;
     claToolBtnFill: TAlphaColor;
     claTouchBtnFill: TAlphaColor;
     claCornerScrollbar: TAlphaColor;
     claCornerBtnText: TAlphaColor;
-    claEquationFill: TAlphaColor;
-    claEquationText: TAlphaColor;
     claTouchbarText: TAlphaColor;
 
     IsDark: Boolean;
@@ -62,44 +57,26 @@ implementation
 
 procedure TColorScheme.BlackText;
 begin
-  claLabelText := claBlack;
-  claSampleText := claBlack;
   claToolBtnFill := claGray;
   claTouchBtnFill := claGray;
   claCornerScrollbar := claGray;
   claCornerBtnText:= claBlue;
-  claEquationFill := claNull;
-  claEquationText := claBlack;
-
-  claOptionText := claSampleText;
 end;
 
 procedure TColorScheme.GrayText;
 begin
-  claLabelText := claGray;
-  claSampleText := claGray;
   claToolBtnFill := claGray;
   claTouchBtnFill := claGray;
   claCornerScrollbar := claGray;
   claCornerBtnText:= claBlue;
-  claEquationFill := claNull;
-  claEquationText := claBlack;
-
-  claOptionText := claSampleText;
 end;
 
 procedure TColorScheme.WhiteText;
 begin
-  claLabelText := claWhite;
-  claSampleText := claWhite;
   claToolBtnFill := claWhite;
   claTouchBtnFill := claWhite;
   claCornerScrollbar := claGray;
   claCornerBtnText:= claWhite;
-  claEquationFill := claNull;
-  claEquationText := claWhite;
-
-  claOptionText := claSampleText;
 end;
 
 constructor TColorScheme.Create(cs: Integer);
@@ -123,103 +100,70 @@ begin
       if WantBlackText then
       begin
         claBackground := claSlateblue;
-        claLabelText := claBlack;
-        claSampleText := claBlack;
         claToolBtnFill := claGray;
         claTouchBtnFill := claGray;
         claCornerScrollbar := claGray;
         claCornerBtnText:= claBlue;
-        claEquationFill := claNull;
-        claEquationText := claBlack;
       end
       else
       begin
         claBackground := claLavender;
-        claLabelText := claGray;
-        claSampleText := claGray;
         claToolBtnFill := claGray;
         claTouchBtnFill := claGray;
         claCornerScrollbar := claGray;
         claCornerBtnText:= claBlue;
-        claEquationFill := claNull;
-        claEquationText := claBlack;
       end;
     end;
     2:
     begin
       IsDark := False;
       claBackground := StringToAlphaColor('#FFF9F9F9');
-      claLabelText := claWhite;
-      claSampleText := claWhite;
       claToolBtnFill := claGray;
       claTouchBtnFill := claGray;
       claCornerScrollbar := claLavender;
       claCornerBtnText:= claBlue;
-      claEquationFill := claNull;
-      claEquationText := claBlack;
     end;
     3:
     begin
       claBackground := claCornflowerblue;
-      claLabelText := claWhite;
-      claSampleText := claWhite;
       claToolBtnFill := claWhite;
       claTouchBtnFill := claWhite;
       claCornerScrollbar := claWhite;
       claCornerBtnText:= claWhite;
-      claEquationFill := claNull;
-      claEquationText := claBlack;
     end;
     4:
     begin
       claBackground := StringToAlphaColor('#FF372E69');
-      claLabelText := claWhite;
-      claSampleText := claWhite;
       claToolBtnFill := claWhite;
       claTouchBtnFill := claWhite;
       claCornerScrollbar := claWhite;
       claCornerBtnText:= claWhite;
-      claEquationFill := claNull;
-      claEquationText := claWhite;
     end;
     5:
     begin
       claBackground := StringToAlphaColor('#FF333333');
-      claLabelText := claWhite;
-      claSampleText := claWhite;
       claToolBtnFill := claWhite;
       claTouchBtnFill := claWhite;
       claCornerScrollbar := claGray;
       claCornerBtnText:= claWhite;
-      claEquationFill := claNull;
-      claEquationText := claWhite;
     end;
     6:
     begin
       claBackground := claBlack;
-      claLabelText := claWhite;
-      claSampleText := claWhite;
       claToolBtnFill := claWhite;
       claTouchBtnFill := claWhite;
       claCornerScrollbar := claGray;
       claCornerBtnText:= claWhite;
-      claEquationFill := claNull;
-      claEquationText := claWhite;
     end;
     7:
     begin
       claBackground := claPurple; //claNull;
-      claLabelText := claBlack;
-      claSampleText := claBlack;
       claToolBtnFill := claGray;
       claTouchBtnFill := claGray;
       claCornerScrollbar := claGray;
       claCornerBtnText:= claWhite;
-      claEquationFill := claNull;
-      claEquationText := claBlack;
     end;
   end;
-  claOptionText := claSampleText;
 end;
 
 end.

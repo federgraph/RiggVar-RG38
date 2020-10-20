@@ -160,6 +160,7 @@ type
     SpeedPanel02: TActionSpeedBar;
     SpeedPanel03: TActionSpeedBar;
     SpeedPanel04: TActionSpeedBar;
+    SpeedPanel05: TActionSpeedBar;
     procedure InitSpeedButtons;
     procedure LayoutSpeedPanel(SP: TActionSpeedBar);
     procedure UpdateSpeedButtonDown;
@@ -188,6 +189,7 @@ type
 
     procedure BogenBtnClick(Sender: TObject);
     procedure KoppelBtnClick(Sender: TObject);
+    procedure HullBtnClick(Sender: TObject);
 
     procedure SuperSimpleBtnClick(Sender: TObject);
     procedure SuperNormalBtnClick(Sender: TObject);
@@ -266,6 +268,7 @@ uses
   RiggVar.RG.Speed02,
   RiggVar.RG.Speed03,
   RiggVar.RG.Speed04,
+  RiggVar.RG.Speed05,
   RiggVar.App.Main,
   RiggVar.FB.ActionConst,
   RiggVar.FB.Classes;
@@ -932,6 +935,7 @@ begin
 
     faRggBogen: BogenBtnClick(nil);
     faRggKoppel: KoppelBtnClick(nil);
+    faRggHull: HullBtnClick(nil);
 
     faSofortBtn: SofortBtnClick(nil);
     faGrauBtn: GrauBtnClick(nil);
@@ -950,6 +954,7 @@ begin
 
     faRotaForm1: SwapRota(1);
     faRotaForm2: SwapRota(2);
+    faRotaForm3: SwapRota(3);
 
     faReset,
     faResetPosition,
@@ -1351,6 +1356,13 @@ begin
   SpeedPanel04.Visible := False;
   SpeedPanel04.Opacity := OpacityValue;
 
+  SpeedPanel05 := TActionSpeedBarRG05.Create(Self);
+  SpeedPanel05.Name := 'SpeedPanel05';
+  SpeedPanel05.Parent := Self;
+  SpeedPanel05.ShowHint := True;
+  SpeedPanel05.Visible := False;
+  SpeedPanel05.Opacity := OpacityValue;
+
   SpeedPanel := SpeedPanel01;
 
   ParamListbox := TListbox.Create(Self);
@@ -1385,7 +1397,7 @@ begin
     case Value of
       1: SpeedPanel := SpeedPanel03;
       2: SpeedPanel := SpeedPanel04;
-      3: SpeedPanel := SpeedPanel04;
+      3: SpeedPanel := SpeedPanel05;
       else
         SpeedPanel := SpeedPanel01;
     end;
@@ -1420,6 +1432,7 @@ begin
   LayoutSpeedPanel(SpeedPanel02);
   LayoutSpeedPanel(SpeedPanel03);
   LayoutSpeedPanel(SpeedPanel04);
+  LayoutSpeedPanel(SpeedPanel05);
 
   TrimmText.Position.X := Raster + Margin;
   TrimmText.Position.Y := 2 * Raster + Margin;
@@ -1912,6 +1925,13 @@ begin
     Main.FederText.CheckState;
 end;
 
+procedure TFormMain.HullBtnClick(Sender: TObject);
+begin
+  Main.HullVisible := not Main.HullVisible;
+  if Sender <> nil then
+    Main.FederText.CheckState;
+end;
+
 function TFormMain.GetChecked(fa: Integer): Boolean;
 begin
   result := false;
@@ -2127,6 +2147,9 @@ begin
 
   if SpeedPanel04 <> nil then
     SpeedPanel04.InitSpeedButtons;
+
+  if SpeedPanel05 <> nil then
+    SpeedPanel05.InitSpeedButtons;
 end;
 
 procedure TFormMain.UpdateSpeedButtonDown;

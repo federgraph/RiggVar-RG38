@@ -178,7 +178,7 @@ begin
 
 {$ifdef WantRotaForm3}
   RotaForm3.ViewPoint := vp3D;
-  RotaForm3.FixPoint := ooD0;
+  RotaForm3.FixPoint := ooD;
 {$endif}
 end;
 

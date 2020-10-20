@@ -505,10 +505,10 @@ end;
 procedure TRggMain.SetOption(fa: TFederAction);
 begin
   case fa of
-    faRggHull:
-    begin
-      HullVisible := not HullVisible;
-    end;
+//    faRggHull:
+//    begin
+//      HullVisible := not HullVisible;
+//    end;
     faDemo:
     begin
       Demo := not Demo;
@@ -1248,7 +1248,7 @@ begin
   if StrokeRigg <> nil then
     StrokeRigg.SalingTyp := Rigg.SalingTyp;
   SetParam(FParam);
-  FixPoint := ooD;
+//  FixPoint := ooD;
 
   case ATrimmSlot of
     7:

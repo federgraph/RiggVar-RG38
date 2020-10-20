@@ -601,7 +601,7 @@ begin
     tempL := j * FMastLinieL / BogenMax;
     RD.MK.RggPoly[j].X := RD.OffsetX + (tempL * temp1 + FMastLinie[k] * temp2 - p.X) * RD.InitialZoom;
     RD.MK.RggPoly[j].Y := RD.OffsetY - (tempL * temp3 + FMastLinie[k] * temp4 - p.Z) * RD.InitialZoom;
-    RD.MK.RggPoly[j].Z := -p.Y * RD.InitialZoom;
+    RD.MK.RggPoly[j].Z := p.Y * RD.InitialZoom;
   end;
   if not RD.ViewpointFlag then
     RD.MK.Transform;
