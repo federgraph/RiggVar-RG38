@@ -946,6 +946,7 @@ begin
   { speziell überschreiben }
   if WantLogoData then
   begin
+    FactArray.Controller.Min := 50;
     FactArray.Winkel.Min := 70;
     FactArray.Winkel.Max := 120;
     // FactArray.Woben.Min := 2000;
@@ -958,6 +959,7 @@ begin
   end
   else
   begin
+    FactArray.Controller.Min := 50;
 
     FactArray.Wante.Min := 4020;
     FactArray.Wante.Max := 4220;

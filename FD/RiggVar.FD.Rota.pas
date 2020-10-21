@@ -329,7 +329,7 @@ end;
 
 procedure TRotaForm2.Zoom(delta: single);
 begin
-  { only the sign of param dy will be uses }
+  { only the sign of param dy will be used }
   TH.DoOnMouse([ssShift], 0, -delta);
 end;
 
@@ -479,12 +479,12 @@ end;
 
 procedure TRotaForm2.RotaTop;
 begin
-  RotaHelper(-90, 0, 0, 0, 3.0)
+  RotaHelper(-90, 0, 0, 0, 2.2)
 end;
 
 procedure TRotaForm2.Rota3D;
 begin
-  RotaHelper(-80, 0, 0, 0, 2.5)
+  RotaHelper(-80, 0, 0, 0, 2.2)
 end;
 
 procedure TRotaForm2.RotaHelper(aRotX, aRotY, aRotZ, aOffsetY, aRelativeZoom: single);

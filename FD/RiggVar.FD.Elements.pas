@@ -545,6 +545,7 @@ end;
 
 constructor TRggElement.Create;
 begin
+  Visible := True;
   FOpacity := 1.0;
   FStrokeThickness := 3.0;
   FStrokeColor := TRggColors.Red;
@@ -703,6 +704,9 @@ procedure TRggCircle.Draw(g: TCanvas);
 var
   R: TRectF;
 begin
+  if not Visible then
+    Exit;
+
   if Radius > 5 then
   begin
     R := RectF(
@@ -827,7 +831,6 @@ begin
   TypeName := 'Line';
   Caption := ACaption;
   ShowCaption := DefaultShowCaption;
-  Visible := True;
 end;
 
 procedure TRggLine.GetInfo(ML: TStrings);

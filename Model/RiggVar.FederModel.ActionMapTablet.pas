@@ -325,7 +325,7 @@ begin
       InitAC(cl, 5, faActionPageP, claYellow);
       InitAC(cl, 6, faRotaForm1, claForm);
       InitAC(cl, 7, faRotaForm2, claForm);
-      InitAC(cl, 8, faNoop, cla);
+      InitAC(cl, 8, faRotaForm3, claForm);
 
       cl := BottomLeft;
       cla := claSample;
