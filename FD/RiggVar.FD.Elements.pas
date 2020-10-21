@@ -1372,9 +1372,9 @@ begin
   dz := zb - za;
 
   if dz > 0 then
-    result := 1
-  else if dz < 0 then
     result := -1
+  else if dz < 0 then
+    result := 1
   else
     result := 0;
 end;

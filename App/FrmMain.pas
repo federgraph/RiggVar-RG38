@@ -1090,6 +1090,14 @@ begin
 
     '#': fa := faActionPage4;
 
+    ',': fa := faRotaForm1;
+    '.': fa := faRotaForm2;
+    '-': fa := faRotaForm3;
+
+    ';': fa := faRotaForm1;
+    ':': fa := faRotaForm2;
+    '_': fa := faRotaForm3;
+
     else fa := faNoop;
 
   end;

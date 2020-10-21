@@ -32,7 +32,7 @@ uses
 {$define WantPoly}
 
 type
-  { This will be the Live drawing - connected to the model your real App. }
+  { This will be the Live drawing - connected to the model the real App. }
   TRggDrawingD00 = class(TRggDrawing)
   private
     A0B0: TRggLine;
@@ -340,7 +340,7 @@ begin
   D0D := L;
 
   L := TRggLine.Create('E0E');
-  L.StrokeThickness := 0.5;
+  L.StrokeThickness := 1.0;
   L.StrokeColor := claCyan;
   L.Point1 := E0;
   L.Point2 := E;
@@ -418,7 +418,7 @@ begin
   N0F0 := L;
 
   L := TRggLine.Create('F0M');
-  L.StrokeThickness := 1.0;
+  L.StrokeThickness := 2.0;
   L.StrokeColor := claAntiquewhite;
   L.Point1 := F0;
   L.Point2 := M;
@@ -426,7 +426,7 @@ begin
   F0M := L;
 
   L := TRggLine.Create('MF');
-  L.StrokeThickness := 1.0;
+  L.StrokeThickness := 2.0;
   L.StrokeColor := claOrange;
   L.Point1 := M;
   L.Point2 := F;
@@ -435,7 +435,7 @@ begin
 
 {$ifdef WantPoly}
   KK := TRggPolyLine3D.Create('KK', High(TKoordLine) + 1);
-  KK.StrokeThickness := 1;
+  KK.StrokeThickness := 2.0;
   KK.StrokeColor := claYellow;
   KK.Point1 := D;
   KK.Point2 := C;
@@ -444,7 +444,7 @@ begin
   Add(KK);
 
   MK := TRggPolyLine3D.Create('MK', BogenMax + 1);
-  MK.StrokeThickness := 12;
+  MK.StrokeThickness := 10.0;
   MK.StrokeColor := claDodgerblue;
   MK.Point1 := D0;
   MK.Point2 := C;
@@ -517,9 +517,9 @@ begin
   C0C.StrokeColor := claYellow;
   MF.StrokeColor := claOrange;
 
-  D0.StrokeColor := claBlue;
-  D.StrokeColor := claBlue;
-  D0D.StrokeColor := claBlue;
+  D0.StrokeColor := claDodgerblue;
+  D.StrokeColor := claDodgerblue;
+  D0D.StrokeColor := claDodgerblue;
 
   E0.StrokeColor := claCyan;
   E.StrokeColor := claCyan;
@@ -537,10 +537,10 @@ begin
   A0B0.StrokeColor := claGray;
   A0C0.StrokeColor := claGray;
   B0C0.StrokeColor := claGray;
-  A0D0.StrokeColor := claGray;
 
-  B0D0.StrokeColor := claBlack;
-  C0D0.StrokeColor := claBlack;
+  B0D0.StrokeColor := claPlum;
+  C0D0.StrokeColor := claPlum;
+  A0D0.StrokeColor := claPlum;
 
   AC.StrokeColor := claRed;
   BC.StrokeColor := claGreen;
