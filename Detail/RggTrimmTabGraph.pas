@@ -1,4 +1,4 @@
-﻿unit RggTrimmTabGraph;
+unit RggTrimmTabGraph;
 
 interface
 

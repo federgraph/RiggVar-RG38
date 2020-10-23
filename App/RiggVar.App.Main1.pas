@@ -537,8 +537,7 @@ begin
     faViewpointT: ViewPoint := vpTop;
     faViewpoint3: ViewPoint := vp3D;
 
-//    faRggHull: SetOption(faRggHull);
-    faDemo: SetOption(faDemo);
+    faDemo: Demo := not Demo;
 
     faTrimm0: Trimm := 0;
     faTrimm1: Trimm := 1;

@@ -32,7 +32,7 @@ uses
 {$define WantPoly}
 
 type
-  { This will be the Live drawing - connected to the model the real App. }
+  { This will be the Live drawing - connected to the model of the real App. }
   TRggDrawingD00 = class(TRggDrawing)
   private
     A0B0: TRggLine;
@@ -98,7 +98,6 @@ type
     FX: TRggFixpointCircle;
 
     constructor Create;
-    procedure InitDefaultPos; override;
     procedure Transform(AM: TMatrix3D); override;
     procedure GoDark; override;
     procedure GoLight; override;
@@ -115,79 +114,6 @@ uses
 
 { TRggDrawingD00 }
 
-procedure TRggDrawingD00.InitDefaultPos;
-var
-  ox, oy, g: single;
-begin
-  ox := 100;
-  oy := 700;
-  g := 3.0;
-
-  N0.Center.X := ox + 0 * g;
-  N0.Center.Y := oy - 0 * g;
-  N0.Center.z := 0;
-
-  A0.Center.X := ox + 30 * g;
-  A0.Center.Y := oy - 40 * g;
-  A0.Center.Z := -40 * g;
-
-  B0.Center.X := ox + 30 * g;
-  B0.Center.Y := oy - 40 * g;
-  B0.Center.Z := 40 * g;
-
-  C0.Center.X := ox + 150 * g;
-  C0.Center.Y := oy - 40 * g;
-  C0.Center.z := 0;
-
-  D0.Center.X := ox + 80 * g;
-  D0.Center.Y := oy - 10 * g;
-  D0.Center.z := 0;
-
-  E0.Center.X := ox + 0 * g;
-  E0.Center.Y := oy - 0 * g;
-  E0.Center.z := 0;
-
-  F0.Center.X := ox + 0 * g;
-  F0.Center.Y := oy - 0 * g;
-  F0.Center.z := 0;
-
-  P0.Center.X := ox + 0 * g;
-  P0.Center.Y := oy - 0 * g;
-  P0.Center.z := 0;
-
-  A.Center.X := ox + 10 * g;
-  A.Center.Y := oy - 100 * g;
-  A.Center.Z := -30 * g;
-
-  B.Center.X := ox + 10 * g;
-  B.Center.Y := oy - 100 * g;
-  B.Center.Z := 30 * g;
-
-  C.Center.X := ox + 30 * g;
-  C.Center.Y := oy - 160 * g;
-  C.Center.z := 0;
-
-  D.Center.X := ox + 50 * g;
-  D.Center.Y := oy - 100 * g;
-  D.Center.Z := 0;
-
-  E.Center.X := ox + 0 * g;
-  E.Center.Y := oy - 0 * g;
-  E.Center.z := 0;
-
-  F.Center.X := ox + 10 * g;
-  F.Center.Y := oy - 220 * g;
-  F.Center.Z := 0;
-
-  P.Center.X := ox + 0 * g;
-  p.Center.Y := oy - 0 * g;
-  p.Center.z := 0;
-
-  M.Center.X := ox + 0 * g;
-  M.Center.Y := oy - 0 * g;
-  M.Center.z := 0;
-end;
-
 constructor TRggDrawingD00.Create;
 var
   L: TRggLine;
@@ -203,9 +129,9 @@ begin
   OffsetY := OffsetYDefault;
   InitialZoom := InitialZoomDefault;
 
-  DefaultShowCaption := True;
-
   { Points }
+
+  DefaultShowCaption := True;
 
   FX := TRggFixpointCircle.Create;
   FX.Caption := 'Fixpoint';
@@ -258,8 +184,6 @@ begin
 
   M := TRggCircle.Create('M');
   M.StrokeColor := claGray;
-
-  InitDefaultPos;
 
   { Lines }
 

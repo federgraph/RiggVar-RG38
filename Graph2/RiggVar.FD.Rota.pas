@@ -374,7 +374,7 @@ end;
 
 procedure TRotaForm2.ImageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
 var
- dx, dy: single;
+  dx, dy: single;
 begin
   if not MouseDown then
     Exit;

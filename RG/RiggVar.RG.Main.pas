@@ -21,21 +21,21 @@ interface
 uses
   System.SysUtils,
   System.Classes,
-  System.Math,
-  System.Math.Vectors,
-  RiggVar.FB.ActionConst,
   RiggVar.RG.Data,
   RiggVar.RG.Def,
   RiggVar.RG.Track,
   RiggVar.RG.Graph,
-  RiggVar.Util.Logger,
   RggStrings,
   RggScroll,
   RggTypes,
   RggUnit4,
   RggCalc,
   RggChart,
-  RggDoc;
+  RggDoc,
+  RiggVar.FB.ActionConst,
+  RiggVar.Util.Logger,
+  System.Math,
+  System.Math.Vectors;
 
 type
   TFederAction = Integer;
@@ -162,6 +162,7 @@ type
     FBogen: Boolean;
     FKoppel: Boolean;
     FHullVisible: Boolean;
+    FDemo: Boolean;
 
     function FormatValue(Value: single): string;
     procedure DoBiegungGF;
@@ -194,6 +195,7 @@ type
     procedure SetBogen(const Value: Boolean);
     procedure SetKoppel(const Value: Boolean);
     procedure SetHullVisible(const Value: Boolean);
+    procedure SetDemo(const Value: Boolean);
   protected
     procedure InitFactArray;
     procedure RggSpecialDoOnTrackBarChange; override;
@@ -206,8 +208,6 @@ type
     ParamCaption: string;
 
     RefCtrl: TTrimmControls;
-
-    Demo: Boolean;
 
     ChartGraph: TChartModel;
 
@@ -257,7 +257,6 @@ type
 
     procedure ToggleRenderOption(fa: TFederAction);
     procedure SetParameter(fa: TFederAction);
-    procedure SetOption(fa: TFederAction);
 
     procedure ViewportChanged(Sender: TObject);
 
@@ -274,6 +273,7 @@ type
     property Koppel: Boolean read FKoppel write SetKoppel;
     property HullVisible: Boolean read GetHullVisible write SetHullVisible;
     property Visible: Boolean read FVisible write SetVisible;
+    property Demo: Boolean read FDemo write SetDemo;
 
     property Korrigiert: Boolean read FKorrigiert write SetKorrigiert;
     property SofortBerechnenNoChange: Boolean read FSofortBerechnen write FSofortBerechnen;
@@ -450,6 +450,18 @@ begin
   FactArray.Find(FParam).Ist := Value;
 end;
 
+procedure TRggMain.SetDemo(const Value: Boolean);
+begin
+  FDemo := Value;
+  if FDemo then
+  begin
+    Rigg.SetDefaultDocument;
+    InitFactArray;
+    SetParam(FParam);
+  end;
+  UpdateText;
+end;
+
 procedure TRggMain.SetViewPoint(const Value: TViewPoint);
 begin
   FViewPoint := Value;
@@ -500,27 +512,6 @@ end;
 procedure TRggMain.SetOnUpdateGraph(const Value: TNotifyEvent);
 begin
   FOnUpdateGraph := Value;
-end;
-
-procedure TRggMain.SetOption(fa: TFederAction);
-begin
-  case fa of
-//    faRggHull:
-//    begin
-//      HullVisible := not HullVisible;
-//    end;
-    faDemo:
-    begin
-      Demo := not Demo;
-      if Demo then
-      begin
-        Rigg.SetDefaultDocument;
-        InitFactArray;
-        SetParam(FParam);
-      end;
-    end;
-  end;
-  UpdateText;
 end;
 
 procedure TRggMain.UpdateGraph;
@@ -1260,8 +1251,8 @@ begin
     end;
     8:
     begin
-  SaveTrimm(Trimm8);
-  TrimmNoChange := 8;
+      SaveTrimm(Trimm8);
+      TrimmNoChange := 8;
     end;
   end;
 
