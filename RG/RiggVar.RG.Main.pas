@@ -32,7 +32,21 @@ uses
   RggCalc,
   RggChart,
   RggDoc,
+  System.UIConsts,
+  RiggVar.FB.Action,
   RiggVar.FB.ActionConst,
+  RiggVar.FB.ActionGroups,
+  RiggVar.FB.ActionTable,
+  RiggVar.FB.ActionKeys,
+  RiggVar.FB.ActionMap,
+  RiggVar.FB.ActionTest,
+  RiggVar.FB.Classes,
+  RiggVar.FB.TextBase,
+  RiggVar.FederModel.Action,
+  RiggVar.FederModel.Binding,
+  RiggVar.FederModel.TouchBase,
+  RiggVar.FederModel.Touch,
+  RiggVar.FederModel.TouchPhone,
   RiggVar.Util.Logger,
   System.Math,
   System.Math.Vectors;
@@ -40,108 +54,13 @@ uses
 type
   TFederAction = Integer;
 
-  TRggRigg = class
-  public
-    IsUp: Boolean;
-    Rigg: TRigg;
-    StrokeRigg: IStrokeRigg; // injected
-  end;
-
-  TRggText = class(TRggRigg)
-  protected
-    FL: TStringList;
-    function GetFLText: string;
-    procedure CopyText;
-  public
-    Logger: TLogger;
-    constructor Create;
-    destructor Destroy; override;
-    procedure UpdateText(ClearFlash: Boolean = False); virtual;
-    procedure UpdateOnParamValueChanged; virtual;
-    property FLText: string read GetFLText;
-  end;
-
-  TRggParam = class(TRggText)
+  TRggMain = class
   private
-    FParam: TFederParam;
-    procedure SetParam(Value: TFederParam); virtual; abstract;
-  public
-    property Param: TFederParam read FParam write SetParam;
-  end;
-
-  TRggWheel = class(TRggParam)
-  protected
-    FAction: TFederAction;
     FactArray: TRggFA; // not owned, cached from Rigg
-    function GetBigStep: single;
-    function GetSmallStep: single;
-    procedure TrackBarChange(Sender: TObject);
-    procedure RggSpecialDoOnTrackBarChange; virtual;
-  public
-    RggTrackbar: TFederTrackbar;
 
-    constructor Create;
-    destructor Destroy; override;
-
-    procedure DoWheel(Delta: single);
-
-    procedure DoBigWheelRG(Delta: single);
-    procedure DoSmallWheelRG(Delta: single);
-    procedure DoRasterWheelRG(Delta: single);
-  end;
-
-  TRggTrimm = class(TRggWheel)
-  protected
+    FParam: TFederParam;
+    FAction: TFederAction;
     FTrimm: Integer;
-    function GetCurrentTrimm: TRggData;
-    procedure SetTrimm(const Value: Integer);
-    procedure SetTrimmNoChange(const Value: Integer);
-    procedure InitTrimmData;
-  public
-    RggData: TRggData; // temp object for data transfer
-
-    { slot used as reference for diffing }
-    Trimm0: TRggData;
-
-    { user data slots }
-    Trimm1: TRggData; // selected with button T1
-    Trimm2: TRggData; // selected with button T2
-    Trimm3: TRggData;
-    Trimm4: TRggData;
-    Trimm5: TRggData;
-    Trimm6: TRggData;
-
-    { example data slots }
-    Trimm7: TRggData; // 420
-    Trimm8: TRggData; // Logo
-
-    constructor Create;
-    destructor Destroy; override;
-
-    procedure InitSalingTyp(fa: Integer); virtual; abstract;
-
-    procedure LoadTrimm(fd: TRggData);
-    procedure SaveTrimm(fd: TRggData);
-
-    function GetTrimmItem(i: Integer): TRggData;
-    function GetTrimmItemReport(ReportID: Integer): string;
-    function GetTrimmItemReportData: string;
-    function GetTrimmItemReportJson: string;
-    function GetTrimmItemReportShort: string;
-    function GetTrimmItemReportLong: string;
-
-    property CurrentTrimm: TRggData read GetCurrentTrimm;
-    property TrimmNoChange: Integer read FTrimm write SetTrimmNoChange;
-    property Trimm: Integer read FTrimm write SetTrimm;
-
-    property TrimmData: string read GetTrimmItemReportData;
-    property TrimmJson: string read GetTrimmItemReportJson;
-    property TrimmShort: string read GetTrimmItemReportShort;
-    property TrimmLong: string read GetTrimmItemReportLong;
-  end;
-
-  TRggMain = class(TRggTrimm)
-  private
     FFixPoint: TRiggPoint;
     FViewPoint: TViewPoint;
     FVisible: Boolean;
@@ -164,12 +83,36 @@ type
     FHullVisible: Boolean;
     FDemo: Boolean;
 
+    FTouch: Integer;
+
+    function GetShowTrimmText: Boolean;
+    function GetShowDiffText: Boolean;
+    function GetShowDataText: Boolean;
+    procedure SetShowTrimmText(const Value: Boolean);
+    procedure SetShowDiffText(const Value: Boolean);
+    procedure SetShowDataText(const Value: Boolean);
+    procedure DoReadTrimmFile(fn: string);
+    function GetTrimmFilePath: string;
+    function GetIsRggParam: Boolean;
+    function LogFileNameToInfoFormatted(t1, t2, fn: string): boolean;
+    procedure PasteTrimm;
+
+    procedure InitRaster;
+    function GetIsDesktop: Boolean;
+    function GetIsLandscape: Boolean;
+    function GetIsPortrait: Boolean;
+    function GetColorScheme: Integer;
+    procedure SetColorScheme(const Value: Integer);
+    procedure InitFederText(ft: TFederTouch0);
+    function GetIsPhone: Boolean;
+    procedure SetTouch(const Value: Integer);
+    function GetFederText: TFederTouchBase;
+
     function FormatValue(Value: single): string;
     procedure DoBiegungGF;
 
     procedure ChangeRigg(Value: single);
 
-    procedure SetParam(Value: TFederParam); override;
     procedure SetParamValue(idx: TFederParam; Value: single);
     function GetParamValue(idx: TFederParam): single;
     procedure SetFixPoint(const Value: TRiggPoint);
@@ -196,10 +139,42 @@ type
     procedure SetKoppel(const Value: Boolean);
     procedure SetHullVisible(const Value: Boolean);
     procedure SetDemo(const Value: Boolean);
-  protected
+
+    function GetCurrentTrimm: TRggData;
+    procedure SetTrimm(const Value: Integer);
+    procedure SetTrimmNoChange(const Value: Integer);
+    procedure InitTrimmData;
+    function GetBigStep: single;
+    function GetSmallStep: single;
+    procedure TrackBarChange(Sender: TObject);
+    procedure RggSpecialDoOnTrackBarChange;
+    procedure SetParam(Value: TFederParam);
     procedure InitFactArray;
-    procedure RggSpecialDoOnTrackBarChange; override;
   public
+    IsUp: Boolean;
+    Rigg: TRigg; // injected via constuctor
+    StrokeRigg: IStrokeRigg; // injected
+    FL: TStringList;
+    Logger: TLogger;
+    RggTrackbar: TFederTrackbar;
+
+    RggData: TRggData; // temp object for data transfer
+
+    { slot used as reference for diffing }
+    Trimm0: TRggData;
+
+    { user data slots }
+    Trimm1: TRggData; // selected with button T1
+    Trimm2: TRggData; // selected with button T2
+    Trimm3: TRggData;
+    Trimm4: TRggData;
+    Trimm5: TRggData;
+    Trimm6: TRggData;
+
+    { example data slots }
+    Trimm7: TRggData; // 420
+    Trimm8: TRggData; // Logo
+
     FixPunkt: TPoint3D;
 
     MinValCaption: string;
@@ -219,8 +194,45 @@ type
 
     UpdateTextCounter: Integer;
 
-    constructor Create;
+    ActionMap1: TActionMap;
+    ActionMap2: TActionMap;
+    ActionHandler: IFederActionHandler;
+    ActionHelper: TActionHelper;
+
+    FederText1: TFederTouch;
+    FederText2: TFederTouchPhone;
+
+    FederKeyboard: TFederKeyboard;
+    BackgroundLock: Boolean;
+
+    ActionGroupList: TActionGroupList;
+    ActionTest: TActionTest;
+    FederBinding: TFederBinding;
+
+    IsRetina: Boolean;
+
+    ReportCounter: Integer;
+    ResizeCounter: Integer;
+
+    constructor Create(ARigg: TRigg);
     destructor Destroy; override;
+
+    function GetFLText: string;
+    procedure CopyText;
+    procedure DoWheel(Delta: single);
+    procedure DoBigWheelRG(Delta: single);
+    procedure DoSmallWheelRG(Delta: single);
+    procedure DoRasterWheelRG(Delta: single);
+
+    procedure LoadTrimm(fd: TRggData);
+    procedure SaveTrimm(fd: TRggData);
+
+    function GetTrimmItem(i: Integer): TRggData;
+    function GetTrimmItemReport(ReportID: Integer): string;
+    function GetTrimmItemReportData: string;
+    function GetTrimmItemReportJson: string;
+    function GetTrimmItemReportShort: string;
+    function GetTrimmItemReportLong: string;
 
     procedure Reset;
     procedure UpdateGetriebe;
@@ -234,7 +246,7 @@ type
     procedure InitLogo;
     procedure InitWithDefaultDoc(AWantLogoData: Boolean; TargetSlot: Integer);
     procedure DoAfterInitDefault(ATrimmSlot: Integer);
-    procedure InitSalingTyp(fa: Integer); override;
+    procedure InitSalingTyp(fa: Integer);
 
     procedure MemoryBtnClick;
     procedure MemoryRecallBtnClick;
@@ -260,6 +272,69 @@ type
 
     procedure ViewportChanged(Sender: TObject);
 
+    procedure HandleAction(fa: Integer);
+    function GetChecked(fa: TFederAction): Boolean;
+
+    procedure InitText;
+
+    procedure DoTouchbarLeft(Delta: single);
+    procedure DoTouchbarRight(Delta: single);
+    procedure DoTouchbarBottom(Delta: single);
+    procedure DoTouchbarTop(Delta: single);
+
+    procedure CycleToolSet(i: Integer);
+    procedure CycleColorSchemeM;
+    procedure CycleColorSchemeP;
+    procedure ToggleDarkMode;
+
+    procedure InitTouch;
+    procedure UpdateTouch;
+
+    procedure UpdateText(ClearFlash: Boolean = False);
+    procedure UpdateOnParamValueChanged;
+
+    procedure PlusOne;
+    procedure PlusTen;
+    procedure DoMouseWheel(Shift: TShiftState; WheelDelta: Integer);
+
+    procedure DoBigWheel(Delta: single);
+    procedure DoSmallWheel(Delta: single);
+
+    procedure WriteTrimmItem;
+    procedure WriteTrimmFile;
+
+    procedure CopyAndPaste;
+    procedure CopyTrimmFile;
+    procedure CopyTrimmItem;
+    procedure PasteTrimmItem;
+
+    procedure UpdateTrimm0;
+    procedure ReadTrimmFile0;
+    procedure ReadTrimmFile;
+    procedure SaveTrimmFile;
+    procedure ReadTrimmFileAuto;
+    procedure SaveTrimmFileAuto;
+
+    procedure ReadText(ML: TStrings);
+
+    procedure DropTargetDropped(fn: string);
+    procedure DoReport;
+    procedure DoCleanReport;
+    procedure ShowDebugData;
+    procedure LogFileNameToInfo(fn: string);
+
+    property FLText: string read GetFLText;
+    property Param: TFederParam read FParam write SetParam;
+
+    property CurrentTrimm: TRggData read GetCurrentTrimm;
+    property TrimmNoChange: Integer read FTrimm write SetTrimmNoChange;
+    property Trimm: Integer read FTrimm write SetTrimm;
+
+    property TrimmData: string read GetTrimmItemReportData;
+    property TrimmJson: string read GetTrimmItemReportJson;
+    property TrimmShort: string read GetTrimmItemReportShort;
+    property TrimmLong: string read GetTrimmItemReportLong;
+
     property Action: TFederAction read FAction;
     property FixPoint: TRiggPoint read FFixPoint write SetFixPoint;
     property ViewPoint: TViewPoint read FViewPoint write SetViewPoint;
@@ -284,21 +359,62 @@ type
     property GraphRadio: TGraphRadio read FGraphRadio write SetSuperRadio;
 
     property OnUpdateGraph: TNotifyEvent read FOnUpdateGraph write SetOnUpdateGraph;
+
+    property ShowTrimmText: Boolean read GetShowTrimmText write SetShowTrimmText;
+    property ShowDiffText: Boolean read GetShowDiffText write SetShowDiffText;
+    property ShowDataText: Boolean read GetShowDataText write SetShowDataText;
+
+    property IsRggParam: Boolean read GetIsRggParam;
+
+    property IsDesktop: Boolean read GetIsDesktop;
+    property IsPhone: Boolean read GetIsPhone;
+    property IsLandscape: Boolean read GetIsLandscape;
+    property IsPortrait: Boolean read GetIsPortrait;
+
+    property ColorScheme: Integer read GetColorScheme write SetColorScheme;
+    property Touch: Integer read FTouch write SetTouch;
+
+    property ActionMapTablet: TActionMap read ActionMap1;
+    property ActionMapPhone: TActionMap read ActionMap2;
+
+    property Keyboard: TFederKeyboard read FederKeyboard;
+    property FederText: TFederTouchBase read GetFederText;
   end;
 
 implementation
 
 uses
-  FMX.PlatForm;
+  System.Rtti,
+  FMX.PlatForm,
+  FMX.Layouts,
+  FrmMain,
+  RiggVar.App.Main,
+  RiggVar.Util.AppUtils,
+  RiggVar.FederModel.Keyboard01,
+  RiggVar.FederModel.ActionMapPhone,
+  RiggVar.FederModel.ActionMapTablet;
 
 const
   tfs = '%-3s %s %8s %6s';
 
 { TRggMain }
 
-constructor TRggMain.Create;
+constructor TRggMain.Create(ARigg: TRigg);
 begin
-  inherited;
+  inherited Create;
+  Rigg := ARigg;
+
+  Main := self;
+  MainVar.RG := True;
+
+  RggTrackbar := TFederTrackbar.Create;
+
+  FactArray := Rigg.GSB;
+  Rigg.ControllerTyp := ctOhne;
+  Init;
+
+  FL := TStringList.Create;
+  Logger := TLogger.Create;
 
   InitialFixPoint := ooD;
 
@@ -314,14 +430,85 @@ begin
 
   FGraphRadio := gSimple;
 
-  FactArray := Rigg.GSB;
-  Rigg.ControllerTyp := ctOhne;
-  Init;
+  RggData := TRggData.Create;
+  RggData.Name := 'fd';
+
+  Trimm0 := TRggData.Create;
+  Trimm0.Name := 'T0';
+  Trimm7 := TRggData.Create;
+  Trimm7.Name := '420';
+  Trimm8 := TRggData.Create;
+  Trimm8.Name := 'Logo';
+
+  Trimm1 := TRggData.Create;
+  Trimm2 := TRggData.Create;
+  Trimm3 := TRggData.Create;
+  Trimm4 := TRggData.Create;
+  Trimm5 := TRggData.Create;
+  Trimm6 := TRggData.Create;
+
+  InitTrimmData;
+
+  { this should be done after or when calling Init }
+//  InitLogo; // sets WantLogoData to true
+//  Init420; // resets WantLogo to false
+//  WantLogoData := False;
+
+  IsRetina := MainVar.Scale > 1;
+
+  ActionGroupList := TActionGroupList.Create;
+  ActionTest := TActionTest.Create;
+
+  ActionMap1 := TActionMapTablet.Create;
+  ActionMap2 := TActionMapPhone.Create;
+
+  InitRaster;
+
+  TTouchBtn.WantHint := True;
+  FederText1 := TFederTouch.Create(nil);
+  FederText1.Name := 'FederText1';
+  FederText2 := TFederTouchPhone.Create(nil);
+  FederText2.Name := 'FederText2';
+  FederKeyboard := TFederKeyboard01.Create;
+  FederBinding := TFederBinding.Create;
+
+  ActionHandler := TFederActionHandler.Create;
+  ActionHelper := TActionHelper.Create(ActionHandler);
 end;
 
 destructor TRggMain.Destroy;
 begin
+  MainVar.AppIsClosing := True;
+
+  ActionHelper.Free;
+  ActionMap1.Free;
+  ActionMap2.Free;
+
+  FederKeyboard.Free;
+  FederText1.Free;
+  FederText2.Free;
+
+  ActionGroupList.Free;
+  ActionTest.Free;
+  FederBinding.Free;
+
+  RggData.Free;
+  Trimm0.Free;
+  Trimm1.Free;
+  Trimm2.Free;
+  Trimm3.Free;
+  Trimm4.Free;
+  Trimm5.Free;
+  Trimm6.Free;
+  Trimm7.Free;
+  Trimm8.Free;
+
+  RggTrackbar.Free;
   Rigg.Free;
+
+  Logger.Free;
+  FL.Free;
+
   inherited;
 end;
 
@@ -1072,7 +1259,7 @@ begin
   end;
 end;
 
-procedure TRggTrimm.LoadTrimm(fd: TRggData);
+procedure TRggMain.LoadTrimm(fd: TRggData);
 var
   temp, tempH, tempA: single;
   i: TFederParam;
@@ -1171,7 +1358,7 @@ begin
   SetParam(FParam);
 end;
 
-procedure TRggTrimm.SaveTrimm(fd: TRggData);
+procedure TRggMain.SaveTrimm(fd: TRggData);
 begin
   Rigg.SaveToFederData(fd);
 
@@ -1430,21 +1617,7 @@ begin
   FVisible := Value;
 end;
 
-{ TRggMain0 }
-
-constructor TRggWheel.Create;
-begin
-  inherited;
-  RggTrackbar := TFederTrackbar.Create;
-end;
-
-destructor TRggWheel.Destroy;
-begin
-  RggTrackbar.Free;
-  inherited;
-end;
-
-procedure TRggWheel.TrackBarChange(Sender: TObject);
+procedure TRggMain.TrackBarChange(Sender: TObject);
 begin
   if FParam = fpT1 then
   begin
@@ -1459,15 +1632,11 @@ begin
   RggSpecialDoOnTrackBarChange;
 end;
 
-procedure TRggWheel.RggSpecialDoOnTrackBarChange;
+procedure TRggMain.DoRasterWheelRG(Delta: single);
 begin
 end;
 
-procedure TRggWheel.DoRasterWheelRG(Delta: single);
-begin
-end;
-
-procedure TRggWheel.DoSmallWheelRG(Delta: single);
+procedure TRggMain.DoSmallWheelRG(Delta: single);
 var
   f: single;
 begin
@@ -1485,7 +1654,7 @@ begin
   end;
 end;
 
-procedure TRggWheel.DoBigWheelRG(Delta: single);
+procedure TRggMain.DoBigWheelRG(Delta: single);
 var
   f: single;
 begin
@@ -1503,7 +1672,7 @@ begin
   end;
 end;
 
-procedure TRggWheel.DoWheel(Delta: single);
+procedure TRggMain.DoWheel(Delta: single);
 begin
   RggTrackbar.Delta := Delta;
   UpdateOnParamValueChanged;
@@ -1515,7 +1684,7 @@ begin
     UpdateText;
 end;
 
-function TRggWheel.GetBigStep: single;
+function TRggMain.GetBigStep: single;
 begin
   case FParam of
     fpWante: result := 2;
@@ -1526,7 +1695,7 @@ begin
   end;
 end;
 
-function TRggWheel.GetSmallStep: single;
+function TRggMain.GetSmallStep: single;
 begin
   result := 1;
 end;
@@ -1773,15 +1942,13 @@ begin
   Rigg.EA := EA;
 end;
 
-{ TRggTrimm }
-
-procedure TRggTrimm.SetTrimmNoChange(const Value: Integer);
+procedure TRggMain.SetTrimmNoChange(const Value: Integer);
 begin
   Logger.Info('SetTrimmNoChange: ' + IntToStr(Value));
   FTrimm := Value;
 end;
 
-procedure TRggTrimm.SetTrimm(const Value: Integer);
+procedure TRggMain.SetTrimm(const Value: Integer);
 begin
   Logger.Info('SetTrimm: ' + IntToStr(Value));
   FTrimm := Value;
@@ -1790,55 +1957,12 @@ begin
   UpdateOnParamValueChanged;
 end;
 
-constructor TRggTrimm.Create;
-begin
-  inherited;
-  RggData := TRggData.Create;
-  RggData.Name := 'fd';
-
-  Trimm0 := TRggData.Create;
-  Trimm0.Name := 'T0';
-  Trimm7 := TRggData.Create;
-  Trimm7.Name := '420';
-  Trimm8 := TRggData.Create;
-  Trimm8.Name := 'Logo';
-
-  Trimm1 := TRggData.Create;
-  Trimm2 := TRggData.Create;
-  Trimm3 := TRggData.Create;
-  Trimm4 := TRggData.Create;
-  Trimm5 := TRggData.Create;
-  Trimm6 := TRggData.Create;
-
-  InitTrimmData;
-
-  { this should be done after or when calling Init }
-//  InitLogo; // sets WantLogoData to true
-//  Init420; // resets WantLogo to false
-//  WantLogoData := False;
-end;
-
-destructor TRggTrimm.Destroy;
-begin
-  RggData.Free;
-  Trimm0.Free;
-  Trimm1.Free;
-  Trimm2.Free;
-  Trimm3.Free;
-  Trimm4.Free;
-  Trimm5.Free;
-  Trimm6.Free;
-  Trimm7.Free;
-  Trimm8.Free;
-  inherited;
-end;
-
-function TRggTrimm.GetCurrentTrimm: TRggData;
+function TRggMain.GetCurrentTrimm: TRggData;
 begin
   result := GetTrimmItem(FTrimm);
 end;
 
-function TRggTrimm.GetTrimmItem(i: Integer): TRggData;
+function TRggMain.GetTrimmItem(i: Integer): TRggData;
 begin
   case i of
     1: result := Trimm1;
@@ -1854,7 +1978,7 @@ begin
   end;
 end;
 
-function TRggTrimm.GetTrimmItemReport(ReportID: Integer): string;
+function TRggMain.GetTrimmItemReport(ReportID: Integer): string;
 begin
   if Assigned(Rigg) and Assigned(RggData) and Assigned(FL) then
   begin
@@ -1882,27 +2006,27 @@ begin
   end;
 end;
 
-function TRggTrimm.GetTrimmItemReportLong: string;
+function TRggMain.GetTrimmItemReportLong: string;
 begin
   result := GetTrimmItemReport(3);
 end;
 
-function TRggTrimm.GetTrimmItemReportShort: string;
+function TRggMain.GetTrimmItemReportShort: string;
 begin
   result := GetTrimmItemReport(2);
 end;
 
-function TRggTrimm.GetTrimmItemReportJson: string;
+function TRggMain.GetTrimmItemReportJson: string;
 begin
   result := GetTrimmItemReport(1);
 end;
 
-function TRggTrimm.GetTrimmItemReportData: string;
+function TRggMain.GetTrimmItemReportData: string;
 begin
   result := GetTrimmItemReport(0);
 end;
 
-procedure TRggTrimm.InitTrimmData;
+procedure TRggMain.InitTrimmData;
 var
   fd: TRggData;
 begin
@@ -1944,26 +2068,12 @@ end;
 
 { TRggText }
 
-constructor TRggText.Create;
-begin
-  inherited;
-  FL := TStringList.Create;
-  Logger := TLogger.Create;
-end;
-
-destructor TRggText.Destroy;
-begin
-  Logger.Free;
-  FL.Free;
-  inherited;
-end;
-
-function TRggText.GetFLText: string;
+function TRggMain.GetFLText: string;
 begin
   result := FL.Text;
 end;
 
-procedure TRggText.CopyText;
+procedure TRggMain.CopyText;
 var
   cbs: IFMXClipboardService;
 begin
@@ -1972,16 +2082,6 @@ begin
     cbs.SetClipboard(FL.Text);
     Logger.Info('in CopyText ( check clipboard )');
   end;
-end;
-
-procedure TRggText.UpdateOnParamValueChanged;
-begin
-
-end;
-
-procedure TRggText.UpdateText(ClearFlash: Boolean);
-begin
-
 end;
 
 procedure TRggMain.SetSuperRadio(const Value: TGraphRadio);
@@ -2040,6 +2140,951 @@ begin
   end;
 
   UpdateGetriebe;
+end;
+
+procedure TRggMain.InitFederText(ft: TFederTouch0);
+begin
+  if ft is TLayout then
+  begin
+    ft.Parent := FormMain;
+    TFederTouchBase.OwnerComponent := ft;
+    TFederTouchBase.ParentObject := ft;
+  end
+  else
+  begin
+    TFederTouchBase.OwnerComponent := FormMain;
+    TFederTouchBase.ParentObject := FormMain;
+  end;
+
+  ft.Position.X := 0;
+  ft.Position.Y := 0;
+  ft.Width := MainVar.ClientWidth;
+  ft.Height := MainVar.ClientHeight;
+  ft.Init;
+end;
+
+procedure TRggMain.InitRaster;
+begin
+  MainVar.ClientWidth := FormMain.ClientWidth;
+  MainVar.ClientHeight := FormMain.ClientHeight;
+end;
+
+procedure TRggMain.InitText;
+begin
+  MainVar.ClientWidth := FormMain.ClientWidth;
+  MainVar.ClientHeight := FormMain.ClientHeight;
+  InitFederText(FederText1);
+  InitFederText(FederText2);
+  Touch := faTouchDesk;
+end;
+
+procedure TRggMain.InitTouch;
+begin
+  InitRaster;
+  FederText2.Visible := IsPhone;
+  FederText1.Visible := not FederText2.Visible;
+end;
+
+procedure TRggMain.UpdateText;
+begin
+  if FederText <> nil then
+    FederText.UpdateText;
+end;
+
+procedure TRggMain.UpdateTouch;
+begin
+  if Assigned(FederText) and FederText.InitOK then
+  begin
+    MainVar.ClientWidth := FormMain.ClientWidth;
+    MainVar.ClientHeight := FormMain.ClientHeight;
+    InitTouch;
+    FederText.UpdateShape;
+  end;
+end;
+
+function TRggMain.GetIsDesktop: Boolean;
+begin
+  result := not IsPhone;
+end;
+
+function TRggMain.GetIsLandscape: Boolean;
+begin
+  result := FormMain.ClientWidth >= FormMain.ClientHeight;
+end;
+
+function TRggMain.GetIsPhone: Boolean;
+var
+  MinCount, MaxCount: Integer;
+begin
+  case FTouch of
+    faTouchPhone: result := True;
+    faTouchTablet: result := False;
+    else
+    begin
+      MinCount := Min(FormMain.ClientHeight, FormMain.ClientWidth) div MainVar.Raster;
+      MaxCount := Max(FormMain.ClientHeight, FormMain.ClientWidth) div MainVar.Raster;
+      result  := (MinCount < 8) or (MaxCount < 12);
+    end;
+  end;
+end;
+
+function TRggMain.GetIsPortrait: Boolean;
+begin
+  result := FormMain.ClientWidth < FormMain.ClientHeight;
+end;
+
+procedure TRggMain.SetColorScheme(const Value: Integer);
+begin
+  if not BackgroundLock then
+  begin
+    MainVar.ColorScheme.Scheme := Value;
+    MainVar.ColorScheme.Init(Value);
+    FormMain.UpdateBackgroundColor(MainVar.ColorScheme.claBackground);
+    FederText.UpdateColorScheme;
+  end;
+
+  if IsUp then
+  begin
+    FormMain.SpeedPanel.DarkMode := MainVar.ColorScheme.IsDark;
+    FormMain.SpeedPanel.UpdateColor;
+    FormMain.UpdateColorScheme;
+  end;
+end;
+
+procedure TRggMain.ToggleDarkMode;
+begin
+  if MainVar.ColorScheme.IsDark then
+    ColorScheme := MainVar.ColorScheme.Light
+  else
+    ColorScheme := MainVar.ColorScheme.Dark;
+end;
+
+procedure TRggMain.SetTouch(const Value: Integer);
+begin
+  FTouch := Value;
+
+  if IsPhone then
+    FederText1.Visible := False
+  else case FTouch of
+    faTouchTablet: FederText1.Visible := True;
+    faTouchPhone: FederText1.Visible := False;
+    else
+      FederText1.Visible := not IsPhone;
+  end;
+  FederText2.Visible := not FederText1.Visible;
+
+  FederText.UpdateShape;
+end;
+
+procedure TRggMain.CycleColorSchemeM;
+var
+  i: Integer;
+  l: Boolean;
+begin
+  l := BackgroundLock;
+  BackgroundLock := false;
+  i := ColorScheme;
+  Dec(i);
+  if (i < 1) then
+    i := MainConst.ColorSchemeCount;
+  if i > MainConst.ColorSchemeCount then
+    i := 1;
+
+  MainVar.ColorScheme.SchemeDefault := i;
+  ColorScheme := i;
+  BackgroundLock := l;
+end;
+
+procedure TRggMain.CycleColorSchemeP;
+var
+  i: Integer;
+  l: Boolean;
+begin
+  l := BackgroundLock;
+  BackgroundLock := false;
+  i := ColorScheme;
+  Inc(i);
+  if (i < 1) then
+    i := MainConst.ColorSchemeCount;
+  if i > MainConst.ColorSchemeCount then
+    i := 1;
+
+  MainVar.ColorScheme.SchemeDefault := i;
+  ColorScheme := i;
+  BackgroundLock := l;
+end;
+
+procedure TRggMain.CycleToolSet(i: Integer);
+begin
+  FederText.UpdateToolSet(i);
+  FormMain.UpdateReport;
+end;
+
+function TRggMain.GetColorScheme: Integer;
+begin
+  result := MainVar.ColorScheme.Scheme;
+end;
+
+function TRggMain.GetFederText: TFederTouchBase;
+begin
+  case FTouch of
+    faTouchTablet: result := FederText1;
+    faTouchPhone: result := FederText2;
+    faTouchDesk:
+    begin
+      if IsPhone then
+        result := FederText2
+      else
+        result := FederText1;
+    end;
+    else
+      result := FederText1;
+  end;
+end;
+
+procedure TRggMain.DoTouchbarLeft(Delta: single);
+begin
+  DoMouseWheel([ssCtrl], Round(Delta));
+end;
+
+procedure TRggMain.DoTouchbarTop(Delta: single);
+begin
+  FormMain.RotaForm.RotateZ(Delta);
+end;
+
+procedure TRggMain.DoTouchbarRight(Delta: single);
+begin
+  DoMouseWheel([ssShift], Round(Delta));
+end;
+
+procedure TRggMain.DoTouchbarBottom(Delta: single);
+begin
+  FormMain.RotaForm.Zoom(Delta);
+end;
+
+procedure TRggMain.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer);
+begin
+  if ssCtrl in Shift then
+  begin
+    DoBigWheel(WheelDelta);
+  end
+  else if ssShift in Shift then
+  begin
+    DoSmallWheel(WheelDelta);
+  end;
+end;
+
+procedure TRggMain.PlusOne;
+begin
+  DoMouseWheel([ssShift], 1);
+end;
+
+procedure TRggMain.PlusTen;
+begin
+  DoMouseWheel([ssCtrl], 1);
+end;
+
+procedure TRggMain.UpdateOnParamValueChanged;
+begin
+  FormMain.UpdateOnParamValueChanged;
+end;
+
+procedure TRggMain.SetShowTrimmText(const Value: Boolean);
+begin
+  FormMain.ShowTrimmText := Value;
+end;
+
+procedure TRggMain.SetShowDiffText(const Value: Boolean);
+begin
+  FormMain.ShowDiffText := Value;
+end;
+
+procedure TRggMain.SetShowDataText(const Value: Boolean);
+begin
+  FormMain.ShowDataText := Value;
+end;
+
+function TRggMain.GetShowTrimmText: Boolean;
+begin
+  result := FormMain.ShowTrimmText;
+end;
+
+function TRggMain.GetShowDiffText: Boolean;
+begin
+  result := FormMain.ShowDiffText;
+end;
+
+function TRggMain.GetShowDataText: Boolean;
+begin
+  result := FormMain.ShowDataText;
+end;
+
+procedure TRggMain.WriteTrimmItem;
+var
+  fd: TRggData;
+begin
+  FL.Clear;
+  fd := RggData;
+  SaveTrimm(fd);
+  fd.WantAll := True;
+  fd.SaveTrimmItem(FL);
+end;
+
+procedure TRggMain.CopyTrimmItem;
+begin
+  Logger.Info('in CopyTrimmItem');
+  WriteTrimmItem;
+  CopyText;
+  FL.Clear;
+end;
+
+procedure TRggMain.WriteTrimmFile;
+begin
+  FL.Clear;
+  Trimm0.SaveTrimmFile(FL);
+end;
+
+procedure TRggMain.CopyTrimmFile;
+begin
+  WriteTrimmFile;
+  CopyText;
+  FL.Clear;
+end;
+
+procedure TRggMain.CopyAndPaste;
+var
+  fd: TRggData;
+begin
+  { copy }
+  fd := RggData;
+  SaveTrimm(fd);
+  fd.WantAll := True;
+  fd.SaveTrimmItem(FL);
+
+  { paste }
+  ReadText(FL);
+  FL.Clear;
+end;
+
+procedure TRggMain.PasteTrimmItem;
+begin
+  Logger.Info('in PasteTrimmItem');
+  PasteTrimm;
+  { Note: There is just one paste button (pti), named after the item, }
+  { but you can paste a Trimm-Item OR a Trimm-File. }
+end;
+
+procedure TRggMain.PasteTrimm;
+var
+  v: TValue;
+  s: string;
+  cbs: IFMXClipboardService;
+begin
+  if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, IInterface(cbs)) then
+  begin
+    FL.Clear;
+    try
+      v := cbs.GetClipboard;
+      if not v.IsEmpty then
+      begin
+        s := v.AsString;
+        if (s <> '') and (Length(s) < 10000) then
+        begin
+          FL.Text := s;
+          ReadText(FL);
+          FL.Clear;
+        end
+        else
+        begin
+          Logger.Error('there is no ''data'' string on the clipboard');
+        end;
+      end;
+    except
+      Logger.Error('no usable data on clipboard');
+    end;
+  end;
+end;
+
+procedure TRggMain.ReadText(ML: TStrings);
+var
+  i: Integer;
+  s: string;
+  IsTrimmItem: Boolean;
+  IsTrimmFile: Boolean;
+begin
+  try
+    IsTrimmItem := False;
+    IsTrimmFile := False;
+    for i := 0 to ML.Count-1 do
+    begin
+      if i > 4 then
+        break;
+      s := ML[i];
+      if Pos('DOCTYPE', s) > 0 then
+      begin
+        if s.Contains('Trimm-Item' )then
+          IsTrimmItem := True;
+        if s.Contains('Trimm-File' )then
+          IsTrimmFile := True;
+      end;
+      if IsTrimmItem then
+      begin
+        RggData.LoadTrimmItem(ML);
+        CurrentTrimm.Assign(RggData);
+        Trimm := FTrimm;
+        Logger.Info(Format('  Trimm %d assigned', [Trimm]));
+        break;
+      end
+      else if IsTrimmFile then
+      begin
+        RggData.ReadTrimmFile(ML);
+        Trimm := FTrimm;
+        Logger.Info(Format('  TrimmFile read, Current Trimm is %d.', [Trimm]));
+        break;
+      end;
+    end;
+  except
+    Trimm := 1;
+  end;
+end;
+
+function TRggMain.GetTrimmFilePath: string;
+begin
+  result := '';
+{$ifdef MacOS}
+  result  := TAppUtils.GetDocumentDirectory;
+{$endif}
+{$ifdef Win32}
+  result  := TAppUtils.GetUserDocumentsDir;
+  //result  := TAppUtils.GetRoamingDir;
+{$endif}
+{$ifdef Win64}
+  result  := TAppUtils.GetUserDocumentsDir;
+  //result  := TAppUtils.GetRoamingDir;
+{$endif}
+{$ifdef Android}
+  result  := TAppUtils.GetDocumentDirectory;
+{$endif}
+{$ifdef IOS}
+  result  := TAppUtils.GetIOSDataDirectory;
+{$endif}
+end;
+
+procedure TRggMain.ReadTrimmFile0;
+var
+  fp, sTrimmFileAuto, sTrimmFile: string;
+begin
+  if not MainVar.IsSandBoxed then
+  begin
+    Logger.Info('in ReadTrimmFile0');
+    fp := GetTrimmFilePath;
+    if fp <> '' then
+    begin
+      sTrimmFile := fp + MainConst.TrimmFileName;
+      sTrimmFileAuto := fp + MainConst.TrimmFileNameAuto;
+      if FileExists(sTrimmFile) then
+      begin
+        DoReadTrimmFile(sTrimmFile);
+      end
+      else if FileExists(sTrimmFileAuto) then
+      begin
+        DoReadTrimmFile(sTrimmFileAuto);
+      end
+      else
+      begin
+        Logger.Info('Trimm-File.txt or Trimm-File-Auto.txt does not exits at path');
+        LogFileNameToInfo(fp);
+      end;
+    end
+    else
+    begin
+      Logger.Info('GetTrimmFilePath is empty');
+    end;
+  end;
+end;
+
+procedure TRggMain.ReadTrimmFile;
+var
+  fp, fn, s: string;
+begin
+  Logger.Info('in ReadTrimmFile');
+  fp := GetTrimmFilePath;
+
+{ By default you try and load the 'manually edited' Trimm-File.txt; }
+{ this should make sense on the Desktop, }
+{ or on any device where you have access to the Documents folder. }
+  fn := MainConst.TrimmFileName;
+
+{ Maybe you want to have the same behaviour on Windows and iOS }
+{ for debugging purpose only... }
+{$ifdef MSWINDOWS}
+//  fn := TrimmFileNameAuto;
+{$endif}
+
+{ On Android and iOS the Trimm-File in the known location cannot be edited, }
+{ so it does not make sense to read a 'manually edited' Trimm-File.txt, }
+{ but you can manualy read a Trimm-File-Auto.txt if already saved, }
+{ e.g. by clicking on a button. }
+{$ifdef IOS}
+  fn := TrimmFileNameAuto;
+{$endif}
+{$ifdef Android}
+  fn := TrimmFileNameAuto;
+{$endif}
+
+  s := fp + fn;
+  if MainVar.IsSandboxed then
+  begin
+    s := FormMain.GetOpenFileName(fp, fn);
+  end;
+
+  if s <> '' then
+  begin
+    DoReadTrimmFile(s);
+  end;
+end;
+
+procedure TRggMain.ReadTrimmFileAuto;
+var
+  fp, fn: string;
+begin
+  if not MainVar.IsSandboxed then
+  begin
+    Logger.Info('in ReadTrimmFileAuto');
+    fp := GetTrimmFilePath;
+    fn := MainConst.TrimmFileNameAuto;
+    if (fp <> '') and (fn <> '') then
+      DoReadTrimmFile(fp + fn);
+  end;
+end;
+
+procedure TRggMain.DoBigWheel(Delta: single);
+begin
+  if not IsRggParam then
+    inherited
+  else if MainVar.RG then
+    DoBigWheelRG(Delta)
+  else
+    inherited;
+end;
+
+procedure TRggMain.DoSmallWheel(Delta: single);
+begin
+  if not IsRggParam then
+    inherited
+  else if MainVar.RG then
+    DoSmallWheelRG(Delta)
+  else
+    inherited;
+end;
+
+procedure TRggMain.DoReadTrimmFile(fn: string);
+begin
+  Logger.Info('in DoReadTrimmFile');
+  if (fn <> '') and FileExists(fn) then
+  begin
+    try
+      try
+        LogFileNameToInfo(fn);
+        FL.LoadFromFile(fn, TEncoding.UTF8);
+        RggData.ReadTrimmFile(FL);
+        Trimm := FTrimm;
+      except
+        Logger.Info('  in exeption handler');
+        InitTrimmData;
+      end;
+    finally
+      FL.Clear;
+    end;
+  end
+  else
+  begin
+    Logger.Info('TrimmFile does not exist');
+    LogFileNameToInfo(fn);
+    Logger.Info('Nothing read.');
+    InitTrimmData;
+  end;
+end;
+
+procedure TRggMain.SaveTrimmFile;
+begin
+  Logger.Info('in SaveTrimmFile');
+  SaveTrimmFileAuto;
+end;
+
+procedure TRggMain.SaveTrimmFileAuto;
+var
+  fp, fn, s: string;
+begin
+  Logger.Info('in SaveTrimmFileAuto');
+  fp := GetTrimmFilePath;
+  fn := MainConst.TrimmFileNameAuto;
+
+  s := fp + fn;
+  if MainVar.IsSandboxed then
+  begin
+    s := FormMain.GetSaveFileName(fp, fn);
+  end;
+
+  if s <> '' then
+  begin
+    Trimm0.SaveTrimmFile(FL);
+    LogFileNameToInfo(s);
+    FL.SaveToFile(s);
+    Logger.Info('TrimmFileAuto saved.');
+  end
+  else
+  begin
+    Logger.Info('Nothing saved.');
+  end;
+end;
+
+procedure TRggMain.UpdateTrimm0;
+begin
+  Logger.Info('in UpdateTrimm0');
+  SaveTrimm(Trimm0);
+  FormMain.UpdateReport;
+end;
+
+function TRggMain.GetIsRggParam: Boolean;
+begin
+  result := True;
+end;
+
+procedure TRggMain.DropTargetDropped(fn: string);
+var
+ ext: string;
+begin
+  Logger.Info('in DropTargetDropped');
+  ext := ExtractFileExt(fn);
+  if ext = '.txt' then
+  begin
+    DoReadTrimmFile(fn);
+  end
+  else
+  begin
+    Logger.Info('  .txt file expected');
+  end;
+end;
+
+procedure TRggMain.DoReport;
+var
+  ML: TStrings;
+begin
+  Inc(ReportCounter);
+  ML := Logger.TL;
+
+  while ML.Count > 24 - 8 do
+    ML.Delete(0);
+
+  ML.Add('Report:');
+  ML.Add('  ReportCounter = ' + IntToStr(ReportCounter));
+  ML.Add('  ColorScheme = ' + IntToStr(MainVar.ColorScheme.Scheme));
+  ML.Add('  Scale = ' + FloatToStr(MainVar.Scale));
+  ML.Add('  Retina = ' + BoolStr[IsRetina]);
+  ML.Add('  Sandboxed = ' + BoolStr[MainVar.IsSandboxed]);
+  ML.Add('  WantOnResize = ' + BoolStr[MainVar.WantOnResize]);
+  ML.Add('  ResizeCounter = ' + IntToStr(ResizeCounter));
+  ML.Add(Format('  ClientSize = (%d, %d)', [MainVar.ClientWidth, MainVar.ClientHeight]));
+  ML.Add('---');
+  ML.Add(Format('  A = %6.2f', [Rigg.Temp1]));
+  ML.Add(Format('  B = %6.2f', [Rigg.Temp2]));
+  ML.Add(Format('  C = %6.2f', [Rigg.Temp3]));
+end;
+
+procedure TRggMain.DoCleanReport;
+begin
+  MainVar.ShowDebugData := True;
+  Logger.TL.Clear;
+  DoReport;
+end;
+
+procedure TRggMain.ShowDebugData;
+begin
+  if not ShowDataText then
+  begin
+    ShowDataText := true;
+    MainVar.ShowDebugData := True;
+  end
+  else
+  begin
+    MainVar.ShowDebugData := not MainVar.ShowDebugData;
+  end;
+end;
+
+procedure TRggMain.LogFileNameToInfo(fn: string);
+var
+  t1: string;
+  t2: string;
+  r: boolean;
+begin
+  t1 := 'C:\Users\';
+  t2 := 'Trimm';
+  r := LogFileNameToInfoFormatted(t1, t2, fn);
+
+  if not r then
+  begin
+    t1 := '/var/mobile/Containers/Data/Application/';
+    t2 := 'Documents/';
+    r := LogFileNameToInfoFormatted(t1, t2, fn);
+  end;
+
+  if not r then
+  begin
+    Logger.Info(fn);
+  end;
+end;
+
+function TRggMain.LogFileNameToInfoFormatted(t1: string; t2: string; fn: string): boolean;
+var
+  p2: Integer;
+begin
+  result := false;
+  if fn.StartsWith(t1) then
+  begin
+    fn := fn.Substring(t1.Length);
+    p2 := fn.LastIndexOf(t2);
+    if p2 > -1 then
+    begin
+      Logger.Info(t1);
+      Logger.Info('  ' + fn.Substring(0, p2));
+      Logger.Info('  ' + fn.Substring(p2));
+      result := True;
+    end;
+  end;
+end;
+
+procedure TRggMain.HandleAction(fa: Integer);
+begin
+  if IsUp then
+  case fa of
+    faUpdateReportText: DoCleanReport;
+    faToggleDebugText: ShowDebugData;
+
+    faParamValueMinus1, faWheelLeft: DoMouseWheel([ssShift], -1);
+    faParamValuePlus1, faWheelRight: DoMouseWheel([ssShift], 1);
+    faParamValuePlus10, faWheelUp: DoMouseWheel([ssCtrl], 1);
+    faParamValueMinus10, faWheelDown: DoMouseWheel([ssCtrl], -1);
+
+    faController: SetParameter(faController);
+    faWinkel: SetParameter(faWinkel);
+    faVorstag: SetParameter(faVorstag);
+    faWante: SetParameter(faWante);
+    faWoben: SetParameter(faWoben);
+    faSalingH: SetParameter(faSalingH);
+    faSalingA: SetParameter(faSalingA);
+    faSalingL: SetParameter(faSalingL);
+    faSalingW: SetParameter(faSalingW);
+    faMastfallF0C: SetParameter(faMastfallF0C);
+    faMastfallF0F: SetParameter(faMastfallF0F);
+    faMastfallVorlauf: SetParameter(faMastfallVorlauf);
+    faBiegung: SetParameter(faBiegung);
+    faMastfussD0X: SetParameter(faMastfussD0X);
+
+    faParamAPW: SetParameter(faParamAPW);
+    faParamEAH: SetParameter(faParamEAH);
+    faParamEAR: SetParameter(faParamEAR);
+    faParamEI: SetParameter(faParamEI);
+
+    faFixpointA0: FixPoint := ooA0;
+    faFixpointA: FixPoint := ooA;
+    faFixpointB0: FixPoint := ooB0;
+    faFixpointB: FixPoint := ooB;
+    faFixpointC0: FixPoint := ooC0;
+    faFixpointC: FixPoint := ooC;
+    faFixpointD0: FixPoint := ooD0;
+    faFixpointD: FixPoint := ooD;
+    faFixpointE0: FixPoint := ooE0;
+    faFixpointE: FixPoint := ooE;
+    faFixpointF0: FixPoint := ooF0;
+    faFixpointF: FixPoint := ooF;
+
+    faSalingTypOhneStarr,
+    faSalingTypOhne,
+    faSalingTypDrehbar,
+    faSalingTypFest: InitSalingTyp(fa);
+
+    faWantRenderH,
+    faWantRenderP,
+    faWantRenderF,
+    faWantRenderE,
+    faWantRenderS: ToggleRenderOption(fa);
+
+    faViewpointS: ViewPoint := vpSeite;
+    faViewpointA: ViewPoint := vpAchtern;
+    faViewpointT: ViewPoint := vpTop;
+    faViewpoint3: ViewPoint := vp3D;
+
+    faDemo: Demo := not Demo;
+
+    faTrimm0: Trimm := 0;
+    faTrimm1: Trimm := 1;
+    faTrimm2: Trimm := 2;
+    faTrimm3: Trimm := 3;
+    faTrimm4: Trimm := 4;
+    faTrimm5: Trimm := 5;
+    faTrimm6: Trimm := 6;
+
+    fa420: Init420;
+    faLogo: InitLogo;
+
+    faUpdateTrimm0: UpdateTrimm0;
+    faCopyAndPaste: CopyAndPaste;
+    faCopyTrimmItem: CopyTrimmItem;
+    faPasteTrimmItem: PasteTrimmItem;
+
+    faReadTrimmFile: ReadTrimmFile;
+    faCopyTrimmFile: CopyTrimmFile;
+    faSaveTrimmFile: SaveTrimmFile;
+
+    faToggleTrimmText: ShowTrimmText := not ShowTrimmText;
+    faToggleDiffText: ShowDiffText := not ShowDiffText;
+    faToggleDataText:
+    begin
+      MainVar.ShowDebugData := False;
+      ShowDataText := not ShowDataText;
+    end;
+
+    faNoop: ;
+    faToggleTouchFrame: FederText.ToggleTouchFrame;
+
+    faActionPageM: CycleToolSet(-1);
+    faActionPageP: CycleToolSet(1);
+    faActionPage1: FederText.ActionPage := 1;
+    faActionPage2: FederText.ActionPage := 2;
+    faActionPage3: FederText.ActionPage := 3;
+    faActionPage4: FederText.ActionPage := 4;
+    faActionPage5: FederText.ActionPage := 5;
+
+    faCycleColorSchemeM: CycleColorSchemeM;
+    faCycleColorSchemeP: CycleColorSchemeP;
+
+    faToggleFontColor: ToggleDarkMode;
+
+    else
+    begin
+      FormMain.HandleAction(fa);
+    end;
+  end;
+
+  if IsUp then
+  begin
+    if (fa in ParamsRange) then
+      FormMain.UpdateItemIndexParams
+    else if (fa in ReportsRange) then
+      FormMain.UpdateItemIndexReports
+    else if (fa in TrimmsRange) then
+      FormMain.UpdateItemIndexTrimms;
+  end;
+end;
+
+function TRggMain.GetChecked(fa: TFederAction): Boolean;
+var
+  F: TFormMain;
+begin
+  F := FormMain;
+  result := false;
+  if not IsUp then
+    Exit;
+
+  case fa of
+    faController: result := Param = fpController;
+    faWinkel: result := Param = fpWinkel;
+    faVorstag: result := Param = fpVorstag;
+    faWante: result := Param = fpWante;
+    faWoben: result := Param = fpWoben;
+    faSalingH: result := Param = fpSalingH;
+    faSalingA: result := Param = fpSalingA;
+    faSalingL: result := Param = fpSalingL;
+    faSalingW: result := Param = fpSalingW;
+    faMastfallF0C: result := Param = fpMastfallF0C;
+    faMastfallF0F: result := Param = fpMastfallF0F;
+    faMastfallVorlauf: result := Param = fpMastfallVorlauf;
+    faBiegung: result := Param = fpBiegung;
+    faMastfussD0X: result := Param = fpD0X;
+
+    faParamAPW: result := Param = fpAPW;
+    faParamEAH: result := Param = fpEAH;
+    faParamEAR: result := Param = fpEAR;
+    faParamEI: result := Param = fpEI;
+
+    faParamT1: result := Param = fpT1;
+    faParamT2: result := Param = fpT2;
+    faPan: result := Action = faPan;
+
+    faFixpointA0: result := FixPoint = ooA0;
+    faFixpointA: result := FixPoint = ooA;
+    faFixpointB0: result := FixPoint = ooB0;
+    faFixpointB: result := FixPoint = ooB;
+    faFixpointC0: result := FixPoint = ooC0;
+    faFixpointC: result := FixPoint = ooC;
+    faFixpointD0: result := FixPoint = ooD0;
+    faFixpointD: result := FixPoint = ooD;
+    faFixpointE0: result := FixPoint = ooE0;
+    faFixpointE: result := FixPoint = ooE;
+    faFixpointF0: result := FixPoint = ooF0;
+    faFixpointF: result := FixPoint = ooF;
+
+    faSalingTypFest: result := Rigg.SalingTyp = stFest;
+    faSalingTypDrehbar: result := Rigg.SalingTyp = stDrehbar;
+    faSalingTypOhne: result := Rigg.SalingTyp = stOhneBiegt;
+    faSalingTypOhneStarr: result := Rigg.SalingTyp = stOhneStarr;
+
+    faTrimm0: result := Trimm = 0;
+    faTrimm1: result := Trimm = 1;
+    faTrimm2: result := Trimm = 2;
+    faTrimm3: result := Trimm = 3;
+    faTrimm4: result := Trimm = 4;
+    faTrimm5: result := Trimm = 5;
+    faTrimm6: result := Trimm = 6;
+    fa420: result := Trimm = 7;
+    faLogo: result := Trimm = 8;
+
+    faRggBogen,
+    faRggKoppel,
+    faWantRenderH,
+    faWantRenderP,
+    faWantRenderF,
+    faWantRenderE,
+    faWantRenderS:
+    begin
+      if StrokeRigg <> nil then
+        result := StrokeRigg.QueryRenderOption(fa)
+      else
+        result := False;
+    end;
+
+    faRggHull: result := HullVisible;
+    faDemo: result := Demo;
+
+    faSofortBtn: result := SofortBerechnen;
+    faGrauBtn: result := BtnGrauDown;
+    faBlauBtn: result := BtnBlauDown;
+    faMemoryBtn: result := False;
+
+    faSuperSimple: result := GraphRadio = gSimple;
+    faSuperNormal: result := GraphRadio = gNormal;
+    faSuperGrau: result := GraphRadio = gGrau;
+    faSuperBlau: result := GraphRadio = gBlau;
+    faSuperMulti: result := GraphRadio = gMulti;
+    faSuperDisplay: result := GraphRadio = gDisplay;
+    faSuperQuick: result := GraphRadio = gQuick;
+
+    faToggleHelp: result := F.HelpText.Visible;
+    faToggleReport: result := F.ReportText.Visible;
+    faToggleButtonReport: result := F.WantButtonReport;
+    faChartRect..faChartReset: result := F.ChartGraph.GetChecked(fa);
+    faReportNone..faReportReadme: result := F.ReportManager.GetChecked(fa);
+
+    faToggleDataText: result := F.ShowDataText;
+    faToggleDiffText: result := F.ShowDiffText;
+    faToggleTrimmText: result := F.ShowTrimmText;
+
+    faToggleFontColor: result := MainVar.ColorScheme.IsDark;
+
+    else
+      result := F.GetChecked(fa);
+  end;
 end;
 
 end.

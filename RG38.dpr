@@ -10,8 +10,6 @@ uses
   FrmConfig in 'App\FrmConfig.pas' {FormConfig},
   FrmTrimmTab in 'App\FrmTrimmTab.pas' {FormTrimmTab},
   RiggVar.App.Main in 'App\RiggVar.App.Main.pas',
-  RiggVar.App.Main0 in 'App\RiggVar.App.Main0.pas',
-  RiggVar.App.Main1 in 'App\RiggVar.App.Main1.pas',
   RggCalc in 'Core\RggCalc.pas',
   RggDoc in 'Core\RggDoc.pas',
   RggFachwerk in 'Core\RggFachwerk.pas',
