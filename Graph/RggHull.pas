@@ -15,18 +15,21 @@ uses
   RggMatrix,
   RggDisplay,
   RggDisplayTypes,
-  RggGraph,
-  RggBootGraph,
-  RggRaumGraph;
+  RggRaumGraph,
+  RggTransformer,
+  RggZug;
 
 type
   TConColors = array [0 .. 15] of TAlphaColor;
 
-  THullGraph0 = class(TRggGraph)
+  THullGraph0 = class
   private
-    procedure MessageBeep(Value: Integer);
-    procedure Transform;
-  protected
+    FColor: TAlphaColor;
+    FColored: Boolean;
+    GrafikOK: Boolean; // loaded with data
+    Updated: Boolean; // transformed
+    KoppelKurveNeedFill: Boolean;
+
     { Vertices }
     vert: TVertArrayF; { Gleitkomma-Koordinaten }
     tvert: TVertArrayI; { Integer-Koordinaten - transformed }
@@ -34,25 +37,35 @@ type
     { Connections }
     con: TConArray;
     ncon: Integer;
-    gr: TConColors;
+
+    {Palette}
+    ColorArray: array of TAlphaColor;
+
+    procedure ReadVerts420;
+    procedure ReadCons420(k, l: Integer);
+    procedure ReadVertices;
+    procedure ReadConnections;
+
+    procedure InitColorArray;
+    function GetColor(i: Integer): TAlphaColor;
 
     function AddVert(x, y, z: single): Integer;
     procedure AddLine(p1, p2: Integer);
     procedure Paint(g: TCanvas);
-  protected
-    {Palette}
-    ColorArray: array of TAlphaColor;
-    procedure InitColorArray;
-    procedure InitColorArray1;
-    procedure InitColorArray2;
-    function GetColor(i: Integer): TAlphaColor;
-  protected
-    procedure ReadVerts420;
-    procedure ReadCons420(k, l: Integer);
-  protected
-    procedure ReadVertices; virtual;
-    procedure ReadConnections; virtual;
+
+    procedure SetColor(const Value: TAlphaColor);
+    procedure SetColored(const Value: Boolean);
+    procedure SetFixPoint(const Value: TRiggPoint);
+    procedure SetZoom(Value: single);
+    function GetFixPoint: TRiggPoint;
+    function GetZoom: single;
+    procedure Transform;
   public
+    RaumGraphData: TRaumGraphData;
+    RaumGraphProps: TRaumGraphProps;
+
+    Transformer: TRggTransformer; // injected, not owned
+
     Factor: TPoint3D;
     ModelFactor: TPoint3D;
 
@@ -60,48 +73,25 @@ type
     destructor Destroy; override;
 
     procedure Load;
-    procedure Update; override;
+    procedure Update;
 
     procedure AddToDisplayList(DL: TRggDisplayList);
-    procedure DrawToCanvas(Canvas: TCanvas); override;
+    procedure DrawToCanvas(Canvas: TCanvas);
+
+    property FixPoint: TRiggPoint read GetFixPoint write SetFixPoint;
+    property Zoom: single read GetZoom write SetZoom;
+    property Coloriert: Boolean read FColored write SetColored;
+    property Color: TAlphaColor read FColor write SetColor;
   end;
-
-  THullGraph1 = class(THullGraph0)
-  protected
-    xmin, xmax, ymin, ymax, zmin, zmax: single;
-    zfac: single;
-    procedure FindBB;
-  public
-    constructor Create;
-  end;
-
-  THullGraph2 = class(THullGraph0)
-  protected
-    procedure ReadCons1;
-    procedure ReadVertices; override;
-    procedure ReadConnections; override;
-  public
-    VertexFileName: string;
-    VertexMemo: TStrings;
-    procedure ReadVertexFromMemo(Memo: TStrings);
-    procedure GetPlotList(ML: TStrings); override;
-  end;
-
-  THullGraph = class(THullGraph0)
-
-  end;
-
-var
-  HullGraph: THullGraph0;
 
 implementation
 
-uses
-  RiggVar.FB.Classes;
-
 constructor THullGraph0.Create;
 begin
-  inherited Create;
+  RaumGraphData := TRaumGraphData.Create;
+  RaumGraphProps := TRaumGraphProps.Create;
+  FColor := claGray;
+  FColored := True;
 
   InitColorArray;
 
@@ -113,7 +103,44 @@ end;
 
 destructor THullGraph0.Destroy;
 begin
-  inherited Destroy;
+  RaumGraphData.Free;
+  RaumGraphProps.Free;
+  inherited;
+end;
+
+procedure THullGraph0.SetColor(const Value: TAlphaColor);
+begin
+  FColor := Value;
+  RaumGraphProps.Color := Value;
+end;
+
+procedure THullGraph0.SetColored(const Value: Boolean);
+begin
+  FColored := Value;
+  RaumGraphProps.Coloriert := FColored;
+end;
+
+procedure THullGraph0.SetFixPoint(const Value: TRiggPoint);
+begin
+  Transformer.FixPoint := Value;
+  Updated := False;
+end;
+
+procedure THullGraph0.SetZoom(Value: single);
+begin
+  Transformer.Zoom := Value;
+  Updated := False;
+  KoppelKurveNeedFill := True;
+end;
+
+function THullGraph0.GetFixPoint: TRiggPoint;
+begin
+  result := Transformer.FixPoint;
+end;
+
+function THullGraph0.GetZoom: single;
+begin
+  result := Transformer.Zoom;
 end;
 
 procedure THullGraph0.Load;
@@ -546,41 +573,7 @@ begin
   end;
 end;
 
-procedure THullGraph0.MessageBeep(Value: Integer);
-begin
-
-end;
-
 procedure THullGraph0.InitColorArray;
-begin
-  InitColorArray2;
-end;
-
-procedure THullGraph0.InitColorArray1;
-var
-  i: Integer;
-  ac: TAlphaColor;
-  bc: TAlphaColor;
-begin
-  ac := claRed;
-  bc := claRed;
-  SetLength(ColorArray, 257);
-  for i := 0 to 256 do
-  begin
-    if i mod 100 = 0 then
-    begin
-      if ac = claRed then
-        ac := claBlue
-      else
-        ac := claRed;
-      bc := ac;
-      TAlphaColorRec(bc).A := 200;
-    end;
-    ColorArray[i] := bc;
-  end;
-end;
-
-procedure THullGraph0.InitColorArray2;
 var
   i: Integer;
   ac: TAlphaColor;
@@ -592,262 +585,6 @@ begin
     TAlphaColorRec(ac).A := 200;
     ColorArray[i] := ac;
   end;
-end;
-
-{ THullGraph2 }
-
-procedure THullGraph2.ReadConnections;
-begin
-//  ReadCons1;
-  ReadCons420(10, 7);
-end;
-
-procedure THullGraph2.ReadVertices;
-var
-  ML: TStringList;
-begin
-  if VertexMemo <> nil then
-    ReadVertexFromMemo(VertexMemo)
-  else if VertexFileName <> '' then
-  begin
-    ML := TStringList.Create;
-    try
-      ML.LoadFromFile(VertexFileName);
-      ReadVertexFromMemo(ML);
-    finally
-      ML.Free;
-    end;
-  end
-  else
-    ReadVerts420;
-end;
-
-procedure THullGraph2.ReadVertexFromMemo(Memo: TStrings);
-var
-  i, Code: Integer;
-  Zeile, Wort: string;
-  a, b, c: Integer;
-
-  { local procedure }
-  procedure GetReal(var RealValue: single);
-  begin
-    Zeile := Trim(Zeile);
-    Wort := TUtils.StripFirstWord(Zeile);
-    if Wort = '' then
-      Wort := Zeile;
-    Val(Wort, RealValue, Code);
-    if Code <> 0 then
-      MessageBeep(0);
-  end;
-
-  { local procedure }
-  procedure GetInteger(out IntValue: Integer);
-  begin
-    Zeile := Trim(Zeile);
-    Wort := TUtils.StripFirstWord(Zeile);
-    if Wort = '' then
-      Wort := Zeile;
-    Val(Wort, IntValue, Code);
-    if Code <> 0 then
-      MessageBeep(0);
-  end;
-
-begin
-  { in Zeile 0 stehen die Faktoren * 100 }
-  for i := 0 to Memo.Count - 1 do
-  begin
-    Zeile := Memo[i];
-    if Zeile = '' then
-      Continue;
-    GetInteger(a);
-    GetInteger(b);
-    GetInteger(c);
-    ModelFactor.X := a / 100;
-    ModelFactor.Y := b / 100;
-    ModelFactor.Z := c / 100;
-    Break;
-  end;
-
-  for i := 1 to Memo.Count - 1 do
-  begin
-    Zeile := Memo[i];
-    if Zeile = '' then
-      Continue;
-    GetInteger(a);
-    GetInteger(b);
-    GetInteger(c);
-    AddVert(a, b, c);
-  end;
-end;
-
-procedure THullGraph2.ReadCons1;
-
-  procedure AddCon7(a1, a2, a3, a4, a5, a6, a7: Integer);
-  begin
-    AddLine(a1 - 1, a2 - 1);
-    AddLine(a2 - 1, a3 - 1);
-    AddLine(a3 - 1, a4 - 1);
-    AddLine(a4 - 1, a5 - 1);
-    AddLine(a5 - 1, a6 - 1);
-    AddLine(a6 - 1, a7 - 1);
-  end;
-  procedure AddCon10(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10: Integer);
-  begin
-    AddLine(a1 - 1, a2 - 1);
-    AddLine(a2 - 1, a3 - 1);
-    AddLine(a3 - 1, a4 - 1);
-    AddLine(a4 - 1, a5 - 1);
-    AddLine(a5 - 1, a6 - 1);
-    AddLine(a6 - 1, a7 - 1);
-    AddLine(a7 - 1, a8 - 1);
-    AddLine(a8 - 1, a9 - 1);
-    AddLine(a9 - 1, a10 - 1);
-  end;
-
-begin
-  AddCon7(1, 2, 3, 4, 5, 6, 7);
-
-  AddCon7(8, 9, 10, 11, 12, 13, 14);
-  AddCon7(14, 15, 16, 17, 18, 19, 20);
-
-  AddCon7(21, 22, 23, 24, 25, 26, 27);
-  AddCon7(27, 28, 29, 30, 31, 32, 33);
-
-  AddCon7(34, 35, 36, 37, 38, 39, 40);
-  AddCon7(40, 41, 42, 43, 44, 45, 46);
-
-  AddCon7(47, 48, 49, 50, 51, 52, 53);
-  AddCon7(53, 54, 55, 56, 57, 58, 59);
-
-  AddCon7(60, 61, 62, 63, 64, 65, 66);
-  AddCon7(66, 67, 68, 69, 70, 71, 72);
-
-  AddCon7(73, 74, 75, 76, 77, 78, 79);
-  AddCon7(79, 80, 81, 82, 83, 84, 85);
-
-  AddCon7(86, 87, 88, 89, 90, 91, 92);
-  AddCon7(92, 93, 94, 95, 96, 97, 98);
-
-  AddCon7(99, 100, 101, 102, 103, 104, 105);
-  AddCon7(105, 106, 107, 108, 109, 110, 111);
-
-  AddCon7(112, 113, 114, 115, 116, 117, 118);
-  AddCon7(118, 119, 120, 121, 122, 123, 124);
-
-  AddCon10(1, 8, 21, 34, 47, 60, 73, 86, 99, 112);
-  AddCon10(2, 9, 22, 35, 48, 61, 74, 87, 100, 113);
-  AddCon10(3, 10, 23, 36, 49, 62, 75, 88, 101, 114);
-  AddCon10(4, 11, 24, 37, 50, 63, 76, 89, 102, 115);
-  AddCon10(5, 12, 25, 38, 51, 64, 77, 90, 103, 116);
-  AddCon10(6, 13, 26, 39, 52, 65, 78, 91, 104, 117);
-  AddCon10(7, 14, 27, 40, 53, 66, 79, 92, 105, 118);
-  AddCon10(6, 15, 28, 41, 54, 67, 80, 93, 106, 119);
-  AddCon10(5, 16, 29, 42, 55, 68, 81, 94, 107, 120);
-  AddCon10(4, 17, 30, 43, 56, 69, 82, 95, 108, 121);
-  AddCon10(3, 18, 31, 44, 57, 70, 83, 96, 109, 122);
-  AddCon10(2, 19, 32, 45, 58, 71, 84, 97, 110, 123);
-  AddCon10(1, 20, 33, 46, 59, 72, 85, 98, 111, 124);
-end;
-
-procedure THullGraph2.GetPlotList(ML: TStrings);
-var
-  i, t, p1, p2: Integer;
-  c: TConArray;
-  v: TVertArrayI;
-  s: string;
-  SavedZoom: single;
-begin
-  if (ncon <= 0) or (nvert <= 0) then
-    Exit;
-  if not GrafikOK then
-    Exit;
-  SavedZoom := Zoom;
-  Zoom := 10;
-  if not Updated then
-    Update;
-  ML.add('SP 1;');
-  c := con;
-  v := tvert;
-  for i := 0 to ncon - 1 do
-  begin
-    { Indizes in das Vertice-array bestimmen }
-    t := c[i]; //T  wie Temp
-    p1 := ((t shr 16) and $FFFF) * 3; // Index Punkt1
-    p2 := (t and $FFFF) * 3; // Index Punkt2
-    // g.MoveTo(v[p1], -v[p1 + 2]);
-    S := Format('PU %d %d;', [v[p1], -v[p1 + 2]]);
-    ML.Add(S);
-    // g.LineTo(v[p2], -v[p2 + 2]);
-    s := Format('PD %d %d;', [ v[p2], -v[p2 + 2] ]);
-    ML.Add(s);
-  end;
-  Zoom := SavedZoom;
-end;
-
-{ THullGraph1 }
-
-constructor THullGraph1.Create;
-var
-  xw, yw, zw: single;
-begin
-  inherited;
-  FindBB();
-  xw := xmax - xmin;
-  yw := ymax - ymin;
-  zw := zmax - zmin;
-  zfac := xw;
-  if (yw > xw) then
-    zfac := yw;
-  if (zw > xw) then
-    zfac := zw;
-end;
-
-procedure THullGraph1.FindBB;
-var
-  v: TVertArrayF;
-  lxmin, lymin, lzmin, lxmax, lymax, lzmax: single;
-  x, y, z: single;
-  i, j: Integer;
-begin
-  { Find the bounding box of this model }
-
-  if (nvert <= 0) then
-    Exit;
-
-  v := vert;
-  lxmin := v[0];
-  lxmax := lxmin;
-  lymin := v[1];
-  lymax := lymin;
-  lzmin := v[2];
-  lzmax := lzmin;
-  for j := nvert downto 0 do
-  begin
-    i := j * 3;
-    x := v[i];
-    if (x < lxmin) then
-      lxmin := x;
-    if (x > lxmax) then
-      lxmax := x;
-
-    y := v[i + 1];
-    if (y < lymin) then
-      lymin := y;
-    if (y > lymax) then
-      lymax := y;
-
-    z := v[i + 2];
-    if (z < lzmin) then
-      lzmin := z;
-    if (z > lzmax) then
-      lzmax := z;
-  end;
-  xmax := lxmax;
-  xmin := lxmin;
-  ymax := lymax;
-  ymin := lymin;
-  zmax := lzmax;
-  zmin := lzmin;
 end;
 
 end.

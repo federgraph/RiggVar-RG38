@@ -19,7 +19,6 @@ uses
   RggTypes,
   RggMatrix,
   RggRaumGraph,
-  RggGraph,
   RggHull,
   RggPolarKar,
   RggTransformer;

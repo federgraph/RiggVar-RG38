@@ -73,8 +73,6 @@ uses
   RggDisplay in 'Graph\RggDisplay.pas',
   RggDisplayOrder in 'Graph\RggDisplayOrder.pas',
   RggDisplayTypes in 'Graph\RggDisplayTypes.pas',
-  RggBootGraph in 'Graph\RggBootGraph.pas',
-  RggGraph in 'Graph\RggGraph.pas',
   RggHull in 'Graph\RggHull.pas',
   RggMatrix in 'Graph\RggMatrix.pas',
   RggPolarKar in 'Graph\RggPolarKar.pas',

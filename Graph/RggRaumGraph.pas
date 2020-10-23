@@ -3,6 +3,7 @@
 interface
 
 uses
+  System.IniFiles,
   System.Types,
   System.SysUtils,
   System.Classes,
@@ -10,18 +11,26 @@ uses
   System.UIConsts,
   System.Math.Vectors,
   FMX.Graphics,
+  RiggVar.FB.ActionConst,
   RiggVar.RG.Graph,
+  RiggVar.RG.Def,
   RggCalc,
   RggTypes,
   RggDisplayTypes,
   RggDisplay,
   RggDisplayOrder,
   RggZug,
-  RggBootGraph;
+  RggTransformer;
 
 type
-  TRaumGraph = class(TBootGraph)
-  protected
+  TRaumGraph = class
+  private
+    FColor: TAlphaColor;
+    FColored: Boolean;
+    GrafikOK: Boolean; // loaded with data
+    Updated: Boolean; // transformed
+    KoppelKurveNeedFill: Boolean;
+
     { original definition of Achsen }
     AchseN: TPoint3D;
     AchseX: TPoint3D;
@@ -38,15 +47,45 @@ type
     A0, B0, C0, D0, E0, F0, P0: TPoint3D;
     A,  B,  C,  D,  E,  F,  P:  TPoint3D;
     M, N: TPoint3D;
-  protected
     Zug3D: TZug3DBase; // injected via constructor
-  private
+
+    FSalingTyp: TSalingTyp;
+    FControllerTyp: TControllerTyp;
+    FKoppelKurve: TKoordLine;
+    FKoppel: Boolean;
+    FBogen: Boolean;
+    FGestrichelt: Boolean;
+    FViewPoint: TViewPoint;
+    FRiggLED: Boolean;
+
+    BogenIndexD: Integer;
+    function FindBogenIndexOf(P: TPoint3D): Integer;
+    function GetFreshRiggPoints: TRiggPoints;
+
+    procedure SetKoppel(const Value: Boolean);
+    procedure SetKoordinaten(const Value: TRiggPoints);
+    procedure SetSalingTyp(const Value: TSalingTyp);
+    procedure SetControllerTyp(const Value: TControllerTyp);
+    procedure SetViewPoint(const Value: TViewPoint);
+    procedure SetWanteGestrichelt(const Value: Boolean);
+    procedure SetBogen(const Value: Boolean);
+    procedure SetRiggLED(const Value: Boolean);
+
     function GetFixPunkt: TPoint3D;
     function GetStrokeWidthS: single;
-  protected
     procedure UpdateZugProps;
     procedure Update2;
+
+    procedure SetColor(const Value: TAlphaColor);
+    procedure SetColored(const Value: Boolean);
+    procedure SetFixPoint(const Value: TRiggPoint);
+    procedure SetZoom(Value: single);
+    function GetFixPoint: TRiggPoint;
+    function GetZoom: single;
   public
+    rP: TRiggPoints;
+    Kurve: TMastKurve;
+
     DF: TRggFrame;
     DL: TRggDisplayList;
     PD: TPathData;
@@ -66,31 +105,60 @@ type
     WantRenderP: Boolean;
     WantRenderS: Boolean;
 
+    RaumGraphData: TRaumGraphData;
+    RaumGraphProps: TRaumGraphProps;
+
+    Transformer: TRggTransformer; // injected, not owned
+
     constructor Create(AZug3D: TZug3DBase);
     destructor Destroy; override;
 
-    procedure Update; override;
+    procedure LoadFromIniFile(FileName: string);
+
+    procedure SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
+    procedure SetMastKurve(const Value: TMastKurve);
+    procedure SetKoppelKurve(const Value: TKoordLine);
+    function GetMastKurvePoint(const Index: Integer): TPoint3D;
+
+    procedure Update;
     procedure UpdateDisplayList;
-    procedure DrawToCanvas(g: TCanvas); override;
+    procedure DrawToCanvas(g: TCanvas);
 
     procedure SetChecked(fa: Integer; Value: Boolean);
     function GetChecked(fa: Integer): Boolean;
-    procedure GetPlotList(ML: TStrings); override;
+    procedure GetPlotList(ML: TStrings);
     property FixPunkt: TPoint3D read GetFixPunkt;
+
+    property Koordinaten: TRiggPoints read rP write SetKoordinaten;
+    property KoppelKurve: TKoordLine read FKoppelKurve write SetKoppelKurve;
+    property Koppel: Boolean read FKoppel write SetKoppel;
+    property ControllerTyp: TControllerTyp read FControllerTyp write SetControllerTyp;
+    property SalingTyp: TSalingTyp read FSalingTyp write SetSalingTyp;
+    property ViewPoint: TViewPoint read FViewPoint write SetViewPoint;
+    property Bogen: Boolean read FBogen write SetBogen;
+    property WanteGestrichelt: Boolean read FGestrichelt write SetWanteGestrichelt;
+    property RiggLED: Boolean read FRiggLED write SetRiggLED;
 
     property WantRenderH: Boolean read WantRumpf write WantRumpf;
     property StrokeWidthS: single read GetStrokeWidthS;
+
+    property FixPoint: TRiggPoint read GetFixPoint write SetFixPoint;
+    property Zoom: single read GetZoom write SetZoom;
+    property Coloriert: Boolean read FColored write SetColored;
+    property Color: TAlphaColor read FColor write SetColor;
   end;
 
 implementation
 
-uses
-  RiggVar.FB.ActionConst,
-  RiggVar.RG.Def;
-
 constructor TRaumGraph.Create(AZug3D: TZug3DBase);
 begin
-  inherited Create;
+  FSalingTyp := stFest;
+  FControllerTyp := ctOhne;
+
+  RaumGraphData := TRaumGraphData.Create;
+  RaumGraphProps := TRaumGraphProps.Create;
+  FColor := claGray;
+  FColored := True;
 
   WantFixPunkt := True;
   WantRumpf := True;
@@ -137,7 +205,232 @@ begin
   DL.Free;
   PD.Free;
   DF.Free;
+  RaumGraphData.Free;
+  RaumGraphProps.Free;
   inherited;
+end;
+
+procedure TRaumGraph.SetColor(const Value: TAlphaColor);
+begin
+  FColor := Value;
+  RaumGraphProps.Color := Value;
+end;
+
+procedure TRaumGraph.SetColored(const Value: Boolean);
+begin
+  FColored := Value;
+  RaumGraphProps.Coloriert := FColored;
+end;
+
+procedure TRaumGraph.SetFixPoint(const Value: TRiggPoint);
+begin
+  Transformer.FixPoint := Value;
+  Updated := False;
+end;
+
+procedure TRaumGraph.SetZoom(Value: single);
+begin
+  Transformer.Zoom := Value;
+  Updated := False;
+  KoppelKurveNeedFill := True;
+end;
+
+function TRaumGraph.GetFixPoint: TRiggPoint;
+begin
+  result := Transformer.FixPoint;
+end;
+
+function TRaumGraph.GetZoom: single;
+begin
+  result := Transformer.Zoom;
+end;
+
+procedure TRaumGraph.SetKoordinaten(const Value: TRiggPoints);
+begin
+  rP := Value;
+  GrafikOK := True;
+  Updated := False;
+end;
+
+procedure TRaumGraph.SetKoppel(const Value: Boolean);
+begin
+  FKoppel := Value;
+  RaumGraphProps.Koppel := True;
+end;
+
+procedure TRaumGraph.SetKoppelKurve(const Value: TKoordLine);
+begin
+  FKoppelKurve := Value;
+  KoppelKurveNeedFill := True;
+end;
+
+procedure TRaumGraph.SetControllerTyp(const Value: TControllerTyp);
+begin
+  FControllerTyp := Value;
+  RaumGraphProps.ControllerTyp := Value;
+end;
+
+procedure TRaumGraph.SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
+var
+  temp1, temp2, temp3, temp4, tempL: single;
+  j, k: Integer;
+begin
+  temp1 := cos(pi / 2 - Beta);
+  temp2 := cos(beta);
+  temp3 := sin(pi / 2 - Beta);
+  temp4 := sin(beta);
+  for j := 0 to BogenMax do
+  begin
+    k := Round(100 / BogenMax * j);
+    tempL := j * L / BogenMax;
+    Kurve[j].X := rP.D0.X - tempL * temp1 + Value[k] * temp2;
+    Kurve[j].Y := 0;
+    Kurve[j].Z := rP.D0.Z + tempL * temp3 + Value[k] * temp4;
+  end;
+end;
+
+procedure TRaumGraph.SetRiggLED(const Value: Boolean);
+begin
+  FRiggLED := Value;
+end;
+
+procedure TRaumGraph.SetMastKurve(const Value: TMastKurve);
+begin
+  Kurve := Value;
+end;
+
+procedure TRaumGraph.SetSalingTyp(const Value: TSalingTyp);
+begin
+  FSalingTyp := Value;
+  RaumGraphProps.SalingTyp := Value;
+end;
+
+procedure TRaumGraph.SetBogen(const Value: Boolean);
+begin
+  FBogen := Value;
+  RaumGraphProps.Bogen := Value;
+  Updated := False;
+end;
+
+procedure TRaumGraph.SetViewPoint(const Value: TViewPoint);
+begin
+  FViewPoint := Value;
+  Updated := False;
+end;
+
+procedure TRaumGraph.SetWanteGestrichelt(const Value: Boolean);
+begin
+  FGestrichelt := Value;
+  RaumGraphProps.Gestrichelt := Value;
+end;
+
+function TRaumGraph.GetMastKurvePoint(const Index: Integer): TPoint3D;
+begin
+  if (Index >= 0) and (Index < Length(Kurve)) then
+    result := Kurve[Index]
+  else
+  begin
+    result := TPoint3D.Zero;
+  end;
+end;
+
+function TRaumGraph.FindBogenIndexOf(P: TPoint3D): Integer;
+var
+  i, j: Integer;
+  MinIndex: Integer;
+  MinAbstand: single;
+  a: single;
+begin
+  j := Length(Kurve);
+  MinIndex := j div 2;
+  MinAbstand := 1000;
+  for i := 0 to j - 1 do
+  begin
+    a := (P - Kurve[i]).Length;
+    if a < MinAbstand then
+    begin
+      MinAbstand := a;
+      MinIndex := i;
+    end;
+  end;
+  result := MinIndex;
+end;
+
+function TRaumGraph.GetFreshRiggPoints: TRiggPoints;
+var
+  i: TRiggPoint;
+begin
+  for i := Low(TRiggPoint) to High(TRiggPoint) do
+  begin
+    result.V[i] := TPoint3D.Zero;
+  end;
+end;
+
+procedure TRaumGraph.LoadFromIniFile(FileName: string);
+var
+  IniFile: TIniFile;
+  S: string;
+  i: TRiggPoint;
+  iP: TRiggPoints;
+begin
+  iP := GetFreshRiggPoints;
+  IniFile := TIniFile.Create(FileName);
+  S := 'Koordinaten Rumpf';
+  try
+    with IniFile do
+    begin
+      iP.A0.X := ReadInteger(S, 'A0x', Round(iP.A0.X));
+      iP.A0.Y := ReadInteger(S, 'A0y', Round(iP.A0.Y));
+      iP.A0.Z := ReadInteger(S, 'A0z', Round(iP.A0.Z));
+      iP.B0.X := ReadInteger(S, 'B0x', Round(iP.B0.X));
+      iP.B0.Y := ReadInteger(S, 'B0y', Round(iP.B0.Y));
+      iP.B0.Z := ReadInteger(S, 'B0z', Round(iP.B0.Z));
+      iP.C0.X := ReadInteger(S, 'C0x', Round(iP.C0.X));
+      iP.C0.Y := ReadInteger(S, 'C0y', Round(iP.C0.Y));
+      iP.C0.Z := ReadInteger(S, 'C0z', Round(iP.C0.Z));
+      iP.D0.X := ReadInteger(S, 'D0x', Round(iP.D0.X));
+      iP.D0.Y := ReadInteger(S, 'D0y', Round(iP.D0.Y));
+      iP.D0.Z := ReadInteger(S, 'D0z', Round(iP.D0.Z));
+      iP.E0.X := ReadInteger(S, 'E0x', Round(iP.E0.X));
+      iP.E0.Y := ReadInteger(S, 'E0y', Round(iP.E0.Y));
+      iP.E0.Z := ReadInteger(S, 'E0z', Round(iP.E0.Z));
+      iP.F0.X := ReadInteger(S, 'F0x', Round(iP.F0.X));
+      iP.F0.Y := ReadInteger(S, 'F0y', Round(iP.F0.Y));
+      iP.F0.Z := ReadInteger(S, 'F0z', Round(iP.F0.Z));
+
+      S := 'Koordinaten Rigg';
+      iP.A.X := ReadInteger(S, 'Ax', Round(iP.A.X));
+      iP.A.Y := ReadInteger(S, 'Ay', Round(iP.A.Y));
+      iP.A.Z := ReadInteger(S, 'Az', Round(iP.A.Z));
+      iP.B.X := ReadInteger(S, 'Bx', Round(iP.B.X));
+      iP.B.Y := ReadInteger(S, 'By', Round(iP.B.Y));
+      iP.B.Z := ReadInteger(S, 'Bz', Round(iP.B.Z));
+      iP.C.X := ReadInteger(S, 'Cx', Round(iP.C.X));
+      iP.C.Y := ReadInteger(S, 'Cy', Round(iP.C.Y));
+      iP.C.Z := ReadInteger(S, 'Cz', Round(iP.C.Z));
+      iP.D.X := ReadInteger(S, 'Dx', Round(iP.D.X));
+      iP.D.Y := ReadInteger(S, 'Dy', Round(iP.D.Y));
+      iP.D.Z := ReadInteger(S, 'Dz', Round(iP.D.Z));
+      iP.E.X := ReadInteger(S, 'Ex', Round(iP.E.X));
+      iP.E.Y := ReadInteger(S, 'Ey', Round(iP.E.Y));
+      iP.E.Z := ReadInteger(S, 'Ez', Round(iP.E.Z));
+      iP.F.X := ReadInteger(S, 'Fx', Round(iP.F.X));
+      iP.F.Y := ReadInteger(S, 'Fy', Round(iP.F.Y));
+      iP.F.Z := ReadInteger(S, 'Fz', Round(iP.F.Z));
+    end;
+    for i := ooA0 to ooF0 do
+    begin
+      rP.V[i] := iP.V[i];
+    end;
+    for i := ooA to ooF do
+    begin
+      rP.V[i] := iP.V[i];
+    end;
+    GrafikOK := True;
+    Updated := False;
+  finally
+    IniFile.Free;
+  end;
 end;
 
 procedure TRaumGraph.Update;
