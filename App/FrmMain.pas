@@ -78,7 +78,6 @@ type
     procedure HandleShowHint(Sender: TObject);
     procedure Flash(s: string);
     procedure Reset;
-    procedure InitRiggAndMain;
     procedure ShowZOrder;
     procedure ShowHelp;
   protected
@@ -285,18 +284,6 @@ begin
     Main.Logger.Info(E.Message);
 end;
 
-procedure TFormMain.InitRiggAndMain;
-begin
-  Rigg := TRigg.Create;
-  Rigg.ControllerTyp := ctOhne;
-
-  Main := TMain.Create(Rigg);
-  Main.Logger.Verbose := True;
-
-  Main.InitText;
-  Main.IsUp := True;
-end;
-
 procedure TFormMain.FormCreate(Sender: TObject);
 begin
 {$ifdef Debug}
@@ -334,7 +321,12 @@ begin
   SetupListbox(ParamListbox);
   SetupListbox(ReportListbox);
 
-  InitRiggAndMain;
+  Rigg := TRigg.Create;
+  Rigg.ControllerTyp := ctOhne;
+
+  Main := TMain.Create(Rigg);
+  Main.Logger.Verbose := True;
+  Main.IsUp := True;
 
   RotaForm := TRotaForm.Create;
   RotaForm.Image := Image;

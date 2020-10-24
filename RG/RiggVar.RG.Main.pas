@@ -211,8 +211,6 @@ type
     ActionTest: TActionTest;
     FederBinding: TFederBinding;
 
-    IsRetina: Boolean;
-
     ReportCounter: Integer;
     ResizeCounter: Integer;
 
@@ -240,7 +238,6 @@ type
     procedure UpdateGetriebe;
     procedure UpdateGraph;
 
-    procedure Init;
     procedure UpdateStrokeRigg;
 
     procedure InitDefaultData;
@@ -405,20 +402,14 @@ constructor TRggMain.Create(ARigg: TRigg);
 begin
   inherited Create;
   Rigg := ARigg;
+  FactArray := Rigg.GSB;
+  Rigg.ControllerTyp := ctOhne;
 
   Main := self;
   MainVar.RG := True;
 
-  RggTrackbar := TFederTrackbar.Create;
-
-  FactArray := Rigg.GSB;
-  Rigg.ControllerTyp := ctOhne;
-  InitialFixPoint := ooD;
-
-  Init;
-
-  FL := TStringList.Create;
-  Logger := TLogger.Create;
+  { this should not be necessary, beause it will be injected in a moment }
+  StrokeRigg := TDummyStrokeRigg.Create(Rigg);
 
   FDemo := False;
   FParam := fpVorstag;
@@ -429,11 +420,20 @@ begin
   FBtnBlauDown := False;
   FBogen := True;
   FKoppel := False;
-
   FGraphRadio := gSimple;
+
+  InitialFixPoint := ooD;
+
+  FL := TStringList.Create;
+  Logger := TLogger.Create;
 
   RggData := TRggData.Create;
   RggData.Name := 'fd';
+
+  RggTrackbar := TFederTrackbar.Create;
+  RggTrackbar.OnChange := TrackBarChange;
+
+  InitFactArray;
 
   Trimm0 := TRggData.Create;
   Trimm0.Name := 'T0';
@@ -450,8 +450,6 @@ begin
   Trimm6 := TRggData.Create;
 
   InitTrimmData;
-
-  IsRetina := MainVar.Scale > 1;
 
   ActionGroupList := TActionGroupList.Create;
   ActionTest := TActionTest.Create;
@@ -471,6 +469,8 @@ begin
 
   ActionHandler := TFederActionHandler.Create;
   ActionHelper := TActionHelper.Create(ActionHandler);
+
+  InitText;
 end;
 
 destructor TRggMain.Destroy;
@@ -509,45 +509,32 @@ begin
   inherited;
 end;
 
-procedure TRggMain.Init;
-begin
-  if not Assigned(RggTrackbar) then
-    Exit;
-
-  RggTrackbar.OnChange := TrackBarChange;
-
-  InitFactArray;
-end;
-
 procedure TRggMain.UpdateStrokeRigg;
 begin
-  if StrokeRigg <> nil then
-  begin
-    StrokeRigg.SalingTyp := Rigg.SalingTyp;
-    StrokeRigg.ControllerTyp := Rigg.ControllerTyp;
-    StrokeRigg.SofortBerechnen := SofortBerechnen;
-    StrokeRigg.GrauZeichnen := GrauZeichnen;
-    StrokeRigg.BtnGrauDown := BtnGrauDown;
-    StrokeRigg.BtnBlauDown := BtnBlauDown;
-    StrokeRigg.RiggLED := RiggLED;
+  StrokeRigg.SalingTyp := Rigg.SalingTyp;
+  StrokeRigg.ControllerTyp := Rigg.ControllerTyp;
+  StrokeRigg.SofortBerechnen := SofortBerechnen;
+  StrokeRigg.GrauZeichnen := GrauZeichnen;
+  StrokeRigg.BtnGrauDown := BtnGrauDown;
+  StrokeRigg.BtnBlauDown := BtnBlauDown;
+  StrokeRigg.RiggLED := RiggLED;
 
-    if Rigg.SalingTyp > stDrehbar then
-      StrokeRigg.Koppel := False
-    else
-      StrokeRigg.Koppel := Koppel;
+  if Rigg.SalingTyp > stDrehbar then
+    StrokeRigg.Koppel := False
+  else
+    StrokeRigg.Koppel := Koppel;
 
-    StrokeRigg.Bogen := Bogen;
-    // if (FParam <> fpWinkel) then StrokeRigg.Bogen := False;
+  StrokeRigg.Bogen := Bogen;
+  // if (FParam <> fpWinkel) then StrokeRigg.Bogen := False;
 
-    StrokeRigg.WanteGestrichelt := not Rigg.GetriebeOK;
+  StrokeRigg.WanteGestrichelt := not Rigg.GetriebeOK;
 
-    StrokeRigg.Koordinaten := Rigg.rP;
-    StrokeRigg.KoordinatenE := Rigg.rPe;
-    StrokeRigg.SetKoppelKurve(Rigg.KoppelKurve);
-    StrokeRigg.SetMastLineData(Rigg.MastLinie, Rigg.lc, Rigg.beta);
+  StrokeRigg.Koordinaten := Rigg.rP;
+  StrokeRigg.KoordinatenE := Rigg.rPe;
+  StrokeRigg.SetKoppelKurve(Rigg.KoppelKurve);
+  StrokeRigg.SetMastLineData(Rigg.MastLinie, Rigg.lc, Rigg.beta);
 
-    StrokeRigg.DoOnUpdateStrokeRigg;
-  end;
+  StrokeRigg.DoOnUpdateStrokeRigg;
 end;
 
 procedure TRggMain.SetParameter(fa: TFederAction);
@@ -632,21 +619,19 @@ end;
 procedure TRggMain.SetViewPoint(const Value: TViewPoint);
 begin
   FViewPoint := Value;
-  if StrokeRigg <> nil then
-    StrokeRigg.ViewPoint := Value;
+  StrokeRigg.ViewPoint := Value;
 end;
 
 procedure TRggMain.SetFixPoint(const Value: TRiggPoint);
 begin
   FFixPoint := Value;
   FixPunkt := Rigg.rP.V[Value];
-  if StrokeRigg <> nil then
-    StrokeRigg.FixPoint := Value;
+  StrokeRigg.FixPoint := Value;
 end;
 
 procedure TRggMain.SetHullVisible(const Value: Boolean);
 begin
-  if (Value <> FHullVisible) and (StrokeRigg <> nil) then
+  if Value <> FHullVisible then
   begin
     FHullVisible := Value;
     StrokeRigg.HullVisible := Value;
@@ -853,7 +838,7 @@ var
   sb: TRggSB;
 begin
   sb := FactArray.Find(idx);
-  if Assigned(sb) then
+  if sb <> nil then
   begin
     if Value = CurrentValue then
       { do nothing }
@@ -875,13 +860,9 @@ end;
 
 function TRggMain.GetHullVisible: Boolean;
 begin
-  result := FHullVisible;
-  if StrokeRigg <> nil then
-  begin
-    result := StrokeRigg.QueryRenderOption(faRggHull);
-    if result <> FHullVisible then
-      FHullVisible := result;
-  end;
+  result := StrokeRigg.QueryRenderOption(faRggHull);
+  if result <> FHullVisible then
+    FHullVisible := result;
 end;
 
 function TRggMain.GetMastfall: string;
@@ -931,6 +912,7 @@ begin
   FAction := faNoop;
   if Demo then
   begin
+    Rigg.SetDefaultDocument;
     InitFactArray;
     ChangeRigg(FactArray.Find(FParam).Ist); // Istwert zurücksetzen
     Rigg.RealGlied[fpVorstag] := FactArray.Vorstag.Ist;
@@ -952,10 +934,7 @@ begin
   else
     Rigg.ControllerTyp := ctOhne;
 
-  if Assigned(StrokeRigg) then
-  begin
-    StrokeRigg.ControllerTyp := Rigg.ControllerTyp;
-  end;
+  StrokeRigg.ControllerTyp := Rigg.ControllerTyp;
 
   Rigg.ManipulatorMode := (Value = fpWinkel);
   FParam := Value;
@@ -1404,11 +1383,9 @@ end;
 procedure TRggMain.DoAfterInitDefault(ATrimmSlot: Integer);
 begin
   Rigg.ControllerTyp := TControllerTyp.ctOhne;
-  InitFactArray();
-  if StrokeRigg <> nil then
-    StrokeRigg.SalingTyp := Rigg.SalingTyp;
+  InitFactArray;
+  StrokeRigg.SalingTyp := Rigg.SalingTyp;
   SetParam(FParam);
-//  FixPoint := ooD;
 
   case ATrimmSlot of
     7:
@@ -1435,8 +1412,7 @@ begin
     faSalingTypOhne: Rigg.SalingTyp := stOhneBiegt;
     faSalingTypOhneStarr: Rigg.SalingTyp := stOhneStarr;
   end;
-  if StrokeRigg <> nil then
-    StrokeRigg.SalingTyp := Rigg.SalingTyp;
+  StrokeRigg.SalingTyp := Rigg.SalingTyp;
   SetParam(FParam);
 end;
 
@@ -1576,19 +1552,15 @@ end;
 
 procedure TRggMain.Draw;
 begin
-  if StrokeRigg <> nil then
-  begin
-    UpdateStrokeRigg;
-    StrokeRigg.Draw;
-  end;
+  UpdateStrokeRigg;
+  StrokeRigg.Draw;
   UpdateFactArrayFromRigg;
   UpdateText;
 end;
 
 procedure TRggMain.ToggleRenderOption(fa: TFederAction);
 begin
-  if StrokeRigg <> nil then
-    StrokeRigg.ToggleRenderOption(fa);
+  StrokeRigg.ToggleRenderOption(fa);
   Draw;
 end;
 
@@ -2167,13 +2139,12 @@ end;
 
 procedure TRggMain.UpdateText;
 begin
-  if FederText <> nil then
-    FederText.UpdateText;
+  FederText.UpdateText;
 end;
 
 procedure TRggMain.UpdateTouch;
 begin
-  if Assigned(FederText) and FederText.InitOK then
+  if FederText.InitOK then
   begin
     MainVar.ClientWidth := FormMain.ClientWidth;
     MainVar.ClientHeight := FormMain.ClientHeight;
@@ -2761,7 +2732,6 @@ begin
   ML.Add('  ReportCounter = ' + IntToStr(ReportCounter));
   ML.Add('  ColorScheme = ' + IntToStr(MainVar.ColorScheme.Scheme));
   ML.Add('  Scale = ' + FloatToStr(MainVar.Scale));
-  ML.Add('  Retina = ' + BoolStr[IsRetina]);
   ML.Add('  Sandboxed = ' + BoolStr[MainVar.IsSandboxed]);
   ML.Add('  WantOnResize = ' + BoolStr[MainVar.WantOnResize]);
   ML.Add('  ResizeCounter = ' + IntToStr(ResizeCounter));
@@ -3026,13 +2996,7 @@ begin
     faWantRenderP,
     faWantRenderF,
     faWantRenderE,
-    faWantRenderS:
-    begin
-      if StrokeRigg <> nil then
-        result := StrokeRigg.QueryRenderOption(fa)
-      else
-        result := False;
-    end;
+    faWantRenderS: result := StrokeRigg.QueryRenderOption(fa);
 
     faRggHull: result := HullVisible;
     faDemo: result := Demo;

@@ -50,7 +50,6 @@ type
     KoppelBtn: TSpeedButton;
 
     MatrixBtn: TSpeedButton;
-    ChartImageBtn: TSpeedButton;
     SalingImageBtn: TSpeedButton;
     ControllerImageBtn: TSpeedButton;
   private
@@ -103,7 +102,6 @@ begin
     faRggBogen: FormMain.BogenBtnClick(Sender);
     faRggKoppel: FormMain.KoppelBtnClick(Sender);
 
-    faToggleChartGraph: FormMain.ChartImageBtnClick(Sender);
     faToggleSalingGraph: FormMain.SalingImageBtnClick(Sender);
     faToggleControllerGraph: FormMain.ControllerImageBtnClick(Sender);
     faToggleMatrixText: FormMain.RotaForm.MatrixItemClick(Sender);
@@ -152,7 +150,6 @@ begin
   BogenBtn.IsPressed := Main.GetChecked(faRggBogen);
   KoppelBtn.IsPressed := Main.GetChecked(faRggKoppel);
 
-  ChartImageBtn.IsPressed := FormMain.ChartImage.IsVisible;
   SalingImageBtn.IsPressed := FormMain.SalingImage.IsVisible;
   ControllerImageBtn.IsPressed := FormMain.ControllerImage.IsVisible;
   MatrixBtn.IsPressed := FormMain.RotaForm.MatrixItemChecked;
@@ -321,12 +318,6 @@ begin
   { Image Elements, and Matrix Text }
 
   BtnColorValue := clvImage;
-
-  sb := AddSpeedBtn('ChartImageBtn', BtnGroupSpace);
-  ChartImageBtn := sb;
-  sb.StaysPressed := True;
-  sb.Tag := faToggleChartGraph;
-  InitSpeedButton(sb);
 
   sb := AddSpeedBtn('SalingImageBtn', 0);
   SalingImageBtn := sb;

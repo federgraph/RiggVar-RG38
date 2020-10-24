@@ -61,7 +61,7 @@ type
     procedure RotaSeite;
     procedure RotaAchtern;
     procedure RotaTop;
-    procedure RotaHelper(aRotX, aRotY, aRotZ, aOffsetY, aRelativeZoom: single);
+    procedure RotaHelper(aRotX, aRotY, aRotZ, aRelativeZoom: single);
 
     procedure SetFixpoint(const Value: TRiggPoint);
     procedure SetViewpoint(const Value: TViewpoint);
@@ -89,7 +89,6 @@ type
     TH: TTransformHelper;
     DL: TRggDrawings;
     RD: TRggDrawingD00;
-    CurrentDrawing: TRggDrawing;
     CurrentElement: TRggElement;
     DrawCounter: Integer;
 
@@ -239,8 +238,8 @@ procedure TRotaForm2.SetDarkMode(const Value: Boolean);
 begin
   FDarkMode := Value;
   DL.UseDarkColorScheme := Value;
-  CurrentDrawing.UseDarkColorScheme := Value;
-  CurrentDrawing.Colors.BackgroundColor := FBackgroundColor;
+  RD.UseDarkColorScheme := Value;
+  RD.Colors.BackgroundColor := FBackgroundColor;
   Draw;
 end;
 
@@ -359,8 +358,7 @@ begin
   TH := TTransformHelper.Create;
   TH.OnDrawToCanvas := DoDrawToCanvas;
 
-  CurrentDrawing := RD;
-  TH.CurrentDrawing := CurrentDrawing;
+  TH.CurrentDrawing := RD;
 end;
 
 procedure TRotaForm2.ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
@@ -460,7 +458,7 @@ begin
     g.Stroke.Thickness := 1.0;
     g.Font.Size := 16;
     g.Font.Family := 'Consolas';
-    CurrentDrawing.Draw(g);
+    RD.Draw(g);
   finally
     g.EndScene;
   end;
@@ -469,25 +467,25 @@ end;
 
 procedure TRotaForm2.RotaSeite;
 begin
-  RotaHelper(0, 0, 0, 0, 1.0);
+  RotaHelper(0, 0, 0, 1.0);
 end;
 
 procedure TRotaForm2.RotaAchtern;
 begin
-  RotaHelper(0, 90, 0, 0, 1.0)
+  RotaHelper(0, 90, 0, 1.0)
 end;
 
 procedure TRotaForm2.RotaTop;
 begin
-  RotaHelper(-90, 0, 0, 0, 2.2)
+  RotaHelper(-90, 0, 0, 2.2)
 end;
 
 procedure TRotaForm2.Rota3D;
 begin
-  RotaHelper(-80, 0, 0, 0, 2.2)
+  RotaHelper(-80, 0, 0, 2.2)
 end;
 
-procedure TRotaForm2.RotaHelper(aRotX, aRotY, aRotZ, aOffsetY, aRelativeZoom: single);
+procedure TRotaForm2.RotaHelper(aRotX, aRotY, aRotZ, aRelativeZoom: single);
 var
   x, y, z: single;
   mx, my, mz: TMatrix3D;
@@ -506,7 +504,7 @@ begin
   TH.ResetTransform;
 
   RD.OffsetX := RD.OffsetXDefault;
-  RD.OffsetY := RD.OffsetYDefault + aOffsetY;
+  RD.OffsetY := RD.OffsetYDefault;
   RD.InitialZoom := RD.InitialZoomDefault * aRelativeZoom;
 
   RD.ViewpointFlag := True;
@@ -533,13 +531,11 @@ end;
 procedure TRotaForm2.HandleAction(fa: Integer);
 var
   aRotX, aRotY, aRotZ: single;
-  aOffsetY: single;
   aRelativeZoom: single;
 begin
   aRotX := 0;
   aRotY := 0;
   aRotZ := 0;
-  aOffsetY := 0;
   aRelativeZoom := 1;
 
   case fa of
@@ -550,17 +546,15 @@ begin
         vpTop:
         begin
           aRotX := -90;
-          aOffsetY := 0;
           aRelativeZoom := 3.0;
         end;
         vp3D:
         begin
           aRotX := -80;
-          aOffsetY := 0;
           aRelativeZoom := 2.5;
         end;
       end;
-      RotaHelper(aRotX, aRotY, aRotZ, aOffsetY, aRelativeZoom);
+      RotaHelper(aRotX, aRotY, aRotZ, aRelativeZoom);
     end;
     faResetPosition: ;
     faResetRotation: ;
