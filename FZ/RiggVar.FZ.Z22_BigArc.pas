@@ -9,12 +9,16 @@ uses
 
 type
   TRggDrawingZ22 = class(TRggDrawing)
+  private
+    function GetHelpText: string;
   public
     A: TRggCircle;
     B: TRggCircle;
     AB: TRggLine;
 
     Arc: TRggBigArc;
+
+    HT: TRggLabel;
 
     constructor Create;
     procedure InitDefaultPos; override;
@@ -63,6 +67,13 @@ begin
   AB.StrokeThickness := 2;
   AB.StrokeColor := TRggColors.Aquamarine;
 
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Tomato;
+  HT.IsMemoLabel := True;
+  Add(HT);
+
   InitDefaultPos;
 
   Arc := TRggBigArc.Create('C');
@@ -81,6 +92,30 @@ begin
   WantSort := False;
 
   DefaultElement := B;
+end;
+
+function TRggDrawingZ22.GetHelpText: string;
+begin
+  ML.Add('Many drawing elements have parameters.');
+  ML.Add('  Param 1 can be changed via mouse wheel.');
+  ML.Add('  Param 2 can be changed via shift mouse wheel.');
+  ML.Add('');
+  ML.Add('Params of Circle element are center coordinates x and y.');
+  ML.Add('Params of Line element are length and angle.');
+  ML.Add('');
+  ML.Add('The circles are the "points" of the drawing.');
+  ML.Add('Circle elements may be referenced by other elements.');
+  ML.Add('  A selected circle element can be dragged with the mouse,');
+  ML.Add('    if it is not a -- computed element.');
+  ML.Add('');
+  ML.Add('Each element has a caption.');
+  ML.Add('  Element captions can be moved via params,');
+  ML.Add('  and visibility of captions can be changed.');
+  ML.Add('');
+  ML.Add('Toggle layout with key v (vertical) and h.');
+
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

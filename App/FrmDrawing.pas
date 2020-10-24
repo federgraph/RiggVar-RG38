@@ -491,11 +491,20 @@ begin
     vkF2: SwapColorScheme;
   end;
 
-  if KeyChar = 'h' then
-    UpdateLayout(True);
+  case KeyChar of
+    'C': SwapColorScheme;
+    'G': GlobalShowCaptionBtnClick(nil);
+    'R': DoReset;
+    'L': SwapDrawingLists;
+    'T': SwapLayout;
+    'W': SwapThickLines;
 
-  if KeyChar = 'v' then
-    UpdateLayout(False);
+    'c': CodeBtnClick(nil);
+    'h': UpdateLayout(True);
+    'i': ShowInfo;
+    't': ToggleShowCaptionBtnClick(nil);
+    'v': UpdateLayout(False);
+  end;
 end;
 
 procedure TFormDrawing.ImageMouseWheel(Sender: TObject; Shift: TShiftState;

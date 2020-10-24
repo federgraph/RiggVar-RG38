@@ -56,6 +56,8 @@ type
 
   TRggMain = class
   private
+    InitDataOK: Boolean;
+
     FactArray: TRggFA; // not owned, cached from Rigg
 
     FParam: TFederParam;
@@ -239,9 +241,9 @@ type
     procedure UpdateGraph;
 
     procedure Init;
-    procedure InitStrokeRigg;
     procedure UpdateStrokeRigg;
 
+    procedure InitDefaultData;
     procedure Init420;
     procedure InitLogo;
     procedure InitWithDefaultDoc(AWantLogoData: Boolean; TargetSlot: Integer);
@@ -411,16 +413,16 @@ begin
 
   FactArray := Rigg.GSB;
   Rigg.ControllerTyp := ctOhne;
+  InitialFixPoint := ooD;
+
   Init;
 
   FL := TStringList.Create;
   Logger := TLogger.Create;
 
-  InitialFixPoint := ooD;
-
-  Demo := False;
-
+  FDemo := False;
   FParam := fpVorstag;
+  FFixPoint := ooD;
   FKorrigiert := True;
   FSofortBerechnen := False;
   FBtnGrauDown := True;
@@ -448,11 +450,6 @@ begin
   Trimm6 := TRggData.Create;
 
   InitTrimmData;
-
-  { this should be done after or when calling Init }
-//  InitLogo; // sets WantLogoData to true
-//  Init420; // resets WantLogo to false
-//  WantLogoData := False;
 
   IsRetina := MainVar.Scale > 1;
 
@@ -520,31 +517,14 @@ begin
   RggTrackbar.OnChange := TrackBarChange;
 
   InitFactArray;
-
-  Param := fpVorstag;
-  FixPoint := InitialFixPoint;
-
-  InitStrokeRigg;
-end;
-
-procedure TRggMain.InitStrokeRigg;
-begin
-  if StrokeRigg <> nil then
-  begin
-    StrokeRigg.SalingTyp := Rigg.SalingTyp;
-    StrokeRigg.ControllerTyp := Rigg.ControllerTyp;
-    StrokeRigg.Koordinaten := Rigg.rP;
-    StrokeRigg.KoordinatenE := Rigg.rPE;
-    StrokeRigg.KoordinatenR := Rigg.rP;
-    StrokeRigg.SetMastLineData(Rigg.MastLinie, Rigg.lc, Rigg.beta);
-    StrokeRigg.WanteGestrichelt := not Rigg.GetriebeOK;
-  end;
 end;
 
 procedure TRggMain.UpdateStrokeRigg;
 begin
   if StrokeRigg <> nil then
   begin
+    StrokeRigg.SalingTyp := Rigg.SalingTyp;
+    StrokeRigg.ControllerTyp := Rigg.ControllerTyp;
     StrokeRigg.SofortBerechnen := SofortBerechnen;
     StrokeRigg.GrauZeichnen := GrauZeichnen;
     StrokeRigg.BtnGrauDown := BtnGrauDown;
@@ -3084,6 +3064,18 @@ begin
 
     else
       result := F.GetChecked(fa);
+  end;
+end;
+
+procedure TRggMain.InitDefaultData;
+begin
+  if not InitDataOK then
+  begin
+    InitDataOK := True;
+    InitLogo; // sets WantLogoData to true
+    Init420; // resets WantLogoData to false
+    Trimm := 1;
+    FixPoint := InitialFixPoint;
   end;
 end;
 

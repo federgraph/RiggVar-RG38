@@ -292,10 +292,6 @@ begin
 
   Main := TMain.Create(Rigg);
   Main.Logger.Verbose := True;
-  Main.InitLogo; // sets WantLogoData to true
-  Main.Init420; // resets WantLogoData to false
-
-  Main.Trimm := 1;
 
   Main.InitText;
   Main.IsUp := True;
@@ -346,7 +342,6 @@ begin
   RotaForm.SwapRota(1);
 
   { Params }
-  Main.Param := fpVorstag;
   if ParamListbox <> nil then
   begin
     InitParamListbox;
@@ -435,6 +430,8 @@ begin
   UpdateColorScheme;
 
   SwapSpeedPanel(RotaForm.Current);
+
+  Main.InitDefaultData;
 end;
 
 procedure TFormMain.FormDestroy(Sender: TObject);
@@ -1140,8 +1137,7 @@ begin
   HL.Add(Format('  Initial-Client-W-H = (%d, %d)', [ClientWidth, ClientHeight]));
   HL.Add(Format('  Handle.Scale = %.1f', [Handle.Scale]));
 
-  if HelpText <> nil then
-    HelpText.Text := HL.Text;
+  HelpText.Text := HL.Text;
 end;
 
 function TFormMain.GetOpenFileName(dn, fn: string): string;
@@ -2118,7 +2114,6 @@ begin
   FormTrimmTab.ShowModal;
   if FormTrimmTab.ModalResult = mrOK then
   begin
-//    Main.RggMain.UpdateGetriebe;
     UpdateReport;
   end;
 end;
