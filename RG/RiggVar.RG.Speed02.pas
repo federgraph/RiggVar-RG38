@@ -50,8 +50,6 @@ type
     KoppelBtn: TSpeedButton;
 
     MatrixBtn: TSpeedButton;
-    SalingImageBtn: TSpeedButton;
-    ControllerImageBtn: TSpeedButton;
   private
     procedure ToggleColorModeBtnClick(Sender: TObject);
     procedure ToggleFontSizeBtnClick(Sender: TObject);
@@ -102,8 +100,6 @@ begin
     faRggBogen: FormMain.BogenBtnClick(Sender);
     faRggKoppel: FormMain.KoppelBtnClick(Sender);
 
-    faToggleSalingGraph: FormMain.SalingImageBtnClick(Sender);
-    faToggleControllerGraph: FormMain.ControllerImageBtnClick(Sender);
     faToggleMatrixText: FormMain.RotaForm.MatrixItemClick(Sender);
 
     faMemoryBtn: FormMain.MemoryBtnClick(Sender);
@@ -150,8 +146,6 @@ begin
   BogenBtn.IsPressed := Main.GetChecked(faRggBogen);
   KoppelBtn.IsPressed := Main.GetChecked(faRggKoppel);
 
-  SalingImageBtn.IsPressed := FormMain.SalingImage.IsVisible;
-  ControllerImageBtn.IsPressed := FormMain.ControllerImage.IsVisible;
   MatrixBtn.IsPressed := FormMain.RotaForm.MatrixItemChecked;
 
   MemoryBtn.IsPressed := False;
@@ -318,18 +312,6 @@ begin
   { Image Elements, and Matrix Text }
 
   BtnColorValue := clvImage;
-
-  sb := AddSpeedBtn('SalingImageBtn', 0);
-  SalingImageBtn := sb;
-  sb.StaysPressed := True;
-  sb.Tag := faToggleSalingGraph;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('ControllerImageBtn', 0);
-  ControllerImageBtn := sb;
-  sb.StaysPressed := True;
-  sb.Tag := faToggleControllerGraph;
-  InitSpeedButton(sb);
 
   sb := AddSpeedBtn('MatrixBtn', 0);
   MatrixBtn := sb;

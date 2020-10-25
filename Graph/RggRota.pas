@@ -191,6 +191,7 @@ type
     procedure SetChecked(fa: Integer; Value: Boolean);
 
     procedure Init;
+    procedure InitPosition(x, y: single);
     procedure Swap;
     procedure Draw;
     procedure ImageScreenScaleChanged(Sender: TObject);
@@ -273,14 +274,18 @@ begin
   FZoomBase := 0.05;
   FViewPoint := vp3D;
   FFixPoint := ooD0;
-//  FXPos := -260;
-//  FYPos := 0;
 
   InitGraph;
   InitRaumGraph;
   InitHullGraph;
   UpdateGraphFromTestData;
   SetViewPoint(FViewPoint);
+end;
+
+procedure TRotaForm1.InitPosition(x, y: single);
+begin
+  FXPos := x; //-260;
+  FYPos := y;
 end;
 
 procedure TRotaForm1.Swap;

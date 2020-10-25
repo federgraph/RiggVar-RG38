@@ -232,6 +232,7 @@ type
     ControllerGraph: TSalingGraph;
     ChartImage: TOriginalImage;
     ChartGraph: TChartGraph;
+    procedure DoOnUpdateChart(Sender: TObject);
     procedure InitSalingGraph;
     procedure InitControllerGraph;
     procedure InitChartGraph;
@@ -424,6 +425,8 @@ begin
   SwapSpeedPanel(RotaForm.Current);
 
   Main.InitDefaultData;
+  Main.FixPoint := ooD0;
+  Main.OnUpdateChart := DoOnUpdateChart;
 end;
 
 procedure TFormMain.FormDestroy(Sender: TObject);
@@ -647,14 +650,12 @@ begin
     MainVar.Scale := Handle.Scale;
     Inc(Main.ResizeCounter);
     Main.UpdateTouch;
-    Main.UpdateText;
   end;
 
   if FormShown then
   begin
     SpeedPanel.UpdateLayout;
     UpdateReport;
-//  CheckSpaceForListbox; // not necessary because Listbox is transparent
     CheckSpaceForMemo;
     CheckSpaceForImages;
   end;
@@ -1040,7 +1041,7 @@ begin
 
     'p': fa := faMemeGotoPortrait;
 
-    'Q': fa := faToggleUseQuickSort;
+    'Q': ;
 
     's': fa := faMemeGotoSquare;
 
@@ -1324,6 +1325,10 @@ begin
   TrimmText.Name := 'TrimmText';
   SetupText(TrimmText);
 
+  Image := TOriginalImage.Create(Self, BitmapWidth, BitmapHeight);
+  Image.Name := 'Image';
+  Image.Parent := Self;
+
   SpeedPanel01 := TActionSpeedBarRG01.Create(Self);
   SpeedPanel01.Name := 'SpeedPanel01';
   SpeedPanel01.Parent := Self;
@@ -1370,10 +1375,6 @@ begin
   ReportListbox.Name := 'ReportListbox';
   ReportListbox.Parent := Self;
   ReportListbox.Opacity := OpacityValue;
-
-  Image := TOriginalImage.Create(Self, BitmapWidth, BitmapHeight);
-  Image.Name := 'Image';
-  Image.Parent := Self;
 
   ComponentsCreated := True;
 end;
@@ -1488,6 +1489,26 @@ begin
   RotaForm.Draw;
 end;
 
+procedure TFormMain.SeiteBtnClick(Sender: TObject);
+begin
+  RotaForm.ViewPoint := vpSeite;
+end;
+
+procedure TFormMain.AchternBtnClick(Sender: TObject);
+begin
+  RotaForm.ViewPoint := vpAchtern;
+end;
+
+procedure TFormMain.TopBtnClick(Sender: TObject);
+begin
+  RotaForm.ViewPoint := vpTop;
+end;
+
+procedure TFormMain.NullBtnClick(Sender: TObject);
+begin
+  RotaForm.ViewPoint := vp3D;
+end;
+
 procedure TFormMain.ChartImageBtnClick(Sender: TObject);
 begin
   ChartImage.Visible := not ChartImage.Visible;
@@ -1513,26 +1534,6 @@ begin
     ControllerImage.BringToFront;
   if ControllerImage.Visible then
     UpdateControllerGraph;
-end;
-
-procedure TFormMain.SeiteBtnClick(Sender: TObject);
-begin
-  RotaForm.ViewPoint := vpSeite;
-end;
-
-procedure TFormMain.AchternBtnClick(Sender: TObject);
-begin
-  RotaForm.ViewPoint := vpAchtern;
-end;
-
-procedure TFormMain.TopBtnClick(Sender: TObject);
-begin
-  RotaForm.ViewPoint := vpTop;
-end;
-
-procedure TFormMain.NullBtnClick(Sender: TObject);
-begin
-  RotaForm.ViewPoint := vp3D;
 end;
 
 procedure TFormMain.InitSalingGraph;
@@ -1942,7 +1943,6 @@ begin
     faToggleHelp: result := HelpText.Visible;
     faToggleReport: result := ReportText.Visible;
     faToggleButtonReport: result := WantButtonReport;
-    faChartRect..faChartReset: result := ChartGraph.GetChecked(fa);
     faReportNone..faReportReadme: result := ReportManager.GetChecked(fa);
     faToggleSegmentF..faToggleSegmentA: result := RotaForm.GetChecked(fa);
 
@@ -1961,6 +1961,7 @@ begin
     faMemoryBtn: result := False;
     faMultiBtn: result := RotaForm.WantOverlayedRiggs;
 
+    faChartRect..faChartReset: result := ChartGraph.GetChecked(fa);
     faToggleChartGraph: result := ChartImage.IsVisible;
     faToggleSalingGraph: result := SalingImage.IsVisible;
     faToggleControllerGraph: result := ControllerImage.IsVisible;
@@ -2270,6 +2271,15 @@ procedure TFormMain.SwapRota(Value: Integer);
 begin
   RotaForm.SwapRota(Value);
   SwapSpeedPanel(RotaForm.Current);
+end;
+
+procedure TFormMain.DoOnUpdateChart(Sender: TObject);
+begin
+  if (ChartGraph <> nil) and (Main.Param = fpAPW)  then
+  begin
+    ChartGraph.APWidth := Round(Main.CurrentValue);
+    ChartGraph.UpdateXMinMax;
+  end;
 end;
 
 end.

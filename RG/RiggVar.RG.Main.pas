@@ -30,7 +30,6 @@ uses
   RggTypes,
   RggUnit4,
   RggCalc,
-  RggChart,
   RggDoc,
   System.UIConsts,
   RiggVar.FB.Action,
@@ -65,7 +64,6 @@ type
     FTrimm: Integer;
     FFixPoint: TRiggPoint;
     FViewPoint: TViewPoint;
-    FVisible: Boolean;
 
     BiegungGF: single;
     BiegungGFDiff: single;
@@ -78,7 +76,6 @@ type
 
     FGraphRadio: TGraphRadio;
 
-    FOnUpdateGraph: TNotifyEvent;
     FKorrigiert: Boolean;
     FBogen: Boolean;
     FKoppel: Boolean;
@@ -86,6 +83,9 @@ type
     FDemo: Boolean;
 
     FTouch: Integer;
+
+    FOnUpdateGraph: TNotifyEvent;
+    FOnUpdateChart: TNotifyEvent;
 
     function GetShowTrimmText: Boolean;
     function GetShowDiffText: Boolean;
@@ -125,7 +125,6 @@ type
     function GetParamValueStringDiff(fp: TFederParam): string;
     function GetMastfall: string;
     procedure SetupTrackBarForRgg;
-    procedure SetVisible(const Value: Boolean);
     procedure AL(A: string; fp: TFederParam);
     procedure BL(A: string; C: string);
     function GetHullVisible: Boolean;
@@ -133,6 +132,7 @@ type
     procedure SetBtnGrauDown(const Value: Boolean);
     procedure SetSofortBerechnen(const Value: Boolean);
     procedure SetOnUpdateGraph(const Value: TNotifyEvent);
+    procedure SetOnUpdateChart(const Value: TNotifyEvent);
     procedure UpdateEAR(Value: single);
     procedure UpdateEAH(Value: single);
     procedure SetSuperRadio(const Value: TGraphRadio);
@@ -186,15 +186,11 @@ type
 
     RefCtrl: TTrimmControls;
 
-    ChartGraph: TChartModel;
-
     RiggLED: Boolean;
     StatusText: string;
     GrauZeichnen: Boolean;
 
     InitialFixPoint: TRiggPoint;
-
-    UpdateTextCounter: Integer;
 
     ActionMap1: TActionMap;
     ActionMap2: TActionMap;
@@ -222,7 +218,6 @@ type
     procedure DoWheel(Delta: single);
     procedure DoBigWheelRG(Delta: single);
     procedure DoSmallWheelRG(Delta: single);
-    procedure DoRasterWheelRG(Delta: single);
 
     procedure LoadTrimm(fd: TRggData);
     procedure SaveTrimm(fd: TRggData);
@@ -269,8 +264,6 @@ type
     procedure ToggleRenderOption(fa: TFederAction);
     procedure SetParameter(fa: TFederAction);
 
-    procedure ViewportChanged(Sender: TObject);
-
     procedure HandleAction(fa: Integer);
     function GetChecked(fa: TFederAction): Boolean;
 
@@ -289,7 +282,6 @@ type
     procedure InitTouch;
     procedure UpdateTouch;
 
-    procedure UpdateText(ClearFlash: Boolean = False);
     procedure UpdateOnParamValueChanged;
 
     procedure PlusOne;
@@ -346,7 +338,6 @@ type
     property Bogen: Boolean read FBogen write SetBogen;
     property Koppel: Boolean read FKoppel write SetKoppel;
     property HullVisible: Boolean read GetHullVisible write SetHullVisible;
-    property Visible: Boolean read FVisible write SetVisible;
     property Demo: Boolean read FDemo write SetDemo;
 
     property Korrigiert: Boolean read FKorrigiert write SetKorrigiert;
@@ -358,6 +349,7 @@ type
     property GraphRadio: TGraphRadio read FGraphRadio write SetSuperRadio;
 
     property OnUpdateGraph: TNotifyEvent read FOnUpdateGraph write SetOnUpdateGraph;
+    property OnUpdateChart: TNotifyEvent read FOnUpdateChart write SetOnUpdateChart;
 
     property ShowTrimmText: Boolean read GetShowTrimmText write SetShowTrimmText;
     property ShowDiffText: Boolean read GetShowDiffText write SetShowDiffText;
@@ -613,7 +605,7 @@ begin
     InitFactArray;
     SetParam(FParam);
   end;
-  UpdateText;
+  FormMain.ShowTrimm;
 end;
 
 procedure TRggMain.SetViewPoint(const Value: TViewPoint);
@@ -659,6 +651,11 @@ begin
     Rigg.Korrigiert := Value;
     UpdateGetriebe;
   end;
+end;
+
+procedure TRggMain.SetOnUpdateChart(const Value: TNotifyEvent);
+begin
+  FOnUpdateChart := Value;
 end;
 
 procedure TRggMain.SetOnUpdateGraph(const Value: TNotifyEvent);
@@ -707,11 +704,8 @@ begin
 
     fpAPW:
     begin
-      if ChartGraph <> nil then
-      begin
-        ChartGraph.APWidth := Round(CurrentValue);
-        ChartGraph.UpdateXMinMax;
-      end;
+      if Assigned(OnUpdateChart) then
+        FOnUpdateChart(Self);
     end;
 
     fpEAH:
@@ -1555,18 +1549,12 @@ begin
   UpdateStrokeRigg;
   StrokeRigg.Draw;
   UpdateFactArrayFromRigg;
-  UpdateText;
 end;
 
 procedure TRggMain.ToggleRenderOption(fa: TFederAction);
 begin
   StrokeRigg.ToggleRenderOption(fa);
   Draw;
-end;
-
-procedure TRggMain.SetVisible(const Value: Boolean);
-begin
-  FVisible := Value;
 end;
 
 procedure TRggMain.TrackBarChange(Sender: TObject);
@@ -1582,10 +1570,6 @@ begin
     StrokeRigg.UpdateHullTexture;
   end;
   RggSpecialDoOnTrackBarChange;
-end;
-
-procedure TRggMain.DoRasterWheelRG(Delta: single);
-begin
 end;
 
 procedure TRggMain.DoSmallWheelRG(Delta: single);
@@ -1628,12 +1612,6 @@ procedure TRggMain.DoWheel(Delta: single);
 begin
   RggTrackbar.Delta := Delta;
   UpdateOnParamValueChanged;
-end;
-
-procedure TRggMain.ViewportChanged(Sender: TObject);
-begin
-  if IsUp then
-    UpdateText;
 end;
 
 function TRggMain.GetBigStep: single;
@@ -2128,6 +2106,8 @@ begin
   InitFederText(FederText1);
   InitFederText(FederText2);
   Touch := faTouchDesk;
+  FederText1.UpdatePageBtnText;
+  FederText2.UpdatePageBtnText;
 end;
 
 procedure TRggMain.InitTouch;
@@ -2135,11 +2115,6 @@ begin
   InitRaster;
   FederText2.Visible := IsPhone;
   FederText1.Visible := not FederText2.Visible;
-end;
-
-procedure TRggMain.UpdateText;
-begin
-  FederText.UpdateText;
 end;
 
 procedure TRggMain.UpdateTouch;
@@ -2574,7 +2549,7 @@ begin
 
 { On Android and iOS the Trimm-File in the known location cannot be edited, }
 { so it does not make sense to read a 'manually edited' Trimm-File.txt, }
-{ but you can manualy read a Trimm-File-Auto.txt if already saved, }
+{ but you can manually read a Trimm-File-Auto.txt if already saved, }
 { e.g. by clicking on a button. }
 {$ifdef IOS}
   fn := TrimmFileNameAuto;
@@ -3017,7 +2992,6 @@ begin
     faToggleHelp: result := F.HelpText.Visible;
     faToggleReport: result := F.ReportText.Visible;
     faToggleButtonReport: result := F.WantButtonReport;
-    faChartRect..faChartReset: result := F.ChartGraph.GetChecked(fa);
     faReportNone..faReportReadme: result := F.ReportManager.GetChecked(fa);
 
     faToggleDataText: result := F.ShowDataText;
