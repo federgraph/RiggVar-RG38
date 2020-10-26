@@ -216,12 +216,22 @@ begin
   SL.Add('');
   SL.Add('Taste * : faActionPageM');
   SL.Add('Taste + : faActionPageP');
-  SL.Add('Taste = : ');
   SL.Add('');
-  SL.Add('Taste # : ');
+  SL.Add('Taste = : faShowZOrder');
+  SL.Add('Taste ? : faHelp');
+  SL.Add('Taste # : faActionPage4');
   SL.Add('');
-  SL.Add('Taste ! : ');
-  SL.Add('Taste " : ');
+  SL.Add('Taste ! : faRotaForm1');
+  SL.Add('Taste " : faRotaForm2');
+  SL.Add('Taste § : faRotaForm3');
+  SL.Add('');
+  SL.Add('Taste ; : faRotaForm1');
+  SL.Add('Taste : : faRotaForm2');
+  SL.Add('Taste _ : faRotaForm3');
+  SL.Add('');
+  SL.Add('Taste , : faRotaForm1');
+  SL.Add('Taste . : faRotaForm2');
+  SL.Add('Taste - : faRotaForm3');
 end;
 
 (*
