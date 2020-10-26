@@ -1,4 +1,4 @@
-﻿object FormMain: TFormMain
+object FormMain: TFormMain
   Left = 90
   Top = 60
   Caption = 'RGXX'

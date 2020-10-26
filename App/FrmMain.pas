@@ -86,9 +86,6 @@ type
     TL: TStrings;
     procedure InitHelpText;
     procedure InitParamListbox;
-    procedure InitTrimmCombo;
-    procedure InitParamCombo;
-    procedure InitReportCombo;
   public
     AllProps: Boolean;
     procedure ShowTrimm;
@@ -111,20 +108,13 @@ type
     ParamListbox: TListBox;
     ReportListbox: TListBox;
     ReportLabel: TText;
-    TrimmCombo: TComboBox;
-    ParamCombo: TComboBox;
-    ReportCombo: TComboBox;
     function FindItemIndexOfParam(ML: TStrings): Integer;
     procedure UpdateItemIndexParams;
     procedure UpdateItemIndexParamsLB;
-    procedure UpdateItemIndexParamsCB;
     procedure UpdateItemIndexReports;
     procedure UpdateItemIndexTrimms;
     procedure ParamListboxChange(Sender: TObject);
     procedure ReportListboxChange(Sender: TObject);
-    procedure TrimmComboChange(Sender: TObject);
-    procedure ParamComboChange(Sender: TObject);
-    procedure ReportComboChange(Sender: TObject);
   public
     procedure ShowReport(const Value: TRggReport);
     function GetShowDataText: Boolean;
@@ -341,12 +331,6 @@ begin
     ParamListbox.OnChange := ParamListboxChange;
     ParamListbox.ItemIndex := ParamListbox.Items.IndexOf('Vorstag');
   end;
-  if ParamCombo <> nil then
-  begin
-    InitParamCombo;
-    ParamCombo.ItemIndex := ParamCombo.Items.IndexOf('Vorstag');
-    ParamCombo.OnChange := ParamComboChange;
-  end;
 
   { Reports }
   HL := TStringList.Create;
@@ -359,19 +343,6 @@ begin
     ReportListbox.OnChange := ReportListboxChange;
     ReportListbox.ItemIndex := ReportListbox.Items.IndexOf(
     ReportManager.GetReportCaption(ReportManager.CurrentReport));
-  end;
-  if ReportCombo <> nil then
-  begin
-    InitReportCombo;
-    ReportCombo.OnChange := ReportComboChange;
-    ReportManager.InitLB(ReportListbox.Items);
-  end;
-
-  if TrimmCombo <> nil then
-  begin
-    InitTrimmCombo;
-    TrimmCombo.ItemIndex := 0;
-    TrimmCombo.OnChange := TrimmComboChange;
   end;
 
   HintText.TextSettings.FontColor := claYellow;
@@ -513,7 +484,6 @@ end;
 procedure TFormMain.UpdateItemIndexParams;
 begin
   UpdateItemIndexParamsLB;
-  UpdateItemIndexParamsCB;
   ShowTrimm;
 end;
 
@@ -531,23 +501,6 @@ begin
     ParamListbox.OnChange := nil;
     ParamListbox.ItemIndex := ik;
     ParamListbox.OnChange := ParamListboxChange;
-  end;
-end;
-
-procedure TFormMain.UpdateItemIndexParamsCB;
-var
-  ii: Integer;
-  ik: Integer;
-begin
-  if ParamCombo = nil then
-    Exit;
-  ii := ParamCombo.ItemIndex;
-  ik := FindItemIndexOfParam(ParamCombo.Items);
-  if ii <> ik then
-  begin
-    ParamCombo.OnChange := nil;
-    ParamCombo.ItemIndex := ik;
-    ParamCombo.OnChange := ParamComboChange;
   end;
 end;
 
@@ -586,20 +539,7 @@ begin
 end;
 
 procedure TFormMain.UpdateItemIndexTrimms;
-var
-  ii: Integer;
-  ij: Integer;
 begin
-  if TrimmCombo = nil then
-    Exit;
-  ii := TrimmCombo.ItemIndex;
-  ij := Main.Trimm-1;
-  if ii <> ij then
-  begin
-    TrimmCombo.OnChange := nil;
-    TrimmCombo.ItemIndex := ij;
-    TrimmCombo.OnChange := TrimmComboChange;
-  end;
 end;
 
 procedure TFormMain.FormMouseWheel(Sender: TObject; Shift: TShiftState;
@@ -1636,8 +1576,8 @@ begin
   SalingImage.Position.Y := PosY + ControllerImage.Height + Margin;
   SalingImage.Anchors := [TAnchorKind.akTop, TAnchorKind.akRight];
 
-  ChartImage.Position.X := Image.Position.X + 700;
-  ChartImage.Position.Y := Image.Position.Y + 0;
+  ChartImage.Position.X := ImagePositionX + 700;
+  ChartImage.Position.Y := ImagePositionY + 0;
 end;
 
 procedure TFormMain.SetViewPoint(const Value: TViewPoint);
@@ -1656,24 +1596,6 @@ begin
   begin
     HelpText.Visible := False;
     ReportText.Visible := True;
-    ReportManager.CurrentIndex := ii;
-    UpdateReport;
-    Main.FederText.CheckState;
-  end;
-end;
-
-procedure TFormMain.InitReportCombo;
-begin
-  ReportManager.InitLB(ReportCombo.Items);
-end;
-
-procedure TFormMain.ReportComboChange(Sender: TObject);
-var
-  ii: Integer;
-begin
-  if ReportCombo <> nil then
-  begin
-    ii := ReportCombo.ItemIndex;
     ReportManager.CurrentIndex := ii;
     UpdateReport;
     Main.FederText.CheckState;
@@ -1724,81 +1646,6 @@ begin
   fp := rm.Param;
   s := rm.Param2Text(fp);
   ParamListbox.ItemIndex := LI.IndexOf(s);
-end;
-
-procedure TFormMain.InitParamCombo;
-  procedure Add(fp: TFederParam);
-  begin
-    ParamCombo.Items.AddObject(Main.Param2Text(fp), TObject(fp));
-  end;
-begin
-  if ParamCombo <> nil then
-    Exit;
-  Add(fpVorstag);
-  Add(fpWinkel);
-  Add(fpController);
-  Add(fpWante);
-  Add(fpWoben);
-  Add(fpSalingH);
-  Add(fpSalingA);
-  Add(fpSalingL);
-  Add(fpSalingW);
-  Add(fpMastfallF0C);
-  Add(fpMastfallF0F);
-  Add(fpMastfallVorlauf);
-  Add(fpBiegung);
-  Add(fpD0X);
-end;
-
-procedure TFormMain.ParamComboChange(Sender: TObject);
-var
-  ii: Integer;
-  fp: TFederParam;
-begin
-  if ParamCombo <> nil then
-  begin
-    ii := ParamCombo.ItemIndex;
-    fp := TFederParam(ParamCombo.Items.Objects[ii]);
-    Main.Param := fp;
-    ShowTrimm;
-  end;
-end;
-
-procedure TFormMain.InitTrimmCombo;
-var
-  cl: TStrings;
-begin
-  if TrimmCombo <> nil then
-  begin
-    cl := TrimmCombo.Items;
-    cl.AddObject('Trimm1', TObject(1));
-    cl.AddObject('Trimm2', TObject(2));
-    cl.AddObject('Trimm3', TObject(3));
-    cl.AddObject('Trimm4', TObject(4));
-    cl.AddObject('Trimm5', TObject(5));
-    cl.AddObject('Trimm6', TObject(6));
-    cl.AddObject('Trimm7 (420)', TObject(7));
-    cl.AddObject('Trimm8 (Logo)', TObject(8));
-  end;
-end;
-
-procedure TFormMain.TrimmComboChange(Sender: TObject);
-var
-  t: Integer;
-  ii: Integer;
-begin
-  if TrimmCombo <> nil then
-  begin
-    ii := TrimmCombo.ItemIndex;
-    t := Integer(TrimmCombo.Items.Objects[ii]);
-    Main.Trimm := t;
-    Main.FederText.CheckState;
-    if ReportText.Visible then
-    begin
-    ShowTrimmData;
-      ReportText.Text := RL.Text;
-    end;
-  end;
 end;
 
 procedure TFormMain.ShowTrimmData;
