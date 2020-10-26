@@ -314,8 +314,8 @@ begin
   SpeedPanelHeight := Raster;
   ListboxWidth := 200;
 
-  BitmapWidth := 1024;
-  BitmapHeight := 800;
+  BitmapWidth := Screen.Width;
+  BitmapHeight := Screen.Height;
 
   CreateComponents;
 
@@ -632,6 +632,8 @@ begin
 
     InitHelpText;
 
+    Image.Align := TAlignLayout.Client;
+
     UpdateSpeedButtonDown;
     UpdateReport;
 
@@ -693,12 +695,6 @@ begin
 
     HelpText.Position.X := Raster + 30;
     ReportText.Position.X := Raster + 30;
-
-    Image.Position.X := 0;
-    Image.Position.Y := 0;
-    Image.Width := BitmapWidth;
-    Image.Height := BitmapHeight;
-    Image.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop];
   end
   else
   begin
@@ -709,12 +705,6 @@ begin
 
     HelpText.Position.X := TextPositionX;
     ReportText.Position.X := TextPositionX;
-
-    Image.Position.X := ImagePositionX;
-    Image.Position.Y := ImagePositionY;
-    Image.Width := ClientWidth - Image.Position.X - Raster - Margin;
-    Image.Height := ClientHeight - Image.Position.Y - Raster - Margin;
-    Image.Anchors := Image.Anchors + [TAnchorKind.akRight, TAnchorKind.akBottom];
   end;
 end;
 
@@ -1454,14 +1444,6 @@ begin
 
   ImagePositionX := TrimmText.Position.X + ListboxWidth + Margin;
   ImagePositionY := TrimmText.Position.Y;
-
-  Image.Position.X := ImagePositionX;
-  Image.Position.Y := ImagePositionY;
-  Image.Width := ClientWidth - Image.Position.X - Raster - Margin;
-  Image.Height := ClientHeight - Image.Position.Y - Raster - Margin;
-  Image.Anchors := Image.Anchors + [TAnchorKind.akRight, TAnchorKind.akBottom];
-  ImagePositionX := Image.Position.X;
-  ImagePositionY := Image.Position.Y;
 
   HintText.Position.X := ImagePositionX + 150;
   HintText.Position.Y := ImagePositionY;

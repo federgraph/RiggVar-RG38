@@ -128,7 +128,7 @@ end;
 
 procedure TDisplayItem.DrawLegend(g: TCanvas; j: Integer);
 var
-  x, w, h: single;
+  x, y, w, h: single;
   R: TRectF;
 
   procedure TextOut(s: string);
@@ -146,10 +146,11 @@ var
 begin
   w := 100;
   h := 25;
-  x := 0;
+  x := 1 * 70 + 200; // 2 * Raster + ListboxWidth
+  y := 2 * 70 + 10; // 2 * Raster + Margin
   if IsRod then
-    x := 20;
-  R := TRectF.Create(x, j * h, x + w, (j + 1) * h);
+    x := x + 20;
+  R := TRectF.Create(x, y + j * h, x + w, y + (j + 1) * h);
   R.Offset(-NullpunktOffset.X, -NullpunktOffset.Y);
   g.Stroke.Thickness := 1.0;
   g.Stroke.Color := claBlack;

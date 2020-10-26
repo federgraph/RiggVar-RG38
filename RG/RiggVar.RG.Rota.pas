@@ -120,11 +120,13 @@ constructor TRotaForm.Create;
 begin
 {$ifdef WantRotaForm1}
   RotaForm1 := TRotaForm1.Create;
+  RotaForm1.InitPosition(350, 100);
   StrokeRigg1 := RotaForm1;
 {$endif}
 
 {$ifdef WantRotaForm2}
   RotaForm2 := TRotaForm2.Create;
+  RotaForm2.InitPosition(950, 600);
   StrokeRigg2 := RotaForm2;
 {$endif}
 
