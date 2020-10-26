@@ -605,11 +605,16 @@ end;
 procedure TFormMain.FormMouseWheel(Sender: TObject; Shift: TShiftState;
   WheelDelta: Integer; var Handled: Boolean);
 begin
-  if (ssShift in Shift) or (ssCtrl in Shift) then
-  begin
-    Main.DoMouseWheel(Shift, WheelDelta div 120);
-    Handled := True;
-  end;
+  { When you want to use normal scrolling in Listbox and Memo }
+//  if (ssShift in Shift) or (ssCtrl in Shift) then
+//  begin
+//    Main.DoMouseWheel(Shift, WheelDelta div 120);
+//    Handled := True;
+//  end;
+
+  { Use wheel for RG model only }
+  Main.DoMouseWheel(Shift, WheelDelta div 120);
+  Handled := True;
 end;
 
 procedure TFormMain.FormShow(Sender: TObject);

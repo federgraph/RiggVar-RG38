@@ -802,11 +802,15 @@ begin
     wy := (y - prevy) * 0.15;
     wz := 0;
   end
-  else
+  else if MouseButton = TMouseButton.mbRight then
   begin
     wx := 0;
     wy := 0;
     wz := (x - prevx) * 0.3;
+  end
+  else
+  begin
+    Exit;
   end;
 
   if Painted then

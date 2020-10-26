@@ -2290,11 +2290,26 @@ end;
 
 procedure TRggMain.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer);
 begin
+  { When you want to use normal scrolling in Listbox and Memo }
+//  if ssCtrl in Shift then
+//  begin
+//    DoBigWheel(WheelDelta);
+//  end
+//  else if ssShift in Shift then
+//  begin
+//    DoSmallWheel(WheelDelta);
+//  end;
+
+  { Use wheel for RG model only }
   if ssCtrl in Shift then
+  begin
+    FormMain.RotaForm.Zoom(WheelDelta);
+  end
+  else if ssShift in Shift then
   begin
     DoBigWheel(WheelDelta);
   end
-  else if ssShift in Shift then
+  else if Shift = [] then
   begin
     DoSmallWheel(WheelDelta);
   end;
