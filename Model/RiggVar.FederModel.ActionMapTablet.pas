@@ -377,7 +377,7 @@ begin
       InitAC(cl, 5, faReportAusgabeDiffL, cla);
       InitAC(cl, 6, faReportAusgabeDiffP, cla);
       InitAC(cl, 7, faNoop, claWhite);
-      InitAC(cl, 8, faNoop, claWhite);
+      InitAC(cl, 8, faShowDiagQ, claForm);
 
       cla := claWhite;
       cl := BottomRight;

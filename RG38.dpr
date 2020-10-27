@@ -9,6 +9,7 @@ uses
   FrmDrawing in 'App\FrmDrawing.pas' {FormDrawing},
   FrmConfig in 'App\FrmConfig.pas' {FormConfig},
   FrmTrimmTab in 'App\FrmTrimmTab.pas' {FormTrimmTab},
+  FrmChart in 'App\FrmChart.pas' {FormChart},
   RiggVar.App.Main in 'App\RiggVar.App.Main.pas',
   RggCalc in 'Core\RggCalc.pas',
   RggDoc in 'Core\RggDoc.pas',

@@ -235,6 +235,7 @@ type
     procedure MemoBtnClick(Sender: TObject);
     procedure ActionsBtnClick(Sender: TObject);
     procedure DrawingsBtnClick(Sender: TObject);
+    procedure ChartBtnClick(Sender: TObject);
     procedure ConfigBtnClick(Sender: TObject);
     procedure TrimmTabBtnClick(Sender: TObject);
     procedure CheckFormBounds(AForm: TForm);
@@ -253,6 +254,7 @@ uses
   FrmDrawing,
   FrmConfig,
   FrmTrimmTab,
+  FrmChart,
   RiggVar.RG.Main,
   RiggVar.RG.Speed01,
   RiggVar.RG.Speed02,
@@ -872,6 +874,7 @@ begin
     faShowDrawings: DrawingsBtnClick(nil);
     faShowConfig: ConfigBtnClick(nil);
     faShowTrimmTab: TrimmTabBtnClick(nil);
+    faShowDiagQ: ChartBtnClick(nil);
 
     faToggleSandboxed: MainVar.IsSandboxed := MainConst.MustBeSandboxed or (not MainVar.IsSandboxed);
     faToggleAllProps: AllProps := not AllProps;
@@ -976,7 +979,7 @@ begin
 
     'p': fa := faMemeGotoPortrait;
 
-    'Q': ;
+    'Q': fa := faShowDiagQ;
 
     's': fa := faMemeGotoSquare;
 
@@ -1889,6 +1892,18 @@ begin
   FormDrawing.Show; //needed on Mac
 end;
 
+procedure TFormMain.ChartBtnClick(Sender: TObject);
+begin
+  if not Assigned(FormDrawing) then
+  begin
+    FormChart := TFormChart.Create(nil);
+    FormChart.Parent := self; // needed for Alt-Tab
+    CheckFormBounds(FormChart);
+  end;
+  FormChart.Visible := True;
+  FormChart.Show; //needed on Mac
+end;
+
 procedure TFormMain.ConfigBtnClick(Sender: TObject);
 begin
   if FormConfig = nil then
@@ -1932,6 +1947,11 @@ begin
   begin
     FormAction.DisposeOf;
     FormAction := nil;
+  end;
+  if FormChart <> nil then
+  begin
+    FormChart.DisposeOf;
+    FormChart := nil;
   end;
   if FormDrawing <> nil then
   begin
