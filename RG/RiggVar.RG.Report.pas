@@ -235,7 +235,7 @@ begin
       rgData: Main.RggData.WriteReport(ML);
       rgAusgabeDetail:
       begin
-        Main.Rigg.AusgabeText(ML, False);
+        Main.Rigg.AusgabeText(ML, False, Main.SofortBerechnen);
       end;
       rgAusgabeRL:
       begin

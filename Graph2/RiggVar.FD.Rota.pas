@@ -111,7 +111,7 @@ type
 
     procedure HandleAction(fa: Integer);
 
-    procedure InitPosition(x, y: single);
+    procedure InitPosition(w, h, x, y: single);
     procedure Init;
     procedure Swap;
     procedure RotateZ(delta: single);
@@ -182,10 +182,14 @@ begin
 
 end;
 
-procedure TRotaForm2.InitPosition(x, y: single);
+procedure TRotaForm2.InitPosition(w, h, x, y: single);
 begin
-  RD.OffsetXDefault := x;
-  RD.OffsetYDefault := y;
+  RD.OffsetX := w / 2;
+  RD.OffsetY := h / 2;
+  RD.OffsetXDefault := RD.OffsetX;
+  RD.OffsetYDefault := RD.OffsetY;
+  TH.Offset := TPointF.Zero;
+  DoOnUpdateStrokeRigg;
 end;
 
 procedure TRotaForm2.Swap;

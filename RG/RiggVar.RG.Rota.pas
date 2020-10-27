@@ -90,6 +90,7 @@ type
     procedure SetChecked(fa: Integer; Value: Boolean);
 
     procedure Init;
+    procedure InitPosition(w, h, x, y: single);
     procedure Draw;
 
     procedure SwapRota(Selected: Integer);
@@ -120,13 +121,11 @@ constructor TRotaForm.Create;
 begin
 {$ifdef WantRotaForm1}
   RotaForm1 := TRotaForm1.Create;
-  RotaForm1.InitPosition(350, 100);
   StrokeRigg1 := RotaForm1;
 {$endif}
 
 {$ifdef WantRotaForm2}
   RotaForm2 := TRotaForm2.Create;
-  RotaForm2.InitPosition(950, 600);
   StrokeRigg2 := RotaForm2;
 {$endif}
 
@@ -181,6 +180,21 @@ begin
 {$ifdef WantRotaForm3}
   RotaForm3.ViewPoint := vp3D;
   RotaForm3.FixPoint := ooD;
+{$endif}
+end;
+
+procedure TRotaForm.InitPosition(w, h, x, y: single);
+begin
+{$ifdef WantRotaForm1}
+  RotaForm1.InitPosition(w, h, x, y);
+{$endif}
+
+{$ifdef WantRotaForm2}
+  RotaForm2.InitPosition(w, h, x, y);
+{$endif}
+
+{$ifdef WantRotaForm3}
+  RotaForm3.InitPosition(w, h, x, y);
 {$endif}
 end;
 
@@ -632,6 +646,7 @@ begin
       RotaForm1.Swap;
       Main.FederText1.Parent := FormMain;
       Main.FederText2.Parent := FormMain;
+      RotaForm1.FixPoint := Main.FixPoint;
     end;
 {$endif}
 
@@ -647,6 +662,7 @@ begin
       RotaForm2.Swap;
       Main.FederText1.Parent := FormMain;
       Main.FederText2.Parent := FormMain;
+      RotaForm2.FixPoint := Main.FixPoint;
     end;
 {$endif}
 
@@ -662,6 +678,7 @@ begin
       Main.FederText1.Parent := Viewport;
       Main.FederText2.Parent := Viewport;
       Viewport.SetFocus;
+      RotaForm3.FixPoint := Main.FixPoint;
     end;
 {$endif}
 

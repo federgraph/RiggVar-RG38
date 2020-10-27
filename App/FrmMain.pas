@@ -214,6 +214,8 @@ type
     ImagePositionY: single;
     TextPositionX: single;
     TextPositionY: single;
+    procedure UpdateFederText;
+    procedure CenterRotaForm;
   public
     SalingImage: TOriginalImage;
     SalingGraph: TSalingGraph;
@@ -229,7 +231,6 @@ type
     procedure UpdateControllerGraph;
     procedure UpdateChartGraph;
     procedure LayoutImages;
-    procedure UpdateFederText;
   protected
     procedure DestroyForms;
     procedure MemoBtnClick(Sender: TObject);
@@ -398,6 +399,7 @@ begin
   SwapSpeedPanel(RotaForm.Current);
 
   Main.InitDefaultData;
+  CenterRotaForm;
   Main.FixPoint := ooD0;
   Main.OnUpdateChart := DoOnUpdateChart;
 end;
@@ -607,6 +609,7 @@ begin
     UpdateReport;
     CheckSpaceForMemo;
     CheckSpaceForImages;
+    CenterRotaForm;
   end;
 end;
 
@@ -2121,6 +2124,13 @@ procedure TFormMain.UpdateFederText;
 begin
   Main.FederText.ST00.Text.Text := Main.ParamCaption;
   Main.FederText.SB00.Text.Text := Main.ParamValueString[Main.Param];
+end;
+
+procedure TFormMain.CenterRotaForm;
+begin
+  RotaForm.InitPosition(Width, Height, 0, 0);
+  if FormShown then
+    RotaForm.Draw;
 end;
 
 end.

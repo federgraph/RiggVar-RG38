@@ -37,7 +37,7 @@ type
 {$ifdef MSWindows}
     procedure WriteXml(ML: TStrings; AllTags: Boolean = False);
 {$endif}
-    procedure AusgabeText(ML: TStrings; WantAll: Boolean = True);
+    procedure AusgabeText(ML: TStrings; WantAll: Boolean = True; WantForce: Boolean = False);
     procedure AusgabeKommentar(ML: TStrings);
 
     procedure SaveToFederData(fd: TRggData);
@@ -486,7 +486,7 @@ begin
   UpdateGSB;
 end;
 
-procedure TRigg.AusgabeText(ML: TStrings; WantAll: Boolean = True);
+procedure TRigg.AusgabeText(ML: TStrings; WantAll: Boolean = True; WantForce: Boolean = False);
 var
   tempSalingDaten: TSalingDaten;
 begin
@@ -504,6 +504,7 @@ begin
 
   ML.Add('Trimm:');
   ML.Add(Format('  Mastfall F0F     = %8.0f mm', [rP.F0.Distance(rP.F)]));
+  if WantForce then
   ML.Add(Format('  Vorstagspannung  = %8.0f N', [rF.C0C]));
   ML.Add(Format('  Durchbiegung hd  = %8.0f mm', [hd]));
 

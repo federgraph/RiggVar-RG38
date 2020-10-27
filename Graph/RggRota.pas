@@ -191,7 +191,7 @@ type
     procedure SetChecked(fa: Integer; Value: Boolean);
 
     procedure Init;
-    procedure InitPosition(x, y: single);
+    procedure InitPosition(w, h, x, y: single);
     procedure Swap;
     procedure Draw;
     procedure ImageScreenScaleChanged(Sender: TObject);
@@ -282,9 +282,11 @@ begin
   SetViewPoint(FViewPoint);
 end;
 
-procedure TRotaForm1.InitPosition(x, y: single);
+procedure TRotaForm1.InitPosition(w, h, x, y: single);
 begin
-  FXPos := x; //-260;
+  BitmapWidth := w;
+  BitmapHeight := h;
+  FXPos := x;
   FYPos := y;
 end;
 

@@ -171,7 +171,7 @@ begin
   SL.Add('Taste P : ');
   SL.Add('');
   SL.Add('Taste q : ');
-  SL.Add('Taste Q : ');
+  SL.Add('Taste Q : faShowDiagQ');
   SL.Add('');
   SL.Add('Taste r : faToggleReport');
   SL.Add('Taste R : faReadTrimmFile');
