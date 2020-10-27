@@ -706,6 +706,7 @@ begin
   begin
     Figure := f;
     DrawToCanvas(Image.Bitmap.Canvas);
+    Image.Repaint;
   end;
 end;
 

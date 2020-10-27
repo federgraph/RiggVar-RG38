@@ -503,9 +503,9 @@ begin
 //  lbBiegung := Format('Biegung  = %5.1f cm', [Rigg.hd / 10]);
 
   ML.Add('Trimm:');
-  ML.Add(Format('  Mastfall F0F     = %8.1f cm', [Trimm.Mastfall / 10]));
-  ML.Add(Format('  Vorstagspannung  = %8.1f N', [rF.C0C]));
-  ML.Add(Format('  Durchbiegung hd  = %8.1f cm', [hd / 10]));
+  ML.Add(Format('  Mastfall F0F     = %8.0f mm', [rP.F0.Distance(rP.F)]));
+  ML.Add(Format('  Vorstagspannung  = %8.0f N', [rF.C0C]));
+  ML.Add(Format('  Durchbiegung hd  = %8.0f mm', [hd]));
 
   ML.Add('');
   ML.Add('Saling:');

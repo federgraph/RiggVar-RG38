@@ -134,7 +134,6 @@ type
     procedure CheckSpaceForListbox;
     procedure SetupMemo(MM: TMemo);
     procedure SetupText(T: TText; fs: single = 16);
-    procedure SetupComboBox(CB: TComboBox);
     procedure SetupListbox(LB: TListBox);
     procedure SetupListboxItems(LB: TListbox; cla: TAlphaColor);
     procedure ListboxItemStyleLookup(Sender: TObject);
@@ -230,6 +229,7 @@ type
     procedure UpdateControllerGraph;
     procedure UpdateChartGraph;
     procedure LayoutImages;
+    procedure UpdateFederText;
   protected
     procedure DestroyForms;
     procedure MemoBtnClick(Sender: TObject);
@@ -1180,24 +1180,6 @@ begin
   T.HitTest := False;
 end;
 
-procedure TFormMain.SetupCombobox(CB: TComboBox);
-begin
-  if CB = nil then
-    Exit;
-
-{$ifdef FMX}
-  CB.StyleLookup := 'comboboxstyle';
-{$endif}
-
-{$ifdef Vcl}
-  CB.Style := csDropDownList;
-  CB.DropDownCount := Integer(High(TFederParam));
-  CB.Font.Name := 'Consolas';
-  CB.Font.Size := 11;
-  CB.Font.Color := clRed;
-{$endif}
-end;
-
 procedure TFormMain.SetupListbox(LB: TListBox);
 begin
   if LB = nil then
@@ -1526,7 +1508,6 @@ begin
     ControllerGraph.EdgePos := Round(Rigg.GSB.Find(fpController).Min);
 
     ControllerGraph.Draw(TFigure.dtController);
-    ControllerImage.Repaint;
   end;
 end;
 
@@ -1549,7 +1530,6 @@ begin
   if IsUp and ChartImage.Visible then
   begin
     ChartGraph.SuperCalc;
-    ChartImage.Repaint;
   end;
 end;
 
@@ -1671,6 +1651,7 @@ begin
   begin
     Main.UpdateTrimmText(TL);
     TrimmText.Text := TL.Text;
+    UpdateFederText;
   end;
   UpdateReport;
 end;
@@ -2114,6 +2095,12 @@ begin
     ChartGraph.APWidth := Round(Main.CurrentValue);
     ChartGraph.UpdateXMinMax;
   end;
+end;
+
+procedure TFormMain.UpdateFederText;
+begin
+  Main.FederText.ST00.Text.Text := Main.ParamCaption;
+  Main.FederText.SB00.Text.Text := Main.ParamValueString[Main.Param];
 end;
 
 end.

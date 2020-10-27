@@ -42,6 +42,7 @@ type
   public
     Width: Integer;
     Height: Integer;
+    BackgroundColor: TAlphaColor;
     constructor Create;
     destructor Destroy; override;
     procedure Draw; override;
@@ -63,6 +64,8 @@ begin
 
   Width := 650;
   Height := 400;
+
+  BackgroundColor := claNull;
 
   Box := TRggBox.Create;
   Box.X := 120;
@@ -107,6 +110,7 @@ begin
   if (Image <> nil) then
   begin
     DrawToCanvas(Image.Bitmap.Canvas);
+    Image.Repaint;
   end;
 end;
 
@@ -118,7 +122,7 @@ begin
   if g.BeginScene then
   try
     g.SetMatrix(TMatrix.CreateScaling(ss, ss));
-    g.Clear(claNull);
+    g.Clear(BackgroundColor);
     DrawLegend(g);
     DrawChart(g);
   finally

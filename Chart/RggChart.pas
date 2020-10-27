@@ -493,7 +493,11 @@ function TChartModel.ComboIndexToCurve(ComboIndex: Integer): Integer;
 var
   YAV: TYAchseValue;
 begin
-  YAV := YAchseSortedList[ComboIndex];
+  if ComboIndex = -1 then
+    YAV := YAchseSortedList[0]
+  else
+    YAV := YAchseSortedList[ComboIndex];
+
   if YAV in YAchseSet then
   begin
     if (csBerechnet in FStatus) or (csGeladen in FStatus) then
