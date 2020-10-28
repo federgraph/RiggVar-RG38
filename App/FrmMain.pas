@@ -549,14 +549,6 @@ end;
 procedure TFormMain.FormMouseWheel(Sender: TObject; Shift: TShiftState;
   WheelDelta: Integer; var Handled: Boolean);
 begin
-  { When you want to use normal scrolling in Listbox and Memo }
-//  if (ssShift in Shift) or (ssCtrl in Shift) then
-//  begin
-//    Main.DoMouseWheel(Shift, WheelDelta div 120);
-//    Handled := True;
-//  end;
-
-  { Use wheel for RG model only }
   Main.DoMouseWheel(Shift, WheelDelta div 120);
   Handled := True;
 end;
@@ -1059,10 +1051,6 @@ begin
   HL.Add('  with Button, Key, or in ListBox');
   HL.Add('');
   HL.Add('Change param value with Wheel!');
-  { When you want to use normal scrolling in Listbox and Memo }
-//  HL.Add('  Shift-Wheel = small step');
-//  HL.Add('  Ctrl-Wheel  = bigger step');
-  { Use wheel for RG model only }
   HL.Add('  Wheel = small step');
   HL.Add('  Shift-Wheel  = bigger step');
   HL.Add('');

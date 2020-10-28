@@ -2270,9 +2270,6 @@ end;
 
 procedure TRggMain.DoTouchbarLeft(Delta: single);
 begin
-  { When you want to use normal scrolling in Listbox and Memo }
-//  DoMouseWheel([ssCtrl], Round(Delta));
-  { Use wheel for RG model only }
   DoMouseWheel([ssShift], Round(Delta));
 end;
 
@@ -2283,9 +2280,6 @@ end;
 
 procedure TRggMain.DoTouchbarRight(Delta: single);
 begin
-  { When you want to use normal scrolling in Listbox and Memo }
-//  DoMouseWheel([ssShift], Round(Delta));
-  { Use wheel for RG model only }
   DoMouseWheel([], Round(Delta));
 end;
 
@@ -2296,17 +2290,6 @@ end;
 
 procedure TRggMain.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer);
 begin
-  { When you want to use normal scrolling in Listbox and Memo }
-//  if ssCtrl in Shift then
-//  begin
-//    DoBigWheel(WheelDelta);
-//  end
-//  else if ssShift in Shift then
-//  begin
-//    DoSmallWheel(WheelDelta);
-//  end;
-
-  { Use wheel for RG model only }
   if ssCtrl in Shift then
   begin
     FormMain.RotaForm.Zoom(WheelDelta);
