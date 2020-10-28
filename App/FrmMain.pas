@@ -1059,8 +1059,12 @@ begin
   HL.Add('  with Button, Key, or in ListBox');
   HL.Add('');
   HL.Add('Change param value with Wheel!');
-  HL.Add('  Shift-Wheel = small step');
-  HL.Add('  Ctrl-Wheel  = bigger step');
+  { When you want to use normal scrolling in Listbox and Memo }
+//  HL.Add('  Shift-Wheel = small step');
+//  HL.Add('  Ctrl-Wheel  = bigger step');
+  { Use wheel for RG model only }
+  HL.Add('  Wheel = small step');
+  HL.Add('  Shift-Wheel  = bigger step');
   HL.Add('');
   HL.Add('Goto stored Trimm');
   HL.Add('  1..8, 0 - Trimm selection');

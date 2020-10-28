@@ -225,10 +225,15 @@ begin
       rgReadme:
       begin
         ML.Add('On the desktop - use scroll Wheel of the mouse!');
+        ML.Add('On touch screen - use touch bar on button frame');
         ML.Add('');
-        ML.Add('Wheel by itself will scroll Text in Controls.');
-        ML.Add('Shift-Wheel changes current param value (small step)');
-        ML.Add('Ctrl-Wheel changes current param value (big step)');
+  { When you want to use normal scrolling in Listbox and Memo }
+//        ML.Add('Wheel by itself will scroll Text in Controls.');
+//        ML.Add('Shift-Wheel changes current param value (small step)');
+//        ML.Add('Ctrl-Wheel changes current param value (big step)');
+  { Use wheel for RG model only }
+        ML.Add('Wheel = small step change of current param value');
+        ML.Add('Shift-Wheel = big step change of current param value');
       end;
       rgLog: ML.Text := Main.Logger.TL.Text;
       rgJson: Main.RggData.WriteJSon(ML);
