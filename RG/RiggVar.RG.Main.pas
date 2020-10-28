@@ -2270,7 +2270,10 @@ end;
 
 procedure TRggMain.DoTouchbarLeft(Delta: single);
 begin
-  DoMouseWheel([ssCtrl], Round(Delta));
+  { When you want to use normal scrolling in Listbox and Memo }
+//  DoMouseWheel([ssCtrl], Round(Delta));
+  { Use wheel for RG model only }
+  DoMouseWheel([ssShift], Round(Delta));
 end;
 
 procedure TRggMain.DoTouchbarTop(Delta: single);
@@ -2280,7 +2283,10 @@ end;
 
 procedure TRggMain.DoTouchbarRight(Delta: single);
 begin
-  DoMouseWheel([ssShift], Round(Delta));
+  { When you want to use normal scrolling in Listbox and Memo }
+//  DoMouseWheel([ssShift], Round(Delta));
+  { Use wheel for RG model only }
+  DoMouseWheel([], Round(Delta));
 end;
 
 procedure TRggMain.DoTouchbarBottom(Delta: single);

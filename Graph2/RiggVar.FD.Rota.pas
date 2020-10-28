@@ -90,7 +90,6 @@ type
     DL: TRggDrawings;
     RD: TRggDrawingD00;
     CurrentElement: TRggElement;
-    DrawCounter: Integer;
 
     procedure ClearImage;
     procedure DrawToCanvas(g: TCanvas);
@@ -105,6 +104,7 @@ type
   public
     Image: TOriginalImage;
     IsUp: Boolean;
+    DrawCounter: Integer;
 
     constructor Create;
     destructor Destroy; override;
@@ -458,6 +458,7 @@ procedure TRotaForm2.DrawToCanvas(g: TCanvas);
 var
   ss: single;
 begin
+  Inc(DrawCounter);
   ss := Image.Scene.GetSceneScale;
   g.Offset := TH.Offset;
   if g.BeginScene then

@@ -646,6 +646,7 @@ begin
       RotaForm1.Swap;
       Main.FederText1.Parent := FormMain;
       Main.FederText2.Parent := FormMain;
+      Main.UpdateStrokeRigg;
       RotaForm1.FixPoint := Main.FixPoint;
     end;
 {$endif}
@@ -662,6 +663,7 @@ begin
       RotaForm2.Swap;
       Main.FederText1.Parent := FormMain;
       Main.FederText2.Parent := FormMain;
+      Main.UpdateStrokeRigg;
       RotaForm2.FixPoint := Main.FixPoint;
     end;
 {$endif}
@@ -677,15 +679,13 @@ begin
 {$endif}
       Main.FederText1.Parent := Viewport;
       Main.FederText2.Parent := Viewport;
-      Viewport.SetFocus;
+      Main.UpdateStrokeRigg;
       RotaForm3.FixPoint := Main.FixPoint;
+      Viewport.SetFocus;
     end;
 {$endif}
 
   end;
-
-  Main.UpdateStrokeRigg;
-  Draw;
 end;
 
 procedure TRotaForm.DoOnIdle;
