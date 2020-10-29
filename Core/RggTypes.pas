@@ -91,7 +91,7 @@ type
 //    WPowerOS
 //    );
 
-  TsbParam = (Ist, Min, Max, TinyStep, BigStep);
+  TsbParam = (IstValue, MinValue, MaxValue, TinyStep, BigStep);
 //  TsbArray = array [TsbName, TsbParam] of Integer;
   TsbLabelArray = array [TsbName] of string;
   TTabellenTyp = (itKonstante, itGerade, itParabel, itBezier);

@@ -55,7 +55,6 @@ type
     procedure SpeedButtonClick(Sender: TObject); virtual;
     procedure UpdateCaptions;
     procedure UpdateHints;
-    procedure ToggleBigMode;
   public
     SpeedColorScheme: TSpeedColorScheme;
 
@@ -63,6 +62,7 @@ type
 
     procedure UpdateLayout;
     procedure UpdateColor;
+    procedure ToggleBigMode;
 
     procedure InitSpeedButtons; virtual;
     procedure UpdateSpeedButtonDown; virtual;

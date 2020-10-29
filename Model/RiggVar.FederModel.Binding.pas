@@ -170,7 +170,7 @@ begin
   SL.Add('Taste p : faMemeGotoPortrait');
   SL.Add('Taste P : ');
   SL.Add('');
-  SL.Add('Taste q : ');
+  SL.Add('Taste q : faToggleAllText');
   SL.Add('Taste Q : faShowDiagQ');
   SL.Add('');
   SL.Add('Taste r : faToggleReport');

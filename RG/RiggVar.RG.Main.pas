@@ -21,6 +21,8 @@ interface
 uses
   System.SysUtils,
   System.Classes,
+  System.Math,
+  System.Math.Vectors,
   RiggVar.RG.Data,
   RiggVar.RG.Def,
   RiggVar.RG.Track,
@@ -46,9 +48,7 @@ uses
   RiggVar.FederModel.TouchBase,
   RiggVar.FederModel.Touch,
   RiggVar.FederModel.TouchPhone,
-  RiggVar.Util.Logger,
-  System.Math,
-  System.Math.Vectors;
+  RiggVar.Util.Logger;
 
 type
   TFederAction = Integer;
@@ -2070,6 +2070,7 @@ begin
   end;
 
   UpdateGetriebe;
+  FormMain.UpdateReport;
 end;
 
 procedure TRggMain.InitFederText(ft: TFederTouch0);
@@ -2165,14 +2166,11 @@ begin
   begin
     MainVar.ColorScheme.Scheme := Value;
     MainVar.ColorScheme.Init(Value);
-    FormMain.UpdateBackgroundColor(MainVar.ColorScheme.claBackground);
-    FederText.UpdateColorScheme;
   end;
 
   if IsUp then
   begin
-    FormMain.SpeedPanel.DarkMode := MainVar.ColorScheme.IsDark;
-    FormMain.SpeedPanel.UpdateColor;
+    FederText.UpdateColorScheme;
     FormMain.UpdateColorScheme;
   end;
 end;

@@ -221,10 +221,7 @@ end;
 
 procedure TActionSpeedBarRG03.ToggleFontSizeBtnClick(Sender: TObject);
 begin
-  ToggleBigMode;
-  FormMain.LayoutComponents;
-  FormMain.CheckSpaceForMemo;
-  FormMain.CheckSpaceForImages;
+  FormMain.ToggleSpeedPanelFontSize;
 end;
 
 end.

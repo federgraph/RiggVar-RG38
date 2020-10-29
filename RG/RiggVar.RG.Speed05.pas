@@ -1,4 +1,4 @@
-unit RiggVar.RG.Speed05;
+﻿unit RiggVar.RG.Speed05;
 
 interface
 
@@ -192,10 +192,7 @@ end;
 
 procedure TActionSpeedBarRG05.ToggleFontSizeBtnClick(Sender: TObject);
 begin
-  ToggleBigMode;
-  FormMain.LayoutComponents;
-  FormMain.CheckSpaceForMemo;
-  FormMain.CheckSpaceForImages;
+  FormMain.ToggleSpeedPanelFontSize;
 end;
 
 end.

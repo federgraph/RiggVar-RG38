@@ -220,6 +220,7 @@ begin
   ML.BeginUpdate;
   try
     ML.Clear;
+    RiggReport.SofortFlag := Main.SofortBerechnen;
     case CurrentReport of
       rgNone: ;
       rgReadme:

@@ -93,7 +93,6 @@ type
   public
     FWantButtonReport: Boolean;
     procedure UpdateReport;
-    procedure UpdateBackgroundColor(AColor: TAlphaColor);
     property WantButtonReport: Boolean read FWantButtonReport;
   public
     OpenDialog: TOpenDialog;
@@ -154,6 +153,7 @@ type
     procedure UpdateSpeedButtonDown;
     procedure UpdateSpeedButtonEnabled;
     procedure ToggleSpeedPanel;
+    procedure ToggleSpeedPanelFontSize;
     procedure SwapSpeedPanel(Value: Integer);
     procedure SwapRota(Value: Integer);
   public
@@ -216,6 +216,7 @@ type
     TextPositionY: single;
     procedure UpdateFederText;
     procedure CenterRotaForm;
+    procedure ToggleAllText;
   public
     SalingImage: TOriginalImage;
     SalingGraph: TSalingGraph;
@@ -370,7 +371,6 @@ begin
   begin
     Fill.Kind := TBrushKind.Solid; // because is still TBrushKind.None
     Fill.Color := claSlateblue;
-    UpdateBackgroundColor(MainVar.ColorScheme.claBackground);
   end;
 
   Caption := HelpCaptionText;
@@ -686,12 +686,6 @@ begin
   UpdateSpeedButtonDown;
 end;
 
-procedure TFormMain.UpdateBackgroundColor(AColor: TAlphaColor);
-begin
-  Self.Fill.Color := AColor;
-  RotaForm.BackgroundColor := AColor;
-end;
-
 procedure TFormMain.Reset;
 begin
   DefaultCaption := ApplicationTitleText;
@@ -783,6 +777,7 @@ end;
 procedure TFormMain.HandleAction(fa: Integer);
 begin
   case fa of
+    faToggleAllText: ToggleAllText;
     faToggleSpeedPanel: ToggleSpeedPanel;
 
     faToggleHelp:
@@ -826,6 +821,8 @@ begin
 
     faReportNone..faReportReadme:
     begin
+      HelpText.Visible := False;
+      ReportText.Visible := True;
       ReportManager.HandleAction(fa);
       UpdateReport;
     end;
@@ -974,6 +971,7 @@ begin
 
     'p': fa := faMemeGotoPortrait;
 
+    'q': fa := faToggleAllText;
     'Q': fa := faShowDiagQ;
 
     's': fa := faMemeGotoSquare;
@@ -1317,6 +1315,8 @@ begin
   SpeedPanel.Visible := True;
   SpeedPanel.UpdateSpeedButtonEnabled;
   SpeedPanel.UpdateSpeedButtonDown;
+  SpeedPanel.DarkMode := MainVar.ColorScheme.IsDark;
+  SpeedPanel.UpdateColor;
 end;
 
 procedure TFormMain.LayoutSpeedPanel(SP: TActionSpeedBar);
@@ -1691,6 +1691,8 @@ end;
 procedure TFormMain.SofortBtnClick(Sender: TObject);
 begin
   Main.SofortBerechnen := not Main.SofortBerechnen;
+  Main.FederText.CheckState;
+  UpdateReport;
 end;
 
 procedure TFormMain.GrauBtnClick(Sender: TObject);
@@ -1995,6 +1997,12 @@ begin
   if not ComponentsCreated then
     Exit;
 
+  Self.Fill.Color := MainVar.ColorScheme.claBackground;
+  RotaForm.BackgroundColor := MainVar.ColorScheme.claBackground;
+
+  SpeedPanel.DarkMode := MainVar.ColorScheme.IsDark;
+  SpeedPanel.UpdateColor;
+
   if ReportLabel <> nil then
     ReportLabel.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claReport;
 
@@ -2100,6 +2108,8 @@ end;
 procedure TFormMain.SwapRota(Value: Integer);
 begin
   RotaForm.SwapRota(Value);
+  RotaForm.BackgroundColor := MainVar.ColorScheme.claBackground;
+  RotaForm.DarkMode := MainVar.ColorScheme.IsDark;
   SwapSpeedPanel(RotaForm.Current);
 end;
 
@@ -2123,6 +2133,36 @@ begin
   RotaForm.InitPosition(Width, Height, 0, 0);
   if FormShown then
     RotaForm.Draw;
+end;
+
+procedure TFormMain.ToggleSpeedPanelFontSize;
+begin
+  SpeedPanel.ToggleBigMode;
+  FormMain.LayoutComponents;
+  FormMain.CheckSpaceForMemo;
+  FormMain.CheckSpaceForImages;
+end;
+
+procedure TFormMain.ToggleAllText;
+var
+  b: Boolean;
+begin
+  b := not ParamListbox.Visible;
+
+  SpeedPanel.Visible := b;
+  ParamListbox.Visible := b;
+  ReportListbox.Visible := b;
+  TrimmText.Visible := b;
+
+  if not b then
+  begin
+    ReportText.Visible := False;
+    HelpText.Visible := False;
+  end
+  else
+  begin
+    ReportText.Visible := True;
+  end;
 end;
 
 end.

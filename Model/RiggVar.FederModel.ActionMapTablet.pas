@@ -280,9 +280,9 @@ begin
       InitAC(cl, 3, faViewpointT, cla);
       InitAC(cl, 4, faViewpoint3, cla);
       InitAC(cl, 5, faActionPageP, claYellow);
-      InitAC(cl, 6, faToggleChartGraph, claCornflowerblue);
-      InitAC(cl, 7, faToggleControllerGraph, claCornflowerblue);
-      InitAC(cl, 8, faToggleSalingGraph, claCornflowerblue);
+      InitAC(cl, 6, faToggleChartGraph, claForm);
+      InitAC(cl, 7, faToggleControllerGraph, claForm);
+      InitAC(cl, 8, faToggleSalingGraph, claForm);
 
       cl := BottomLeft;
       cla := claParam;
@@ -376,17 +376,16 @@ begin
       InitAC(cl, 4, faReportAusgabeRPE, cla);
       InitAC(cl, 5, faReportAusgabeDiffL, cla);
       InitAC(cl, 6, faReportAusgabeDiffP, cla);
-      InitAC(cl, 7, faNoop, claWhite);
+      InitAC(cl, 7, faToggleAllText, claWhite);
       InitAC(cl, 8, faShowDiagQ, claForm);
 
-      cla := claWhite;
       cl := BottomRight;
-      InitAC(cl, 1, faCycleColorSchemeM, cla);
-      InitAC(cl, 2, faCycleColorSchemeP, cla);
-      InitAC(cl, 3, faNoop, cla);
-      InitAC(cl, 4, faReportDebugReport, claGoldenrod);
-      InitAC(cl, 5, faReportReadme, claGoldenrod);
-      InitAC(cl, 6, faReportNone, claGoldenrod);
+      InitAC(cl, 1, faCycleColorSchemeM, claWhite);
+      InitAC(cl, 2, faCycleColorSchemeP, claWhite);
+      InitAC(cl, 3, faSofortBtn, claPlum);
+      InitAC(cl, 4, faReportDebugReport, cla);
+      InitAC(cl, 5, faReportReadme, cla);
+      InitAC(cl, 6, faReportNone, cla);
     end;
 
     6:

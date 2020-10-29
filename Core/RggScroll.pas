@@ -143,9 +143,9 @@ end;
 function TRggSB.GetValue(n: TsbParam): single;
 begin
   case n of
-    TsbParam.Ist: result := Ist;
-    TsbParam.Min: result := Min;
-    TsbParam.Max: result := Max;
+    TsbParam.IstValue: result := Ist;
+    TsbParam.MinValue: result := Min;
+    TsbParam.MaxValue: result := Max;
     TsbParam.TinyStep: result := SmallStep;
     TsbParam.BigStep: result := BigStep;
     else
