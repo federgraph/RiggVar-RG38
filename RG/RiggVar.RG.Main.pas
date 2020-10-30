@@ -210,6 +210,8 @@ type
     ReportCounter: Integer;
     ResizeCounter: Integer;
 
+    CurrentRotaForm: Integer;
+
     constructor Create(ARigg: TRigg);
     destructor Destroy; override;
 
@@ -531,6 +533,12 @@ end;
 
 procedure TRggMain.SetParameter(fa: TFederAction);
 begin
+  if FAction = faPan then
+  begin
+    FAction := faNoop;
+    Exit;
+  end;
+
   FAction := fa;
   case fa of
     faController: Param := fpController;
@@ -904,6 +912,7 @@ procedure TRggMain.SetParam(Value: TFederParam);
 begin
   { make sure the 'pseudo-param' faPan gets cancelled }
   FAction := faNoop;
+
   if Demo then
   begin
     Rigg.SetDefaultDocument;
@@ -2071,6 +2080,7 @@ begin
 
   UpdateGetriebe;
   FormMain.UpdateReport;
+  FederText.CheckState;
 end;
 
 procedure TRggMain.InitFederText(ft: TFederTouch0);
@@ -2788,10 +2798,10 @@ begin
     faUpdateReportText: DoCleanReport;
     faToggleDebugText: ShowDebugData;
 
-    faParamValueMinus1, faWheelLeft: DoMouseWheel([ssShift], -1);
-    faParamValuePlus1, faWheelRight: DoMouseWheel([ssShift], 1);
-    faParamValuePlus10, faWheelUp: DoMouseWheel([ssCtrl], 1);
-    faParamValueMinus10, faWheelDown: DoMouseWheel([ssCtrl], -1);
+    faParamValueMinus1, faWheelLeft: DoMouseWheel([], -1);
+    faParamValuePlus1, faWheelRight: DoMouseWheel([], 1);
+    faParamValuePlus10, faWheelUp: DoMouseWheel([ssShift], 1);
+    faParamValueMinus10, faWheelDown: DoMouseWheel([ssShift], -1);
 
     faController: SetParameter(faController);
     faWinkel: SetParameter(faWinkel);

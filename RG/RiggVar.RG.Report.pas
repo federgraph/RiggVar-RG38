@@ -225,10 +225,10 @@ begin
       rgNone: ;
       rgReadme:
       begin
-        ML.Add('On the desktop - use scroll Wheel of the mouse!');
+        ML.Add('On the desktop  - use scroll Wheel of the mouse!');
         ML.Add('On touch screen - use touch bar on button frame');
         ML.Add('');
-        ML.Add('Wheel by itself will scroll Text in Controls.');
+//        ML.Add('Wheel by itself will scroll Text in Controls.');
         ML.Add('Wheel = small step change of current param value');
         ML.Add('Shift-Wheel = big step change of current param value');
       end;
@@ -307,13 +307,13 @@ var
 begin
   rs := [];
 
-  { there is not enough space to show all in listbox }
+//  { there is not enough space to show all in listbox }
 
   Include(rs, rgLog);
-//  Include(rs, rgJson);
-//  Include(rs, rgData);
+  Include(rs, rgJson);
+  Include(rs, rgData);
   Include(rs, rgShort);
-//  Include(rs, rgLong);
+  Include(rs, rgLong);
 
   Include(rs, rgTrimmText);
   Include(rs, rgJsonText);
@@ -322,11 +322,11 @@ begin
 
   Include(rs, rgAusgabeDetail);
   Include(rs, rgAusgabeRL);
-//  Include(rs, rgAusgabeRP);
-//  Include(rs, rgAusgabeRLE);
-//  Include(rs, rgAusgabeRPE);
+  Include(rs, rgAusgabeRP);
+  Include(rs, rgAusgabeRLE);
+  Include(rs, rgAusgabeRPE);
   Include(rs, rgAusgabeDiffL);
-//  Include(rs, rgAusgabeDiffP);
+  Include(rs, rgAusgabeDiffP);
 
   Include(rs, rgXML);
   Include(rs, rgDebugReport);

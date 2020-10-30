@@ -638,6 +638,7 @@ begin
     1:
     begin
       FCurrent := 1;
+      Main.CurrentRotaForm := 1;
       Main.StrokeRigg := RotaForm1;
 {$ifdef UseViewport}
       Viewport.Visible := False;
@@ -655,6 +656,7 @@ begin
     2:
     begin
       FCurrent := 2;
+      Main.CurrentRotaForm := 2;
       Main.StrokeRigg := RotaForm2;
 {$ifdef UseViewport}
       Viewport.Visible := False;
@@ -672,6 +674,7 @@ begin
     3:
     begin
       FCurrent := 3;
+      Main.CurrentRotaForm := 3;
       Main.StrokeRigg := RotaForm3;
       Viewport.Visible := True;
 {$ifdef UseImage}
