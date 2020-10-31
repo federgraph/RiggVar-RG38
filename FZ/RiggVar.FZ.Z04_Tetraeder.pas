@@ -9,11 +9,14 @@ uses
 
 type
   TRggDrawingZ04 = class(TRggDrawing)
+  private
+    function GetHelpText: string;
   public
     A0: TRggCircle;
     B0: TRggCircle;
     C0: TRggCircle;
     D0: TRggCircle;
+    HT: TRggLabel;
     constructor Create;
     procedure InitDefaultPos; override;
   end;
@@ -47,6 +50,16 @@ var
 begin
   inherited;
   Name := 'Z04-Tetraeder';
+
+  { Help Text }
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Tomato;
+  HT.IsMemoLabel := True;
+  HT.Position.Y := 500;
+  Add(HT);
 
   { Points }
 
@@ -114,6 +127,23 @@ begin
   FixPoint3D := D0.Center.C;
   WantRotation := True;
   WantSort := True;
+end;
+
+function TRggDrawingZ04.GetHelpText: string;
+begin
+  ML.Add('Tetreder = Tetrahedron = 3D drawing sample.');
+  ML.Add('');
+  ML.Add('Click in white space on image and drag the mouse.');
+  ML.Add('Try dragging  with right mouse button down.');
+  ML.Add('');
+  ML.Add('Select different circles and drag them with mouse.');
+  ML.Add('  by starting the drag within the selection shape.');
+  ML.Add('');
+  ML.Add('Use one finger on a touch screen device.');
+  ML.Add('Note which circle is the rotation center.');
+  ML.Add('Press Esc key to reset drawing.');
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

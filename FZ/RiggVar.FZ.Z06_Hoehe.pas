@@ -23,6 +23,8 @@ type
     SeiteC: TRggLine;
 
     LineH: TRggLine;
+    HT: TRggLabel;
+    function GetHelpText: string;
   protected
     procedure Compute2D;
     procedure Compute3D;
@@ -30,6 +32,8 @@ type
     constructor Create;
     procedure InitDefaultPos; override;
     procedure Compute; override;
+    procedure GoDark; override;
+    procedure GoLight; override;
   end;
 
 implementation
@@ -103,6 +107,15 @@ begin
   inherited;
   Name := 'Z06-Hoehe';
 
+  { Help Text }
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Red;
+  HT.IsMemoLabel := True;
+  Add(HT);
+
   { Points }
 
   DefaultShowCaption := True;
@@ -111,11 +124,11 @@ begin
   A.StrokeColor := TRggColors.Red;
 
   B := TRggCircle.Create('B');
-  B.StrokeColor := TRggColors.Lime;
+  B.StrokeColor := TRggColors.Aquamarine;
 
   C := TRggCircle.Create;
   C.Caption := 'C';
-  C.StrokeColor := TRggColors.Aqua;
+  C.StrokeColor := TRggColors.Dodgerblue;
 
   D := TRggCircle.Create('D');
   D.ShowCaption := False;
@@ -130,7 +143,7 @@ begin
 
   L := TRggLine.Create('a');
   L.ShowCaption := False;
-  L.StrokeColor := TRggColors.White;
+  L.StrokeColor := TRggColors.Red;
   L.StrokeThickness := 1;
   L.Point1 := C;
   L.Point2 := B;
@@ -138,7 +151,7 @@ begin
   SeiteA := L;
 
   L := TRggLine.Create('b');
-  L.StrokeColor := TRggColors.Lime;
+  L.StrokeColor := TRggColors.Aquamarine;
   L.StrokeThickness := 4;
   L.Point1 := C;
   L.Point2 := A;
@@ -146,7 +159,7 @@ begin
   SeiteB := L;
 
   L := TRggLine.Create('c');
-  L.StrokeColor := TRggColors.Aqua;
+  L.StrokeColor := TRggColors.Dodgerblue;
   L.StrokeThickness := 4;
   L.Point1 := B;
   L.Point2 := A;
@@ -188,6 +201,57 @@ begin
   WantSort := True;
 
   DefaultElement := A;
+end;
+
+procedure TRggDrawingZ06.GoDark;
+begin
+  inherited;
+  A.StrokeColor := TRggColors.Tomato;
+  B.StrokeColor := TRggColors.Lime;
+  C.StrokeColor := TRggColors.Dodgerblue;
+
+  SeiteA.StrokeColor := TRggColors.Tomato;
+  SeiteB.StrokeColor := TRggColors.Lime;
+  SeiteC.StrokeColor := TRggColors.Dodgerblue;
+
+  D.StrokeColor := TRggColors.Yellow;
+  LineH.StrokeColor := TRggColors.Yellow;
+end;
+
+procedure TRggDrawingZ06.GoLight;
+begin
+  inherited;
+  A.StrokeColor := TRggColors.Red;
+  B.StrokeColor := TRggColors.Aquamarine;
+  C.StrokeColor := TRggColors.Dodgerblue;
+
+  SeiteA.StrokeColor := TRggColors.Red;
+  SeiteB.StrokeColor := TRggColors.Aquamarine;
+  SeiteC.StrokeColor := TRggColors.Dodgerblue;
+
+  D.StrokeColor := TRggColors.Orange;
+  LineH.StrokeColor := TRggColors.Black;
+end;
+
+function TRggDrawingZ06.GetHelpText: string;
+begin
+  ML.Add('function Hoehe(a, b, c: single; out k: single): single;');
+  ML.Add('var');
+  ML.Add('  t: single;');
+  ML.Add('begin');
+  ML.Add('  k := sqr(a) + sqr(b) - sqr(c);');
+  ML.Add('  k := k / 2 / a / a;');
+  ML.Add('  t := sqr(b) - sqr(k) * sqr(a);');
+  ML.Add('  if t < 0.001 then');
+  ML.Add('    result := 0');
+  ML.Add('  else');
+  ML.Add('    result := sqrt(t);');
+  ML.Add('  if IsNan(result) then');
+  ML.Add('    result := 0;');
+  ML.Add('end;');
+
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

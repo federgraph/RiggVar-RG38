@@ -23,6 +23,7 @@ type
     Counter: Integer;
     Branch: Integer;
     procedure ComputePhi(l, s: single);
+    function GetHelpText: string;
   public
     A: TRggCircle;
     B: TRggCircle;
@@ -33,6 +34,8 @@ type
     AB: TRggPolyLine3D;
 
     Bem: TRggLabel;
+
+    HT: TRggLabel;
 
     constructor Create;
     procedure InitDefaultPos; override;
@@ -192,6 +195,16 @@ begin
   MastLength := 460;
   Radius := 300;
 
+  { Help Text }
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Tomato;
+  HT.IsMemoLabel := True;
+  HT.Position.Y := 500;
+  Add(HT);
+
   { Points }
 
   A := TRggCircle.Create('A');
@@ -245,6 +258,24 @@ begin
   DefaultElement := B;
 
   AB.WantRotation := WantRotation;
+end;
+
+function TRggDrawingZ16.GetHelpText: string;
+begin
+  ML.Add('Shrink sample');
+  ML.Add('');
+  ML.Add('If the Mast bends - distance AB (D0C) will shorten, but how much?');
+  ML.Add('  This is a sample based on paper and pencil work for RiggVar,');
+  ML.Add('    in the 90th.');
+  ML.Add('');
+  ML.Add('I created the drawing elements out of a need to document stuff,');
+  ML.Add('  in 2020 using Delphi.');
+  ML.Add('Drawing elements need an attached caption and should be live!');
+  ML.Add('Once they are live you may find out that they are not working,');
+  ML.Add('  but most of them can be fixed?');
+  ML.Add('We will find out, because it is easy to create new drawings.');
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

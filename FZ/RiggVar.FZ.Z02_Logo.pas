@@ -29,10 +29,13 @@ uses
 
 type
   TRggDrawingZ02 = class(TRggDrawing)
+  private
+    function GetHelpText: string;
   public
     D0, D: TRggCircle;
     P0, P: TRggCircle;
     C0, C: TRggCircle;
+    HT: TRggLabel;
     constructor Create;
     procedure InitDefaultPos; override;
   end;
@@ -81,6 +84,14 @@ begin
   inherited;
   Name := 'Z02-Logo';
   WantSort := False;
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Tomato;
+  HT.IsMemoLabel := True;
+  HT.Position.X := 400;
+  Add(HT);
 
   D0 := TRggCircle.Create;
   D0.Caption := 'D0';
@@ -177,6 +188,13 @@ begin
   Add(D);
   Add(P);
   Add(C);
+end;
+
+function TRggDrawingZ02.GetHelpText: string;
+begin
+  ML.Add('The RiggVar Logo.');
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

@@ -12,6 +12,8 @@ uses
 
 type
   TRggDrawingZ12 = class(TRggDrawing)
+  private
+    function GetHelpText: string;
   public
     A: TRggCircle;
     B: TRggCircle;
@@ -21,6 +23,7 @@ type
     Figure: Integer;
     ResultLabel: TRggLabel;
     FigureString: string;
+    HT: TRggLabel;
     constructor Create(AFigure: Integer = 0);
     procedure InitDefaultPos; override;
     procedure Compute; override;
@@ -99,6 +102,16 @@ begin
       FigureString := 'Figure Value';
   end;
 
+  { Help Text }
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Tomato;
+  HT.IsMemoLabel := True;
+  HT.Position.Y := 100;
+  Add(HT);
+
   { Points }
 
   A := TRggCircle.Create('A');
@@ -155,6 +168,17 @@ begin
   WantSort := False;
 
   DefaultElement := C;
+end;
+
+function TRggDrawingZ12.GetHelpText: string;
+begin
+  ML.Add('Atan and Atan2 samples.');
+  ML.Add('  One file, one class - two samples.');
+  ML.Add('');
+  ML.Add('constructor Create(AFigure: Integer = 0);');
+
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

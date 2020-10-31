@@ -18,6 +18,7 @@ type
   TRggDrawingZ20 = class(TRggDrawingKK)
   private
     Raster: single;
+    function GetHelpText: string;
   public
     M1: TRggCircle;
     M2: TRggCircle;
@@ -30,6 +31,8 @@ type
 
     ChartX: TRggChart;
     ChartY: TRggChart;
+
+    HT: TRggLabel;
 
     constructor Create;
     procedure InitDefaultPos; override;
@@ -67,6 +70,16 @@ begin
   inherited;
   Name := 'Z20-Epsilon';
   Raster := 25;
+
+  { Help Text }
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Tomato;
+  HT.IsMemoLabel := True;
+  HT.Position.Y := 200;
+  Add(HT);
 
   { Points }
 
@@ -189,6 +202,24 @@ begin
 
   ParamA.Text := Format('Param A = %.2f', [ParamA.RelativeValue]);
   ParamR.Text := Format('Param R = %.2f', [ParamR.RelativeValue]);
+end;
+
+function TRggDrawingZ20.GetHelpText: string;
+begin
+  ML.Add('Epsilon Test');
+  ML.Add('  A manual test for TSchnittKK class.');
+  ML.Add('  SchnittKK = Intersection Circle Circle');
+  ML.Add('  SchnittKK = Schnitt Kreis Kreis');
+  ML.Add('');
+  ML.Add('Select a Parameter element.');
+  ML.Add('  Scroll the wheel.');
+  ML.Add('    Examine code at GitHub:');
+  ML.Add('');
+  ML.Add('see github.com/federgraph/RiggVar-RG38/');
+  ML.Add('  repository RiggVar-RG38');
+  ML.Add('    drawings are in folder FZ');
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

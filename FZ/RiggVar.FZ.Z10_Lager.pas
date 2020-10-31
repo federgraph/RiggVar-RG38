@@ -9,11 +9,14 @@ uses
 
 type
   TRggDrawingZ10 = class(TRggDrawing)
+  private
+    function GetHelpText: string;
   public
     Origin: TRggCircle;
     AX: TRggCircle;
     AY: TRggCircle;
     AZ: TRggCircle;
+    HT: TRggLabel;
     constructor Create;
     procedure InitDefaultPos; override;
   end;
@@ -53,6 +56,15 @@ var
 begin
   inherited;
   Name := 'Z10-Lager';
+
+  { Help Text }
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Teal;
+  HT.IsMemoLabel := True;
+  Add(HT);
 
   { Points }
 
@@ -105,6 +117,38 @@ begin
   FixPoint3D := Origin.Center.C;
   WantRotation := True;
   WantSort := True;
+end;
+
+function TRggDrawingZ10.GetHelpText: string;
+begin
+  ML.Add('Lager = Bearing (Festlager und Loslager),');
+  ML.Add('  to be used later - when I will do real examples.');
+  ML.Add('');
+  ML.Add('Meanwhile, I have some Keyboard shortcuts from FormDrawing:');
+  ML.Add('');
+  ML.Add('case Key of');
+  ML.Add('  vkEscape: DoReset;');
+  ML.Add('  vkF11: SwapLayout;');
+  ML.Add('  vkF6 : SwapDrawingLists;');
+  ML.Add('  vkF3 : SwapThickLines;');
+  ML.Add('  vkF1 : ShowInfo;');
+  ML.Add('  vkF2 : SwapColorScheme;');
+  ML.Add('');
+  ML.Add('case KeyChar of');
+  ML.Add('  C: SwapColorScheme;');
+  ML.Add('  G: GlobalShowCaptionBtnClick(nil);');
+  ML.Add('  R: DoReset;');
+  ML.Add('  L: SwapDrawingLists;');
+  ML.Add('  T: SwapLayout;');
+  ML.Add('  W: SwapThickLines;');
+  ML.Add('');
+  ML.Add('  c: CodeBtnClick(nil);');
+  ML.Add('  h: UpdateLayout(True);');
+  ML.Add('  i: ShowInfo;');
+  ML.Add('  t: ToggleShowCaptionBtnClick(nil);');
+  ML.Add('  v: UpdateLayout(False);');
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

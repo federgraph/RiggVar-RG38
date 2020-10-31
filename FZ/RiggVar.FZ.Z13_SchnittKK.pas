@@ -16,6 +16,7 @@ type
   private
     Radius: single;
     SchnittKK: TSchnittKK;
+    function GetHelpText: string;
   public
     M1: TRggCircle;
     M2: TRggCircle;
@@ -28,6 +29,7 @@ type
     C1: TRggBigCircle;
     C2: TRggBigCircle;
 
+    HT: TRggLabel;
     constructor Create;
     destructor Destroy; override;
     procedure InitDefaultPos; override;
@@ -78,6 +80,16 @@ begin
 
   Radius := 150;
   SchnittKK := TSchnittKK.Create;
+
+  { Help Text }
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Tomato;
+  HT.IsMemoLabel := True;
+  HT.Position.Y := 600;
+  Add(HT);
 
   { Points }
 
@@ -146,6 +158,17 @@ destructor TRggDrawingZ13.Destroy;
 begin
   SchnittKK.Free;
   inherited;
+end;
+
+function TRggDrawingZ13.GetHelpText: string;
+begin
+  ML.Add('SchnittKK sample');
+  ML.Add('');
+  ML.Add('Move the center points and watch the intersections,');
+  ML.Add('  dragging with the mouse is probably best.');
+
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

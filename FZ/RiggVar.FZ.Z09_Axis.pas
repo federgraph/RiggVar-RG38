@@ -17,11 +17,13 @@ type
     procedure Btn4Click(Sender: TObject);
     procedure Btn5Click(Sender: TObject);
     procedure Btn6Click(Sender: TObject);
+    function GetHelpText: string;
   public
     Origin: TRggCircle;
     AX: TRggCircle;
     AY: TRggCircle;
     AZ: TRggCircle;
+    HT: TRggLabel;
     constructor Create;
     procedure InitDefaultPos; override;
     procedure InitButtons(BG: TRggButtonGroup); override;
@@ -84,6 +86,15 @@ var
 begin
   inherited;
   Name := 'Z09-Axis';
+
+  { Help Text }
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Tomato;
+  HT.IsMemoLabel := True;
+  Add(HT);
 
   { Points }
 
@@ -190,6 +201,18 @@ begin
   TH.Rotation.Z := DegToRad(-10);
   TH.Draw;
   TH.GetEulerAngles;
+end;
+
+function TRggDrawingZ09.GetHelpText: string;
+begin
+  ML.Add('Axis sample for doing rotation tests.');
+  ML.Add(' with special buttons Btn1..Btn6 mapped.');
+  ML.Add('');
+  ML.Add('Toggle layout with key v (vertical) and h.');
+  ML.Add('  Vertical layout is better on Surface tablet screen.');
+
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

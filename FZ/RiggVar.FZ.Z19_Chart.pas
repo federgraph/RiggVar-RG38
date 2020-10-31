@@ -10,12 +10,13 @@ uses
 
 type
   TRggDrawingZ19 = class(TRggDrawing)
+  private
+    function GetHelpText: string;
   public
     B0: TRggCircle;
     A: TRggCircle;
-
     Chart: TRggChart;
-
+    HT: TRggLabel;
     constructor Create;
     procedure InitDefaultPos; override;
     procedure Compute; override;
@@ -42,6 +43,14 @@ begin
   inherited;
   Name := 'Z19-Chart';
   WantSort := False;
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Tomato;
+  HT.IsMemoLabel := True;
+  HT.Position.Y := 500;
+  Add(HT);
 
   B0 := TRggCircle.Create('B0');
   B0.StrokeColor := TRggColors.Blue;
@@ -89,6 +98,14 @@ begin
   B0.StrokeColor := TRggColors.Cyan;
   A.StrokeColor := TRggColors.Orangered;
   Chart.StrokeColor := TRggColors.Dodgerblue;
+end;
+
+function TRggDrawingZ19.GetHelpText: string;
+begin
+  ML.Add('Chart Test');
+  ML.Add('');
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

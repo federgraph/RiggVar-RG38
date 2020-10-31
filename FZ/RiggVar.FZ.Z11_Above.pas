@@ -9,11 +9,14 @@ uses
 
 type
   TRggDrawingZ11 = class(TRggDrawing)
+  private
+    function GetHelpText: string;
   public
     A: TRggCircle;
     B: TRggCircle;
     C: TRggCircle;
     D: TRggCircle;
+    HT: TRggLabel;
     constructor Create;
     procedure InitDefaultPos; override;
   end;
@@ -52,6 +55,15 @@ var
 begin
   inherited;
   Name := 'Z11-Above';
+
+  { Help Text }
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Tomato;
+  HT.IsMemoLabel := True;
+  Add(HT);
 
   { Points }
 
@@ -93,6 +105,26 @@ begin
   FixPoint3D := A.Center.C;
   WantRotation := True;
   WantSort := True;
+end;
+
+function TRggDrawingZ11.GetHelpText: string;
+begin
+  ML.Add('Drawing with 3D rotations enabled:');
+  ML.Add('  WantRotation := True;');
+  ML.Add('  WantSort := True;');
+  ML.Add('');
+  ML.Add('You can rotate around 3 axis by dragging the mouse.');
+  ML.Add('  with left mouse button down: x and y.');
+  ML.Add('  with right mouse button down: z');
+  ML.Add('');
+  ML.Add('Lines will be drawn in sorted order - sorted by which is "above",');
+  ML.Add('  this is not so straight forward as it seems to be,');
+  ML.Add('    and this is one of the first tests that should be done.');
+  ML.Add('');
+  ML.Add('Lines detected as above should be drawn on top.');
+
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

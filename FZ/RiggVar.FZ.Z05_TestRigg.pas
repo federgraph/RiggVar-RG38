@@ -51,6 +51,9 @@ type
     AB: TRggLine;
     AD: TRggLine;
     BD: TRggLine;
+
+    HT: TRggLabel;
+    function GetHelpText: string;
   public
     A0, A: TRggCircle;
     B0, B: TRggCircle;
@@ -147,6 +150,16 @@ begin
   InitialZoom := InitialZoomDefault;
 
   DefaultShowCaption := True;
+
+  { Help Text }
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Tomato;
+  HT.IsMemoLabel := True;
+  HT.Position.X := 400;
+  Add(HT);
 
   { Points }
 
@@ -498,6 +511,20 @@ begin
   BD.StrokeColor := TRggColors.Lime;
 
   CF.StrokeColor := TRggColors.Cyan;
+end;
+
+function TRggDrawingZ05.GetHelpText: string;
+begin
+  ML.Add('Test-Rigg');
+  ML.Add('');
+  ML.Add('  WantRotation := True;');
+  ML.Add('  WantSort := True;');
+  ML.Add('');
+  ML.Add('  FixPoint3D := D.Center.C;');
+  ML.Add('  DefaultElement := D;');
+
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

@@ -1515,7 +1515,10 @@ begin
   y := TextCenter.Y;
 
   if IsMemoLabel then
-    h := 500;
+  begin
+    w := 620;
+    h := 700;
+  end;
 
   R := RectF(x, y, x + w, y + h);
 

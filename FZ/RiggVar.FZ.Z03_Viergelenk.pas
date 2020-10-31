@@ -22,6 +22,7 @@ type
     SchnittKK: TSchnittKK;
     rP: TRiggPoints;
     procedure UpdateKoppelkurve;
+    function GetHelpText: string;
   public
     A0: TRggCircle;
     B0: TRggCircle;
@@ -40,6 +41,8 @@ type
 
     Phi: TRggArc;
 
+    HT: TRggLabel;
+
     constructor Create;
     destructor Destroy; override;
 
@@ -54,7 +57,7 @@ implementation
 procedure TRggDrawingZ03.InitDefaultPos;
 begin
   ox := 100;
-  oy := 600;
+  oy := 530;
 
   A0.Center.X := ox + 0;
   A0.Center.Y := oy - 0;
@@ -105,6 +108,14 @@ begin
 
   Name := 'Z03-Viergelenk';
   WantSort := False;
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Tomato;
+  HT.IsMemoLabel := True;
+  HT.Position.Y := 600;
+  Add(HT);
 
   A0 := TRggCircle.Create;
   A0.Caption := 'A0';
@@ -270,6 +281,20 @@ begin
     KK.Poly[i].Y := rP.C.Y;
     phiM := phiM + WinkelStep;
   end;
+end;
+
+function TRggDrawingZ03.GetHelpText: string;
+begin
+  ML.Add('Viergelenk A0ABB0 = mechanism A0 A B B0 = a four bar linkage?');
+  ML.Add('');
+  ML.Add('Line Element AB is called "Koppel".');
+  ML.Add('  Points A, B and C are located in a plain, the "Koppelebene".');
+  ML.Add('');
+  ML.Add('Yellow curve is called "Koppelkurve".');
+  ML.Add('  Point C will move along the Koppelkurve if you change Phi.');
+  ML.Add('    Change angle phi via element RotaLine A0A.');
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

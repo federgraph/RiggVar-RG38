@@ -95,6 +95,7 @@ type
 
     procedure SwapRota(Selected: Integer);
     procedure DoOnIdle;
+    procedure DoOnResizeEnd;
 
     property IsUp: Boolean read FIsUp write SetIsUp;
     property BackgroundColor: TAlphaColor read FBackgroundColor write SetBackgroundColor;
@@ -695,6 +696,13 @@ procedure TRotaForm.DoOnIdle;
 begin
 {$ifdef WantRotaForm3}
   RotaForm3.Frame3D.DoOnIdle;
+{$endif}
+end;
+
+procedure TRotaForm.DoOnResizeEnd;
+begin
+{$ifdef WantRotaForm3}
+  RotaForm3.DoOnResize;
 {$endif}
 end;
 

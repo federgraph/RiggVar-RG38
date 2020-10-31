@@ -143,8 +143,8 @@ begin
   SL.Add('Taste g : ');
   SL.Add('Taste G : ');
   SL.Add('');
-  SL.Add('Taste h : faToggleHelp');
-  SL.Add('Taste H : faSalingH');
+  SL.Add('Taste h : faSalingH');
+  SL.Add('Taste H : faToggleHelp');
   SL.Add('');
   SL.Add('Taste i : faWheelRight');
   SL.Add('Taste I : faWheelLeft');

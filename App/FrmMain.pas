@@ -75,6 +75,8 @@ type
     DefaultCaption: string;
     FormShown: Boolean;
     procedure ApplicationEventsException(Sender: TObject; E: Exception);
+    procedure FormCreate2(Sender: TObject);
+    procedure FormDestroy2(Sender: TObject);
     procedure HandleShowHint(Sender: TObject);
     procedure Flash(s: string);
     procedure Reset;
@@ -268,7 +270,7 @@ uses
   RiggVar.FB.Classes;
 
 const
-  HelpCaptionText = 'press h for help';
+  HelpCaptionText = 'press H for help';
   ApplicationTitleText = 'RG38';
 
 { TFormMain }
@@ -280,6 +282,21 @@ begin
 end;
 
 procedure TFormMain.FormCreate(Sender: TObject);
+begin
+  FormatSettings.DecimalSeparator := '.';
+
+  { FormCreate2 will be called from Init if RotaForm3 is used }
+  FormCreate2(Sender);
+end;
+
+procedure TFormMain.FormDestroy(Sender: TObject);
+begin
+  MainVar.AppIsClosing := True;
+
+  FormDestroy2(Sender);
+end;
+
+procedure TFormMain.FormCreate2(Sender: TObject);
 begin
 {$ifdef Debug}
   ReportMemoryLeaksOnShutdown := True;
@@ -401,10 +418,11 @@ begin
   Main.InitDefaultData;
   CenterRotaForm;
   Main.FixPoint := ooD0;
+  Main.HullVisible := False;
   Main.OnUpdateChart := DoOnUpdateChart;
 end;
 
-procedure TFormMain.FormDestroy(Sender: TObject);
+procedure TFormMain.FormDestroy2(Sender: TObject);
 begin
   DestroyForms;
 
@@ -483,6 +501,9 @@ begin
   ClientWidth := w;
   ClientHeight := h;
   Flash(Format('%d x %d', [ClientWidth, ClientHeight]));
+{$ifdef WantRotaForm3}
+  DoOnResizeEnd;
+{$endif}
 end;
 
 procedure TFormMain.UpdateItemIndexParams;
@@ -725,6 +746,9 @@ begin
     Left := 0;
   end;
   Flash('Landscape');
+{$ifdef WantRotaForm3}
+  DoOnResizeEnd;
+{$endif}
 end;
 
 procedure TFormMain.GotoPortrait;
@@ -744,6 +768,9 @@ begin
     Top := 0;
   end;
   Flash('Portrait');
+{$ifdef WantRotaForm3}
+  DoOnResizeEnd;
+{$endif}
 end;
 
 procedure TFormMain.GotoSquare;
@@ -762,6 +789,9 @@ begin
     Left := 0
   end;
   Flash('Square');
+{$ifdef WantRotaForm3}
+  DoOnResizeEnd;
+{$endif}
 end;
 
 procedure TFormMain.Flash(s: string);
@@ -943,8 +973,8 @@ begin
     'g': ;
     'G': ;
 
-    'h': fa := faToggleHelp;
-    'H': fa := faSalingH;
+    'h': fa := faSalingH;
+    'H': fa := faToggleHelp;
 
     'i': fa := faWheelRight;
     'I': fa := faWheelLeft;
@@ -1042,7 +1072,7 @@ procedure TFormMain.InitHelpText;
 begin
   HL.Clear;
   HL.Add('Toggle Text with Keys:');
-  HL.Add('  h    - toggle help');
+  HL.Add('  H    - toggle help');
   HL.Add('  r    - toggle Report');
   HL.Add('');
   HL.Add('Select current parameter:');
@@ -1057,9 +1087,17 @@ begin
   HL.Add('Change Format of Window');
   HL.Add('  l, p, s - Landscape, Portrait, Square');
   HL.Add('');
+  HL.Add('Forms:');
+  HL.Add('  FA - seach for meaning of button');
+  HL.Add('  FM - list about keyboard shortcuts');
+  HL.Add('  FD - show documentation drawings');
+
+{$ifdef debug}
+  HL.Add('');
   HL.Add('Window-Info:');
   HL.Add(Format('  Initial-Client-W-H = (%d, %d)', [ClientWidth, ClientHeight]));
   HL.Add(Format('  Handle.Scale = %.1f', [Handle.Scale]));
+{$endif}
 
   HelpText.Text := HL.Text;
 end;

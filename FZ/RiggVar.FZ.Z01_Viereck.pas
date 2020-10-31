@@ -9,11 +9,14 @@ uses
 
 type
   TRggDrawingZ01 = class(TRggDrawing)
+  private
+    function GetHelpText: string;
   public
     A0: TRggCircle;
     B0: TRggCircle;
     A: TRggCircle;
     B: TRggCircle;
+    HT: TRggLabel;
     constructor Create;
     procedure InitDefaultPos; override;
   end;
@@ -49,6 +52,18 @@ begin
   Name := 'Z01-Viereck';
   WantSort := False;
 
+  { Help Text }
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Tomato;
+  HT.IsMemoLabel := True;
+  HT.Position.Y := 500;
+  Add(HT);
+
+  { Points }
+
   A0 := TRggCircle.Create('A0');
   A0.StrokeColor := TRggColors.Orangered;
 
@@ -62,6 +77,8 @@ begin
   B.StrokeColor := TRggColors.Blue;
 
   InitDefaultPos;
+
+  { Lines }
 
   L := TRggLine.Create('A0B0');
   L.StrokeColor := TRggColors.Gray;
@@ -87,10 +104,30 @@ begin
   L.Point2 := B;
   Add(L);
 
+  { Add points last so that they stay in front. }
   Add(A0);
   Add(B0);
   Add(A);
   Add(B);
+end;
+
+function TRggDrawingZ01.GetHelpText: string;
+begin
+  ML.Add('First select a drawing element, Circle or Line, and play with Params.');
+  ML.Add('');
+  ML.Add('Change Param 1 with mouse wheel.');
+  ML.Add('Change Param 2 with Shift-Wheel');
+  ML.Add('  Make sure the mouse is over the drawing when you wheel.');
+  ML.Add('');
+  ML.Add('A Circle element can be moved in x and y direction.');
+  ML.Add('A Line element maps length and angle to params 1 and 2.');
+  ML.Add('');
+  ML.Add('Drag a Selected circle with the mouse.');
+  ML.Add('');
+  ML.Add('Press Esc key to reset the drawing.');
+  ML.Add('  For other keyboard shortcuts see drawing Z10-Lager.');
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

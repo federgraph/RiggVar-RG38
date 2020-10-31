@@ -96,6 +96,9 @@ end;
 
 function TRggDrawingZ22.GetHelpText: string;
 begin
+  ML.Add('BigArc is the test drawing for element TBigArc.');
+  ML.Add('  Use it like all the drawings.');
+  ML.Add('');
   ML.Add('Many drawing elements have parameters.');
   ML.Add('  Param 1 can be changed via mouse wheel.');
   ML.Add('  Param 2 can be changed via shift mouse wheel.');
@@ -110,9 +113,7 @@ begin
   ML.Add('');
   ML.Add('Each element has a caption.');
   ML.Add('  Element captions can be moved via params,');
-  ML.Add('  and visibility of captions can be changed.');
-  ML.Add('');
-  ML.Add('Toggle layout with key v (vertical) and h.');
+  ML.Add('    and visibility of captions can be changed with key t.');
 
   result := ML.Text;
   ML.Clear;

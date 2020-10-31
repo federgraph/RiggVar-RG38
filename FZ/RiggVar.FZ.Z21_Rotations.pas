@@ -19,6 +19,7 @@ type
     LAX: TRggLine;
     LAY: TRggLine;
     LAZ: TRggLine;
+    HT: TRggLabel;
     procedure Btn0Click(Sender: TObject);
     procedure Btn1Click(Sender: TObject);
     procedure Btn2Click(Sender: TObject);
@@ -40,6 +41,7 @@ type
     procedure RotaMat(aRotX, aRotY, aRotZ: single);
     procedure RotaHPB(aRotX, aRotY, aRotZ: single);
     procedure RotaYPR(aRotX, aRotY, aRotZ: single);
+    function GetHelpText: string;
   public
     Origin: TRggCircle;
     AX: TRggCircle;
@@ -87,6 +89,15 @@ var
 begin
   inherited;
   Name := 'Z21-Rotations';
+
+  { Help Text }
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Tomato;
+  HT.IsMemoLabel := True;
+  Add(HT);
 
   { Points }
 
@@ -444,6 +455,23 @@ begin
   TH.Reset;
   TH.InitTransform(mr);
   TH.GetEulerAngles;
+end;
+
+function TRggDrawingZ21.GetHelpText: string;
+begin
+  ML.Add('Rotation Test - for testing out Euler angles.');
+  ML.Add('  Hover mouse over buttons 8 and 9 to see hints.');
+  ML.Add('');
+  ML.Add('Steps:');
+  ML.Add('1. Rotate the graph in 3D.');
+  ML.Add('2. Click speed button 8 or 9.');
+  ML.Add('3. Graph should NOT jump away.');
+  ML.Add('     All is good if it does not, see code.');
+  ML.Add('');
+  ML.Add('Otherwise - work in progress.');
+
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

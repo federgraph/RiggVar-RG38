@@ -10,6 +10,8 @@ uses
 
 type
   TRggDrawingZ14 = class(TRggDrawing)
+  private
+    function GetHelpText: string;
   public
     A: TRggCircle;
     B: TRggCircle;
@@ -30,6 +32,8 @@ type
     Param: TRggParam;
 
     Alpha: TRggArc;
+
+    HT: TRggLabel;
     constructor Create;
     procedure InitDefaultPos; override;
     procedure Compute; override;
@@ -87,6 +91,14 @@ var
 begin
   inherited;
   Name := 'Z14-SplitF';
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Tomato;
+  HT.IsMemoLabel := True;
+  HT.Position.Y := 680;
+  Add(HT);
 
   A := TRggCircle.Create;
   A.Caption := 'A';
@@ -198,6 +210,14 @@ begin
   Add(F1);
 
   DefaultElement := Param;
+end;
+
+function TRggDrawingZ14.GetHelpText: string;
+begin
+  ML.Add('SplitF = split force vector F into components.');
+
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.

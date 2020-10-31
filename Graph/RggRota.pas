@@ -818,7 +818,9 @@ begin
   if Painted then
   begin
     Painted := False;
-    if FTranslation or (Shift = [ssLeft, ssRight]) then
+    if (ssCtrl in Shift) then
+      Translate(x,y)
+    else if FTranslation or (Shift = [ssLeft, ssRight]) then
       Translate(x,y)
     else
       Rotate(0, 0, 0, wx, wy, wz);

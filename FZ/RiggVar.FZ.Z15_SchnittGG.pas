@@ -11,12 +11,15 @@ uses
 
 type
   TRggDrawingZ15 = class(TRggDrawing)
+  private
+    function GetHelpText: string;
   public
     A: TRggCircle;
     B: TRggCircle;
     C: TRggCircle;
     D: TRggCircle;
     S: TRggCircle;
+    HT: TRggLabel;
     constructor Create;
     procedure InitDefaultPos; override;
     procedure Compute; override;
@@ -82,6 +85,15 @@ begin
   inherited;
   Name := 'Z15-SchnittGG';
 
+  { Help Text }
+
+  HT := TRggLabel.Create;
+  HT.Caption := 'HelpText';
+  HT.Text := GetHelpText;
+  HT.StrokeColor := TRggColors.Tomato;
+  HT.IsMemoLabel := True;
+  Add(HT);
+
   { Points }
 
   A := TRggCircle.Create('A');
@@ -128,6 +140,25 @@ begin
   WantRotation := False;
   WantSort := False;
   DefaultElement := D;
+end;
+
+function TRggDrawingZ15.GetHelpText: string;
+begin
+  ML.Add('SchnittGG = Schnitt Gerade Gerade = Intersection Line Line.');
+  ML.Add('  2D drawing with 2 lines AB and CD.');
+  ML.Add('');
+  ML.Add('Points A, B, C and D are instances of the TRggCircle class.');
+  ML.Add('  TRggLine instances reference two TRggCircle instances.');
+  ML.Add('    Line AB references Circle A and Circle B.');
+  ML.Add('');
+  ML.Add('Schnittpunkt SP is computed with SchnittGG(P1, P2, P3, P4, SP);');
+  ML.Add('  with P1.X := A.Center.X; and so on see code at GitHub.');
+  ML.Add('');
+  ML.Add('Intersection point S is a computed point (Circle S).');
+  ML.Add('  Computed circle elements (--) cannot be selected/dragged.');
+
+  result := ML.Text;
+  ML.Clear;
 end;
 
 end.
