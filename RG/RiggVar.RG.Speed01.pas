@@ -99,7 +99,7 @@ begin
 
   sb := AddSpeedBtn('SandboxedBtn', BtnGroupSpace);
   SandboxedBtn := sb;
-  sb.Text := 'SB';
+  sb.Text := 'SX';
   if MainConst.MustBeSandboxed then
   begin
     sb.Hint := 'Sandboxed (Store)';
@@ -125,7 +125,7 @@ begin
 
   sb := AddSpeedBtn('AllPropsBtn');
   AllPropsBtn := sb;
-  sb.Text := 'ATP';
+  sb.Text := 'AP';
   sb.Hint := 'All Trimm Props';
   sb.StaysPressed := True;
   sb.IsPressed := False;
@@ -133,7 +133,7 @@ begin
 
   sb := AddSpeedBtn('AllTagsBtn');
   AllTagsBtn := sb;
-  sb.Text := 'AXT';
+  sb.Text := 'AT';
   sb.Hint := 'All Xml Tags';
   sb.StaysPressed := True;
   sb.IsPressed := False;

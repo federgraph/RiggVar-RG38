@@ -227,9 +227,9 @@ begin
     faReportDebugReport: result := '~';
     faReportReadme: result := '~R';
 
-    faToggleSandboxed: result := 'SB';
-    faToggleAllProps: result := 'ATP';
-    faToggleAllTags: result := 'AXT';
+    faToggleSandboxed: result := 'SX';
+    faToggleAllProps: result := 'AP';
+    faToggleAllTags: result := 'AT';
 
     faToggleLineColor: result := 'LC';
 
@@ -263,7 +263,7 @@ begin
     faMemoryRecallBtn: result := 'MR';
 
     faKorrigiertItem: result := 'KI';
-    faSofortBtn: result := 'SF';
+    faSofortBtn: result := 'SB';
     faGrauBtn: result := 'GB';
     faBlauBtn: result := 'BB';
     faMultiBtn: result := 'MB';

@@ -584,7 +584,7 @@ begin
   begin
     RD.KK.RggPoly[i].X := RD.OffsetX + (FKoppelKurve[i].X - p.X) * RD.InitialZoom;
     RD.KK.RggPoly[i].Y := RD.OffsetY - (FKoppelKurve[i].Z - p.Z) * RD.InitialZoom;
-    RD.KK.RggPoly[i].Z := 0;
+    RD.KK.RggPoly[i].Z := p.Y * RD.InitialZoom;
   end;
   if not RD.ViewpointFlag then
     RD.KK.Transform;

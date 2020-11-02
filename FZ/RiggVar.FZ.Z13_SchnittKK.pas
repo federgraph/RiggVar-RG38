@@ -130,6 +130,7 @@ begin
   C1.StrokeColor := TRggColors.Plum;
   C1.Radius := Radius;
   C1.IsComputed := True;
+  C1.ShowCaption := False;
   Add(C1);
 
   C2 := TRggBigCircle.Create('C2');
@@ -137,6 +138,7 @@ begin
   C2.StrokeColor := TRggColors.Dodgerblue;
   C2.Radius := Radius;
   C2.IsComputed := True;
+  C2.ShowCaption := False;
   Add(C2);
 
   Add(M1);

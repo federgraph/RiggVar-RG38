@@ -2598,22 +2598,22 @@ end;
 
 procedure TRggMain.DoBigWheel(Delta: single);
 begin
-  if not IsRggParam then
-    inherited
-  else if MainVar.RG then
+//  if not IsRggParam then
+//    inherited
+//  else if MainVar.RG then
     DoBigWheelRG(Delta)
-  else
-    inherited;
+//  else
+//    inherited;
 end;
 
 procedure TRggMain.DoSmallWheel(Delta: single);
 begin
-  if not IsRggParam then
-    inherited
-  else if MainVar.RG then
+//  if not IsRggParam then
+//    inherited
+//  else if MainVar.RG then
     DoSmallWheelRG(Delta)
-  else
-    inherited;
+//  else
+//    inherited;
 end;
 
 procedure TRggMain.DoReadTrimmFile(fn: string);

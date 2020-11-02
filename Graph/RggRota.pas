@@ -11,6 +11,7 @@ uses
   System.Types,
   System.UITypes,
   System.UIConsts,
+  System.Math,
   System.Math.Vectors,
   FMX.Graphics,
   FMX.Objects,
@@ -1018,7 +1019,7 @@ end;
 
 procedure TRotaForm1.Zoom(Delta: single);
 begin
-  FZoom := FZoom + FZoom * FZoomBase * Delta * 0.3;
+  FZoom := FZoom + FZoom * FZoomBase * Sign(Delta) * 0.5;
   RaumGraph.Zoom := FZoom;
   Draw;
 end;

@@ -155,8 +155,8 @@ begin
   SL.Add('Taste k : ');
   SL.Add('Taste K : faRggKoppel');
   SL.Add('');
-  SL.Add('Taste l : faMemeGotoLandscape');
-  SL.Add('Taste L : faToggleShowLegend');
+  SL.Add('Taste l : faToggleShowLegend');
+  SL.Add('Taste L : faMemeGotoLandscape');
   SL.Add('');
   SL.Add('Taste m : faMemoryBtn');
   SL.Add('Taste M : faCopyAndPaste');
@@ -167,8 +167,8 @@ begin
   SL.Add('Taste o : faWoben');
   SL.Add('Taste O : ');
   SL.Add('');
-  SL.Add('Taste p : faMemeGotoPortrait');
-  SL.Add('Taste P : ');
+  SL.Add('Taste p : faPan');
+  SL.Add('Taste P : faMemeGotoPortrait');
   SL.Add('');
   SL.Add('Taste q : faToggleAllText');
   SL.Add('Taste Q : faShowDiagQ');
@@ -176,8 +176,8 @@ begin
   SL.Add('Taste r : faToggleReport');
   SL.Add('Taste R : faReadTrimmFile');
   SL.Add('');
-  SL.Add('Taste s : faMemeGotsSquare');
-  SL.Add('Taste S : ');
+  SL.Add('Taste s : ');
+  SL.Add('Taste S : faMemeGotsSquare');
   SL.Add('');
   SL.Add('Taste t : faToggleFontColor');
   SL.Add('Taste T : faToggleSpeedPanel');

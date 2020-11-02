@@ -154,8 +154,8 @@ begin
     faToggleTouchFrame: result := 'Toggle Touch Frame';
     faToggleSpeedPanel: result := 'Toggle Speed Panel';
 
-    faCycleColorSchemeM: result := 'cycle 3D color scheme -';
-    faCycleColorSchemeP: result := 'cycle 3D color scheme +';
+    faCycleColorSchemeM: result := 'cycle color scheme -';
+    faCycleColorSchemeP: result := 'cycle color scheme +';
 
     faTouchDesk: result := 'Touch Desk';
     faTouchTablet: result := 'Touch Tablet';
@@ -359,9 +359,9 @@ begin
     faParamT3: result := 'Param T3';
     faParamT4: result := 'Param T4';
 
-    faRotaForm1: result := 'use RotaFrom 1';
-    faRotaForm2: result := 'use RotaFrom 2';
-    faRotaForm3: result := 'use RotaFrom 3';
+    faRotaForm1: result := 'use RotaForm 1';
+    faRotaForm2: result := 'use RotaForm 2';
+    faRotaForm3: result := 'use RotaForm 3';
 
     faReset: result := 'Reset';
     faResetPosition: result := 'Reset Position';

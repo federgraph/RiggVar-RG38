@@ -301,7 +301,6 @@ begin
 {$ifdef Debug}
   ReportMemoryLeaksOnShutdown := True;
 {$endif}
-  FormatSettings.DecimalSeparator := '.';
 
   FScale := 1.0;
 {$ifdef MSWINDOWS}
@@ -405,7 +404,6 @@ begin
 
   Main.Draw;
   Main.MemoryBtnClick;
-  Main.FederText.CheckState;
 
   Application.OnHint := HandleShowHint;
   InitSpeedButtons;
@@ -420,6 +418,7 @@ begin
   Main.FixPoint := ooD0;
   Main.HullVisible := False;
   Main.OnUpdateChart := DoOnUpdateChart;
+  Main.FederText.CheckState;
 end;
 
 procedure TFormMain.FormDestroy2(Sender: TObject);
@@ -570,7 +569,16 @@ end;
 procedure TFormMain.FormMouseWheel(Sender: TObject; Shift: TShiftState;
   WheelDelta: Integer; var Handled: Boolean);
 begin
+  if Abs(WheelDelta) > 100 then
+  begin
+    { normal mouse }
   Main.DoMouseWheel(Shift, WheelDelta div 120);
+  end
+  else
+  begin
+    { touchpad of Surface Cover }
+    Main.DoMouseWheel(Shift, WheelDelta);
+  end;
   Handled := True;
 end;
 
@@ -985,8 +993,8 @@ begin
     'k': ;
     'K': fa := faRggKoppel;
 
-    'l': fa := faMemeGotoLandscape;
-    'L': fa := faToggleShowLegend;
+    'l': fa := faToggleShowLegend;
+    'L': fa := faMemeGotoLandscape;
 
     'm': fa := faMemoryBtn;
     'M': fa := faCopyAndPaste;
@@ -999,12 +1007,13 @@ begin
 
     'o': fa := faWoben;
 
-    'p': fa := faMemeGotoPortrait;
+    'p': fa := faPan;
+    'P': fa := faMemeGotoPortrait;
 
     'q': fa := faToggleAllText;
     'Q': fa := faShowDiagQ;
 
-    's': fa := faMemeGotoSquare;
+    'S': fa := faMemeGotoSquare;
 
     't': fa := faToggleFontColor;
     'T': fa := faToggleSpeedPanel;
@@ -1085,7 +1094,7 @@ begin
   HL.Add('Goto stored Trimm');
   HL.Add('  1..8, 0 - Trimm selection');
   HL.Add('Change Format of Window');
-  HL.Add('  l, p, s - Landscape, Portrait, Square');
+  HL.Add('  L, P, S - Landscape, Portrait, Square');
   HL.Add('');
   HL.Add('Forms:');
   HL.Add('  FA - seach for meaning of button');
