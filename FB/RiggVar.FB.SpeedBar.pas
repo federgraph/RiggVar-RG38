@@ -56,7 +56,7 @@ type
     procedure UpdateCaptions;
     procedure UpdateHints;
   public
-    SpeedColorScheme: TSpeedColorScheme;
+    class var SpeedColorScheme: TSpeedColorScheme; // injected
 
     constructor Create(AOwner: TComponent); override;
 

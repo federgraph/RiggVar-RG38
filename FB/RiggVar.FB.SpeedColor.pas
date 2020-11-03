@@ -37,7 +37,8 @@ type
     clvZoom
   );
 
-  TSpeedColorScheme = record
+  TSpeedColorScheme = class
+  public
     claScheme: TAlphaColor;
 
     claBack: TAlphaColor;

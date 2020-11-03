@@ -19,10 +19,11 @@
 interface
 
 uses
+  RiggVar.FB.SpeedColor,
+  RiggVar.FB.SpeedBar,
   RiggVar.RG.Def,
   RiggVar.RG.Report,
   RiggVar.RG.Rota,
-  RiggVar.FB.SpeedBar,
   RiggVar.FD.Image,
   RggCtrls,
   RggChartGraph,
@@ -150,6 +151,7 @@ type
     SpeedPanel03: TActionSpeedBar;
     SpeedPanel04: TActionSpeedBar;
     SpeedPanel05: TActionSpeedBar;
+    SpeedColorScheme: TSpeedColorScheme;
     procedure InitSpeedButtons;
     procedure LayoutSpeedPanel(SP: TActionSpeedBar);
     procedure UpdateSpeedButtonDown;
@@ -285,6 +287,10 @@ procedure TFormMain.FormCreate(Sender: TObject);
 begin
   FormatSettings.DecimalSeparator := '.';
 
+  SpeedColorScheme := TSpeedColorScheme.Create;
+  SpeedColorScheme.InitDark;
+  TActionSpeedBar.SpeedColorScheme := SpeedColorScheme;
+
   { FormCreate2 will be called from Init if RotaForm3 is used }
   FormCreate2(Sender);
 end;
@@ -294,6 +300,8 @@ begin
   MainVar.AppIsClosing := True;
 
   FormDestroy2(Sender);
+
+  SpeedColorScheme.Free;
 end;
 
 procedure TFormMain.FormCreate2(Sender: TObject);
@@ -2008,19 +2016,24 @@ begin
   Self.Fill.Color := MainVar.ColorScheme.claBackground;
   RotaForm.BackgroundColor := MainVar.ColorScheme.claBackground;
 
+  if MainVar.ColorScheme.IsDark then
+    SpeedColorScheme.InitDark
+  else
+    SpeedColorScheme.InitLight;
+
   SpeedPanel.DarkMode := MainVar.ColorScheme.IsDark;
   SpeedPanel.UpdateColor;
 
   if ReportLabel <> nil then
-    ReportLabel.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claReport;
+    ReportLabel.TextSettings.FontColor := SpeedColorScheme.claReport;
 
-  HintText.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claHintText;
-  ReportText.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claReportText;
-  HelpText.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claHelpText;
-  TrimmText.TextSettings.FontColor := SpeedPanel.SpeedColorScheme.claTrimmText;
+  HintText.TextSettings.FontColor := SpeedColorScheme.claHintText;
+  ReportText.TextSettings.FontColor := SpeedColorScheme.claReportText;
+  HelpText.TextSettings.FontColor := SpeedColorScheme.claHelpText;
+  TrimmText.TextSettings.FontColor := SpeedColorScheme.claTrimmText;
 
-  SetupListboxItems(ParamListbox, SpeedPanel.SpeedColorScheme.claParamList);
-  SetupListboxItems(ReportListbox, SpeedPanel.SpeedColorScheme.claReportList);
+  SetupListboxItems(ParamListbox, SpeedColorScheme.claParamList);
+  SetupListboxItems(ReportListbox, SpeedColorScheme.claReportList);
 
   ControllerGraph.BackgroundColor := MainVar.ColorScheme.claBackground;
   UpdateControllerGraph;
@@ -2028,7 +2041,7 @@ begin
   SalingGraph.BackgroundColor := MainVar.ColorScheme.claBackground;
   UpdateSalingGraph;
 
-  RotaForm.DarkMode := SpeedPanel.DarkMode;
+  RotaForm.DarkMode := SpeedColorScheme.IsDark;
 end;
 
 procedure TFormMain.SuperSimpleBtnClick(Sender: TObject);
