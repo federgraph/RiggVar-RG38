@@ -93,7 +93,6 @@ begin
   { View }
   AddSpecial(ActionGroupFederText, 'FederText');
   AddSpecial(ActionGroupViewParams, 'ViewParams');
-  AddSpecial(ActionGroupParamT, 'ParamT');
 
   { RG }
   AddSpecial(ActionGroupRggControls, 'RggControls');
@@ -131,7 +130,6 @@ begin
   AddSpecial(ActionGroupCopyPaste, 'CopyPaste');
   AddSpecial(ActionGroupViewType, 'ViewType');
   AddSpecial(ActionGroupViewOptions, 'ViewOptions');
-  AddSpecial(ActionGroupBitmapCycle, 'BitmapCycle');
   AddSpecial(ActionGroupHullMesh, 'HullMesh');
 end;
 

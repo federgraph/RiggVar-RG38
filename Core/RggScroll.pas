@@ -85,8 +85,6 @@ type
     SalingL: TRggSB;
     VorstagOS: TRggSB;
     WPowerOS: TRggSB;
-    T1: TRggSB;
-    T2: TRggSB;
     SalingW: TRggSB;
     MastfallF0C: TRggSB;
     MastfallF0F: TRggSB;
@@ -225,20 +223,6 @@ begin
   Dummy := TRggSB.Create;
   Dummy.IsVolatile := True;
 
-  T1 := TRggSB.Create;
-  T1.Min := 0;
-  T1.Max := 500;
-  T1.Ist := 0;
-  T1.IsVolatile := True;
-  T1.Save;
-
-  T2 := TRggSB.Create;
-  T2.Min := 1;
-  T2.Max := 800;
-  T2.Ist := 1;
-  T2.IsVolatile := True;
-  T2.Save;
-
   APWidth := TRggSB.Create;
   APWidth.Min := 1;
   APWidth.Ist := 30;
@@ -272,9 +256,6 @@ end;
 
 procedure TRggFA.ResetVolatile;
 begin
-  T1.Reset;
-  T2.Reset;
-
   APWidth.Reset;
 
   EARigg.Reset;
@@ -302,9 +283,6 @@ begin
   Biegung.Free;
   D0X.Free;
 
-  T1.Free;
-  T2.Free;
-
   APWidth.Free;
   EI.Free;
   EARigg.Free;
@@ -330,8 +308,6 @@ begin
   SalingL.SmallStep := Value;
   VorstagOS.SmallStep := Value;
   WPowerOS.SmallStep := Value;
-  T1.SmallStep := Value;
-  T2.SmallStep := Value;
 end;
 
 procedure TRggFA.InitBigStep(Value: Integer);
@@ -346,8 +322,6 @@ begin
   SalingL.BigStep := Value;
   VorstagOS.BigStep := Value;
   WPowerOS.BigStep := Value;
-  T1.BigStep := Value;
-  T2.BigStep := Value;
 end;
 
 procedure TRggFA.Assign(Value: TRggFA);
@@ -368,9 +342,6 @@ begin
   MastfallVorlauf.Assign(Value.MastfallVorlauf);
   Biegung.Assign(Value.Biegung);
   D0X.Assign(Value.D0X);
-
-  T1.Assign(Value.T1);
-  T2.Assign(Value.T2);
 
   APWidth.Assign(Value.APWidth);
   EARigg.Assign(Value.EARigg);
@@ -413,8 +384,6 @@ begin
     TFederParam.fpMastfallVorlauf: result := MastfallVorlauf;
     TFederParam.fpBiegung: result := Biegung;
     TFederParam.fpD0X: result := D0X;
-    TFederParam.fpT1: result := T1;
-    TFederParam.fpT2: result := T2;
     TFederParam.fpVorstagOS: result := VorstagOS;
     TFederParam.fpWPowerOS: result := WPowerOS;
     TFederParam.fpAPW: result := APWidth;
@@ -444,8 +413,6 @@ begin
   MastfallVorlauf.LoadFromStream(s);
   Biegung.LoadFromStream(s);
   D0X.LoadFromStream(s);
-  T1.LoadFromStream(s);
-  T2.LoadFromStream(s);
 
   { volatile items will not be streamed }
 end;
@@ -468,8 +435,6 @@ begin
   MastfallVorlauf.SaveToStream(s);
   Biegung.SaveToStream(s);
   D0X.SaveToStream(s);
-  T1.SaveToStream(s);
-  T2.SaveToStream(s);
 
   { volatile items will not be streamed }
 end;

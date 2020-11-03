@@ -107,12 +107,6 @@ faParamRY = 57;
 faParamRZ = 58;
 faParamCZ = 59;
 
-{ ParamT }
-faParamT1 = 60;
-faParamT2 = 61;
-faParamT3 = 62;
-faParamT4 = 63;
-
 { RggControls }
 faController = 64;
 faWinkel = 65;
@@ -397,31 +391,21 @@ faToggleMoveMode = 293;
 faLinearMove = 294;
 faExpoMove = 295;
 
-{ BitmapCycle }
-faCycleBitmapM = 296;
-faCycleBitmapP = 297;
-faRandom = 298;
-faRandomWhite = 299;
-faRandomBlack = 300;
-faBitmapEscape = 301;
-faToggleContour = 302;
-
 { HullMesh }
-faHullMesh = 303;
-faHullMeshOn = 304;
-faHullMeshOff = 305;
+faHullMesh = 296;
+faHullMeshOn = 297;
+faHullMeshOff = 298;
 
-faShowHelpText = 306;
-faShowInfoText = 307;
-faShowNormalKeyInfo = 308;
-faShowSpecialKeyInfo = 309;
-faShowDebugInfo = 310;
-faShowZOrderInfo = 311;
+faShowHelpText = 299;
+faShowInfoText = 300;
+faShowNormalKeyInfo = 60;
+faShowSpecialKeyInfo = 61;
+faShowDebugInfo = 62;
+faShowZOrderInfo = 63;
 
-faMax = 312;
+faMax = 301;
 
 ParamsRange = [
-  faParamT1 .. faParamT2,
   faController .. faParamAPW,
   faParamEAH .. faParamEI];
 

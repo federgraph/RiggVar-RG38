@@ -552,9 +552,6 @@ begin
     faBiegung: Param := fpBiegung;
     faMastfussD0X: Param := fpD0X;
 
-    faParamT1: Param := fpT1;
-    faParamT2: Param := fpT2;
-
     faParamAPW: Param := fpAPW;
     faParamEAH: Param := fpEAH;
     faParamEAR: Param := fpEAR;
@@ -699,11 +696,6 @@ begin
     begin
       Rigg.Reset;
       UpdateGetriebe;
-    end;
-
-    fpT1, fpT2:
-    begin
-      Draw;
     end;
 
     fpAPW:
@@ -944,7 +936,7 @@ end;
 
 function TRggMain.Text2Param(T: string): TFederParam;
 begin
-  result := fpT1;
+  result := fpVorstag;
   if T = ControllerString then
     result := fpController
   else if T = WinkelString then
@@ -973,10 +965,6 @@ begin
     result := fpBiegung
   else if T = MastFootD0XString then
     result := fpD0X
-  else if T = T1String then
-    result := fpT1
-  else if T = T2String then
-    result := fpT2
   else if T = APWidthString then
     result := fpAPW
   else if T = EAHullString then
@@ -1019,10 +1007,6 @@ begin
     result := BiegungString
   else if P = fpD0X then
     result := MastfootD0XString
-  else if P = fpT1 then
-    result := T1String
-  else if P = fpT2 then
-    result := T2String
   else if P = fpAPW then
     result := APWidthString
   else if P = fpEAH then
@@ -1064,9 +1048,6 @@ begin
   FactArray.MastfallF0F.Ist := Rigg.RealTrimm[tiMastfallF0F];
   FactArray.Biegung.Ist := Rigg.RealTrimm[tiBiegungS];
   FactArray.D0X.Ist := Rigg.rP.D0.X;
-
-  FactArray.T1.Ist := 650;
-  FactArray.T2.Ist := 150;
 
   { allgemein setzen }
   for i := fpController to fpD0X do
@@ -1141,8 +1122,6 @@ begin
     FactArray.Biegung.Min := 0;
     FactArray.Biegung.Max := 500;
 
-    FactArray.T1.Save;
-    FactArray.T2.Save;
     FactArray.ResetVolatile;
   end;
 end;
@@ -1309,8 +1288,6 @@ begin
   FactArray.Biegung.Min := 0;
   FactArray.Biegung.Max := 500;
 
-  FactArray.T1.Save;
-  FactArray.T2.Save;
   FactArray.ResetVolatile;
 
   SetParam(FParam);
@@ -1515,7 +1492,6 @@ begin
     fpWinkel, fpSalingW: us := GradString;
     fpEAH, fpEAR: us := KiloNewtonString;
     fpEI: us := NewtonMeterSquareString;
-    fpT1, fpT2: us := '';
   else
     us := MilimeterString;
   end;
@@ -1538,7 +1514,6 @@ begin
     fpWinkel, fpSalingW: us := GradString;
     fpEAH, fpEAR: us := KiloNewtonString;
     fpEI: us := NewtonMeterSquareString;
-    fpT1, fpT2: us := '';
   else
     us := MilimeterString;
   end;
@@ -1564,16 +1539,6 @@ end;
 
 procedure TRggMain.TrackBarChange(Sender: TObject);
 begin
-  if FParam = fpT1 then
-  begin
-    FactArray.T1.Ist := Round(RggTrackbar.Value);
-    StrokeRigg.UpdateHullTexture;
-  end
-  else if FParam = fpT2 then
-  begin
-    FactArray.T2.Ist := Round(RggTrackbar.Value);
-    StrokeRigg.UpdateHullTexture;
-  end;
   RggSpecialDoOnTrackBarChange;
 end;
 
@@ -2929,8 +2894,6 @@ begin
     faParamEAR: result := Param = fpEAR;
     faParamEI: result := Param = fpEI;
 
-    faParamT1: result := Param = fpT1;
-    faParamT2: result := Param = fpT2;
     faPan: result := Action = faPan;
 
     faFixpointA0: result := FixPoint = ooA0;

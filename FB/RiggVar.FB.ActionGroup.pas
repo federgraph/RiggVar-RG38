@@ -376,12 +376,6 @@ ActionGroupCircles: TActionGroup = [
   faCircleParamM2Z,
   faCirclesReset];
 
-ActionGroupParamT: TActionGroup = [
-  faParamT1,
-  faParamT2,
-  faParamT3,
-  faParamT4];
-
 ActionGroupReset: TActionGroup = [
   faReset,
   faResetPosition,
@@ -416,15 +410,6 @@ ActionGroupHullMesh: TActionGroup = [
   faHullMesh,
   faHullMeshOn,
   faHullMeshOff];
-
-ActionGroupBitmapCycle: TActionGroup = [
-  faCycleBitmapM,
-  faCycleBitmapP,
-  faRandom,
-  faRandomWhite,
-  faRandomBlack,
-  faBitmapEscape,
-  faToggleContour];
 
 implementation
 

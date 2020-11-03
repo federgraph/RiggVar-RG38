@@ -356,11 +356,6 @@ begin
     faParamEAR: result := 'EAR';
     faParamEI: result := 'EI';
 
-    faParamT1: result := 't1';
-    faParamT2: result := 't2';
-    faParamT3: result := 't3';
-    faParamT4: result := 't4';
-
     faRotaForm1: result := 'RF1';
     faRotaForm2: result := 'RF2';
     faRotaForm3: result := 'RF3';
@@ -384,17 +379,6 @@ begin
     faToggleMoveMode: result := 'mm';
     faLinearMove: result := 'lmm';
     faExpoMove: result := 'emm';
-
-    faCycleBitmapM: result := 'b-';
-    faCycleBitmapP: result := 'b+';
-
-    faRandom: result := 'ran';
-    faRandomWhite: result := 'rcw';
-    faRandomBlack: result := 'rcb';
-
-    faBitmapEscape: result := 'be';
-
-    faToggleContour: result := 'ct';
 
     faToggleViewType: result := 'vt';
     faViewTypeOrtho: result := 'vto';
