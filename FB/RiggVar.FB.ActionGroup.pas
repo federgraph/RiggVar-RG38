@@ -297,9 +297,15 @@ ActionGroupMemeFormat: TActionGroup = [
   faMemeFormat8,
   faMemeFormat9];
 
+ActionGroupRggInfo: TActionGroup = [
+  faShowHelpText,
+  faShowInfoText,
+  faShowNormalKeyInfo,
+  faShowSpecialKeyInfo,
+  faShowDebugInfo,
+  faShowZOrderInfo];
+
 ActionGroupRggSonstiges: TActionGroup = [
-  faShowZOrder,
-  faShowHelp,
   faToggleHelp,
   faToggleReport,
   faToggleButtonReport,

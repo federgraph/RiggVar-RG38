@@ -463,8 +463,13 @@ begin
     faCycleBitmapP: result := 'cycle bitmap +';
     faCycleBitmapM: result := 'cycle bitmap -';
 
-    faShowZOrder: result := 'Show Z-Order';
-    faShowHelp: result := 'Show Help';
+    faShowHelpText: result := 'Show Help Text';
+    faShowInfoText: result := 'Show Info Text';
+    faShowNormalKeyInfo: result := 'Show normal key info';
+    faShowSpecialKeyInfo: result := 'Show special key info';
+    faShowDebugInfo: result := 'Show Debug Info';
+    faShowZOrderInfo: result := 'Show Z-Order';
+
   end;
 end;
 

@@ -411,9 +411,12 @@ faHullMesh: result := 'faHullMesh';
 faHullMeshOn: result := 'faHullMeshOn';
 faHullMeshOff: result := 'faHullMeshOff';
 
-faShowZOrder: result := 'faShowZOrder';
-faShowHelp: result := 'faShowHelp';
-
+faShowHelpText: result := 'faShowHelpText';
+faShowInfoText: result := 'faShowInfoText';
+faShowNormalKeyInfo: result := 'ShowNormalKeyInfo';
+faShowSpecialKeyInfo: result := 'ShowSpecialKeyInfo';
+faShowZOrderInfo: result := 'faShowZOrder';
+faShowDebugInfo: result := 'faShowDebugInfo';
     else
       result := '??';
   end;

@@ -1019,7 +1019,7 @@ end;
 
 procedure TRotaForm1.Zoom(Delta: single);
 begin
-  FZoom := FZoom + FZoom * FZoomBase * Sign(Delta) * 0.5;
+  FZoom := FZoom + FZoom * FZoomBase * Sign(Delta);
   RaumGraph.Zoom := FZoom;
   Draw;
 end;

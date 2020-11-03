@@ -217,9 +217,6 @@ type
 
     function GetFLText: string;
     procedure CopyText;
-    procedure DoWheel(Delta: single);
-    procedure DoBigWheelRG(Delta: single);
-    procedure DoSmallWheelRG(Delta: single);
 
     procedure LoadTrimm(fd: TRggData);
     procedure SaveTrimm(fd: TRggData);
@@ -289,7 +286,7 @@ type
     procedure PlusOne;
     procedure PlusTen;
     procedure DoMouseWheel(Shift: TShiftState; WheelDelta: Integer);
-
+    procedure DoWheel(Delta: single);
     procedure DoBigWheel(Delta: single);
     procedure DoSmallWheel(Delta: single);
 
@@ -400,7 +397,6 @@ begin
   Rigg.ControllerTyp := ctOhne;
 
   Main := self;
-  MainVar.RG := True;
 
   { this should not be necessary, beause it will be injected in a moment }
   StrokeRigg := TDummyStrokeRigg.Create(Rigg);
@@ -1581,7 +1577,7 @@ begin
   RggSpecialDoOnTrackBarChange;
 end;
 
-procedure TRggMain.DoSmallWheelRG(Delta: single);
+procedure TRggMain.DoSmallWheel(Delta: single);
 var
   f: single;
 begin
@@ -1599,7 +1595,7 @@ begin
   end;
 end;
 
-procedure TRggMain.DoBigWheelRG(Delta: single);
+procedure TRggMain.DoBigWheel(Delta: single);
 var
   f: single;
 begin
@@ -2297,18 +2293,26 @@ begin
 end;
 
 procedure TRggMain.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer);
+var
+  wd: Integer;
 begin
+  wd := WheelDelta; // small values may come from touchpad
+
+  { normal mouse }
+  if Abs(WheelDelta) > 100 then
+    wd := WheelDelta div 120;;
+
   if ssCtrl in Shift then
   begin
-    FormMain.RotaForm.Zoom(WheelDelta);
+    FormMain.RotaForm.Zoom(wd);
   end
   else if ssShift in Shift then
   begin
-    DoBigWheel(WheelDelta);
+    DoBigWheel(wd);
   end
   else if Shift = [] then
   begin
-    DoSmallWheel(WheelDelta);
+    DoSmallWheel(wd);
   end;
 end;
 
@@ -2594,26 +2598,6 @@ begin
     if (fp <> '') and (fn <> '') then
       DoReadTrimmFile(fp + fn);
   end;
-end;
-
-procedure TRggMain.DoBigWheel(Delta: single);
-begin
-//  if not IsRggParam then
-//    inherited
-//  else if MainVar.RG then
-    DoBigWheelRG(Delta)
-//  else
-//    inherited;
-end;
-
-procedure TRggMain.DoSmallWheel(Delta: single);
-begin
-//  if not IsRggParam then
-//    inherited
-//  else if MainVar.RG then
-    DoSmallWheelRG(Delta)
-//  else
-//    inherited;
 end;
 
 procedure TRggMain.DoReadTrimmFile(fn: string);

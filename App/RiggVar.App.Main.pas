@@ -43,7 +43,6 @@ type
   public
   class var
     IsSandboxed: Boolean;
-    RG: Boolean;
     AppIsClosing: Boolean;
     ShowDebugData: Boolean;
     WantOnResize: Boolean;
@@ -62,7 +61,6 @@ implementation
 
 class constructor MainVar.Create;
 begin
-  RG := True;
   IsSandboxed := true;
   ColorScheme := TColorScheme.Create(5);
   Raster := 70;

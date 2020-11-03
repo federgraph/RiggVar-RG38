@@ -80,13 +80,13 @@ type
     procedure HandleShowHint(Sender: TObject);
     procedure Flash(s: string);
     procedure Reset;
-    procedure ShowZOrder;
-    procedure ShowHelp;
+    procedure InitDebugInfo;
+    procedure InitZOrderInfo;
+    procedure ShowHelpText(fa: Integer);
   protected
     HL: TStringList;
     RL: TStrings;
     TL: TStrings;
-    procedure InitHelpText;
     procedure InitParamListbox;
   public
     AllProps: Boolean;
@@ -569,16 +569,7 @@ end;
 procedure TFormMain.FormMouseWheel(Sender: TObject; Shift: TShiftState;
   WheelDelta: Integer; var Handled: Boolean);
 begin
-  if Abs(WheelDelta) > 100 then
-  begin
-    { normal mouse }
-  Main.DoMouseWheel(Shift, WheelDelta div 120);
-  end
-  else
-  begin
-    { touchpad of Surface Cover }
-    Main.DoMouseWheel(Shift, WheelDelta);
-  end;
+  Main.DoMouseWheel(Shift, WheelDelta);
   Handled := True;
 end;
 
@@ -594,8 +585,6 @@ begin
 
     SetupListboxItems(ParamListbox, claAqua);
     SetupListboxItems(ReportListbox, claAquamarine);
-
-    InitHelpText;
 
     Image.Align := TAlignLayout.Client;
 
@@ -822,6 +811,8 @@ begin
     begin
       HelpText.Visible := not HelpText.Visible;
       ReportText.Visible := False;
+      if HelpText.Visible then
+        ShowHelpText(faShowHelpText);
     end;
 
     faMemeGotoLandscape: GotoLandscape;
@@ -925,8 +916,12 @@ begin
       ShowTrimm;
     end;
 
-    faShowHelp: ShowHelp;
-    faShowZOrder: ShowZOrder;
+    faShowZOrderInfo,
+    faShowNormalKeyInfo,
+    faShowSpecialKeyInfo,
+    faShowDebugInfo,
+    faShowInfoText,
+    faShowHelpText: ShowHelpText(fa);
 
     else
     begin
@@ -1038,12 +1033,12 @@ begin
     '8': fa := faLogo;
     '9': ;
 
-    '!': fa := faRotaForm1;
-    '"': fa := faRotaForm2;
-    '§': fa := faRotaForm3;
-
-    '=': fa := faShowZOrder;
-    '?': fa := faShowHelp;
+    '!': fa := faShowNormalKeyInfo;
+    '"': fa := faShowSpecialKeyInfo;
+    '§': fa := faShowInfoText;
+    '$': fa := faShowDebugInfo;
+    '=': fa := faShowZOrderInfo;
+    '?': fa := faShowHelpText;
 
     '+': fa := faActionPageP;
     '*': fa := faActionPageM;
@@ -1075,40 +1070,6 @@ end;
 procedure TFormMain.SetIsUp(const Value: Boolean);
 begin
   Main.IsUp := Value;
-end;
-
-procedure TFormMain.InitHelpText;
-begin
-  HL.Clear;
-  HL.Add('Toggle Text with Keys:');
-  HL.Add('  H    - toggle help');
-  HL.Add('  r    - toggle Report');
-  HL.Add('');
-  HL.Add('Select current parameter:');
-  HL.Add('  with Button, Key, or in ListBox');
-  HL.Add('');
-  HL.Add('Change param value with Wheel!');
-  HL.Add('  Wheel = small step');
-  HL.Add('  Shift-Wheel  = bigger step');
-  HL.Add('');
-  HL.Add('Goto stored Trimm');
-  HL.Add('  1..8, 0 - Trimm selection');
-  HL.Add('Change Format of Window');
-  HL.Add('  L, P, S - Landscape, Portrait, Square');
-  HL.Add('');
-  HL.Add('Forms:');
-  HL.Add('  FA - seach for meaning of button');
-  HL.Add('  FM - list about keyboard shortcuts');
-  HL.Add('  FD - show documentation drawings');
-
-{$ifdef debug}
-  HL.Add('');
-  HL.Add('Window-Info:');
-  HL.Add(Format('  Initial-Client-W-H = (%d, %d)', [ClientWidth, ClientHeight]));
-  HL.Add(Format('  Handle.Scale = %.1f', [Handle.Scale]));
-{$endif}
-
-  HelpText.Text := HL.Text;
 end;
 
 function TFormMain.GetOpenFileName(dn, fn: string): string;
@@ -2121,32 +2082,43 @@ begin
   Main.GraphRadio := gQuick;
 end;
 
-procedure TFormMain.ShowZOrder;
+procedure TFormMain.InitZOrderInfo;
 var
   i: Integer;
   o: TFMXObject;
   c: TControl;
-  ML: TStrings;
 begin
-  ML := TStringList.Create;
   for i := 0 to Self.ChildrenCount-1 do
   begin
     o := Self.Children.Items[i];
     if o is TControl then
     begin
       c := o as TControl;
-      ML.Add(Format('%2d - %s: %s', [i, c.Name, c.ClassName]));
+      HL.Add(Format('%2d - %s: %s', [i, c.Name, c.ClassName]));
     end;
   end;
-  HelpText.Text := ML.Text;
-  ML.Free;
-
-  HelpText.Visible := True;
-  ReportText.Visible := False;
 end;
 
-procedure TFormMain.ShowHelp;
+procedure TFormMain.InitDebugInfo;
 begin
+  HL.Add('Window-Info:');
+  HL.Add(Format('  Initial-Client-W-H = (%d, %d)', [ClientWidth, ClientHeight]));
+  HL.Add(Format('  Handle.Scale = %.1f', [Handle.Scale]));
+end;
+
+procedure TFormMain.ShowHelpText(fa: Integer);
+begin
+  HL.Clear;
+
+  case fa of
+    faShowHelpText: Main.FederBinding.InitSplashText(HL);
+    faShowInfoText: Main.FederBinding.InitInfoText(HL);
+    faShowNormalKeyInfo: Main.FederBinding.InitNormalKeyInfo(HL);
+    faShowSpecialKeyInfo: Main.FederBinding.InitSpecialKeyInfo(HL);
+    faShowDebugInfo: InitDebugInfo;
+    faShowZOrderInfo: InitZOrderInfo;
+  end;
+
   HelpText.Text := HL.Text;
   HelpText.Visible := True;
   ReportText.Visible := False;

@@ -404,8 +404,12 @@ begin
     faHullMeshOn: result := 'hm1';
     faHullMeshOff: result := 'hm0';
 
-    faShowZOrder: result := 'sz';
-    faShowHelp: result := 'sh';
+    faShowHelpText: result := 'sh';
+    faShowInfoText: result := 'si';
+    faShowNormalKeyInfo: result := 'nki';
+    faShowSpecialKeyInfo: result := 'ski';
+    faShowDebugInfo: result := 'sdi';
+    faShowZOrderInfo: result := 'zoi';
   end;
 end;
 

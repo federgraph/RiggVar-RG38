@@ -112,6 +112,7 @@ begin
   AddSpecial(ActionGroupRggTrimmFile, 'RggTrimmFile');
   AddSpecial(ActionGroupRggTrimmText, 'RggTrimmText');
   AddSpecial(ActionGroupRggSonstiges, 'RggSonstiges');
+  AddSpecial(ActionGroupRggInfo, 'RggInfo');
 
   { TouchFrame Buttons }
   AddSpecial(ActionGroupBtnLegendTablet, 'BtnLegendTablet');

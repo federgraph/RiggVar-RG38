@@ -32,6 +32,10 @@ type
     procedure InitSpecialKeys(SL: TStrings);
 
     procedure InitHullPoints(ML: TStrings);
+
+    procedure InitNormalKeyInfo(SL: TStrings);
+    procedure InitSpecialKeyInfo(SL: TStrings);
+    procedure InitSplashText(HL: TStrings);
   end;
 
 implementation
@@ -84,9 +88,6 @@ begin
   SL.Add('');
   SL.Add('see www.federgraph.de');
   SL.Add('see federgraph''s GitHub repository: RiggVar-RG38');
-  SL.Add('');
-  SL.Add('Still wanted:');
-  SL.Add('  Better "hull data" and "trimm file". ');
 
 {$ifdef MSWINDOWS}
   SL.Add('');
@@ -111,7 +112,7 @@ begin
   SL.Add('Help Text');
   SL.Add('=========');
   SL.Add('Tip: Use space bar instead of Enter in left List.');
-SL.Add('');
+  SL.Add('');
   SL.Add('ToDo: Update manually written shortcut list.');
   SL.Add('--- manually written key binding report below ---');
   SL.Add('');
@@ -177,7 +178,7 @@ begin
   SL.Add('Taste R : faReadTrimmFile');
   SL.Add('');
   SL.Add('Taste s : ');
-  SL.Add('Taste S : faMemeGotsSquare');
+  SL.Add('Taste S : faMemeGotoSquare');
   SL.Add('');
   SL.Add('Taste t : faToggleFontColor');
   SL.Add('Taste T : faToggleSpeedPanel');
@@ -199,7 +200,6 @@ begin
   SL.Add('');
   SL.Add('Taste z : ');
   SL.Add('Taste Z : faUpdateTrimm0');
-
 end;
 
 procedure TFederBinding.InitSpecialKeys(SL: TStrings);
@@ -217,13 +217,8 @@ begin
   SL.Add('Taste * : faActionPageM');
   SL.Add('Taste + : faActionPageP');
   SL.Add('');
-  SL.Add('Taste = : faShowZOrder');
   SL.Add('Taste ? : faHelp');
   SL.Add('Taste # : faActionPage4');
-  SL.Add('');
-  SL.Add('Taste ! : faRotaForm1');
-  SL.Add('Taste " : faRotaForm2');
-  SL.Add('Taste § : faRotaForm3');
   SL.Add('');
   SL.Add('Taste ; : faRotaForm1');
   SL.Add('Taste : : faRotaForm2');
@@ -391,6 +386,101 @@ begin
   ML.Add('  Punkt(0, 580, 250);');
   ML.Add('end;');
   ML.Add('');
+end;
+
+procedure TFederBinding.InitNormalKeyInfo(SL: TStrings);
+begin
+  SL.Add('Taste a : faSalingA');
+  SL.Add('Taste h : faSalingH');
+  SL.Add('Taste o : faWoben');
+  SL.Add('Taste p : faPan');
+  SL.Add('Taste v : faVorstag');
+  SL.Add('Taste w : faWante');
+  SL.Add('');
+  SL.Add('Taste A : faFixpointA0');
+  SL.Add('Taste b : faFixpointB');
+  SL.Add('Taste B : faFixpointB0');
+  SL.Add('Taste d : faFixpointD');
+  SL.Add('Taste D : faFixpointD0');
+  SL.Add('Taste f : faFixpointF');
+  SL.Add('Taste F : faFixpointF0');
+  SL.Add('');
+  SL.Add('Taste i : faWheelRight');
+  SL.Add('Taste I : faWheelLeft');
+  SL.Add('Taste j : faWheelUp');
+  SL.Add('Taste J : faWheelDown');
+  SL.Add('');
+  SL.Add('Taste K : faRggKoppel');
+  SL.Add('');
+  SL.Add('Taste H : faToggleHelp');
+  SL.Add('Taste q : faToggleAllText');
+  SL.Add('Taste r : faToggleReport');
+  SL.Add('Taste u : faToggleDataText');
+  SL.Add('Taste U : faToggleDiffText');
+  SL.Add('');
+  SL.Add('Taste m : faMemoryBtn');
+  SL.Add('Taste M : faCopyAndPaste');
+  SL.Add('Taste R : faReadTrimmFile');
+  SL.Add('Taste T : faToggleSpeedPanel');
+  SL.Add('Taste Z : faUpdateTrimm0');
+end;
+
+procedure TFederBinding.InitSpecialKeyInfo(SL: TStrings);
+begin
+  SL.Add('Taste 0 : faTrimm0');
+  SL.Add('Taste 1 : faTrimm1');
+  SL.Add('Taste 2 : faTrimm2');
+  SL.Add('Taste 3 : faTrimm3');
+  SL.Add('Taste 4 : faTrimm4');
+  SL.Add('Taste 5 : faTrimm5');
+  SL.Add('Taste 6 : faTrimm6');
+  SL.Add('');
+  SL.Add('Taste 7 : fa420');
+  SL.Add('Taste 8 : faLogo');
+
+  SL.Add('');
+  SL.Add('Taste * : faActionPageM');
+  SL.Add('Taste + : faActionPageP');
+
+  SL.Add('');
+  SL.Add('Taste ! : ShowNormalKeyInfo');
+  SL.Add('Taste " : ShowSpecialKeyInfo');
+  SL.Add('Taste § : ShowInfo');
+  SL.Add('Taste = : faShowZOrder');
+  SL.Add('Taste ? : faHelp');
+
+  SL.Add('');
+  SL.Add('Taste # : faActionPage4');
+
+  SL.Add('');
+  SL.Add('Taste , : faRotaForm1');
+  SL.Add('Taste . : faRotaForm2');
+  SL.Add('Taste - : faRotaForm3');
+end;
+
+procedure TFederBinding.InitSplashText(HL: TStrings);
+begin
+  HL.Clear;
+  HL.Add('Toggle Text with Keys:');
+  HL.Add('  H    - toggle help');
+  HL.Add('  r    - toggle Report');
+  HL.Add('');
+  HL.Add('Select current parameter:');
+  HL.Add('  with Button, Key, or in ListBox');
+  HL.Add('');
+  HL.Add('Change param value with Wheel!');
+  HL.Add('  Wheel = small step');
+  HL.Add('  Shift-Wheel  = bigger step');
+  HL.Add('');
+  HL.Add('Goto stored Trimm');
+  HL.Add('  1..8, 0 - Trimm selection');
+  HL.Add('Change Format of Window');
+  HL.Add('  L, P, S - Landscape, Portrait, Square');
+  HL.Add('');
+  HL.Add('Forms:');
+  HL.Add('  FA - search in Actions');
+  HL.Add('  FM - show Text in Memo');
+  HL.Add('  FD - show documentation drawings');
 end;
 
 end.

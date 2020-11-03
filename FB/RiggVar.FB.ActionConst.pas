@@ -411,10 +411,14 @@ faHullMesh = 303;
 faHullMeshOn = 304;
 faHullMeshOff = 305;
 
-faShowZOrder = 306;
-faShowHelp = 307;
+faShowHelpText = 306;
+faShowInfoText = 307;
+faShowNormalKeyInfo = 308;
+faShowSpecialKeyInfo = 309;
+faShowDebugInfo = 310;
+faShowZOrderInfo = 311;
 
-faMax = 308;
+faMax = 312;
 
 ParamsRange = [
   faParamT1 .. faParamT2,
