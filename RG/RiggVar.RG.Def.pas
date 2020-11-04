@@ -18,9 +18,12 @@
 
 interface
 
+{.$define WantRotaForm3}
+
 uses
   System.UITypes,
   System.UIConsts,
+  System.Classes,
   FMX.Graphics;
 
 type
@@ -44,6 +47,22 @@ type
     fpE2
   );
 
+{$ifdef WantRotaForm3}
+  TFederMessageKind = (
+    fmkNoop,
+    fmkAction,
+    fmkParam,
+    fmkParamValue,
+
+    fmkTX,
+    fmkTY,
+    fmkRX,
+    fmkRY,
+    fmkRZ,
+    fmkCZ
+  );
+{$endif}
+
   TFederParam = (
     fpController,
     fpWinkel,
@@ -65,6 +84,21 @@ type
     fpEAH,
     fpEAR,
     fpEI
+{$ifdef WantRotaForm3}
+    ,
+    fprx,
+    fpry,
+    fprz,
+    fptx,
+    fpty,
+    fpcz,
+    fppx,
+    fppy,
+    fppz,
+    fpva,
+    fpnp,
+    fpfp
+{$endif}
     );
 
 const

@@ -398,9 +398,9 @@ faHullMeshOff: result := 'faHullMeshOff';
 
 faShowHelpText: result := 'faShowHelpText';
 faShowInfoText: result := 'faShowInfoText';
-faShowNormalKeyInfo: result := 'ShowNormalKeyInfo';
-faShowSpecialKeyInfo: result := 'ShowSpecialKeyInfo';
-faShowZOrderInfo: result := 'faShowZOrder';
+faShowNormalKeyInfo: result := 'faShowNormalKeyInfo';
+faShowSpecialKeyInfo: result := 'faShowSpecialKeyInfo';
+faShowZOrderInfo: result := 'faShowZOrderInfo';
 faShowDebugInfo: result := 'faShowDebugInfo';
     else
       result := '??';

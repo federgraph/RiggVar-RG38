@@ -291,7 +291,6 @@ begin
   SpeedColorScheme.InitDark;
   TActionSpeedBar.SpeedColorScheme := SpeedColorScheme;
 
-  { FormCreate2 will be called from Init if RotaForm3 is used }
   FormCreate2(Sender);
 end;
 
@@ -966,11 +965,11 @@ begin
     'a': fa := faSalingA;
     'A': fa := faFixpointA0;
 
-    'b': fa := faFixpointB;
+    'b': fa := faBiegung;
     'B': fa := faFixpointB0;
 
-    'c': fa := faCycleColorSchemeP;
-    'C': fa := faCycleColorSchemeM;
+    'c': fa := faMastfallF0C;
+    'C': fa := faFixpointC0;
 
     'd': fa := faFixpointD;
     'D': fa := faFixpointD0;
@@ -978,10 +977,10 @@ begin
     'e': fa := faFixpointE;
     'E': fa := faFixpointE0;
 
-    'f': fa := faFixpointF;
+    'f': fa := faMastfallF0F;
     'F': fa := faFixpointF0;
 
-    'g': ;
+    'g': fa := faMastfallVorlauf;
     'G': ;
 
     'h': fa := faSalingH;
@@ -1002,7 +1001,7 @@ begin
     'm': fa := faMemoryBtn;
     'M': fa := faCopyAndPaste;
 
-    'n': ;
+    'n': fa := faShowNormalKeyInfo;
     'N': ;
 
     'r': fa := faToggleReport;
@@ -1016,6 +1015,7 @@ begin
     'q': fa := faToggleAllText;
     'Q': fa := faShowDiagQ;
 
+    's': fa := faShowSpecialKeyInfo;
     'S': fa := faMemeGotoSquare;
 
     't': fa := faToggleFontColor;
@@ -1027,7 +1027,7 @@ begin
     'v': fa := faVorstag;
     'w': fa := faWante;
 
-    'z': ;
+    'z': fa := faShowInfoText;
     'Z': fa := faUpdateTrimm0;
 
     '0': fa := faTrimm0;
