@@ -20,7 +20,7 @@ uses
 {$endif}
 {$ifdef WantRotaForm3}
   FMX.Viewport3D,
-  RiggVar.App.Rota,
+  RiggVar.FG.Rota,
 {$endif}
 {$ifdef UseImage }
   RiggVar.FD.Image,
@@ -140,11 +140,6 @@ end;
 
 destructor TRotaForm.Destroy;
 begin
-{$ifdef WantRotaForm3}
-  RotaForm3.Frame3D.Camera.FG := nil;
-  RotaForm3.Frame3D.FG := nil;
-{$endif}
-
   inherited;
   { RotaForm instances are automatically freed
     when StrokeRigg instances go out of scope. }
@@ -695,7 +690,7 @@ end;
 procedure TRotaForm.DoOnIdle;
 begin
 {$ifdef WantRotaForm3}
-  RotaForm3.Frame3D.DoOnIdle;
+  RotaForm3.DoOnIdle;
 {$endif}
 end;
 

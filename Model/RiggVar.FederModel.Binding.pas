@@ -172,7 +172,7 @@ begin
   SL.Add('Taste P : faMemeGotoPortrait');
   SL.Add('');
   SL.Add('Taste q : faToggleAllText');
-  SL.Add('Taste Q : faShowDiagQ');
+  SL.Add('Taste Q : ');
   SL.Add('');
   SL.Add('Taste r : faToggleReport');
   SL.Add('Taste R : faReadTrimmFile');
@@ -422,13 +422,6 @@ begin
   SL.Add('J : faWheelDown');
 
   SL.Add('');
-  SL.Add('H : faToggleHelp');
-  SL.Add('q : faToggleAllText');
-  SL.Add('r : faToggleReport');
-  SL.Add('u : faToggleDataText');
-  SL.Add('U : faToggleDiffText');
-
-  SL.Add('');
   SL.Add('m : faMemoryBtn');
   SL.Add('M : faCopyAndPaste');
   SL.Add('R : faReadTrimmFile');
@@ -473,13 +466,16 @@ end;
 procedure TFederBinding.InitSplashText(HL: TStrings);
 begin
   HL.Clear;
-  HL.Add('Toggle Text with Keys:');
-  HL.Add('  H    - toggle help');
-  HL.Add('  r    - toggle Report');
-  HL.Add('  n    - show normal key info');
-  HL.Add('  s    - show special key info');
-  HL.Add('  z    - show info text');
-  HL.Add('  ?    - show help text');
+  HL.Add('Control Text with Keys:');
+  HL.Add('  n    - show Normal key info');
+  HL.Add('  H    - toggle Help text');
+  HL.Add('  q    - toggle All text');
+  HL.Add('  r    - toggle Report text');
+  HL.Add('  s    - show Special key info');
+  HL.Add('  u    - toggle Data Text');
+  HL.Add('  U    - toggle Diff Text');
+  HL.Add('  z    - show Info text');
+  HL.Add('  ?    - show Help text');
   HL.Add('');
   HL.Add('Select current parameter:');
   HL.Add('  with Button, Key, or in ListBox');

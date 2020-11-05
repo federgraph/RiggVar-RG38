@@ -272,7 +272,7 @@ uses
   RiggVar.FB.Classes;
 
 const
-  HelpCaptionText = 'press H for help';
+  HelpCaptionText = 'press ? for help';
   ApplicationTitleText = 'RG38';
 
 { TFormMain }
@@ -981,7 +981,6 @@ begin
     'F': fa := faFixpointF0;
 
     'g': fa := faMastfallVorlauf;
-    'G': ;
 
     'h': fa := faSalingH;
     'H': fa := faToggleHelp;
@@ -1002,10 +1001,6 @@ begin
     'M': fa := faCopyAndPaste;
 
     'n': fa := faShowNormalKeyInfo;
-    'N': ;
-
-    'r': fa := faToggleReport;
-    'R': fa := faReadTrimmFile;
 
     'o': fa := faWoben;
 
@@ -1013,7 +1008,9 @@ begin
     'P': fa := faMemeGotoPortrait;
 
     'q': fa := faToggleAllText;
-    'Q': fa := faShowDiagQ;
+
+    'r': fa := faToggleReport;
+    'R': fa := faReadTrimmFile;
 
     's': fa := faShowSpecialKeyInfo;
     'S': fa := faMemeGotoSquare;
@@ -1025,6 +1022,7 @@ begin
     'U': fa := faToggleDiffText;
 
     'v': fa := faVorstag;
+
     'w': fa := faWante;
 
     'z': fa := faShowInfoText;

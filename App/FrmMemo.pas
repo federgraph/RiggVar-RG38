@@ -98,7 +98,7 @@ implementation
 uses
   RiggVar.App.Main,
 {$ifdef WantDriverTest}
-  RiggVar.Util.DriverTest,
+  RiggVar.FG.DriverTest,
 {$endif}
   FrmMain;
 
