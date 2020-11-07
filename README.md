@@ -64,18 +64,21 @@ In FormDrawing you can select a drawing from a list and manipulate the drawing e
 Every drawing element has a caption attached so that you know what the name of the element is,
 very essential for a documentation drawing.
 They could be used to produce screen shots, but it is much better: documentation drawings are live!
-I like it and recommend that you should have a look at the project,
+I recommend that you should have a look at the project,
 if only to see these drawings in action.
-They are supposed to be more object oriented and easy to create.
+They are supposed to be object oriented and easy to create.
+You don't have to do the actual drawing, because of the drawing elements, which you create in code and add to a list.
 
 > Documentation drawings as a sub project was only started in 2020.
 
-There is a button with caption FD which you can use to bring up the form with the documentation drawings.
+There is a button with caption FD (see screenshot above) which you can use to bring up the form with the documentation drawings.
 
-Documentation drawings can serve as a unit tests alternative.
+<a href="doc/images/RiggVar-FD-01.png">*Documentation drawings can serve as a unit tests alternative.*<br>
+![FormDrawing screenshot](doc/images/RiggVar-FD-01.png)</a>
+
 With the code in folder Graph2 I have determined how the documentation should be done.
-Actual documentation work should be done by adding more of these drawings.
-Then it will easier to explain the project by explaining the drawings in words.
+We need to add more drawings.
+Then it will easier to explain the project, by explaining the drawings, in words.
 
 ## How to build
 
@@ -119,4 +122,4 @@ Please get in contact if you want to use the button frame code for a different p
 
 ## Contributions
 
-Contribution are welcome. Lots of work to do.
+Contributions are welcome. Lots of work to do.
