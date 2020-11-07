@@ -55,7 +55,7 @@ the relaxed situation, and a reference situation to compare with.
 3. A real 3D graph, not yet included in this repository.
 
 The three implementations are called RotaForm1, RotaForm2, and RotaForm3.
-RotaForm was the name of the original standalone form where you could rotate the model graph around 3 axis with the mouse, you want to view the model from all angles, this is at the hart of the application, as for as graphics is concerned.
+RotaForm was the name of the original standalone form where you could rotate the graph around 3 axis with the mouse.
 
 ## Documentation Drawings
 
@@ -64,33 +64,35 @@ In FormDrawing you can select a drawing from a list and manipulate the drawing e
 Every drawing element has a caption attached so that you know what the name of the element is,
 very essential for a documentation drawing.
 They could be used to produce screen shots, but it is much better: documentation drawings are live!
-I like it and recommend that you should have a look at the project, even if it is only to see these drawings in action, and to see how easy it is to write them.
-It is supposed to be object oriented an pretty light weight.
+I like it and recommend that you should have a look at the project,
+if only to see these drawings in action.
+They are supposed to be more object oriented and easy to create.
 
-Documentation drawings as a sub project was only started in 2020.
+> Documentation drawings as a sub project was only started in 2020.
 
-There is a button with caption FD which you can use to bring up the form with the documentation drawings. ( Download the app from the store to see it in action without building. )
+There is a button with caption FD which you can use to bring up the form with the documentation drawings.
 
 Documentation drawings can serve as a unit tests alternative.
 With the code in folder Graph2 I have determined how the documentation should be done.
-Actual documentation work should be done by adding more of these drawings, to begin with.
-Then it will easier, if 'we' 'just' have to explain the drawings.
+Actual documentation work should be done by adding more of these drawings.
+Then it will easier to explain the project by explaining the drawings in words.
 
 ## How to build
 
 This is a Delphi FMX project, currently using IDE 10.3.3.
 
 Before you open the project in the IDE you need to recreate the dproj file, because it is in gitignore.
-I recommend that you create a new FMX project with the name RG38 somewhere and copy the dproj.
+I recommend that you create a new FMX project with the name RG38 somewhere and copy the dproj file
+(Delphi Project File) over to the RG38 working directory.
 
-Once you have added the new dproj you should be able to open the project in the Delphi IDE and run in the debugger with F9.
-Use Shift-F9 to build again after making changes.
+Once you have added the new dproj file you should be able to open the project in the Delphi IDE and run in the debugger with F9.
+( Use Shift-F9 to build again after making changes. )
 
 ## How to use a build of the app
 
 The built executable - RG38.exe - can be used standalone on any current Windows 10 machine.
 There is no database, and no files are saved by default.
-The app should be very easy to work with, you can run it from USB stick.
+The app should be very easy to work with, you can run it from a USB stick.
 
 ## Download from the Store
 
@@ -100,8 +102,6 @@ The store entry for the app has a German language description,
 but much of the text in the application is in English.
 There is currently no localization, and I am not convinced there should be at this time.
 
-( To build the store application I have added an Icon and RotaForm3. )
-
 ## License
 
 I have picked GPL 3.0 as a license, because I mean it,
@@ -110,7 +110,7 @@ and because I want the application to have a long life.
 The *library* code for the RiggVar computations in folder Core shall always be GPL only,
 and a complete application that you build with it should always have the same license.
 
-Having made this clear, I do anticipate that it may be useful to publish the documentation drawing code separately under an alternative license.
+Having made this clear, I do anticipate that it may be useful to publish the documentation drawing base classes separately under an alternative license.
 
 Since this is a complete application, it contains a number of reusable pieces of original code, besides the computation for the RiggVar model.
 Next to the documentation drawings, there is also the button frame with the integrated touch bar elements, which could be regarded as a reusable piece.
@@ -119,4 +119,4 @@ Please get in contact if you want to use the button frame code for a different p
 
 ## Contributions
 
-Yes, contribution are welcome. Please do.
+Contribution are welcome. Lots of work to do.
