@@ -34,7 +34,7 @@ begin
   DL.Add(RiggVar.FD.Drawing03.TRggDrawingD03.Create); // Getriebe
   DL.Add(RiggVar.FD.Drawing04.TRggDrawingD04.Create); // Tetrahedron
   DL.Add(RiggVar.FD.Drawing05.TRggDrawingD05.Create); // Rigg
-  DL.Add(RiggVar.FD.Drawing06.TRggDrawingD06.Create); // Hight
+  DL.Add(RiggVar.FD.Drawing06.TRggDrawingD06.Create); // Height
   DL.Add(RiggVar.FD.Drawing07.TRggDrawingD07.Create); // Triangle
   DL.Add(RiggVar.FD.Drawing08.TRggDrawingD08.Create); // Arc
   DL.Add(RiggVar.FD.Drawing09.TRggDrawingD09.Create); // Axis

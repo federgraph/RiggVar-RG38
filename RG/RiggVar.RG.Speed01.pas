@@ -120,7 +120,6 @@ begin
     InitSpeedButton(sb);
   end;
 
-
   BtnColorValue := clvProp;
 
   sb := AddSpeedBtn('AllPropsBtn');

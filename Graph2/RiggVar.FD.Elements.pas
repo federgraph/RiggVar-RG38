@@ -541,7 +541,7 @@ begin
   result.C := TPoint3D.Zero;
 end;
 
-{ TRggBase }
+{ TRggElement }
 
 constructor TRggElement.Create;
 begin
@@ -554,8 +554,6 @@ begin
   TextRadius := DefaultTextRadius;
   TextAngle := DefaultTextAngle;
 end;
-
-{ TRggElement }
 
 procedure TRggElement.GetInfo(ML: TStrings);
 begin

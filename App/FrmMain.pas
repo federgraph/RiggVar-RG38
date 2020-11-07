@@ -398,13 +398,6 @@ begin
 
   Caption := HelpCaptionText;
 
-{$ifdef MACOS}
-  { OnKeyUp does not work well on Mac, RSP-2766 }
-  OnKeyUp := nil;
-  { we will use OnKeyDown instead }
-  OnKeyDown := FormKeyUp;
-{$endif}
-
   InitSalingGraph;
   InitControllerGraph;
   InitChartGraph;
@@ -426,6 +419,13 @@ begin
   Main.HullVisible := False;
   Main.OnUpdateChart := DoOnUpdateChart;
   Main.FederText.CheckState;
+
+{$ifdef MACOS}
+  { OnKeyUp does not work well on Mac, RSP-2766 }
+  OnKeyUp := nil;
+  { we will use OnKeyDown instead }
+  OnKeyDown := FormKeyUp;
+{$endif}
 end;
 
 procedure TFormMain.FormDestroy2(Sender: TObject);
@@ -605,14 +605,6 @@ end;
 
 procedure TFormMain.FormResize(Sender: TObject);
 begin
-  //if not FormShown then
-  //   Exit;
-
-  { will be done via Resize and UpdateTouch }
-//  MainVar.ClientWidth := ClientWidth;
-//  MainVar.ClientHeight := ClientHeight;
-  { 10.3.3. ClientHeight not (yet) correct when moving form between monitors }
-
   if (Main <> nil) and Main.IsUp then
   begin
     MainVar.Scale := Handle.Scale;
@@ -662,8 +654,7 @@ begin
   begin
     TrimmText.Visible := True;
     ParamListbox.Visible := True;
-    if ReportListbox <> nil then
-      ReportListbox.Visible := True;
+    ReportListbox.Visible := True;
 
     HelpText.Position.X := TextPositionX;
     ReportText.Position.X := TextPositionX;
@@ -946,7 +937,7 @@ begin
     vkF12: result := faMemeGotoSquare;
 //    vkC: result := faCopyTrimmItem;
 //    vkV: result := faPasteTrimmItem;
-    VKEscape:
+    vkEscape:
     begin
       if Shift = [ssShift] then
         result := faResetPosition

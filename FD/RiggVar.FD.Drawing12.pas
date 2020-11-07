@@ -157,7 +157,6 @@ type
 implementation
 
 uses
-  RggTypes,
   RggSchnittKK;
 
 { TRggDrawingD12 }
