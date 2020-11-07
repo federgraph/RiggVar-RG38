@@ -73,12 +73,12 @@ You don't have to do the actual drawing, because of the drawing elements, which 
 
 There is a button with caption FD (see screenshot above) which you can use to bring up the form with the documentation drawings.
 
-<a href="doc/images/RiggVar-FD-01.png">*Documentation drawings can serve as a unit tests alternative.*<br>
+<a href="doc/images/RiggVar-FD-01.png">*Documentation drawings can serve as a unit test alternative.*<br>
 ![FormDrawing screenshot](doc/images/RiggVar-FD-01.png)</a>
 
 With the code in folder Graph2 I have determined how the documentation should be done.
 We need to add more drawings.
-Then it will easier to explain the project, by explaining the drawings, in words.
+Then it will be easier to explain the project, by explaining the drawings, in words.
 
 ## How to build
 
