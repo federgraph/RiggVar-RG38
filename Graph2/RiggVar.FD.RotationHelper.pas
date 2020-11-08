@@ -196,12 +196,12 @@ begin
 
   { Tait-Bryan angles Y1 Z2 X3 }
 
-  { first row}
+  { first row }
   result.m11 := c1 * c2; { first column }
   result.m12 := s1 * s3 - c1 * s2 * c3;
   result.m13 := c1 * s2 * s3 + s1 * c3;
 
-  { second row}
+  { second row }
   result.m21 := s2;
   result.m22 := c2 * c3;
   result.m23 := -c2 * s3;
