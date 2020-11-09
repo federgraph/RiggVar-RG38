@@ -22,6 +22,10 @@
 This is a Delphi FMX project which can be built with IDE Rio 10.3.3.
 
 While it is a technically a Delphi cross platform project, it is intended for Windows only.
+It should compile for other platforms,
+but mainly because of the additional forms,
+which have been available previously for the VCL platform and reintroduced as FMX forms,
+it is not expected to run.
 
 ## RiggVar
 
@@ -79,11 +83,13 @@ Then it will be easier to explain the project, by explaining the drawings.
 This is a Delphi FMX project, currently using IDE 10.3.3.
 
 Before you open the project in the IDE you need to recreate the dproj file, because it is in gitignore.
-I recommend that you create a new FMX project with the name RG38 somewhere and copy the dproj file
-(Delphi Project File) over to the RG38 working directory.
+I recommend that you create a new FMX project in the default new project area,
+save project as RG38,
+then copy just the dproj file (Delphi Project File) over to the RG38 working directory.
 
 Once you have added the new dproj file you should be able to open the project in the Delphi IDE and run in the debugger with F9.
-( Use Shift-F9 to build again after making changes. )
+
+Use Shift-F9 to build again after making changes.
 
 ## How to use a build of the app
 
@@ -111,17 +117,17 @@ I plan to publish the documentation drawing base classes in a standalone reposit
 Since this is a complete application, it contains a number of reusable pieces of original code, besides the computation for the RiggVar model.
 Next to the documentation drawings, there is also the button frame with the integrated touch bar elements, which could be regarded as a reusable piece.
 I use the button frame component in most of my Delphi applications.
-Please get in contact if you want to use the button frame code for a different project under a different license.
+
+How you could use the button frame code in another application needs to be discussed.
 
 ## Contributions
 
 Contributions are welcome. Lots of work to do.
 
-There is currently no localization, and I am not convinced there should be at this time.
-For example you could fork the project and change the text for the key terms.
-
-You could also provide default data that is closer to reality.
-
-The project is available for VCL and LCL as well,
+- There is currently no localization, and I have not decided how that should be done.
+You could fork the project, change the text for the terms, and let me look your the changes.
+- You could provide default data that is closer to reality.
+- You could find a use case and describe it.
+- The project is available for VCL and LCL as well,
 but graphics and high resolution monitor support is currently more advanced on the FMX platform.
-You could help with the graphics in the LCL project.
+You could help with the Lazarus project, which is currently a private repository on GitHub.

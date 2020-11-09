@@ -2533,10 +2533,10 @@ begin
 { but you can manually read a Trimm-File-Auto.txt if already saved, }
 { e.g. by clicking on a button. }
 {$ifdef IOS}
-  fn := TrimmFileNameAuto;
+  fn := MainConst.TrimmFileNameAuto;
 {$endif}
 {$ifdef Android}
-  fn := TrimmFileNameAuto;
+  fn := MainConst.TrimmFileNameAuto;
 {$endif}
 
   s := fp + fn;

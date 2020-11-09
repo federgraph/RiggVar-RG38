@@ -2,6 +2,11 @@
 Deploy/
 Office/
 OSX64/
+Android/
+Android64/
+iOSDevice32/
+iOSDevice64
+iOSimulator
 
 AndroidManifest.template.xml
 Entitlement.TemplateOSX.xml
