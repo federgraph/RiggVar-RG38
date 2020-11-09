@@ -123,12 +123,12 @@ which is a set of current values for the model.
 At this time the model and the reference are the same - and you cannot see the reference position
 because it is drawn first, and therefore hides behind the current position.
 
-When you then change the model the reference position will become visible.
+When you *then* change the model, the reference position will become visible.
 
-So, it is FBtnGrauDown that can be true of false but you will use Super Blau action to manipulate it.
-It will ensure that FSofortBerechnen will also be set.
+So, it is FBtnBlauDown that can be true or false, but now you will use Super Blau *action* to manipulate it.
+It will ensure that FSofortBerechnen will be set.
 
-Now it is time to inspect the relevant code in unit RiggVar.RG.Main.pas:
+It is time to inspect the relevant code in unit RiggVar.RG.Main.pas:
 
 ```pascal
 procedure TRggMain.SetSuperRadio(const Value: TGraphRadio);
@@ -220,7 +220,7 @@ but rather I will let you decide.
 You can read about the *painters algorithm* on Wikipedia,
 it is more like a concept than something that can be reused easily.
 I know more about the topic now, e.g why it is not easy, but I am not a mathematician
-and therefore will prefer not to talk too much.
+and therefore will leave it to you to analyze the situation.
 
 ### Super Quick
 
@@ -228,12 +228,16 @@ Super Quick is not so quick actually, it is expected to be slow!
 It just means that the built in quick sort code is used to sort display items.
 Sorting the drawing elements is slow compared to not sorting them.
 
-Using quick sort with a special comparer is the more general variation of how the elements get sorted. 
-I needed a button for this when testing.
-Eventually I guess we will probably keep only one button, Super Display or Super Quick.
+Using quick sort with a special comparer is the more general variation of how the elements can be sorted.
+It was or is not easy to get right and at one time I though it is not possible.
+So I tried to do it manually, before I found another bug and now it appears as if the sorting via quick sort seems to be working.
+This needs to monitored and checked again.
 
 I have done extra test projects to be able to test out the display list approach.
 I recognize that it will be difficult to do proper testing within this project.
+
+I needed a button for this when testing.
+Eventually I guess we will keep only one button, Super Display or Super Quick.
 
 ### End of Super
 
@@ -288,9 +292,16 @@ I will do the illustrations with the help of the new drawing elements in folder 
 
 There is a legend in RotaForm 1. It shows the order of the display items.
 
-You can use button **LG** to see it while *display list* drawing is active,
-and button **LC** to change the color scheme used for the individual display items.
+You can use button **LG** to see it while *display list* drawing is active.
+While you are at it, also try button **LC**, it will change the color scheme used for the individual display items.
+If you wanted to use alternative colors - this is the place to change colors?
 
-( If you select the Super Simple mode of the graph,
-then the legend button and line color button do apparently nothing,
-since the display list is not used. )
+Question: If you select the Super Simple mode of the graph,
+and you find that the legend button and the line color button appear to do nothing,
+what do you do?
+
+Answer: Correct - you click on on Super Quick, or Super Duper, done.
+
+> The Legend is a legend.
+
+You haven't seen the display items if you did not see the legend.
