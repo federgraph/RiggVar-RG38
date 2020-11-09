@@ -22,8 +22,8 @@
 This is a Delphi FMX project which can be built with IDE Rio 10.3.3.
 
 While it is a technically a Delphi cross platform project, it is intended for Windows only.
-It should compile for other platforms,
-but mainly because of the additional forms,
+It should compile for other platforms.
+But mainly because of the additional forms,
 which have been available previously for the VCL platform and reintroduced as FMX forms,
 it is not expected to run on any other platform than Windows.
 
@@ -33,8 +33,8 @@ The RiggVar project started in 1995.
 Special versions of it have been created for several platforms and published via the app store,
 but published versions were light versions that did not surface all of the original features.
 
-While it is a good thing to have a lightweight version of the app,
-and there will probably be more of them,
+While it is a good thing to have a lightweight version of the app - 
+and there will probably be more of them - 
 the intention with this repository is to rescue some of the original work,
 and provide a basis for future development.
 
@@ -65,7 +65,7 @@ When a variation of the drawing is done it should support input.
 
 This project includes documentation drawings.
 
-In *TFormDrawing* you can select a drawing from a list and manipulate the params of these drawing elements with the mouse wheel.
+In *TFormDrawing* you can select a drawing from a list and manipulate the parameters of the drawing elements with the mouse wheel.
 Every drawing element has a caption attached so that you know what the name of the element is.
 Captions of elements can be hidden and shown interactively.
 
@@ -87,7 +87,7 @@ It will be easier to explain how the model works once the drawings are in place.
 
 Use Delphi IDE 10.3.3 to build the project.
 
-I have added the dproj file to gitignore so that you can have you own icons.
+I have added the dproj file to gitignore so that you can have your own icons.
 Before you open the project in the IDE you need to create a **new dproj file** (Delphi Project File):
 
 - Create a new FMX project in the default new project area,
@@ -125,7 +125,7 @@ Since this is a complete application, it contains a number of reusable pieces of
 Next to the documentation drawings, there is also the button frame with the integrated touch bar elements, which could be regarded as a reusable piece.
 I use the button frame component in most of my Delphi applications.
 
-How you could use the button frame code in another applications needs to be discussed.
+How you could use the button frame code in other applications needs to be discussed.
 
 ## Contributions
 

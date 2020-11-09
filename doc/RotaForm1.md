@@ -52,25 +52,33 @@ and/or to see updated values for the relaxed position coordinates in the textual
 There were other buttons on the original toolbar related to options.
 
 I would set model and view options via the speed buttons and get the desired result,
-because I could remember the meaning and the buttons had glyphs.
+because I knew the purpose of the buttons and they had glyphs.
 
-> Legacy screen shot should appear here?
+> Legacy screen shot of the toolbar buttons with self made glyphs shot appear here?
 
 Now that I have decided to not bother about glyphs any more and go with short captions instead,
-it may be even more confusing to the user who is not aware of the meaning of the short button captions.
+I made sure that hints are displayed immediately when you hover over a button with the mouse.
+On the touch screen, hint with the long caption will be displayed the moment you come close to a button with the pen.
 
-This is why the super buttons are useful.
-They are *superimposed* over the available options.
-Super buttons are like *radio buttons*, one of them can be down at a time.
+But the problem remained that the user needs to know about the options to use the application.
+
+And this is why the new super buttons have now replaced the original toolbar buttons.
+They are *super imposing* the available options.
 Each super button will select a predefined set of options as explained below.
+Super buttons are like *radio buttons* - one of them can be down at a time.
+
+Each graph can have its dedicated speed panel.
+In the picture below you can see the speed panel used with RotaForm 1.
 
 <a href="images/RiggVar-RG38-01.png">*super buttons gS gN gG gB gM gD and gQ are on the speed panel*<br>
 ![RG38 screenshot](images/RiggVar-RG38-01.png)</a>
 
-In the picture above you can see the speed panel used with RotaForm 1.
-Each graph can have its dedicated speed panel.
-
 ```pascal
+
+// SpeedPanel01 is used for data access buttons.
+// SpeedPanel02 is the old style speed panel for RotaForm1.
+// SpeedPanel03 is the new version with the super buttons. 
+
 type
   TActionSpeedBarRG03 = class(TActionSpeedBar)
   private
@@ -83,8 +91,8 @@ type
     BogenBtn: TSpeedButton;
     KoppelBtn: TSpeedButton;
 
-    SimpleBtn: TSpeedButton;
-    NormalBtn: TSpeedButton;
+    SimpleBtn: TSpeedButton; // short caption = 'gS'
+    NormalBtn: TSpeedButton; // gN
     GrauBtn: TSpeedButton;
     BlauBtn: TSpeedButton;
     MultiBtn: TSpeedButton;
