@@ -266,8 +266,9 @@ Special applications that may be derived for certain platforms from this one wil
 The most interesting part of RotaForm 1 is probably not the drawing itself but how input is handled to change the view.
 This differs between the views, but should perhaps be generalized and optimized.
 For example, an input throttle could be applied in a consistent way across all implementations of the view.
-The mouse wheel does not always have a notched behavior one any more,
-you will receive many mouse move messages via a touch screen or a touch pad.
+The mouse wheel does not always have a notched behavior any more,
+you may receive more mouse move messages than expected via a touch screen or a touch pad.
+RotaForm 3 uses OnIdle to reduce the input load via OnIdle, which I think is better.
 
 ## Readme startup notes
 

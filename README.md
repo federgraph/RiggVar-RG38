@@ -70,7 +70,7 @@ Every drawing element has a caption attached so that you know what the name of t
 Captions of elements can be hidden and shown interactively.
 
 The drawings could be used to produce screen shots,
-but I think it is much better to use the **live instance**.
+but I think it is much better to use a **live instance** of the drawing instead.
 
 Documentation drawings are new, started only in 2020 because of a need.
 To see these drawings in action may be the only reason why you may want to look at the project.
@@ -88,7 +88,7 @@ It will be easier to explain how the model works once the drawings are in place.
 Use Delphi IDE 10.3.3 to build the project.
 
 I have added the dproj file to gitignore so that you can have you own icons.
-Before you open the project in the IDE you need to recreate a **new dproj file** (Delphi Project File):
+Before you open the project in the IDE you need to create a **new dproj file** (Delphi Project File):
 
 - Create a new FMX project in the default new project area,
 - save project as RG38,
@@ -100,7 +100,7 @@ It may be necessary to use Shift-F9 to build again after making changes to the p
 
 ## How to use a build of the app
 
-The built executable - RG38.exe - can be used standalone on any current Windows 10 machine.
+The executable - RG38.exe - can be used standalone on any current Windows 10 machine.
 There is no database, and no files are saved by default.
 The app should be very easy to deploy, you can run it from a USB stick.
 
@@ -119,7 +119,7 @@ and because I want the application to have a long life.
 The *library* code for the RiggVar computations in folder Core shall always be GPL only,
 and a complete application that you build with it should always have the same license.
 
-I plan to publish the documentation drawing base classes in a standalone repository with dual license.
+I plan to publish the documentation drawing base classes in a dedicated repository with a dual license.
 
 Since this is a complete application, it contains a number of reusable pieces of original code, besides the computation for the RiggVar model.
 Next to the documentation drawings, there is also the button frame with the integrated touch bar elements, which could be regarded as a reusable piece.
