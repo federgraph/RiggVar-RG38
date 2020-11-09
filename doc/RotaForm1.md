@@ -31,7 +31,7 @@ It means that only *part one* of the computation is carried out, inside the mode
 **Part one** of the computation deals with kinematics only.
 It is all you need to support a basic display of the model.
 
-**Part two** of the computation deals with forces and the computes the relaxed position of the model.
+**Part two** of the computation deals with forces and computes the relaxed position of the model.
 You would not be able to see a difference in the graphical display - whether the force in the shrouds is bigger or smaller,
 the graph does not give a clue.
 And it is therefore not necessary to do an expensive computation,
@@ -127,9 +127,8 @@ because it is drawn first, and therefore hides behind the current position.
 
 When you then change the model the reference position will become visible.
 
-So, it is BtnBlau that can be down or not.
-You know about its existence but will use Super Blau instead.
-It will ensure that Sofort Berechnen will also be set.
+So, it is FBtnGrauDown that can be true of false but will use Super Blau action to manipulate it.
+It will ensure that FSofortBerechnen will also be set.
 
 Now it is time to inspect the relevant code in unit RiggVar.RG.Main.pas:
 
@@ -209,21 +208,21 @@ For many years the original version of it was good enough.
 featuring a 3D graph which some say looks better.
 - Then, years later, I wanted to update the application and reintroduce features,
 like for example part two of the computation, and the 2D graph which can show the result.
-- And then, month later, I thought that some sort of a *painters algorithm* to improve the 3D impression would be appropriate,
+- And then, month later, I thought that some sort of a *painters algorithm* to improve the 3D impression would be nice,
 to see what is in front.
 
 I don't claim anything,
 - whether this is worth the effort,
 - whether it works in all situations,
-- whether there is prove that is in theory possible at all or not,
+- whether there is prove that it is in theory possible at all or may be not,
 - or whether it is fast enough to be usable,
 
-but rather I will let you decide which you want to keep.
+but rather I will let you decide.
 
 You can read about the *painters algorithm* on Wikipedia,
 it is more like a concept than something that can be reused easily.
 I know more about the topic now, e.g why it is not easy, but I am not a mathematician
-and therefore will prefer not to talk too much about.
+and therefore will prefer not to talk too much.
 
 ### Super Quick
 
@@ -236,7 +235,7 @@ I needed a button for this when testing.
 Eventually I guess we will probably keep only one button, Super Display or Super Quick.
 
 I have done extra test projects to be able to test out the display list approach.
-I recognize that will be difficult to to proper testing within this project.
+I recognize that will be difficult to do proper testing within this project.
 
 ### End of Super
 
@@ -248,7 +247,7 @@ There you can find out more about the history of BtnBlau and BtnGrau, SofortBtn,
 RotaForm 2, the new one, is also a 2D graph, and it reuses the depth sorting of lines as with Super Quick,
 but it does not show the relaxed position, or the reference position.
 RotaForm 2 is leaner, and easier to maintain than RotaForm 1.
-I would rather want you to have a look at RotaForm 2 and improve that.
+I would rather want you to have a look at RotaForm 2 and improve that one.
 
 RotaForm 3 - the 3D graph that is expected to appear in folder Graph3 in the future -
 is somehow even easier, since I can use existing components for the elements,
@@ -264,7 +263,7 @@ Special applications that may be derived for certain platforms from this one wil
 
 The most interesting part of RotaForm 1 is probably not the drawing itself but how input is handled to change the view.
 This differs between the views, but should perhaps be generalized and optimized.
-For example, an input throttle could be applied in a consistent way across all implementation of view.
+For example, an input throttle could be applied in a consistent way across all implementations of the view.
 The mouse wheel not a notched one any more, if you receive mouse move messages via touch screen or touch pad.
 In this situation, especially on a mobile device, a more robust solution is anticipated to be needed.
 
@@ -290,10 +289,9 @@ The illustrations for that book will be created using the drawing elements in fo
 
 There is a legend in RotaForm 1.
 
-You can use button **LG** to see it while *display list* drawing is active.
-
-Button **LC** will change the color scheme used for the individual display items.
+You can use button **LG** to see it while *display list* drawing is active,
+and button **LC** to change the color scheme used for the individual display items.
 
 ( If you select the Super Simple mode of the graph,
-then the legend button and line color button change nothing,
+then the legend button and line color button do apparently nothing,
 since the display list is not used. )
