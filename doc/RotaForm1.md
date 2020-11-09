@@ -300,7 +300,7 @@ Question: If you select the Super Simple mode of the graph,
 and you find that the legend button and the line color button appear to do nothing,
 what do you do?
 
-Answer: Correct - you click on on Super Quick, or Super Duper, done.
+Answer: Correct - you click on Super Quick, or Super Duper, done.
 
 > The Legend is a legend.
 

@@ -58,7 +58,7 @@ the relaxed situation, and a reference situation to compare with.
 The three implementations are called RotaForm1, RotaForm2, and RotaForm3.
 **RotaForm** was the name of the original standalone form where you could rotate the graph around 3 axis with the mouse.
 Now you can rotate, pan and zoom on the touch screen as well.
-The touchpad should work as well.
+The touchpad should work too.
 When a variation of the drawing is done it should support input.
 
 ## Documentation Drawings
@@ -67,7 +67,7 @@ This project includes documentation drawings.
 
 In *TFormDrawing* you can select a drawing from a list and manipulate the params of these drawing elements with the mouse wheel.
 Every drawing element has a caption attached so that you know what the name of the element is.
-Captions of elements can be hidden interactively.
+Captions of elements can be hidden and shown interactively.
 
 The drawings could be used to produce screen shots,
 but I think it is much better to use the **live instance**.
@@ -85,9 +85,9 @@ It will be easier to explain how the model works once the drawings are in place.
 
 ## How to build
 
-Use the Delphi IDE 10.3.3 to build the project.
+Use Delphi IDE 10.3.3 to build the project.
 
-I have added the dproj file to gitignore so that you can have you own Icons.
+I have added the dproj file to gitignore so that you can have you own icons.
 Before you open the project in the IDE you need to recreate a **new dproj file** (Delphi Project File):
 
 - Create a new FMX project in the default new project area,
@@ -125,24 +125,43 @@ Since this is a complete application, it contains a number of reusable pieces of
 Next to the documentation drawings, there is also the button frame with the integrated touch bar elements, which could be regarded as a reusable piece.
 I use the button frame component in most of my Delphi applications.
 
-How you could use the button frame code in another application needs to be discussed.
+How you could use the button frame code in another applications needs to be discussed.
 
 ## Contributions
 
 Contributions are welcome. Lots of work to do.
 
-- There is currently no localization, and I have not decided how that should be done.
-You could fork the project, change the text for the key terms, and let me look at the changes.
+There is currently no localization, and I have not decided how that should be done.
+
+- You could fork the project, change the text for the key terms, and let me look at the changes.
 - You could provide default data that is closer to reality.
-- You could find a use case and describe it.
 - You could build a lightweight version in a branch and test on another target.
+- You could find a (new) use case and describe it.
 
-Please tell me if a branch is needed.
+The standard use case for the applications is of educational type.
+It shows how the rigg behaves in principle.
+To work with concrete values for your boat requires more *work*.
+I do not own a boat any more and have focused on the programming aspect of the project,
+because I found that interesting in itself.
+A possible contribution to the project could be the practical application of the tool.
 
-The project is available for VCL and LCL as well too:
-- The LCL project can be build in the Lazarus IDE on iMac.
-- It should be working on a Raspberry Pi but I have not tried yet.
-- The Lazarus project is currently a private repository on GitHub.
-- A measuring device may be connected to a version of the application.
+Please tell me if a branch is needed, via issues?
 
-> Graphics and high resolution monitor support is currently *more advanced* on the FMX platform!
+## About the sibling projects
+
+The project is also available for VCL and LCL:
+- The LCL project can be built in the Lazarus IDE on iMac.
+- The LCL project is currently a private repository on GitHub.
+- There should be a Raspberry Pi version, but I have not tried recently.
+- A measuring device may be connected to a version of the application?
+
+> Graphics and high resolution monitor support is currently *more advanced* on the FMX platform.
+
+Other environments, namely java and C# exist but are not up to date.
+A rudimentary typescript version exists - of the basics.
+A swift version was started but abandoned, I would be interested.
+
+I have updated and advanced the Pascal projects instead, as you can see here.
+But I don't know if there will be a current *community edition* for this project in the future.
+As for 2020, I think I have achieved the goal.
+What is next?
