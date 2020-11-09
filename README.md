@@ -57,9 +57,9 @@ the relaxed situation, and a reference situation to compare with.
 
 The three implementations are called RotaForm1, RotaForm2, and RotaForm3.
 **RotaForm** was the name of the original standalone form where you could rotate the graph around 3 axis with the mouse.
-Now you can rotate pan and zoom on the touch screen as well.
-The touchpad should works as well.
-When a variation of the drawing is done it should support input as well.
+Now you can rotate, pan and zoom on the touch screen as well.
+The touchpad should work as well.
+When a variation of the drawing is done it should support input.
 
 ## Documentation Drawings
 
@@ -81,11 +81,11 @@ Button FD (see screenshot above) will bring up the form with the documentation d
 
 With the code in folder Graph2 I have determined how the documentation should be done.
 More drawings should be added.
-It will be easier then to explain the project by explaining the drawings.
+It will be easier to explain how the model works once the drawings are in place.
 
 ## How to build
 
-This is a Delphi FMX project, currently using IDE 10.3.3.
+Use the Delphi IDE 10.3.3 to build the project.
 
 I have added the dproj file to gitignore so that you can have you own Icons.
 Before you open the project in the IDE you need to recreate a **new dproj file** (Delphi Project File):
