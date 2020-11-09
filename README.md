@@ -25,7 +25,7 @@ While it is a technically a Delphi cross platform project, it is intended for Wi
 It should compile for other platforms,
 but mainly because of the additional forms,
 which have been available previously for the VCL platform and reintroduced as FMX forms,
-it is not expected to run.
+it is not expected to run on any other platform than Windows.
 
 ## RiggVar
 
@@ -64,13 +64,15 @@ When a variation of the drawing is done it should support input as well.
 ## Documentation Drawings
 
 This project includes documentation drawings.
-In FormDrawing you can select a drawing from a list and manipulate the drawing elements.
-Every drawing element has a caption attached so that you know what the name of the element is,
-very essential for a documentation drawing.
-They could be used to produce screen shots, but I think it is much better to use the live instance.
 
-> Documentation drawings are new, started in 2020.
+In *TFormDrawing* you can select a drawing from a list and manipulate the params of these drawing elements with the mouse wheel.
+Every drawing element has a caption attached so that you know what the name of the element is.
+Captions of elements can be hidden interactively.
 
+The drawings could be used to produce screen shots,
+but I think it is much better to use the **live instance**.
+
+Documentation drawings are new, started only in 2020 because of a need.
 To see these drawings in action may be the only reason why you may want to look at the project.
 Button FD (see screenshot above) will bring up the form with the documentation drawings.
 
@@ -79,26 +81,28 @@ Button FD (see screenshot above) will bring up the form with the documentation d
 
 With the code in folder Graph2 I have determined how the documentation should be done.
 More drawings should be added.
-It will be easier then to explain the project - by explaining the drawings.
+It will be easier then to explain the project by explaining the drawings.
 
 ## How to build
 
 This is a Delphi FMX project, currently using IDE 10.3.3.
 
-Before you open the project in the IDE you need to recreate a **new dproj file**, because I added it to gitignore:
+I have added the dproj file to gitignore so that you can have you own Icons.
+Before you open the project in the IDE you need to recreate a **new dproj file** (Delphi Project File):
+
 - Create a new FMX project in the default new project area,
 - save project as RG38,
-- then copy just the dproj file (Delphi Project File) over to the RG38 working directory.
+- then copy just the dproj file over to the RG38 working directory.
 
 Once you have added the new dproj file you should be able to open the project in the Delphi IDE and run in the debugger with F9.
 
-Use Shift-F9 to build again after making changes.
+It may be necessary to use Shift-F9 to build again after making changes to the project.
 
 ## How to use a build of the app
 
 The built executable - RG38.exe - can be used standalone on any current Windows 10 machine.
 There is no database, and no files are saved by default.
-The app should be very easy to work with, you can run it from a USB stick.
+The app should be very easy to deploy, you can run it from a USB stick.
 
 ## Download from the Store
 
@@ -128,9 +132,17 @@ How you could use the button frame code in another application needs to be discu
 Contributions are welcome. Lots of work to do.
 
 - There is currently no localization, and I have not decided how that should be done.
-You could fork the project, change the text for the terms, and let me look your the changes.
+You could fork the project, change the text for the key terms, and let me look at the changes.
 - You could provide default data that is closer to reality.
 - You could find a use case and describe it.
-- The project is available for VCL and LCL as well,
-but graphics and high resolution monitor support is currently more advanced on the FMX platform.
-You could help with the Lazarus project, which is currently a private repository on GitHub.
+- You could build a lightweight version in a branch and test on another target.
+
+Please tell me if a branch is needed.
+
+The project is available for VCL and LCL as well too:
+- The LCL project can be build in the Lazarus IDE on iMac.
+- It should be working on a Raspberry Pi but I have not tried yet.
+- The Lazarus project is currently a private repository on GitHub.
+- A measuring device may be connected to a version of the application.
+
+> Graphics and high resolution monitor support is currently *more advanced* on the FMX platform!
