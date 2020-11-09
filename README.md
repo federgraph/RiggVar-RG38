@@ -49,14 +49,17 @@ As of now, the code behind should be the same for all versions,
 but the graphical display of the model can be different.
 Currently there are three implementations for the Delphi platform:
 
-1. A *close to original* version of a 2D graph, done by drawing to the Canvas.
+1. A *close to original* version of a 2D graph, done by drawing to the canvas.
 This one can show multiple overlaid instances of the model; the current situation under load,
 the relaxed situation, and a reference situation to compare with.
 2. A new 2D graph implementation which is created by defining drawing elements in code, which in turn draw to the canvas.
 3. A real 3D graph, not yet included in this repository.
 
 The three implementations are called RotaForm1, RotaForm2, and RotaForm3.
-RotaForm was the name of the original standalone form where you could rotate the graph around 3 axis with the mouse.
+**RotaForm** was the name of the original standalone form where you could rotate the graph around 3 axis with the mouse.
+Now you can rotate pan and zoom on the touch screen as well.
+The touchpad should works as well.
+When a variation of the drawing is done it should support input as well.
 
 ## Documentation Drawings
 
@@ -68,24 +71,24 @@ They could be used to produce screen shots, but I think it is much better to use
 
 > Documentation drawings are new, started in 2020.
 
-You may want to look at the project only to see these drawings in action.
-There is a button with caption FD (see screenshot above) which you can use to bring up the form with the documentation drawings.
+To see these drawings in action may be the only reason why you may want to look at the project.
+Button FD (see screenshot above) will bring up the form with the documentation drawings.
 
 <a href="doc/images/RiggVar-FD-01.png">*Documentation drawings can serve as a unit test alternative.*<br>
 ![FormDrawing screenshot](doc/images/RiggVar-FD-01.png)</a>
 
 With the code in folder Graph2 I have determined how the documentation should be done.
 More drawings should be added.
-Then it will be easier to explain the project, by explaining the drawings.
+It will be easier then to explain the project - by explaining the drawings.
 
 ## How to build
 
 This is a Delphi FMX project, currently using IDE 10.3.3.
 
-Before you open the project in the IDE you need to recreate the dproj file, because it is in gitignore.
-I recommend that you create a new FMX project in the default new project area,
-save project as RG38,
-then copy just the dproj file (Delphi Project File) over to the RG38 working directory.
+Before you open the project in the IDE you need to recreate a **new dproj file**, because I added it to gitignore:
+- Create a new FMX project in the default new project area,
+- save project as RG38,
+- then copy just the dproj file (Delphi Project File) over to the RG38 working directory.
 
 Once you have added the new dproj file you should be able to open the project in the Delphi IDE and run in the debugger with F9.
 

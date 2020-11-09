@@ -6,7 +6,7 @@ Android/
 Android64/
 iOSDevice32/
 iOSDevice64
-iOSimulator
+iOSSimulator
 
 AndroidManifest.template.xml
 Entitlement.TemplateOSX.xml
