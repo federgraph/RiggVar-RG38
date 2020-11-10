@@ -21,17 +21,18 @@
 
 This is a Delphi FMX project which can be built with IDE Rio 10.3.3.
 
-While it is a technically a Delphi cross platform project, it is intended for Windows only.
-It should compile for other platforms.
-But mainly because of the additional forms,
+While it is technically a Delphi cross platform project, it is intended for Windows only.
+
+It is not expected to run on any other platform than Windows because of the additional forms,
 which have been available previously for the VCL platform and reintroduced as FMX forms,
-it is not expected to run on any other platform than Windows.
+
+It should compile for other platforms though.
 
 ## RiggVar
 
 The RiggVar project started in 1995.
-Special versions of it have been created for several platforms and published via the app store,
-but published versions were light versions that did not surface all of the original features.
+Special versions of it have been created for several platforms and published via the app store.
+Published versions before 2020 were light versions that did not surface all of the original features.
 
 While it is a good thing to have a lightweight version of the app - 
 and there will probably be more of them - 
@@ -85,7 +86,7 @@ It will be easier to explain how the model works once the drawings are in place.
 
 ## How to build
 
-Use Delphi IDE 10.3.3 to build the project.
+Use IDE 10.3.3 to build the project.
 
 I have added the dproj file to gitignore so that you can have your own icons.
 Before you open the project in the IDE you need to create a **new dproj file** (Delphi Project File):
@@ -122,10 +123,10 @@ and a complete application that you build with it should always have the same li
 I plan to publish the documentation drawing base classes in a dedicated repository with a dual license.
 
 Since this is a complete application, it contains a number of reusable pieces of original code, besides the computation for the RiggVar model.
-Next to the documentation drawings, there is also the button frame with the integrated touch bar elements, which could be regarded as a reusable piece.
-I use the button frame component in most of my Delphi applications.
-
-How you could use the button frame code in other applications needs to be discussed.
+Next to the documentation drawings there is the button frame with the integrated touch bar elements, which could be regarded as a reusable piece.
+I originally created the button frame feature for the federgraph application.
+I understand that it can be used in another GPL project, since I have published it here.
+It cannot be reused in your closed source commercial project without asking.
 
 ## Contributions
 
@@ -145,7 +146,8 @@ I do not own a boat any more and have focused on the programming aspect of the p
 because I found that interesting in itself.
 A possible contribution to the project could be the practical application of the tool.
 
-Please tell me if a branch is needed, via issues?
+Trimm 470?
+Please tell me if a branch is needed.
 
 ## About the sibling projects
 
@@ -161,7 +163,4 @@ Other environments, namely java and C# exist but are not up to date.
 A rudimentary typescript version exists - of the basics.
 A swift version was started but abandoned, I would be interested.
 
-I have updated and advanced the Pascal projects instead, as you can see here.
-But I don't know if there will be a current *community edition* for this project in the future.
-As for 2020, I think I have achieved the goal.
-What is next?
+In 2020 I have updated and advanced the Pascal projects instead, as you can see here.
