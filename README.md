@@ -24,7 +24,7 @@ This is a Delphi FMX project which can be built with IDE Rio 10.3.3.
 While it is technically a Delphi cross platform project, it is intended for Windows only.
 
 It is not expected to run on any other platform than Windows because of the additional forms,
-which have been available previously for the VCL platform and reintroduced as FMX forms,
+which have been available previously for the VCL platform and reintroduced as FMX forms.
 
 It should compile for other platforms though.
 
@@ -60,7 +60,6 @@ The three implementations are called RotaForm1, RotaForm2, and RotaForm3.
 **RotaForm** was the name of the original standalone form where you could rotate the graph around 3 axis with the mouse.
 Now you can rotate, pan and zoom on the touch screen as well.
 The touchpad should work too.
-When a variation of the drawing is done it should support input.
 
 ## Documentation Drawings
 
@@ -159,8 +158,8 @@ The project is also available for VCL and LCL:
 
 > Graphics and high resolution monitor support is currently *more advanced* on the FMX platform.
 
-Other environments, namely java and C# exist but are not up to date.
-A rudimentary typescript version exists - of the basics.
+Projects for other environments, namely for java and C# exist but are not up to date.
+A typescript version exists - of the basics.
 A swift version was started but abandoned, I would be interested.
 
 In 2020 I have updated and advanced the Pascal projects instead, as you can see here.
