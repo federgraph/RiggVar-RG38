@@ -21,7 +21,7 @@ If you want to add a new action you have to do this:
 - assign a *long caption* in unit RiggVar.FB.ActionLong.pas
 - register the Name of the action in RiggVar.FB.ActionName.pas 
 - add the action to a group in unit RiggVar.FB.ActionGroup.pas
-- register a new group in RiggVar.FB.ActionGroups.pas
+- if new group, register the group in RiggVar.FB.ActionGroups.pas
 
 Now you are ready to
 - assign the action to a button on the button frame
@@ -35,18 +35,18 @@ Now you are ready to
 ```
 
 At runtime you can use Form Actions to examine the groups
-and search for the action by short caption,
+and search for actions by short caption,
 as you can see in the picture above.
 
 The list view for the details will show the assigned short cuts if any,
-and also show the pages of the button frame where the action appears.
+and the pages of the button frame where the action appears.
 
 ## Maintaining Actions
 
-Form Memo can run basic checks on the actions
-and generate code with new numbers for the actions.
+Use Form Memo to run basic checks on the defined actions
+and generate code with new numbers.
 This will help to maintain the contiguous range of action numbers.
-You would just paste the generated snippet of text into the unit.
+You would then just paste the generated snippet of text into the unit.
 
 ```pascal
 { from RiggVar.FB.ActionConst.pas }
@@ -75,10 +75,10 @@ TrimmsRange = [faTrimm0 .. faLogo];
 ```
 
 One more thing to watch out for:
-If you have an additional need to use an action numbers in a set,
-then this number needs to be below 256.
+If you have an additional need to use action numbers in a set,
+those numbers need to be below 256.
 
-My action numbers have served me well so far. It may appear old fashioned,
+Action numbers have served me well so far. It may appear old fashioned,
 but a few things will perhaps be quite easy to do as a side effect.
 For example, it should be easy to have a localized version of the captions,
 short and long, without using third party code.

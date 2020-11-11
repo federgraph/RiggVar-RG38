@@ -1,6 +1,6 @@
-# RotaForm 1
+# RotaForm1
 
-RotaForm 1 is the default graphical display for the Rigg, rig, Rgg, or RG model.
+RotaForm1 is the default graphical display for the Rigg, rig, Rgg, or RG model.
 
 ```pascal
   // see RggRota.pas in folder Graph
@@ -9,61 +9,98 @@ RotaForm 1 is the default graphical display for the Rigg, rig, Rgg, or RG model.
     //...
   end;
 ```
-TRotaform1 implements a 2D graph - but note that it can be rotated around 3 axis with the mouse.
+*TRotaform1* implements a 2D graph - but note that it can be rotated about 3 axis with the mouse.
 The model has 3D coordinates which will be transformed *before drawing to the canvas*.
 
 The graph is drawn onto Image.Bitmap.Canvas
 and the image component will handle OnMouseDown, OnMouseMove and OnMouseUp events.
 
-I am using a special *TOriginalImage* component to support dragging the application from a high resolution monitor to a normal monitor.
+I am using a special *TOriginalImage* component to support dragging the application between a high resolution monitor and a normal monitor.
 This may be of interest to the developer.
 
-But the main purpose of this topic is to explain the toolbar buttons for **RotaForm 1**.
+The main purpose of this topic however is to explain the toolbar buttons for **RotaForm1**.
+
+It is key to know about the *Sofort Berechnen* option before I can explain the buttons.
+Let's do this first.
 
 ## Sofort Berechnen
 
-Alias *compute immediately*.
-There used to be a corresponding button on the tool bar of the original, legacy application.
+FSofortBerechnen is a boolean field in TRggMain. There is also an action, faSofortBtn, to toggle it on or off. **SB** is the short caption of the action. It is mapped to a button in the button frame. The button will indicate whether the option is on or off.
 
-By default the option is off.
-It means that only *part one* of the computation is carried out inside the model code, but not *part two*.
+Sofort Berechnen means that only *part one* of the computation is carried out inside the model code, but not *part two*. See procedure TRggMain.UpdateGetriebe;
 
 **Part one** of the computation deals with kinematics only
 and is all you need to support a basic display of the model.
 
 **Part two** of the computation deals with forces and computes the relaxed position of the model.
 
-You would not be able to see a difference in the graphical display - whether the force in the shrouds is bigger or smaller.
+Whether the force in the shrouds is bigger or smaller - you cannot see it in the graphical display.
 It is therefore not necessary to do an expensive computation, if the only purpose is to show the current position of the model.
 
 With property *Sofort Berechnen* set to False the computation completes earlier.
 And of course it was important in 1995 to be fast when changing the current parameter of the model - by scrolling a scroll bar.
 
+There used to be a corresponding button on the tool bar of the original, legacy application.
+
+<a href="images/Sofort-Berechnen-01.png">*Old toolbar of legacy application with Automatik button A*<br>
+![RG19A toolbar screenshot](images/Sofort-Berechnen-01.png)</a>
+
+```
+var
+  A: TSpeedButton; // Automatik
+  FSofortBerechnen: boolean; // alias 'compute immediately'
+
+Assert(A.Down = not SB);
+
+// Old default was A off (speed button not down) and SB on.
+// New default is Automatik on and SB off. 
+
+{ Note the old speed button glyphs in the middle:
+  BlauBtn = 0. ( zero point, the reference position )
+  GrauBtn = show the relaxed position in color Gray
+  KoppelBtn = show a yellow polyline for the Koppelkurve
+  ZweischlagBtn = show mast as 2 lines or as curve (Bogen).
+}
+```
 Depending on the value of Sofort Berechnen I would update the graph while scrolling - or only when scrolling ended.
 
 Even as of today I do not use a background task to update the model.
 May be in the future, but currently I am convinced that the program should do everything in the main thread.
 
-Sofort Berechnen needs to be True to see the relaxed position of the model in the graph,
+Option Sofort Berechnen needs to be True to see the relaxed position of the model in the graph,
 and/or to see updated values for the relaxed position coordinates in the textual reports.
+
+In the current application you may see a hint line below a report:
+```
+--- ( updated only in mode Sofort Berechnen ) ---
+```
+
+In the old application I printed out a legend text below the reports:
+```
+--- Report Text went here ---
+
+Angezeigt werden die zuletzt gültigen Werte.
+
+ Die Tabellenwerte sind aktuell und gültig, wenn
+ - die LED Grün ist und
+ - die Taste "=" gedrückt wurde bzw.
+ - der Schalter "A" gedrückt ist.
+
+ Die Tabellenwerte können ungültig sein, wenn
+ - die LED Rot ist und/oder
+ - die Taste "=" nicht gedrückt wurde bzw.
+ - der Schalter "A" nicht gedrückt ist
+```
+The speed panel in unit RiggVar.RG.Speed02.pas has the SofortBtn.
+But the use of this speed panel is deprecated.
+We think we now have something better, read on.
 
 ## Super Buttons
 
-There were other buttons on the original toolbar related to options.
+Now we use the speed panel defined in unit RiggVar.RG.Speed03.pas.
 
-I would set model and view options via the speed buttons and get the desired result,
-because I knew the purpose of the buttons and they had glyphs.
-
-> Legacy screen shot of the toolbar buttons with self made glyphs shot appear here?
-
-Now that I have decided to not bother about glyphs any more and go with short captions instead,
-I made sure that hints are displayed immediately when you hover over a button with the mouse.
-On the touch screen, hint with the long caption will be displayed the moment you come close to a button with the pen.
-
-But the problem remained that the user needs to know about the options to use the application.
-
-And this is why the new super buttons have now replaced the original toolbar buttons.
-They are *super imposing* the available options.
+The new super buttons have replaced the original toolbar buttons.
+They are *superimposing* the available options.
 Each super button will select a predefined set of options as explained below.
 Super buttons are like *radio buttons* - one of them can be down at a time.
 
@@ -120,7 +157,7 @@ unless you want to be super fast and only need part one of the computation.
 Sofort Berechnen is true and two positions of the model will be shown - 
 The normal position and the relaxed position of the model.
 
-You can see the relaxed position only if the mast bends, when the force in the shrouds is greater zero.
+You can see the relaxed position only if the mast bends - when the force in the shrouds is greater zero.
 
 ### Super Blau
 
@@ -200,15 +237,17 @@ end;
 
 ### Super Multi
 
-True both - Grau and Blau.
-Do you know the German color values by now?
+True both - Grau and Blau - do you know the German color values by now?
+
+<a href="images/Sofort-Berechnen-03.png">*graph RotaForm1 with gray relaxed position, blue reference position and yellow Koppelkurve*<br>
+![RG19A toolbar screenshot](images/Sofort-Berechnen-03.png)</a>
 
 ### Super Display
 
 This will give you an alternative way of drawing, which uses *display items* that can be sorted,
 so that lines in front are drawn last.
 
-- RotaForm 1 is a 2D graph.
+- RotaForm1  is a 2D graph.
 For many years the original version of it was good enough.
 - Then I published an application to the store - the FMX application -
 featuring a 3D graph which some say looks better.
@@ -240,7 +279,6 @@ Using quick sort with a special comparer is the more general variation of how th
 It was or is not easy to get right and at one time I though it is not possible.
 So I tried to do it manually, before I found another bug and now it appears as if the sorting via quick sort seems to be working.
 This needs to monitored and checked again.
-
 I have done extra test projects to be able to test out the display list approach.
 I recognize that it will be difficult to do proper testing within this project.
 
@@ -249,34 +287,29 @@ Eventually I guess we will keep only one button, Super Display or Super Quick.
 
 ### End of Super
 
-You could have a look at the other repository, where the legacy VCL application code is located.
-There you can find out more about the history of BtnBlau and BtnGrau, SofortBtn, and so on.
-
-> Rename refactoring is super easy today, but what should the better names be?
-
-RotaForm 2, the new one, is also a 2D graph, and it reuses the depth sorting of lines as with Super Quick,
+RotaForm2, the new one, is also a 2D graph, and it reuses the depth sorting of lines,
 but it does not show the relaxed position, or the reference position.
-RotaForm 2 is leaner, and easier to maintain than RotaForm 1.
-I would rather want you to have a look at RotaForm 2 and improve that one.
+RotaForm2 is leaner, and easier to maintain than RotaForm1.
+I would rather want you to have a look at RotaForm2 and improve that one.
 
-RotaForm 3 - the 3D graph that is expected to appear in folder Graph3 in the future -
+RotaForm3 - the 3D graph that is expected to appear in folder Graph3 in the future -
 is somehow even easier, since I can use existing components for the elements,
 but note that the complexity there just shifted towards other areas,
 like setting up the perspective or persisting rotations.
 
-Good news is that this project allows you to use all graph implementations side by side via the interface.
+Good news is that this project allows to use all graph implementations side by side via the interface.
 
 Special applications that may be derived for certain platforms from this one will have to decide
 - whether they want to support the computation of forces,
 - what kind of graph should be used
 - how data will be stored.
 
-The most interesting part of RotaForm 1 is probably not the drawing itself but how input is handled to change the view.
+The most interesting part of RotaForm1 is probably not the drawing itself but how input is handled to change the view.
 This differs between the views, but should perhaps be generalized and optimized.
 For example, an input throttle could be applied in a consistent way across all implementations of the view.
 The mouse wheel does not always have a notched behavior any more,
 you may receive more mouse move messages than expected via a touch screen or a touch pad.
-RotaForm 3 uses OnIdle to reduce the input load via OnIdle, which I think is better.
+RotaForm3 can deal with it better because it uses OnIdle to reduce the input load via OnIdle.
 
 ## Readme startup notes
 
@@ -299,7 +332,7 @@ I will do the illustrations with the help of the new drawing elements in folder 
 
 ## Legend
 
-There is a legend in RotaForm 1. It shows the order of the display items.
+There is a legend in RotaForm1. It shows the order of the display items.
 
 You can use button **LG** to see it while *display list* drawing is active.
 While you are at it, also try button **LC**, it will change the color scheme used for the individual display items.

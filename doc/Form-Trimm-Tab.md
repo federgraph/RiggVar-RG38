@@ -52,10 +52,10 @@ type
 
 Go ahead and do this:
 
-- Click on **<** WriteMemoBtn to update the values in the Memo.
-- Click on ReadMemoBtn **>** to update the yellow points in the graph.
+- Click on **WriteMemoBtn** to update the values in the Memo.
+- Click on **ReadMemoBtn** to update the yellow points in the graph.
 
-As a result you should now see that the yellow points lie on the curve!
+You should now see that the yellow points lie on the curve!
 
 Usually you would:
 
@@ -66,16 +66,21 @@ Usually you would:
 
 This was intended to be a short intro.
 I hope it will be of help when you read the code.
-Search for TTrimmTabDaten to learn more.
+Search for *TTrimmTabDaten* to learn more.
 
 ## Trimm Tabelle Daten
 
 > See *TTrimmTabDaten* in unit RggTypes.
 
-An important thing to note is that the application was designed to persist the parameters of the blue curve, instead of the list of measured values of your TrimmTab.
+An important thing to note is that the application was designed to persist the parameters of the blue curve instead of a list of measured values of your TrimmTab.
 
 Currently the values are not persisted.
 The new data format is a lightweight data format which does not include any material properties or force values.
 The old data format did.
 
-To use measured values for the Kraft-Weg-Kurve as a lookup table for the force in the shroud is expected to be the way to go.
+The goal is to use measured values for the Kraft-Weg-Kurve as a lookup table for the force in the shroud.
+How to do this has been established already in the code of the application.
+Just how to provide the data, and how to persist it, needs to be reviewed and agreed.
+Assuming of course, that it is wanted.
+This is an open source project top which you can contribute.
+And of course it needs to be tested.

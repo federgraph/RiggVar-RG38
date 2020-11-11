@@ -1747,6 +1747,7 @@ begin
   RiggLED := False;
   StatusText := '';
 
+  { part one of computation }
   Rigg.UpdateGetriebe;
 
   temp := (SofortBerechnen and Rigg.GetriebeOK and Rigg.MastOK);
@@ -1754,6 +1755,7 @@ begin
   if temp then
   begin
     { continue to do Rigg }
+    { part two of computation }
     Rigg.UpdateRigg;
 
     RiggLED := Rigg.RiggOK;
