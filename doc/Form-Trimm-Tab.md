@@ -82,5 +82,5 @@ The goal is to use measured values for the Kraft-Weg-Kurve as a lookup table for
 How to do this has been established already in the code of the application.
 Just how to provide the data, and how to persist it, needs to be reviewed and agreed.
 Assuming of course, that it is wanted.
-This is an open source project top which you can contribute.
+This is an open source project to which you can contribute.
 And of course it needs to be tested.

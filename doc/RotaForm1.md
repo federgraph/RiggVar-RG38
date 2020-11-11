@@ -93,7 +93,7 @@ Angezeigt werden die zuletzt gültigen Werte.
 ```
 The speed panel in unit RiggVar.RG.Speed02.pas has the SofortBtn.
 But the use of this speed panel is deprecated.
-We think we now have something better, read on.
+I think we now have something better, read on.
 
 ## Super Buttons
 
@@ -105,7 +105,7 @@ Each super button will select a predefined set of options as explained below.
 Super buttons are like *radio buttons* - one of them can be down at a time.
 
 Each graph can have its dedicated speed panel.
-In the picture below you can see the speed panel used with RotaForm 1.
+In the picture below you can see the speed panel used with RotaForm1.
 
 <a href="images/RiggVar-RG38-01.png">*super buttons gS gN gG gB gM gD and gQ are on the speed panel*<br>
 ![RG38 screenshot](images/RiggVar-RG38-01.png)</a>
@@ -149,13 +149,12 @@ The graph will show one positions of the model only.
 
 Sofort Berechnen will be set to true.
 Otherwise it is the same as super simple.
-This mode is considered the normal mode of operation,
-unless you want to be super fast and only need part one of the computation.
+This mode is considered the normal mode of operation.
 
 ### Super Grau
 
 Sofort Berechnen is true and two positions of the model will be shown - 
-The normal position and the relaxed position of the model.
+The normal position and the relaxed position of the model, probably using a gray color.
 
 You can see the relaxed position only if the mast bends - when the force in the shrouds is greater zero.
 
@@ -239,8 +238,8 @@ end;
 
 True both - Grau and Blau - do you know the German color values by now?
 
-<a href="images/Sofort-Berechnen-03.png">*graph RotaForm1 with gray relaxed position, blue reference position and yellow Koppelkurve*<br>
-![RG19A toolbar screenshot](images/Sofort-Berechnen-03.png)</a>
+<a href="images/Sofort-Berechnen-03.png">*gray relaxed position, blue reference position and yellow Koppelkurve*<br>
+![screenshot of RotaForm1 in mode super multi](images/Sofort-Berechnen-03.png)</a>
 
 ### Super Display
 

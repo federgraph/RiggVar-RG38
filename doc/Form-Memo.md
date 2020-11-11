@@ -26,7 +26,7 @@ then do the test:
 
 If so - congratulations.
 
-More test are required to be confident that it works.
+More tests are required to be confident that it works.
 
 The important questions are of course:
 - Where is the data going?
