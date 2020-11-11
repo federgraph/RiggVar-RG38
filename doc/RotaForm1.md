@@ -309,26 +309,7 @@ This differs between the views, but should perhaps be generalized and optimized.
 For example, an input throttle could be applied in a consistent way across all implementations of the view.
 The mouse wheel does not always have a notched behavior any more,
 you may receive more mouse move messages than expected via a touch screen or a touch pad.
-RotaForm3 can deal with it better because it uses OnIdle to reduce the input load via OnIdle.
-
-## Readme startup notes
-
-This file is the first readme file in folder doc.
-
-I do not know yet where I will do the *documentation* of the project,
-whether we should prefer the wiki or not.
-
-For now I have decided to add two images for the top README.md to a folder doc/images,
-and I think that I will put some readme files in the doc folder, because it exists.
-
-> This place is for the code primarily - and for *your* readme files.
-
-Some documentation is available on the website and I may add some info over there or here.
-
-( Perhaps there will also be a book in the future.
-Existing but unpublished documentation about the RG model itself may end up in this *book*.
-Currently I have a word document with illustrations that need an update.
-I will do the illustrations with the help of the new drawing elements in folder Graph2. )
+RotaForm3 can deal with it better because it uses OnIdle to implement a throttle.
 
 ## Legend
 
