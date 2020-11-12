@@ -6,6 +6,7 @@ uses
   System.Types,
   System.Classes,
   System.Generics.Collections,
+  FMX.Objects,
   FMX.Controls,
   FMX.Graphics;
 
@@ -23,6 +24,14 @@ type
     function Add(AScale: single): TBitmap;
   end;
 
+  TOriginalImage__ = class(TImage)
+  public
+    { constructor changes WrapMode to TImageWrapMode.Original }
+    constructor Create(AOwner: TComponent); override;
+  end;
+
+  { This control does not even have a WrapMode property. }
+  { But it behaves similar to a TImage with WrapMode set to Original }
   TOriginalImage = class(TControl)
   private
     FCurrentBitmap: TBitmap;
@@ -173,6 +182,15 @@ begin
     FBitmaps.TryGetValue(AScale, result);
   end;
   Assert(result <> nil);
+end;
+
+{ TTestImage }
+
+constructor TOriginalImage__.Create(AOwner: TComponent);
+begin
+  inherited;
+//  WrapMode := TImageWrapMode.Fit; // default
+  WrapMode := TImageWrapMode.Original;
 end;
 
 end.

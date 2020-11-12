@@ -12,7 +12,7 @@ The **Read** button in Form Memo works with *Trimm Items* and *Trimm Files*.
 By *works with* I mean that it can read text from the Memo,
 which is expected to represent a Trimm-Item or a Trimm-File.
 
-> Trimm-Item is explained in repository *trimm-420-data-format-delphi*.
+> Trimm-Item is explained in [Trimm-Data readme](Trimm-Data.md).
 
 Get ready for a quick test by making sure
 that you can watch the graph and the report - on the main form, 

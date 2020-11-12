@@ -136,7 +136,7 @@ There is currently no localization, and I have not decided how that should be do
 - You could build a lightweight version in a branch and test on another target.
 - You could find a (new) use case and describe it.
 
-The standard use case for the applications is of educational type.
+The standard use case for the application is of educational type.
 It shows how the rig behaves in principle.
 To work with concrete values for your boat requires more *work*.
 I do not have easy access to a boat any more and have focused on the programming aspect of the project
