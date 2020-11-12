@@ -269,7 +269,7 @@ begin
 {$ifdef MSWINDOWS}
 //  MemoActionList.AddMemoAction('Help Text for IO', HelpTextForIO);
   MemoActionList.AddMemoAction('Auto Shortcuts', WriteShortcuts);
-{$if WantDriverTest}
+{$ifdef WantDriverTest}
   MemoActionList.AddMemoAction('Device Report', DeviceReportBtnClick);
 {$endif}
 

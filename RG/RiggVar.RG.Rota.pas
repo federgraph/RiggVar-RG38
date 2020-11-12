@@ -2,12 +2,17 @@
 
 interface
 
-{$define UseImage}
-{.$define UseViewport}
-
 {$define WantRotaForm1}
 {$define WantRotaForm2}
 {.$define WantRotaForm3}
+
+{$if defined(WantRotaForm1) or defined(WantRotaForm2) }
+{$define UseImage}
+{$endif}
+
+{$ifdef WantRotaForm3}
+{$define UseViewport}
+{$endif}
 
 uses
   RggTypes,

@@ -19,7 +19,7 @@
 ```
 
 
-This is a Delphi FMX project which can be built with IDE Rio 10.3.3.
+This is a Delphi FMX project which can be built with IDE Rio 10.3.3 CE.
 
 While it is technically a Delphi cross platform project, it is intended for Windows only.
 
@@ -42,7 +42,7 @@ and provide a basis for future development.
 <a href="doc/images/RiggVar-RG38-01.png">*RG38 is a full featured Delphi version of the RiggVar project.*<br>
 ![RG38 screenshot](doc/images/RiggVar-RG38-01.png)</a>
 
-Please read about the RiggVar project ( RG ) on the federgraph website.
+> Read more about the RiggVar project ( RG ) on the federgraph website.
 
 ## Graphics
 
@@ -54,7 +54,7 @@ Currently there are three implementations for the Delphi platform:
 This one can show overlaid instances of the model; the current situation under load,
 the relaxed situation, and a reference situation to compare with.
 2. A new 2D graph implementation which is created by defining drawing elements in code, which in turn will draw to the canvas.
-3. A real 3D graph, not yet included in this repository.
+3. A real 3D graph.
 
 The three implementations are called RotaForm1, RotaForm2, and RotaForm3.
 
@@ -75,30 +75,33 @@ To add a new drawing is supposed to be easy.
 More drawings should be added.
 It will be easier to explain how the model works once the drawings are in place.
 
-Button **FD** will bring up the form with the documentation drawings.
+Button **FD** ( see picture above )will bring up the form with the documentation drawings.
 
 <a href="doc/images/RiggVar-FD-01.png">*Documentation drawings can serve as a unit test alternative.*<br>
 ![FormDrawing screenshot](doc/images/RiggVar-FD-01.png)</a>
 
 ## How to build
 
-Use IDE 10.3.3 to build the project.
+Use the following IDE versions to build the project:
+- IDE 10.3.3 Rio CE
+- IDE 10.2.3 Tokyo Pro
 
 I have added the dproj file to gitignore so that you can have your own icons.
 
 Before you open the project in the IDE you need to create a **new dproj file** (Delphi Project File):
 
-- Create a new FMX project in the default new project area,
-- save project as RG38,
-- then copy just the dproj file over to the RG38 working directory.
+1. Create a new FMX project in the default new project area.
+1. Save the project as RG38.
+1. Copy the new dproj file to your RG38 working directory.
 
-Once you have added the new dproj file you should be able to open the project in the Delphi IDE and run in the debugger with F9.
+Then you are ready to open the project in the IDE and run in the debugger with **F9**.
 
-It may be necessary to use Shift-F9 to build again after making changes to the project.
+It may be necessary to use **Shift-F9** to *build again*.
 
 ## How to use a build of the app
 
 The executable - RG38.exe - can be used standalone on any current Windows 10 machine.
+
 There is no database, and no files are saved by default.
 The app should be very easy to deploy, it can be run from a USB stick.
 
@@ -124,10 +127,11 @@ I understand that it can now be used in your GPL project - since I have publishe
 but it cannot be reused in your closed source project without asking. )
 
 I plan to publish the documentation drawing base classes in a dedicated repository.
+They can be used standalone, with TFormDrawing as the main form and new samples.
 
 ## Contributions
 
-Contributions are welcome. Lots of work to do.
+Contributions are welcome. There is a still lot of work to do.
 
 There is currently no localization, and I have not decided how that should be done.
 
@@ -142,7 +146,7 @@ To work with concrete values for your boat requires more *work*.
 I do not have easy access to a boat any more and have focused on the programming aspect of the project
 because I found that interesting in itself.
 
-Adapt the project for the 470 class in Trimm 470?
+Do you want to adapt the project for the 470 class?
 Please tell me if a branch is needed.
 
 ## About the sibling projects
@@ -157,9 +161,7 @@ A similar project is available for VCL and LCL:
 
 Projects for other environments, namely for java and C#, exist but are not up to date.
 A typescript version exists - of the basics.
-A swift version was started but abandoned - I would be interested.
+A Swift version was started but abandoned - I would be interested in a collaboration.
 
 In 2020 I have updated and advanced the Pascal projects, as you can see here.
-
-At some time in the future I may jump to a now very popular platform and do another light weight version using the latest free tools.
-If you start such a project and layout a UI with a graph, I may have a jump target.
+Will I jump to a new environment if you lay out a UI with a nice graph?

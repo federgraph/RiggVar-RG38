@@ -18,6 +18,9 @@
 
 interface
 
+{.$define WantInitTimer}
+{.$define WantRotaForm3}
+
 uses
   RiggVar.FB.SpeedColor,
   RiggVar.FB.SpeedBar,
@@ -37,6 +40,10 @@ uses
   FMX.Platform,
   FMX.Graphics,
   FMX.Types,
+{$ifdef WantRotaForm3}
+  FMX.Types3D,
+  FMX.Viewport3D,
+{$endif}
   FMX.Controls,
   FMX.Forms,
   FMX.StdCtrls,
@@ -75,6 +82,7 @@ type
     FWantResizeNormalizing: Boolean;
     DefaultCaption: string;
     FormShown: Boolean;
+    InitTimerCalled: Boolean;
     procedure ApplicationEventsException(Sender: TObject; E: Exception);
     procedure FormCreate2(Sender: TObject);
     procedure FormDestroy2(Sender: TObject);
@@ -191,6 +199,25 @@ type
     procedure SuperDisplayBtnClick(Sender: TObject);
     procedure SuperQuickBtnClick(Sender: TObject);
   public
+    NewControlSize: TControlSize;
+    InitTimer: TTimer;
+{$ifdef WantRotaForm3}
+    ExitSizeMoveCounter: Integer;
+    ClearStateCounter: Integer;
+
+    Viewport: TViewport3D;
+
+    procedure FormResizeEnd(Sender: TObject);
+    procedure ApplicationEventsIdle(Sender: TObject; var Done: Boolean);
+    procedure FormActivate(Sender: TObject);
+
+    procedure HandleClearStateException;
+    procedure DoOnResize;
+    procedure DoOnResizeEnd;
+{$endif}
+    procedure InitTimerTimer(Sender: TObject);
+    procedure InitIsSandboxed;
+    procedure InitWantOnResize;
     procedure UpdateColorScheme;
     procedure LayoutComponents;
     function GetActionFromKey(Shift: TShiftState; Key: Word): Integer;
@@ -279,6 +306,11 @@ const
 
 procedure TFormMain.ApplicationEventsException(Sender: TObject; E: Exception);
 begin
+{$ifdef WantRotaForm3}
+  if (E is EContext3DException) and (E.Message.StartsWith('ClearState')) then
+    HandleClearStateException;
+  if (E is EContext3DException) then
+{$endif}
   if (Main <> nil) and (Main.Logger <> nil) then
     Main.Logger.Info(E.Message);
 end;
@@ -287,9 +319,30 @@ procedure TFormMain.FormCreate(Sender: TObject);
 begin
   FormatSettings.DecimalSeparator := '.';
 
+  MainVar.ClientWidth := Round(ClientWidth);
+  MainVar.ClientHeight := Round(ClientHeight);
+
+  FormMain := self;
+
   SpeedColorScheme := TSpeedColorScheme.Create;
   SpeedColorScheme.InitDark;
   TActionSpeedBar.SpeedColorScheme := SpeedColorScheme;
+
+  NewControlSize := TControlSize.Create(TSizeF.Create(0, 0));
+
+  InitIsSandboxed;
+
+{$ifdef WantRotaForm3}
+  InitWantOnResize;
+{$endif}
+
+{$ifdef WantInitTimer}
+  InitTimer := TTimer.Create(Self);
+  InitTimer.Interval := 1100;
+  InitTimer.OnTimer := InitTimerTimer; { will call FormCreate2 and FormShow }
+  InitTimer.Enabled := True;
+  Exit;
+{$endif}
 
   FormCreate2(Sender);
 end;
@@ -300,13 +353,14 @@ begin
 
   FormDestroy2(Sender);
 
+  NewControlSize.Free;
   SpeedColorScheme.Free;
 end;
 
 procedure TFormMain.FormCreate2(Sender: TObject);
 begin
-{$ifdef Debug}
-  ReportMemoryLeaksOnShutdown := True;
+{$if defined(Debug) and not defined (WantRotaForm3) }
+  ReportMemoryLeaksOnShutdown := True; // there is a small systematic Memory leak when using RotaForm3
 {$endif}
 
   FScale := 1.0;
@@ -348,8 +402,17 @@ begin
 
   RotaForm := TRotaForm.Create;
   RotaForm.Image := Image;
+{$ifdef WantRotaForm3}
+  RotaForm.Viewport := Viewport;
+{$endif}
+
   RotaForm.Init;
+
+{$ifdef WantRotaForm3}
+  RotaForm.SwapRota(3);
+{$else}
   RotaForm.SwapRota(1);
+{$endif}
 
   { Params }
   if ParamListbox <> nil then
@@ -420,6 +483,18 @@ begin
   Main.OnUpdateChart := DoOnUpdateChart;
   Main.FederText.CheckState;
 
+  Self.OnMouseWheel := FormMouseWheel;
+  Self.OnResize := FormResize;
+  Self.OnKeyUp := FormKeyUp;
+
+{$ifdef WantRotaForm3}
+  if not MainVar.IsSandBoxed then
+    Main.ReadTrimmFile0;
+
+  Self.OnActivate := FormActivate;
+  Application.OnIdle := ApplicationEventsIdle;
+{$endif}
+
 {$ifdef MACOS}
   { OnKeyUp does not work well on Mac, RSP-2766 }
   OnKeyUp := nil;
@@ -453,6 +528,17 @@ procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
 var
   fa: Integer;
 begin
+{$ifdef WantRotaForm3}
+  if RotaForm.Current = 3 then
+    Exit;
+
+  if Viewport.IsFocused then
+  begin
+    ParamListbox.SetFocus;
+    Exit;
+  end;
+{$endif}
+
   fa := GetActionFromKey(Shift, Key);
   if fa = faNoop then
     fa := GetActionFromKeyChar(KeyChar);
@@ -576,12 +662,28 @@ end;
 procedure TFormMain.FormMouseWheel(Sender: TObject; Shift: TShiftState;
   WheelDelta: Integer; var Handled: Boolean);
 begin
+{$ifdef WantRotaForm3}
+  if RotaForm.Current = 3 then
+    Exit;
+{$endif}
   Main.DoMouseWheel(Shift, WheelDelta);
   Handled := True;
 end;
 
 procedure TFormMain.FormShow(Sender: TObject);
 begin
+{$ifdef WantRotaForm3}
+  { this eventhandler is most likely not even assigned (iOS) }
+  if Main = nil then
+    Exit;
+
+  Main.Logger.Info('in FormShow');
+  DoOnResizeEnd;
+{$endif}
+
+  if (InitTimer <> nil) and not InitTimerCalled then
+    Exit;
+
   if not FormShown then
   begin
     FormShown := True;
@@ -608,6 +710,9 @@ begin
   if (Main <> nil) and Main.IsUp then
   begin
     MainVar.Scale := Handle.Scale;
+{$ifdef WantRotaForm3}
+    DoOnResize;
+{$endif}
     Inc(Main.ResizeCounter);
     Main.UpdateTouch;
   end;
@@ -1226,6 +1331,14 @@ var
   OpacityValue: single;
 begin
   OpacityValue := 1.0;
+
+{$ifdef WantRotaForm3}
+  Viewport := TViewport3D.Create(self);
+  Viewport.Name := 'Viewport';
+  Viewport.Parent := self;
+  Viewport.UsingDesignCamera := False;
+  Viewport.Visible := False;
+{$endif}
 
   HintText := TText.Create(Self);
   HintText.Name := 'HintText';
@@ -2193,5 +2306,103 @@ begin
     ReportText.Visible := True;
   end;
 end;
+
+procedure TFormMain.InitWantOnResize;
+begin
+{$ifdef MACOS}
+  MainVar.WantOnResize := True;
+{$endif}
+
+{$ifdef MSWINDOWS}
+  MainVar.WantOnResize := True;
+{$endif}
+
+{$ifdef IOS}
+  MainVar.WantOnResize := True;
+{$endif}
+end;
+
+procedure TFormMain.InitIsSandboxed;
+begin
+{$ifdef MACOS}
+  MainVar.IsSandboxed := True;
+{$endif}
+
+{$ifdef MSWINDOWS}
+  MainVar.IsSandboxed := MainConst.MustBeSandboxed;
+{$endif}
+
+{$ifdef IOS}
+  MainVar.IsSandboxed := False;
+{$endif}
+end;
+
+procedure TFormMain.InitTimerTimer(Sender: TObject);
+begin
+  InitTimer.Enabled := False;
+  InitTimerCalled := True;
+  if not IsUp then
+  begin
+    FormCreate2(nil);
+    FormShow(nil);
+  end;
+end;
+
+{$ifdef WantRotaForm3}
+procedure TFormMain.ApplicationEventsIdle(Sender: TObject; var Done: Boolean);
+begin
+{$ifdef WantRotaForm3}
+  if IsUp then
+  begin
+    RotaForm.DoOnIdle;
+  end;
+  Done := True;
+{$endif}
+end;
+
+procedure TFormMain.FormActivate(Sender: TObject);
+begin
+{$ifdef WantRotaForm3}
+  if IsUp then
+  begin
+    Viewport.SetFocus;
+  end;
+{$endif}
+end;
+
+procedure TFormMain.DoOnResize;
+begin
+  if MainVar.WantOnResize then
+    DoOnResizeEnd;
+end;
+
+procedure TFormMain.FormResizeEnd(Sender: TObject);
+begin
+  Inc(ExitSizeMoveCounter);
+  DoOnResizeEnd;
+end;
+
+procedure TFormMain.DoOnResizeEnd;
+begin
+  if IsUp then
+  begin
+    NewControlSize.Width := ClientWidth;
+    NewControlSize.Height := ClientHeight;
+    Viewport.Size := NewControlSize;
+
+    MainVar.ClientWidth := Round(ClientWidth);
+    MainVar.ClientHeight := Round(ClientHeight);
+    Main.UpdateTouch;
+    RotaForm.DoOnResizeEnd;
+  end;
+end;
+
+procedure TFormMain.HandleClearStateException;
+begin
+  Inc(ClearStateCounter);
+  Caption := Format('%d - %d', [ClearStateCounter, Main.ResizeCounter]);
+end;
+
+{$endif}
 
 end.
