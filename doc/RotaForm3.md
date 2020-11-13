@@ -2,43 +2,44 @@
 
 RotaForm3 is the 3D graph.
 
-By default it is disabled.
-You need to switch on the conditional by removing the dot:
+It is *disabled* by default but can be
+switched on by removing the dot from the conditional define.
 
 ```pascal
 {.$define WantRotaForm3}
 ```
 
+<a href="images/RiggVar-RG38-03.png">*Federgraph wants RotaForm3 with Ortho.*<br>
+![picture with RotaForm3](images/RiggVar-RG38-03.png)</a>
+
 Search in all files belonging to the project for *define WantRotaForm3* and remove or add the dot.
-You should find two locations:
+You should find it in two locations:
 
-- unit App\FrmMain.pas
-- unit Graph3\RiggVar.RG.Rota.pas
+- in unit App\FrmMain.pas
+- in unit Graph3\RiggVar.RG.Rota.pasS
 
-If you are running without the 3D Graph, then you can remove all units in folder Graph3.
-I have added them to the project, event if they are not used by default.
-This is so that you can examine them in the IDE.
+If you are running without the 3D Graph, then you can remove all units in folder Graph3 from the project.
+I have added them to the project so that you can browse the code in the IDE.
 
-Now - with RotaForm3 - it is a little more complex then before.
+## To do List
 
-There are 3 things that are note done yet:
+Three improvement opportunities have been identified:
 
-1. An improved device check, for the capabilities of the driver to run the application.
-1. The orthographic perspective for the RotaForm3.
-1. OnResizeEnd on the Windows platform.
+1. A device capabilities check before the main form loads - it needs RSP-18853.
+1. Using the OnResizeEnd event for the Windows platform - it needs RSP-18851.
+1. Introducing the orthographic projection - it needs access to the projection matrix.
 
-This will be done in the future when Embarcadero Community Edition will be ready to support it.
+( I know that it can be achieved with 10.2 Pro. )
 
-It can be done in IDE version 10.2.3 - Tokyo Pro, if you know how.
+## Special versions 
 
-When my CE version will run out I will switch back to Tokyo or Berlin to maintain the project.
+As I said in README.md: RG38 is a full featured version of the app.
 
-I said in README.md that RG38 is a full featured version of the app.
-It is expected that you will build a more light weight version of the app by removing code.
-It is easier to remove code than to add code.
+It is expected that lighter versions will be derived by removing code.
 
-To put slightly different versions of the same app into permanent branches would be an option.
-But I think this is going against the idea if git to have permanent branches, which will never be merged with the master branch.
+> It is easier to remove code than to add code.
 
-Somehow the orthographic projection would be better for this type of application.
-We will see what happens in the future.
+For example: You could build an application with RotaForm3 as the only view
+and remove all code for RotaForm2 and RotaForm1.
+
+Where should special versions be located, in permanent branches?

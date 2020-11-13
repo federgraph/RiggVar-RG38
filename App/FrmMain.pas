@@ -495,10 +495,11 @@ begin
   Application.OnIdle := ApplicationEventsIdle;
 {$endif}
 
-{$ifdef MACOS}
+{$if defined(MACOS) and (CompilerVersion < 34.0) }
   { OnKeyUp does not work well on Mac, RSP-2766 }
+  { fixed in Sidney 10.4 }
   OnKeyUp := nil;
-  { we will use OnKeyDown instead }
+  { we will use OnKeyDown instead, in Tokyo 10.2 and Rio 10.3 }
   OnKeyDown := FormKeyUp;
 {$endif}
 end;
@@ -2314,6 +2315,7 @@ begin
 {$endif}
 
 {$ifdef MSWINDOWS}
+  { False if OnResizeEnd is 'available' see RSP-18851 }
   MainVar.WantOnResize := True;
 {$endif}
 
@@ -2349,25 +2351,22 @@ begin
 end;
 
 {$ifdef WantRotaForm3}
+
 procedure TFormMain.ApplicationEventsIdle(Sender: TObject; var Done: Boolean);
 begin
-{$ifdef WantRotaForm3}
   if IsUp then
   begin
     RotaForm.DoOnIdle;
   end;
   Done := True;
-{$endif}
 end;
 
 procedure TFormMain.FormActivate(Sender: TObject);
 begin
-{$ifdef WantRotaForm3}
   if IsUp then
   begin
     Viewport.SetFocus;
   end;
-{$endif}
 end;
 
 procedure TFormMain.DoOnResize;
