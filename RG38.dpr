@@ -141,6 +141,14 @@ uses
 begin
   Application.Initialize;
   Application.Title := 'RG38';
+
+//    DeviceCheck := TDeviceCheck.Create;
+//    if not DeviceCheck.CheckSpecial then
+//    begin
+//      DeviceCheck.Free;
+//      Exit;
+//    end;
+
   Application.CreateForm(TFormMain, FormMain);
   Application.Run;
 end.

@@ -284,6 +284,9 @@ implementation
 uses
   FrmMemo,
   FrmAction,
+//{$ifdef WantRotaForm3}
+//  RiggVar.FG.DriverTest,
+//{$endif}
   FrmDrawing,
   FrmConfig,
   FrmTrimmTab,
@@ -352,6 +355,14 @@ begin
   MainVar.AppIsClosing := True;
 
   FormDestroy2(Sender);
+
+//{$ifdef WantRotaForm3}
+//  if DeviceCheck <> nil then
+//  begin
+//    DeviceCheck.Free;
+//    DeviceCheck := nil;
+//  end;
+//{$endif}
 
   NewControlSize.Free;
   SpeedColorScheme.Free;
@@ -492,6 +503,7 @@ begin
     Main.ReadTrimmFile0;
 
   Self.OnActivate := FormActivate;
+//  Self.OnResizeEnd := FormResizeEnd;
   Application.OnIdle := ApplicationEventsIdle;
 {$endif}
 
@@ -2367,6 +2379,10 @@ begin
   begin
     Viewport.SetFocus;
   end;
+{$if defined(MSWINDOWS) or defined(MACOS)}
+//  if DeviceCheck <> nil then
+//    DeviceCheck.Viewport := Viewport;
+{$endif}
 end;
 
 procedure TFormMain.DoOnResize;
