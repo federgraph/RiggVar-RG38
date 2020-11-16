@@ -18,8 +18,15 @@
 
 interface
 
+{.$define DriverTestSupported}
+{.$define ResizeEndSupported}
+
 {.$define WantInitTimer}
 {.$define WantRotaForm3}
+{.$define WantDeviceCheck}
+{.$define WantResizeEnd}
+
+{$define FMX}
 
 uses
   RiggVar.FB.SpeedColor,
@@ -57,8 +64,6 @@ uses
   FMX.Surfaces,
   FMX.Layouts,
   FMX.Controls.Presentation;
-
-{$define FMX}
 
 type
   TFormMain = class(TForm)
@@ -284,9 +289,9 @@ implementation
 uses
   FrmMemo,
   FrmAction,
-//{$ifdef WantRotaForm3}
-//  RiggVar.FG.DriverTest,
-//{$endif}
+{$ifdef WantDeviceCheck}
+  RiggVar.FG.DriverTest,
+{$endif}
   FrmDrawing,
   FrmConfig,
   FrmTrimmTab,
@@ -356,13 +361,13 @@ begin
 
   FormDestroy2(Sender);
 
-//{$ifdef WantRotaForm3}
-//  if DeviceCheck <> nil then
-//  begin
-//    DeviceCheck.Free;
-//    DeviceCheck := nil;
-//  end;
-//{$endif}
+{$ifdef WantDeviceCheck}
+  if DeviceCheck <> nil then
+  begin
+    DeviceCheck.Free;
+    DeviceCheck := nil;
+  end;
+{$endif}
 
   NewControlSize.Free;
   SpeedColorScheme.Free;
@@ -370,7 +375,7 @@ end;
 
 procedure TFormMain.FormCreate2(Sender: TObject);
 begin
-{$if defined(Debug) and not defined (WantRotaForm3) }
+{$if defined(Debug) and not defined(WantRotaForm3) }
   ReportMemoryLeaksOnShutdown := True; // there is a small systematic Memory leak when using RotaForm3
 {$endif}
 
@@ -503,8 +508,11 @@ begin
     Main.ReadTrimmFile0;
 
   Self.OnActivate := FormActivate;
-//  Self.OnResizeEnd := FormResizeEnd;
   Application.OnIdle := ApplicationEventsIdle;
+{$endif}
+
+{$ifdef WantResizeEnd}
+  Self.OnResizeEnd := FormResizeEnd;
 {$endif}
 
 {$if defined(MACOS) and (CompilerVersion < 34.0) }
@@ -1025,6 +1033,10 @@ begin
     faResetPosition,
     faResetRotation,
     faResetZoom: RotaForm.HandleAction(fa);
+
+{$ifdef WantRotaForm3}
+    faToggleViewType: RotaForm.HandleAction(fa);
+{$endif}
 
     faPan:
     begin
@@ -2326,9 +2338,14 @@ begin
   MainVar.WantOnResize := True;
 {$endif}
 
-{$ifdef MSWINDOWS}
-  { False if OnResizeEnd is 'available' see RSP-18851 }
   MainVar.WantOnResize := True;
+{$ifdef MSWINDOWS}
+  { see RSP-18851 }
+{$ifdef ResizeEndSupported}
+{$ifdef WantResizeEnd}
+  MainVar.WantOnResize := False;
+{$endif}
+{$endif}
 {$endif}
 
 {$ifdef IOS}
@@ -2379,9 +2396,11 @@ begin
   begin
     Viewport.SetFocus;
   end;
-{$if defined(MSWINDOWS) or defined(MACOS)}
-//  if DeviceCheck <> nil then
-//    DeviceCheck.Viewport := Viewport;
+{$ifdef MSWINDOWS}
+{$ifdef WantDeviceCheck}
+  if DeviceCheck <> nil then
+    DeviceCheck.Viewport := Viewport;
+{$endif}
 {$endif}
 end;
 

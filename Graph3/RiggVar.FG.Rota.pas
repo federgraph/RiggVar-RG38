@@ -2,6 +2,8 @@
 
 interface
 
+{.$define WantOrtho}
+
 uses
   RggTypes,
   System.SysUtils,
@@ -222,8 +224,9 @@ begin
     faReset: Reset;
     faResetPosition: ResetPosition;
     faResetZoom: ResetZoom;
-
-//    faToggleViewType: IsOrthoProjection := not IsOrthoProjection;
+{$ifdef WantOrtho}
+    faToggleViewType: IsOrthoProjection := not IsOrthoProjection;
+{$endif}
 
     else
       inherited;
@@ -235,7 +238,9 @@ begin
   ResetRotation;
   if IsOrthoProjection then
   begin
-//    OrthoRotDeltaXY(0, DegToRad(-90));
+{$ifdef WantOrtho}
+    OrthoRotDeltaXY(0, DegToRad(-90));
+{$endif}
   end
   else
   begin
@@ -248,8 +253,10 @@ begin
   ResetRotation;
   if IsOrthoProjection then
   begin
-//    OrthoRotDeltaXY(DegToRad(90), 0);
-//    OrthoRotDeltaZ(DegToRad(90));
+{$ifdef WantOrtho}
+    OrthoRotDeltaXY(DegToRad(90), 0);
+    OrthoRotDeltaZ(DegToRad(90));
+{$endif}
   end
   else
   begin
@@ -276,7 +283,9 @@ begin
   ResetRotation;
   if IsOrthoProjection then
   begin
-//    OrthoRotDeltaXY(0, DegToRad(-5));
+{$ifdef WantOrtho}
+    OrthoRotDeltaXY(0, DegToRad(-5));
+{$endif}
   end
   else
   begin

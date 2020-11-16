@@ -18,6 +18,8 @@
 
 interface
 
+{.$define DriverTestSupported}
+
 {$ifdef MSWINDOWS}
 
 uses
@@ -141,7 +143,9 @@ begin
   SL.Add('');
   SL.Add('Testing for TContextDX11-Warp:');
   GlobalUseDXSoftware := True;
-//  TContextClass.ResetDriverSupportTested;
+{$ifdef DriverTestSupported}
+  TContextClass.ResetDriverSupportTested;
+{$endif}
   TContextClass.TestDriverSupport(DriverType, FeatureLevel);
   AddLines(SL);
 
@@ -156,7 +160,9 @@ begin
   ShowMessage(SL.Text);
 
   GlobalUseDXSoftware := False;
-//  TContextClass.ResetDriverSupportTested;
+{$ifdef DriverTestSupported}
+  TContextClass.ResetDriverSupportTested;
+{$endif}
 end;
 
 function TDeviceCheck.CheckSpecial: Boolean;
@@ -169,7 +175,9 @@ begin
   begin
     SL.Add('11_0 hardware driver not found.');
     GlobalUseDXSoftware := True;
-//    TContextClass.ResetDriverSupportTested;
+{$ifdef DriverTestSupported}
+    TContextClass.ResetDriverSupportTested;
+{$endif}
     TContextClass.TestDriverSupport(DriverType, FeatureLevel);
     if FeatureLevel < D3D_FEATURE_LEVEL_11_0 then
     begin
@@ -204,7 +212,9 @@ begin
     ML.Add(Viewport.Context.ClassName);
     if Viewport.Context is TContextClass then
     begin
-//      DriverType := TContextClass.DriverType;
+{$ifdef DriverTestSupported}
+      DriverType := TContextClass.DriverType;
+{$endif}
       FeatureLevel := TContextClass.FeatureLevel;
       AddLines(ML);
     end;
