@@ -80,7 +80,7 @@ end;
 
 procedure TPolarKar.SetPhi(Value: single);
 begin
-  FPhi := Value * pi / 180;
+  FPhi := DegToRad(Value);
   FValid := False;
 end;
 
@@ -92,63 +92,63 @@ end;
 
 procedure TPolarKar.SetGamma(Value: single);
 begin
-  FGamma := Value * pi / 180;
+  FGamma := DegToRad(Value);
   FValid := False;
 end;
 
 procedure TPolarKar.SetXrot(Value: single);
 begin
-  FXRot := Value * pi / 180;
+  FXRot := DegToRad(Value);
   FValid := False;
 end;
 
 procedure TPolarKar.SetYrot(Value: single);
 begin
-  FYRot := Value * pi / 180;
+  FYRot := DegToRad(Value);
   FValid := False;
 end;
 
 procedure TPolarKar.SetZrot(Value: single);
 begin
-  FZRot := Value * pi / 180;
+  FZRot := DegToRad(Value);
   FValid := False;
 end;
 
 function TPolarKar.GetPhi: single;
 begin
-  Result := Int(FPhi * 180 / pi);
+  Result := Int(RadToDeg(FPhi));
 end;
 
 function TPolarKar.GetTheta: single;
 begin
-  Result := Int(FTheta * 180 / pi);
+  Result := Int(RadToDeg(FTheta));
 end;
 
 function TPolarKar.GetGamma: single;
 begin
-  Result := Int(FGamma * 180 / pi);
+  Result := Int(RadToDeg(FGamma));
 end;
 
 function TPolarKar.GetXrot: single;
 begin
-  Result := Int(FXRot * 180 / pi);
+  Result := Int(RadToDeg(FXRot));
 end;
 
 function TPolarKar.GetYrot: single;
 begin
-  Result := Int(FYRot * 180 / pi);
+  Result := Int(RadToDeg(FYRot));
 end;
 
 function TPolarKar.GetZrot: single;
 begin
-  Result := Int(FZRot * 180 / pi);
+  Result := Int(RadToDeg(FZRot));
 end;
 
 procedure TPolarKar.SetRotAngle(index: TRotationAngle; Value: single);
 var
   temp: single;
 begin
-  temp := Value * pi / 180;
+  temp := DegToRad(Value);
   case index of
     raPhi:
       FPhi := temp;
@@ -184,7 +184,7 @@ begin
     raZrot:
       temp := FZRot;
   end;
-  Result := Int(temp * 180 / pi);
+  Result := Int(RadToDeg(temp));
 end;
 
 function TPolarKar.GetMatrix: TMatrix3D;
@@ -337,7 +337,7 @@ procedure TPolarKar.GetAngle1(Sender: TObject; var wx, wy, wz: single);
       temp := 1;
     if temp < -1 then
       temp := -1;
-    Result := ArcCos(temp) * 180 / pi;
+    Result := RadToDeg(ArcCos(temp));
   end;
 
 var
@@ -380,8 +380,8 @@ procedure TPolarKar.GetAngle2(Sender: TObject; var wp, wt, wg: single);
 
   function CheckSinCos(c: Extended): Extended;
   begin
-    Assert(c <= 1, Format('sincos > 1 (%6.5f)', [c]));
-    Assert(c >= -1, Format('sincos < -1 (%6.5f)', [c]));
+//    Assert(c <= 1, Format('sincos > 1 (%6.5f)', [c]));
+//    Assert(c >= -1, Format('sincos < -1 (%6.5f)', [c]));
     if c > 1 then
       c := 1;
     if c < -1 then
@@ -406,7 +406,7 @@ begin
   tempsin := -ux.z;
   //tempcos := Dot(ux,zVec); //nicht verwendet
   wt := arcsin(CheckSinCos(tempsin));
-  Theta90 := abs(tempsin * 180 / pi) > 89.9; //Theta90 := abs(tempsin) > 0.99;
+  Theta90 := abs(RadToDeg(tempsin)) > 89.9; //Theta90 := abs(tempsin) > 0.99;
 
   { Winkel Gamma ermitteln im Bereich -180..180 Grad }
   if Theta90 then
@@ -446,9 +446,9 @@ begin
   if tempsin < 0 then
     wp := -wp;
 
-  wg := wg * 180 / pi;
-  wt := wt * 180 / pi;
-  wp := wp * 180 / pi;
+  wg := RadToDeg(wg);
+  wt := RadToDeg(wt);
+  wp := RadToDeg(wp);
 
   wg := Round(wg * 10) / 10;
   wt := Round(wt * 10) / 10;

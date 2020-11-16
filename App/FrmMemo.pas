@@ -208,6 +208,8 @@ begin
   MemoBeginUpdate;
   Memo.Lines.Clear;
 {$ifdef WantDriverTest}
+  { DeviceCheck instance should already have been created in dpr file. }
+  { Viewport instance should have been injected into DeviceCheck in FormMain }
   if not Assigned(DeviceCheck) then
     DeviceCheck := TDeviceCheck.Create;
   DeviceCheck.GetDeviceReport(Memo.Lines);

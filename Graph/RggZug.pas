@@ -114,8 +114,6 @@ begin
   SetLength(ZugMastfall, 3);
   SetLength(ZugRP, 4);
   SetLength(ZugKoppelKurve, 101);
-//  SetLength(ZugMastKurveD0D, ...);
-//  SetLength(ZugMastKurveDC, ...);
 end;
 
 procedure TZug3DBase.GetPlotList(ML: TStrings);

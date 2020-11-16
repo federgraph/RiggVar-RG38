@@ -283,22 +283,6 @@ begin
   SetViewPoint(FViewPoint);
 end;
 
-procedure TRotaForm1.InitPosition(w, h, x, y: single);
-begin
-  BitmapWidth := w;
-  BitmapHeight := h;
-  FXPos := x;
-  FYPos := y;
-end;
-
-procedure TRotaForm1.Swap;
-begin
-  Image.OnMouseDown := PaintBox3DMouseDown;
-  Image.OnMouseMove := PaintBox3DMouseMove;
-  Image.OnMouseUp := PaintBox3DMouseUp;
-  Image.OnScreenScaleChanged := ImageScreenScaleChanged;
-end;
-
 procedure TRotaForm1.InitGraph;
 begin
   Rotator := TPolarKar.Create;
@@ -394,12 +378,12 @@ end;
 
 procedure TRotaForm1.UpdateMatrixText;
 var
-  m4x4: TMatrix3D;
+  m: TMatrix3D;
 begin
-  m4x4 := Rotator.Mat;
-  MatrixTextU := Format('%8.4f %8.4f %8.4f',[m4x4.m11, m4x4.m12, m4x4.m13]);
-  MatrixTextV := Format('%8.4f %8.4f %8.4f',[m4x4.m21, m4x4.m22, m4x4.m23]);
-  MatrixTextW := Format('%8.4f %8.4f %8.4f',[m4x4.m31, m4x4.m32, m4x4.m33]);
+  m := Rotator.Mat;
+  MatrixTextU := Format('%8.4f %8.4f %8.4f',[m.m11, m.m12, m.m13]);
+  MatrixTextV := Format('%8.4f %8.4f %8.4f',[m.m21, m.m22, m.m23]);
+  MatrixTextW := Format('%8.4f %8.4f %8.4f',[m.m31, m.m32, m.m33]);
 end;
 
 procedure TRotaForm1.DrawMatrix(g: TCanvas);
@@ -645,12 +629,6 @@ begin
   FSofortBerechnen := Value;
 end;
 
-procedure TRotaForm1.SetUseQuickSort(const Value: Boolean);
-begin
-  FUseQuickSort := Value;
-  RaumGraph.DL.UseQuickSort := True;
-end;
-
 procedure TRotaForm1.SetOnAfterDraw(const Value: TNotifyEvent);
 begin
   FOnAfterDraw := Value;
@@ -857,11 +835,6 @@ begin
   DoTrans;
 end;
 
-procedure TRotaForm1.ImageScreenScaleChanged(Sender: TObject);
-begin
-  Draw;
-end;
-
 procedure TRotaForm1.Draw;
 begin
   if IsUp then
@@ -949,11 +922,6 @@ begin
   RaumGraph.ControllerTyp := Value;
 end;
 
-procedure TRotaForm1.SetDarkMode(const Value: Boolean);
-begin
-  FDarkMode := Value;
-end;
-
 procedure TRotaForm1.SetKoordinaten(const Value: TRiggPoints);
 begin
   RPN := Value;
@@ -989,12 +957,6 @@ procedure TRotaForm1.SetWanteGestrichelt(const Value: Boolean);
 begin
   FWanteGestrichelt := Value;
   RaumGraph.WanteGestrichelt := Value;
-end;
-
-procedure TRotaForm1.SetWantLineColors(const Value: Boolean);
-begin
-  FWantLineColors := Value;
-  RaumGraph.DL.WantLineColors := Value;
 end;
 
 procedure TRotaForm1.SetWantOverlayedRiggs(const Value: Boolean);
@@ -1095,21 +1057,6 @@ begin
   end;
 end;
 
-function TRotaForm1.GetChecked(fa: Integer): Boolean;
-begin
-  result := RaumGraph.GetChecked(fa);
-end;
-
-procedure TRotaForm1.SetChecked(fa: Integer; Value: Boolean);
-begin
-  RaumGraph.SetChecked(fa, Value);
-end;
-
-procedure TRotaForm1.UpdateHullTexture;
-begin
-
-end;
-
 procedure TRotaForm1.UpdateCameraX(Delta: single);
 begin
   FXPos := FXPos + Delta * 5;
@@ -1120,6 +1067,32 @@ procedure TRotaForm1.UpdateCameraY(Delta: single);
 begin
   FYPos := FYPos - Delta * 5;
   Draw;
+end;
+
+procedure TRotaForm1.DoOnUpdateStrokeRigg;
+begin
+
+end;
+
+procedure TRotaForm1.UpdateHullTexture;
+begin
+
+end;
+
+procedure TRotaForm1.InitPosition(w, h, x, y: single);
+begin
+  BitmapWidth := w;
+  BitmapHeight := h;
+  FXPos := x;
+  FYPos := y;
+end;
+
+procedure TRotaForm1.Swap;
+begin
+  Image.OnMouseDown := PaintBox3DMouseDown;
+  Image.OnMouseMove := PaintBox3DMouseMove;
+  Image.OnMouseUp := PaintBox3DMouseUp;
+  Image.OnScreenScaleChanged := ImageScreenScaleChanged;
 end;
 
 procedure TRotaForm1.HandleAction(fa: Integer);
@@ -1162,9 +1135,36 @@ begin
   Draw;
 end;
 
-procedure TRotaForm1.DoOnUpdateStrokeRigg;
+procedure TRotaForm1.SetDarkMode(const Value: Boolean);
 begin
+  FDarkMode := Value;
+end;
 
+function TRotaForm1.GetChecked(fa: Integer): Boolean;
+begin
+  result := RaumGraph.GetChecked(fa);
+end;
+
+procedure TRotaForm1.SetChecked(fa: Integer; Value: Boolean);
+begin
+  RaumGraph.SetChecked(fa, Value);
+end;
+
+procedure TRotaForm1.ImageScreenScaleChanged(Sender: TObject);
+begin
+  Draw;
+end;
+
+procedure TRotaForm1.SetWantLineColors(const Value: Boolean);
+begin
+  FWantLineColors := Value;
+  RaumGraph.DL.WantLineColors := Value;
+end;
+
+procedure TRotaForm1.SetUseQuickSort(const Value: Boolean);
+begin
+  FUseQuickSort := Value;
+  RaumGraph.DL.UseQuickSort := True;
 end;
 
 end.

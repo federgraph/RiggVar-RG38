@@ -93,7 +93,6 @@ begin
     -FTransformedFixPunkt.Z
   );
   mt := TMatrix3D.CreateTranslation(pt);
-
   ps := TPoint3D.Create(Zoom, Zoom, Zoom);
   ms := TMatrix3D.CreateScaling(ps);
 

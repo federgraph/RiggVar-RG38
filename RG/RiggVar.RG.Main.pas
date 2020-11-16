@@ -743,7 +743,7 @@ begin
       tempH := FactArray.SalingH.Ist;
       tempA := FactArray.SalingA.Ist;
       tempL := sqrt(sqr(tempA / 2) + sqr(tempH));
-      tempW := arctan2(tempH * 2, tempA) * 180 / pi;
+      tempW := RadToDeg(arctan2(tempH * 2, tempA));
 
       Rigg.RealGlied[fpSalingH] := tempH;
       Rigg.RealGlied[fpSalingA] := tempA;
@@ -760,7 +760,7 @@ begin
       tempH := FactArray.SalingH.Ist;
       tempA := FactArray.SalingA.Ist;
       tempL := sqrt(sqr(tempA / 2) + sqr(tempH));
-      tempW := arctan2(tempH * 2, tempA) * 180 / pi;
+      tempW := RadToDeg(arctan2(tempH * 2, tempA));
 
       Rigg.RealGlied[fpSalingH] := tempH;
       Rigg.RealGlied[fpSalingA] := tempA;
@@ -1138,7 +1138,7 @@ begin
       fpController:
         sb.Ist := Rigg.RealGlied[fpController];
       fpWinkel:
-        sb.Ist := Rigg.RealGlied[fpWinkel] * 180 / pi;
+        sb.Ist := RadToDeg(Rigg.RealGlied[fpWinkel]);
       fpVorstag:
         sb.Ist := Rigg.RealGlied[fpVorstag];
       fpWante:
@@ -1152,7 +1152,7 @@ begin
       fpSalingL:
         sb.Ist := Rigg.RealGlied[fpSalingL];
       fpSalingW:
-        sb.Ist := arctan2(Rigg.RealGlied[fpSalingH] * 2, Rigg.RealGlied[fpSalingA]) * 180 / pi;
+        sb.Ist := RadToDeg(arctan2(Rigg.RealGlied[fpSalingH] * 2, Rigg.RealGlied[fpSalingA]));
       fpMastfallF0C:
         sb.Ist := Rigg.rP.F0.Distance(Rigg.rP.C);
       fpMastfallF0F:
@@ -1167,7 +1167,7 @@ begin
   if Param <> fpWinkel then
   begin
     sb := FactArray.Find(fpWinkel);
-    sb.Ist := Rigg.RealGlied[fpWinkel] * 180 / pi;
+    sb.Ist := RadToDeg(Rigg.RealGlied[fpWinkel]);
   end;
 end;
 
@@ -1215,7 +1215,7 @@ begin
     tempA := Rigg.GSB.SalingA.Ist;
 //  FactArray.SalingA.Ist := tempA;
 //  FactArray.SalingL.Ist := Rigg.GSB.SalingL.Ist;
-  FactArray.SalingW.Ist := Round(180 / pi * arctan2(tempH * 2, tempA));
+  FactArray.SalingW.Ist := Round(RadToDeg(arctan2(tempH * 2, tempA)));
 
   FactArray.MastfallF0C.Ist := Rigg.RealTrimm[tiMastfallF0C];
   FactArray.MastfallF0F.Ist := Rigg.RealTrimm[tiMastfallF0F];

@@ -197,6 +197,8 @@ procedure TDeviceCheck.GetDeviceReport(ML: TStrings);
 var
   cr9: TCustomDX9Context;
 begin
+  { DeviceCheck instance usually created in dpr project file. }
+  { Viewport instance usually injected in FormMain, if RotaForm3 is used. }
   if (Main <> nil) and (Viewport <> nil) then
   begin
     ML.Add(Viewport.Context.ClassName);
