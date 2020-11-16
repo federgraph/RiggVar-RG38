@@ -18,6 +18,8 @@
 
 interface
 
+{.$define WantOrtho}
+
 uses
   System.Math,
   System.Math.Vectors,
@@ -53,7 +55,7 @@ type
     btBottomRight
   );
 
-  TFederGraph = class(TInterfacedObject)
+  TFederGraph0 = class(TInterfacedObject)
   private
     FIsOrthoProjection: Boolean;
     FOnViewportChanged: TNotifyEvent;
@@ -124,10 +126,15 @@ type
     procedure InitFrame(vp: TViewport3D);
   public
     CameraDummy: TDummy;
-    Camera: TCamera;
-
     FederMesh: THullMesh;
+
+{$ifdef WantOrtho}
+    ModelGroup: TFederDummy;
+    Camera: TFederCamera;
+{$else}
     ModelGroup: TDummy;
+    Camera: TCamera;
+{$endif}
 
     Viewport: TViewPort3D; // injected
 
@@ -169,6 +176,18 @@ type
     procedure ResetZoom;
     procedure ResetPositionAndRotation;
 
+{$ifdef WantOrtho}
+    procedure ResetOrtho; virtual; abstract;
+    procedure ResetOrthoZoom; virtual; abstract;
+    procedure ResetOrthoRotation; virtual; abstract;
+
+    procedure OrthoRotXYZ(p: TPoint3D); virtual; abstract;
+    procedure OrthoRotZYX(const pz, py, px: single); virtual; abstract;
+    procedure OrthoRotDeltaXY(const DeltaX, DeltaY: single); virtual; abstract;
+    procedure OrthoRotDeltaZ(const DeltaZ: single); virtual; abstract;
+    procedure OrthoZoomDelta(const Value: single); virtual; abstract;
+{$endif}
+
     procedure DoZoom(Delta: single);
     procedure DoZoomTimed(Delta: single);
     procedure DoZoomTimed3D(Delta: single);
@@ -196,6 +215,12 @@ type
     property DefaultRX: Integer read GetDefaultRX;
   end;
 
+{$ifdef WantOrtho}
+  TFederGraph = TFederGraph1;
+{$else}
+  TFederGraph = TFederGraph0;
+{$endif}
+
 implementation
 
 uses
@@ -203,7 +228,7 @@ uses
   RiggVar.App.Main,
   RiggVar.RG.Main;
 
-constructor TFederGraph.Create;
+constructor TFederGraph0.Create;
 begin
   GlobalZoom := 20.0;
   GlobalZoomMin := -100;
@@ -228,7 +253,7 @@ begin
   SB := TStringBuilder.Create;
 end;
 
-destructor TFederGraph.Destroy;
+destructor TFederGraph0.Destroy;
 begin
   SB.Free;
 
@@ -237,7 +262,7 @@ begin
   inherited;
 end;
 
-procedure TFederGraph.InitGraph;
+procedure TFederGraph0.InitGraph;
 begin
   ModelOwner := Viewport.Owner;
   ModelParent := Viewport;
@@ -246,7 +271,7 @@ begin
   InitHull;
 end;
 
-procedure TFederGraph.InitBitmap;
+procedure TFederGraph0.InitBitmap;
 begin
   if Assigned(BMP) then
     BMP.Free;
@@ -255,20 +280,25 @@ begin
   Viewport.Repaint;
 end;
 
-procedure TFederGraph.AssignBitmap;
+procedure TFederGraph0.AssignBitmap;
 begin
   MaterialSourceL.Texture := BMP;
 end;
 
-procedure TFederGraph.InitDummy;
+procedure TFederGraph0.InitDummy;
 begin
   if Assigned(ModelGroup) then
     ModelGroup.Free;
+{$ifdef WantOrtho}
+  ModelGroup := TFederDummy.Create(ModelOwner);
+{$else}
   ModelGroup := TDummy.Create(ModelOwner);
+{$endif}
+
   ModelParent.AddObject(ModelGroup);
 end;
 
-procedure TFederGraph.InitHull;
+procedure TFederGraph0.InitHull;
 begin
   FederMesh := THullMesh.Create(ModelOwner);
   FederMesh.FederModel_FT1 := 650;
@@ -283,19 +313,19 @@ begin
   FederMesh.Visible := True;
 end;
 
-function TFederGraph.GetIsUp: Boolean;
+function TFederGraph0.GetIsUp: Boolean;
 begin
   result := False;
   if Assigned(Main) then
     result := Main.IsUP;
 end;
 
-function TFederGraph.GetBitmap: TBitmap;
+function TFederGraph0.GetBitmap: TBitmap;
 begin
   result := GetBitmap99(True, 0, 360, 0, 1);
 end;
 
-function TFederGraph.GetBitmap99(color: Boolean; szmin, szmax, offset, gain: Integer): TBitmap;
+function TFederGraph0.GetBitmap99(color: Boolean; szmin, szmax, offset, gain: Integer): TBitmap;
 var
   Data: TBitmapData;
   i: Integer;
@@ -344,7 +374,7 @@ begin
   end;
 end;
 
-procedure TFederGraph.DoMM(fmk: TFederMessageKind; X, Y: single);
+procedure TFederGraph0.DoMM(fmk: TFederMessageKind; X, Y: single);
 begin
   if InitOK then
   begin
@@ -372,12 +402,12 @@ begin
   end;
 end;
 
-function TFederGraph.GetMoveMode: Boolean;
+function TFederGraph0.GetMoveMode: Boolean;
 begin
   result := WantLinearMove;
 end;
 
-function TFederGraph.GetMoveModeText: string;
+function TFederGraph0.GetMoveModeText: string;
 begin
   if MoveMode then
   begin
@@ -390,23 +420,23 @@ begin
     result := ''; // normal move
 end;
 
-procedure TFederGraph.SetMoveMode(const Value: Boolean);
+procedure TFederGraph0.SetMoveMode(const Value: Boolean);
 begin
   WantLinearMove := Value;
   WantLinearZoom := Value;
 end;
 
-function TFederGraph.GetDefaultRX: Integer;
+function TFederGraph0.GetDefaultRX: Integer;
 begin
   result := 0;
 end;
 
-function TFederGraph.GetIsClean: Boolean;
+function TFederGraph0.GetIsClean: Boolean;
 begin
   result := mmfmk = fmkNoop;
 end;
 
-procedure TFederGraph.ClearIdleMoveInfo;
+procedure TFederGraph0.ClearIdleMoveInfo;
 begin
   mmfmk := fmkNoop;
   mmX := 0;
@@ -414,7 +444,7 @@ begin
   mmDelta := 0;
 end;
 
-procedure TFederGraph.UpdateRasterSize(RetinaScale: single; X, Y: single);
+procedure TFederGraph0.UpdateRasterSize(RetinaScale: single; X, Y: single);
 begin
   if RetinaScale > 1 then
   begin
@@ -432,7 +462,7 @@ begin
   end;
 end;
 
-procedure TFederGraph.UpdateBorderTrack(X, Y: single);
+procedure TFederGraph0.UpdateBorderTrack(X, Y: single);
 begin
   FLastTrack := btNoop;
 
@@ -465,7 +495,7 @@ begin
     FLastTrack := btRight;
 end;
 
-procedure TFederGraph.HandleTrackMove(X, Y: single);
+procedure TFederGraph0.HandleTrackMove(X, Y: single);
 begin
   if FLastTrack = btBottom then
   begin
@@ -510,7 +540,7 @@ begin
   end;
 end;
 
-procedure TFederGraph.HandleClick(Sender: TObject);
+procedure TFederGraph0.HandleClick(Sender: TObject);
 begin
   UpdateBorderTrack(OldX, OldY);
   case FLastTrack of
@@ -521,59 +551,59 @@ begin
   end;
 end;
 
-procedure TFederGraph.SetOnViewportChanged(const Value: TNotifyEvent);
+procedure TFederGraph0.SetOnViewportChanged(const Value: TNotifyEvent);
 begin
   FOnViewportChanged := Value;
 end;
 
-procedure TFederGraph.ViewportChanged;
+procedure TFederGraph0.ViewportChanged;
 begin
   if Assigned(OnViewportChanged) then
     OnViewportChanged(nil);
 end;
 
-procedure TFederGraph.ViewportMouseDown(Sender: TObject; Button: TMouseButton;
+procedure TFederGraph0.ViewportMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Single);
 begin
   HandleMouseDown(Sender, Button, Shift, X, Y);
 end;
 
-procedure TFederGraph.ViewportMouseMove(Sender: TObject; Shift: TShiftState; X,
+procedure TFederGraph0.ViewportMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Single);
 begin
   HandleMouseMove(Sender, Shift, X, Y);
 end;
 
-procedure TFederGraph.ViewportMouseUp(Sender: TObject; Button: TMouseButton;
+procedure TFederGraph0.ViewportMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Single);
 begin
   HandleMouseUp(Sender, Button, Shift, X, Y);
 end;
 
-procedure TFederGraph.ImageClick(Sender: TObject);
+procedure TFederGraph0.ImageClick(Sender: TObject);
 begin
   HandleClick(Sender);
 end;
 
-procedure TFederGraph.ImageMouseDown(Sender: TObject;
+procedure TFederGraph0.ImageMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Single; RayPos: TVector3D; RayDir: TVector3D);
 begin
   HandleMouseDown(Sender, Button, Shift, X, Y);
 end;
 
-procedure TFederGraph.ImageMouseMove(Sender: TObject; Shift: TShiftState;
+procedure TFederGraph0.ImageMouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Single; RayPos: TVector3D; RayDir: TVector3D);
 begin
   HandleMouseMove(Sender, Shift, X, Y);
 end;
 
-procedure TFederGraph.ImageMouseUp(Sender: TObject;
+procedure TFederGraph0.ImageMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Single; RayPos: TVector3D; RayDir: TVector3D);
 begin
   HandleMouseUp(Sender, Button, Shift, X, Y);
 end;
 
-procedure TFederGraph.HandleMouseDown(Sender: TObject; Button: TMouseButton;
+procedure TFederGraph0.HandleMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Single);
 begin
   OldX := X;
@@ -583,7 +613,7 @@ begin
   Down := True;
 end;
 
-procedure TFederGraph.HandleMouseUp(Sender: TObject; Button: TMouseButton;
+procedure TFederGraph0.HandleMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Single);
 begin
   FLastTrack := btNoop;
@@ -591,7 +621,7 @@ begin
   Main.FederText.OwnsMouse := False;
 end;
 
-procedure TFederGraph.HandleMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
+procedure TFederGraph0.HandleMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
 begin
   if InitOK then
   begin
@@ -611,7 +641,7 @@ begin
   end;
 end;
 
-procedure TFederGraph.HandleNormalMove(Sender: TObject; Shift: TShiftState; X, Y: single);
+procedure TFederGraph0.HandleNormalMove(Sender: TObject; Shift: TShiftState; X, Y: single);
 var
   ldx, ldy: single;
   rx, ry: Integer;
@@ -650,10 +680,12 @@ begin
       begin
         if IsOrthoProjection then
         begin
-//          OrthoRotDeltaXY(
-//          ldx * FMouseRotationSpeed * -0.01,
-//          ldy * FMouseRotationSpeed * 0.01
-//          );
+{$ifdef WantOrtho}
+          OrthoRotDeltaXY(
+          ldx * FMouseRotationSpeed * -0.01,
+          ldy * FMouseRotationSpeed * 0.01
+          );
+{$endif}
         end
         else
         begin
@@ -685,8 +717,10 @@ begin
       begin
         if IsOrthoProjection then
         begin
-//        if rx <> 0 then
-//          OrthoRotDeltaZ(ldx * 0.003);
+{$ifdef WantOrtho}
+        if rx <> 0 then
+          OrthoRotDeltaZ(ldx * 0.003);
+{$endif}
         end
         else
         begin
@@ -701,7 +735,7 @@ begin
   end;
 end;
 
-procedure TFederGraph.DoMMRemote(fmk: TFederMessageKind; X, Y: single);
+procedure TFederGraph0.DoMMRemote(fmk: TFederMessageKind; X, Y: single);
 begin
   if InitOK then
   begin
@@ -728,7 +762,7 @@ begin
   end;
 end;
 
-procedure TFederGraph.DoMMTimed(fmk: TFederMessageKind; X, Y: Single);
+procedure TFederGraph0.DoMMTimed(fmk: TFederMessageKind; X, Y: Single);
 begin
   if InitOK then
   begin
@@ -756,13 +790,26 @@ begin
   ClearIdleMoveInfo;
 end;
 
-procedure TFederGraph.DoZoom(Delta: single);
+procedure TFederGraph0.DoZoom(Delta: single);
 begin
+{$ifdef WantOrtho}
+  if Camera.ViewType = TViewType.Orthographic then
+  begin
+    OrthoZoomDelta(-Delta);
+  end
+  else
+  begin
+    mmfmk := fmkCZ;
+    mmDelta := mmDelta + Delta;
+  end;
+  Exit;
+{$endif}
+
   mmfmk := fmkCZ;
   mmDelta := mmDelta + Delta;
 end;
 
-procedure TFederGraph.DoZoomTimed(Delta: single);
+procedure TFederGraph0.DoZoomTimed(Delta: single);
 var
   temp: single;
 begin
@@ -776,7 +823,7 @@ begin
   end;
 end;
 
-procedure TFederGraph.DoZoomTimed3D(Delta: single);
+procedure TFederGraph0.DoZoomTimed3D(Delta: single);
 begin
   if InitOK then
   begin
@@ -785,13 +832,24 @@ begin
     if Delta < -3 then
       Delta := -3;
 
-   DoZoomTimed3DPerspective(Delta);
-
-    ViewportChanged;
+{$ifdef WantOrtho}
+    if Camera.ViewType = TViewType.Orthographic then
+    begin
+      OrthoZoomDelta(-Delta);
+    end
+    else
+    begin
+       DoZoomTimed3DPerspective(Delta);
+    end;
+   ViewportChanged;
+{$else}
+  DoZoomTimed3DPerspective(Delta);
+  ViewportChanged;
+{$endif}
   end;
 end;
 
-procedure TFederGraph.DoZoomTimed3DPerspective(Delta: single);
+procedure TFederGraph0.DoZoomTimed3DPerspective(Delta: single);
 var
   v: TPoint3D;
   l: single;
@@ -816,10 +874,26 @@ begin
   end;
 end;
 
-procedure TFederGraph.DoParamValueChange(fp: TFederParam; pv: double);
+procedure TFederGraph0.DoParamValueChange(fp: TFederParam; pv: double);
 begin
   if InitOK then
   case fp of
+
+{$ifdef WantOrtho}
+    fprx:
+    begin
+      CameraDummy.RotationAngle.X := Round(pv) mod 360;
+    end;
+    fpry:
+    begin
+      CameraDummy.RotationAngle.Y := Round(pv) mod 360;
+    end;
+    fprz:
+    begin
+      CameraDummy.RotationAngle.Z := Round(pv) mod 360;
+    end;
+{$endif}
+
     fptx:
     begin
       if Abs(pv) < 100 then
@@ -843,16 +917,39 @@ begin
     begin
       Camera.Position.Y := pv / 20;
     end;
+
+{$ifdef WantOrtho}
+    fpva:
+    begin
+      if not IsOrthoProjection then
+      begin
+        if (pv >= 2) and (pv <= 122) then
+        begin
+          Camera.AngleW := pv;
+          Camera.Position.Z := 1650 / pv / 5;
+        end;
+      end;
+    end;
+    fpnp:
+    begin
+      Camera.NearPlane := pv;
+    end;
+    fpfp:
+    begin
+      Camera.FarPlane := pv;
+    end;
+{$endif}
+
   end;
   ClearIdleMoveInfo;
 end;
 
-procedure TFederGraph.ViewportClick(Sender: TObject);
+procedure TFederGraph0.ViewportClick(Sender: TObject);
 begin
   HandleClick(Sender);
 end;
 
-procedure TFederGraph.DoOnIdle;
+procedure TFederGraph0.DoOnIdle;
 begin
   if mmfmk = fmkCZ then
     DoZoomTimed(mmDelta)
@@ -860,7 +957,7 @@ begin
     DoMMTimed(mmfmk, mmX, mmY);
 end;
 
-procedure TFederGraph.HandleMouseWheel(Sender: TObject; Shift: TShiftState;
+procedure TFederGraph0.HandleMouseWheel(Sender: TObject; Shift: TShiftState;
   WheelDelta: Integer; var Handled: Boolean);
 begin
   if ssShift in Shift then
@@ -878,7 +975,7 @@ begin
   Handled := True;
 end;
 
-procedure TFederGraph.ViewportKeyDown(Sender: TObject; var Key: Word;
+procedure TFederGraph0.ViewportKeyDown(Sender: TObject; var Key: Word;
 var KeyChar: Char; Shift: TShiftState);
 begin
   if Main.CurrentRotaForm <> 3 then
@@ -901,7 +998,7 @@ begin
   end;
 end;
 
-procedure TFederGraph.UpdateSize(X, Y: single);
+procedure TFederGraph0.UpdateSize(X, Y: single);
 var
   ss: single;
 begin
@@ -920,7 +1017,7 @@ begin
   RasterB := RasterH - MainVar.Raster;
 end;
 
-procedure TFederGraph.InitFrame(vp: TViewport3D);
+procedure TFederGraph0.InitFrame(vp: TViewport3D);
 begin
   if vp = nil then
     Exit;
@@ -928,9 +1025,25 @@ begin
   CameraDummy := TDummy.Create(vp);
   vp.AddObject(CameraDummy);
 
+{$ifdef WantOrtho}
+  Camera := TFederCamera.Create(vp);
+  Camera.WantOrthoProjection := IsOrthoProjection;
+  Camera.Reset;
+{$else}
   Camera := TCamera.Create(vp);
+{$endif}
+
 
   CameraDummy.AddObject(Camera);
+
+{$ifdef WantOrtho}
+  if Camera.Context <> nil then
+  begin
+    { Context can be nil if Viewport.Size is still (0, 0) }
+    Camera.Context.OnPick := Camera.Pick;
+    Camera.Context.OnGetMatrix := Camera.GetProjectionMatrix;
+  end;
+{$endif}
 
   if Assigned(vp) then
   begin
@@ -942,7 +1055,7 @@ begin
   Reset;
 end;
 
-procedure TFederGraph.Reset;
+procedure TFederGraph0.Reset;
 begin
   if (CameraDummy = nil) or (Camera = nil) then
     Exit;
@@ -965,10 +1078,15 @@ begin
   Camera.RotationAngle.Y := 0;
   Camera.RotationAngle.Z := 0;
 
+{$ifdef WantOrtho}
+  if IsOrthoProjection then
+    ResetOrtho
+  else
+{$endif}
   FWheelBetrag := Camera.Position.Z;
 end;
 
-procedure TFederGraph.ResetPositionAndRotation;
+procedure TFederGraph0.ResetPositionAndRotation;
 begin
   if (CameraDummy = nil) or (Camera = nil) then
     Exit;
@@ -989,9 +1107,14 @@ begin
   Camera.RotationAngle.X := 180;
   Camera.RotationAngle.Y := 0;
   Camera.RotationAngle.Z := 0;
+
+{$ifdef WantOrtho}
+  if IsOrthoProjection then
+    ResetOrtho;
+{$endif}
 end;
 
-procedure TFederGraph.ResetRotation;
+procedure TFederGraph0.ResetRotation;
 begin
   if (CameraDummy = nil) or (Camera = nil) then
     Exit;
@@ -1005,9 +1128,13 @@ begin
   Camera.RotationAngle.X := 180;
   Camera.RotationAngle.Y := 0;
   Camera.RotationAngle.Z := 0;
+
+{$ifdef WantOrtho}
+  ResetOrthoRotation;
+{$endif}
 end;
 
-procedure TFederGraph.ResetPosition;
+procedure TFederGraph0.ResetPosition;
 begin
   if (CameraDummy = nil) or (Camera = nil) then
     Exit;
@@ -1020,17 +1147,25 @@ begin
   Camera.Position.Y := 0.0;
 end;
 
-procedure TFederGraph.ResetZoom;
+procedure TFederGraph0.ResetZoom;
 begin
   if (CameraDummy = nil) or (Camera = nil) then
     Exit;
 
   Camera.Position.Z := GlobalZoom;
+
+{$ifdef WantOrtho}
+  if IsOrthoProjection then
+    ResetOrthoZoom;
+{$endif}
 end;
 
-procedure TFederGraph.LoadEulerAngle(ed: TPoint3D);
+procedure TFederGraph0.LoadEulerAngle(ed: TPoint3D);
 begin
   if Assigned(CameraDummy)
+{$ifdef WantOrtho}
+    and (Camera.ViewType = TViewType.Perspective)
+{$endif}
   then
   begin
     CameraDummy.ResetRotationAngle;
@@ -1041,7 +1176,7 @@ begin
   end;
 end;
 
-function TFederGraph.GetRotationInfoFrame: TPoint3D;
+function TFederGraph0.GetRotationInfoFrame: TPoint3D;
 var
   rm: TMatrix3D;
   ax, ay, az: single;
@@ -1100,7 +1235,7 @@ begin
   result.Z := RadToDeg(az);
 end;
 
-function TFederGraph.DoCameraZoom(Delta, CameraPositionZ: single): single;
+function TFederGraph0.DoCameraZoom(Delta, CameraPositionZ: single): single;
 var
   l: single;
 begin
@@ -1128,7 +1263,7 @@ begin
   FWheelBetrag := l;
 end;
 
-procedure TFederGraph.HandleKey(KeyChar: Char);
+procedure TFederGraph0.HandleKey(KeyChar: Char);
 var
   fa: TFederAction;
   Key: Word;
@@ -1140,8 +1275,21 @@ begin
     Main.ActionHandler.Execute(fa);
 end;
 
-procedure TFederGraph.SetIsOrthoProjection(const Value: Boolean);
+procedure TFederGraph0.SetIsOrthoProjection(const Value: Boolean);
 begin
+{$ifdef WantOrtho}
+  FIsOrthoProjection := Value;
+
+  if Camera = nil then
+    Exit;
+
+  if Value then
+    Camera.ViewType := TViewType.Orthographic
+  else
+    Camera.ViewType := TViewType.Perspective;
+
+  Viewport.Repaint;
+{$endif}
 end;
 
 end.
