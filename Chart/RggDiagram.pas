@@ -1,4 +1,4 @@
-﻿unit RggChartGraph;
+﻿unit RggDiagram;
 
 interface
 
@@ -14,7 +14,8 @@ uses
   FMX.Graphics,
   FMX.StdCtrls,
   FMX.Objects,
-  RggChartModel;
+  RggChartModel,
+  RggChartModel01;
 
 type
   TRggBox = class
@@ -25,8 +26,11 @@ type
     Height: Integer;
   end;
 
-  TChartGraph = class(TChartModel)
+  { like the Graph part in ChartGraph, with CharModel injected }
+  TRggDiagram = class
   private
+    CM: TChartModel; // injected via constructor, not owned
+
     FImage: TOriginalImage; // injected via property, not owned
 
     Box: TRggBox;
@@ -43,9 +47,9 @@ type
     Width: Integer;
     Height: Integer;
     BackgroundColor: TAlphaColor;
-    constructor Create;
+    constructor Create(Model: TChartModel);
     destructor Destroy; override;
-    procedure Draw; override;
+    procedure Draw(Sender: TObject);
     procedure ImageScreenScaleChanged(Sender: TObject);
     property Image: TOriginalImage read FImage write SetImage;
   end;
@@ -58,9 +62,9 @@ uses
 
 { TChartGraph }
 
-constructor TChartGraph.Create;
+constructor TRggDiagram.Create(Model: TChartModel);
 begin
-  inherited;
+  CM := Model;
 
   Width := 650;
   Height := 400;
@@ -76,36 +80,36 @@ begin
   Raster := 24;
   Padding := 2;
 
-  WantRectangles := True;
-  WantTextRect := False;
-  WantLegend := True;
+  CM.WantRectangles := True;
+  CM.WantTextRect := False;
+  CM.WantLegend := True;
 end;
 
-destructor TChartGraph.Destroy;
+destructor TRggDiagram.Destroy;
 begin
   Box.Free;
   inherited;
 end;
 
-procedure TChartGraph.InitBitmap;
+procedure TRggDiagram.InitBitmap;
 begin
   Image.Width := Width;
   Image.Height := Height;
 end;
 
-procedure TChartGraph.SetImage(const Value: TOriginalImage);
+procedure TRggDiagram.SetImage(const Value: TOriginalImage);
 begin
   FImage := Value;
   InitBitmap;
   Image.OnScreenScaleChanged := ImageScreenScaleChanged;
 end;
 
-procedure TChartGraph.ImageScreenScaleChanged(Sender: TObject);
+procedure TRggDiagram.ImageScreenScaleChanged(Sender: TObject);
 begin
-  Draw;
+  Draw(nil);
 end;
 
-procedure TChartGraph.Draw;
+procedure TRggDiagram.Draw(Sender: TObject);
 begin
   if (Image <> nil) then
   begin
@@ -114,7 +118,7 @@ begin
   end;
 end;
 
-procedure TChartGraph.DrawToCanvas(g: TCanvas);
+procedure TRggDiagram.DrawToCanvas(g: TCanvas);
 var
   ss: single;
 begin
@@ -130,7 +134,7 @@ begin
   end;
 end;
 
-procedure TChartGraph.DrawChart(g: TCanvas);
+procedure TRggDiagram.DrawChart(g: TCanvas);
 var
   LineToPoint: TPointF;
   P: TPoint;
@@ -170,55 +174,55 @@ begin
 
   g.Stroke.Thickness := 1;
 
-  xrange := Xmax - Xmin;
-  yrange := Ymax - Ymin;
+  xrange := CM.Xmax - CM.Xmin;
+  yrange := CM.Ymax - CM.Ymin;
 
   { ChartPunktX }
   WantChartPunktX := True;
   if WantChartPunktX then
   begin
     g.Stroke.Color := claRed;
-    tempX := Box.Width * ((ChartPunktX) - Xmin) / xrange;
+    tempX := Box.Width * ((CM.ChartPunktX) - CM.Xmin) / xrange;
     tempY := Box.Height;
     DrawVerticalLine;
 
     g.Stroke.Color := claSilver;
-    tempX := Box.Width * (ChartPunktX - APWidth - Xmin) / xrange;
+    tempX := Box.Width * (CM.ChartPunktX - CM.APWidth - CM.Xmin) / xrange;
     DrawVerticalLine;
 
-    tempX := Box.Width * (ChartPunktX + APWidth - Xmin) / xrange;
+    tempX := Box.Width * (CM.ChartPunktX + CM.APWidth - CM.Xmin) / xrange;
     DrawVerticalLine;
   end;
 
   Radius := 3;
 
-  for param := 0 to ParamCount - 1 do
+  for param := 0 to CM.ParamCount - 1 do
   begin
     { Kurve }
-    g.Stroke.Color := cf[param];
-    tempY := Box.Height - Box.Height * (bf[param, 0] - Ymin) / yrange;
+    g.Stroke.Color := CM.cf[param];
+    tempY := Box.Height - Box.Height * (CM.bf[param, 0] - CM.Ymin) / yrange;
     P.X := Box.X;
     P.Y := Box.Y + Round(Limit(tempY));
     LineToPoint := PointF(P.X, P.Y);
     for i := 1 to LNr do
     begin
       tempX := Box.Width * (i / LNr);
-      tempY := Box.Height - Box.Height * (bf[param, i] - Ymin) / yrange;
+      tempY := Box.Height - Box.Height * (CM.bf[param, i] - CM.Ymin) / (yrange);
       P.X := Box.X + Round(Limit(tempX));
       P.Y := Box.Y + Round(Limit(tempY));
       LineTo(P.X, P.Y);
     end;
 
-    if WantRectangles then
+    if CM.WantRectangles then
     begin
       { Rechtecke }
       g.Stroke.Thickness := 1.0;
       g.Stroke.Color := claWhite;
-      g.Fill.Color := cf[param];
+      g.Fill.Color := CM.cf[param];
       for i := 0 to LNr do
       begin
         tempX := Box.Width * i / LNr;
-        tempY := Box.Height - Box.Height * (bf[param, i] - Ymin) / yrange;
+        tempY := Box.Height - Box.Height * (CM.bf[param, i] - CM.Ymin) / yrange;
         P.X := Box.X + Round(Limit(tempX));
         P.Y := Box.Y + Round(Limit(tempY));
         g.FillRect(
@@ -230,7 +234,7 @@ begin
   end;
 end;
 
-procedure TChartGraph.DrawLabels(g: TCanvas);
+procedure TRggDiagram.DrawLabels(g: TCanvas);
 var
   PosX: single;
   PosY: single;
@@ -243,7 +247,7 @@ var
   procedure TextRect(s: string; ha, va: TTextAlign);
   begin
     R := RectF(PosX, PosY, PosX + w, PosY + h);
-    if WantTextRect then
+    if CM.WantTextRect then
       g.DrawRect(R, 0, 0, [], 1.0);
     g.FillText(
       R,
@@ -256,7 +260,7 @@ var
   end;
 
 begin
-  if not WantLegend then
+  if not CM.WantLegend then
     Exit;
 
   g.Stroke.Thickness := 0.5;
@@ -273,12 +277,12 @@ begin
 
   { Column 1, Row 1 }
   PosY := Padding;
-  s := Format('Xmin..Xmax = %.1f .. %.1f', [Xmin, Xmax]);
+  s := Format('Xmin..Xmax = %.1f .. %.1f', [CM.Xmin, CM.Xmax]);
   TextRect(s, TTextAlign.Leading, TTextAlign.Leading);
 
   { Column 1, Row 2 }
   PosY := PosY + Raster;
-  s := Format('Ymin..Ymax = %.1f .. %.1f', [Ymin, Ymax]);
+  s := Format('Ymin..Ymax = %.1f .. %.1f', [CM.Ymin, CM.Ymax]);
   TextRect(s, TTextAlign.Leading, TTextAlign.Leading);
 
   { Column 1, Row 3 }
@@ -292,25 +296,25 @@ begin
 
   { Column 2, Row 1 }
   PosY := Padding;
-  s := XTitle;
+  s := CM.XTitle;
   TextRect(s, TTextAlign.Leading, TTextAlign.Leading);
 
   { Column 2, Row 2 }
   PosY := PosY + Raster;
-  s := YTitle;
+  s := CM.YTitle;
   TextRect(s, TTextAlign.Leading, TTextAlign.Leading);
 
   { Column 2, Row 3 }
-  if ParamCount > 1 then
+  if CM.ParamCount > 1 then
   begin
     PosX := PosX + 15;
     PosY := PosY + Raster;
-    s := PTitle;
+    s := CM.PTitle;
     TextRect(s, TTextAlign.Leading, TTextAlign.Leading);
   end;
 end;
 
-procedure TChartGraph.DrawLegend(g: TCanvas);
+procedure TRggDiagram.DrawLegend(g: TCanvas);
 var
   p, PosX, PosY: Integer;
   R: TRectF;
@@ -319,7 +323,7 @@ var
   procedure TextOut(x, y: single; const s: string; ha, va: TTextAlign);
   begin
     R := RectF(x, y, x + 200, y + 20);
-    if WantTextRect then
+    if CM.WantTextRect then
       g.DrawRect(R, 0, 0, [], 1.0);
     g.FillText(
       R,
@@ -334,10 +338,10 @@ var
 var
   bw, bh: Integer;
 begin
-  if not WantLegend then
+  if not CM.WantLegend then
     Exit;
 
-  if ParamCount < 2 then
+  if CM.ParamCount < 2 then
     Exit;
 
   bw := 16;
@@ -354,16 +358,16 @@ begin
     { Bullet }
     g.Stroke.Thickness := 1.0;
     g.Stroke.Color := claWhite;
-    g.Fill.Color := cf[p];
+    g.Fill.Color := CM.cf[p];
     g.FillRect(RectF(PosX, PosY, PosX + bw, PosY + bh), 0, 0, [], 1.0);
 
     { Text }
     g.Fill.Color := claSilver;
     PosY := PosY + 16;
-    if Valid then
-      s := PText[p]
+    if CM.Valid then
+      s := CM.PText[p]
     else
-      s := PColorText[p];
+      s := CM.PColorText[p];
     TextOut(PosX, PosY, s, TTextAlign.Leading, TTextAlign.Leading);
     PosY := PosY + 30;
   end;

@@ -270,6 +270,9 @@ type
     procedure LayoutImages;
   protected
     procedure DestroyForms;
+    procedure ShowDiagramC;
+    procedure ShowDiagramE;
+    procedure ShowDiagramQ;
     procedure MemoBtnClick(Sender: TObject);
     procedure ActionsBtnClick(Sender: TObject);
     procedure DrawingsBtnClick(Sender: TObject);
@@ -296,6 +299,9 @@ uses
   FrmConfig,
   FrmTrimmTab,
   FrmChart,
+  FrmDiagramC,
+  FrmDiagramE,
+  FrmDiagramQ,
   RiggVar.RG.Main,
   RiggVar.RG.Speed01,
   RiggVar.RG.Speed02,
@@ -1019,7 +1025,10 @@ begin
     faShowDrawings: DrawingsBtnClick(nil);
     faShowConfig: ConfigBtnClick(nil);
     faShowTrimmTab: TrimmTabBtnClick(nil);
-    faShowDiagQ: ChartBtnClick(nil);
+
+    faShowDiagC: ShowDiagramC;
+    faShowDiagE: ShowDiagramE;
+    faShowDiagQ: ShowDiagramQ;
 
     faToggleSandboxed: MainVar.IsSandboxed := MainConst.MustBeSandboxed or (not MainVar.IsSandboxed);
     faToggleAllProps: AllProps := not AllProps;
@@ -1697,7 +1706,7 @@ begin
   SalingImage.Position.Y := PosY + ControllerImage.Height + Margin;
   SalingImage.Anchors := [TAnchorKind.akTop, TAnchorKind.akRight];
 
-  ChartImage.Position.X := ImagePositionX + 700;
+  ChartImage.Position.X := ImagePositionX + 400;
   ChartImage.Position.Y := ImagePositionY + 0;
 end;
 
@@ -2044,6 +2053,49 @@ begin
   FormChart.Show; //needed on Mac
 end;
 
+procedure TFormMain.ShowDiagramC;
+begin
+  if not Assigned(FormDiagramC) then
+  begin
+    FormDiagramC := TFormDiagramC.Create(nil);
+    FormDiagramC.Parent := self; // needed for Alt-Tab
+    FormDiagramC.ChartModel := ChartGraph;
+    ChartGraph.OnActionHandled := FormDiagramC.UpdateUI;
+
+    if not ChartImage.Visible then
+    begin
+      Main.FederText.ActionPage := 9;
+      ChartImageBtnClick(nil);
+      UpdateSpeedButtonDown;
+    end;
+  end;
+
+  FormDiagramC.Visible := True;
+  FormDiagramC.Show; //needed on Mac
+end;
+
+procedure TFormMain.ShowDiagramE;
+begin
+  if not Assigned(FormDiagramE) then
+  begin
+    FormDiagramE := TFormDiagramE.Create(nil);
+    FormDiagramE.Parent := self; // needed for Alt-Tab
+  end;
+  FormDiagramE.Visible := True;
+  FormDiagramE.Show; //needed on Mac
+end;
+
+procedure TFormMain.ShowDiagramQ;
+begin
+  if not Assigned(FormDiagramQ) then
+  begin
+    FormDiagramQ := TFormDiagramQ.Create(nil);
+    FormDiagramQ.Parent := self; // needed for Alt-Tab
+  end;
+  FormDiagramQ.Visible := True;
+  FormDiagramQ.Show; //needed on Mac
+end;
+
 procedure TFormMain.ConfigBtnClick(Sender: TObject);
 begin
   if FormConfig = nil then
@@ -2083,26 +2135,6 @@ end;
 
 procedure TFormMain.DestroyForms;
 begin
-  if FormAction <> nil then
-  begin
-    FormAction.DisposeOf;
-    FormAction := nil;
-  end;
-  if FormChart <> nil then
-  begin
-    FormChart.DisposeOf;
-    FormChart := nil;
-  end;
-  if FormDrawing <> nil then
-  begin
-    FormDrawing.DisposeOf;
-    FormDrawing := nil;
-  end;
-  if FormMemo <> nil then
-  begin
-    FormMemo.DisposeOf;
-    FormMemo := nil;
-  end;
 end;
 
 procedure TFormMain.InitSpeedButtons;

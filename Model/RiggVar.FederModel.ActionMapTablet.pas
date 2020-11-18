@@ -72,7 +72,7 @@ const
   claSample = claCyan;
   claOption = claBeige;
 
-  PageCountRG = 5;
+  PageCountRG = 9;
 
 constructor TActionMapTablet.Create;
 begin
@@ -519,12 +519,12 @@ begin
       InitAC(cl, 2, faChartRect, claPlum);
       InitAC(cl, 3, faChartTextRect, claPlum);
       InitAC(cl, 4, faChartLegend, claPlum);
-      InitAC(cl, 5, faNoop, claPlum);
-      InitAC(cl, 6, faChartReset, cla);
+      InitAC(cl, 5, faNoop, cla);
+      InitAC(cl, 6, faChartReset, claPlum);
 
       cl := TopRight;
       InitAC(cl, 1, faXComboMinus, cla);
-      InitAC(cl, 2, faXComboPlus, claWhite);
+      InitAC(cl, 2, faXComboPlus, cla);
       InitAC(cl, 3, faPComboMinus, cla);
       InitAC(cl, 4, faPComboPlus, cla);
       //InitAC(cl, 5, faActionPageP, claYellow);
@@ -540,15 +540,15 @@ begin
       InitAC(cl, 5, faParamCountPlus, cla);
       InitAC(cl, 6, faNoop, cla);
       InitAC(cl, 7, faNoop, cla);
-      InitAC(cl, 8, faNoop, cla);
+      InitAC(cl, 8, faParamAPW, claPlum);
 
       cl := BottomRight;
       InitAC(cl, 1, faCycleColorSchemeM, cla);
       InitAC(cl, 2, faCycleColorSchemeP, cla);
-      InitAC(cl, 3, faNoop, cla);
-      InitAC(cl, 4, faNoop, cla);
-      InitAC(cl, 5, faNoop, cla);
-      InitAC(cl, 6, faNoop, cla);
+      InitAC(cl, 3, faToggleChartGraph, claForm);
+      InitAC(cl, 4, faShowDiagE, claForm);
+      InitAC(cl, 5, faShowDiagQ, claForm);
+      InitAC(cl, 6, faShowDiagC, claForm);
     end;
 
   end;

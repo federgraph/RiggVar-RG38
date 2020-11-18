@@ -351,7 +351,7 @@ begin
     faParamRZ: result := 'rz';
     faParamCZ: result := 'cz';
 
-    faParamAPW: result := 'APW';
+    faParamAPW: result := 'apw';
     faParamEAH: result := 'EAH';
     faParamEAR: result := 'EAR';
     faParamEI: result := 'EI';

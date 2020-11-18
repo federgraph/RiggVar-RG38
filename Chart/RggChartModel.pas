@@ -1,4 +1,4 @@
-﻿unit RggChart;
+﻿unit RggChartModel;
 
 interface
 
@@ -273,7 +273,6 @@ uses
   RiggVar.App.Main,
   RiggVar.FB.Classes,
   RiggVar.RG.Def,
-  RggCalc,
   RggScroll;
 
 procedure TChartModel.InitXComboItems;

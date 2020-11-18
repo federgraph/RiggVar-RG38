@@ -389,7 +389,7 @@ end;
 procedure TRotaForm1.DrawMatrix(g: TCanvas);
 var
   R: TRectF;
-  tx: single;
+  ox: single;
   th: single;
   oy, w, h: single;
 
@@ -411,19 +411,19 @@ var
   end;
 
 begin
-  oy := 10;
+  ox := 1320;
+  oy := 150;
   w := 250;
   h := 20;
-  tx := 400;
   th := 25;
   g.Stroke.Thickness := 0.2;
   g.Stroke.Color := claWhite;
   g.Fill.Color := claSilver;
   g.Font.Family := 'Consolas';
   g.Font.Size := 16;
-  TextOut(tx, oy + 0 * th, MatrixTextU);
-  TextOut(tx, oy + 1 * th, MatrixTextV);
-  TextOut(tx, oy + 2 * th, MatrixTextW);
+  TextOut(ox, oy + 0 * th, MatrixTextU);
+  TextOut(ox, oy + 1 * th, MatrixTextV);
+  TextOut(ox, oy + 2 * th, MatrixTextW);
 end;
 
 procedure TRotaForm1.DrawToImage(g: TCanvas);

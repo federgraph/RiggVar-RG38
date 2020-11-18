@@ -18,6 +18,8 @@
 
 interface
 
+{.$define WantOrtho}
+
 uses
   System.Math,
   System.Types,
