@@ -161,7 +161,7 @@ Similar projects are available for VCL and LCL:
 
 | Project | Platform | Note |
 | :-- | :- | :- |
-| RG19 | VCL | original RiggVar project |
+| [RG19](https://github.com/federgraph/RiggVar-RG19) | VCL | original RiggVar project |
 | RG38 | FMX | Trimm 420 |
 | RG76 | FMX | standalone documentation drawings |
-| RG51 | LCL | FPC / Lazarus project using TBGRABitmap |
+| [RG51](https://github.com/federgraph/RiggVar-RG51) | LCL | FPC / Lazarus project using TBGRABitmap |
