@@ -160,7 +160,7 @@ Similar projects are available for VCL and LCL:
 - RG51 is currently in a private repository on GitHub.
 
 | Project | Platform | Note |
-| :-- | :- | :- | :- |
+| :-- | :- | :- |
 | RG19 | VCL | original RiggVar project |
 | RG38 | FMX | Trimm 420 |
 | RG76 | FMX | standalone documentation drawings |
