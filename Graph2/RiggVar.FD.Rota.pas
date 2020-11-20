@@ -163,7 +163,7 @@ implementation
 uses
   RiggVar.App.Main;
 
-{ TRotaForm }
+{ TRotaForm2 }
 
 procedure TRotaForm2.Draw;
 begin

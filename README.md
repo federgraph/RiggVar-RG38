@@ -80,6 +80,8 @@ Button **FD** ( see picture above )will bring up the form with the documentation
 <a href="doc/images/RiggVar-FD-01.png">*Documentation drawings can serve as a unit test alternative.*<br>
 ![FormDrawing screenshot](doc/images/RiggVar-FD-01.png)</a>
 
+This form can be used as the main form in a standalone application, see RG76.dpr.
+
 ## How to build
 
 Use the following IDE versions to build the project:
@@ -91,12 +93,14 @@ I have added the dproj file to gitignore so that you can have your own icons.
 Before you open the project in the IDE you need to create a **new dproj file** (Delphi Project File):
 
 1. Create a new FMX project in the default new project area.
-1. Save the project as RG38.
+1. Save the project as RG38
 1. Copy the new dproj file to your RG38 working directory.
 
 Then you are ready to open the project in the IDE and run in the debugger with **F9**.
 
 It may be necessary to use **Shift-F9** to *build again*.
+
+> Use same procedure to create RG76.dproj.
 
 ## How to use a build of the app
 
@@ -149,19 +153,15 @@ because I found that interesting in itself.
 Do you want to adapt the project for the 470 class?
 Please tell me if a branch is needed.
 
-## About the sibling projects
+## About sibling projects at GitHub
 
-A similar project is available for VCL and LCL:
+Similar projects are available for VCL and LCL:
 - The LCL project can be built in the Lazarus IDE on iMac.
-- It is currently in a private repository on GitHub.
-- There should be a Raspberry Pi version.
-- A measuring device may be connected to a version of the application?
+- RG51 is currently in a private repository on GitHub.
 
-> Graphics and high resolution monitor support is currently *more advanced* on the FMX platform.
-
-Projects for other environments, namely for java and C#, exist but are not up to date.
-A typescript version exists - of the basics.
-A Swift version was started but abandoned - I would be interested in a collaboration.
-
-In 2020 I have updated and advanced the Pascal projects, as you can see here.
-Will I jump to a new environment if you lay out a UI with a nice graph?
+| Project | Platform | Note |
+| :-- | :- | :- | :- |
+| RG19 | VCL | original RiggVar project |
+| RG38 | FMX | Trimm 420 |
+| RG76 | FMX | standalone documentation drawings |
+| RG51 | LCL | FPC / Lazarus project using TBGRABitmap |

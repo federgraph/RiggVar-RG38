@@ -1,4 +1,4 @@
-unit RggChartModel01;
+ï»¿unit RggChartModel01;
 
 interface
 
@@ -21,7 +21,7 @@ uses
 type
   TRggChartModel01 = class(TChartModel)
   private
-    FSalingTyp: TSalingTyp;
+//    FSalingTyp: TSalingTyp; // see inherited class, keeps popping up when doing code completion
     procedure SetSalingTyp(Value: TSalingTyp);
   public
     BereichBtnDown: Boolean;
@@ -288,7 +288,7 @@ begin
     begin
       if (DstList.Items.Count = 0) then
       begin
-        { mindestens ein Eintrag muß sich in DestList befinden }
+        { mindestens ein Eintrag muï¿½ sich in DestList befinden }
         DstList.Items.AddObject(SrcList.Items[0], SrcList.Items.Objects[0]);
         SrcList.Items.Delete(0);
       end;

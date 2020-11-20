@@ -16,6 +16,18 @@
 -
 *)
 
+{$ifdef fpc}
+  {$mode delphi}
+{$endif}
+
+{$define WantDynamicFixPoint}
+{$define WantMemoOutput}
+
+{$define FMX}
+{.$define VCL}
+{.$define LCL}
+{.$define BitmapBGRA}
+
 interface
 
 uses
@@ -46,8 +58,6 @@ uses
   FMX.ListView.Appearances,
   FMX.ListView.Adapters.Base,
   FMX.ListView;
-
-{$define FMX}
 
 type
   TFormDrawing = class(TForm)
@@ -98,7 +108,6 @@ type
     WantVerticalButtons: Boolean;
     WantThickLines: Boolean;
     procedure InitComponentSize;
-    procedure UpdateLayout(Horz: Boolean);
     procedure LayoutComponents;
     procedure LayoutComponentsH;
     procedure LayoutComponentsV;
@@ -144,7 +153,9 @@ type
     procedure StackV(c: TControl);
     procedure AdjustWH;
     procedure ResetLayout;
-  private
+    procedure UpdateLayout(Horz: Boolean);
+  protected
+    WantMemoOutput: Boolean;
     DrawCounter: Integer;
     ClickCounter: Integer;
     ShowPointCounter: Integer;
@@ -250,6 +261,11 @@ end;
 
 procedure TFormDrawing.ShowPoint3D(P: TPoint3D; WantClear: Boolean);
 begin
+   if not WantMemoOutput then
+     Exit;
+
+{$ifdef WantMemoOutput}
+  ML.BeginUpdate;
   if WantClear then
     ML.Clear;
   Inc(ShowPointCounter);
@@ -258,6 +274,8 @@ begin
   ML.Add(Format('Y = %.2f', [P.Y]));
   ML.Add(Format('Z = %.2f', [P.Z]));
   ML.Add('');
+  ML.EndUpdate;
+{$endif}
 end;
 
 procedure TFormDrawing.DoShowRotation(Sender: TObject);
@@ -303,6 +321,7 @@ begin
   ML := Memo.Lines;
   ML.Clear;
   SetupMemo(Memo);
+  WantMemoOutput := True;
 
   CreateDrawings;
 
@@ -484,11 +503,11 @@ procedure TFormDrawing.FormKeyUp(Sender: TObject; var Key: Word;
 begin
   case Key of
     vkEscape: DoReset;
-    vkF11: SwapLayout;
-    vkF6: SwapDrawingLists;
-    vkF3: SwapThickLines;
     vkF1: ShowInfo;
     vkF2: SwapColorScheme;
+    vkF3: SwapThickLines;
+    vkF6: SwapDrawingLists;
+    vkF11: SwapLayout;
   end;
 
   case KeyChar of
@@ -609,7 +628,15 @@ begin
   MM.TextSettings.FontColor := claDodgerblue;
 {$endif}
 
-{$ifdef Vcl}
+{$ifdef VCL}
+  MM.Parent := Self;
+  MM.Font.Name := 'Consolas';
+  MM.Font.Size := 11;
+  MM.Font.Color := clTeal;
+  MM.ScrollBars := TScrollStyle.ssBoth;
+{$endif}
+
+{$ifdef LCL}
   MM.Parent := Self;
   MM.Font.Name := 'Consolas';
   MM.Font.Size := 11;
@@ -785,6 +812,7 @@ begin
   if dy < -dt then
     dy := -dt;
 
+{$ifdef WantDynamicFixPoint}
   { InplaceShape.Position is updated in DrawToCanvas }
 
   cr.Param1I(dx);
@@ -797,8 +825,22 @@ begin
 
   Draw;
 
-  ML.Add(Format('dx = %.2f', [dx]));
-  ML.Add(Format('dy = %.2f', [dy]));
+  if WantMemoOutput then
+  begin
+    ML.Add(Format('dx = %.2f', [dx]));
+    ML.Add(Format('dy = %.2f', [dy]));
+  end;
+
+{$else}
+  InplaceShape.Left := InplaceShape.Left + dx;
+  InplaceShape.Top := InplaceShape.Top + dy;
+
+  CurrentElement.Param1(dx);
+  CurrentElement.Param2(dy);
+
+  CurrentDrawing.Compute;
+  Draw;
+{$endif}
 end;
 
 procedure TFormDrawing.InplaceShapeMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
@@ -1019,8 +1061,10 @@ begin
 end;
 
 procedure TFormDrawing.SelectElement(ii: Integer);
+{$ifdef WantDynamicFixPoint}
 var
   cr: TRggCircle;
+{$endif}
 begin
   Inc(ClickCounter);
 
@@ -1030,6 +1074,7 @@ begin
   if ii > -1 then
   begin
     CurrentElement := CurrentDrawing.Element[ii];
+{$ifdef WantDynamicFixPoint}
     if CurrentElement is TRggCircle then
     begin
       cr := CurrentElement as TRggCircle;
@@ -1039,6 +1084,7 @@ begin
       cr.Save;
       cr.TransformI;
     end;
+{$endif}
     Draw;
   end;
 end;
@@ -1066,6 +1112,7 @@ begin
     InplaceShape.Position.Y := Image.Position.Y + TH.Offset.Y + cr.Center.Y - InplaceShape.Height / 2;
     InplaceShape.Visible := True;
 
+{$ifdef WantDynamicFixPoint}
     if CurrentDrawing.InplaceFlag then
     begin
       TH.AccuMatrix := TH.BuildMatrixG(cr.Center.C);
@@ -1078,6 +1125,7 @@ begin
 
     CurrentDrawing.InplaceFlag := False;
     CurrentDrawing.WheelFlag := False;
+{$endif}
 
     Exit;
   end;
@@ -1108,25 +1156,34 @@ end;
 
 procedure TFormDrawing.DrawToCanvas(g: TCanvas);
 var
+{$ifdef WantDynamicFixPoint}
   cr: TRggCircle;
+{$endif}
+{$ifdef FMX}
   ss: single;
+{$endif}
 begin
+{$ifdef WantDynamicFixPoint}
   if CurrentElement is TRggCircle then
   begin
     Inc(DrawCounter);
     cr := CurrentElement as TRggCircle;
-    ML.Clear;
-    ML.Add('DrawCounter = ' + IntToStr(DrawCounter));
-    ML.Add(cr.Caption + '.OriginalCenter:');
-    ShowPoint3D(cr.OriginalCenter.C, False);
-    ML.Add(cr.Caption + '.Center:');
-    ShowPoint3D(cr.Center.C, False);
+    if WantMemoOutput then
+    begin
+      ML.Clear;
+      ML.Add('DrawCounter = ' + IntToStr(DrawCounter));
+      ML.Add(cr.Caption + '.OriginalCenter:');
+      ShowPoint3D(cr.OriginalCenter.C, False);
+      ML.Add(cr.Caption + '.Center:');
+      ShowPoint3D(cr.Center.C, False);
+    end;
   end;
+{$endif}
 
   UpdateInplacePosition;
   UpdateMemo;
 
-  { FMX }
+{$ifdef FMX}
   ss := Image.Scene.GetSceneScale;
   g.Offset := TH.Offset;
   if g.BeginScene then
@@ -1142,8 +1199,8 @@ begin
   finally
     g.EndScene;
   end;
-
   Image.Repaint;
+{$endif}
 end;
 
 procedure TFormDrawing.UpdateMemo;
@@ -1154,6 +1211,7 @@ end;
 
 procedure TFormDrawing.ShowInfo;
 begin
+{$ifdef FMX}
   ML.Add('W and H:');
   ML.Add(Format('PosID  = %d, %d, %d', [FScreenPosID, FAdjustW, FAdjustH]));
   ML.Add(Format('Screen = (%d, %d)', [Screen.Width, Screen.Height]));
@@ -1171,13 +1229,17 @@ begin
   ML.Add(Format('R2     = (%.1f, %.1f)', [Image.R2.Width, Image.R2.Height]));
   ML.Add(Format('IR     = (%.1f, %.1f)', [Image.IR.Width, Image.IR.Height]));
   ML.Add('');
+{$endif}
 end;
 
 procedure TFormDrawing.ShowDrawingInfo;
 begin
-  ML.Clear;
+  if not WantMemoOutput then
+    Exit;
+
   if not CurrentDrawing.IsValid then
   begin
+    ML.Clear;
     ML.Add(CurrentDrawing.Name);
     ML.Add('Invalid');
     CurrentDrawing.GetInfo(ML);

@@ -2135,6 +2135,7 @@ end;
 
 procedure TFormMain.DestroyForms;
 begin
+  { nothing here because Parent of forms was set to this one. }
 end;
 
 procedure TFormMain.InitSpeedButtons;
