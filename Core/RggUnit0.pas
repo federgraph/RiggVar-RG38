@@ -112,7 +112,7 @@ type
     property ManipulatorMode: Boolean read FManipulatorMode write FManipulatorMode;
     property GetriebeOK: Boolean read FGetriebeOK;
 
-    property MastLaenge: single read FrMastLength write SetMastL;
+    property MastLength: single read FrMastLength write SetMastL;
     property MastUnten: single read FrMastUnten write SetMastunten;
     property MastOben: single read FrMastOben write SetMastoben;
     property MastfallVorlauf: single read FrMastfallVorlauf write FrMastfallVorlauf;

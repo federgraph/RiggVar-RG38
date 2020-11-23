@@ -35,6 +35,7 @@ uses
   FMX.Viewport3D,
   FMX.Materials,
   FMX.MaterialSources,
+  RggTypes,
   RiggVar.FB.Classes,
   RiggVar.FG.Objects,
   RiggVar.FG.Mesh,

@@ -1798,7 +1798,7 @@ end;
 
 procedure TRggMain.UpdateEAR(Value: single);
 var
-  EA: TRiggLvektor; { EA in KN }
+  EA: TRiggRods; { EA in KN }
   c: Integer;
 begin
   EA := Rigg.EA;
@@ -1826,7 +1826,7 @@ end;
 
 procedure TRggMain.UpdateEAH(Value: single);
 var
-  EA: TRiggLvektor; { EA in KN }
+  EA: TRiggRods; { EA in KN }
   c: Integer;
 begin
   EA := Rigg.EA;

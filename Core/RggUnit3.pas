@@ -48,8 +48,8 @@ type
     FHullIsFlexible: Boolean;
     KnotenLastD0, KnotenLastC, KnotenLastC0: TPoint3D;
 
-    function GetEA: TRiggLvektor;
-    procedure SetEA(Value: TRiggLvektor);
+    function GetEA: TRiggRods;
+    procedure SetEA(Value: TRiggRods);
     procedure Kraefte; virtual;
     procedure Split; virtual;
     procedure MakeRumpfKoord;
@@ -71,9 +71,9 @@ type
   public
     Fachwerk: TFachwerk;
 
-    rLe: TRiggLvektor; { Längen entlastet 3d in mm }
-    rF: TRiggLvektor; { Stabkräfte 3d in N }
-    rEA: TRiggLvektor; { EA Werte 3d in KN }
+    rLe: TRiggRods; { Längen entlastet 3d in mm }
+    rF: TRiggRods; { Stabkräfte 3d in N }
+    rEA: TRiggRods; { EA Werte 3d in KN }
     rPe: TRiggPoints; { Koordinaten entlastet 3d in mm }
     iPe: TRiggPoints; { Integerkoordinaten entlastet 3d in mm }
 
@@ -96,7 +96,7 @@ type
     property ProofRequired: Boolean read FProbe write FProbe;
     property RiggOK: Boolean read FRiggOK;
     property HullFlexible: Boolean read FHullIsFlexible write FHullIsFlexible;
-    property EA: TRiggLvektor read GetEA write SetEA;
+    property EA: TRiggRods read GetEA write SetEA;
   end;
 
 implementation
@@ -223,7 +223,7 @@ begin
   end;
 end;
 
-function TRiggFS.GetEA: TRiggLvektor;
+function TRiggFS.GetEA: TRiggRods;
 var
   i: Integer;
 begin
@@ -232,7 +232,7 @@ begin
     Result.V[i] := rEA.V[i] / 1000;
 end;
 
-procedure TRiggFS.SetEA(Value: TRiggLvektor);
+procedure TRiggFS.SetEA(Value: TRiggRods);
 var
   i: Integer;
 begin

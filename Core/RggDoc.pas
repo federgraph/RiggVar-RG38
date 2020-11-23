@@ -84,7 +84,7 @@ type
     { Rumpf: Koordinaten in mm }
     iP: TRiggPoints; { Array enthält auch die Riggkoordinaten }
     { Festigkeitswerte }
-    rEA: TRiggLvektor; { N }
+    rEA: TRiggRods; { N }
     EI: single; { Nmm^2 }
     { Grenzwerte und Istwerte }
     GSB: TRggFA;

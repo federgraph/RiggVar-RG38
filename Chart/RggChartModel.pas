@@ -1287,7 +1287,7 @@ begin
     begin
       Add(Format('  D0D: %d mm (Saling)', [Round(MastUnten)]));
       Add(Format('  D0C: %d mm (Vorstag)', [Round(MastUnten + MastOben)]));
-      Add(Format('  D0F: %d mm (Top)', [Round(MastLaenge)]));
+      Add(Format('  D0F: %d mm (Top)', [Round(MastLength)]));
       Add(Format('  Biegesteifigkeit EI: %d Nm^2', [MastEI]));
     end;
     { Exit Counters }

@@ -89,7 +89,7 @@ type
     Beta, Gamma, gammaE, delta1, delta2, alpha1, alpha2: single; { in rad }
     eps1, eps2, epsA, epsB: single; { in rad }
 
-    rL: TRiggLvektor; { Längen belastet 3d in mm }
+    rL: TRiggRods; { Längen belastet 3d in mm }
 
     FExcenter: single; { in mm, Erfahrungswert }
     FKnicklaenge: single; { in mm }

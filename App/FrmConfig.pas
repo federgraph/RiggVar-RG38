@@ -171,7 +171,7 @@ type
     FiMastWante: Integer;
     FiMastTop: Integer;
     FiEI: Integer;
-    FEAarray: TRiggLvektor;
+    FEAarray: TRiggRods;
 
     FMastTypList: TStringList;
     FMastMassList: TStringList;
@@ -228,6 +228,8 @@ begin
 
   FScale := 1.0;
 
+  FGSB := TRggFA.Create;
+
   FMastTypList := TStringList.Create;
   FMastMassList := TStringList.Create;
   FElementList := TStringList.Create;
@@ -258,6 +260,7 @@ begin
   FQuerschnittList.Free;
   FTrimmList.Free;
   FTempList.Free;
+  FGSB.Free;
 end;
 
 procedure TFormConfig.GetKeyList(Source, Dest: TStringList);
@@ -302,12 +305,12 @@ procedure TFormConfig.FillRiggLists;
 var
   fs: string;
 begin
-  FGSB := Rigg.GSB;
+  FGSB.Assign(Rigg.GSB);
   FEAarray := Rigg.EA; { EA in KN }
   FiEI := Rigg.MastEI;
   FiMastSaling := Round(Rigg.MastUnten);
   FiMastWante := FiMastSaling + Round(Rigg.MastOben);
-  FiMastTop := Round(Rigg.MastLaenge);
+  FiMastTop := Round(Rigg.MastLength);
   FiP := Rigg.rP;
 
   FMastMassList.Clear;
@@ -699,8 +702,8 @@ begin
   Rigg.rP := FiP; { Rumpfkoordinaten }
   Rigg.MastUnten := FiMastSaling;
   Rigg.MastOben := FiMastWante - FiMastSaling;
-  Rigg.MastLaenge := FiMastTop;
-  Rigg.GSB := FGSB; { neue Grenzen und Istwerte }
+  Rigg.MastLength := FiMastTop;
+  Rigg.GSB.Assign(FGSB); { neue Grenzen und Istwerte }
   Rigg.EA := FEAarray;
   Rigg.MastEI := FiEI;
 end;

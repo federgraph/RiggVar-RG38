@@ -59,41 +59,6 @@ type
     fmkCZ
   );
 
-  TFederParam = (
-    fpController,
-    fpWinkel,
-    fpVorstag,
-    fpWante,
-    fpWoben,
-    fpSalingH,
-    fpSalingA,
-    fpSalingL,
-    fpVorstagOS,
-    fpWPowerOS,
-    fpSalingW,
-    fpMastfallF0C,
-    fpMastfallF0F,
-    fpMastfallVorlauf,
-    fpBiegung,
-    fpD0X,
-    fpAPW,
-    fpEAH,
-    fpEAR,
-    fpEI,
-    fprx,
-    fpry,
-    fprz,
-    fptx,
-    fpty,
-    fpcz,
-    fppx,
-    fppy,
-    fppz,
-    fpva,
-    fpnp,
-    fpfp
-    );
-
 const
   cFaktor = 'Faktor';
   cName = 'Name';

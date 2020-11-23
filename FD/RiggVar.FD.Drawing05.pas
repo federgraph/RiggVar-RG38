@@ -345,12 +345,7 @@ var
   end;
 begin
   f := 1 / 12;
-{$ifdef Rgg}
-  Rigg := Main.Rigg;
-  rP := Rigg.rP;
-{$else}
   rP := TRggTestData.GetKoordinaten420;
-{$endif}
   q := rP.V[ooD0];
 
   try
