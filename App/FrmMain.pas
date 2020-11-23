@@ -34,7 +34,7 @@ uses
   RiggVar.RG.Def,
   RiggVar.RG.Report,
   RiggVar.RG.Rota,
-  RggUnit4,
+  RiggVar.RG.Model,
   RiggVar.FD.Image,
   RggCtrls,
   RggChartGraph,
