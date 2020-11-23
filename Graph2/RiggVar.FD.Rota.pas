@@ -18,6 +18,8 @@
 
 interface
 
+{$define FMX}
+
 uses
   System.SysUtils,
   System.Types,
@@ -459,6 +461,8 @@ var
   ss: single;
 begin
   Inc(DrawCounter);
+
+{$ifdef FMX}
   ss := Image.Scene.GetSceneScale;
   g.Offset := TH.Offset;
   if g.BeginScene then
@@ -475,6 +479,8 @@ begin
     g.EndScene;
   end;
   Image.Repaint;
+{$endif}
+
 end;
 
 procedure TRotaForm2.RotaSeite;

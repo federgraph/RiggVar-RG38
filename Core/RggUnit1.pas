@@ -31,10 +31,9 @@ uses
 
 type
   TGetriebeFS = class(TGetriebe)
-  private
+  protected
     FrVorstagDiff: single;
     FrSpannungW: single;
-  protected
     psiStart: single;
     psiEnde: single;
     procedure BerechneF; virtual;
@@ -57,6 +56,9 @@ type
 
     WantToPlayWithExtendedSearchRange: Boolean;
 
+    function GetCounterValue(Idx: Integer): Integer;
+    function GetTempValue(Idx: Integer): single;
+
     procedure ResetExitCounters;
 
     constructor Create;
@@ -70,7 +72,7 @@ type
     procedure Rest;
     procedure BerechneWinkel;
     procedure BerechneM;
-    function Koppelkurve: TKoordLine;
+    function GetKoppelKurve: TKoordLine;
     procedure BiegeUndNeigeF1(Mastfall, Biegung: single);
     procedure NeigeF(Mastfall: single);
     procedure BiegeUndNeigeC(MastfallC, Biegung: single);
@@ -84,6 +86,7 @@ type
 
     property VorstagDiff: single read FrVorstagDiff;
     property SpannungW: single read FrSpannungW;
+    property KoppelKurve: TKoordLine read GetKoppelKurve;
   end;
 
 implementation
@@ -322,7 +325,7 @@ begin
   Rest; { think: refactored away with 'extract method refactoring' }
 end;
 
-function TGetriebeFS.Koppelkurve: TKoordLine;
+function TGetriebeFS.GetKoppelKurve: TKoordLine;
 { Koppelkurve Viergelenk P0, P, D, D0 }
 { Wanten2d neu bereitgestellt,
   sonst interne Felder nicht verändert! }
@@ -1037,6 +1040,32 @@ begin
       MakeSalingHBiggerFS(FrSalingH);
     stDrehbar:
       MakeSalingLBiggerDS(FrSalingL);
+  end;
+end;
+
+function TGetriebeFS.GetCounterValue(Idx: Integer): Integer;
+begin
+  result := 0;
+  case Idx of
+    0: result := UpdateGetriebeCounter;
+    1: result := ExitCounter1;
+    2: result := ExitCounter2;
+    3: result := ExitCounter3;
+    4: result := ExitCounter4;
+    5: result := ExitCounter5;
+    6: result := ExitCounter6;
+    7: result := ExitCounter7;
+  end;
+end;
+
+function TGetriebeFS.GetTempValue(Idx: Integer): single;
+begin
+  result := 0;
+  case Idx of
+    1: result := Temp1;
+    2: result := Temp2;
+    3: result := Temp3;
+    4: result := Temp4;
   end;
 end;
 

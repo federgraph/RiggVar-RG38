@@ -10,7 +10,7 @@ uses
   System.UIConsts,
   RggStrings,
   RggScroll,
-  RggUnit4,
+  RggInter,
   RggTypes,
   System.IniFiles,
   FMX.Types,
@@ -203,10 +203,10 @@ type
     FirstRowIndex: Integer;
     SecondRowIndex: Integer;
 
-    Rigg: TRigg;
+    Rigg: IRigg;
     IniFileName: string;
     FormShown: Boolean;
-    procedure Init(ARigg: TRigg);
+    procedure Init(ARigg: IRigg);
     procedure LoadFromIniFile;
     procedure WriteToIniFile;
   end;
@@ -284,7 +284,7 @@ begin
   GridSelectCell(nil, FRumpfCell.X, FRumpfCell.Y, b);
 end;
 
-procedure TFormConfig.Init(ARigg: TRigg);
+procedure TFormConfig.Init(ARigg: IRigg);
 begin
   Rigg := ARigg;
 
@@ -305,13 +305,13 @@ procedure TFormConfig.FillRiggLists;
 var
   fs: string;
 begin
-  FGSB.Assign(Rigg.GSB);
+  FGSB.Assign(Rigg.RggFA);
   FEAarray := Rigg.EA; { EA in KN }
   FiEI := Rigg.MastEI;
   FiMastSaling := Round(Rigg.MastUnten);
   FiMastWante := FiMastSaling + Round(Rigg.MastOben);
   FiMastTop := Round(Rigg.MastLength);
-  FiP := Rigg.rP;
+  FiP := Rigg.RiggPoints;
 
   FMastMassList.Clear;
   FElementList.Clear;
@@ -699,11 +699,11 @@ end;
 
 procedure TFormConfig.OKBtnClick(Sender: TObject);
 begin
-  Rigg.rP := FiP; { Rumpfkoordinaten }
+  Rigg.RiggPoints := FiP; { Rumpfkoordinaten }
   Rigg.MastUnten := FiMastSaling;
   Rigg.MastOben := FiMastWante - FiMastSaling;
   Rigg.MastLength := FiMastTop;
-  Rigg.GSB.Assign(FGSB); { neue Grenzen und Istwerte }
+  Rigg.RggFA.Assign(FGSB); { neue Grenzen und Istwerte }
   Rigg.EA := FEAarray;
   Rigg.MastEI := FiEI;
 end;

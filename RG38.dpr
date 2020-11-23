@@ -17,6 +17,7 @@ uses
   RggCalc in 'Core\RggCalc.pas',
   RggDoc in 'Core\RggDoc.pas',
   RggFachwerk in 'Core\RggFachwerk.pas',
+  RggInter in 'Core\RggInter.pas',
   RggReport in 'Core\RggReport.pas',
   RggSaling3Eck in 'Core\RggSaling3Eck.pas',
   RggSchnittKK in 'Core\RggSchnittKK.pas',

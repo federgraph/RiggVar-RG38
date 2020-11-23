@@ -32,16 +32,10 @@ uses
   RggTrimmTab;
 
 type
-  TGetriebe = class(TPersistent)
-  private
+  TGetriebe = class(TInterfacedObject)
+  protected
     FSalingTyp: TSalingTyp;
     FManipulatorMode: Boolean;
-    procedure SetGlieder(Values: TTrimmControls);
-    function GetGlieder: TTrimmControls;
-    function GetSalingDaten: TSalingDaten;
-    procedure GetLogoData;
-    procedure GetDefaultData;
-  protected
     FTrimm: TTrimm;
     FGetriebeOK: Boolean;
     FMastOK: Boolean;
@@ -78,16 +72,40 @@ type
     FrMastLength: single;
     FrMastfallVorlauf: single;
 
+    function GetTrimmTabelle: TTrimmTab;
+    function GetTrimmTabDaten: TTrimmTabDaten;
+    function GetRiggPoints: TRiggPoints;
+    procedure SetRiggPoints(const Value: TRiggPoints);
+
+    function GetMastLength: single;
+    function GetMastUnten: single; //(TPersistent)
+    function GetMastOben: single;
+
+    function GetSalingDaten: TSalingDaten;
+    procedure GetLogoData;
+    procedure GetDefaultData;
+
+    function GetMastOK: Boolean;
+    function GetGetriebeOK: Boolean;
+    function GetMastfallVorlauf: single;
+    procedure SetMastfallVorlauf(const Value: single);
+    function GetManipulatorMode: Boolean;
+    procedure SetManipulatorMode(const Value: Boolean);
+    procedure SetGlieder(const Values: TTrimmControls);
+    function GetGlieder: TTrimmControls;
+    function GetRggFA: TRggFA;
+
     procedure IntGliederToReal;
     procedure RealGliederToInt;
     procedure Wanten2dTo3d;
     procedure Wanten3dTo2d;
-    procedure SetMastL(Value: single);
-    procedure SetMastunten(Value: single);
-    procedure SetMastoben(Value: single);
+    procedure SetMastLength(const Value: single);
+    procedure SetMastUnten(const Value: single);
+    procedure SetMastOben(const Value: single);
     function GetRealGlied(Index: TsbName): single;
-    procedure SetRealGlied(Index: TsbName; Value: single);
-    procedure SetSalingTyp(Value: TSalingTyp); virtual;
+    procedure SetRealGlied(Index: TsbName; const Value: single);
+    function GetSalingTyp: TSalingTyp;
+    procedure SetSalingTyp(const Value: TSalingTyp); virtual;
 
     procedure LoadFromIniFile(ini: TIniFile); virtual;
     procedure WriteToIniFile(ini: TIniFile); virtual;
@@ -106,16 +124,17 @@ type
     procedure UpdateGSB;
     procedure UpdateGlieder;
 
-    function GetriebeStatusText: string;
+    function GetGetriebeStatusText: string;
 
-    property SalingTyp: TSalingTyp read FSalingTyp write SetSalingTyp;
-    property ManipulatorMode: Boolean read FManipulatorMode write FManipulatorMode;
-    property GetriebeOK: Boolean read FGetriebeOK;
+    property SalingTyp: TSalingTyp read GetSalingTyp write SetSalingTyp;
+    property ManipulatorMode: Boolean read GetManipulatorMode write SetManipulatorMode;
+    property GetriebeOK: Boolean read GetGetriebeOK;
 
-    property MastLength: single read FrMastLength write SetMastL;
-    property MastUnten: single read FrMastUnten write SetMastunten;
-    property MastOben: single read FrMastOben write SetMastoben;
-    property MastfallVorlauf: single read FrMastfallVorlauf write FrMastfallVorlauf;
+    property MastOK: Boolean read GetMastOK;
+    property MastLength: single read GetMastLength write SetMastLength;
+    property MastUnten: single read GetMastUnten write SetMastunten;
+    property MastOben: single read GetMastOben write SetMastoben;
+    property MastfallVorlauf: single read GetMastfallVorlauf write SetMastfallVorlauf;
 
     property phi: single read FrPhi write FrPhi;
     property psi: single read FrPsi write FrPsi;
@@ -127,6 +146,14 @@ type
     property SalingDaten: TSalingDaten read GetSalingDaten;
     property Glieder: TTrimmControls read GetGlieder write SetGlieder;
     property RealGlied[Index: TsbName]: single read GetRealGlied write SetRealGlied;
+
+    property RggFA: TRggFA read GetRggFA;
+    property Trimm: TTrimm read FTrimm;
+    property GetriebeStatusText: string read GetGetriebeStatusText;
+
+    property RiggPoints: TRiggPoints read GetRiggPoints write SetRiggPoints;
+    property TrimmTabDaten: TTrimmTabDaten read GetTrimmTabDaten;
+    property TrimmTabelle: TTrimmTab read GetTrimmTabelle;
   end;
 
 implementation
@@ -158,7 +185,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TGetriebe.SetSalingTyp(Value: TSalingTyp);
+procedure TGetriebe.SetSalingTyp(const Value: TSalingTyp);
 begin
   if Value <> FSalingTyp then
   begin
@@ -166,7 +193,7 @@ begin
   end;
 end;
 
-procedure TGetriebe.SetMastunten(Value: single);
+procedure TGetriebe.SetMastUnten(const Value: single);
 begin
   if Value <> FrMastUnten then
   begin
@@ -174,7 +201,7 @@ begin
   end;
 end;
 
-procedure TGetriebe.SetMastoben(Value: single);
+procedure TGetriebe.SetMastOben(const Value: single);
 begin
   if Value <> FrMastOben then
   begin
@@ -182,13 +209,28 @@ begin
   end;
 end;
 
-procedure TGetriebe.SetMastL(Value: single);
+procedure TGetriebe.SetManipulatorMode(const Value: Boolean);
+begin
+  FManipulatorMode := Value;
+end;
+
+procedure TGetriebe.SetMastfallVorlauf(const Value: single);
+begin
+  FrMastfallVorlauf := Value;
+end;
+
+procedure TGetriebe.SetMastLength(const Value: single);
 begin
   if Value <> FrMastLength then
   begin
     FrMastLength := Value;
     FrMastEnde := Value - FrMastOben - FrMastUnten;
   end;
+end;
+
+function TGetriebe.GetGetriebeOK: Boolean;
+begin
+  result := FGetriebeOK;
 end;
 
 function TGetriebe.GetGlieder: TTrimmControls;
@@ -205,7 +247,7 @@ begin
   result.WPowerOS := Round(FWPowerOS);
 end;
 
-procedure TGetriebe.SetGlieder(Values: TTrimmControls);
+procedure TGetriebe.SetGlieder(const Values: TTrimmControls);
 begin
   FrController := Values.Controller;
   FWinkelDegrees := Values.Winkel;
@@ -236,7 +278,17 @@ begin
   end;
 end;
 
-procedure TGetriebe.SetRealGlied(Index: TsbName; Value: single);
+function TGetriebe.GetRggFA: TRggFA;
+begin
+  result := GSB;
+end;
+
+function TGetriebe.GetRiggPoints: TRiggPoints;
+begin
+  result := rP;
+end;
+
+procedure TGetriebe.SetRealGlied(Index: TsbName; const Value: single);
 begin
   case Index of
     fpController: FrController := Value;
@@ -254,6 +306,11 @@ begin
     fpVorstagOS: FrVorstag := Value;
     fpWPowerOS: FWPowerOS := Round(Value);
   end;
+end;
+
+procedure TGetriebe.SetRiggPoints(const Value: TRiggPoints);
+begin
+  rP := Value;
 end;
 
 function TGetriebe.GetSalingDaten: TSalingDaten;
@@ -301,6 +358,21 @@ begin
   SD.KraftWinkel := RadToDeg(tempWS);
 
   result := SD;
+end;
+
+function TGetriebe.GetSalingTyp: TSalingTyp;
+begin
+  result := FSalingTyp;
+end;
+
+function TGetriebe.GetTrimmTabDaten: TTrimmTabDaten;
+begin
+  result := TrimmTab.TrimmTabDaten;
+end;
+
+function TGetriebe.GetTrimmTabelle: TTrimmTab;
+begin
+  result := TrimmTab;
 end;
 
 procedure TGetriebe.IntGliederToReal;
@@ -365,7 +437,7 @@ begin
   end;
 end;
 
-function TGetriebe.GetriebeStatusText: string;
+function TGetriebe.GetGetriebeStatusText: string;
 var
   s: string;
 begin
@@ -582,6 +654,36 @@ begin
   GSB.MastfallVorlauf.Max := GSB.MastfallVorlauf.Ist + 10 * f;
 
   TrimmTab.TrimmTabDaten := DefaultTrimmTabDaten;
+end;
+
+function TGetriebe.GetManipulatorMode: Boolean;
+begin
+  result := FManipulatorMode;
+end;
+
+function TGetriebe.GetMastfallVorlauf: single;
+begin
+  result := FrMastfallVorlauf;
+end;
+
+function TGetriebe.GetMastLength: single;
+begin
+  result := FrMastLength;
+end;
+
+function TGetriebe.GetMastOben: single;
+begin
+  result := FrMastOben;
+end;
+
+function TGetriebe.GetMastOK: Boolean;
+begin
+  result := FMastOK;
+end;
+
+function TGetriebe.GetMastUnten: single;
+begin
+  result := FrMastUnten;
 end;
 
 procedure TGetriebe.Reset;

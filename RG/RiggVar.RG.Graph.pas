@@ -5,7 +5,7 @@ interface
 uses
   System.Math.Vectors,
   RggTypes,
-  RggUnit4;
+  RggInter;
 
 type
   IStrokeRigg = interface
@@ -67,7 +67,7 @@ type
 
   TDummyStrokeRigg = class(TInterfacedObject, IStrokeRigg)
   private
-    FRigg: TRigg;
+    FRigg: IRigg;
     FBogen: Boolean;
     FWanteGestrichelt: Boolean;
     FViewPoint: TViewPoint;
@@ -108,7 +108,7 @@ type
     WantRenderE: Boolean;
     WantRenderS: Boolean;
 
-    constructor Create(rgg: TRigg);
+    constructor Create(rgg: IRigg);
 
     procedure SetKoordinaten(const Value: TRiggPoints);
     procedure SetKoppelKurve(const Value: TKoordLine);
@@ -153,7 +153,7 @@ uses
 
 { TStrokeRigg }
 
-constructor TDummyStrokeRigg.Create(rgg: TRigg);
+constructor TDummyStrokeRigg.Create(rgg: IRigg);
 begin
   FRigg := rgg;
 end;
@@ -171,9 +171,9 @@ begin
   begin
     k := Round(100 / BogenMax * j);
     tempL := j * L / BogenMax;
-    FMastKurve[j].X := FRigg.rP.D0.X - tempL * temp1 + Value[k] * temp2;
+    FMastKurve[j].X := FRigg.GetPoint3D(ooD0).X - tempL * temp1 + Value[k] * temp2;
     FMastKurve[j].Y := 0;
-    FMastKurve[j].Z := FRigg.rP.D0.Z + tempL * temp3 + Value[k] * temp4;
+    FMastKurve[j].Z := FRigg.GetPoint3D(ooD0).Z + tempL * temp3 + Value[k] * temp4;
   end;
 end;
 

@@ -31,14 +31,6 @@ uses
   RggUnit2,
   RggFachwerk;
 
-const
-  { in KN / cm^2 }
-  EModulStahl = 210E3; { N/mm^2 }
-  EModulAlu = 70E3; { N/mm^2 }
-  EAgross = 100E6; { N }
-  EARumpf = 10E6; { N }
-  EASaling = 1E6; { N }
-
 type
   TRiggFS = class(TMast)
   private
@@ -48,8 +40,6 @@ type
     FHullIsFlexible: Boolean;
     KnotenLastD0, KnotenLastC, KnotenLastC0: TPoint3D;
 
-    function GetEA: TRiggRods;
-    procedure SetEA(Value: TRiggRods);
     procedure Kraefte; virtual;
     procedure Split; virtual;
     procedure MakeRumpfKoord;
@@ -60,14 +50,20 @@ type
     procedure MakeKoordOS; virtual;
     procedure Probe;
     procedure Entlasten;
-
   protected
     SplitF: TSplitF;
     TetraF: TTetraF;
     FRiggStatus: set of TRiggStatus;
-    procedure SetSalingTyp(Value: TSalingTyp); override;
+    function GetRelaxedRiggLengths: TRiggRods;
+    function GetStabKraefte: TRiggRods;
+    function GetRelaxedRiggPoints: TRiggPoints;
+    function GetProofRequired: Boolean;
+    procedure SetProofRequired(const Value: Boolean);
+    procedure SetSalingTyp(const Value: TSalingTyp); override;
     procedure GetDefaultChartData;
-
+    function GetRiggOK: Boolean;
+    function GetEA: TRiggRods;
+    procedure SetEA(const Value: TRiggRods);
   public
     Fachwerk: TFachwerk;
 
@@ -90,13 +86,17 @@ type
 
     procedure UpdateRigg;
     function Regeln(TrimmSoll: TTrimm): Integer;
-    function RiggStatusText: string;
+    function GetRiggStatusText: string;
 
     property OnRegelGrafik: TNotifyEvent read FOnRegelGrafik write FOnRegelGrafik;
-    property ProofRequired: Boolean read FProbe write FProbe;
-    property RiggOK: Boolean read FRiggOK;
+    property ProofRequired: Boolean read GetProofRequired write SetProofRequired;
+    property RiggOK: Boolean read GetRiggOK;
     property HullFlexible: Boolean read FHullIsFlexible write FHullIsFlexible;
     property EA: TRiggRods read GetEA write SetEA;
+    property RiggStatusText: string read GetRiggStatusText;
+    property RelaxedRiggPoints: TRiggPoints read GetRelaxedRiggPoints;
+    property RelaxedRiggLengths: TRiggRods read GetRelaxedRiggLengths;
+    property StabKraefte: TRiggRods read GetStabKraefte;
   end;
 
 implementation
@@ -183,7 +183,7 @@ begin
   end;
 end;
 
-procedure TRiggFS.SetSalingTyp(Value: TSalingTyp);
+procedure TRiggFS.SetSalingTyp(const Value: TSalingTyp);
 begin
   if Value <> SalingTyp then
   begin
@@ -192,7 +192,7 @@ begin
   end;
 end;
 
-function TRiggFS.RiggStatusText: string;
+function TRiggFS.GetRiggStatusText: string;
 var
   s: string;
 begin
@@ -206,6 +206,11 @@ begin
   if rsKraftZuGross in FRiggStatus then
     s := s + Status_String_RiggForceTooBig;
   Result := s;
+end;
+
+function TRiggFS.GetStabKraefte: TRiggRods;
+begin
+  result := rF;
 end;
 
 procedure TRiggFS.Entlasten;
@@ -232,7 +237,27 @@ begin
     Result.V[i] := rEA.V[i] / 1000;
 end;
 
-procedure TRiggFS.SetEA(Value: TRiggRods);
+function TRiggFS.GetProofRequired: Boolean;
+begin
+  result := FProbe;
+end;
+
+function TRiggFS.GetRelaxedRiggLengths: TRiggRods;
+begin
+  result := rLe;
+end;
+
+function TRiggFS.GetRelaxedRiggPoints: TRiggPoints;
+begin
+  result := rPe;
+end;
+
+function TRiggFS.GetRiggOK: Boolean;
+begin
+  result := FRiggOK;
+end;
+
+procedure TRiggFS.SetEA(const Value: TRiggRods);
 var
   i: Integer;
 begin
@@ -246,6 +271,11 @@ begin
   Fachwerk.vektorEA[7] := rEA.C0D0;
   Fachwerk.vektorEA[8] := rEA.C0D0;
   Fachwerk.vektorEA[9] := rEA.C0D0;
+end;
+
+procedure TRiggFS.SetProofRequired(const Value: Boolean);
+begin
+  FProbe := Value;
 end;
 
 procedure TRiggFS.UpdateRigg;

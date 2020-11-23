@@ -340,7 +340,24 @@ type
 
   TKoordLabels = array [TRiggPoint] of string;
 
+  TKurvenTyp = (KurveOhneController, KurveMitController);
+  TMastStatusSet = set of TMastStatus;
+
+  TMastGraphModel = class
+  public
+    FLineCountM: Integer;
+    LineData: TLineDataR100; { Durchbiegungswerte in mm }
+    GetriebeOK: Boolean;
+  end;
+
 const
+  { in KN / cm^2 }
+  EModulStahl = 210E3; { N/mm^2 }
+  EModulAlu = 70E3; { N/mm^2 }
+  EAgross = 100E6; { N }
+  EARumpf = 10E6; { N }
+  EASaling = 1E6; { N }
+
   ZeroCtrl: TTrimmControls = (
     Controller: 0;
     Winkel: 0;

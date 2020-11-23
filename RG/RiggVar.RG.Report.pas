@@ -244,37 +244,37 @@ begin
       rgAusgabeRL:
       begin
         RiggReport.ML.Clear;
-        RiggReport.AusgabeRL(Main.Rigg.rL);
+        RiggReport.AusgabeRL(Main.Rigg.RiggLengths);
         ML.Assign(RiggReport.ML);
       end;
       rgAusgabeRP:
       begin
         RiggReport.ML.Clear;
-        RiggReport.AusgabeRP(Main.Rigg.rP);
+        RiggReport.AusgabeRP(Main.Rigg.RiggPoints);
         ML.Assign(RiggReport.ML);
       end;
       rgAusgabeRLE:
       begin
         RiggReport.ML.Clear;
-        RiggReport.AusgabeRLE(Main.Rigg.rLE);
+        RiggReport.AusgabeRLE(Main.Rigg.RelaxedRiggLengths);
         ML.Assign(RiggReport.ML);
       end;
       rgAusgabeRPE:
       begin
         RiggReport.ML.Clear;
-        RiggReport.AusgabeRPE(Main.Rigg.rPE);
+        RiggReport.AusgabeRPE(Main.Rigg.RelaxedRiggPoints);
         ML.Assign(RiggReport.ML);
       end;
       rgAusgabeDiffL:
       begin
         RiggReport.ML.Clear;
-        RiggReport.AusgabeDiffL(Main.Rigg.rL, Main.Rigg.rLE);
+        RiggReport.AusgabeDiffL(Main.Rigg.RiggLengths, Main.Rigg.RelaxedRiggLengths);
         ML.Assign(RiggReport.ML);
       end;
       rgAusgabeDiffP:
       begin
         RiggReport.ML.Clear;
-        RiggReport.AusgabeDiffP(Main.Rigg.rP, Main.Rigg.rPE);
+        RiggReport.AusgabeDiffP(Main.Rigg.RiggPoints, Main.Rigg.RelaxedRiggPoints);
         ML.Assign(RiggReport.ML);
       end;
 {$ifdef MSWindows}

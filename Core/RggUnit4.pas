@@ -23,14 +23,16 @@ uses
   System.Classes,
   System.Math,
   System.Math.Vectors,
+  RggInter,
   RggStrings,
   RggTypes,
   RggUnit3,
   RggDoc,
+  RggScroll,
   RiggVar.RG.Data;
 
 type
-  TRigg = class(TRiggFS)
+  TRigg = class(TRiggFS, IRigg)
   private
     function GetRealTrimm(Index: TTrimmIndex): single;
   public
@@ -40,17 +42,29 @@ type
     procedure AusgabeText(ML: TStrings; WantAll: Boolean = True; WantForce: Boolean = False);
     procedure AusgabeKommentar(ML: TStrings);
 
+    procedure InitFactArray;
+    procedure UpdateFactArray(CurrentParam: TFederParam);
+    procedure ChangeRigg(CurrentParam: TFederParam; Value: single);
+    function GetPlotValue(CurrentParam: TFederParam; PlotID: Integer; x, y: single): single;
+    function GetPoint3D(Value: TRiggPoint): TPoint3D;
+    function GetRelaxedPoint3D(Value: TRiggPoint): TPoint3D;
+    function GetRiggDistance(Value: TRiggRod): single;
+    function GetStabKraft(Value: TRiggRod): single;
+
     procedure SaveToFederData(fd: TRggData);
     procedure LoadFromFederData(fd: TRggData);
     procedure WriteToDocFile(FileName: string);
     procedure LoadFromDocFile(FileName: string);
-    procedure Assign(Source: TPersistent); override;
+    procedure Assign(Source: TRigg);
     procedure GetDocument(Doc: TRggDocument);
     procedure SetDocument(Doc: TRggDocument);
     procedure SetDefaultDocument;
     procedure GetRealTrimmRecord(var RealTrimm: TRealTrimm);
+
+    procedure LoadTrimm(fd: TRggData);
+    procedure SaveTrimm(fd: TRggData);
+
     property RealTrimm[Index: TTrimmIndex]: single read GetRealTrimm;
-    property Trimm: TTrimm read FTrimm;
   end;
 
 implementation
@@ -148,7 +162,7 @@ begin
   end;
 end;
 
-procedure TRigg.Assign(Source: TPersistent);
+procedure TRigg.Assign(Source: TRigg);
 var
   Document: TRggDocument;
 begin
@@ -163,7 +177,6 @@ begin
     end;
     Exit;
   end;
-  inherited Assign(Source);
 end;
 
 procedure TRigg.GetDocument(Doc: TRggDocument);
@@ -281,6 +294,11 @@ begin
     { "Elastizität" }
     FlexWert := rP.C.Distance(rPe.C); { in mm }
   end;
+end;
+
+function TRigg.GetRelaxedPoint3D(Value: TRiggPoint): TPoint3D;
+begin
+  result := rPe.V[Value];
 end;
 
 function TRigg.GetRealTrimm(Index: TTrimmIndex): single;
@@ -596,6 +614,425 @@ begin
     ML.Add('Vorstagspannung zu groß.');
 
 //  ML.EndUpdate;
+end;
+
+procedure TRigg.InitFactArray;
+var
+  temp, tempH, tempA: single;
+  i: TFederParam;
+  sb: TRggSB;
+begin
+//  FactArray.Controller.Ist := Rigg.GSB.Controller.Ist;
+//  FactArray.Winkel.Ist := Rigg.GSB.Winkel.Ist;
+//  FactArray.Vorstag.Ist := Rigg.GSB.Vorstag.Ist;
+//  FactArray.Wante.Ist := Rigg.GSB.Wante.Ist;
+//  FactArray.Woben.Ist := Rigg.GSB.Woben.Ist;
+    tempH := RggFA.SalingH.Ist;
+//  FactArray.SalingH.Ist := tempH;
+    tempA := RggFA.SalingA.Ist;
+//  FactArray.SalingA.Ist := tempA;
+//  FactArray.SalingL.Ist := Rigg.GSB.SalingL.Ist;
+  GSB.SalingW.Ist := Round(RadToDeg(arctan2(tempH * 2, tempA)));
+
+  GSB.MastfallF0C.Ist := RealTrimm[tiMastfallF0C];
+  GSB.MastfallF0F.Ist := RealTrimm[tiMastfallF0F];
+  GSB.Biegung.Ist := RealTrimm[tiBiegungS];
+  GSB.D0X.Ist := rP.D0.X;
+
+  { allgemein setzen }
+  for i := fpController to fpD0X do
+  begin
+    sb := GSB.Find(i);
+    sb.SmallStep := 1;
+    sb.BigStep := 10;
+    temp := sb.Ist;
+    sb.Min := temp - 100;
+    sb.Max := temp + 100;
+  end;
+
+  { speziell überschreiben }
+  if WantLogoData then
+  begin
+    GSB.Controller.Min := 50;
+    GSB.Winkel.Min := 70;
+    GSB.Winkel.Max := 120;
+    // GSB.Woben.Min := 2000;
+    // GSB.Woben.Max := 2100;
+    GSB.SalingW.Min := 40;
+    GSB.SalingW.Max := 60;
+    // GSB.MastfallF0F.Max := 6400;
+    GSB.Biegung.Min := 0;
+    GSB.Biegung.Max := 120;
+  end
+  else
+  begin
+    GSB.Controller.Min := 50;
+
+    GSB.Wante.Min := 4020;
+    GSB.Wante.Max := 4220;
+
+    GSB.Vorstag.Min := 4200;
+    GSB.Vorstag.Max := 5000;
+
+    GSB.Winkel.Min := 80;
+    GSB.Winkel.Max := 115;
+
+    GSB.Woben.Min := 2000;
+    GSB.Woben.Max := 2100;
+
+    GSB.SalingH.Min := 170;
+    GSB.SalingH.Max := 1020;
+
+    GSB.SalingA.Min := 250;
+    GSB.SalingA.Max := 1550;
+
+    GSB.SalingL.Ist := 480;
+    GSB.SalingL.Min := 240;
+    GSB.SalingL.Max := 1200;
+
+    GSB.SalingW.Min := 15;
+    GSB.SalingW.Max := 87;
+
+    GSB.D0X.Min := 2600;
+    GSB.D0X.Ist := 2870;
+    GSB.D0X.Max := 3300;
+
+    GSB.MastfallF0C.Min := 4000;
+    GSB.MastfallF0C.Ist := 4800;
+    GSB.MastfallF0C.Max := 5100;
+
+    GSB.MastfallF0F.Min := 5370;
+    GSB.MastfallF0F.Ist := 6070;
+    GSB.MastfallF0F.Max := 6570;
+
+    GSB.MastfallVorlauf.Min := 4950;
+    GSB.MastfallVorlauf.Ist := 5000;
+    GSB.MastfallVorlauf.Max := 5150;
+
+    GSB.Biegung.Min := 0;
+    GSB.Biegung.Max := 500;
+
+    GSB.ResetVolatile;
+  end;
+end;
+
+procedure TRigg.UpdateFactArray(CurrentParam: TFederParam);
+var
+  i: TFederParam;
+  sb: TRggSB;
+begin
+  for i := fpController to fpD0X do
+  begin
+    sb := GSB.Find(i);
+    case i of
+      fpController:
+        sb.Ist := RealGlied[fpController];
+      fpWinkel:
+        sb.Ist := RadToDeg(RealGlied[fpWinkel]);
+      fpVorstag:
+        sb.Ist := RealGlied[fpVorstag];
+      fpWante:
+        sb.Ist := RealGlied[fpWante];
+      fpWoben:
+        sb.Ist := RealGlied[fpWoben];
+      fpSalingH:
+        sb.Ist := RealGlied[fpSalingH];
+      fpSalingA:
+        sb.Ist := RealGlied[fpSalingA];
+      fpSalingL:
+        sb.Ist := RealGlied[fpSalingL];
+      fpSalingW:
+        sb.Ist := RadToDeg(arctan2(RealGlied[fpSalingH] * 2, RealGlied[fpSalingA]));
+      fpMastfallF0C:
+        sb.Ist := rP.F0.Distance(rP.C);
+      fpMastfallF0F:
+        sb.Ist := rP.F0.Distance(rP.F);
+      fpBiegung:
+        sb.Ist := DurchbiegungHD;
+      fpD0X:
+        sb.Ist := rP.D0.X;
+    end;
+  end;
+
+  if CurrentParam <> fpWinkel then
+  begin
+    sb := GSB.Find(fpWinkel);
+    sb.Ist := RadToDeg(RealGlied[fpWinkel]);
+  end;
+end;
+
+procedure TRigg.ChangeRigg(CurrentParam: TFederParam; Value: single);
+var
+  tempH, tempA, tempL, tempW: single;
+begin
+  case CurrentParam of
+    fpController: RealGlied[fpController] := Value;
+
+    fpWinkel: RealGlied[fpWinkel] := DegToRad(Value);
+
+    fpVorstag: RealGlied[fpVorstag] := Value;
+    fpWante: RealGlied[fpWante] := Value;
+    fpWoben: RealGlied[fpWoben] := Value;
+
+    fpSalingH:
+    begin
+      tempH := GSB.SalingH.Ist;
+      tempA := GSB.SalingA.Ist;
+      tempL := sqrt(sqr(tempA / 2) + sqr(tempH));
+      tempW := RadToDeg(arctan2(tempH * 2, tempA));
+
+      RealGlied[fpSalingH] := tempH;
+      RealGlied[fpSalingA] := tempA;
+      RealGlied[fpSalingL] := tempL;
+
+      // SalingH no change (just changed)
+      // SalingA no change (kept unchanged)
+      GSB.SalingL.Ist := tempL;
+      GSB.SalingW.Ist := tempW;
+    end;
+
+    fpSalingA:
+    begin
+      tempH := GSB.SalingH.Ist;
+      tempA := GSB.SalingA.Ist;
+      tempL := sqrt(sqr(tempA / 2) + sqr(tempH));
+      tempW := RadToDeg(arctan2(tempH * 2, tempA));
+
+      RealGlied[fpSalingH] := tempH;
+      RealGlied[fpSalingA] := tempA;
+      RealGlied[fpSalingL] := tempL;
+
+      // SalingH no change (kept unchanged)
+      // SalingA no change (just changed)
+      GSB.SalingL.Ist := tempL;
+      GSB.SalingW.Ist := tempW;
+    end;
+
+    fpSalingL:
+    begin
+      tempW := GSB.SalingW.Ist;
+      tempL := GSB.SalingL.Ist;
+      tempH := tempL * sin(DegToRad(tempW));
+      tempA := 2 * tempL * cos(DegToRad(tempW));
+
+      RealGlied[fpSalingH] := tempH;
+      RealGlied[fpSalingA] := tempA;
+      RealGlied[fpSalingL] := tempL;
+
+      GSB.SalingH.Ist := tempH;
+      GSB.SalingA.Ist := tempA;
+      // SalingL no change (just changed)
+      // SalingW no change (kept unchanged)
+    end;
+
+    fpSalingW:
+    begin
+      tempW := GSB.SalingW.Ist;
+      tempL := GSB.SalingL.Ist;
+      tempH := tempL * sin(DegToRad(tempW));
+      tempA := 2 * tempL * cos(DegToRad(tempW));
+
+      RealGlied[fpSalingH] := tempH;
+      RealGlied[fpSalingA] := tempA;
+      RealGlied[fpSalingL] := tempL;
+
+      GSB.SalingH.Ist := tempH;
+      GSB.SalingA.Ist := tempA;
+      // SalingL no change
+      // SalingW no change
+    end;
+
+    fpMastfallF0F:
+      NeigeF(Value - GSB.MastfallVorlauf.Ist);
+
+    fpMastfallF0C:
+      BiegeUndNeigeC(Value, GSB.Biegung.Ist);
+
+    fpMastfallVorlauf:
+      MastfallVorlauf := Value;
+
+    fpBiegung:
+      BiegeUndNeigeC(GSB.MastfallF0C.Ist, Value);
+
+    fpD0X:
+      rP.D0.X := Round(Value);
+  end;
+end;
+
+function TRigg.GetPlotValue(CurrentParam: TFederParam; PlotID: Integer; x, y: single): single;
+var
+  tx, ty: single;
+begin
+  case PlotID of
+    1..12:
+    begin
+      tx := GSB.Vorstag.Ist;
+      ty := GSB.SalingL.Ist;
+      RealGlied[fpVorstag] := tx + x;
+      RealGlied[fpSalingA] := ty + y / 10;
+      UpdateGetriebe;
+      if GetriebeOK then
+      begin
+        result := rP.F0.Distance(rP.F);
+        UpdateFactArray(CurrentParam);
+      end
+      else
+        result := 0;
+    end;
+    else
+      result := 0;
+  end;
+end;
+
+function TRigg.GetPoint3D(Value: TRiggPoint): TPoint3D;
+begin
+  result := rP.V[Value];
+end;
+
+function TRigg.GetRiggDistance(Value: TRiggRod): single;
+begin
+  result := rL.Rod[Value];
+end;
+
+function TRigg.GetStabKraft(Value: TRiggRod): single;
+begin
+  result := rF.Rod[Value];
+end;
+
+procedure TRigg.LoadTrimm(fd: TRggData);
+var
+  temp, tempH, tempA: single;
+  i: TFederParam;
+  sb: TRggSB;
+begin
+  SetDefaultDocument;
+  LoadFromFederData(fd);
+
+//  FactArray.Controller.Ist := Rigg.GSB.Controller.Ist;
+//  FactArray.Winkel.Ist := Rigg.GSB.Winkel.Ist;
+//  FactArray.Vorstag.Ist := Rigg.GSB.Vorstag.Ist;
+//  FactArray.Wante.Ist := Rigg.GSB.Wante.Ist;
+//  FactArray.Woben.Ist := Rigg.GSB.Woben.Ist;
+  tempH := RggFA.SalingH.Ist;
+//  FactArray.SalingH.Ist := tempH;
+  tempA := RggFA.SalingA.Ist;
+//  FactArray.SalingA.Ist := tempA;
+//  FactArray.SalingL.Ist := Rigg.GSB.SalingL.Ist;
+  GSB.SalingW.Ist := Round(RadToDeg(arctan2(tempH * 2, tempA)));
+
+  GSB.MastfallF0C.Ist := RealTrimm[tiMastfallF0C];
+  GSB.MastfallF0F.Ist := RealTrimm[tiMastfallF0F];
+  GSB.Biegung.Ist := RealTrimm[tiBiegungS];
+  GSB.D0X.Ist := rP.D0.X;
+
+  fd.F0C := Round(GSB.MastfallF0C.Ist);
+  fd.F0F := Round(GSB.MastfallF0F.Ist);
+  fd.Bie := Round(GSB.Biegung.Ist);
+
+  { allgemein setzen }
+  for i := fpController to fpD0X do
+  begin
+    sb := GSB.Find(i);
+    sb.SmallStep := 1;
+    sb.BigStep := 10;
+    temp := sb.Ist;
+    sb.Min := temp - 100;
+    sb.Max := temp + 100;
+  end;
+
+  GSB.Controller.Min := fd.CPMin;
+  GSB.Controller.Max := fd.CPMax;
+
+  GSB.Wante.Min := fd.WLMin;
+  GSB.Wante.Max := fd.WLMax;
+
+  GSB.Vorstag.Min := fd.VOMin;
+  GSB.Vorstag.Max := fd.VOMax;
+
+  GSB.Winkel.Min := fd.WIMin;
+  GSB.Winkel.Max := fd.WIMax;
+
+  GSB.Woben.Min := fd.WOMin;
+  GSB.Woben.Max := fd.WOMax;
+
+  GSB.SalingH.Min := fd.SHMin;
+  GSB.SalingH.Max := fd.SHMax;
+
+  GSB.SalingA.Min := fd.SAMin;
+  GSB.SalingA.Max := fd.SAMax;
+
+  GSB.SalingL.Min := fd.SLMin;
+  GSB.SalingL.Max := fd.SLMax;
+
+  GSB.SalingW.Min := fd.SWMin;
+  GSB.SalingW.Max := fd.SWMax;
+
+  GSB.D0X.Min := fd.D0X - 100;
+  GSB.D0X.Max := fd.D0X + 100;
+
+  GSB.MastfallVorlauf.Ist := fd.MV;
+  GSB.MastfallVorlauf.Min := fd.MV - 100;
+  GSB.MastfallVorlauf.Max := fd.MV + 100;
+
+//  tempA := Abstand(Rigg.rP[ooF0], Rigg.rP[ooC]);
+//  tempH := GSB.MastfallF0C.Ist;
+//  temp := tempA - tempH; // = 0
+  temp := GSB.MastfallF0C.Ist;
+  GSB.MastfallF0C.Min := temp - 700;
+  GSB.MastfallF0C.Max := temp + 500;
+
+//  tempA := Abstand(Rigg.rP[ooF0], Rigg.rP[ooF]);
+//  tempH := GSB.MastfallF0F.Ist;
+//  temp := tempA - tempH; // = 0
+  temp := GSB.MastfallF0F.Ist;
+  GSB.MastfallF0F.Min := temp - 700;
+  GSB.MastfallF0F.Max := temp + 500;
+
+  GSB.Biegung.Min := 0;
+  GSB.Biegung.Max := 500;
+
+  GSB.ResetVolatile;
+end;
+
+procedure TRigg.SaveTrimm(fd: TRggData);
+begin
+  SaveToFederData(fd);
+
+  fd.CPMin := Round(GSB.Controller.Min);
+  fd.CPPos := Round(GSB.Controller.Ist);
+  fd.CPMax := Round(GSB.Controller.Max);
+
+  fd.SHMin := Round(GSB.SalingH.Min);
+  fd.SHPos := Round(GSB.SalingH.Ist);
+  fd.SHMax := Round(GSB.SalingH.Max);
+
+  fd.SAMin := Round(GSB.SalingA.Min);
+  fd.SAPos := Round(GSB.SalingA.Ist);
+  fd.SaMax := Round(GSB.SalingA.Max);
+
+  fd.SLMin := Round(GSB.SalingL.Min);
+  fd.SLPos := Round(GSB.SalingL.Ist);
+  fd.SLMax := Round(GSB.SalingL.Max);
+
+  fd.SWMin := Round(GSB.SalingW.Min);
+  fd.SWPos := Round(GSB.SalingW.Ist);
+  fd.SWMax := Round(GSB.SalingW.Max);
+
+  fd.VOMin := Round(GSB.Vorstag.Min);
+  fd.VOPos := Round(GSB.Vorstag.Ist);
+  fd.VOMax := Round(GSB.Vorstag.Max);
+
+  fd.WIMin := Round(GSB.Winkel.Min);
+  fd.WIPos := Round(GSB.Winkel.Ist);
+  fd.WIMax := Round(GSB.Winkel.Max);
+
+  fd.WLMin := Round(GSB.Wante.Min);
+  fd.WLPos := Round(GSB.Wante.Ist);
+  fd.WLMax := Round(GSB.Wante.Max);
+
+  fd.WOMin := Round(GSB.Woben.Min);
+  fd.WOPos := Round(GSB.Woben.Ist);
+  fd.WOMax := Round(GSB.Woben.Max);
 end;
 
 end.

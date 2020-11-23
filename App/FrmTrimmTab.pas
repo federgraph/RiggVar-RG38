@@ -18,7 +18,7 @@ uses
   FMX.StdCtrls,
   FMX.ExtCtrls,
   FMX.Menus,
-  RggUnit4,
+  RggInter,
   RggTypes,
   RggTrimmTab,
   RggTrimmTabGraph,
@@ -101,8 +101,8 @@ type
     procedure InitTabOrder;
     procedure LayoutComponents;
   public
-    Rigg: TRigg;
-    procedure Init(ARigg: TRigg);
+    Rigg: IRigg;
+    procedure Init(ARigg: IRigg);
   end;
 
 var
@@ -135,7 +135,7 @@ begin
   FTrimmTabGraph.Free;
 end;
 
-procedure TFormTrimmTab.Init(ARigg: TRigg);
+procedure TFormTrimmTab.Init(ARigg: IRigg);
 begin
   Rigg := ARigg;
 
@@ -144,7 +144,7 @@ begin
   K1SpinBox.Enabled := False;
   W1SpinBox.Enabled := False;
 
-  FTrimmTabelle := Rigg.TrimmTab;
+  FTrimmTabelle := Rigg.TrimmTabelle;
   FTrimmTabDaten := FTrimmTabelle.TrimmTabDaten;
   CheckTabelle;
 

@@ -31,16 +31,6 @@ uses
   RggUnit1;
 
 type
-  TKurvenTyp = (KurveOhneController, KurveMitController);
-  TMastStatusSet = set of TMastStatus;
-
-  TMastGraphModel = class
-  public
-    FLineCountM: Integer;
-    LineData: TLineDataR100; { Durchbiegungswerte in mm }
-    GetriebeOK: Boolean;
-  end;
-
   TMast = class(TGetriebeFS)
   private
     l0: single; { in mm }
@@ -61,13 +51,25 @@ type
     procedure GetEpsilon;
     function GetKoppelFaktor: single;
     procedure SolveKG21(KM, KU1, KU2, KB: TPoint3D; var FU1, FU2, FB: single);
-
-    procedure SetEI(Value: Integer);
-    function GetEI: Integer;
-
   protected
     FEx, FEy, FDx, FDy, FD0x, FD0y, FCx, FCy: single;
     FE, FD, FAx, FAy, FALx, FALy, FLvon1, FLvon2, FALvon12: single;
+
+    function GetRiggLengths: TRiggRods;
+    function GetDurchbiegungHD: single;
+    function GetMastBeta: single;
+    function GetMastLC: single;
+
+    function GetCalcTyp: TCalcTyp;
+    procedure SetCalcTyp(const Value: TCalcTyp);
+
+    function GetKorrigiert: Boolean;
+    procedure SetKorrigiert(const Value: Boolean);
+    procedure SetEI(const Value: Integer);
+    function GetEI: Integer;
+    function GetControllerTyp: TControllerTyp;
+    procedure SetControllerTyp(const Value: TControllerTyp);
+    function GetMastLinie: TLineDataR100;
 
     procedure LoadFromIniFile(ini: TIniFile); override;
     procedure WriteToIniFile(ini: TIniFile); override;
@@ -116,7 +118,7 @@ type
     function FvonW(WSoll: single; Kurve: TKurvenTyp; Korrigiert: Boolean): single;
     procedure SchnittKraefte;
     procedure ResetMastStatus;
-    function MastStatusText: string;
+    function GetMastStatusText: string;
     procedure GetMastPositionE;
 
     procedure UpdateMastGraph(Model: TMastGraphModel);
@@ -126,11 +128,15 @@ type
     property LineCountM: Integer read FLineCountM write FLineCountM;
     property KoppelFaktor: single read FKoppelFaktor;
     property SalingAlpha: single read FSalingAlpha;
-    property Korrigiert: Boolean read FKorrigiert write FKorrigiert;
-    property MastOK: Boolean read FMastOK;
-    property ControllerTyp: TControllerTyp read FControllerTyp write FControllerTyp;
-    property CalcTyp: TCalcTyp read FCalcTyp write FCalcTyp;
-    property MastLinie: TLineDataR100 read LineData write LineData;
+    property Korrigiert: Boolean read GetKorrigiert write SetKorrigiert;
+    property ControllerTyp: TControllerTyp read GetControllerTyp write SetControllerTyp;
+    property CalcTyp: TCalcTyp read GetCalcTyp write SetCalcTyp;
+    property MastLinie: TLineDataR100 read GetMastLinie;
+    property MastStatusText: string read GetMastStatusText;
+    property DurchbiegungHD: single read GetDurchbiegungHD;
+    property MastBeta: single read GetMastBeta;
+    property MastLC: single read GetMastLC;
+    property RiggLengths: TRiggRods read GetRiggLengths;
   end;
 
 implementation
@@ -155,10 +161,25 @@ begin
   inherited Create;
 end;
 
-procedure TMast.SetEI(Value: Integer);
+procedure TMast.SetCalcTyp(const Value: TCalcTyp);
+begin
+  FCalcTyp := Value;
+end;
+
+procedure TMast.SetControllerTyp(const Value: TControllerTyp);
+begin
+  FControllerTyp := Value;
+end;
+
+procedure TMast.SetEI(const Value: Integer);
 begin
   { EI Werte intern in Nmm^2, extern in Nm^2 }
   EI := Value * 1E6;
+end;
+
+procedure TMast.SetKorrigiert(const Value: Boolean);
+begin
+  FKorrigiert := Value;
 end;
 
 function TMast.GetEI: Integer;
@@ -189,7 +210,7 @@ begin
   Exclude(FMastStatus, msControllerKraftzuGross);
 end;
 
-function TMast.MastStatusText: string;
+function TMast.GetMastStatusText: string;
 var
   s: string;
 begin
@@ -208,6 +229,11 @@ begin
       s := s + Status_String_MastControllerTooFar;
   end;
   result := s;
+end;
+
+function TMast.GetRiggLengths: TRiggRods;
+begin
+  result := rL;
 end;
 
 procedure TMast.WriteToIniFile(ini: TIniFile);
@@ -461,6 +487,16 @@ begin
   FSalingWeg := a01 * tempF1; { in mm }
 end;
 
+function TMast.GetCalcTyp: TCalcTyp;
+begin
+  result := FCalcTyp;
+end;
+
+function TMast.GetControllerTyp: TControllerTyp;
+begin
+  result := FControllerTyp;
+end;
+
 procedure TMast.GetControllerWeg;
 { aus CalcW2 abgeleitet. Ermittelt die Durchbiegung he, wenn hd vorgegeben ist
   und die Controllerkraft F1 Null ist. }
@@ -472,6 +508,11 @@ begin
   tempF2 := hd / alpha22;
   a02 := le * (lc - ld) * (lc * lc - le * le - Sqr(lc - ld)) / lc / EI / 6;
   FControllerWeg := a02 * tempF2; { in mm }
+end;
+
+function TMast.GetDurchbiegungHD: single;
+begin
+  result := hd;
 end;
 
 procedure TMast.GetSalingWegKnick;
@@ -696,6 +737,11 @@ begin
         result := FU1; { selbe Einheit wie FB }
     end;
   end;
+end;
+
+function TMast.GetKorrigiert: Boolean;
+begin
+  result := FKorrigiert;
 end;
 
 procedure TMast.SolveKG21(KM, KU1, KU2, KB: TPoint3D; var FU1, FU2, FB: single);
@@ -1015,6 +1061,21 @@ begin
   temp := k8 * sin(Gamma - Beta); { delta k3, siehe Zeichnung }
   k3 := k3 - temp;
   Beta := Beta + k8 * cos(Gamma - Beta) / k3 * 0.6; { 0.6 empirisch }
+end;
+
+function TMast.GetMastBeta: single;
+begin
+  result := Beta;
+end;
+
+function TMast.GetMastLC: single;
+begin
+  result := lc;
+end;
+
+function TMast.GetMastLinie: TLineDataR100;
+begin
+  result := LineData;
 end;
 
 procedure TMast.GetMastPositionE;
