@@ -404,7 +404,12 @@ faHullMesh = 298;
 faHullMeshOn = 299;
 faHullMeshOff = 300;
 
-faMax = 301;
+faTouchBarTop = 301;
+faTouchBarBottom = 302;
+faTouchBarLeft = 303;
+faTouchBarRight = 304;
+
+faMax = 305;
 
 ParamsRange = [
   faController .. faParamAPW,

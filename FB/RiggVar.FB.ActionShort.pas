@@ -394,6 +394,12 @@ begin
     faShowSpecialKeyInfo: result := 'ski';
     faShowDebugInfo: result := 'sdi';
     faShowZOrderInfo: result := 'zoi';
+
+    faTouchBarTop: result := 'tbT';
+    faTouchBarBottom: result := 'tbB';
+    faTouchBarLeft: result := 'tbL';
+    faTouchBarRight: result := 'tbR';
+
   end;
 end;
 

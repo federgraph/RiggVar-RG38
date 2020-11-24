@@ -393,6 +393,11 @@ begin
     faShowDebugInfo: result := 'Show Debug Info';
     faShowZOrderInfo: result := 'Show Z-Order';
 
+    faTouchBarTop: result := 'TouchBar Top: Rotation X';
+    faTouchBarBottom: result := 'TouchBar Bottom: Zoom';
+    faTouchBarLeft: result := 'TouchBar Left: Big Step';
+    faTouchBarRight: result := 'TouchBar Right: Small Step ';
+
   end;
 end;
 

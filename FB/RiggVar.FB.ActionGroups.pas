@@ -116,6 +116,7 @@ begin
   { TouchFrame Buttons }
   AddSpecial(ActionGroupBtnLegendTablet, 'BtnLegendTablet');
   AddSpecial(ActionGroupBtnLegendPhone, 'BtnLegendPhone');
+  AddSpecial(ActionGroupTouchBarLegend, 'TouchBarLegend');
 
   { SK }
   AddSpecial(ActionGroupCircles, 'Circles');

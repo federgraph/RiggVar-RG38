@@ -185,10 +185,10 @@ begin
   CornerBtnList.Add(CornerMenu.NewBtn(cp, 4, 0, cl, fa, 28));
 
   cl := MainVar.ColorScheme.claCornerScrollbar;
-  ST00 := CornerMenu.NewBtn(cpT, 0, 0, cl, faNoop);
-  SR00 := CornerMenu.NewBtn(cpR, 0, 0, cl, faNoop);
-  SB00 := CornerMenu.NewBtn(cpB, 0, 0, cl, faNoop);
-  SL00 := CornerMenu.NewBtn(cpL, 0, 0, cl, faNoop);
+  ST00 := CornerMenu.NewBtn(cpT, 0, 0, cl, faTouchBarTop);
+  SR00 := CornerMenu.NewBtn(cpR, 0, 0, cl, faTouchBarRight);
+  SB00 := CornerMenu.NewBtn(cpB, 0, 0, cl, faTouchBarBottom);
+  SL00 := CornerMenu.NewBtn(cpL, 0, 0, cl, faTouchBarLeft);
 
   ST00.Text.Align := TAlignLayout.Client;
   ST00.Text.HitTest := False;

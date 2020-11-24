@@ -402,6 +402,12 @@ faShowNormalKeyInfo: result := 'faShowNormalKeyInfo';
 faShowSpecialKeyInfo: result := 'faShowSpecialKeyInfo';
 faShowZOrderInfo: result := 'faShowZOrderInfo';
 faShowDebugInfo: result := 'faShowDebugInfo';
+
+faTouchBarTop: result := 'faTouchBarTop';
+faTouchBarBottom: result := 'faTouchBarBottom';
+faTouchBarLeft: result := 'faTouchBarLeft';
+faTouchBarRight: result := 'faTouchBarRight';
+
     else
       result := '??';
   end;

@@ -215,19 +215,14 @@ ActionGroupRggChart: TActionGroup = [
   faChartAP,
   faChartBP,
   faChartGroup,
-
   faParamCountPlus,
   faParamCountMinus,
-
   faPComboPlus,
   faPComboMinus,
-
   faXComboPlus,
   faXComboMinus,
-
   faYComboPlus,
   faYComboMinus,
-
   faChartReset];
 
 ActionGroupRggReport: TActionGroup = [
@@ -267,19 +262,15 @@ ActionGroupRggGraph: TActionGroup = [
   faToggleUseDisplayList,
   faToggleUseQuickSort,
   faToggleShowLegend,
-
   faRggBogen,
   faRggKoppel,
   faRggHull,
-
   faRggZoomIn,
   faRggZoomOut,
-
   faToggleSalingGraph,
   faToggleControllerGraph,
   faToggleChartGraph,
   faToggleKraftGraph,
-
   faToggleMatrixText];
 
 ActionGroupMemeFormat: TActionGroup = [
@@ -410,6 +401,12 @@ ActionGroupHullMesh: TActionGroup = [
   faHullMesh,
   faHullMeshOn,
   faHullMeshOff];
+
+ActionGroupTouchBarLegend: TActionGroup = [
+  faTouchBarTop,
+  faTouchBarBottom,
+  faTouchBarLeft,
+  faTouchBarRight];
 
 implementation
 
