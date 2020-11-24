@@ -40,19 +40,44 @@ type
   TRigg = class(TInterfacedObject, IRigg)
   private
     FSalingTyp: TSalingTyp;
+    FControllerTyp: TControllerTyp;
+    FCalcTyp: TCalcTyp;
+
     FManipulatorMode: Boolean;
-    function GetSalingDaten: TSalingDaten;
-    procedure GetLogoData;
-    procedure GetDefaultData;
-    function GetMastLength: single;
-    function GetMastOben: single;
-    function GetMastUnten: single;
-  protected
+
     FTrimm: TTrimm;
+
     FGetriebeOK: Boolean;
     FMastOK: Boolean;
+    FRiggOK: Boolean;
+
     FGetriebeStatus: set of TGetriebeStatus;
+    FRiggStatus: set of TRiggStatus;
+
     FrWanteZulang: single;
+
+    LogList: TStringList;
+
+    SKK: TSchnittKK;
+    SplitF: TSplitF;
+    TetraF: TTetraF;
+    Fachwerk: TFachwerk;
+
+    TrimmTab: TTrimmTab;
+
+    GSB: TRggFA; { Getriebe-Scroll-Bars }
+
+    rP: TRiggPoints; { Koordinaten belastet 3d in mm }
+    rPe: TRiggPoints; { Koordinaten entlastet 3d in mm }
+
+    rL: TRiggRods; { Längen belastet 3d in mm }
+    rLe: TRiggRods; { Längen entlastet 3d in mm }
+
+    rF: TRiggRods; { Stabkräfte 3d in N }
+    rEA: TRiggRods; { EA Werte 3d in KN }
+
+    LineData: TLineDataR100; { Durchbiegungswerte in mm }
+    MastKurve: TMastKurve;
 
     FrPuettingA: single;
     FrBasis: single;
@@ -84,6 +109,118 @@ type
     FrMastLength: single;
     FrMastfallVorlauf: single;
 
+    FrVorstagDiff: single;
+    FrSpannungW: single;
+
+    psiStart: single;
+    psiEnde: single;
+
+    l0: single; { in mm }
+
+    FLineCountM: Integer;
+    FMastStatus: TMastStatusSet;
+    FKorrigiert: Boolean;
+
+    FEx, FEy, FDx, FDy, FD0x, FD0y, FCx, FCy: single;
+    FE, FD, FAx, FAy, FALx, FALy, FLvon1, FLvon2, FALvon12: single;
+
+    ControllerFree: Boolean;
+    BiegungE: single; { in mm }
+    FMastPositionE: single;
+    hd, he, lc, ld, le: single; { in mm }
+    F1, F2, FA, FB, FC: single; { in N }
+    EI: single; { in Nmm^2 }
+
+    { gammaE bedeutet gammaEntlastet und wird in RggUnit3 verwendet, hier nicht }
+    Beta, Gamma, gammaE, delta1, delta2, alpha1, alpha2: single; { in rad }
+    eps1, eps2, epsA, epsB: single; { in rad }
+
+    FExcenter: single; { in mm, Erfahrungswert }
+    FKnicklaenge: single; { in mm }
+    FXpos: single; { in mm }
+    FSchnittPunktKraft, { in N }
+    FwSchnittOhne, { in N }
+    FwSchnittMit, { in N }
+    FwSchnittOffset: single; { in mm }
+    FControllerWeg: single; { in mm }
+    FSalingWeg: single; { in mm }
+    FSalingWegKnick: single; { in mm }
+    FKoppelFaktor: single; { dimensionslos }
+    FKorrekturFaktor: single; { dimensionlos }
+    FSalingAlpha: single; { in mm/N }
+    FControllerAlpha: single; { in mm/N }
+
+    FOnRegelGrafik: TNotifyEvent;
+    FProbe: Boolean;
+    FHullIsFlexible: Boolean;
+    WantToPlayWithExtendedSearchRange: Boolean;
+
+    KnotenLastD0: TPoint3D;
+    KnotenLastC: TPoint3D;
+    KnotenLastC0: TPoint3D;
+
+    UpdateGetriebeCounter: Integer;
+
+    ExitCounter1: Integer;
+    ExitCounter2: Integer;
+    ExitCounter3: Integer;
+    ExitCounter4: Integer;
+    ExitCounter5: Integer;
+    ExitCounter6: Integer;
+    ExitCounter7: Integer;
+
+    Temp1: single;
+    Temp2: single;
+    Temp3: single;
+    Temp4: single;
+
+    { Daten für RegelGrafik }
+    Anfang, Antrieb, Ende: single;
+    limitA, limitB, TrySalingH: single;
+    KurveF: TChartLine;
+
+    procedure Kraefte;
+    procedure Split;
+    procedure MakeRumpfKoord;
+    procedure MakeKoord;
+    procedure MakeKoordDS;
+    procedure KraefteOS;
+    procedure SplitOS;
+    procedure MakeKoordOS;
+    procedure Probe;
+    procedure Entlasten;
+
+    function GetProofRequired: Boolean;
+    procedure SetProofRequired(const Value: Boolean);
+
+    procedure GetDefaultChartData;
+    function GetRiggOK: Boolean;
+    function GetEA: TRiggRods;
+    procedure SetEA(const Value: TRiggRods);
+
+    procedure UpdateRigg;
+    function GetRiggStatusText: string;
+
+    function GetKorrigiert: Boolean;
+    procedure SetKorrigiert(const Value: Boolean);
+    procedure SetEI(const Value: Integer);
+    function GetEI: Integer;
+    function GetControllerTyp: TControllerTyp;
+    procedure SetControllerTyp(const Value: TControllerTyp);
+    function GetMastLinie: TLineDataR100;
+
+    procedure Abstaende;
+
+    procedure BerechneF;
+    procedure KorrekturF(tempH, k1, k2: single; var k3, Beta, Gamma: single);
+
+    function GetSalingDaten: TSalingDaten;
+    procedure GetLogoData;
+    procedure GetDefaultData;
+    function GetMastLength: single;
+    function GetMastOben: single;
+    function GetMastUnten: single;
+
     function GetMastOK: Boolean;
     function GetGetriebeOK: Boolean;
     function GetMastfallVorlauf: single;
@@ -108,81 +245,24 @@ type
     function GetSalingTyp: TSalingTyp;
     procedure SetSalingTyp(const Value: TSalingTyp);
 
-    procedure LoadFromIniFile(ini: TIniFile);
-    procedure WriteToIniFile(ini: TIniFile);
-  public
-    LogList: TStringList;
-    SKK: TSchnittKK;
-    TrimmTab: TTrimmTab;
-    GSB: TRggFA;
-    rP: TRiggPoints;
-
-    constructor Create;
-    destructor Destroy; override;
+    procedure CalcW1W2;
+    procedure CalcW1;
+    procedure CalcW2;
+    procedure CalcWante;
+    procedure Clear;
+    procedure FanIn;
+    procedure FanOut;
+    procedure GetEpsilon;
+    function GetKoppelFaktor: single;
+    procedure SolveKG21(KM, KU1, KU2, KB: TPoint3D; var FU1, FU2, FB: single);
+    function GetMastPostionE: single;
 
     procedure GetBuiltinData;
-    procedure Reset;
-    procedure UpdateGSB;
-    procedure UpdateGlieder;
 
     function GetGetriebeStatusText: string;
 
-    property SalingTyp: TSalingTyp read GetSalingTyp write SetSalingTyp;
-    property ManipulatorMode: Boolean read GetManipulatorMode write SetManipulatorMode;
-    property GetriebeOK: Boolean read GetGetriebeOK;
-
-    property MastOK: Boolean read GetMastOK;
-    property MastLength: single read GetMastLength write SetMastLength;
-    property MastUnten: single read GetMastUnten write SetMastUnten;
-    property MastOben: single read GetMastOben write SetMastOben;
-    property MastfallVorlauf: single read GetMastfallVorlauf write SetMastfallVorlauf;
-
-    property phi: single read FrPhi write FrPhi;
-    property psi: single read FrPsi write FrPsi;
-    property alpha: single read FrAlpha;
-    property epsilon: single read FrEpsilon write FrEpsilon;
-    property WantenSpannung: single read FWPowerOS write FWPowerOS;
-    property ControllerAnschlag: Integer read FiControllerAnschlag write FiControllerAnschlag;
-
-    property SalingDaten: TSalingDaten read GetSalingDaten;
-    property Glieder: TTrimmControls read GetGlieder write SetGlieder;
-    property RealGlied[Index: TsbName]: single read GetRealGlied write SetRealGlied;
-
-    property RggFA: TRggFA read GetRggFA;
-    property Trimm: TTrimm read FTrimm;
-
-//  TGetriebeFS = class(TGetriebe)
-  private
-    FrVorstagDiff: single;
-    FrSpannungW: single;
-  protected
-    psiStart: single;
-    psiEnde: single;
-  protected
-    procedure BerechneF;
-    procedure KorrekturF(tempH, k1, k2: single; var k3, Beta, Gamma: single);
-  public
-    UpdateGetriebeCounter: Integer;
-
-    ExitCounter1: Integer;
-    ExitCounter2: Integer;
-    ExitCounter3: Integer;
-    ExitCounter4: Integer;
-    ExitCounter5: Integer;
-    ExitCounter6: Integer;
-    ExitCounter7: Integer;
-
-    Temp1: single;
-    Temp2: single;
-    Temp3: single;
-    Temp4: single;
-
-    WantToPlayWithExtendedSearchRange: Boolean;
-
     function GetCounterValue(Idx: Integer): Integer;
     function GetTempValue(Idx: Integer): single;
-
-    procedure ResetExitCounters;
 
     procedure ResetStatus;
     procedure UpdateGetriebe;
@@ -194,6 +274,7 @@ type
     procedure BerechneWinkel;
     procedure BerechneM;
     function GetKoppelKurve: TKoordLine;
+    function GetMastKurve: TMastKurve;
     procedure BiegeUndNeigeF1(Mastfall, Biegung: single);
     procedure NeigeF(Mastfall: single);
     procedure BiegeUndNeigeC(MastfallC, Biegung: single);
@@ -204,74 +285,6 @@ type
     procedure GetWantenspannung;
     function WantenKraftvonVorstag(WegSoll: single): single;
     function GetVorstagNull: single;
-
-    property VorstagDiff: single read FrVorstagDiff;
-    property SpannungW: single read FrSpannungW;
-    property KoppelKurve: TKoordLine read GetKoppelKurve;
-
-//  TMast = class(TGetriebeFS)
-  private
-    l0: single; { in mm }
-
-    FLineCountM: Integer;
-    FControllerTyp: TControllerTyp;
-    FCalcTyp: TCalcTyp;
-    FMastStatus: TMastStatusSet;
-    FKorrigiert: Boolean;
-
-    procedure CalcW1W2;
-    procedure CalcW1;
-    procedure CalcW2;
-    procedure CalcWante;
-    procedure Clear;
-    procedure FanIn;
-    procedure FanOut;
-    procedure GetEpsilon;
-    function GetKoppelFaktor: single;
-    procedure SolveKG21(KM, KU1, KU2, KB: TPoint3D; var FU1, FU2, FB: single);
-  protected
-    FEx, FEy, FDx, FDy, FD0x, FD0y, FCx, FCy: single;
-    FE, FD, FAx, FAy, FALx, FALy, FLvon1, FLvon2, FALvon12: single;
-
-    function GetKorrigiert: Boolean;
-    procedure SetKorrigiert(const Value: Boolean);
-    procedure SetEI(const Value: Integer);
-    function GetEI: Integer;
-    function GetControllerTyp: TControllerTyp;
-    procedure SetControllerTyp(const Value: TControllerTyp);
-    function GetMastLinie: TLineDataR100;
-
-    procedure Abstaende;
-  public
-    LineData: TLineDataR100; { Durchbiegungswerte in mm }
-
-    ControllerFree: Boolean;
-    BiegungE: single; { in mm }
-    MastPositionE: single;
-    hd, he, lc, ld, le: single; { in mm }
-    F1, F2, FA, FB, FC: single; { in N }
-    EI: single; { in Nmm^2 }
-
-    { gammaE bedeutet gammaEntlastet und wird in RggUnit3 verwendet, hier nicht }
-    Beta, Gamma, gammaE, delta1, delta2, alpha1, alpha2: single; { in rad }
-    eps1, eps2, epsA, epsB: single; { in rad }
-
-    rL: TRiggRods; { Längen belastet 3d in mm }
-
-    FExcenter: single; { in mm, Erfahrungswert }
-    FKnicklaenge: single; { in mm }
-    FXpos: single; { in mm }
-    FSchnittPunktKraft, { in N }
-    FwSchnittOhne, { in N }
-    FwSchnittMit, { in N }
-    FwSchnittOffset: single; { in mm }
-    FControllerWeg: single; { in mm }
-    FSalingWeg: single; { in mm }
-    FSalingWegKnick: single; { in mm }
-    FKoppelFaktor: single; { dimensionslos }
-    FKorrekturFaktor: single; { dimensionlos }
-    FSalingAlpha: single; { in mm/N }
-    FControllerAlpha: single; { in mm/N }
 
     procedure CalcWKnick;
     procedure GetSalingWeg;
@@ -284,78 +297,12 @@ type
     function GetMastStatusText: string;
     procedure GetMastPositionE;
 
-    procedure UpdateMastGraph(Model: TMastGraphModel);
-
-    property MastEI: Integer read GetEI write SetEI;
-    property MastStatus: TMastStatusSet read FMastStatus;
-    property LineCountM: Integer read FLineCountM write FLineCountM;
-    property KoppelFaktor: single read FKoppelFaktor;
-    property SalingAlpha: single read FSalingAlpha;
-    property Korrigiert: Boolean read GetKorrigiert write SetKorrigiert;
-    property ControllerTyp: TControllerTyp read GetControllerTyp write SetControllerTyp;
-    property CalcTyp: TCalcTyp read GetCalcTyp write SetCalcTyp;
-    property MastLinie: TLineDataR100 read GetMastLinie;
-
-//  TRiggFS = class(TMast)
-  private
-    FOnRegelGrafik: TNotifyEvent;
-    FProbe: Boolean;
-    FRiggOK: Boolean;
-    FHullIsFlexible: Boolean;
-    KnotenLastD0, KnotenLastC, KnotenLastC0: TPoint3D;
-
-    procedure Kraefte;
-    procedure Split;
-    procedure MakeRumpfKoord;
-    procedure MakeKoord;
-    procedure MakeKoordDS;
-    procedure KraefteOS;
-    procedure SplitOS;
-    procedure MakeKoordOS;
-    procedure Probe;
-    procedure Entlasten;
-  private
-    function GetProofRequired: Boolean;
-    procedure SetProofRequired(const Value: Boolean);
-  protected
-    SplitF: TSplitF;
-    TetraF: TTetraF;
-    FRiggStatus: set of TRiggStatus;
-    procedure GetDefaultChartData;
-    function GetRiggOK: Boolean;
-    function GetEA: TRiggRods;
-    procedure SetEA(const Value: TRiggRods);
-  public
-    Fachwerk: TFachwerk;
-
-    rLe: TRiggRods; { Längen entlastet 3d in mm }
-    rF: TRiggRods; { Stabkräfte 3d in N }
-    rEA: TRiggRods; { EA Werte 3d in KN }
-    rPe: TRiggPoints; { Koordinaten entlastet 3d in mm }
-    iPe: TRiggPoints; { Integerkoordinaten entlastet 3d in mm }
-
-    { Daten für RegelGrafik }
-    Anfang, Antrieb, Ende: single;
-    limitA, limitB, TrySalingH: single;
-    KurveF: TChartLine;
-
-    procedure UpdateRigg;
-    function Regeln(TrimmSoll: TTrimm): Integer;
-    function GetRiggStatusText: string;
-
-    property OnRegelGrafik: TNotifyEvent read FOnRegelGrafik write FOnRegelGrafik;
-    property ProofRequired: Boolean read GetProofRequired write SetProofRequired;
-    property RiggOK: Boolean read GetRiggOK;
-    property HullFlexible: Boolean read FHullIsFlexible write FHullIsFlexible;
-    property EA: TRiggRods read GetEA write SetEA;
-
-//  TRigg = class(TRiggFS, IRigg)
-  private
     function GetRealTrimm(Index: TTrimmIndex): single;
     function GetMastLC: single;
     function GetMastBeta: single;
     function GetRiggPoints: TRiggPoints;
     function GetRelaxedRiggPoints: TRiggPoints;
+    function GetDurchbiegungHE: single;
     function GetDurchbiegungHD: single;
     function GetRelaxedRiggLengths: TRiggRods;
     function GetRiggLengths: TRiggRods;
@@ -363,40 +310,113 @@ type
     function GetStabKraefte: TRiggRods;
     procedure SetRiggPoints(const Value: TRiggPoints);
     function GetTrimmTabelle: TTrimmTab;
-  public
-{$ifdef MSWindows}
-    procedure WriteXml(ML: TStrings; AllTags: Boolean = False);
-{$endif}
+    function GetMastLE: single;
+
     procedure AusgabeText(ML: TStrings; WantAll: Boolean = True; WantForce: Boolean = False);
-    procedure AusgabeKommentar(ML: TStrings);
 
     procedure InitFactArray;
     procedure UpdateFactArray(CurrentParam: TFederParam);
     procedure ChangeRigg(CurrentParam: TFederParam; Value: single);
+
+    procedure SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
+  protected
+    procedure AusgabeKommentar(ML: TStrings);
+    procedure ResetExitCounters;
     function GetPlotValue(CurrentParam: TFederParam; PlotID: Integer; x, y: single): single;
+    procedure UpdateMastGraph(Model: TMastGraphModel);
+    function Regeln(TrimmSoll: TTrimm): Integer;
+    function FindBogenIndexOf(P: TPoint3D): Integer;
+    function GetMastKurvePoint(const Index: Integer): TPoint3D;
+  public
+    constructor Create;
+    destructor Destroy; override;
+
     function GetPoint3D(Value: TRiggPoint): TPoint3D;
     function GetRelaxedPoint3D(Value: TRiggPoint): TPoint3D;
     function GetRiggDistance(Value: TRiggRod): single;
     function GetStabKraft(Value: TRiggRod): single;
 
+    procedure Reset;
+    procedure UpdateGSB;
+    procedure UpdateGlieder;
+
+    procedure Assign(Source: TRigg);
+
+    procedure LoadFromIniFile(ini: TIniFile);
+    procedure WriteToIniFile(ini: TIniFile);
+
     procedure SaveToFederData(fd: TRggData);
     procedure LoadFromFederData(fd: TRggData);
+
     procedure WriteToDocFile(FileName: string);
     procedure LoadFromDocFile(FileName: string);
-    procedure Assign(Source: TRigg);
+
     procedure GetDocument(Doc: TRggDocument);
     procedure SetDocument(Doc: TRggDocument);
+
     procedure SetDefaultDocument;
     procedure GetRealTrimmRecord(var RealTrimm: TRealTrimm);
 
     procedure LoadTrimm(fd: TRggData);
     procedure SaveTrimm(fd: TRggData);
 
-    property RealTrimm[Index: TTrimmIndex]: single read GetRealTrimm;
+    procedure WriteXml(ML: TStrings; AllTags: Boolean = False);
 
+    property SalingTyp: TSalingTyp read GetSalingTyp write SetSalingTyp;
+    property ControllerTyp: TControllerTyp read GetControllerTyp write SetControllerTyp;
+    property CalcTyp: TCalcTyp read GetCalcTyp write SetCalcTyp;
+
+    property ManipulatorMode: Boolean read GetManipulatorMode write SetManipulatorMode;
+
+    property GetriebeOK: Boolean read GetGetriebeOK;
+    property MastOK: Boolean read GetMastOK;
+    property RiggOK: Boolean read GetRiggOK;
+
+    property GetriebeStatusText: string read GetGetriebeStatusText;
+    property MastStatusText: string read GetMastStatusText;
+    property RiggStatusText: string read GetRiggStatusText;
+
+    property MastLength: single read GetMastLength write SetMastLength;
+    property MastUnten: single read GetMastUnten write SetMastUnten;
+    property MastOben: single read GetMastOben write SetMastOben;
+    property MastfallVorlauf: single read GetMastfallVorlauf write SetMastfallVorlauf;
+    property DurchbiegungHE: single read GetDurchbiegungHE;
     property DurchbiegungHD: single read GetDurchbiegungHD;
+    property MastLE: single read GetMastLE;
     property MastLC: single read GetMastLC;
     property MastBeta: single read GetMastBeta;
+    property MastPositionE: single read GetMastPostionE;
+    property MastEI: Integer read GetEI write SetEI;
+    property MastStatus: TMastStatusSet read FMastStatus;
+
+    property ControllerAnschlag: Integer read FiControllerAnschlag write FiControllerAnschlag;
+
+    property WantenSpannung: single read FWPowerOS write FWPowerOS;
+
+    property LineCountM: Integer read FLineCountM write FLineCountM;
+    property Korrigiert: Boolean read GetKorrigiert write SetKorrigiert;
+    property ProofRequired: Boolean read GetProofRequired write SetProofRequired;
+
+    property KoppelFaktor: single read FKoppelFaktor;
+    property SpannungW: single read FrSpannungW;
+    property VorstagDiff: single read FrVorstagDiff;
+
+    property phi: single read FrPhi write FrPhi;
+    property psi: single read FrPsi write FrPsi;
+    property alpha: single read FrAlpha;
+    property epsilon: single read FrEpsilon write FrEpsilon;
+    property SalingAlpha: single read FSalingAlpha;
+
+    property RggFA: TRggFA read GetRggFA;
+    property Trimm: TTrimm read FTrimm;
+
+    property KoppelKurve: TKoordLine read GetKoppelKurve;
+    property MastLinie: TLineDataR100 read GetMastLinie;
+
+    property OnRegelGrafik: TNotifyEvent read FOnRegelGrafik write FOnRegelGrafik;
+    property HullFlexible: Boolean read FHullIsFlexible write FHullIsFlexible;
+
+    property RealTrimm[Index: TTrimmIndex]: single read GetRealTrimm;
 
     property RiggPoints: TRiggPoints read GetRiggPoints write SetRiggPoints;
     property RelaxedRiggPoints: TRiggPoints read GetRelaxedRiggPoints;
@@ -404,12 +424,13 @@ type
     property RiggLengths: TRiggRods read GetRiggLengths;
     property RelaxedRiggLengths: TRiggRods read GetRelaxedRiggLengths;
 
+    property EA: TRiggRods read GetEA write SetEA;
     property StabKraefte: TRiggRods read GetStabKraefte;
 
-    property GetriebeStatusText: string read GetGetriebeStatusText;
-    property MastStatusText: string read GetMastStatusText;
-    property RiggStatusText: string read GetRiggStatusText;
+    property Glieder: TTrimmControls read GetGlieder write SetGlieder;
+    property RealGlied[Index: TsbName]: single read GetRealGlied write SetRealGlied;
 
+    property SalingDaten: TSalingDaten read GetSalingDaten;
     property TrimmtabDaten: TTrimmTabDaten read GetTrimmTabDaten;
     property TrimmTabelle: TTrimmTab read GetTrimmTabelle;
   end;
@@ -3069,12 +3090,17 @@ procedure TRigg.GetMastPositionE;
 var
   PositionEStrich: single;
 begin
-  MastPositionE := rP.E.X - rP.D0.X;
+  FMastPositionE := rP.E.X - rP.D0.X;
   if not ControllerFree then
     Exit;
   PositionEStrich := -le * sin(Beta) + BiegungE * cos(Beta);
   PositionEStrich := PositionEStrich + BiegungE * tan(alpha1) * sin(Beta);
-  MastPositionE := PositionEStrich;
+  FMastPositionE := PositionEStrich;
+end;
+
+function TRigg.GetMastPostionE: single;
+begin
+  result := FMastPositionE;
 end;
 
 procedure TRigg.UpdateMastGraph(Model: TMastGraphModel);
@@ -4138,34 +4164,6 @@ begin
     KurveF[i] := i * (2000 div CLMax);
 end;
 
-{ TRigg }
-
-{
-  procedure TRiggModel.WriteToIniFile(FileName: String);
-  var
-  IniFile: TIniFile;
-  begin
-    IniFile := TIniFile.Create(FileName);
-    try
-      inherited WriteToIniFile(IniFile);
-    finally
-      IniFile.Free;
-    end;
-  end;
-
-  procedure TRiggModel.LoadFromIniFile(FileName: String);
-  var
-    IniFile: TIniFile;
-  begin
-    IniFile := TIniFile.Create(FileName);
-    try
-      inherited LoadFromIniFile(IniFile);
-    finally
-      IniFile.Free;
-    end;
-  end;
-}
-
 {$ifdef MSWindows}
 procedure TRigg.WriteXml(ML: TStrings; AllTags: Boolean);
 var
@@ -4180,6 +4178,10 @@ begin
   finally
     Document.Free;
   end;
+end;
+{$else}
+procedure TRigg.WriteXml(ML: TStrings; AllTags: Boolean);
+begin
 end;
 {$endif}
 
@@ -4278,6 +4280,11 @@ begin
   result := hd;
 end;
 
+function TRigg.GetDurchbiegungHE: single;
+begin
+  result := BiegungE;
+end;
+
 function TRigg.GetMastBeta: single;
 begin
   result := Beta;
@@ -4286,6 +4293,11 @@ end;
 function TRigg.GetMastLC: single;
 begin
   result := lc;
+end;
+
+function TRigg.GetMastLE: single;
+begin
+  result := le;
 end;
 
 function TRigg.GetMastLength: single;
@@ -5143,6 +5155,63 @@ begin
   fd.WOMin := Round(GSB.Woben.Min);
   fd.WOPos := Round(GSB.Woben.Ist);
   fd.WOMax := Round(GSB.Woben.Max);
+end;
+
+procedure TRigg.SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
+var
+  temp1, temp2, temp3, temp4, tempL: single;
+  j, k: Integer;
+begin
+  temp1 := cos(pi / 2 - Beta);
+  temp2 := cos(beta);
+  temp3 := sin(pi / 2 - Beta);
+  temp4 := sin(beta);
+  for j := 0 to BogenMax do
+  begin
+    k := Round(100 / BogenMax * j);
+    tempL := j * L / BogenMax;
+    MastKurve[j].X := rP.D0.X - tempL * temp1 + Value[k] * temp2;
+    MastKurve[j].Y := 0;
+    MastKurve[j].Z := rP.D0.Z + tempL * temp3 + Value[k] * temp4;
+  end;
+end;
+
+function TRigg.GetMastKurve: TMastKurve;
+begin
+  SetMastLineData(MastLinie, MastLC, MastBeta);
+  result := MastKurve;
+end;
+
+function TRigg.GetMastKurvePoint(const Index: Integer): TPoint3D;
+begin
+  if (Index >= 0) and (Index < Length(MastKurve)) then
+    result := MastKurve[Index]
+  else
+  begin
+    result := TPoint3D.Zero;
+  end;
+end;
+
+function TRigg.FindBogenIndexOf(P: TPoint3D): Integer;
+var
+  i, j: Integer;
+  MinIndex: Integer;
+  MinAbstand: single;
+  a: single;
+begin
+  j := Length(MastKurve);
+  MinIndex := j div 2;
+  MinAbstand := 1000;
+  for i := 0 to j - 1 do
+  begin
+    a := (P - MastKurve[i]).Length;
+    if a < MinAbstand then
+    begin
+      MinAbstand := a;
+      MinIndex := i;
+    end;
+  end;
+  result := MinIndex;
 end;
 
 end.

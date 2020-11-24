@@ -50,13 +50,20 @@ type
     FBackgroundColor: TAlphaColor;
 
     FKoordinaten: TRiggPoints;
+
     FKoppelKurve: TKoordLine;
+
+    FMastKurve: TMastKurve;
+
     FMastLinie: TLineDataR100;
     FMastLinieL: single;
     FMastLinieB: single;
 
+    UseMastKurve: Boolean;
+
     procedure UpdateRiggKoords;
     procedure UpdateKoppelKurve;
+    procedure UpdateMastKurve;
     procedure UpdateMastLinie;
     procedure MoveToFX;
     procedure Rota3D;
@@ -161,9 +168,6 @@ type
   end;
 
 implementation
-
-uses
-  RiggVar.App.Main;
 
 { TRotaForm2 }
 
@@ -293,7 +297,7 @@ end;
 
 procedure TRotaForm2.SetMastKurve(const Value: TMastKurve);
 begin
-  { currently not called from RiggVar.RGMain }
+  FMastKurve := Value;
 end;
 
 procedure TRotaForm2.SetMastLineData(const Value: TLineDataR100; L, Beta: single);
@@ -363,6 +367,8 @@ end;
 
 constructor TRotaForm2.Create;
 begin
+  UseMastKurve := True;
+
   RD := TRggDrawingD00.Create;
   DL := TRggDrawings.Create;
   DL.UseDarkColorScheme := True;
@@ -596,6 +602,22 @@ begin
     RD.KK.Transform;
 end;
 
+procedure TRotaForm2.UpdateMastKurve;
+var
+  i: Integer;
+  p: TPoint3D;
+begin
+  p := RD.rP_FX;
+  for i := 0 to BogenMax do
+  begin
+    RD.MK.RggPoly[i].X := RD.OffsetX + (FMastKurve[i].X - p.X) * RD.InitialZoom;
+    RD.MK.RggPoly[i].Y := RD.OffsetY - (FMastKurve[i].Z - p.Z) * RD.InitialZoom;
+    RD.MK.RggPoly[i].Z := p.Y * RD.InitialZoom;
+  end;
+  if not RD.ViewpointFlag then
+    RD.MK.Transform;
+end;
+
 procedure TRotaForm2.UpdateMastLinie;
 var
   temp1, temp2, temp3, temp4, tempL: single;
@@ -633,7 +655,11 @@ begin
 
   UpdateRiggKoords;
   UpdateKoppelKurve;
-  UpdateMastLinie;
+
+  if UseMastKurve then
+    UpdateMastKurve
+  else
+    UpdateMastLinie;
 
   RD.ViewpointFlag := False;
 end;
