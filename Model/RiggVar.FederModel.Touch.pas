@@ -206,6 +206,11 @@ begin
   SR00.Text.HitTest := False;
   SR00.Text.Font.Size := MainConst.DefaultBtnFontSize;
 
+  ST00.Text.Text := '';
+  SB00.Text.Text := '';
+  SL00.Text.Text := '';
+  SR00.Text.Text := '';
+
   FCornerBtnOpacity := PageBtnM.Opacity;
 
   ResetCornerMenu;

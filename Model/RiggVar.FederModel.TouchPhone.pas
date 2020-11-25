@@ -168,10 +168,10 @@ begin
   CornerBtnList.Add(CornerMenu.NewBtn(cp, 3, 0, cl, fa, 4));
 
   cl := MainVar.ColorScheme.claCornerScrollbar;
-  ST00 := CornerMenu.NewBtn(cpT, 0, 0, cl, fa);
-  SR00 := CornerMenu.NewBtn(cpR, 0, 0, cl, fa);
-  SB00 := CornerMenu.NewBtn(cpB, 0, 0, cl, fa);
-  SL00 := CornerMenu.NewBtn(cpL, 0, 0, cl, fa);
+  ST00 := CornerMenu.NewBtn(cpT, 0, 0, cl, faTouchBarTop);
+  SR00 := CornerMenu.NewBtn(cpR, 0, 0, cl, faTouchBarRight);
+  SB00 := CornerMenu.NewBtn(cpB, 0, 0, cl, faTouchBarBottom);
+  SL00 := CornerMenu.NewBtn(cpL, 0, 0, cl, faTouchBarLeft);
 
   ST00.Text.Align := TAlignLayout.Client;
   ST00.Text.HitTest := false;
@@ -188,6 +188,11 @@ begin
   SR00.Text.Align := TAlignLayout.Client;
   SR00.Text.HitTest := false;
   SR00.Text.Font.Size := MainConst.DefaultBtnFontSize;
+
+  ST00.Text.Text := '';
+  SB00.Text.Text := '';
+  SL00.Text.Text := '';
+  SR00.Text.Text := '';
 
   InitActions(1);
 end;

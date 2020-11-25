@@ -97,6 +97,7 @@ type
     procedure InitDebugInfo;
     procedure InitZOrderInfo;
     procedure ShowHelpText(fa: Integer);
+    function GetCanShowMemo: Boolean;
   protected
     HL: TStringList;
     RL: TStrings;
@@ -242,6 +243,7 @@ type
     procedure SetViewPoint(const Value: TViewPoint);
     property ViewPoint: TViewPoint read FViewPoint write SetViewPoint;
     property IsUp: Boolean read GetIsUp write SetIsUp;
+    property CanShowMemo: Boolean read GetCanShowMemo;
   public
     BitmapWidth: Integer;
     BitmapHeight: Integer;
@@ -313,7 +315,7 @@ uses
   RiggVar.FB.Classes;
 
 const
-  HelpCaptionText = 'press ? for help';
+  HelpCaptionText = 'RG38 - press ? for help';
   ApplicationTitleText = 'RG38';
 
 { TFormMain }
@@ -742,15 +744,17 @@ begin
 {$endif}
     Inc(Main.ResizeCounter);
     Main.UpdateTouch;
+    UpdateFederText;
   end;
 
   if FormShown then
   begin
-    SpeedPanel.UpdateLayout;
-    UpdateReport;
     CheckSpaceForMemo;
     CheckSpaceForImages;
     CenterRotaForm;
+
+    UpdateReport;
+    SpeedPanel.UpdateLayout;
   end;
 end;
 
@@ -768,12 +772,15 @@ begin
   if not ComponentsCreated then
     Exit;
 
-  if (ClientWidth < 900) or (ClientHeight < 700) then
+  if not CanShowMemo then
   begin
     if RotaForm.LegendItemChecked then
     begin
       RotaForm.LegendBtnClick(nil);
     end;
+
+    SpeedPanel.Visible := False;
+
     TrimmText.Visible := False;
     ParamListbox.Visible := False;
     if ReportListbox <> nil then
@@ -784,6 +791,8 @@ begin
   end
   else
   begin
+    SpeedPanel.Visible := True;
+
     TrimmText.Visible := True;
     ParamListbox.Visible := True;
     ReportListbox.Visible := True;
@@ -1464,7 +1473,9 @@ begin
         SpeedPanel := SpeedPanel01;
     end;
 
+  SpeedPanel.Width := ClientWidth - 3 * Raster - Margin;
   SpeedPanel.Visible := True;
+  SpeedPanel.UpdateLayout;;
   SpeedPanel.UpdateSpeedButtonEnabled;
   SpeedPanel.UpdateSpeedButtonDown;
   SpeedPanel.DarkMode := MainVar.ColorScheme.IsDark;
@@ -1528,6 +1539,8 @@ begin
 
   TextPositionX := ReportText.Position.X;
   TextPositionY := ReportText.Position.Y;
+
+  SpeedPanel.Width := ClientWidth - 3 * Raster - Margin;
 end;
 
 procedure TFormMain.LineColorBtnClick(Sender: TObject);
@@ -1993,7 +2006,7 @@ begin
   end
   else
   begin
-    { Tested on Microsoft Surface Tablet with FScale = 2.0 }
+    { Tested on Microsoft Surface Tablet }
     Left := 20;
     Top := 30;
     Width := 1336;
@@ -2338,21 +2351,30 @@ end;
 procedure TFormMain.ToggleSpeedPanelFontSize;
 begin
   SpeedPanel.ToggleBigMode;
-  FormMain.LayoutComponents;
-  FormMain.CheckSpaceForMemo;
-  FormMain.CheckSpaceForImages;
+  LayoutComponents;
+  CheckSpaceForMemo;
+  CheckSpaceForImages;
 end;
 
 procedure TFormMain.ToggleAllText;
 var
   b: Boolean;
 begin
+  if not Main.FederText.Visible then
+    Exit;
+
+  if Main.FederText = Main.FederText2 then
+    Exit;
+
+  if not CanShowMemo then
+    Exit;
+
   b := not ParamListbox.Visible;
 
   SpeedPanel.Visible := b;
+  TrimmText.Visible := b;
   ParamListbox.Visible := b;
   ReportListbox.Visible := b;
-  TrimmText.Visible := b;
 
   if not b then
   begin
@@ -2363,6 +2385,20 @@ begin
   begin
     ReportText.Visible := True;
   end;
+end;
+
+function TFormMain.GetCanShowMemo: Boolean;
+begin
+  result := True;
+
+  if (ClientWidth < 900 * FScale) then
+    result := False;
+
+  if (ClientHeight < 700 * FScale) then
+    result := False;
+
+  if Main.IsPhone then
+    result := False;
 end;
 
 procedure TFormMain.InitWantOnResize;

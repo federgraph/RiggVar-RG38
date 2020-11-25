@@ -265,7 +265,7 @@ begin
     faMemoryRecallBtn: result := 'Memory Recall Btn';
 
     faKorrigiertItem: result := 'Korrigiert Item';
-    faSofortBtn: result := 'Sofort Btn';
+    faSofortBtn: result := 'Sofort Berechnen Btn';
     faGrauBtn: result := 'Grau Btn';
     faBlauBtn: result := 'Blau Btn';
     faMultiBtn: result := 'Multi Btn';
@@ -393,7 +393,7 @@ begin
     faShowDebugInfo: result := 'Show Debug Info';
     faShowZOrderInfo: result := 'Show Z-Order';
 
-    faTouchBarTop: result := 'TouchBar Top: Rotation X';
+    faTouchBarTop: result := 'TouchBar Top: Rotation Z';
     faTouchBarBottom: result := 'TouchBar Bottom: Zoom';
     faTouchBarLeft: result := 'TouchBar Left: Big Step';
     faTouchBarRight: result := 'TouchBar Right: Small Step ';
