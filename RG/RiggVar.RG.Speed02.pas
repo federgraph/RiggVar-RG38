@@ -76,6 +76,16 @@ var
   fa: Integer;
 begin
   fa := (Sender as TComponent).Tag;
+
+  Main.ActionHandler.Execute(fa);
+
+  case fa of
+    faToggleUseDisplayList,
+    faMultiBtn: UpdateSpeedButtonEnabled;
+  end;
+
+  Exit;
+
   case fa of
     faToggleUseDisplayList:
     begin

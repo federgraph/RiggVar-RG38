@@ -354,9 +354,9 @@ begin
     faParamEAR: result := 'Param EA Rigg';
     faParamEI: result := 'Param EI Mast';
 
-    faRotaForm1: result := 'use RotaForm 1';
-    faRotaForm2: result := 'use RotaForm 2';
-    faRotaForm3: result := 'use RotaForm 3';
+    faRotaForm1: result := 'Use RotaForm 1';
+    faRotaForm2: result := 'Use RotaForm 2';
+    faRotaForm3: result := 'Use RotaForm 3';
 
     faReset: result := 'Reset';
     faResetPosition: result := 'Reset Position';

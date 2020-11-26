@@ -57,6 +57,11 @@ var
   fa: Integer;
 begin
   fa := (Sender as TComponent).Tag;
+
+  Main.ActionHandler.Execute(fa);
+
+  Exit;
+
   case fa of
     faMemoryBtn: FormMain.MemoryBtnClick(Sender);
     faMemoryRecallBtn: FormMain.MemoryRecallBtnClick(Sender);

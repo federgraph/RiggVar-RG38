@@ -57,8 +57,10 @@ type
 
     function GetRiggLengths: TRiggRods;
     function GetDurchbiegungHD: single;
+    function GetDurchbiegungHE: single;
     function GetMastBeta: single;
     function GetMastLC: single;
+    function GetMastLE: single;
 
     function GetCalcTyp: TCalcTyp;
     procedure SetCalcTyp(const Value: TCalcTyp);
@@ -82,7 +84,7 @@ type
 
     ControllerFree: Boolean;
     BiegungE: single; { in mm }
-    MastPositionE: single;
+    FMastPositionE: single;
     hd, he, lc, ld, le: single; { in mm }
     F1, F2, FA, FB, FC: single; { in N }
     EI: single; { in Nmm^2 }
@@ -119,7 +121,8 @@ type
     procedure SchnittKraefte;
     procedure ResetMastStatus;
     function GetMastStatusText: string;
-    procedure GetMastPositionE;
+    procedure UpdateMastPositionE;
+    function GetMastPositionE: single;
 
     procedure UpdateMastGraph(Model: TMastGraphModel);
 
@@ -133,9 +136,12 @@ type
     property CalcTyp: TCalcTyp read GetCalcTyp write SetCalcTyp;
     property MastLinie: TLineDataR100 read GetMastLinie;
     property MastStatusText: string read GetMastStatusText;
+    property DurchbiegungHE: single read GetDurchbiegungHE;
     property DurchbiegungHD: single read GetDurchbiegungHD;
     property MastBeta: single read GetMastBeta;
     property MastLC: single read GetMastLC;
+    property MastLE: single read GetMastLE;
+    property MastPositionE: single read GetMastPositionE;
     property RiggLengths: TRiggRods read GetRiggLengths;
   end;
 
@@ -513,6 +519,11 @@ end;
 function TMast.GetDurchbiegungHD: single;
 begin
   result := hd;
+end;
+
+function TMast.GetDurchbiegungHE: single;
+begin
+  result := BiegungE;
 end;
 
 procedure TMast.GetSalingWegKnick;
@@ -932,7 +943,7 @@ begin
     end;
   end;
 
-  GetMastPositionE;
+  UpdateMastPositionE;
 
   { Kraftkomponenten bereitstellen }
   case SalingTyp of
@@ -1073,21 +1084,32 @@ begin
   result := lc;
 end;
 
+function TMast.GetMastLE: single;
+begin
+  result := le;
+end;
+
 function TMast.GetMastLinie: TLineDataR100;
 begin
   result := LineData;
 end;
 
-procedure TMast.GetMastPositionE;
+procedure TMast.UpdateMastPositionE;
 var
   PositionEStrich: single;
 begin
-  MastPositionE := rP.E.X - rP.D0.X;
+  FMastPositionE := rP.E.X - rP.D0.X;
+
   if not ControllerFree then
     Exit;
   PositionEStrich := -le * sin(Beta) + BiegungE * cos(Beta);
   PositionEStrich := PositionEStrich + BiegungE * tan(alpha1) * sin(Beta);
-  MastPositionE := PositionEStrich;
+  FMastPositionE := PositionEStrich;
+end;
+
+function TMast.GetMastPositionE: single;
+begin
+  result := FMastPositionE;
 end;
 
 procedure TMast.UpdateMastGraph(Model: TMastGraphModel);

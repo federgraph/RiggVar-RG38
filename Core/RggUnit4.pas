@@ -33,9 +33,14 @@ uses
 
 type
   TRigg = class(TRiggFS, IRigg)
-  private
-    function GetRealTrimm(Index: TTrimmIndex): single;
   public
+    MastKurve: TMastKurve;
+    function GetRealTrimm(Index: TTrimmIndex): single;
+    function FindBogenIndexOf(P: TPoint3D): Integer;
+    function GetMastKurve: TMastKurve;
+    function GetMastKurvePoint(const Index: Integer): TPoint3D;
+    procedure SetMastLineData(const Value: TLineDataR100; L, Beta: single);
+
 {$ifdef MSWindows}
     procedure WriteXml(ML: TStrings; AllTags: Boolean = False);
 {$endif}
@@ -1033,6 +1038,63 @@ begin
   fd.WOMin := Round(GSB.Woben.Min);
   fd.WOPos := Round(GSB.Woben.Ist);
   fd.WOMax := Round(GSB.Woben.Max);
+end;
+
+procedure TRigg.SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
+var
+  temp1, temp2, temp3, temp4, tempL: single;
+  j, k: Integer;
+begin
+  temp1 := cos(pi / 2 - Beta);
+  temp2 := cos(beta);
+  temp3 := sin(pi / 2 - Beta);
+  temp4 := sin(beta);
+  for j := 0 to BogenMax do
+  begin
+    k := Round(100 / BogenMax * j);
+    tempL := j * L / BogenMax;
+    MastKurve[j].X := rP.D0.X - tempL * temp1 + Value[k] * temp2;
+    MastKurve[j].Y := 0;
+    MastKurve[j].Z := rP.D0.Z + tempL * temp3 + Value[k] * temp4;
+  end;
+end;
+
+function TRigg.GetMastKurve: TMastKurve;
+begin
+  SetMastLineData(MastLinie, MastLC, MastBeta);
+  result := MastKurve;
+end;
+
+function TRigg.GetMastKurvePoint(const Index: Integer): TPoint3D;
+begin
+  if (Index >= 0) and (Index < Length(MastKurve)) then
+    result := MastKurve[Index]
+  else
+  begin
+    result := TPoint3D.Zero;
+  end;
+end;
+
+function TRigg.FindBogenIndexOf(P: TPoint3D): Integer;
+var
+  i, j: Integer;
+  MinIndex: Integer;
+  MinAbstand: single;
+  a: single;
+begin
+  j := Length(MastKurve);
+  MinIndex := j div 2;
+  MinAbstand := 1000;
+  for i := 0 to j - 1 do
+  begin
+    a := (P - MastKurve[i]).Length;
+    if a < MinAbstand then
+    begin
+      MinAbstand := a;
+      MinIndex := i;
+    end;
+  end;
+  result := MinIndex;
 end;
 
 end.

@@ -54,6 +54,11 @@ var
   fa: Integer;
 begin
   fa := (Sender as TComponent).Tag;
+
+  Main.ActionHandler.Execute(fa);
+
+  Exit;
+
   case fa of
     faViewpointS: FormMain.SeiteBtnClick(Sender);
     faViewpointA: FormMain.AchternBtnClick(Sender);

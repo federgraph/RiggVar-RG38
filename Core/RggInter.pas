@@ -85,7 +85,7 @@ type
     function GetMastLength: single;
     function GetMastOben: single;
     function GetMastUnten: single;
-    function GetMastPostionE: single;
+    function GetMastPositionE: single;
 
     procedure SetMastLength(const Value: single);
     procedure SetMastUnten(const Value: single);
@@ -156,7 +156,7 @@ type
     property MastLength: single read GetMastLength write SetMastLength;
     property MastUnten: single read GetMastUnten write SetMastUnten;
     property MastOben: single read GetMastOben write SetMastOben;
-    property MastPositionE: single read GetMastPostionE;
+    property MastPositionE: single read GetMastPositionE;
 
     property DurchbiegungHE: single read GetDurchbiegungHE;
     property DurchbiegungHD: single read GetDurchbiegungHD;

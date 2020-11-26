@@ -254,7 +254,6 @@ type
     procedure GetEpsilon;
     function GetKoppelFaktor: single;
     procedure SolveKG21(KM, KU1, KU2, KB: TPoint3D; var FU1, FU2, FB: single);
-    function GetMastPostionE: single;
 
     procedure GetBuiltinData;
 
@@ -292,8 +291,10 @@ type
     function FvonW(WSoll: single; Kurve: TKurvenTyp; Korrigiert: Boolean): single;
     procedure SchnittKraefte;
     procedure ResetMastStatus;
+    procedure UpdateMastPositionE;
+
     function GetMastStatusText: string;
-    procedure GetMastPositionE;
+    function GetMastPositionE: single;
 
     function GetRealTrimm(Index: TTrimmIndex): single;
     function GetMastLC: single;
@@ -385,7 +386,7 @@ type
     property MastLE: single read GetMastLE;
     property MastLC: single read GetMastLC;
     property MastBeta: single read GetMastBeta;
-    property MastPositionE: single read GetMastPostionE;
+    property MastPositionE: single read GetMastPositionE;
     property MastEI: Integer read GetEI write SetEI;
     property MastStatus: TMastStatusSet read FMastStatus;
 
@@ -2951,7 +2952,7 @@ begin
     end;
   end;
 
-  GetMastPositionE;
+  UpdateMastPositionE;
 
   { Kraftkomponenten bereitstellen }
   case SalingTyp of
@@ -3077,7 +3078,7 @@ begin
   result := LineData;
 end;
 
-procedure TRigg.GetMastPositionE;
+procedure TRigg.UpdateMastPositionE;
 var
   PositionEStrich: single;
 begin
@@ -3089,7 +3090,7 @@ begin
   FMastPositionE := PositionEStrich;
 end;
 
-function TRigg.GetMastPostionE: single;
+function TRigg.GetMastPositionE: single;
 begin
   result := FMastPositionE;
 end;

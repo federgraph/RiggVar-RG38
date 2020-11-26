@@ -32,9 +32,9 @@ uses
   RiggVar.FB.SpeedColor,
   RiggVar.FB.SpeedBar,
   RiggVar.RG.Def,
+  RiggVar.RG.Model,
   RiggVar.RG.Report,
   RiggVar.RG.Rota,
-  RiggVar.RG.Model,
   RiggVar.FD.Image,
   RggCtrls,
   RggChartGraph,
@@ -1028,6 +1028,14 @@ begin
     faGrauBtn: GrauBtnClick(nil);
     faBlauBtn: BlauBtnClick(nil);
     faMultiBtn: MultiBtnClick(nil);
+
+    faSuperSimple: SuperSimpleBtnClick(nil);
+    faSuperNormal: SuperNormalBtnClick(nil);
+    faSuperGrau: SuperGrauBtnClick(nil);
+    faSuperBlau: SuperBlauBtnClick(nil);
+    faSuperMulti: SuperMultiBtnClick(nil);
+    faSuperDisplay: SuperDisplayBtnClick(nil);
+    faSuperQuick: SuperQuickBtnClick(nil);
 
     faShowMemo: MemoBtnClick(nil);
     faShowActions: ActionsBtnClick(nil);

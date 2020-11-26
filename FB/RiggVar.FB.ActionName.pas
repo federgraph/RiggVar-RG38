@@ -414,4 +414,3 @@ faTouchBarRight: result := 'faTouchBarRight';
 end;
 
 end.
-
