@@ -966,9 +966,9 @@ procedure TRggData.ProcessW;
 begin
   if (l3 > 0) and (w3 > 0) then
   begin
-    h3 := l3 * sin(RadToDeg(w3));
+    h3 := l3 * sin(DegToRad(w3));
     SHPos := Round(h2 + h3);
-    SAPos := Round(2 * (l3 * cos(RadToDeg(w3)) + l2));
+    SAPos := Round(2 * (l3 * cos(DegToRad(w3)) + l2));
   end;
 end;
 

@@ -43,6 +43,8 @@ type
   public
   class var
     IsSandboxed: Boolean;
+    AllProps: Boolean;
+    AllTags: Boolean;
     AppIsClosing: Boolean;
     ShowDebugData: Boolean;
     WantOnResize: Boolean;

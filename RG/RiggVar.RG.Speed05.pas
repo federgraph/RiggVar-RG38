@@ -1,4 +1,4 @@
-﻿unit RiggVar.RG.Speed05;
+unit RiggVar.RG.Speed05;
 
 interface
 
@@ -36,44 +36,22 @@ type
   public
     procedure InitSpeedButtons; override;
     procedure UpdateSpeedButtonDown; override;
-    procedure UpdateSpeedButtonEnabled; override;
   end;
 
 implementation
 
 uses
-  FrmMain,
   RiggVar.App.Main,
-  RggTypes,
   RiggVar.FB.ActionConst;
 
-{ TActionSpeedBarRG04 }
+{ TActionSpeedBarRG05 }
 
 procedure TActionSpeedBarRG05.SpeedButtonClick(Sender: TObject);
 var
   fa: Integer;
 begin
   fa := (Sender as TComponent).Tag;
-
   Main.ActionHandler.Execute(fa);
-
-  Exit;
-
-  case fa of
-    faViewpointS: FormMain.SeiteBtnClick(Sender);
-    faViewpointA: FormMain.AchternBtnClick(Sender);
-    faViewpointT: FormMain.TopBtnClick(Sender);
-    faViewpoint3: FormMain.NullBtnClick(Sender);
-
-    faRggZoomIn: FormMain.RotaForm.ZoomInBtnClick(Sender);
-    faRggZoomOut: FormMain.RotaForm.ZoomOutBtnClick(Sender);
-
-    faRggBogen: FormMain.BogenBtnClick(Sender);
-    faRggHull: FormMain.HullBtnClick(Sender);
-
-    faMemoryBtn: FormMain.MemoryBtnClick(Sender);
-    faMemoryRecallBtn: FormMain.MemoryRecallBtnClick(Sender);
-  end;
 end;
 
 procedure TActionSpeedBarRG05.UpdateSpeedButtonDown;
@@ -91,10 +69,6 @@ begin
 
   MemoryBtn.IsPressed := False;
   MemoryRecallBtn.IsPressed := False;
-end;
-
-procedure TActionSpeedBarRG05.UpdateSpeedButtonEnabled;
-begin
 end;
 
 procedure TActionSpeedBarRG05.InitSpeedButtons;
@@ -197,7 +171,7 @@ end;
 
 procedure TActionSpeedBarRG05.ToggleFontSizeBtnClick(Sender: TObject);
 begin
-  FormMain.ToggleSpeedPanelFontSize;
+  Main.ToggleSpeedPanelFontSize;
 end;
 
 end.

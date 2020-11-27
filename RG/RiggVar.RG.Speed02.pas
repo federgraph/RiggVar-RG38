@@ -66,7 +66,6 @@ implementation
 uses
   FrmMain,
   RiggVar.App.Main,
-  RggTypes,
   RiggVar.FB.ActionConst;
 
 { TActionSpeedBarRG02 }
@@ -82,47 +81,6 @@ begin
   case fa of
     faToggleUseDisplayList,
     faMultiBtn: UpdateSpeedButtonEnabled;
-  end;
-
-  Exit;
-
-  case fa of
-    faToggleUseDisplayList:
-    begin
-      FormMain.RotaForm.UseDisplayListBtnClick(Sender);
-      UpdateSpeedButtonEnabled;
-    end;
-
-    faToggleUseQuickSort: FormMain.RotaForm.UseQuickSortBtnClick(Sender);
-    faToggleLineColor: FormMain.LineColorBtnClick(Sender);
-    faToggleShowLegend: FormMain.RotaForm.LegendBtnClick(Sender);
-
-    faToggleSegmentF .. faToggleSegmentA: FormMain.HandleSegment(fa);
-
-    faViewpointS: FormMain.SeiteBtnClick(Sender);
-    faViewpointA: FormMain.AchternBtnClick(Sender);
-    faViewpointT: FormMain.TopBtnClick(Sender);
-    faViewpoint3: FormMain.NullBtnClick(Sender);
-
-    faRggZoomIn: FormMain.RotaForm.ZoomInBtnClick(Sender);
-    faRggZoomOut: FormMain.RotaForm.ZoomOutBtnClick(Sender);
-
-    faRggBogen: FormMain.BogenBtnClick(Sender);
-    faRggKoppel: FormMain.KoppelBtnClick(Sender);
-
-    faToggleMatrixText: FormMain.RotaForm.MatrixItemClick(Sender);
-
-    faMemoryBtn: FormMain.MemoryBtnClick(Sender);
-    faMemoryRecallBtn: FormMain.MemoryRecallBtnClick(Sender);
-
-    faSofortBtn: FormMain.SofortBtnClick(Sender);
-    faGrauBtn: FormMain.GrauBtnClick(Sender);
-    faBlauBtn: FormMain.BlauBtnClick(Sender);
-    faMultiBtn:
-    begin
-      FormMain.MultiBtnClick(Sender);
-      UpdateSpeedButtonEnabled;
-    end;
   end;
 end;
 
@@ -417,7 +375,7 @@ end;
 
 procedure TActionSpeedBarRG02.ToggleFontSizeBtnClick(Sender: TObject);
 begin
-  FormMain.ToggleSpeedPanelFontSize;
+  Main.ToggleSpeedPanelFontSize;
 end;
 
 end.

@@ -45,9 +45,7 @@ type
 implementation
 
 uses
-  FrmMain,
   RiggVar.App.Main,
-  RggTypes,
   RiggVar.FB.ActionConst;
 
 { TActionSpeedBarRG03 }
@@ -57,37 +55,15 @@ var
   fa: Integer;
 begin
   fa := (Sender as TComponent).Tag;
-
   Main.ActionHandler.Execute(fa);
-
-  Exit;
-
-  case fa of
-    faMemoryBtn: FormMain.MemoryBtnClick(Sender);
-    faMemoryRecallBtn: FormMain.MemoryRecallBtnClick(Sender);
-
-    faRggBogen: FormMain.BogenBtnClick(Sender);
-    faRggKoppel: FormMain.KoppelBtnClick(Sender);
-
-    faSuperSimple: FormMain.SuperSimpleBtnClick(Sender);
-    faSuperNormal: FormMain.SuperNormalBtnClick(Sender);
-    faSuperGrau: FormMain.SuperGrauBtnClick(Sender);
-    faSuperBlau: FormMain.SuperBlauBtnClick(Sender);
-    faSuperMulti: FormMain.SuperMultiBtnClick(Sender);
-    faSuperDisplay: FormMain.SuperDisplayBtnClick(Sender);
-    faSuperQuick: FormMain.SuperQuickBtnClick(Sender);
-
-    faToggleLineColor: FormMain.LineColorBtnClick(Sender);
-    faToggleShowLegend: FormMain.RotaForm.LegendBtnClick(Sender);
-  end;
-
-  UpdateSpeedButtonDown;
 end;
 
 procedure TActionSpeedBarRG03.UpdateSpeedButtonDown;
 begin
   MemoryBtn.IsPressed := False;
   MemoryRecallBtn.IsPressed := False;
+
+  { Pattern: Btn.IsPressed := Main.GetChecked(Btn.Tag); }
 
   BogenBtn.IsPressed := Main.GetChecked(faRggBogen);
   KoppelBtn.IsPressed := Main.GetChecked(faRggKoppel);
@@ -226,7 +202,7 @@ end;
 
 procedure TActionSpeedBarRG03.ToggleFontSizeBtnClick(Sender: TObject);
 begin
-  FormMain.ToggleSpeedPanelFontSize;
+  Main.ToggleSpeedPanelFontSize;
 end;
 
 end.

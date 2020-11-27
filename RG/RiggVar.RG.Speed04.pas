@@ -1,4 +1,4 @@
-﻿unit RiggVar.RG.Speed04;
+unit RiggVar.RG.Speed04;
 
 interface
 
@@ -42,9 +42,7 @@ type
 implementation
 
 uses
-  FrmMain,
   RiggVar.App.Main,
-  RggTypes,
   RiggVar.FB.ActionConst;
 
 { TActionSpeedBarRG04 }
@@ -55,24 +53,6 @@ var
 begin
   fa := (Sender as TComponent).Tag;
   Main.ActionHandler.Execute(fa);
-
-  Exit;
-
-  case fa of
-    faViewpointS: FormMain.SeiteBtnClick(Sender);
-    faViewpointA: FormMain.AchternBtnClick(Sender);
-    faViewpointT: FormMain.TopBtnClick(Sender);
-    faViewpoint3: FormMain.NullBtnClick(Sender);
-
-    faRggZoomIn: FormMain.RotaForm.ZoomInBtnClick(Sender);
-    faRggZoomOut: FormMain.RotaForm.ZoomOutBtnClick(Sender);
-
-    faRggBogen: FormMain.BogenBtnClick(Sender);
-    faRggKoppel: FormMain.KoppelBtnClick(Sender);
-
-    faMemoryBtn: FormMain.MemoryBtnClick(Sender);
-    faMemoryRecallBtn: FormMain.MemoryRecallBtnClick(Sender);
-  end;
 end;
 
 procedure TActionSpeedBarRG04.UpdateSpeedButtonDown;
@@ -196,7 +176,7 @@ end;
 
 procedure TActionSpeedBarRG04.ToggleFontSizeBtnClick(Sender: TObject);
 begin
-  FormMain.ToggleSpeedPanelFontSize;
+  Main.ToggleSpeedPanelFontSize;
 end;
 
 end.
