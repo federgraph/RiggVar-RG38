@@ -56,6 +56,7 @@ uses
   RiggVar.FederModel.ActionMapTablet in 'Model\RiggVar.FederModel.ActionMapTablet.pas',
   RiggVar.FederModel.Binding in 'Model\RiggVar.FederModel.Binding.pas',
   RiggVar.FederModel.Keyboard01 in 'Model\RiggVar.FederModel.Keyboard01.pas',
+  RiggVar.FederModel.Menu in 'Model\RiggVar.FederModel.Menu.pas',
   RiggVar.FederModel.Touch in 'Model\RiggVar.FederModel.Touch.pas',
   RiggVar.FederModel.TouchBase in 'Model\RiggVar.FederModel.TouchBase.pas',
   RiggVar.FederModel.TouchPhone in 'Model\RiggVar.FederModel.TouchPhone.pas',

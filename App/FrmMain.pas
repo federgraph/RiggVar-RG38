@@ -37,6 +37,7 @@ uses
   RiggVar.RG.Report,
   RiggVar.RG.Rota,
   RiggVar.FD.Image,
+  RiggVar.FederModel.Menu,
   RggCtrls,
   RggChartGraph,
   RggTypes,
@@ -52,6 +53,7 @@ uses
   FMX.Types3D,
   FMX.Viewport3D,
 {$endif}
+  FMX.Menus,
   FMX.Controls,
   FMX.Forms,
   FMX.StdCtrls,
@@ -202,6 +204,16 @@ type
     procedure SuperMultiBtnClick(Sender: TObject);
     procedure SuperDisplayBtnClick(Sender: TObject);
     procedure SuperQuickBtnClick(Sender: TObject);
+{$ifdef WantMenu}
+  public
+    MainMenu: TMainMenu;
+    MenuItem: TMenuItem;
+    FederMenu: TFederMenu;
+    function GetMainMenuVisible: Boolean;
+    procedure SetMainMenuVisible(const Value: Boolean);
+    procedure PopulateMenu;
+    property MainMenuVisible: Boolean read GetMainMenuVisible write SetMainMenuVisible;
+{$endif}
   public
     NewControlSize: TControlSize;
     InitTimer: TTimer;
@@ -377,6 +389,9 @@ begin
 
   NewControlSize.Free;
   SpeedColorScheme.Free;
+{$ifdef WantMenu}
+  FederMenu.Free;
+{$endif}
 end;
 
 procedure TFormMain.FormCreate2(Sender: TObject);
@@ -409,6 +424,15 @@ begin
 
   BitmapWidth := Screen.Width;
   BitmapHeight := Screen.Height;
+
+{$ifdef WantMenu}
+  FederMenu := TFederMenu.Create;
+  { Create MainMenu before setting ClientHeight ? }
+  MainMenu := TMainMenu.Create(self);
+  MainMenu.Parent := self;
+  MenuItem := TMenuItem.Create(self);
+  MainMenu.AddObject(MenuItem);
+{$endif}
 
   CreateComponents;
 
@@ -525,6 +549,10 @@ begin
   OnKeyUp := nil;
   { we will use OnKeyDown instead, in Tokyo 10.2 and Rio 10.3 }
   OnKeyDown := FormKeyUp;
+{$endif}
+
+{$ifdef WantMenu}
+  PopulateMenu;
 {$endif}
 end;
 
@@ -1854,7 +1882,7 @@ procedure TFormMain.SofortBtnClick(Sender: TObject);
 begin
   Main.SofortBerechnen := not Main.SofortBerechnen;
   if Sender <> nil then
-  Main.FederText.CheckState;
+    Main.FederText.CheckState;
   UpdateReport;
 end;
 
@@ -2491,6 +2519,46 @@ begin
   Caption := Format('%d - %d', [ClearStateCounter, Main.ResizeCounter]);
 end;
 
+{$endif}
+
+{$ifdef WantMenu}
+procedure TFormMain.PopulateMenu;
+begin
+  { need dummy MenuItem to set correct client height from beginning }
+  if MenuItem.Parent = MainMenu then
+  begin
+    MainMenu.RemoveObject(MenuItem);
+  end;
+
+  if Assigned(MainMenu) and Assigned(Main) then
+  begin
+    FederMenu.InitMainMenu(MainMenu);
+  end;
+end;
+
+function TFormMain.GetMainMenuVisible: Boolean;
+begin
+  result := MainMenu <> nil;
+end;
+
+procedure TFormMain.SetMainMenuVisible(const Value: Boolean);
+begin
+  if Value and not Assigned(MainMenu) then
+  begin
+    MainMenu := TMainMenu.Create(self);
+    MainMenu.Tag := -1;
+    MainMenu.Parent := self;
+    PopulateMenu;
+    MainMenu.Tag := 1;
+    MainMenu.RecreateOSMenu;
+  end
+  else if Assigned(MainMenu) and not Value then
+  begin
+    MainMenu.Free;
+    MainMenu := nil;
+    Main.UpdateTouch;
+  end;
+end;
 {$endif}
 
 end.

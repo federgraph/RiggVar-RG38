@@ -1,4 +1,20 @@
-unit RiggVar.FederModel.ActionList;
+﻿unit RiggVar.FederModel.ActionList;
+
+(*
+-
+-     F
+-    * * *
+-   *   *   G
+-  *     * *   *
+- E - - - H - - - I
+-  *     * *         *
+-   *   *   *           *
+-    * *     *             *
+-     D-------A---------------B
+-              *
+-              (C) federgraph.de
+-
+*)
 
 interface
 
@@ -7,16 +23,21 @@ uses
   System.Actions,
   FMX.ActnList,
   RiggVar.FB.ActionShort,
-  RiggVAr.FB.ActionLong;
+  RiggVar.FB.ActionLong;
 
 type
+  TRggAction = class(TCustomAction)
+  public
+    UseShortCaption: Boolean;
+  end;
+
   TRggActionList = class(TActionList)
   private
     procedure DoOnExecute(Action: TBasicAction; var Handled: Boolean);
     procedure DoOnUpdate(Action: TBasicAction; var Handled: Boolean);
   public
     constructor Create(AOwner: TComponent); override;
-    function FindFederAction(fa: Integer): TContainedAction;
+    function FindFederAction(fa: Integer; WantShortCaption: Boolean): TContainedAction;
     function GetFederAction(fa: Integer; WantShortCaption: Boolean): TContainedAction;
   end;
 
@@ -42,26 +63,31 @@ end;
 
 procedure TRggActionList.DoOnUpdate(Action: TBasicAction; var Handled: Boolean);
 var
-  cr: TContainedAction;
+  cr: TRggAction;
 begin
-  cr := TContainedAction(Action);
+  cr := TRggAction(Action);
   cr.Checked := Main.GetChecked(cr.Tag);
   Handled := True;
 end;
 
-function TRggActionList.FindFederAction(fa: Integer): TContainedAction;
+function TRggActionList.FindFederAction(fa: Integer; WantShortCaption: Boolean): TContainedAction;
 var
   i: Integer;
-  cr: TContainedAction;
+  ca: TContainedAction;
+  cr: TRggAction;
 begin
   result := nil;
   for i := 0 to ActionCount-1 do
   begin
-    cr := Actions[i];
-    if cr.Tag = fa then
+    ca := Actions[i];
+    if (ca is TRggAction) then
     begin
-      result := cr;
-      Exit;
+      cr := TRggAction(ca);
+      if (cr.Tag = fa) and (cr.UseShortCaption = WantShortCaption) then
+      begin
+        result := cr;
+        Exit;
+      end;
     end;
   end;
 end;
@@ -69,18 +95,20 @@ end;
 function TRggActionList.GetFederAction(fa: Integer; WantShortCaption: Boolean): TContainedAction;
 var
   ca: TContainedAction;
-  cr: TContainedAction;
+  cr: TRggAction;
 begin
-  ca := FindFederAction(fa);
+  ca := FindFederAction(fa, WantShortCaption);
 
   if ca = nil then
   begin
-    cr := TCustomAction.Create(Self);
+    cr := TRggAction.Create(Self);
     cr.Tag := fa;
+    cr.UseShortCaption := WantShortCaption;
     if WantShortCaption then
       cr.Caption := GetFederActionShort(fa)
     else
       cr.Caption := GetFederActionLong(fa);
+    cr.Hint := GetFederActionLong(fa);
     AddAction(cr);
     ca := cr;
   end;
