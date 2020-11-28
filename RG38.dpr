@@ -51,6 +51,7 @@ uses
   RiggVar.FB.SpeedColor in 'FB\RiggVar.FB.SpeedColor.pas',
   RiggVar.FB.TextBase in 'FB\RiggVar.FB.TextBase.pas',
   RiggVar.FederModel.Action in 'Model\RiggVar.FederModel.Action.pas',
+  RiggVar.FederModel.ActionList in 'Model\RiggVar.FederModel.ActionList.pas',
   RiggVar.FederModel.ActionMapPhone in 'Model\RiggVar.FederModel.ActionMapPhone.pas',
   RiggVar.FederModel.ActionMapTablet in 'Model\RiggVar.FederModel.ActionMapTablet.pas',
   RiggVar.FederModel.Binding in 'Model\RiggVar.FederModel.Binding.pas',

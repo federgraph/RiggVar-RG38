@@ -168,8 +168,6 @@ type
     SpeedColorScheme: TSpeedColorScheme;
     procedure InitSpeedButtons;
     procedure LayoutSpeedPanel(SP: TActionSpeedBar);
-    procedure UpdateSpeedButtonDown;
-    procedure UpdateSpeedButtonEnabled;
     procedure ToggleSpeedPanel;
     procedure ToggleSpeedPanelFontSize;
     procedure SwapSpeedPanel(Value: Integer);
@@ -494,8 +492,6 @@ begin
 
   Application.OnHint := HandleShowHint;
   InitSpeedButtons;
-  UpdateSpeedButtonDown;
-  UpdateSpeedButtonEnabled;
   UpdateColorScheme;
 
   SwapSpeedPanel(RotaForm.Current);
@@ -726,7 +722,6 @@ begin
 
     Image.Align := TAlignLayout.Client;
 
-    UpdateSpeedButtonDown;
     UpdateReport;
 
     RotaForm.IsUp := True;
@@ -840,7 +835,6 @@ begin
   end;
 
   Main.FederText.CheckState;
-  UpdateSpeedButtonDown;
 end;
 
 procedure TFormMain.Reset;
@@ -1007,7 +1001,6 @@ begin
     faToggleUseDisplayList:
     begin
       RotaForm.UseDisplayListBtnClick(nil);
-      UpdateSpeedButtonEnabled;
     end;
 
     faToggleShowLegend: RotaForm.LegendBtnClick(nil);
@@ -1083,7 +1076,6 @@ begin
     end;
 
   end;
-  UpdateSpeedButtonDown;
 end;
 
 function TFormMain.GetActionFromKey(Shift: TShiftState; Key: Word): Integer;
@@ -1484,8 +1476,6 @@ begin
   SpeedPanel.Width := ClientWidth - 3 * Raster - Margin;
   SpeedPanel.Visible := True;
   SpeedPanel.UpdateLayout;;
-  SpeedPanel.UpdateSpeedButtonEnabled;
-  SpeedPanel.UpdateSpeedButtonDown;
   SpeedPanel.DarkMode := MainVar.ColorScheme.IsDark;
   SpeedPanel.UpdateColor;
 end;
@@ -1554,7 +1544,6 @@ end;
 procedure TFormMain.LineColorBtnClick(Sender: TObject);
 begin
   RotaForm.WantLineColors := not RotaForm.WantLineColors;
-  UpdateSpeedButtonDown;
   RotaForm.Draw;
 end;
 
@@ -2088,7 +2077,6 @@ begin
     begin
       Main.FederText.ActionPage := 9;
       ChartImageBtnClick(nil);
-      UpdateSpeedButtonDown;
     end;
   end;
 
@@ -2176,18 +2164,6 @@ begin
 
   if SpeedPanel05 <> nil then
     SpeedPanel05.InitSpeedButtons;
-end;
-
-procedure TFormMain.UpdateSpeedButtonDown;
-begin
-  if SpeedPanel <> nil then
-    SpeedPanel.UpdateSpeedButtonDown;
-end;
-
-procedure TFormMain.UpdateSpeedButtonEnabled;
-begin
-  if SpeedPanel <> nil then
-    SpeedPanel.UpdateSpeedButtonEnabled;
 end;
 
 procedure TFormMain.UpdateColorScheme;

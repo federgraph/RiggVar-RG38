@@ -1,12 +1,10 @@
-unit RiggVar.RG.Speed05;
+﻿unit RiggVar.RG.Speed05;
 
 interface
 
 uses
   RiggVar.FB.SpeedBar,
   RiggVar.FB.SpeedColor,
-  System.UIConsts,
-  System.Classes,
   FMX.StdCtrls;
 
 type
@@ -28,14 +26,8 @@ type
     TopBtn: TSpeedButton;
     AchternBtn: TSpeedButton;
     NullBtn: TSpeedButton;
-  private
-    procedure ToggleColorModeBtnClick(Sender: TObject);
-    procedure ToggleFontSizeBtnClick(Sender: TObject);
-  protected
-    procedure SpeedButtonClick(Sender: TObject); override;
   public
     procedure InitSpeedButtons; override;
-    procedure UpdateSpeedButtonDown; override;
   end;
 
 implementation
@@ -45,31 +37,6 @@ uses
   RiggVar.FB.ActionConst;
 
 { TActionSpeedBarRG05 }
-
-procedure TActionSpeedBarRG05.SpeedButtonClick(Sender: TObject);
-var
-  fa: Integer;
-begin
-  fa := (Sender as TComponent).Tag;
-  Main.ActionHandler.Execute(fa);
-end;
-
-procedure TActionSpeedBarRG05.UpdateSpeedButtonDown;
-begin
-  SeiteBtn.IsPressed := False;
-  TopBtn.IsPressed := False;
-  AchternBtn.IsPressed := False;
-  NullBtn.IsPressed := False;
-
-  ZoomInBtn.IsPressed := False;
-  ZoomOutBtn.IsPressed := False;
-
-  BogenBtn.IsPressed := Main.GetChecked(faRggBogen);
-  HullBtn.IsPressed := Main.GetChecked(faRggHull);
-
-  MemoryBtn.IsPressed := False;
-  MemoryRecallBtn.IsPressed := False;
-end;
 
 procedure TActionSpeedBarRG05.InitSpeedButtons;
 var
@@ -162,16 +129,6 @@ begin
   NullBtn := sb;
   sb.Tag := faViewpoint3;
   InitSpeedButton(sb);
-end;
-
-procedure TActionSpeedBarRG05.ToggleColorModeBtnClick(Sender: TObject);
-begin
-  Main.ToggleDarkMode;
-end;
-
-procedure TActionSpeedBarRG05.ToggleFontSizeBtnClick(Sender: TObject);
-begin
-  Main.ToggleSpeedPanelFontSize;
 end;
 
 end.

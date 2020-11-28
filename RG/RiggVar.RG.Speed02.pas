@@ -5,8 +5,6 @@ interface
 uses
   RiggVar.FB.SpeedBar,
   RiggVar.FB.SpeedColor,
-  System.UIConsts,
-  System.Classes,
   FMX.StdCtrls;
 
 {.$define SegmentButtons}
@@ -50,15 +48,8 @@ type
     KoppelBtn: TSpeedButton;
 
     MatrixBtn: TSpeedButton;
-  private
-    procedure ToggleColorModeBtnClick(Sender: TObject);
-    procedure ToggleFontSizeBtnClick(Sender: TObject);
-  protected
-    procedure SpeedButtonClick(Sender: TObject); override;
   public
     procedure InitSpeedButtons; override;
-    procedure UpdateSpeedButtonDown; override;
-    procedure UpdateSpeedButtonEnabled; override;
   end;
 
 implementation
@@ -70,85 +61,30 @@ uses
 
 { TActionSpeedBarRG02 }
 
-procedure TActionSpeedBarRG02.SpeedButtonClick(Sender: TObject);
-var
-  fa: Integer;
-begin
-  fa := (Sender as TComponent).Tag;
-
-  Main.ActionHandler.Execute(fa);
-
-  case fa of
-    faToggleUseDisplayList,
-    faMultiBtn: UpdateSpeedButtonEnabled;
-  end;
-end;
-
-procedure TActionSpeedBarRG02.UpdateSpeedButtonDown;
-begin
-  UseDisplayListBtn.IsPressed := FormMain.RotaForm.UseDisplayList;
-
-  UseQuickSortBtn.IsPressed := FormMain.RotaForm.UseQuickSort;
-  LegendBtn.IsPressed := FormMain.RotaForm.LegendItemChecked;
-  LineColorBtn.IsPressed := Main.GetChecked(faToggleLineColor);
-
-{$ifdef SegmentButtons}
-  FixpunktBtn.IsPressed := Main.GetChecked(faToggleSegmentF);
-  RumpfBtn.IsPressed := Main.GetChecked(faToggleSegmentR);
-  SalingBtn.IsPressed := Main.GetChecked(faToggleSegmentS);
-  WanteBtn.IsPressed := Main.GetChecked(faToggleSegmentW);
-  MastBtn.IsPressed := Main.GetChecked(faToggleSegmentM);
-  VorstagBtn.IsPressed := Main.GetChecked(faToggleSegmentV);
-  ControllerBtn.IsPressed := Main.GetChecked(faToggleSegmentC);
-  AchsenBtn.IsPressed := Main.GetChecked(faToggleSegmentA);
-{$endif}
-
-  SeiteBtn.IsPressed := False;
-  TopBtn.IsPressed := False;
-  AchternBtn.IsPressed := False;
-  NullBtn.IsPressed := False;
-
-  ZoomInBtn.IsPressed := False;
-  ZoomOutBtn.IsPressed := False;
-
-  BogenBtn.IsPressed := Main.GetChecked(faRggBogen);
-  KoppelBtn.IsPressed := Main.GetChecked(faRggKoppel);
-
-  MatrixBtn.IsPressed := FormMain.RotaForm.MatrixItemChecked;
-
-  MemoryBtn.IsPressed := False;
-  MemoryRecallBtn.IsPressed := False;
-
-  SofortBtn.IsPressed := Main.GetChecked(faSofortBtn);
-  MultiBtn.IsPressed := Main.GetChecked(faMultiBtn);
-  GrauBtn.IsPressed := Main.GetChecked(faGrauBtn);
-  BlauBtn.IsPressed := Main.GetChecked(faBlauBtn);
-end;
-
-procedure TActionSpeedBarRG02.UpdateSpeedButtonEnabled;
-var
-  b1, b2: Boolean;
-  b: Boolean;
-begin
-  b1 := FormMain.RotaForm.UseDisplayList;
-  b2 := FormMain.RotaForm.WantOverlayedRiggs;
-
-  b := b1;
-
-  UseQuickSortBtn.Enabled := b;
-  LegendBtn.Enabled := b;
-  LineColorBtn.Enabled := b;
-
-  b := not b1;
-
-  MultiBtn.Enabled := b;
-  KoppelBtn.Enabled := b;
-
-  b := (not b1) and b2;
-
-  GrauBtn.Enabled := b;
-  BlauBtn.Enabled := b;
-end;
+//procedure TActionSpeedBarRG02.UpdateSpeedButtonEnabled;
+//var
+//  b1, b2: Boolean;
+//  b: Boolean;
+//begin
+//  b1 := FormMain.RotaForm.UseDisplayList;
+//  b2 := FormMain.RotaForm.WantOverlayedRiggs;
+//
+//  b := b1;
+//
+//  UseQuickSortBtn.Enabled := b;
+//  LegendBtn.Enabled := b;
+//  LineColorBtn.Enabled := b;
+//
+//  b := not b1;
+//
+//  MultiBtn.Enabled := b;
+//  KoppelBtn.Enabled := b;
+//
+//  b := (not b1) and b2;
+//
+//  GrauBtn.Enabled := b;
+//  BlauBtn.Enabled := b;
+//end;
 
 procedure TActionSpeedBarRG02.InitSpeedButtons;
 var
@@ -366,16 +302,6 @@ begin
   NullBtn := sb;
   sb.Tag := faViewpoint3;
   InitSpeedButton(sb);
-end;
-
-procedure TActionSpeedBarRG02.ToggleColorModeBtnClick(Sender: TObject);
-begin
-  Main.ToggleDarkMode;
-end;
-
-procedure TActionSpeedBarRG02.ToggleFontSizeBtnClick(Sender: TObject);
-begin
-  Main.ToggleSpeedPanelFontSize;
 end;
 
 end.

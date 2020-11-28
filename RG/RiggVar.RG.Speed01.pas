@@ -5,9 +5,6 @@ interface
 uses
   RiggVar.FB.SpeedBar,
   RiggVar.FB.SpeedColor,
-  System.UIConsts,
-  System.Classes,
-  FMX.Types,
   FMX.StdCtrls;
 
 type
@@ -32,14 +29,8 @@ type
 
     ColorModeBtn: TSpeedButton;
     FontSizeBtn: TSpeedButton;
-
-    procedure ToggleColorModeBtnClick(Sender: TObject);
-    procedure ToggleFontSizeBtnClick(Sender: TObject);
-  protected
-    procedure SpeedButtonClick(Sender: TObject); override;
   public
     procedure InitSpeedButtons; override;
-    procedure UpdateSpeedButtonDown; override;
   end;
 
 implementation
@@ -202,31 +193,6 @@ begin
   sb.Hint := 'Param Value Plus 10';
   sb.Tag := faParamValuePlus10;
   InitSpeedButton(sb);
-end;
-
-procedure TActionSpeedBarRG01.UpdateSpeedButtonDown;
-begin
-  SandboxedBtn.IsPressed := MainConst.MustBeSandboxed or MainVar.IsSandboxed;
-  AllPropsBtn.IsPressed := MainVar.AllProps;
-  AllTagsBtn.IsPressed := MainVar.AllTags;
-end;
-
-procedure TActionSpeedBarRG01.SpeedButtonClick(Sender: TObject);
-var
-  fa: Integer;
-begin
-  fa := (Sender as TComponent).Tag;
-  Main.ActionHandler.Execute(fa);
-end;
-
-procedure TActionSpeedBarRG01.ToggleColorModeBtnClick(Sender: TObject);
-begin
-  Main.ToggleDarkMode;
-end;
-
-procedure TActionSpeedBarRG01.ToggleFontSizeBtnClick(Sender: TObject);
-begin
-  Main.ToggleSpeedPanelFontSize;
 end;
 
 end.

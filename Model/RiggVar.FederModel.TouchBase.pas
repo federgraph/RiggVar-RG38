@@ -42,10 +42,10 @@ type
     FCaption: string;
     FText: TText;
     FShape: TShape;
-    FAction: TFederAction;
+    FFederAction: TFederAction;
     procedure SetColor(const Value: TAlphaColor);
     procedure SetCaption(const Value: string);
-    procedure SetAction(const Value: TFederAction);
+    procedure SetFederAction(const Value: TFederAction);
   protected
     procedure SetHint(const Value: string); override;
   protected
@@ -72,7 +72,7 @@ type
     property ID: Integer read FID write FID;
     property Caption: string read FCaption write SetCaption;
     property Hint: string write SetHint;
-    property Action: TFederAction read FAction write SetAction;
+    property FederAction: TFederAction read FFederAction write SetFederAction;
     property Shape: TShape read FShape;
     property Text: TText read FText;
     property Color: TAlphaColor write SetColor;
@@ -104,7 +104,7 @@ type
       CornerPos: TCornerPos;
       X, Y: Integer;
       BtnColor: TAlphaColor;
-      Action: TFederAction;
+      fa: TFederAction;
       BtnID: Integer = 0
       ): TCornerBtn;
 
@@ -215,7 +215,7 @@ end;
 
 procedure TTouchBtn.HandleClick(Sender: TObject);
 begin
-  Main.ActionHandler.Execute(Action);
+  Main.ActionHandler.Execute(FederAction);
   Main.FederText.CheckState; // if not done in Execute
 end;
 
@@ -226,7 +226,7 @@ var
 begin
   if FShape is TRectangle then
   begin
-    b := Main.ActionHandler.GetChecked(self.Action);
+    b := Main.ActionHandler.GetChecked(FederAction);
     r := FShape as TRectangle;
     if not b then
       r.Corners := [TCorner.TopLeft, TCorner.TopRight, TCorner.BottomLeft, TCorner.BottomRight]
@@ -247,7 +247,7 @@ var
 begin
   if FShape is TCircle then
   begin
-    b := Main.ActionHandler.GetChecked(self.Action);
+    b := Main.ActionHandler.GetChecked(FederAction);
     c := FShape as TCircle;
     if b then
       c.Fill.Color := claCyan
@@ -256,9 +256,9 @@ begin
   end;
 end;
 
-procedure TTouchBtn.SetAction(const Value: TFederAction);
+procedure TTouchBtn.SetFederAction(const Value: TFederAction);
 begin
-  FAction := Value;
+  FFederAction := Value;
 end;
 
 procedure TTouchBtn.SetCaption(const Value: string);
@@ -288,7 +288,7 @@ procedure TTouchBtn.UpdateHint;
 begin
   if WantHint then
   begin
-    Hint := Main.ActionHandler.GetCaption(FAction);
+    Hint := Main.ActionHandler.GetCaption(FederAction);
   end;
 end;
 
@@ -347,7 +347,7 @@ function TCornerMenu.NewBtn(
   CornerPos: TCornerPos;
   X, Y: Integer;
   BtnColor: TAlphaColor;
-  Action: TFederAction;
+  fa: TFederAction;
   BtnID: Integer = 0
   ): TCornerBtn;
 var
@@ -359,12 +359,12 @@ begin
   b.FID := BtnID;
   b.X := X;
   b.Y := Y;
-  b.Action := Action;
+  b.FederAction := fa;
   b.Opacity := TFederTouchBase.OpacityValue;
   b.Init;
   b.Color := BtnColor;
 
-  b.Caption := Main.ActionHandler.GetShortCaption(Action);
+  b.Caption := Main.ActionHandler.GetShortCaption(fa);
   b.FText.Color := MainVar.ColorScheme.claCornerBtnText;
   b.FText.Font.Size := MainConst.DefaultBtnFontSize;
   b.FText.Opacity := 1.0;
@@ -731,7 +731,7 @@ begin
   tb := FindCornerBtn(BtnID);
   if Assigned(tb) then
   begin
-    tb.Action := fa;
+    tb.FederAction := fa;
     tb.Caption := Main.ActionHandler.GetShortCaption(fa);
     tb.UpdateHint;
   end;
@@ -744,7 +744,7 @@ begin
   tb := FindCornerBtn(BtnID);
   if Assigned(tb) then
   begin
-    tb.Action := fa;
+    tb.FederAction := fa;
     tb.Caption := Main.ActionHandler.GetShortCaption(fa);
     tb.UpdateHint;
     tb.Color := ac;
@@ -807,7 +807,7 @@ var
     s := Format('%.2d: %s, %s = %s', [
       cb.ID,
       GetLocationString(cb.CornerPos),
-      Main.ActionHandler.GetCaption(cb.Action),
+      Main.ActionHandler.GetCaption(cb.FederAction),
       cb.Caption
       ]);
     ML.Add(s);

@@ -55,6 +55,8 @@ type
     procedure SpeedButtonClick(Sender: TObject); virtual;
     procedure UpdateCaptions;
     procedure UpdateHints;
+    procedure ToggleColorModeBtnClick(Sender: TObject);
+    procedure ToggleFontSizeBtnClick(Sender: TObject);
   public
     class var SpeedColorScheme: TSpeedColorScheme; // injected
 
@@ -65,8 +67,6 @@ type
     procedure ToggleBigMode;
 
     procedure InitSpeedButtons; virtual;
-    procedure UpdateSpeedButtonDown; virtual;
-    procedure UpdateSpeedButtonEnabled; virtual;
 
     property DarkMode: Boolean read FDarkMode write SetDarkMode;
     property BigMode: Boolean read FBigMode write SetBigMode;
@@ -84,6 +84,7 @@ type
 implementation
 
 uses
+  RiggVar.App.Main,
   RiggVar.FB.ActionConst,
   RiggVar.FB.ActionShort,
   RiggVar.FB.ActionLong;
@@ -269,7 +270,7 @@ begin
   begin
     sb.Text := GetFederActionShort(SB.Tag);
     sb.Hint := GetFederActionLong(SB.Tag);
-    sb.OnClick := SpeedButtonClick;
+    sb.Action := Main.ActionList.GetFederAction(sb.Tag, True);
   end;
 
   { Text must be set before changing Font.Size }
@@ -382,16 +383,6 @@ begin
   { virtual }
 end;
 
-procedure TActionSpeedBar.UpdateSpeedButtonDown;
-begin
-  { virtual }
-end;
-
-procedure TActionSpeedBar.UpdateSpeedButtonEnabled;
-begin
-  { virtual }
-end;
-
 { TActionSpeedBarExample }
 
 procedure TActionSpeedBarExample.InitSpeedButtons;
@@ -417,6 +408,16 @@ end;
 procedure TActionSpeedBarExample.TestBtnClick(Sender: TObject);
 begin
 
+end;
+
+procedure TActionSpeedBar.ToggleColorModeBtnClick(Sender: TObject);
+begin
+  Main.ToggleDarkMode;
+end;
+
+procedure TActionSpeedBar.ToggleFontSizeBtnClick(Sender: TObject);
+begin
+  Main.ToggleSpeedPanelFontSize;
 end;
 
 end.

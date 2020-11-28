@@ -5,8 +5,6 @@ interface
 uses
   RiggVar.FB.SpeedBar,
   RiggVar.FB.SpeedColor,
-  System.UIConsts,
-  System.Classes,
   FMX.StdCtrls;
 
 type
@@ -31,15 +29,8 @@ type
 
     LegendBtn: TSpeedButton;
     LineColorBtn: TSpeedButton;
-
-  private
-    procedure ToggleColorModeBtnClick(Sender: TObject);
-    procedure ToggleFontSizeBtnClick(Sender: TObject);
-  protected
-    procedure SpeedButtonClick(Sender: TObject); override;
   public
     procedure InitSpeedButtons; override;
-    procedure UpdateSpeedButtonDown; override;
   end;
 
 implementation
@@ -49,36 +40,6 @@ uses
   RiggVar.FB.ActionConst;
 
 { TActionSpeedBarRG03 }
-
-procedure TActionSpeedBarRG03.SpeedButtonClick(Sender: TObject);
-var
-  fa: Integer;
-begin
-  fa := (Sender as TComponent).Tag;
-  Main.ActionHandler.Execute(fa);
-end;
-
-procedure TActionSpeedBarRG03.UpdateSpeedButtonDown;
-begin
-  MemoryBtn.IsPressed := False;
-  MemoryRecallBtn.IsPressed := False;
-
-  { Pattern: Btn.IsPressed := Main.GetChecked(Btn.Tag); }
-
-  BogenBtn.IsPressed := Main.GetChecked(faRggBogen);
-  KoppelBtn.IsPressed := Main.GetChecked(faRggKoppel);
-
-  SimpleBtn.IsPressed := Main.GetChecked(faSuperSimple);
-  NormalBtn.IsPressed := Main.GetChecked(faSuperNormal);
-  GrauBtn.IsPressed := Main.GetChecked(faSuperGrau);
-  BlauBtn.IsPressed := Main.GetChecked(faSuperBlau);
-  MultiBtn.IsPressed := Main.GetChecked(faSuperMulti);
-  DisplayBtn.IsPressed := Main.GetChecked(faSuperDisplay);
-  QuickBtn.IsPressed := Main.GetChecked(faSuperQuick);
-
-  LegendBtn.IsPressed := Main.GetChecked(faToggleShowLegend);
-  LineColorBtn.IsPressed := Main.GetChecked(faToggleLineColor);
-end;
 
 procedure TActionSpeedBarRG03.InitSpeedButtons;
 var
@@ -193,16 +154,6 @@ begin
   sb.StaysPressed := True;
   sb.Tag := faToggleLineColor;
   InitSpeedButton(sb);
-end;
-
-procedure TActionSpeedBarRG03.ToggleColorModeBtnClick(Sender: TObject);
-begin
-  Main.ToggleDarkMode;
-end;
-
-procedure TActionSpeedBarRG03.ToggleFontSizeBtnClick(Sender: TObject);
-begin
-  Main.ToggleSpeedPanelFontSize;
 end;
 
 end.
