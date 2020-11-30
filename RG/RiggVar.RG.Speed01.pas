@@ -26,9 +26,6 @@ type
     SandboxedBtn: TSpeedButton;
     AllPropsBtn: TSpeedButton;
     AllTagsBtn: TSpeedButton;
-
-    ColorModeBtn: TSpeedButton;
-    FontSizeBtn: TSpeedButton;
   public
     procedure InitSpeedButtons; override;
   end;
@@ -45,26 +42,6 @@ procedure TActionSpeedBarRG01.InitSpeedButtons;
 var
   sb: TSpeedBtn;
 begin
-  { Special Buttons }
-
-  BtnColorValue := clvData;
-
-  sb := AddSpeedBtn('FontSizeBtn', BtnGroupSpace);
-  FontSizeBtn := sb;
-  sb.Text := 'FS';
-  sb.Hint := 'Toggle FontSize';
-  sb.OnClick := ToggleFontSizeBtnClick;
-  sb.Tag := faNoop;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('ColorModeBtn');
-  ColorModeBtn := sb;
-  sb.Text := 'CM';
-  sb.Hint := 'Toggle ColorMode';
-  sb.OnClick := ToggleColorModeBtnClick;
-  sb.Tag := faNoop;
-  InitSpeedButton(sb);
-
   { Check Box Buttons }
 
   BtnColorValue := clvOption;

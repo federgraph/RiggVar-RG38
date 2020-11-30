@@ -278,7 +278,8 @@ faUpdateReportText: result := 'faUpdateReportText';
 faToggleHelp: result := 'faToggleHelp';
 faToggleReport: result := 'faToggleReport';
 faToggleButtonReport: result := 'faToggleButtonReport';
-faToggleFontColor: result := 'faToggleFontColor';
+faToggleDarkMode: result := 'faToggleDarkMode';
+faToggleButtonSize: result := 'faToggleButtonSize';
 faToggleSandboxed: result := 'faToggleSandboxed';
 faToggleSpeedPanel: result := 'faToggleSpeedPanel';
 faToggleAllProps: result := 'faToggleAllProps';
@@ -367,6 +368,26 @@ faResetPosition: result := 'faResetPosition';
 faResetRotation: result := 'faResetRotation';
 faResetZoom: result := 'faResetZoom';
 
+faShowHelpText: result := 'faShowHelpText';
+faShowInfoText: result := 'faShowInfoText';
+faShowNormalKeyInfo: result := 'faShowNormalKeyInfo';
+faShowSpecialKeyInfo: result := 'faShowSpecialKeyInfo';
+faShowZOrderInfo: result := 'faShowZOrderInfo';
+faShowDebugInfo: result := 'faShowDebugInfo';
+
+{ ParamT }
+faParamT1: result := 'faParamT1';
+faParamT2: result := 'faParamT2';
+faParamT3: result := 'faParamT3';
+faParamT4: result := 'faParamT4';
+
+faTouchBarTop: result := 'faTouchBarTop';
+faTouchBarBottom: result := 'faTouchBarBottom';
+faTouchBarLeft: result := 'faTouchBarLeft';
+faTouchBarRight: result := 'faTouchBarRight';
+
+{$ifdef WantAll}
+
 { DropTarget }
 faToggleDropTarget: result := 'faToggleDropTarget';
 
@@ -396,17 +417,15 @@ faHullMesh: result := 'faHullMesh';
 faHullMeshOn: result := 'faHullMeshOn';
 faHullMeshOff: result := 'faHullMeshOff';
 
-faShowHelpText: result := 'faShowHelpText';
-faShowInfoText: result := 'faShowInfoText';
-faShowNormalKeyInfo: result := 'faShowNormalKeyInfo';
-faShowSpecialKeyInfo: result := 'faShowSpecialKeyInfo';
-faShowZOrderInfo: result := 'faShowZOrderInfo';
-faShowDebugInfo: result := 'faShowDebugInfo';
-
-faTouchBarTop: result := 'faTouchBarTop';
-faTouchBarBottom: result := 'faTouchBarBottom';
-faTouchBarLeft: result := 'faTouchBarLeft';
-faTouchBarRight: result := 'faTouchBarRight';
+{ BitmapCycle }
+faCycleBitmapM: result := 'faCycleBitmapM';
+faCycleBitmapP: result := 'faCycleBitmapP';
+faRandom: result := 'faRandom';
+faRandomWhite: result := 'faRandomWhite';
+faRandomBlack: result := 'faRandomBlack';
+faBitmapEscape: result := 'faBitmapEscape';
+faToggleContour: result := 'faToggleContour';
+{$endif}
 
     else
       result := '??';

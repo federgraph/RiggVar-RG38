@@ -204,7 +204,8 @@ begin
 
     faChartReset: result := 'cR';
 
-    faToggleFontColor: result := 'fc';
+    faToggleDarkMode: result := 'DM';
+    faToggleButtonSize: result := 'BS';
 
     faReportNone: result := '~N';
     faReportLog: result := '~L';
@@ -365,6 +366,24 @@ begin
     faResetRotation: result := 'rro';
     faResetZoom: result := 'rzo';
 
+    faShowHelpText: result := 'sh';
+    faShowInfoText: result := 'si';
+    faShowNormalKeyInfo: result := 'nki';
+    faShowSpecialKeyInfo: result := 'ski';
+    faShowDebugInfo: result := 'sdi';
+    faShowZOrderInfo: result := 'zoi';
+
+    faParamT1: result := 't1';
+    faParamT2: result := 't2';
+    faParamT3: result := 't3';
+    faParamT4: result := 't4';
+
+    faTouchBarTop: result := 'tbT';
+    faTouchBarBottom: result := 'tbB';
+    faTouchBarLeft: result := 'tbL';
+    faTouchBarRight: result := 'tbR';
+
+{$ifdef WantAll}
     faToggleLanguage: result := 'lan';
 
     faToggleDropTarget: result := 'tdt';
@@ -388,17 +407,17 @@ begin
     faHullMeshOn: result := 'hm1';
     faHullMeshOff: result := 'hm0';
 
-    faShowHelpText: result := 'sh';
-    faShowInfoText: result := 'si';
-    faShowNormalKeyInfo: result := 'nki';
-    faShowSpecialKeyInfo: result := 'ski';
-    faShowDebugInfo: result := 'sdi';
-    faShowZOrderInfo: result := 'zoi';
+    faCycleBitmapM: result := 'b-';
+    faCycleBitmapP: result := 'b+';
 
-    faTouchBarTop: result := 'tbT';
-    faTouchBarBottom: result := 'tbB';
-    faTouchBarLeft: result := 'tbL';
-    faTouchBarRight: result := 'tbR';
+    faRandom: result := 'ran';
+    faRandomWhite: result := 'rcw';
+    faRandomBlack: result := 'rcb';
+
+    faBitmapEscape: result := 'be';
+
+    faToggleContour: result := 'ct';
+{$endif}
 
   end;
 end;

@@ -55,8 +55,8 @@ type
     procedure SpeedButtonClick(Sender: TObject); virtual;
     procedure UpdateCaptions;
     procedure UpdateHints;
-    procedure ToggleColorModeBtnClick(Sender: TObject);
-    procedure ToggleFontSizeBtnClick(Sender: TObject);
+    procedure ToggleDarkModeBtnClick(Sender: TObject);
+    procedure ToggleButtonSizeBtnClick(Sender: TObject);
   public
     class var SpeedColorScheme: TSpeedColorScheme; // injected
 
@@ -410,14 +410,14 @@ begin
 
 end;
 
-procedure TActionSpeedBar.ToggleColorModeBtnClick(Sender: TObject);
+procedure TActionSpeedBar.ToggleDarkModeBtnClick(Sender: TObject);
 begin
   Main.ToggleDarkMode;
 end;
 
-procedure TActionSpeedBar.ToggleFontSizeBtnClick(Sender: TObject);
+procedure TActionSpeedBar.ToggleButtonSizeBtnClick(Sender: TObject);
 begin
-  Main.ToggleSpeedPanelFontSize;
+  Main.ToggleButtonSize;
 end;
 
 end.

@@ -93,6 +93,7 @@ begin
   { View }
   AddSpecial(ActionGroupFederText, 'FederText');
   AddSpecial(ActionGroupViewParams, 'ViewParams');
+  AddSpecial(ActionGroupParamT, 'ParamT');
 
   { RG }
   AddSpecial(ActionGroupRggControls, 'RggControls');
@@ -126,12 +127,16 @@ begin
 
   { RotaForm3 }
   AddSpecial(ActionGroupReset, 'Reset');
+
+{$ifdef WantAll}
   AddSpecial(ActionGroupDropTarget, 'DropTarget');
   AddSpecial(ActionGroupLanguage, 'Language');
   AddSpecial(ActionGroupCopyPaste, 'CopyPaste');
   AddSpecial(ActionGroupViewType, 'ViewType');
   AddSpecial(ActionGroupViewOptions, 'ViewOptions');
   AddSpecial(ActionGroupHullMesh, 'HullMesh');
+  AddSpecial(ActionGroupBitmapCycle, 'BitmapCycle');
+{$endif}
 end;
 
 function TActionGroupList.GetGroup(fa: Integer): Integer;

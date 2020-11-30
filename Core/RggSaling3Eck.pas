@@ -21,7 +21,7 @@ interface
 uses
   System.Math,
   RggTypes,
-  RggInter;
+  RiggVar.App.Model;
 
 type
   TSalingDreieck = class
@@ -43,7 +43,7 @@ type
     function GetSalingWMax: single;
   public
     constructor Create;
-    procedure CopyFromRigg(Rigg: IRigg);
+    procedure CopyFromRigg(Rigg: TRigg);
     procedure GetLW(H, A: single; out L, W: single);
 
     property Saling_H: single read FSalingH write SetSalingH;
@@ -161,7 +161,7 @@ begin
   result := tempW;
 end;
 
-procedure TSalingDreieck.CopyFromRigg(Rigg: IRigg);
+procedure TSalingDreieck.CopyFromRigg(Rigg: TRigg);
 begin
   FSalingHMin := Rigg.RggFA.SalingH.Min;
   FSalingHMax := Rigg.RggFA.SalingH.Max;

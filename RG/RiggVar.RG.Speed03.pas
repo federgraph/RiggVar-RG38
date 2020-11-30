@@ -10,9 +10,6 @@ uses
 type
   TActionSpeedBarRG03 = class(TActionSpeedBar)
   private
-    ColorModeBtn: TSpeedButton;
-    FontSizeBtn: TSpeedButton;
-
     MemoryBtn: TSpeedButton;
     MemoryRecallBtn: TSpeedButton;
 
@@ -45,26 +42,6 @@ procedure TActionSpeedBarRG03.InitSpeedButtons;
 var
   sb: TSpeedBtn;
 begin
-  { Special Buttons }
-
-  BtnColorValue := clvScheme;
-
-  sb := AddSpeedBtn('FontSizeBtn', BtnGroupSpace);
-  FontSizeBtn := sb;
-  sb.Text := 'FS';
-  sb.Hint := 'Toggle FontSize';
-  sb.OnClick := ToggleFontSizeBtnClick;
-  sb.Tag := faNoop;
-  InitSpeedButton(sb);
-
-  sb := AddSpeedBtn('ColorModeBtn');
-  ColorModeBtn := sb;
-  sb.Text := 'CM';
-  sb.Hint := 'Toggle ColorMode';
-  sb.OnClick := ToggleColorModeBtnClick;
-  sb.Tag := faNoop;
-  InitSpeedButton(sb);
-
   { Memory Buttons }
 
   BtnColorValue := clvMemory;

@@ -5,10 +5,10 @@ interface
 uses
   RiggVar.FB.ActionConst,
   RggStrings,
-  RggInter,
   RggTypes,
   RggDoc,
   RggSaling3Eck,
+  RiggVar.App.Model,
   System.SysUtils,
   System.Classes,
   System.Types,
@@ -54,11 +54,10 @@ type
   public
     FSalingTyp: TSalingTyp;
 
-    Rigg: IRigg;
+    Rigg: TRigg;
     RggDocument: TRggDocument;
     SalingDreieck: TSalingDreieck;
 
-    procedure InitRigg;
     procedure UpdateGetriebe;
   public
     ProgressPosition: Integer;
@@ -253,7 +252,7 @@ type
   public
     IsUp: Boolean;
 
-    constructor Create;
+    constructor Create(ARigg: TRigg);
     destructor Destroy; override;
 
     procedure SuperInit;
@@ -311,7 +310,7 @@ begin
   ML.Add(WantenSpannungString);
 end;
 
-constructor TChartModel.Create;
+constructor TChartModel.Create(ARigg: TRigg);
 begin
   UserSelectedKurvenZahl := 3;
   ParamCount := 3;
@@ -350,7 +349,8 @@ begin
 
   InitSpinner;
 
-  InitRigg;
+  Rigg := ARigg;
+  FSalingTyp := Rigg.SalingTyp;
 
   FXTextClicked := VorstagString;
   FPTextClicked := SalingHString;
@@ -1814,12 +1814,6 @@ begin
 
   APSpinnerMax := 100;
   APSpinnerValue := APWidth;
-end;
-
-procedure TChartModel.InitRigg;
-begin
-  Rigg := Main.Rigg;
-  FSalingTyp := Rigg.SalingTyp;
 end;
 
 function TChartModel.XComboSelectedText: string;

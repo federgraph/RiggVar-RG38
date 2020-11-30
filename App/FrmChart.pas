@@ -89,6 +89,7 @@ implementation
 {$R *.fmx}
 
 uses
+  FrmMain,
   RiggVar.App.Main;
 
 const
@@ -117,7 +118,7 @@ begin
   CreateComponents;
   Layout := 2;
 
-  ChartGraph := TChartGraph.Create;
+  ChartGraph := TChartGraph.Create(FormMain.Rigg);
   ChartGraph.Image := Image;
   ChartGraph.BackgroundColor := TAlphaColors.Navy;
 end;

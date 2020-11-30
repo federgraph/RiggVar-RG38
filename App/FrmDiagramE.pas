@@ -110,6 +110,7 @@ implementation
 {$R *.fmx}
 
 uses
+  FrmMain,
   RiggVar.App.Main;
 
 const
@@ -142,8 +143,7 @@ begin
   CreateComponents;
   Layout := 2;
 
-  ChartModel := TRggChartModel01.Create;
-  ChartModel.Rigg := Main.Rigg;
+  ChartModel := TRggChartModel01.Create(FormMain.Rigg);
 
   ChartGraph := TRggDiagram.Create(ChartModel);
   ChartGraph.Image := Image;

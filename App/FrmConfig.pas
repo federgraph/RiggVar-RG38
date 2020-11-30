@@ -10,8 +10,8 @@ uses
   System.UIConsts,
   RggStrings,
   RggScroll,
-  RggInter,
   RggTypes,
+  RiggVar.App.Model,
   System.IniFiles,
   FMX.Types,
   FMX.Controls,
@@ -203,10 +203,10 @@ type
     FirstRowIndex: Integer;
     SecondRowIndex: Integer;
 
-    Rigg: IRigg;
+    Rigg: TRigg;
     IniFileName: string;
     FormShown: Boolean;
-    procedure Init(ARigg: IRigg);
+    procedure Init(ARigg: TRigg);
     procedure LoadFromIniFile;
     procedure WriteToIniFile;
   end;
@@ -284,7 +284,7 @@ begin
   GridSelectCell(nil, FRumpfCell.X, FRumpfCell.Y, b);
 end;
 
-procedure TFormConfig.Init(ARigg: IRigg);
+procedure TFormConfig.Init(ARigg: TRigg);
 begin
   Rigg := ARigg;
 

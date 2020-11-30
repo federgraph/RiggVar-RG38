@@ -3,6 +3,7 @@
 interface
 
 uses
+  RiggVar.App.Model,
   RiggVar.FD.Image,
   System.SysUtils,
   System.Classes,
@@ -43,7 +44,7 @@ type
     Width: Integer;
     Height: Integer;
     BackgroundColor: TAlphaColor;
-    constructor Create;
+    constructor Create(ARigg: TRigg);
     destructor Destroy; override;
     procedure Draw; override;
     procedure ImageScreenScaleChanged(Sender: TObject);
@@ -58,7 +59,7 @@ uses
 
 { TChartGraph }
 
-constructor TChartGraph.Create;
+constructor TChartGraph.Create(ARigg: TRigg);
 begin
   inherited;
 

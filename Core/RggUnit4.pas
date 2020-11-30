@@ -32,7 +32,7 @@ uses
   RiggVar.RG.Data;
 
 type
-  TRigg = class(TRiggFS, IRigg)
+  TRigg1 = class(TRiggFS, IRigg)
   public
     MastKurve: TMastKurve;
     function GetRealTrimm(Index: TTrimmIndex): single;
@@ -60,7 +60,7 @@ type
     procedure LoadFromFederData(fd: TRggData);
     procedure WriteToDocFile(FileName: string);
     procedure LoadFromDocFile(FileName: string);
-    procedure Assign(Source: TRigg);
+    procedure Assign(Source: TRigg1);
     procedure GetDocument(Doc: TRggDocument);
     procedure SetDocument(Doc: TRggDocument);
     procedure SetDefaultDocument;
@@ -76,34 +76,8 @@ implementation
 
 { TRigg }
 
-{
-  procedure TRigg.WriteToIniFile(FileName: String);
-  var
-  IniFile: TIniFile;
-  begin
-    IniFile := TIniFile.Create(FileName);
-    try
-      inherited WriteToIniFile(IniFile);
-    finally
-      IniFile.Free;
-    end;
-  end;
-
-  procedure TRigg.LoadFromIniFile(FileName: String);
-  var
-    IniFile: TIniFile;
-  begin
-    IniFile := TIniFile.Create(FileName);
-    try
-      inherited LoadFromIniFile(IniFile);
-    finally
-      IniFile.Free;
-    end;
-  end;
-}
-
 {$ifdef MSWindows}
-procedure TRigg.WriteXml(ML: TStrings; AllTags: Boolean);
+procedure TRigg1.WriteXml(ML: TStrings; AllTags: Boolean);
 var
   Document: TRggDocument;
 begin
@@ -119,7 +93,7 @@ begin
 end;
 {$endif}
 
-procedure TRigg.WriteToDocFile(FileName: string);
+procedure TRigg1.WriteToDocFile(FileName: string);
 var
   Document: TRggDocument;
   s: string;
@@ -144,7 +118,7 @@ begin
   end;
 end;
 
-procedure TRigg.LoadFromDocFile(FileName: string);
+procedure TRigg1.LoadFromDocFile(FileName: string);
 var
   Document: TRggDocument;
   s: string;
@@ -167,15 +141,15 @@ begin
   end;
 end;
 
-procedure TRigg.Assign(Source: TRigg);
+procedure TRigg1.Assign(Source: TRigg1);
 var
   Document: TRggDocument;
 begin
-  if Source is TRigg then
+  if Source is TRigg1 then
   begin
     Document := TRggDocument.Create;
     try
-      (Source as TRigg).GetDocument(Document);
+      (Source as TRigg1).GetDocument(Document);
       SetDocument(Document);
     finally
       Document.Free;
@@ -184,7 +158,7 @@ begin
   end;
 end;
 
-procedure TRigg.GetDocument(Doc: TRggDocument);
+procedure TRigg1.GetDocument(Doc: TRggDocument);
 begin
   UpdateGSB;
   { Rigg: Typ }
@@ -208,7 +182,7 @@ begin
   Doc.TrimmTabDaten := TrimmTab.TrimmTabDaten;
 end;
 
-procedure TRigg.SetDocument(Doc: TRggDocument);
+procedure TRigg1.SetDocument(Doc: TRggDocument);
 var
   InputRec: TTrimmControls;
   tempManipulatorMode: Boolean;
@@ -257,7 +231,7 @@ begin
   UpdateGSB;
 end;
 
-procedure TRigg.SetDefaultDocument;
+procedure TRigg1.SetDefaultDocument;
 var
   Document: TRggDocument;
 begin
@@ -270,7 +244,7 @@ begin
   end;
 end;
 
-procedure TRigg.GetRealTrimmRecord(var RealTrimm: TRealTrimm);
+procedure TRigg1.GetRealTrimmRecord(var RealTrimm: TRealTrimm);
 { Die Funktion überprüft nicht, ob die Werte in Rigg aktualisiert sind.
   Einige Werte stehen schon nach Aufruf von UpdateGetriebe() zur Verfügung.
   Andere erst nach Aufruf von UpdateRigg(). }
@@ -301,12 +275,12 @@ begin
   end;
 end;
 
-function TRigg.GetRelaxedPoint3D(Value: TRiggPoint): TPoint3D;
+function TRigg1.GetRelaxedPoint3D(Value: TRiggPoint): TPoint3D;
 begin
   result := rPe.V[Value];
 end;
 
-function TRigg.GetRealTrimm(Index: TTrimmIndex): single;
+function TRigg1.GetRealTrimm(Index: TTrimmIndex): single;
 var
   temp: single;
 begin
@@ -336,7 +310,7 @@ begin
   result := temp;
 end;
 
-procedure TRigg.SaveToFederData(fd: TRggData);
+procedure TRigg1.SaveToFederData(fd: TRggData);
 begin
   fd.A0X := Round(rP.A0.X);
   fd.A0Y := -Round(rP.A0.Y);
@@ -401,7 +375,7 @@ begin
   fd.Bie := Round(RealTrimm[tiBiegungS]);
 end;
 
-procedure TRigg.LoadFromFederData(fd: TRggData);
+procedure TRigg1.LoadFromFederData(fd: TRggData);
 var
   InputRec: TTrimmControls;
   tempManipulatorMode: Boolean;
@@ -509,7 +483,7 @@ begin
   UpdateGSB;
 end;
 
-procedure TRigg.AusgabeText(ML: TStrings; WantAll: Boolean = True; WantForce: Boolean = False);
+procedure TRigg1.AusgabeText(ML: TStrings; WantAll: Boolean = True; WantForce: Boolean = False);
 var
   tempSalingDaten: TSalingDaten;
 begin
@@ -596,7 +570,7 @@ begin
 //  ML.EndUpdate;
 end;
 
-procedure TRigg.AusgabeKommentar(ML: TStrings);
+procedure TRigg1.AusgabeKommentar(ML: TStrings);
 var
   temp: single;
 begin
@@ -621,7 +595,7 @@ begin
 //  ML.EndUpdate;
 end;
 
-procedure TRigg.InitFactArray;
+procedure TRigg1.InitFactArray;
 var
   temp, tempH, tempA: single;
   i: TFederParam;
@@ -721,7 +695,7 @@ begin
   end;
 end;
 
-procedure TRigg.UpdateFactArray(CurrentParam: TFederParam);
+procedure TRigg1.UpdateFactArray(CurrentParam: TFederParam);
 var
   i: TFederParam;
   sb: TRggSB;
@@ -766,7 +740,7 @@ begin
   end;
 end;
 
-procedure TRigg.ChangeRigg(CurrentParam: TFederParam; Value: single);
+procedure TRigg1.ChangeRigg(CurrentParam: TFederParam; Value: single);
 var
   tempH, tempA, tempL, tempW: single;
 begin
@@ -864,7 +838,7 @@ begin
   end;
 end;
 
-function TRigg.GetPlotValue(CurrentParam: TFederParam; PlotID: Integer; x, y: single): single;
+function TRigg1.GetPlotValue(CurrentParam: TFederParam; PlotID: Integer; x, y: single): single;
 var
   tx, ty: single;
 begin
@@ -889,22 +863,22 @@ begin
   end;
 end;
 
-function TRigg.GetPoint3D(Value: TRiggPoint): TPoint3D;
+function TRigg1.GetPoint3D(Value: TRiggPoint): TPoint3D;
 begin
   result := rP.V[Value];
 end;
 
-function TRigg.GetRiggDistance(Value: TRiggRod): single;
+function TRigg1.GetRiggDistance(Value: TRiggRod): single;
 begin
   result := rL.Rod[Value];
 end;
 
-function TRigg.GetStabKraft(Value: TRiggRod): single;
+function TRigg1.GetStabKraft(Value: TRiggRod): single;
 begin
   result := rF.Rod[Value];
 end;
 
-procedure TRigg.LoadTrimm(fd: TRggData);
+procedure TRigg1.LoadTrimm(fd: TRggData);
 var
   temp, tempH, tempA: single;
   i: TFederParam;
@@ -999,7 +973,7 @@ begin
   GSB.ResetVolatile;
 end;
 
-procedure TRigg.SaveTrimm(fd: TRggData);
+procedure TRigg1.SaveTrimm(fd: TRggData);
 begin
   SaveToFederData(fd);
 
@@ -1040,7 +1014,7 @@ begin
   fd.WOMax := Round(GSB.Woben.Max);
 end;
 
-procedure TRigg.SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
+procedure TRigg1.SetMastLineData(const Value: TLineDataR100; L: single; Beta: single);
 var
   temp1, temp2, temp3, temp4, tempL: single;
   j, k: Integer;
@@ -1059,13 +1033,13 @@ begin
   end;
 end;
 
-function TRigg.GetMastKurve: TMastKurve;
+function TRigg1.GetMastKurve: TMastKurve;
 begin
   SetMastLineData(MastLinie, MastLC, MastBeta);
   result := MastKurve;
 end;
 
-function TRigg.GetMastKurvePoint(const Index: Integer): TPoint3D;
+function TRigg1.GetMastKurvePoint(const Index: Integer): TPoint3D;
 begin
   if (Index >= 0) and (Index < Length(MastKurve)) then
     result := MastKurve[Index]
@@ -1075,7 +1049,7 @@ begin
   end;
 end;
 
-function TRigg.FindBogenIndexOf(P: TPoint3D): Integer;
+function TRigg1.FindBogenIndexOf(P: TPoint3D): Integer;
 var
   i, j: Integer;
   MinIndex: Integer;

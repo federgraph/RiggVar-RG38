@@ -300,7 +300,8 @@ ActionGroupRggSonstiges: TActionGroup = [
   faToggleHelp,
   faToggleReport,
   faToggleButtonReport,
-  faToggleFontColor,
+  faToggleDarkMode,
+  faToggleButtonSize,
   faToggleSandboxed,
   faToggleSpeedPanel,
   faToggleAllProps,
@@ -367,12 +368,25 @@ ActionGroupCircles: TActionGroup = [
   faCircleParamM2Z,
   faCirclesReset];
 
+ActionGroupParamT: TActionGroup = [
+  faParamT1,
+  faParamT2,
+  faParamT3,
+  faParamT4];
+
 ActionGroupReset: TActionGroup = [
   faReset,
   faResetPosition,
   faResetRotation,
   faResetZoom];
 
+ActionGroupTouchBarLegend: TActionGroup = [
+  faTouchBarTop,
+  faTouchBarBottom,
+  faTouchBarLeft,
+  faTouchBarRight];
+
+{$ifdef WantAll}
 ActionGroupDropTarget: TActionGroup = [
   faToggleDropTarget];
 
@@ -402,11 +416,15 @@ ActionGroupHullMesh: TActionGroup = [
   faHullMeshOn,
   faHullMeshOff];
 
-ActionGroupTouchBarLegend: TActionGroup = [
-  faTouchBarTop,
-  faTouchBarBottom,
-  faTouchBarLeft,
-  faTouchBarRight];
+ActionGroupBitmapCycle: TActionGroup = [
+  faCycleBitmapM,
+  faCycleBitmapP,
+  faRandom,
+  faRandomWhite,
+  faRandomBlack,
+  faBitmapEscape,
+  faToggleContour];
+{$endif}
 
 implementation
 

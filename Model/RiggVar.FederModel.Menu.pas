@@ -283,17 +283,22 @@ begin
   fag.Add(faMemeGotoLandscape);
   fag.Add(faMemeGotoSquare);
   fag.Add(faMemeGotoPortrait);
-  fag.Add(faMemeFormat0);
-  fag.Add(faMemeFormat1);
-  fag.Add(faMemeFormat2);
-  fag.Add(faMemeFormat3);
-  fag.Add(faMemeFormat4);
-  fag.Add(faMemeFormat5);
-  fag.Add(faMemeFormat6);
-  fag.Add(faMemeFormat7);
-  fag.Add(faMemeFormat8);
-  fag.Add(faMemeFormat9);
+//  fag.Add(faMemeFormat0);
+//  fag.Add(faMemeFormat1);
+//  fag.Add(faMemeFormat2);
+//  fag.Add(faMemeFormat3);
+//  fag.Add(faMemeFormat4);
+//  fag.Add(faMemeFormat5);
+//  fag.Add(faMemeFormat6);
+//  fag.Add(faMemeFormat7);
+//  fag.Add(faMemeFormat8);
+//  fag.Add(faMemeFormat9);
   AddGroup('Format', fag);
+
+  fag := TFederActionGroup.Create;
+  fag.Add(faToggleButtonSize);
+  fag.Add(faToggleDarkMode);
+  AddGroup('Option', fag);
 end;
 
 destructor TFederMenuBase.Destroy;
