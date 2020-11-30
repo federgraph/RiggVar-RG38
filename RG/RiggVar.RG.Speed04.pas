@@ -30,7 +30,6 @@ type
 implementation
 
 uses
-  RiggVar.App.Main,
   RiggVar.FB.ActionConst;
 
 { TActionSpeedBarRG04 }

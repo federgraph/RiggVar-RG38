@@ -41,9 +41,7 @@ type
     function GetMastKurvePoint(const Index: Integer): TPoint3D;
     procedure SetMastLineData(const Value: TLineDataR100; L, Beta: single);
 
-{$ifdef MSWindows}
     procedure WriteXml(ML: TStrings; AllTags: Boolean = False);
-{$endif}
     procedure AusgabeText(ML: TStrings; WantAll: Boolean = True; WantForce: Boolean = False);
     procedure AusgabeKommentar(ML: TStrings);
 
@@ -76,23 +74,6 @@ implementation
 
 { TRigg }
 
-{$ifdef MSWindows}
-procedure TRigg1.WriteXml(ML: TStrings; AllTags: Boolean);
-var
-  Document: TRggDocument;
-begin
-  Document := TRggDocument.Create;
-  Document.WantFestigkeitsWerteInXml := AllTags;
-  Document.WantTrimmTabInXml := AllTags;
-  try
-    GetDocument(Document);
-    Document.WriteXML(ML);
-  finally
-    Document.Free;
-  end;
-end;
-{$endif}
-
 procedure TRigg1.WriteToDocFile(FileName: string);
 var
   Document: TRggDocument;
@@ -117,6 +98,27 @@ begin
     Document.Free;
   end;
 end;
+
+{$ifdef MSWindows}
+procedure TRigg1.WriteXml(ML: TStrings; AllTags: Boolean);
+var
+  Document: TRggDocument;
+begin
+  Document := TRggDocument.Create;
+  Document.WantFestigkeitsWerteInXml := AllTags;
+  Document.WantTrimmTabInXml := AllTags;
+  try
+    GetDocument(Document);
+    Document.WriteXML(ML);
+  finally
+    Document.Free;
+  end;
+end;
+{$else}
+procedure TRigg1.WriteXml(ML: TStrings; AllTags: Boolean);
+begin
+end;
+{$endif}
 
 procedure TRigg1.LoadFromDocFile(FileName: string);
 var

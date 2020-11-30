@@ -97,7 +97,7 @@ The app can be run from a USB stick.
 
 > The name of the Windows Store application is **Trimm420**.
 
-( The store entry for the app has a German language description. )
+The store entry for the app has a German language description.
 
 ## License
 
