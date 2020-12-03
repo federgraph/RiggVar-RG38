@@ -86,12 +86,8 @@ type
     Koordinaten: TRiggPoints;
     rP_D0: TPoint3D;
     rP_FX: TPoint3D;
-    OffsetX: single;
-    OffsetY: single;
     InitialZoom: single;
 
-    OffsetXDefault: single;
-    OffsetYDefault: single;
     InitialZoomDefault: single;
 
     FixPoint: TRiggPoint;
@@ -109,9 +105,6 @@ type
 
 implementation
 
-uses
-  RggCalc;
-
 { TRggDrawingD00 }
 
 constructor TRggDrawingD00.Create;
@@ -121,12 +114,8 @@ begin
   inherited;
   Name := 'D00-Live-Rigg';
 
-  OffsetXDefault := 620;
-  OffsetYDefault := 420;
   InitialZoomDefault := 0.09;
 
-  OffsetX := OffsetXDefault;
-  OffsetY := OffsetYDefault;
   InitialZoom := InitialZoomDefault;
 
   { Points }
@@ -578,8 +567,8 @@ var
   procedure Temp(cr: TRggCircle; oo: TRiggPoint);
   begin
     t := Koordinaten.V[oo] - rP_FX;
-    cr.Center.X := OffsetX + t.X * InitialZoom;
-    cr.Center.Y := OffsetY - t.Z * InitialZoom;
+    cr.Center.X := t.X * InitialZoom;
+    cr.Center.Y := -t.Z * InitialZoom;
     cr.Center.Z := -t.Y * InitialZoom;
     cr.Save;
   end;

@@ -72,7 +72,7 @@ type
 
 implementation
 
-{ TRigg }
+{ TRigg1 }
 
 procedure TRigg1.WriteToDocFile(FileName: string);
 var

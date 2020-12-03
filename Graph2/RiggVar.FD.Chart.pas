@@ -116,6 +116,8 @@ var
   tempX: single;
   tempY: single;
 
+  ox, oy: single;
+
   procedure LineTo(x2, y2: single);
   begin
     g.DrawLine(LineToPoint, PointF(x2, y2), 1.0);
@@ -123,6 +125,9 @@ var
   end;
 
 begin
+  ox := Box.X + Drawing.FaxPoint3D.X;
+  oy := Box.Y + Drawing.FaxPoint3D.Y;
+
   g.Stroke.Thickness := StrokeThickness;
   g.Stroke.Color := StrokeColor;
 
@@ -133,15 +138,15 @@ begin
   begin
     g.Stroke.Color := StrokeColor;
     tempY := Box.Height - Box.Height * (Poly[0] - Ymin) / (Ymax - Ymin);
-    P.X := Box.X;
-    P.Y := Box.Y + tempY;
+    P.X := ox;
+    P.Y := oy + tempY;
     LineToPoint := P;
     for i := 1 to LNr do
     begin
       tempX := Box.Width * i / LNr;
       tempY := Box.Height - Box.Height * (Poly[i] - Ymin) / (Ymax - Ymin);
-      P.X := Box.X + tempX;
-      P.Y := Box.Y + tempY;
+      P.X := ox + tempX;
+      P.Y := oy + tempY;
       LineTo(P.X, P.Y);
     end;
   end;
@@ -155,11 +160,11 @@ begin
     begin
       tempX := Box.Width * i / LNr;
       tempY := Box.Height - Box.Height * (Poly[i] - Ymin) / (Ymax - Ymin);
-      P.X := Box.X + tempX;
-      P.Y := Box.Y + tempY;
+      P.X := ox + tempX;
+      P.Y := oy + tempY;
       g.FillRect(
-        RectF(P.x - PointRadius, P.y - PointRadius,
-              P.x + PointRadius, P.y + PointRadius), 0, 0, [], 1.0);
+        RectF(P.X - PointRadius, P.Y - PointRadius,
+              P.X + PointRadius, P.Y + PointRadius), 0, 0, [], 1.0);
     end;
   end;
 
@@ -168,11 +173,11 @@ begin
     g.Stroke.Color := claRed;
     tempX := Box.Width * ((ChartPunktX) - Xmin) / (XMax - Xmin);
     tempY := Box.Height;
-    P.X := Box.X + tempX;
-    P.Y := Box.Y + tempY;
+    P.X := ox + tempX;
+    P.Y := oy + tempY;
     g.FillRect(
-      RectF(P.x - PointRadius, P.y - PointRadius,
-            P.x + PointRadius, P.y + PointRadius), 0, 0, [], 1.0);
+      RectF(P.X - PointRadius, P.Y - PointRadius,
+            P.X + PointRadius, P.Y + PointRadius), 0, 0, [], 1.0);
 
   end;
 end;
@@ -203,9 +208,13 @@ var
   i: Integer;
   tempX: single;
   tempY: single;
+  ox, oy: single;
 begin
   if Length(Poly) = 0 then
     Exit;
+
+  ox := Box.X + Drawing.FaxPoint3D.X;
+  oy := Box.Y + Drawing.FaxPoint3D.Y;
 
   g.Stroke.Thickness := StrokeThickness;
   g.Stroke.Color := StrokeColor;
@@ -218,15 +227,15 @@ begin
   begin
     PD.Clear;
     tempY := Box.Height - Box.Height * (Poly[0] - Ymin) / (Ymax - Ymin);
-    P.X := Box.X;
-    P.Y := Box.Y + tempY;
+    P.X := ox;
+    P.Y := oy + tempY;
     PD.MoveTo(P);
     for i := 1 to LNr do
     begin
       tempX := Box.Width * (i / LNr);
       tempY := Box.Height - Box.Height * (Poly[i] - Ymin) / (Ymax - Ymin);
-      P.X := Box.X + tempX;
-      P.Y := Box.Y + tempY;
+      P.X := ox + tempX;
+      P.Y := oy + tempY;
       PD.LineTo(P);
     end;
     g.DrawPath(PD, CurveOpacity);
@@ -241,11 +250,11 @@ begin
     begin
       tempX := Box.Width * i / LNr;
       tempY := Box.Height - Box.Height * (Poly[i] - Ymin) / (Ymax - Ymin);
-      P.X := Box.X + tempX;
-      P.Y := Box.Y + tempY;
+      P.X := ox + tempX;
+      P.Y := oy + tempY;
       g.FillRect(
-        RectF(P.x - PointRadius, P.y - PointRadius,
-              P.x + PointRadius, P.y + PointRadius), 0, 0, [], 1.0);
+        RectF(P.X - PointRadius, P.Y - PointRadius,
+              P.X + PointRadius, P.Y + PointRadius), 0, 0, [], 1.0);
     end;
   end;
 
@@ -254,11 +263,11 @@ begin
     g.Stroke.Color := claRed;
     tempX := Box.Width * ((ChartPunktX) - Xmin) / (XMax - Xmin);
     tempY := Box.Height;
-    P.X := Box.X + tempX;
-    P.Y := Box.Y + tempY;
+    P.X := ox + tempX;
+    P.Y := oy + tempY;
     g.FillRect(
-      RectF(P.x - PointRadius, P.y - PointRadius,
-            P.x + PointRadius, P.y + PointRadius), 0, 0, [], 1.0);
+      RectF(P.X - PointRadius, P.Y - PointRadius,
+            P.X + PointRadius, P.Y + PointRadius), 0, 0, [], 1.0);
 
   end;
 end;

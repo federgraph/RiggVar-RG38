@@ -7,7 +7,6 @@ uses
   RiggVar.RG.Model;
 
 type
-  { select the model of the app - take one }
 //  TRigg = TRigg1;
   TRigg = TRigg2;
 

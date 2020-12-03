@@ -386,6 +386,8 @@ faTouchBarBottom: result := 'faTouchBarBottom';
 faTouchBarLeft: result := 'faTouchBarLeft';
 faTouchBarRight: result := 'faTouchBarRight';
 
+faToggleSortedRota: result := 'faToggleSortedRota';
+
 {$ifdef WantAll}
 
 { DropTarget }

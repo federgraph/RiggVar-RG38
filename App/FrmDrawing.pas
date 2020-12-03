@@ -1036,7 +1036,7 @@ begin
     begin
       InitElements;
       CurrentDrawing.Compute;
-      CurrentDrawing.UseDarkColorScheme := DL.UseDarkColorScheme;
+      CurrentDrawing.IsDark := DL.UseDarkColorScheme;
       Draw;
       ElementList.ItemIndex := CurrentDrawing.DefaultElementIndex;
       SelectElement(CurrentDrawing.DefaultElementIndex);
@@ -1185,7 +1185,6 @@ begin
 
 {$ifdef FMX}
   ss := Image.Scene.GetSceneScale;
-  g.Offset := TH.Offset;
   if g.BeginScene then
   try
     g.SetMatrix(TMatrix.CreateScaling(ss, ss));
@@ -1195,6 +1194,7 @@ begin
     g.Stroke.Thickness := 1.0;
     g.Font.Size := 16;
     g.Font.Family := 'Consolas';
+    CurrentDrawing.FaxPoint3D.C := TH.Offset;
     CurrentDrawing.Draw(g);
   finally
     g.EndScene;
@@ -1317,7 +1317,7 @@ end;
 procedure TFormDrawing.SwapColorScheme;
 begin
   DL.UseDarkColorScheme := not DL.UseDarkColorScheme;
-  CurrentDrawing.UseDarkColorScheme := DL.UseDarkColorScheme;
+  CurrentDrawing.IsDark := DL.UseDarkColorScheme;
 
   if DL.UseDarkColorScheme then
   begin

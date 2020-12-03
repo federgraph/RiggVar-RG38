@@ -381,6 +381,8 @@ begin
     faTouchBarLeft: result := 'TouchBar Left: Big Step';
     faTouchBarRight: result := 'TouchBar Right: Small Step ';
 
+    faToggleSortedRota: result := 'Toggle Sorted Rota';
+
 {$ifdef WantAll}
     faToggleLanguage: result := 'Toggle Language';
 

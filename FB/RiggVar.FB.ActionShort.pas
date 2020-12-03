@@ -383,6 +383,8 @@ begin
     faTouchBarLeft: result := 'tbL';
     faTouchBarRight: result := 'tbR';
 
+    faToggleSortedRota: result := 'S';
+
 {$ifdef WantAll}
     faToggleLanguage: result := 'lan';
 

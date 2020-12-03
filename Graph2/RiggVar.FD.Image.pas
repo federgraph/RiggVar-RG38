@@ -113,7 +113,6 @@ begin
   if FCurrentBitmap <> nil then
   begin
     R1 := LocalRect;
-//    R2 := FCurrentBitmap.BoundsF;
     R2 := TRectF.Create(R1.Left, R1.Top, R1.Left + FCurrentBitmap.Width, R1.Top + FCurrentBitmap.Height);
 
     LR := TRectF.Create(R1.Left * FSS, R1.Top * FSS, R1.Right * FSS, R1.Bottom * FSS);

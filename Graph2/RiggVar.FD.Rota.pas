@@ -100,6 +100,8 @@ type
     RD: TRggDrawingD00;
     CurrentElement: TRggElement;
 
+    NullPunktOffset: TPointF;
+
     procedure ClearImage;
     procedure DrawToCanvas(g: TCanvas);
     procedure DoDrawToCanvas(Sender: TObject);
@@ -107,13 +109,14 @@ type
     procedure DoReset;
     procedure ResetBtnClick(Sender: TObject);
 
-    procedure ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
-    procedure ImageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
-    procedure ImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+    procedure ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: single);
+    procedure ImageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: single);
+    procedure ImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: single);
   public
     Image: TOriginalImage;
     IsUp: Boolean;
     DrawCounter: Integer;
+    UseRotaCenterFullScreen: Boolean;
 
     constructor Create;
     destructor Destroy; override;
@@ -180,7 +183,7 @@ end;
 
 function TRotaForm2.GetMastKurvePoint(const Index: Integer): TPoint3D;
 begin
-
+  result := TPoint3D.Zero;
 end;
 
 procedure TRotaForm2.Init;
@@ -190,12 +193,18 @@ end;
 
 procedure TRotaForm2.InitPosition(w, h, x, y: single);
 begin
-  RD.OffsetX := w / 2;
-  RD.OffsetY := h / 2;
-  RD.OffsetXDefault := RD.OffsetX;
-  RD.OffsetYDefault := RD.OffsetY;
-  TH.Offset := TPointF.Zero;
-  DoOnUpdateStrokeRigg;
+  if UseRotaCenterFullScreen then
+  begin
+    NullpunktOffset.X := w / 2;
+    NullpunktOffset.Y := h / 2;
+  end
+  else
+  begin
+    NullpunktOffset.X := Image.Width / 2;
+    NullpunktOffset.Y := Image.Height / 2;
+  end;
+  TH.Offset.X := 0;
+  TH.Offset.Y := 0;
 end;
 
 procedure TRotaForm2.Swap;
@@ -212,6 +221,7 @@ begin
   case fa of
     faRggBogen: result := FBogen;
     faRggKoppel: result := FKoppel;
+    faToggleSortedRota: result := RD.WantSort;
     else
       result := False;
   end;
@@ -254,8 +264,7 @@ end;
 procedure TRotaForm2.SetDarkMode(const Value: Boolean);
 begin
   FDarkMode := Value;
-  DL.UseDarkColorScheme := Value;
-  RD.UseDarkColorScheme := Value;
+  RD.IsDark := Value;
   RD.Colors.BackgroundColor := FBackgroundColor;
   Draw;
 end;
@@ -340,7 +349,9 @@ end;
 
 procedure TRotaForm2.ToggleRenderOption(const fa: Integer);
 begin
-
+  case fa of
+    faToggleSortedRota: RD.WantSort := not RD.WantSort;
+  end;
 end;
 
 procedure TRotaForm2.Zoom(delta: single);
@@ -367,7 +378,19 @@ end;
 
 constructor TRotaForm2.Create;
 begin
+  UseRotaCenterFullScreen := True;
   UseMastKurve := True;
+
+  if UseRotaCenterFullScreen then
+  begin
+    NullpunktOffset.X := 1920 / 2;
+    NullpunktOffset.Y := 1080 / 2;
+  end
+  else
+  begin
+    NullpunktOffset.X := 1024 / 2;
+    NullpunktOffset.Y := 768 / 2;
+  end;
 
   RD := TRggDrawingD00.Create;
   DL := TRggDrawings.Create;
@@ -380,7 +403,7 @@ begin
   TH.CurrentDrawing := RD;
 end;
 
-procedure TRotaForm2.ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+procedure TRotaForm2.ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: single);
 begin
   MouseDown := True;
   MousePos.X := X;
@@ -389,7 +412,7 @@ begin
   TH.Rotation := TPoint3D.Zero;
 end;
 
-procedure TRotaForm2.ImageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
+procedure TRotaForm2.ImageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: single);
 var
   dx, dy: single;
 begin
@@ -405,7 +428,7 @@ begin
   MousePos.Y := Y;
 end;
 
-procedure TRotaForm2.ImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+procedure TRotaForm2.ImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: single);
 begin
   MouseDown := False;
 end;
@@ -469,8 +492,10 @@ begin
   Inc(DrawCounter);
 
 {$ifdef FMX}
+
+  g.Offset := PointF(NullpunktOffset.X, NullpunktOffset.Y);
+
   ss := Image.Scene.GetSceneScale;
-  g.Offset := TH.Offset;
   if g.BeginScene then
   try
     g.SetMatrix(TMatrix.CreateScaling(ss, ss));
@@ -480,6 +505,7 @@ begin
     g.Stroke.Thickness := 1.0;
     g.Font.Size := 16;
     g.Font.Family := 'Consolas';
+    RD.FaxPoint3D.C := TH.Offset;
     RD.Draw(g);
   finally
     g.EndScene;
@@ -527,8 +553,6 @@ begin
 
   TH.ResetTransform;
 
-  RD.OffsetX := RD.OffsetXDefault;
-  RD.OffsetY := RD.OffsetYDefault;
   RD.InitialZoom := RD.InitialZoomDefault * aRelativeZoom;
 
   RD.ViewpointFlag := True;
@@ -540,6 +564,9 @@ end;
 function TRotaForm2.GetChecked(fa: Integer): Boolean;
 begin
   result := False;
+  case fa of
+    faToggleSortedRota: result := RD.WantSort;
+  end;
 end;
 
 procedure TRotaForm2.SetChecked(fa: Integer; Value: Boolean);
@@ -583,6 +610,12 @@ begin
     faResetPosition: ;
     faResetRotation: ;
     faResetZoom: ;
+
+    faToggleSortedRota:
+    begin
+      RD.WantSort := not RD.WantSort;
+      Draw;
+    end;
   end;
 end;
 
@@ -594,8 +627,8 @@ begin
   p := RD.rP_FX;
   for i := 0 to 100 do
   begin
-    RD.KK.RggPoly[i].X := RD.OffsetX + (FKoppelKurve[i].X - p.X) * RD.InitialZoom;
-    RD.KK.RggPoly[i].Y := RD.OffsetY - (FKoppelKurve[i].Z - p.Z) * RD.InitialZoom;
+    RD.KK.RggPoly[i].X := (FKoppelKurve[i].X - p.X) * RD.InitialZoom;
+    RD.KK.RggPoly[i].Y := -(FKoppelKurve[i].Z - p.Z) * RD.InitialZoom;
     RD.KK.RggPoly[i].Z := p.Y * RD.InitialZoom;
   end;
   if not RD.ViewpointFlag then
@@ -610,8 +643,8 @@ begin
   p := RD.rP_FX;
   for i := 0 to BogenMax do
   begin
-    RD.MK.RggPoly[i].X := RD.OffsetX + (FMastKurve[i].X - p.X) * RD.InitialZoom;
-    RD.MK.RggPoly[i].Y := RD.OffsetY - (FMastKurve[i].Z - p.Z) * RD.InitialZoom;
+    RD.MK.RggPoly[i].X := (FMastKurve[i].X - p.X) * RD.InitialZoom;
+    RD.MK.RggPoly[i].Y := -(FMastKurve[i].Z - p.Z) * RD.InitialZoom;
     RD.MK.RggPoly[i].Z := p.Y * RD.InitialZoom;
   end;
   if not RD.ViewpointFlag then
@@ -633,8 +666,8 @@ begin
   begin
     k := Round(100 / BogenMax * j);
     tempL := j * FMastLinieL / BogenMax;
-    RD.MK.RggPoly[j].X := RD.OffsetX + (tempL * temp1 + FMastLinie[k] * temp2 - p.X) * RD.InitialZoom;
-    RD.MK.RggPoly[j].Y := RD.OffsetY - (tempL * temp3 + FMastLinie[k] * temp4 - p.Z) * RD.InitialZoom;
+    RD.MK.RggPoly[j].X := (tempL * temp1 + FMastLinie[k] * temp2 - p.X) * RD.InitialZoom;
+    RD.MK.RggPoly[j].Y := -(tempL * temp3 + FMastLinie[k] * temp4 - p.Z) * RD.InitialZoom;
     RD.MK.RggPoly[j].Z := p.Y * RD.InitialZoom;
   end;
   if not RD.ViewpointFlag then

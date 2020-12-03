@@ -27,7 +27,7 @@ type
     DirY: TPoint3D;
     DirZ: TPoint3D;
 
-    Offset: TPointF;
+    Offset: TPoint3D;
     Rotation: TPoint3D;
     ZoomDelta: single;
 
@@ -119,10 +119,6 @@ begin
   begin
     ra := RotationHelper.EulerAnglesFromMatrix(AccuMatrix);
 
-    { Variante 1 }
-//    mr := RotationHelper.EulerAnglesToMatrix(ra.X, ra.Y, ra.Z);
-
-    { Variante 2 }
     mx := TMatrix3D.CreateRotationX(ra.X);
     my := TMatrix3D.CreateRotationY(ra.Y);
     mz := TMatrix3D.CreateRotationZ(ra.Z);
@@ -162,7 +158,6 @@ end;
 
 function TTransformHelper.BuildMatrixI: TMatrix3D;
 var
-//  mx, my, mz: TMatrix3D;
   mr: TMatrix3D;
   ra: TPoint3D;
 begin
@@ -170,14 +165,7 @@ begin
   begin
     ra := RotationHelper.EulerAnglesFromMatrix(AccuMatrix);
     mr := RotationHelper.EulerAnglesToMatrix(ra.X, ra.Y, ra.Z);
-
-//    mx := TMatrix3D.CreateRotationX(ra.X);
-//    my := TMatrix3D.CreateRotationY(ra.Y);
-//    mz := TMatrix3D.CreateRotationZ(ra.Z);
-//    mr := mx * my * mz;
-
     mr := mr.Transpose;
-
     BuildMatrix(mr);
     result := NewMatrix;
     NewMatrix := TMatrix3D.Identity;
@@ -206,7 +194,7 @@ begin
   TRggCircle.Matrix := TMatrix3D.Identity;
   AccuMatrix := TMatrix3D.Identity;
   Rotation := TPoint3D.Zero;
-  Offset := TPointF.Zero;
+  Offset := TPoint3D.Zero;
 end;
 
 procedure TTransformHelper.Reset;

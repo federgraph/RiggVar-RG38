@@ -262,6 +262,7 @@ ActionGroupRggGraph: TActionGroup = [
   faToggleUseDisplayList,
   faToggleUseQuickSort,
   faToggleShowLegend,
+  faToggleSortedRota,
   faRggBogen,
   faRggKoppel,
   faRggHull,
