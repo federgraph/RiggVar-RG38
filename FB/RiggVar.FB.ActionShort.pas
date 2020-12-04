@@ -18,6 +18,8 @@
 
 interface
 
+{.$define WantAll}
+
 uses
   System.SysUtils,
   RiggVar.FB.ActionConst;
@@ -385,6 +387,10 @@ begin
 
     faToggleSortedRota: result := 'S';
 
+    faToggleViewType: result := 'vt';
+    faViewTypeOrtho: result := 'vto';
+    faViewTypePerspective: result := 'vtp';
+
 {$ifdef WantAll}
     faToggleLanguage: result := 'lan';
 
@@ -400,10 +406,6 @@ begin
     faToggleMoveMode: result := 'mm';
     faLinearMove: result := 'lmm';
     faExpoMove: result := 'emm';
-
-    faToggleViewType: result := 'vt';
-    faViewTypeOrtho: result := 'vto';
-    faViewTypePerspective: result := 'vtp';
 
     faHullMesh: result := 'hm';
     faHullMeshOn: result := 'hm1';

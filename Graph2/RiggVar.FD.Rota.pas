@@ -100,7 +100,7 @@ type
     RD: TRggDrawingD00;
     CurrentElement: TRggElement;
 
-    NullPunktOffset: TPointF;
+    ImageMidPoint: TPoint3D;
 
     procedure ClearImage;
     procedure DrawToCanvas(g: TCanvas);
@@ -195,13 +195,13 @@ procedure TRotaForm2.InitPosition(w, h, x, y: single);
 begin
   if UseRotaCenterFullScreen then
   begin
-    NullpunktOffset.X := w / 2;
-    NullpunktOffset.Y := h / 2;
+    ImageMidPoint.X := w / 2;
+    ImageMidPoint.Y := h / 2;
   end
   else
   begin
-    NullpunktOffset.X := Image.Width / 2;
-    NullpunktOffset.Y := Image.Height / 2;
+    ImageMidPoint.X := Image.Width / 2;
+    ImageMidPoint.Y := Image.Height / 2;
   end;
   TH.Offset.X := 0;
   TH.Offset.Y := 0;
@@ -383,13 +383,13 @@ begin
 
   if UseRotaCenterFullScreen then
   begin
-    NullpunktOffset.X := 1920 / 2;
-    NullpunktOffset.Y := 1080 / 2;
+    ImageMidPoint.X := 1920 / 2;
+    ImageMidPoint.Y := 1080 / 2;
   end
   else
   begin
-    NullpunktOffset.X := 1024 / 2;
-    NullpunktOffset.Y := 768 / 2;
+    ImageMidPoint.X := 1024 / 2;
+    ImageMidPoint.Y := 768 / 2;
   end;
 
   RD := TRggDrawingD00.Create;
@@ -493,7 +493,7 @@ begin
 
 {$ifdef FMX}
 
-  g.Offset := PointF(NullpunktOffset.X, NullpunktOffset.Y);
+  g.Offset := TPointF.Zero;
 
   ss := Image.Scene.GetSceneScale;
   if g.BeginScene then
@@ -505,7 +505,7 @@ begin
     g.Stroke.Thickness := 1.0;
     g.Font.Size := 16;
     g.Font.Family := 'Consolas';
-    RD.FaxPoint3D.C := TH.Offset;
+    RD.FaxPoint3D.C := ImageMidPoint + TH.Offset;
     RD.Draw(g);
   finally
     g.EndScene;

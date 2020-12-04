@@ -18,6 +18,8 @@
 
 interface
 
+{.$define WantAll}
+
 uses
   RiggVar.FB.ActionConst;
 
@@ -387,6 +389,11 @@ ActionGroupTouchBarLegend: TActionGroup = [
   faTouchBarLeft,
   faTouchBarRight];
 
+ActionGroupViewType: TActionGroup = [
+  faToggleViewType,
+  faViewTypeOrtho,
+  faViewTypePerspective];
+
 {$ifdef WantAll}
 ActionGroupDropTarget: TActionGroup = [
   faToggleDropTarget];
@@ -406,11 +413,6 @@ ActionGroupViewOptions: TActionGroup = [
   faToggleMoveMode,
   faLinearMove,
   faExpoMove];
-
-ActionGroupViewType: TActionGroup = [
-  faToggleViewType,
-  faViewTypeOrtho,
-  faViewTypePerspective];
 
 ActionGroupHullMesh: TActionGroup = [
   faHullMesh,

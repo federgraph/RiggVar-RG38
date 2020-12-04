@@ -18,6 +18,8 @@
 
 interface
 
+{.$define WantAll}
+
 uses
   RiggVar.FB.ActionConst;
 
@@ -388,6 +390,11 @@ faTouchBarRight: result := 'faTouchBarRight';
 
 faToggleSortedRota: result := 'faToggleSortedRota';
 
+{ ViewType }
+faToggleViewType: result := 'faToggleViewType';
+faViewTypeOrtho: result := 'faViewTypeOrtho';
+faViewTypePerspective: result := 'faViewTypePerspective';
+
 {$ifdef WantAll}
 
 { DropTarget }
@@ -403,11 +410,6 @@ faOpen: result := 'faOpen';
 faCopy: result := 'faCopy';
 faPaste: result := 'faPaste';
 faShare: result := 'faShare';
-
-{ ViewType }
-faToggleViewType: result := 'faToggleViewType';
-faViewTypeOrtho: result := 'faViewTypeOrtho';
-faViewTypePerspective: result := 'faViewTypePerspective';
 
 { ViewOptions }
 faToggleMoveMode: result := 'faToggleMoveMode';

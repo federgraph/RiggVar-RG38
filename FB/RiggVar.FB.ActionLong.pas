@@ -18,6 +18,8 @@
 
 interface
 
+{.$define WantAll}
+
 uses
   System.SysUtils,
   RiggVar.FB.ActionConst;
@@ -383,6 +385,10 @@ begin
 
     faToggleSortedRota: result := 'Toggle Sorted Rota';
 
+    faToggleViewType: result := 'Toggle view type';
+    faViewTypeOrtho: result := 'Set view type to orthographic';
+    faViewTypePerspective: result := 'Set view type to perspective';
+
 {$ifdef WantAll}
     faToggleLanguage: result := 'Toggle Language';
 
@@ -394,10 +400,6 @@ begin
     faCopy: result := 'Copy';
     faPaste: result := 'Paste';
     faShare: result := 'Share';
-
-    faToggleViewType: result := 'Toggle view type';
-    faViewTypeOrtho: result := 'Set view type to orthographic';
-    faViewTypePerspective: result := 'Set view type to perspective';
 
     faHullMesh :result := 'toggle hull mesh';
     faHullMeshOn :result := 'hull mesh on';

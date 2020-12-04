@@ -22,6 +22,8 @@ interface
 {$mode delphi}
 {$endif}
 
+{.$define WantAll}
+
 type
   TFederAction = Integer;
 
@@ -390,25 +392,25 @@ faResetZoom = 292;
 
 faToggleSortedRota = 293;
 
+{ ViewType }
+faToggleViewType = 294;
+faViewTypeOrtho = 295;
+faViewTypePerspective = 296;
+
 {$ifdef WantAll}
 { DropTarget }
-faToggleDropTarget = 294;
+faToggleDropTarget = 297;
 
 { Language }
-faToggleLanguage = 295;
+faToggleLanguage = 298;
 
 { CopyPaste }
-faSave = 296;
-faLoad = 297;
-faOpen = 298;
-faCopy = 299;
-faPaste = 300;
-faShare = 301;
-
-{ ViewType }
-faToggleViewType = 302;
-faViewTypeOrtho = 303;
-faViewTypePerspective = 304;
+faSave = 299;
+faLoad = 300;
+faOpen = 301;
+faCopy = 302;
+faPaste = 303;
+faShare = 304;
 
 { ViewOptions }
 faToggleMoveMode = 305;
@@ -433,7 +435,7 @@ faToggleContour = 317;
 {$ifdef WantAll}
 faMax = 318;
 {$else}
-faMax = 294;
+faMax = 297;
 {$endif}
 
 ParamsRange = [

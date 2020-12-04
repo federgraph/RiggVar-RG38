@@ -18,6 +18,8 @@
 
 interface
 
+{.$define WantAll}
+
 uses
   System.SysUtils,
   System.Classes,
@@ -119,20 +121,15 @@ begin
   AddSpecial(ActionGroupBtnLegendPhone, 'BtnLegendPhone');
   AddSpecial(ActionGroupTouchBarLegend, 'TouchBarLegend');
 
-  { SK }
   AddSpecial(ActionGroupCircles, 'Circles');
-
-  { Meme }
   AddSpecial(ActionGroupMemeFormat, 'MemeFormat');
-
-  { RotaForm3 }
   AddSpecial(ActionGroupReset, 'Reset');
+  AddSpecial(ActionGroupViewType, 'ViewType');
 
 {$ifdef WantAll}
   AddSpecial(ActionGroupDropTarget, 'DropTarget');
   AddSpecial(ActionGroupLanguage, 'Language');
   AddSpecial(ActionGroupCopyPaste, 'CopyPaste');
-  AddSpecial(ActionGroupViewType, 'ViewType');
   AddSpecial(ActionGroupViewOptions, 'ViewOptions');
   AddSpecial(ActionGroupHullMesh, 'HullMesh');
   AddSpecial(ActionGroupBitmapCycle, 'BitmapCycle');
