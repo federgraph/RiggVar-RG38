@@ -216,7 +216,7 @@ end;
 procedure TTouchBtn.HandleClick(Sender: TObject);
 begin
   Main.ActionHandler.Execute(FederAction);
-  Main.FederText.CheckState; // if not done in Execute
+  Main.FederTextCheckState; // if not done in Execute
 end;
 
 procedure TTouchBtn.CheckState;

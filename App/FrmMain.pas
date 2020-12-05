@@ -525,7 +525,7 @@ begin
   Main.FixPoint := ooD0;
   Main.HullVisible := False;
   Main.OnUpdateChart := DoOnUpdateChart;
-  Main.FederText.CheckState;
+  Main.FederTextCheckState;
 
   Self.OnMouseWheel := FormMouseWheel;
   Self.OnResize := FormResize;
@@ -774,8 +774,10 @@ begin
   begin
     CheckSpaceForMemo;
     CheckSpaceForImages;
+{$ifndef WantResizeEnd}
+    if RotaForm.Current <> 3 then
     CenterRotaForm;
-
+{$endif}
     UpdateReport;
     SpeedPanel.UpdateLayout;
   end;
@@ -862,7 +864,7 @@ begin
       SalingImage.Visible := False;
   end;
 
-  Main.FederText.CheckState;
+  Main.FederTextCheckState;
 end;
 
 procedure TFormMain.Reset;
@@ -1768,7 +1770,7 @@ begin
     ReportText.Visible := True;
     ReportManager.CurrentIndex := ii;
     UpdateReport;
-    Main.FederText.CheckState;
+    Main.FederTextCheckState;
   end;
 end;
 
@@ -1778,7 +1780,7 @@ begin
     Main.Param := Main.Text2Param(ParamListbox.Items[ParamListbox.ItemIndex]);
   ShowTrimm;
   UpdateControllerGraph;
-  Main.FederText.CheckState;
+  Main.FederTextCheckState;
 end;
 
 procedure TFormMain.InitParamListbox;
@@ -1884,7 +1886,7 @@ procedure TFormMain.SofortBtnClick(Sender: TObject);
 begin
   Main.SofortBerechnen := not Main.SofortBerechnen;
   if Sender <> nil then
-    Main.FederText.CheckState;
+    Main.FederTextCheckState;
   UpdateReport;
 end;
 
@@ -1920,21 +1922,21 @@ procedure TFormMain.BogenBtnClick(Sender: TObject);
 begin
   Main.Bogen := not Main.Bogen;
   if Sender <> nil then
-    Main.FederText.CheckState;
+    Main.FederTextCheckState;
 end;
 
 procedure TFormMain.KoppelBtnClick(Sender: TObject);
 begin
   Main.Koppel := not Main.Koppel;
   if Sender <> nil then
-    Main.FederText.CheckState;
+    Main.FederTextCheckState;
 end;
 
 procedure TFormMain.HullBtnClick(Sender: TObject);
 begin
   Main.HullVisible := not Main.HullVisible;
   if Sender <> nil then
-    Main.FederText.CheckState;
+    Main.FederTextCheckState;
 end;
 
 function TFormMain.GetChecked(fa: Integer): Boolean;
@@ -2513,6 +2515,7 @@ begin
     MainVar.ClientWidth := Round(ClientWidth);
     MainVar.ClientHeight := Round(ClientHeight);
     Main.UpdateTouch;
+    CenterRotaForm;
     RotaForm.DoOnResizeEnd;
   end;
 end;

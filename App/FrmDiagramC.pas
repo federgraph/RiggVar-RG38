@@ -323,7 +323,7 @@ procedure TFormDiagramC.AToggleClick(Sender: TObject);
 begin
   ChartModel.AP := not AToggle.IsChecked;
   ChartModel.Calc;
-  Main.FederText.CheckState;
+  Main.FederTextCheckState;
   UpdateACaption;
   Memo.Text := ChartModel.MemoLines.Text;
 end;
@@ -333,7 +333,7 @@ begin
   ChartModel.ShowGroup := GToggle.IsChecked;
   ChartModel.DrawGroup;
   YBox.Enabled := not ChartModel.ShowGroup;
-  Main.FederText.CheckState;
+  Main.FederTextCheckState;
   UpdateGCaption;
   UpdateMemo;
 end;

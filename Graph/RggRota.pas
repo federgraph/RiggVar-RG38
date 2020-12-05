@@ -157,9 +157,9 @@ type
     FWanteGestrichelt: Boolean;
     FBogen: Boolean;
     FKoppel: Boolean;
+    FWantOverlayedRiggs: Boolean;
     FWantLineColors: Boolean;
     FDarkMode: Boolean;
-    FWantOverlayedRiggs: Boolean;
     FUseQuickSort: Boolean;
     procedure InitGraph;
     procedure InitRaumGraph;
@@ -171,9 +171,9 @@ type
     procedure SetOnBeforeDraw(const Value: TNotifyEvent);
     procedure SetOnAfterDraw(const Value: TNotifyEvent);
     function SingleDraw: Boolean;
+    procedure SetWantOverlayedRiggs(const Value: Boolean);
     procedure SetWantLineColors(const Value: Boolean);
     procedure SetDarkMode(const Value: Boolean);
-    procedure SetWantOverlayedRiggs(const Value: Boolean);
     procedure SetUseQuickSort(const Value: Boolean);
   public
     IsUp: Boolean;
@@ -186,15 +186,15 @@ type
 
     constructor Create;
     destructor Destroy; override;
+    procedure Init;
+    procedure Draw;
 
     procedure HandleAction(fa: Integer);
     function GetChecked(fa: Integer): Boolean;
     procedure SetChecked(fa: Integer; Value: Boolean);
 
-    procedure Init;
     procedure InitPosition(w, h, x, y: single);
     procedure Swap;
-    procedure Draw;
     procedure ImageScreenScaleChanged(Sender: TObject);
 
     procedure RotateZ(Delta: single);
@@ -367,7 +367,7 @@ begin
   begin
     Xpos := -130;
     Ypos := -80;
-    Matrix := GetMatrix(90,-87);
+    Matrix := GetMatrix(90, -87);
     ZoomIndex := 8;
     FixPunktIndex := 8;
     IncrementIndex := 3;
