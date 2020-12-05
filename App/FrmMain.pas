@@ -2348,16 +2348,7 @@ end;
 
 procedure TFormMain.UpdateFederText;
 begin
-  if Main.Action = faPan then
-  begin
-    Main.FederText1.ST00.Text.Text := 'Pan';
-    Main.FederText.SB00.Text.Text := '';
-  end
-  else
-  begin
-    Main.FederText.ST00.Text.Text := Main.ParamCaption;
-    Main.FederText.SB00.Text.Text := Main.ParamValueString[Main.Param];
-  end;
+  Main.FederTextUpdateCaption;
 end;
 
 procedure TFormMain.CenterRotaForm;
