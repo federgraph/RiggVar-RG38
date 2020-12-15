@@ -5,7 +5,7 @@ interface
 uses
   System.Math.Vectors,
   RggTypes,
-  RggInter;
+  RiggVar.App.Model;
 
 type
   IStrokeRigg = interface

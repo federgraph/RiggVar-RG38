@@ -217,12 +217,7 @@ begin
   SL.Add('Taste * : faActionPageM');
   SL.Add('Taste + : faActionPageP');
   SL.Add('');
-//  SL.Add('Taste ! : faShowNormalKeyInfo');
-//  SL.Add('Taste " : faShowSpecialKeyInfo');
-//  SL.Add('Taste § : faShowInfoText');
-//  SL.Add('Taste $ : faShowDebugInfo');
   SL.Add('Taste ? : faShowHelpText');
-//  SL.Add('Taste = : faShowZOrderInfo');
   SL.Add('Taste # : faActionPage4');
   SL.Add('');
   SL.Add('Taste ; : faRotaForm1');

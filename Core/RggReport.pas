@@ -66,6 +66,7 @@ type
     procedure AusgabeRPE(rPe: TRiggPoints);
     procedure AusgabeDiffP(rP, rPe: TRiggPoints);
     procedure AusgabeRF(rF: TRiggRods);
+    procedure AusgabeAngle(Value: TRiggAngles);
     procedure AusgabeWinkel(alpha, alpha1, alpha2, beta, gamma,
       delta1, delta2, epsilon, phi, psi: single);
     procedure AusgabeTrimmControls(Ctrls: TTrimmControls);
@@ -390,25 +391,36 @@ begin
   end;
 end;
 
+procedure TRiggReport.AusgabeAngle(Value: TRiggAngles);
+begin
+  with Value do
+    AusgabeWinkel(
+      alpha, alpha1, alpha2, beta, gamma,
+      delta1, delta2, epsilon, phi, psi);
+end;
+
 procedure TRiggReport.AusgabeWinkel(alpha, alpha1, alpha2, beta, gamma,
   delta1, delta2, epsilon, phi, psi: single);
+var
+  t: single;
 begin
+  t := 180 / pi;
   with FML do
   begin
     Add('  Winkel:');
     PrintUnderline;
-    Add(Format('%s phi = %4.2f Grad', [LinkerRand, phi*180/pi]));
-    Add(Format('%s psi = %4.2f Grad', [LinkerRand, psi*180/pi]));
-    Add(Format('%s alpha = %4.2f Grad', [LinkerRand, alpha*180/pi]));
-    Add(Format('%s phi-alpha = %4.2f Grad', [LinkerRand, (phi-alpha)*180/pi]));
-    Add(Format('%s psi-alpha = %4.2f Grad', [LinkerRand, (psi-alpha)*180/pi]));
-    Add(Format('%s alpha1 = %4.2f Grad', [LinkerRand, alpha1*180/pi]));
-    Add(Format('%s alpha2 = %4.2f Grad', [LinkerRand, alpha2*180/pi]));
-    Add(Format('%s delta1 = %4.2f Grad', [LinkerRand, delta1*180/pi]));
-    Add(Format('%s delta2 = %4.2f Grad', [LinkerRand, delta2*180/pi]));
-    Add(Format('%s gamma = %4.2f Grad', [LinkerRand, gamma*180/pi]));
-    Add(Format('%s beta = %4.2f Grad', [LinkerRand, beta*180/pi]));
-    Add(Format('%s epsilon = %4.2f Grad', [LinkerRand, epsilon*180/pi]));
+    Add(Format('%s phi = %4.2f Grad', [LinkerRand, phi * t]));
+    Add(Format('%s psi = %4.2f Grad', [LinkerRand, psi * t]));
+    Add(Format('%s alpha = %4.2f Grad', [LinkerRand, alpha * t]));
+    Add(Format('%s phi-alpha = %4.2f Grad', [LinkerRand, (phi-alpha) * t]));
+    Add(Format('%s psi-alpha = %4.2f Grad', [LinkerRand, (psi-alpha) * t]));
+    Add(Format('%s alpha1 = %4.2f Grad', [LinkerRand, alpha1 * t]));
+    Add(Format('%s alpha2 = %4.2f Grad', [LinkerRand, alpha2 * t]));
+    Add(Format('%s delta1 = %4.2f Grad', [LinkerRand, delta1 * t]));
+    Add(Format('%s delta2 = %4.2f Grad', [LinkerRand, delta2 * t]));
+    Add(Format('%s gamma = %4.2f Grad', [LinkerRand, gamma * t]));
+    Add(Format('%s beta = %4.2f Grad', [LinkerRand, beta * t]));
+    Add(Format('%s epsilon = %4.2f Grad', [LinkerRand, epsilon * t]));
     Add('');
   end;
 end;

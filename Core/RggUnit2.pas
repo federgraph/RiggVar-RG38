@@ -51,6 +51,7 @@ type
     procedure GetEpsilon;
     function GetKoppelFaktor: single;
     procedure SolveKG21(KM, KU1, KU2, KB: TPoint3D; var FU1, FU2, FB: single);
+    function GetAngles: TRiggAngles;
   protected
     FEx, FEy, FDx, FDy, FD0x, FD0y, FCx, FCy: single;
     FE, FD, FAx, FAy, FALx, FALy, FLvon1, FLvon2, FALvon12: single;
@@ -143,6 +144,7 @@ type
     property MastLE: single read GetMastLE;
     property MastPositionE: single read GetMastPositionE;
     property RiggLengths: TRiggRods read GetRiggLengths;
+    property Angles: TRiggAngles read GetAngles;
   end;
 
 implementation
@@ -491,6 +493,20 @@ begin
   tempF1 := he / alpha11;
   a01 := (lc - ld) * le * (lc * lc - Sqr(lc - ld) - le * le) / lc / EI / 6;
   FSalingWeg := a01 * tempF1; { in mm }
+end;
+
+function TMast.GetAngles: TRiggAngles;
+begin
+  result.alpha := alpha;
+  result.alpha1 := alpha1;
+  result.alpha2 := alpha2;
+  result.beta := beta;
+  result.gamma := gamma;
+  result.delta1 := delta1;
+  result.delta2 := delta2;
+  result.epsilon := epsilon;
+  result.phi := phi;
+  result.psi := psi;
 end;
 
 function TMast.GetCalcTyp: TCalcTyp;

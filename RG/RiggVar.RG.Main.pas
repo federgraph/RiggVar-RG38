@@ -32,10 +32,10 @@ uses
   RggStrings,
   RggScroll,
   RggTypes,
-  RggInter,
   RggCalc,
   RggDoc,
   System.UIConsts,
+  RiggVar.App.Model,
   RiggVar.FB.Action,
   RiggVar.FB.ActionConst,
   RiggVar.FB.ActionGroups,
@@ -180,8 +180,6 @@ type
     Trimm7: TRggData; // 420
     Trimm8: TRggData; // Logo
 
-    BackgroundLock: Boolean;
-
     FixPunkt: TPoint3D;
 
     MinValCaption: string;
@@ -213,6 +211,7 @@ type
     ActionGroupList: TActionGroupList;
     ActionTest: TActionTest;
     FederBinding: TFederBinding;
+    BackgroundLock: Boolean;
 
     CurrentRotaForm: Integer;
 
@@ -270,6 +269,7 @@ type
     procedure HandleAction(fa: Integer);
     function GetChecked(fa: TFederAction): Boolean;
     procedure FederTextCheckState;
+    procedure FederTextUpdateParent;
     procedure FederTextUpdateCaption;
     procedure CollectShortcuts(fa: Integer; ML: TStrings);
 
@@ -539,8 +539,8 @@ begin
 
   StrokeRigg.Koordinaten := Rigg.RiggPoints;
   StrokeRigg.KoordinatenE := Rigg.RelaxedRiggPoints;
-  StrokeRigg.SetKoppelKurve(Rigg.GetKoppelKurve);
-  StrokeRigg.SetMastKurve(Rigg.GetMastKurve);
+  StrokeRigg.SetKoppelKurve(Rigg.KoppelKurve);
+  StrokeRigg.SetMastKurve(Rigg.MastKurve);
   StrokeRigg.SetMastLineData(Rigg.MastLinie, Rigg.MastLC, Rigg.MastBeta);
 
   StrokeRigg.DoOnUpdateStrokeRigg;
@@ -1694,7 +1694,7 @@ end;
 procedure TRggMain.InitRaster;
 begin
   MainVar.ClientWidth := FormMain.ClientWidth;
-  MainVar.ClientHeight := FormMain.ClientHeight;
+  MainVar.ClientHeight := FormMain.ClientHeight - MainVar.StatusBarHeight;
 end;
 
 procedure TRggMain.InitText;
@@ -1716,8 +1716,16 @@ procedure TRggMain.InitTouch;
 begin
   InitRaster;
 {$ifdef WantFederText}
-  FederText2.Visible := IsPhone;
-  FederText1.Visible := not FederText2.Visible;
+  if MainVar.WantFederText then
+  begin
+    FederText2.Visible := IsPhone;
+    FederText1.Visible := not FederText2.Visible;
+  end
+  else
+  begin
+    FederText1.Visible := False;
+    FederText2.Visible := False;
+  end;
 {$endif}
 end;
 
@@ -1752,9 +1760,13 @@ begin
     faTouchTablet: result := False;
     else
     begin
-      MinCount := Min(FormMain.ClientHeight, FormMain.ClientWidth) div MainVar.Raster;
-      MaxCount := Max(FormMain.ClientHeight, FormMain.ClientWidth) div MainVar.Raster;
-      result  := (MinCount < 8) or (MaxCount < 12);
+      result := False;
+      if MainVar.Raster > 1 then
+      begin
+        MinCount := Min(FormMain.ClientHeight, FormMain.ClientWidth) div MainVar.Raster;
+        MaxCount := Max(FormMain.ClientHeight, FormMain.ClientWidth) div MainVar.Raster;
+        result  := (MinCount < 8) or (MaxCount < 12);
+      end;
     end;
   end;
 end;
@@ -2640,6 +2652,17 @@ procedure TRggMain.FederTextCheckState;
 begin
 {$ifdef WantFederText}
   FederText.CheckState;
+{$endif}
+end;
+
+procedure TRggMain.FederTextUpdateParent;
+begin
+{$ifdef WantFederText}
+  if FederText.Parent = nil then
+  begin
+    FederText1.Parent := FormMain;
+    FederText2.Parent := FormMain;
+  end;
 {$endif}
 end;
 

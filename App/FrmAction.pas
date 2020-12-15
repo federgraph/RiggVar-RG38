@@ -377,11 +377,7 @@ begin
   ML.Add(Format('group id = %d', [ofg]));
   ML.Add(Format('group name = %s', [ogn]));
 
-  Main.Keyboard.GetShortcuts(fa, ML);
-//  Main.ActionMap0.CollectOne(fa, ML);
-  Main.ActionMapTablet.CollectOne(fa, ML);
-//  Main.ActionMapPhone.CollectOne(fa, ML);
-//  Main.FederMenu.CollectOne(fa, ML);
+  Main.CollectShortcuts(fa, ML);
 
   UpdateDetails(fa);
 end;

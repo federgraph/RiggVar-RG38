@@ -54,6 +54,8 @@ type
     Scale: single;
     ClientWidth: Integer;
     ClientHeight: Integer;
+    WantFederText: Boolean;
+    StatusBarHeight: Integer;
     class constructor Create;
   end;
 
@@ -66,6 +68,7 @@ begin
   IsSandboxed := true;
   ColorScheme := TColorScheme.Create(5);
   Raster := 70;
+  Scale := 1.0;
 end;
 
 end.

@@ -32,9 +32,9 @@ uses
   RiggVar.RG.Data;
 
 type
-  TRigg1 = class(TRiggFS, IRigg)
+  TRigg1 = class(TRiggFS, IRigg0)
   public
-    MastKurve: TMastKurve;
+    FMastKurve: TMastKurve;
     function GetRealTrimm(Index: TTrimmIndex): single;
     function FindBogenIndexOf(P: TPoint3D): Integer;
     function GetMastKurve: TMastKurve;
@@ -68,6 +68,7 @@ type
     procedure SaveTrimm(fd: TRggData);
 
     property RealTrimm[Index: TTrimmIndex]: single read GetRealTrimm;
+    property MastKurve: TMastKurve read GetMastKurve;
   end;
 
 implementation
@@ -1029,22 +1030,22 @@ begin
   begin
     k := Round(100 / BogenMax * j);
     tempL := j * L / BogenMax;
-    MastKurve[j].X := rP.D0.X - tempL * temp1 + Value[k] * temp2;
-    MastKurve[j].Y := 0;
-    MastKurve[j].Z := rP.D0.Z + tempL * temp3 + Value[k] * temp4;
+    FMastKurve[j].X := rP.D0.X - tempL * temp1 + Value[k] * temp2;
+    FMastKurve[j].Y := 0;
+    FMastKurve[j].Z := rP.D0.Z + tempL * temp3 + Value[k] * temp4;
   end;
 end;
 
 function TRigg1.GetMastKurve: TMastKurve;
 begin
   SetMastLineData(MastLinie, MastLC, MastBeta);
-  result := MastKurve;
+  result := FMastKurve;
 end;
 
 function TRigg1.GetMastKurvePoint(const Index: Integer): TPoint3D;
 begin
-  if (Index >= 0) and (Index < Length(MastKurve)) then
-    result := MastKurve[Index]
+  if (Index >= 0) and (Index < Length(FMastKurve)) then
+    result := FMastKurve[Index]
   else
   begin
     result := TPoint3D.Zero;
@@ -1058,12 +1059,12 @@ var
   MinAbstand: single;
   a: single;
 begin
-  j := Length(MastKurve);
+  j := Length(FMastKurve);
   MinIndex := j div 2;
   MinAbstand := 1000;
   for i := 0 to j - 1 do
   begin
-    a := (P - MastKurve[i]).Length;
+    a := (P - FMastKurve[i]).Length;
     if a < MinAbstand then
     begin
       MinAbstand := a;

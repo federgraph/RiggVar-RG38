@@ -74,9 +74,7 @@ type
     iPe: TRiggPoints; { Integerkoordinaten entlastet 3d in mm }
 
     { Daten für RegelGrafik }
-    Anfang, Antrieb, Ende: single;
-    limitA, limitB, TrySalingH: single;
-    KurveF: TChartLine;
+    RGD: TRegelGraphData;
 
     constructor Create;
     destructor Destroy; override;
@@ -88,6 +86,8 @@ type
     function Regeln(TrimmSoll: TTrimm): Integer;
     function GetRiggStatusText: string;
 
+    procedure ComputeKraftKurven(KK: TKraftKurven);
+
     property OnRegelGrafik: TNotifyEvent read FOnRegelGrafik write FOnRegelGrafik;
     property ProofRequired: Boolean read GetProofRequired write SetProofRequired;
     property RiggOK: Boolean read GetRiggOK;
@@ -97,6 +97,7 @@ type
     property RelaxedRiggPoints: TRiggPoints read GetRelaxedRiggPoints;
     property RelaxedRiggLengths: TRiggRods read GetRelaxedRiggLengths;
     property StabKraefte: TRiggRods read GetStabKraefte;
+    property RegelGraphData: TRegelGraphData read RGD;
   end;
 
 implementation
@@ -107,6 +108,7 @@ uses
 constructor TRiggFS.Create;
 begin
   inherited Create;
+  RGD := TRegelGraphData.Create;
   FOnRegelGrafik := nil;
   GetDefaultChartData;
 
@@ -144,6 +146,7 @@ begin
   SplitF.Free;
   TetraF.Free;
   Fachwerk.Free;
+  RGD.Free;
   inherited Destroy;
 end;
 
@@ -1134,9 +1137,9 @@ begin
   { Biegen und Neigen }
   case SalingTyp of
     stFest:
-      BiegeUndNeigeFS(TrimmSoll, limitA);
+      BiegeUndNeigeFS(TrimmSoll, RGD.LimitA);
     stDrehbar:
-      BiegeUndNeigeDS(TrimmSoll, limitA);
+      BiegeUndNeigeDS(TrimmSoll, RGD.LimitA);
     stOhneStarr, stOhneBiegt:
       Exit; { Regeln nur für stFest und stDrehbar }
   end;
@@ -1149,20 +1152,20 @@ begin
         case SalingTyp of
           stFest:
             begin
-              limitA := GSB.SalingH.Min; { in mm }
-              limitB := GSB.SalingH.Max; { in mm }
+              RGD.LimitA := GSB.SalingH.Min; { in mm }
+              RGD.LimitB := GSB.SalingH.Max; { in mm }
             end;
           stDrehbar:
             begin
-              limitA := GSB.SalingL.Min; { in mm }
-              limitB := GSB.SalingL.Max; { in mm }
+              RGD.LimitA := GSB.SalingL.Min; { in mm }
+              RGD.LimitB := GSB.SalingL.Max; { in mm }
             end;
         end;
       end;
     ctQuerKraftBiegung:
       begin
         { limitA := limitA; } { in mm, wird in BiegeUndNeigeF ermittelt }
-        limitB := limitA + 400; { in mm }
+        RGD.LimitB := RGD.LimitA + 400; { in mm }
       end;
     ctKraftGemessen:
       begin
@@ -1178,39 +1181,39 @@ begin
   end;
 
   { Anfang und Ende bestimmen }
-  if limitA < limitB then
+  if RGD.LimitA < RGD.LimitB then
   begin { normalerweise immer limitA < limitB }
-    Anfang := limitA;
-    Ende := limitB;
+    RGD.Anfang := RGD.LimitA;
+    RGD.Ende := RGD.LimitB;
   end
   else
   begin
-    Anfang := limitB;
-    Ende := limitA;
+    RGD.Anfang := RGD.LimitB;
+    RGD.Ende := RGD.LimitA;
   end;
 
   tempFProbe := FProbe;
   FProbe := False;
 
   { Mittleren Kraftwert ermitteln }
-  Antrieb := Anfang + (Ende - Anfang) / 2;
-  Berechnen(Antrieb);
+  RGD.Antrieb := RGD.Anfang + (RGD.Ende - RGD.Anfang) / 2;
+  Berechnen(RGD.Antrieb);
   KraftMin := FTrimm.Spannung;
   KraftMax := KraftMin;
 
   { Daten für Kurve sowie KraftMin und KraftMax ermitteln }
-  KurveF[0] := 0;
-  KurveF[CLMax] := 2000; { Bereich zwischen 0 und 1700 immer sichtbar }
+  RGD.KurveF[0] := 0;
+  RGD.KurveF[CLMax] := 2000; { Bereich zwischen 0 und 1700 immer sichtbar }
   for i := CLMax - 2 downto 6 do
   begin
-    Antrieb := Anfang + (Ende - Anfang) * i / CLMax;
-    Berechnen(Antrieb);
+    RGD.Antrieb := RGD.Anfang + (RGD.Ende - RGD.Anfang) * i / CLMax;
+    Berechnen(RGD.Antrieb);
     { FTrimm.Spannung schon begrenzt auf +/- 32000 }
     if rF.C0C < KraftMin then
       KraftMin := FTrimm.Spannung;
     if rF.C0C > KraftMax then
       KraftMax := FTrimm.Spannung;
-    KurveF[i] := FTrimm.Spannung;
+    RGD.KurveF[i] := FTrimm.Spannung;
     if Assigned(FOnRegelGrafik) then
       FOnRegelGrafik(Self);
   end;
@@ -1222,17 +1225,17 @@ begin
   TrimmSollOut := False;
   if TrimmSoll.Spannung < KraftMin then
   begin
-    TrySalingH := Anfang + (Ende - Anfang) * (CLMax - 2) / CLMax;
+    RGD.TrySalingH := RGD.Anfang + (RGD.Ende - RGD.Anfang) * (CLMax - 2) / CLMax;
     TrimmSollOut := True;
   end;
   if TrimmSoll.Spannung > KraftMax then
   begin
-    TrySalingH := Anfang + (Ende - Anfang) * 6 / CLMax;
+    RGD.TrySalingH := RGD.Anfang + (RGD.Ende - RGD.Anfang) * 6 / CLMax;
     TrimmSollOut := True;
   end;
   if TrimmSollOut then
   begin
-    Berechnen(TrySalingH);
+    Berechnen(RGD.TrySalingH);
     FOnRegelGrafik(Self);
     FProbe := tempFProbe;
     Exit;
@@ -1244,13 +1247,13 @@ begin
   ZaehlerMax := 20; { max. ZaehlerMax Schleifendurchläufe }
   repeat
     Inc(Zaehler);
-    TrySalingH := (limitA + limitB) / 2;
-    Berechnen(TrySalingH);
+    RGD.TrySalingH := (RGD.limitA + RGD.LimitB) / 2;
+    Berechnen(RGD.TrySalingH);
     Diff := rF.C0C - TrimmSoll.Spannung; { Abweichung der Vorstagspannung in N }
     if Diff > 0 then
-      limitA := TrySalingH
+      RGD.LimitA := RGD.TrySalingH
     else
-      limitB := TrySalingH;
+      RGD.LimitB := RGD.TrySalingH;
     FOnRegelGrafik(Self);
   until (abs(Diff) < Schranke) or (Zaehler = ZaehlerMax);
   Result := Zaehler;
@@ -1262,13 +1265,108 @@ procedure TRiggFS.GetDefaultChartData;
 var
   i: Integer;
 begin
-  Anfang := 0;
-  Antrieb := 50;
-  Ende := 100;
-  limitA := 20;
-  limitB := 80;
+  RGD.Anfang := 0;
+  RGD.Antrieb := 50;
+  RGD.Ende := 100;
+  RGD.LimitA := 20;
+  RGD.LimitB := 80;
   for i := 0 to CLMax do
-    KurveF[i] := i * (2000 div CLMax);
+    RGD.KurveF[i] := i * (2000 div CLMax);
+end;
+
+procedure TRiggFS.ComputeKraftKurven(KK: TKraftKurven);
+var
+  i: Integer;
+  tempHD: single;
+  tempKorrigiert: Boolean;
+  tempControllerTyp: TControllerTyp;
+  Knicklaenge, KnickLast, Kraft, Weg: single;
+begin
+  { mit FSalingAlpha wird in FvonW korrigiert, daher auch in WvonF gebraucht;
+    mit FControllerWeg wird in SchnittKraefte getestet, ob Controller anliegt }
+  GetControllerWeg; { FSalingAlpha und FControllerWeg }
+  { mit FContollerAlpha wird in CalcWKnick die ControllerKraft ausgerechnet }
+  GetSalingWeg; { FControllerAlpha und FSalingWeg }
+  { mit SalingWegKnick wird in CalcWKnick KurvenTyp und Offset bestimmt }
+  GetSalingWegKnick; { FSalingWegKnick }
+  { FKurveOhne und FKurveMit }
+  for i := 0 to 150 do
+  begin
+    FwSchnittOhne := i; { in mm }
+    FSchnittPunktKraft := FvonW(FwSchnittOhne, TKurvenTyp.KurveOhneController, False);
+    KK.KurveOhne[i] := FSchnittPunktKraft; { in N }
+    FwSchnittMit := i; { in mm }
+    FSchnittPunktKraft := FvonW(FwSchnittMit, TKurvenTyp.KurveMitController, False);
+    KK.KurveMit[i] := FSchnittPunktKraft; { in N }
+  end;
+  { FKurveOhneKorrigiert }
+  FKnicklaenge := lc;
+  KnickLast := EI * PI * PI / FKnicklaenge / FKnicklaenge; { Knicklast in N }
+  for i := 0 to 100 do
+  begin
+    Kraft := i * 100;
+    if Kraft > 0.9 * KnickLast then
+      KK.KurveOhneKorrigiert[i] := 150
+    else
+    begin
+      Weg := WvonF(Kraft, TKurvenTyp.KurveOhneController, True);
+      if Weg < 150 then
+        KK.KurveOhneKorrigiert[i] := Weg
+      else
+        KK.KurveOhneKorrigiert[i] := 150;
+    end;
+  end;
+
+  { FKurveMitKorrigiert }
+  Knicklaenge := FKnicklaenge * FKorrekturFaktor;
+  KnickLast := EI * PI * PI / Knicklaenge / Knicklaenge; { Knicklast in N }
+  for i := 0 to 100 do
+  begin
+    Kraft := i*100;
+    if Kraft > 0.9 * KnickLast then
+      KK.KurveMitKorrigiert[i] := 150
+    else
+    begin
+      Weg := WvonF(Kraft, TKurvenTyp.KurveMitController, True);
+      if Weg < 150 then
+        KK.KurveMitKorrigiert[i] := Weg
+      else
+        KK.KurveMitKorrigiert[i] := 150;
+    end;
+  end;
+
+  tempHD := hd; { hd sichern }
+  tempControllerTyp := ControllerTyp;
+  tempKorrigiert := Korrigiert;
+
+  for i := 0 to 150 do
+  begin
+    { FVerschoben }
+    Korrigiert := False;
+    ControllerTyp := ctZugDruck;
+    hd := i;
+    CalcWKnick;
+    if MastOK or KK.ShowAll then
+      KK.KurveVerschoben[i] := Round(-FC) { in N }
+    else
+      KK.KurveVerschoben[i] := 0;
+
+    { FVerschobenKorrigiert }
+    Korrigiert := True;
+    ControllerTyp := ctZugDruck;
+    hd := i;
+    CalcWKnick;
+    if MastOK or KK.ShowAll then
+      KK.KurveVerschobenKorrigiert[i] := Round(-FC) { in N }
+    else
+      KK.KurveVerschobenKorrigiert[i] := 0;
+  end;
+
+  { hd und FKorrigiert restaurieren }
+  hd := tempHD;
+  Korrigiert := tempKorrigiert;
+  ControllerTyp := tempControllerTyp;
+  CalcWKnick;
 end;
 
 end.

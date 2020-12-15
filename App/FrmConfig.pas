@@ -203,10 +203,10 @@ type
     FirstRowIndex: Integer;
     SecondRowIndex: Integer;
 
-    Rigg: TRigg;
+    Rigg: IRigg;
     IniFileName: string;
     FormShown: Boolean;
-    procedure Init(ARigg: TRigg);
+    procedure Init(ARigg: IRigg);
     procedure LoadFromIniFile;
     procedure WriteToIniFile;
   end;
@@ -284,7 +284,7 @@ begin
   GridSelectCell(nil, FRumpfCell.X, FRumpfCell.Y, b);
 end;
 
-procedure TFormConfig.Init(ARigg: TRigg);
+procedure TFormConfig.Init(ARigg: IRigg);
 begin
   Rigg := ARigg;
 

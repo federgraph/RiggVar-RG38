@@ -44,7 +44,7 @@ type
     Width: Integer;
     Height: Integer;
     BackgroundColor: TAlphaColor;
-    constructor Create(ARigg: TRigg);
+    constructor Create(ARigg: IRigg);
     destructor Destroy; override;
     procedure Draw; override;
     procedure ImageScreenScaleChanged(Sender: TObject);
@@ -59,7 +59,7 @@ uses
 
 { TChartGraph }
 
-constructor TChartGraph.Create(ARigg: TRigg);
+constructor TChartGraph.Create(ARigg: IRigg);
 begin
   inherited;
 

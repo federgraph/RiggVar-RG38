@@ -150,6 +150,7 @@ type
     );
 
   Linie = array [0 .. LineCount] of TPoint;
+  TLineDataR150 = array[0..150] of single;
   TLineDataR100 = array [0 .. 100] of single;
   TLineDataR50 = array [0 .. 50] of single;
   TChartLine = array [0 .. CLMax] of single;
@@ -348,6 +349,47 @@ type
     FLineCountM: Integer;
     LineData: TLineDataR100; { Durchbiegungswerte in mm }
     GetriebeOK: Boolean;
+  end;
+
+  TKraftKurven = class
+  public
+    KurveOhne: TLineDataR150;
+    KurveMit: TLineDataR150;
+    KurveVerschoben: TLineDataR150;
+    KurveVerschobenKorrigiert: TLineDataR150;
+
+    KurveOhneKorrigiert: TLineDataR100;
+    KurveMitKorrigiert: TLineDataR100;
+
+    ShowAll: Boolean;
+
+    ControllerTyp: TControllerTyp;
+    Korrigiert: Boolean;
+    KoppelFaktor: single;
+    SalingAlpha: single;
+
+    hd: single;
+    FC: single;
+  end;
+
+  TRiggAngles = record
+    alpha: single;
+    alpha1: single;
+    alpha2: single;
+    beta: single;
+    gamma: single;
+    delta1: single;
+    delta2: single;
+    epsilon: single;
+    phi: single;
+    psi: single;
+  end;
+
+  TRegelGraphData = class
+  public
+    Anfang, Antrieb, Ende: single;
+    LimitA, LimitB, TrySalingH: single;
+    KurveF: TChartLine;
   end;
 
 const

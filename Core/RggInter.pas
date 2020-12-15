@@ -12,7 +12,7 @@ uses
   RiggVar.RG.Data;
 
 type
-  IRigg = interface
+  IRigg0 = interface
   ['{CA6D68C5-B9EC-4C80-AF51-56777A8963DA}']
     function GetRggFA: TRggFA;
 
@@ -126,6 +126,7 @@ type
     property RelaxedRiggLengths: TRiggRods read GetRelaxedRiggLengths;
     property StabKraefte: TRiggRods read GetStabKraefte;
 
+    property MastKurve: TMastKurve read GetMastKurve;
     property KoppelKurve: TKoordLine read GetKoppelKurve;
     property RealTrimm[Index: TTrimmIndex]: single read GetRealTrimm;
     property Glieder: TTrimmControls read GetGlieder write SetGlieder;

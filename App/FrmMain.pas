@@ -37,7 +37,9 @@ uses
   RiggVar.RG.Report,
   RiggVar.RG.Rota,
   RiggVar.FD.Image,
+{$ifdef WantMenu}
   RiggVar.FederModel.Menu,
+{$endif}
   RggCtrls,
   RggChartGraph,
   RggTypes,
@@ -60,7 +62,9 @@ uses
   FMX.Objects,
   FMX.ScrollBox,
   FMX.Memo,
+{$ifdef WantMenu}
   FMX.Menus,
+{$endif}
   FMX.Listbox,
   FMX.Dialogs,
   FMX.Edit,
@@ -345,6 +349,7 @@ procedure TFormMain.FormCreate(Sender: TObject);
 begin
   FormatSettings.DecimalSeparator := '.';
 
+  MainVar.WantFederText := True;
   MainVar.ClientWidth := Round(ClientWidth);
   MainVar.ClientHeight := Round(ClientHeight);
 
@@ -392,6 +397,8 @@ begin
 {$ifdef WantMenu}
   FederMenu.Free;
 {$endif}
+
+  TModelFactory.ReleaseIfAppropriate(Rigg);
 end;
 
 procedure TFormMain.FormCreate2(Sender: TObject);
@@ -411,7 +418,6 @@ begin
 
   Application.OnException := ApplicationEventsException;
 
-  FormMain := self;
   InitScreenPos;
 
   Margin := 2;
@@ -439,7 +445,7 @@ begin
   SetupListbox(ParamListbox);
   SetupListbox(ReportListbox);
 
-  Rigg := TRigg.Create;
+  Rigg := TModelFactory.NewRigg;
   Rigg.ControllerTyp := ctOhne;
 
   Main := TMain.Create(Rigg);

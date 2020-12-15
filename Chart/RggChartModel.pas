@@ -54,7 +54,7 @@ type
   public
     FSalingTyp: TSalingTyp;
 
-    Rigg: TRigg;
+    Rigg: IRigg;
     RggDocument: TRggDocument;
     SalingDreieck: TSalingDreieck;
 
@@ -252,7 +252,7 @@ type
   public
     IsUp: Boolean;
 
-    constructor Create(ARigg: TRigg);
+    constructor Create(ARigg: IRigg);
     destructor Destroy; override;
 
     procedure SuperInit;
@@ -310,7 +310,7 @@ begin
   ML.Add(WantenSpannungString);
 end;
 
-constructor TChartModel.Create(ARigg: TRigg);
+constructor TChartModel.Create(ARigg: IRigg);
 begin
   UserSelectedKurvenZahl := 3;
   ParamCount := 3;
@@ -1288,13 +1288,13 @@ begin
     Add(Format('  Biegesteifigkeit EI: %d Nm^2', [Rigg.MastEI]));
     { Exit Counters }
     Add('');
-//    if ExitCounter1 > 0 then Add(Format('  EC 1: %d ', [ExitCounter1]));
-//    if ExitCounter2 > 0 then Add(Format('  EC 2: %d ', [ExitCounter2]));
-//    if ExitCounter3 > 0 then Add(Format('  EC 3: %d ', [ExitCounter3]));
-//    if ExitCounter4 > 0 then Add(Format('  EC 4: %d ', [ExitCounter4]));
-//    if ExitCounter5 > 0 then Add(Format('  EC 5: %d ', [ExitCounter5]));
-//    if ExitCounter6 > 0 then Add(Format('  EC 6: %d ', [ExitCounter6]));
-//    if ExitCounter7 > 0 then Add(Format('  EC 7: %d ', [ExitCounter6]));
+//    if Rigg.GetCounterValue(1) > 0 then Add(Format('  EC 1: %d ', [Rigg.GetCounterValue(1)]));
+//    if Rigg.GetCounterValue(2) > 0 then Add(Format('  EC 2: %d ', [Rigg.GetCounterValue(2)]));
+//    if Rigg.GetCounterValue(3) > 0 then Add(Format('  EC 3: %d ', [Rigg.GetCounterValue(3)]));
+//    if Rigg.GetCounterValue(4) > 0 then Add(Format('  EC 4: %d ', [Rigg.GetCounterValue(4)]));
+//    if Rigg.GetCounterValue(5) > 0 then Add(Format('  EC 5: %d ', [Rigg.GetCounterValue(5)]));
+//    if Rigg.GetCounterValue(6) > 0 then Add(Format('  EC 6: %d ', [Rigg.GetCounterValue(6)]));
+//    if Rigg.GetCounterValue(7) > 0 then Add(Format('  EC 7: %d ', [Rigg.GetCounterValue(7)]));
     Add(Format('Memo Counter: %d', [MemoCounter]));
     Add(Format('Calc Counter: %d', [CalcCounter]));
   end;
