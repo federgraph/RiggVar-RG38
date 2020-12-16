@@ -323,9 +323,6 @@ end;
 
 procedure TRggDrawingD05.UpdateFromRigg;
 var
-{$ifdef Rgg}
-  Rigg: TRigg;
-{$endif}
   rP: TRiggPoints;
   cr: TRggCircle;
   t, p, q: TPoint3D;

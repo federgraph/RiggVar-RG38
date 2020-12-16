@@ -248,7 +248,7 @@ type
     RotaForm: TRotaForm;
     procedure HandleSegment(fa: Integer);
   public
-    Rigg: TRigg;
+    Rigg: IRigg;
     ReportManager: TRggReportManager;
     FViewPoint: TViewPoint;
     procedure UpdateOnParamValueChanged;

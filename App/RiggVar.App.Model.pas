@@ -40,7 +40,7 @@ type
   TModelFactory = class
   public
     class function NewRigg: TRigg;
-    class procedure ReleaseIfAppropriate(ARigg: TRigg);
+    class procedure ReleaseIfAppropriate(ARigg: IRigg);
   end;
 
 implementation
@@ -52,7 +52,7 @@ begin
   result := TRigg.Create;
 end;
 
-class procedure TModelFactory.ReleaseIfAppropriate(ARigg: TRigg);
+class procedure TModelFactory.ReleaseIfAppropriate(ARigg: IRigg);
 begin
 {$ifdef WantInterface}
   { do nothing }
