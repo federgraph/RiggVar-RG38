@@ -1,4 +1,4 @@
-﻿unit RggProfile;
+﻿unit RiggVar.DT.Profile;
 
 interface
 
@@ -8,7 +8,7 @@ uses
   System.UIConsts,
   System.Math.Vectors,
   FMX.Graphics,
-  RggTypes;
+  RiggVar.RG.Types;
 
 type
   TLage = (Hoch, Quer);

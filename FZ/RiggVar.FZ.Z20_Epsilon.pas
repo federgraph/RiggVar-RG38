@@ -8,7 +8,7 @@ uses
   System.UITypes,
   System.Math,
   System.Math.Vectors,
-  RggSchnittKK,
+  RiggVar.RG.Calc,
   RiggVar.FB.Color,
   RiggVar.FD.Chart,
   RiggVar.FD.Elements,

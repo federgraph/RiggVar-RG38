@@ -26,6 +26,7 @@ uses
   System.UIConsts,
   System.Math,
   System.Math.Vectors,
+  RiggVar.RG.Types,
   RiggVar.FB.Color,
   RiggVar.FD.Chart,
   RiggVar.FD.Elements,
@@ -161,10 +162,6 @@ type
   end;
 
 implementation
-
-uses
-  RggTypes,
-  RggSchnittKK;
 
 { TRggDrawingZ18 }
 

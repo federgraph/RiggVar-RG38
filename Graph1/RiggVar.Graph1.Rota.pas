@@ -1,4 +1,4 @@
-﻿unit RggRota;
+﻿unit RiggVar.Graph1.Rota;
 
 interface
 
@@ -17,12 +17,10 @@ uses
   FMX.Objects,
   FMX.Types,
   RiggVar.RG.Graph,
-  RggTypes,
-  RggMatrix,
-  RggRaumGraph,
-  RggHull,
-  RggPolarKar,
-  RggTransformer;
+  RiggVar.RG.Types,
+  RiggVar.Graph1.Rigg,
+  RiggVar.Graph1.Transform,
+  RiggVar.Graph1.Hull;
 
 type
   TRotaForm1 = class(TInterfacedObject, IStrokeRigg)
@@ -236,11 +234,9 @@ type
 implementation
 
 uses
-  RggDisplay,
+  RiggVar.Graph1.DisplayList,
   RiggVar.FB.ActionConst,
-  RiggVar.RG.Def,
-  RggZug3D,
-  RggTestData;
+  RiggVar.RG.Def;
 
 { TRotaForm }
 

@@ -4,11 +4,6 @@ uses
   System.StartUpCopy,
   FMX.Forms,
   FrmDrawing in 'App\FrmDrawing.pas' {FormDrawing},
-  RggCalc in 'Core\RggCalc.pas',
-  RiggVar.RG.Def in 'RG\RiggVar.RG.Def.pas',
-  RggTestData in 'Core\RggTestData.pas',
-  RggTypes in 'Core\RggTypes.pas',
-  RggSchnittKK in 'Core\RggSchnittKK.pas',
   RiggVar.FB.Color in 'FB\RiggVar.FB.Color.pas',
   RiggVar.FD.RotationHelper in 'Graph2\RiggVar.FD.RotationHelper.pas',
   RiggVar.FD.Elements in 'Graph2\RiggVar.FD.Elements.pas',
@@ -52,7 +47,9 @@ uses
   RiggVar.FZ.Z19_Chart in 'FZ\RiggVar.FZ.Z19_Chart.pas',
   RiggVar.FZ.Z20_Epsilon in 'FZ\RiggVar.FZ.Z20_Epsilon.pas',
   RiggVar.FZ.Z21_Rotations in 'FZ\RiggVar.FZ.Z21_Rotations.pas',
-  RiggVar.FZ.Z22_BigArc in 'FZ\RiggVar.FZ.Z22_BigArc.pas';
+  RiggVar.FZ.Z22_BigArc in 'FZ\RiggVar.FZ.Z22_BigArc.pas',
+  RiggVar.RG.Calc in 'RG\RiggVar.RG.Calc.pas',
+  RiggVar.RG.Types in 'RG\RiggVar.RG.Types.pas';
 
 {$R *.res}
 

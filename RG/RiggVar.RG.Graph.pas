@@ -4,7 +4,7 @@ interface
 
 uses
   System.Math.Vectors,
-  RggTypes,
+  RiggVar.RG.Types,
   RiggVar.App.Model;
 
 type

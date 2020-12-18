@@ -24,17 +24,16 @@ uses
   System.IniFiles,
   System.Math,
   System.Math.Vectors,
+  RiggVar.App.Strings,
+  RiggVar.RG.Calc,
   RiggVar.RG.Def,
   RiggVar.RG.Data,
-  RggStrings,
-  RggScroll,
-  RggTypes,
-  RggSchnittKK,
-  RggTrimmTab,
-  RggCalc,
-  RggDoc,
-  RggFachwerk,
-  RggInter;
+  RiggVar.RG.Scroll,
+  RiggVar.RG.Types,
+  RiggVar.RG.TrimmTab,
+  RiggVar.RG.Doc,
+  RiggVar.RG.Fachwerk,
+  RiggVar.RG.Inter;
 
 type
   TRigg2 = class(TInterfacedObject, IRigg0)
@@ -467,26 +466,26 @@ begin
   FKnicklaenge := 4600.0; { in mm }
   FKorrekturFaktor := 0.8; { dimensionlos }
 
-  rEA.D0C := EAgross;
-  rEA.C0D0 := EARumpf;
-  rEA.B0C0 := EARumpf;
-  rEA.A0C0 := EARumpf;
-  rEA.B0D0 := EARumpf;
-  rEA.A0D0 := EARumpf;
-  rEA.A0B0 := EARumpf;
-  rEA.B0B := 13 * EModulStahl;
-  rEA.A0A := 13 * EModulStahl;
-  rEA.BD := EAgross;
-  rEA.AD := EAgross;
-  rEA.AB := EASaling;
-  rEA.BC := 13 * EModulStahl;
-  rEA.AC := 13 * EModulStahl;
-  rEA.C0C := 13 * EModulStahl;
-  rEA.DC := EAgross;
-  rEA.D0D := EAgross;
-  rEA.ED := EAgross;
-  rEA.D0E := EAgross;
-  rEA.E0E := EAgross;
+  rEA.D0C := RggMaterial.EAgross;
+  rEA.C0D0 := RggMaterial.EARumpf;
+  rEA.B0C0 := RggMaterial.EARumpf;
+  rEA.A0C0 := RggMaterial.EARumpf;
+  rEA.B0D0 := RggMaterial.EARumpf;
+  rEA.A0D0 := RggMaterial.EARumpf;
+  rEA.A0B0 := RggMaterial.EARumpf;
+  rEA.B0B := 13 * RggMaterial.EModulStahl;
+  rEA.A0A := 13 * RggMaterial.EModulStahl;
+  rEA.BD := RggMaterial.EAgross;
+  rEA.AD := RggMaterial.EAgross;
+  rEA.AB := RggMaterial.EASaling;
+  rEA.BC := 13 * RggMaterial.EModulStahl;
+  rEA.AC := 13 * RggMaterial.EModulStahl;
+  rEA.C0C := 13 * RggMaterial.EModulStahl;
+  rEA.DC := RggMaterial.EAgross;
+  rEA.D0D := RggMaterial.EAgross;
+  rEA.ED := RggMaterial.EAgross;
+  rEA.D0E := RggMaterial.EAgross;
+  rEA.E0E := RggMaterial.EAgross;
 
   GSB := TRggFA.Create;
   WantLogoData := false;
@@ -676,7 +675,7 @@ begin
     tempWS := arctan2(tempSinus, tempCosinus);
   except
     on EMathError do
-      Main.Logger.Error(Ebenen_senkrecht_in_GetSalingDaten_String);
+      Main.Logger.Error(RggStrings.Ebenen_senkrecht_in_GetSalingDaten_String);
   end;
 
   SD.SalingH := FrSalingH;
@@ -760,17 +759,17 @@ function TRigg2.GetGetriebeStatusText: string;
 var
   s: string;
 begin
-  s := Status_String_Getriebe;
+  s := RggStrings.Status_String_Getriebe;
   if FGetriebeOK then
-    s := s + Status_String_OK
+    s := s + RggStrings.Status_String_OK
   else
   begin
     if gsWanteZukurz in FGetriebeStatus then
-      s := s + Status_String_WanteZuKurz
+      s := s + RggStrings.Status_String_WanteZuKurz
     else if gsWanteZulang in FGetriebeStatus then
-      s := s + Format(Status_Format_String_WanteZuLang, [FrWanteZulang])
+      s := s + Format(RggStrings.Status_Format_String_WanteZuLang, [FrWanteZulang])
     else if gsErrorPsivonPhi in FGetriebeStatus then
-      s := s + SalingHTooSmallString;
+      s := s + RggStrings.SalingHTooSmallString;
   end;
   result := s;
 end;
@@ -1028,99 +1027,99 @@ var
   s, s1, s2: string;
   tempEI: Integer;
 begin
-  s := Rigg_IniSectionString;
-  ini.WriteInteger(s, SalingTyp_IniString, Ord(FSalingTyp));
+  s := RggStrings.Rigg_IniSectionString;
+  ini.WriteInteger(s, RggStrings.SalingTyp_IniString, Ord(FSalingTyp));
   TrimmTab.WriteToIniFile(ini);
 
-  s := Mast_IniSectionString;
-  ini.WriteInteger(s, MastL_IniString, Round(FrMastLength));
-  ini.WriteInteger(s, Mastunten_IniString, Round(FrMastUnten));
-  ini.WriteInteger(s, Mastoben_IniString, Round(FrMastOben));
-  ini.WriteInteger(s, MastfallVorlauf_IniString, Round(FrMastfallVorlauf));
+  s := RggStrings.Mast_IniSectionString;
+  ini.WriteInteger(s, RggStrings.MastL_IniString, Round(FrMastLength));
+  ini.WriteInteger(s, RggStrings.Mastunten_IniString, Round(FrMastUnten));
+  ini.WriteInteger(s, RggStrings.Mastoben_IniString, Round(FrMastOben));
+  ini.WriteInteger(s, RggStrings.MastfallVorlauf_IniString, Round(FrMastfallVorlauf));
 
-  s := Ist_IniSectionString;
-  ini.WriteInteger(s, Controller_IniString, Round(FrController));
-  ini.WriteInteger(s, WinkelString, Round(FWinkelDegrees));
-  ini.WriteInteger(s, VorstagString, Round(FrVorstag));
-  ini.WriteInteger(s, WanteString, Round(FrWunten3D + FrWoben3D));
-  ini.WriteInteger(s, Woben_IniString, Round(FrWoben3D));
-  ini.WriteInteger(s, SalingH_IniString, Round(FrSalingH));
-  ini.WriteInteger(s, SalingA_IniString, Round(FrSalingA));
-  ini.WriteInteger(s, WPowerOS_IniString, Round(FWPowerOS));
+  s := RggStrings.Ist_IniSectionString;
+  ini.WriteInteger(s, RggStrings.Controller_IniString, Round(FrController));
+  ini.WriteInteger(s, RggStrings.WinkelString, Round(FWinkelDegrees));
+  ini.WriteInteger(s, RggStrings.VorstagString, Round(FrVorstag));
+  ini.WriteInteger(s, RggStrings.WanteString, Round(FrWunten3D + FrWoben3D));
+  ini.WriteInteger(s, RggStrings.Woben_IniString, Round(FrWoben3D));
+  ini.WriteInteger(s, RggStrings.SalingH_IniString, Round(FrSalingH));
+  ini.WriteInteger(s, RggStrings.SalingA_IniString, Round(FrSalingA));
+  ini.WriteInteger(s, RggStrings.WPowerOS_IniString, Round(FWPowerOS));
 
-  s := Min_IniSectionString;
-  ini.WriteInteger(s, Controller_IniString, Round(GSB.Controller.Min));
-  ini.WriteInteger(s, Winkel_IniString, Round(GSB.Winkel.Min));
-  ini.WriteInteger(s, Vorstag_IniString, Round(GSB.Vorstag.Min));
-  ini.WriteInteger(s, Wante_IniString, Round(GSB.Wante.Min));
-  ini.WriteInteger(s, Woben_IniString, Round(GSB.Woben.Min));
-  ini.WriteInteger(s, SalingH_IniString, Round(GSB.SalingH.Min));
-  ini.WriteInteger(s, SalingA_IniString, Round(GSB.SalingA.Min));
-  ini.WriteInteger(s, SalingL_IniString, Round(GSB.SalingL.Min));
-  ini.WriteInteger(s, VorstagOS_IniString, Round(GSB.VorstagOS.Min));
-  ini.WriteInteger(s, WPowerOS_IniString, Round(GSB.WPowerOS.Min));
+  s := RggStrings.Min_IniSectionString;
+  ini.WriteInteger(s, RggStrings.Controller_IniString, Round(GSB.Controller.Min));
+  ini.WriteInteger(s, RggStrings.Winkel_IniString, Round(GSB.Winkel.Min));
+  ini.WriteInteger(s, RggStrings.Vorstag_IniString, Round(GSB.Vorstag.Min));
+  ini.WriteInteger(s, RggStrings.Wante_IniString, Round(GSB.Wante.Min));
+  ini.WriteInteger(s, RggStrings.Woben_IniString, Round(GSB.Woben.Min));
+  ini.WriteInteger(s, RggStrings.SalingH_IniString, Round(GSB.SalingH.Min));
+  ini.WriteInteger(s, RggStrings.SalingA_IniString, Round(GSB.SalingA.Min));
+  ini.WriteInteger(s, RggStrings.SalingL_IniString, Round(GSB.SalingL.Min));
+  ini.WriteInteger(s, RggStrings.VorstagOS_IniString, Round(GSB.VorstagOS.Min));
+  ini.WriteInteger(s, RggStrings.WPowerOS_IniString, Round(GSB.WPowerOS.Min));
 
-  s := Max_IniSectionString;
-  ini.WriteInteger(s, Controller_IniString, Round(GSB.Controller.Max));
-  ini.WriteInteger(s, Winkel_IniString, Round(GSB.Winkel.Max));
-  ini.WriteInteger(s, Vorstag_IniString, Round(GSB.Vorstag.Max));
-  ini.WriteInteger(s, Wante_IniString, Round(GSB.Wante.Max));
-  ini.WriteInteger(s, Woben_IniString, Round(GSB.Woben.Max));
-  ini.WriteInteger(s, SalingH_IniString, Round(GSB.SalingH.Max));
-  ini.WriteInteger(s, SalingA_IniString, Round(GSB.SalingA.Max));
-  ini.WriteInteger(s, SalingL_IniString, Round(GSB.SalingL.Max));
-  ini.WriteInteger(s, VorstagOS_IniString, Round(GSB.VorstagOS.Max));
-  ini.WriteInteger(s, WPowerOS_IniString, Round(GSB.WPowerOS.Max));
+  s := RggStrings.Max_IniSectionString;
+  ini.WriteInteger(s, RggStrings.Controller_IniString, Round(GSB.Controller.Max));
+  ini.WriteInteger(s, RggStrings.Winkel_IniString, Round(GSB.Winkel.Max));
+  ini.WriteInteger(s, RggStrings.Vorstag_IniString, Round(GSB.Vorstag.Max));
+  ini.WriteInteger(s, RggStrings.Wante_IniString, Round(GSB.Wante.Max));
+  ini.WriteInteger(s, RggStrings.Woben_IniString, Round(GSB.Woben.Max));
+  ini.WriteInteger(s, RggStrings.SalingH_IniString, Round(GSB.SalingH.Max));
+  ini.WriteInteger(s, RggStrings.SalingA_IniString, Round(GSB.SalingA.Max));
+  ini.WriteInteger(s, RggStrings.SalingL_IniString, Round(GSB.SalingL.Max));
+  ini.WriteInteger(s, RggStrings.VorstagOS_IniString, Round(GSB.VorstagOS.Max));
+  ini.WriteInteger(s, RggStrings.WPowerOS_IniString, Round(GSB.WPowerOS.Max));
 
-  s := Koordinaten_Rumpf_IniSectionString;
-  ini.WriteInteger(s, A0x_IniString, Round(rP.A0.X));
-  ini.WriteInteger(s, A0y_IniString, Round(rP.A0.Y));
-  ini.WriteInteger(s, A0z_IniString, Round(rP.A0.Z));
-  ini.WriteInteger(s, B0x_IniString, Round(rP.B0.X));
-  ini.WriteInteger(s, B0y_IniString, Round(rP.B0.Y));
-  ini.WriteInteger(s, B0z_IniString, Round(rP.B0.Z));
-  ini.WriteInteger(s, C0x_IniString, Round(rP.C0.X));
-  ini.WriteInteger(s, C0y_IniString, Round(rP.C0.Y));
-  ini.WriteInteger(s, C0z_IniString, Round(rP.C0.Z));
-  ini.WriteInteger(s, D0x_IniString, Round(rP.D0.X));
-  ini.WriteInteger(s, D0y_IniString, Round(rP.D0.Y));
-  ini.WriteInteger(s, D0z_IniString, Round(rP.D0.Z));
-  ini.WriteInteger(s, E0x_IniString, Round(rP.E0.X));
-  ini.WriteInteger(s, E0y_IniString, Round(rP.E0.Y));
-  ini.WriteInteger(s, E0z_IniString, Round(rP.E0.Z));
-  ini.WriteInteger(s, F0x_IniString, Round(rP.F0.X));
-  ini.WriteInteger(s, F0y_IniString, Round(rP.F0.Y));
-  ini.WriteInteger(s, F0z_IniString, Round(rP.F0.Z));
+  s := RggStrings.Koordinaten_Rumpf_IniSectionString;
+  ini.WriteInteger(s, RggStrings.A0x_IniString, Round(rP.A0.X));
+  ini.WriteInteger(s, RggStrings.A0y_IniString, Round(rP.A0.Y));
+  ini.WriteInteger(s, RggStrings.A0z_IniString, Round(rP.A0.Z));
+  ini.WriteInteger(s, RggStrings.B0x_IniString, Round(rP.B0.X));
+  ini.WriteInteger(s, RggStrings.B0y_IniString, Round(rP.B0.Y));
+  ini.WriteInteger(s, RggStrings.B0z_IniString, Round(rP.B0.Z));
+  ini.WriteInteger(s, RggStrings.C0x_IniString, Round(rP.C0.X));
+  ini.WriteInteger(s, RggStrings.C0y_IniString, Round(rP.C0.Y));
+  ini.WriteInteger(s, RggStrings.C0z_IniString, Round(rP.C0.Z));
+  ini.WriteInteger(s, RggStrings.D0x_IniString, Round(rP.D0.X));
+  ini.WriteInteger(s, RggStrings.D0y_IniString, Round(rP.D0.Y));
+  ini.WriteInteger(s, RggStrings.D0z_IniString, Round(rP.D0.Z));
+  ini.WriteInteger(s, RggStrings.E0x_IniString, Round(rP.E0.X));
+  ini.WriteInteger(s, RggStrings.E0y_IniString, Round(rP.E0.Y));
+  ini.WriteInteger(s, RggStrings.E0z_IniString, Round(rP.E0.Z));
+  ini.WriteInteger(s, RggStrings.F0x_IniString, Round(rP.F0.X));
+  ini.WriteInteger(s, RggStrings.F0y_IniString, Round(rP.F0.Y));
+  ini.WriteInteger(s, RggStrings.F0z_IniString, Round(rP.F0.Z));
 
-  s := Koordinaten_Rigg_IniSectionString;
-  ini.WriteInteger(s, Ax_IniString, Round(rP.A.X));
-  ini.WriteInteger(s, Ay_IniString, Round(rP.A.Y));
-  ini.WriteInteger(s, Az_IniString, Round(rP.A.Z));
-  ini.WriteInteger(s, Bx_IniString, Round(rP.B.X));
-  ini.WriteInteger(s, By_IniString, Round(rP.B.Y));
-  ini.WriteInteger(s, Bz_IniString, Round(rP.B.Z));
-  ini.WriteInteger(s, Cx_IniString, Round(rP.C.X));
-  ini.WriteInteger(s, Cy_IniString, Round(rP.C.Y));
-  ini.WriteInteger(s, Cz_IniString, Round(rP.C.Z));
-  ini.WriteInteger(s, Dx_IniString, Round(rP.D.X));
-  ini.WriteInteger(s, Dy_IniString, Round(rP.D.Y));
-  ini.WriteInteger(s, Dz_IniString, Round(rP.D.Z));
-  ini.WriteInteger(s, Ex_IniString, Round(rP.E.X));
-  ini.WriteInteger(s, Ey_IniString, Round(rP.E.Y));
-  ini.WriteInteger(s, Ez_IniString, Round(rP.E.Z));
-  ini.WriteInteger(s, Fx_IniString, Round(rP.F.X));
-  ini.WriteInteger(s, Fy_IniString, Round(rP.F.Y));
-  ini.WriteInteger(s, Fz_IniString, Round(rP.F.Z));
+  s := RggStrings.Koordinaten_Rigg_IniSectionString;
+  ini.WriteInteger(s, RggStrings.Ax_IniString, Round(rP.A.X));
+  ini.WriteInteger(s, RggStrings.Ay_IniString, Round(rP.A.Y));
+  ini.WriteInteger(s, RggStrings.Az_IniString, Round(rP.A.Z));
+  ini.WriteInteger(s, RggStrings.Bx_IniString, Round(rP.B.X));
+  ini.WriteInteger(s, RggStrings.By_IniString, Round(rP.B.Y));
+  ini.WriteInteger(s, RggStrings.Bz_IniString, Round(rP.B.Z));
+  ini.WriteInteger(s, RggStrings.Cx_IniString, Round(rP.C.X));
+  ini.WriteInteger(s, RggStrings.Cy_IniString, Round(rP.C.Y));
+  ini.WriteInteger(s, RggStrings.Cz_IniString, Round(rP.C.Z));
+  ini.WriteInteger(s, RggStrings.Dx_IniString, Round(rP.D.X));
+  ini.WriteInteger(s, RggStrings.Dy_IniString, Round(rP.D.Y));
+  ini.WriteInteger(s, RggStrings.Dz_IniString, Round(rP.D.Z));
+  ini.WriteInteger(s, RggStrings.Ex_IniString, Round(rP.E.X));
+  ini.WriteInteger(s, RggStrings.Ey_IniString, Round(rP.E.Y));
+  ini.WriteInteger(s, RggStrings.Ez_IniString, Round(rP.E.Z));
+  ini.WriteInteger(s, RggStrings.Fx_IniString, Round(rP.F.X));
+  ini.WriteInteger(s, RggStrings.Fy_IniString, Round(rP.F.Y));
+  ini.WriteInteger(s, RggStrings.Fz_IniString, Round(rP.F.Z));
 
-  s := Rigg_IniSectionString;
-  ini.WriteInteger(s, ControllerTyp_IniString, Ord(FControllerTyp));
-  ini.WriteInteger(s, CalcTyp_IniString, Ord(FCalcTyp));
+  s := RggStrings.Rigg_IniSectionString;
+  ini.WriteInteger(s, RggStrings.ControllerTyp_IniString, Ord(FControllerTyp));
+  ini.WriteInteger(s, RggStrings.CalcTyp_IniString, Ord(FCalcTyp));
 
-  s := Mast_IniSectionString;
+  s := RggStrings.Mast_IniSectionString;
   tempEI := Round(EI / 1E6);
-  ini.WriteInteger(s, EI_IniString, tempEI);
+  ini.WriteInteger(s, RggStrings.EI_IniString, tempEI);
 
-  s := EA_IniString;
+  s := RggStrings.EA_IniString;
   for i := 0 to 19 do
   begin
     s1 := IntToStr(i);
@@ -1135,99 +1134,99 @@ var
   i: Integer;
   s, s1, s2: string;
 begin
-  s := Rigg_IniSectionString;
-  SalingTyp := TSalingTyp(ini.ReadInteger(s, SalingTyp_IniString, Ord(stFest)));
+  s := RggStrings.Rigg_IniSectionString;
+  SalingTyp := TSalingTyp(ini.ReadInteger(s, RggStrings.SalingTyp_IniString, Ord(stFest)));
 
   TrimmTab.LoadFromIniFile(ini);
 
-  s := Mast_IniSectionString;
-  FrMastLength := ini.ReadInteger(s, MastL_IniString, Round(FrMastLength));
-  FrMastUnten := ini.ReadInteger(s, Mastunten_IniString, Round(FrMastUnten));
-  FrMastOben := ini.ReadInteger(s, Mastoben_IniString, Round(FrMastOben));
-  FrMastfallVorlauf := ini.ReadInteger(s, MastfallVorlauf_IniString, Round(FrMastfallVorlauf));
+  s := RggStrings.Mast_IniSectionString;
+  FrMastLength := ini.ReadInteger(s, RggStrings.MastL_IniString, Round(FrMastLength));
+  FrMastUnten := ini.ReadInteger(s, RggStrings.Mastunten_IniString, Round(FrMastUnten));
+  FrMastOben := ini.ReadInteger(s, RggStrings.Mastoben_IniString, Round(FrMastOben));
+  FrMastfallVorlauf := ini.ReadInteger(s, RggStrings.MastfallVorlauf_IniString, Round(FrMastfallVorlauf));
 
-  s := Ist_IniSectionString;
-  FrController := ini.ReadInteger(s, Controller_IniString, Round(FrController));
-  FrWinkel := ini.ReadInteger(s, Winkel_IniString, Round(FrWinkel));
-  FrVorstag := ini.ReadInteger(s, Vorstag_IniString, Round(FrVorstag));
-  FrWoben3D := ini.ReadInteger(s, Woben_IniString, Round(FrWoben3D));
-  FrWunten3D := ini.ReadInteger(s, Wante_IniString, Round(FrWunten3D + FrWoben3D - FrWoben3D));
-  FrSalingH := ini.ReadInteger(s, SalingH_IniString, Round(FrSalingH));
-  FrSalingA := ini.ReadInteger(s, SalingA_IniString, Round(FrSalingA));
-  FWPowerOS := ini.ReadInteger(s, WPowerOS_IniString, Round(FWPowerOS));
+  s := RggStrings.Ist_IniSectionString;
+  FrController := ini.ReadInteger(s, RggStrings.Controller_IniString, Round(FrController));
+  FrWinkel := ini.ReadInteger(s, RggStrings.Winkel_IniString, Round(FrWinkel));
+  FrVorstag := ini.ReadInteger(s, RggStrings.Vorstag_IniString, Round(FrVorstag));
+  FrWoben3D := ini.ReadInteger(s, RggStrings.Woben_IniString, Round(FrWoben3D));
+  FrWunten3D := ini.ReadInteger(s, RggStrings.Wante_IniString, Round(FrWunten3D + FrWoben3D - FrWoben3D));
+  FrSalingH := ini.ReadInteger(s, RggStrings.SalingH_IniString, Round(FrSalingH));
+  FrSalingA := ini.ReadInteger(s, RggStrings.SalingA_IniString, Round(FrSalingA));
+  FWPowerOS := ini.ReadInteger(s, RggStrings.WPowerOS_IniString, Round(FWPowerOS));
 
-  s := Min_IniSectionString;
-  GSB.Controller.Min := ini.ReadInteger(s, Controller_IniString, Round(GSB.Controller.Min));
-  GSB.Winkel.Min := ini.ReadInteger(s, Winkel_IniString, Round(GSB.Winkel.Min));
-  GSB.Vorstag.Min := ini.ReadInteger(s, Vorstag_IniString, Round(GSB.Vorstag.Min));
-  GSB.Wante.Min := ini.ReadInteger(s, Wante_IniString, Round(GSB.Wante.Min));
-  GSB.Woben.Min := ini.ReadInteger(s, Woben_IniString, Round(GSB.Woben.Min));
-  GSB.SalingH.Min := ini.ReadInteger(s, SalingH_IniString, Round(GSB.SalingH.Min));
-  GSB.SalingA.Min := ini.ReadInteger(s, SalingA_IniString, Round(GSB.SalingA.Min));
-  GSB.SalingL.Min := ini.ReadInteger(s, SalingL_IniString, Round(GSB.SalingL.Min));
-  GSB.VorstagOS.Min := ini.ReadInteger(s, VorstagOS_IniString, Round(GSB.VorstagOS.Min));
-  GSB.WPowerOS.Min := ini.ReadInteger(s, WPowerOS_IniString, Round(GSB.WPowerOS.Min));
+  s := RggStrings.Min_IniSectionString;
+  GSB.Controller.Min := ini.ReadInteger(s, RggStrings.Controller_IniString, Round(GSB.Controller.Min));
+  GSB.Winkel.Min := ini.ReadInteger(s, RggStrings.Winkel_IniString, Round(GSB.Winkel.Min));
+  GSB.Vorstag.Min := ini.ReadInteger(s, RggStrings.Vorstag_IniString, Round(GSB.Vorstag.Min));
+  GSB.Wante.Min := ini.ReadInteger(s, RggStrings.Wante_IniString, Round(GSB.Wante.Min));
+  GSB.Woben.Min := ini.ReadInteger(s, RggStrings.Woben_IniString, Round(GSB.Woben.Min));
+  GSB.SalingH.Min := ini.ReadInteger(s, RggStrings.SalingH_IniString, Round(GSB.SalingH.Min));
+  GSB.SalingA.Min := ini.ReadInteger(s, RggStrings.SalingA_IniString, Round(GSB.SalingA.Min));
+  GSB.SalingL.Min := ini.ReadInteger(s, RggStrings.SalingL_IniString, Round(GSB.SalingL.Min));
+  GSB.VorstagOS.Min := ini.ReadInteger(s, RggStrings.VorstagOS_IniString, Round(GSB.VorstagOS.Min));
+  GSB.WPowerOS.Min := ini.ReadInteger(s, RggStrings.WPowerOS_IniString, Round(GSB.WPowerOS.Min));
 
-  s := Max_IniSectionString;
-  GSB.Controller.Max := ini.ReadInteger(s, Controller_IniString, Round(GSB.Controller.Max));
-  GSB.Winkel.Max := ini.ReadInteger(s, Winkel_IniString, Round(GSB.Winkel.Max));
-  GSB.Vorstag.Max := ini.ReadInteger(s, Vorstag_IniString, Round(GSB.Vorstag.Max));
-  GSB.Wante.Max := ini.ReadInteger(s, Wante_IniString, Round(GSB.Wante.Max));
-  GSB.Woben.Max := ini.ReadInteger(s, Woben_IniString, Round(GSB.Woben.Max));
-  GSB.SalingH.Max := ini.ReadInteger(s, SalingH_IniString, Round(GSB.SalingH.Max));
-  GSB.SalingA.Max := ini.ReadInteger(s, SalingA_IniString, Round(GSB.SalingA.Max));
-  GSB.SalingL.Max := ini.ReadInteger(s, SalingL_IniString, Round(GSB.SalingL.Max));
-  GSB.VorstagOS.Max := ini.ReadInteger(s, VorstagOS_IniString, Round(GSB.VorstagOS.Max));
-  GSB.WPowerOS.Max := ini.ReadInteger(s, WPowerOS_IniString, Round(GSB.WPowerOS.Max));
+  s := RggStrings.Max_IniSectionString;
+  GSB.Controller.Max := ini.ReadInteger(s, RggStrings.Controller_IniString, Round(GSB.Controller.Max));
+  GSB.Winkel.Max := ini.ReadInteger(s, RggStrings.Winkel_IniString, Round(GSB.Winkel.Max));
+  GSB.Vorstag.Max := ini.ReadInteger(s, RggStrings.Vorstag_IniString, Round(GSB.Vorstag.Max));
+  GSB.Wante.Max := ini.ReadInteger(s, RggStrings.Wante_IniString, Round(GSB.Wante.Max));
+  GSB.Woben.Max := ini.ReadInteger(s, RggStrings.Woben_IniString, Round(GSB.Woben.Max));
+  GSB.SalingH.Max := ini.ReadInteger(s, RggStrings.SalingH_IniString, Round(GSB.SalingH.Max));
+  GSB.SalingA.Max := ini.ReadInteger(s, RggStrings.SalingA_IniString, Round(GSB.SalingA.Max));
+  GSB.SalingL.Max := ini.ReadInteger(s, RggStrings.SalingL_IniString, Round(GSB.SalingL.Max));
+  GSB.VorstagOS.Max := ini.ReadInteger(s, RggStrings.VorstagOS_IniString, Round(GSB.VorstagOS.Max));
+  GSB.WPowerOS.Max := ini.ReadInteger(s, RggStrings.WPowerOS_IniString, Round(GSB.WPowerOS.Max));
 
-  s := Koordinaten_Rumpf_IniSectionString;
-  rP.A0.X := ini.ReadInteger(s, A0x_IniString, Round(rP.A0.X));
-  rP.A0.Y := ini.ReadInteger(s, A0y_IniString, Round(rP.A0.Y));
-  rP.A0.Z := ini.ReadInteger(s, A0z_IniString, Round(rP.A0.Z));
-  rP.B0.X := ini.ReadInteger(s, B0x_IniString, Round(rP.B0.X));
-  rP.B0.Y := ini.ReadInteger(s, B0y_IniString, Round(rP.B0.Y));
-  rP.B0.Z := ini.ReadInteger(s, B0z_IniString, Round(rP.B0.Z));
-  rP.C0.X := ini.ReadInteger(s, C0x_IniString, Round(rP.C0.X));
-  rP.C0.Y := ini.ReadInteger(s, C0y_IniString, Round(rP.C0.Y));
-  rP.C0.Z := ini.ReadInteger(s, C0z_IniString, Round(rP.C0.Z));
-  rP.D0.X := ini.ReadInteger(s, D0x_IniString, Round(rP.D0.X));
-  rP.D0.Y := ini.ReadInteger(s, D0y_IniString, Round(rP.D0.Y));
-  rP.D0.Z := ini.ReadInteger(s, D0z_IniString, Round(rP.D0.Z));
-  rP.E0.X := ini.ReadInteger(s, E0x_IniString, Round(rP.E0.X));
-  rP.E0.Y := ini.ReadInteger(s, E0y_IniString, Round(rP.E0.Y));
-  rP.E0.Z := ini.ReadInteger(s, E0z_IniString, Round(rP.E0.Z));
-  rP.F0.X := ini.ReadInteger(s, F0x_IniString, Round(rP.F0.X));
-  rP.F0.Y := ini.ReadInteger(s, F0y_IniString, Round(rP.F0.Y));
-  rP.F0.Z := ini.ReadInteger(s, F0z_IniString, Round(rP.F0.Z));
+  s := RggStrings.Koordinaten_Rumpf_IniSectionString;
+  rP.A0.X := ini.ReadInteger(s, RggStrings.A0x_IniString, Round(rP.A0.X));
+  rP.A0.Y := ini.ReadInteger(s, RggStrings.A0y_IniString, Round(rP.A0.Y));
+  rP.A0.Z := ini.ReadInteger(s, RggStrings.A0z_IniString, Round(rP.A0.Z));
+  rP.B0.X := ini.ReadInteger(s, RggStrings.B0x_IniString, Round(rP.B0.X));
+  rP.B0.Y := ini.ReadInteger(s, RggStrings.B0y_IniString, Round(rP.B0.Y));
+  rP.B0.Z := ini.ReadInteger(s, RggStrings.B0z_IniString, Round(rP.B0.Z));
+  rP.C0.X := ini.ReadInteger(s, RggStrings.C0x_IniString, Round(rP.C0.X));
+  rP.C0.Y := ini.ReadInteger(s, RggStrings.C0y_IniString, Round(rP.C0.Y));
+  rP.C0.Z := ini.ReadInteger(s, RggStrings.C0z_IniString, Round(rP.C0.Z));
+  rP.D0.X := ini.ReadInteger(s, RggStrings.D0x_IniString, Round(rP.D0.X));
+  rP.D0.Y := ini.ReadInteger(s, RggStrings.D0y_IniString, Round(rP.D0.Y));
+  rP.D0.Z := ini.ReadInteger(s, RggStrings.D0z_IniString, Round(rP.D0.Z));
+  rP.E0.X := ini.ReadInteger(s, RggStrings.E0x_IniString, Round(rP.E0.X));
+  rP.E0.Y := ini.ReadInteger(s, RggStrings.E0y_IniString, Round(rP.E0.Y));
+  rP.E0.Z := ini.ReadInteger(s, RggStrings.E0z_IniString, Round(rP.E0.Z));
+  rP.F0.X := ini.ReadInteger(s, RggStrings.F0x_IniString, Round(rP.F0.X));
+  rP.F0.Y := ini.ReadInteger(s, RggStrings.F0y_IniString, Round(rP.F0.Y));
+  rP.F0.Z := ini.ReadInteger(s, RggStrings.F0z_IniString, Round(rP.F0.Z));
 
-  s := Koordinaten_Rigg_IniSectionString;
-  rP.A.X := ini.ReadInteger(s, Ax_IniString, Round(rP.A.X));
-  rP.A.Y := ini.ReadInteger(s, Ay_IniString, Round(rP.A.Y));
-  rP.A.Z := ini.ReadInteger(s, Az_IniString, Round(rP.A.Z));
-  rP.B.X := ini.ReadInteger(s, Bx_IniString, Round(rP.B.X));
-  rP.B.Y := ini.ReadInteger(s, By_IniString, Round(rP.B.Y));
-  rP.B.Z := ini.ReadInteger(s, Bz_IniString, Round(rP.B.Z));
-  rP.C.X := ini.ReadInteger(s, Cx_IniString, Round(rP.C.X));
-  rP.C.Y := ini.ReadInteger(s, Cy_IniString, Round(rP.C.Y));
-  rP.C.Z := ini.ReadInteger(s, Cz_IniString, Round(rP.C.Z));
-  rP.D.X := ini.ReadInteger(s, Dx_IniString, Round(rP.D.X));
-  rP.D.Y := ini.ReadInteger(s, Dy_IniString, Round(rP.D.Y));
-  rP.D.Z := ini.ReadInteger(s, Dz_IniString, Round(rP.D.Z));
-  rP.E.X := ini.ReadInteger(s, Ex_IniString, Round(rP.E.X));
-  rP.E.Y := ini.ReadInteger(s, Ey_IniString, Round(rP.E.Y));
-  rP.E.Z := ini.ReadInteger(s, Ez_IniString, Round(rP.E.Z));
-  rP.F.X := ini.ReadInteger(s, Fx_IniString, Round(rP.F.X));
-  rP.F.Y := ini.ReadInteger(s, Fy_IniString, Round(rP.F.Y));
-  rP.F.Z := ini.ReadInteger(s, Fz_IniString, Round(rP.F.Z));
+  s := RggStrings.Koordinaten_Rigg_IniSectionString;
+  rP.A.X := ini.ReadInteger(s, RggStrings.Ax_IniString, Round(rP.A.X));
+  rP.A.Y := ini.ReadInteger(s, RggStrings.Ay_IniString, Round(rP.A.Y));
+  rP.A.Z := ini.ReadInteger(s, RggStrings.Az_IniString, Round(rP.A.Z));
+  rP.B.X := ini.ReadInteger(s, RggStrings.Bx_IniString, Round(rP.B.X));
+  rP.B.Y := ini.ReadInteger(s, RggStrings.By_IniString, Round(rP.B.Y));
+  rP.B.Z := ini.ReadInteger(s, RggStrings.Bz_IniString, Round(rP.B.Z));
+  rP.C.X := ini.ReadInteger(s, RggStrings.Cx_IniString, Round(rP.C.X));
+  rP.C.Y := ini.ReadInteger(s, RggStrings.Cy_IniString, Round(rP.C.Y));
+  rP.C.Z := ini.ReadInteger(s, RggStrings.Cz_IniString, Round(rP.C.Z));
+  rP.D.X := ini.ReadInteger(s, RggStrings.Dx_IniString, Round(rP.D.X));
+  rP.D.Y := ini.ReadInteger(s, RggStrings.Dy_IniString, Round(rP.D.Y));
+  rP.D.Z := ini.ReadInteger(s, RggStrings.Dz_IniString, Round(rP.D.Z));
+  rP.E.X := ini.ReadInteger(s, RggStrings.Ex_IniString, Round(rP.E.X));
+  rP.E.Y := ini.ReadInteger(s, RggStrings.Ey_IniString, Round(rP.E.Y));
+  rP.E.Z := ini.ReadInteger(s, RggStrings.Ez_IniString, Round(rP.E.Z));
+  rP.F.X := ini.ReadInteger(s, RggStrings.Fx_IniString, Round(rP.F.X));
+  rP.F.Y := ini.ReadInteger(s, RggStrings.Fy_IniString, Round(rP.F.Y));
+  rP.F.Z := ini.ReadInteger(s, RggStrings.Fz_IniString, Round(rP.F.Z));
 
-  s := Rigg_IniSectionString;
-  ControllerTyp := TControllerTyp(ini.ReadInteger(S, ControllerTyp_IniString, Ord(ctDruck)));
-  CalcTyp := TCalcTyp(ini.ReadInteger(S, CalcTyp_IniString, Ord(ctBiegeKnicken)));
+  s := RggStrings.Rigg_IniSectionString;
+  ControllerTyp := TControllerTyp(ini.ReadInteger(S, RggStrings.ControllerTyp_IniString, Ord(ctDruck)));
+  CalcTyp := TCalcTyp(ini.ReadInteger(S, RggStrings.CalcTyp_IniString, Ord(ctBiegeKnicken)));
 
-  s := Mast_IniSectionString;
-  EI := ini.ReadInteger(S, EI_IniString, 14700) * 1E6;
+  s := RggStrings.Mast_IniSectionString;
+  EI := ini.ReadInteger(S, RggStrings.EI_IniString, 14700) * 1E6;
 
-  s := EA_IniString;
+  s := RggStrings.EA_IniString;
   for i := 0 to 19 do
   begin
     s1 := IntToStr(i);
@@ -1286,7 +1285,7 @@ begin
   Wanten3dTo2d;
 
   { Berechnung der Punkte A, B, P und D }
-  FrPsi := PsiVonPhi(FrPhi, FrBasis, FrWunten2D, FrSalingH, FrMastUnten, svar);
+  FrPsi := TRggCalc.PsiVonPhi(FrPhi, FrBasis, FrWunten2D, FrSalingH, FrMastUnten, svar);
   if FrPsi < 0 then
     FrPsi := FrPsi + 2 * PI;
 
@@ -1294,8 +1293,8 @@ begin
   begin
     FGetriebeOK := False;
     Include(FGetriebeStatus, gsErrorPsivonPhi);
-    LogList.Add(LogList_String_InUpdateGetriebeFS);
-    LogList.Add(LogList_String_FalseInPsiVonPhi);
+    LogList.Add(RggStrings.LogList_String_InUpdateGetriebeFS);
+    LogList.Add(RggStrings.LogList_String_FalseInPsiVonPhi);
     Inc(ExitCounter1);
     Exit;
   end;
@@ -1456,7 +1455,7 @@ begin
     imagine we are looking from behind - the mechanism appears mirrored,
     angle Psi needs to be transformed back and forth,
     and member length values passed according to mirrored model. }
-  FrPhi := pi - PsiVonPhi(pi - FrPsi, FrBasis, FrMastUnten, FrSalingH, FrWunten2D, svar);
+  FrPhi := pi - TRggCalc.PsiVonPhi(pi - FrPsi, FrBasis, FrMastUnten, FrSalingH, FrWunten2D, svar);
   if FrPhi > 2 * PI then
     FrPhi := FrPhi - 2 * PI;
 
@@ -1464,8 +1463,8 @@ begin
   begin
     FGetriebeOK := False;
     Include(FGetriebeStatus, gsErrorPsivonPhi);
-    LogList.Add(LogList_String_InBerechneWinkel);
-    LogList.Add(LogList_String_FalseInPsiVonPhi);
+    LogList.Add(RggStrings.LogList_String_InBerechneWinkel);
+    LogList.Add(RggStrings.LogList_String_FalseInPsiVonPhi);
     Inc(ExitCounter2);
     Exit;
   end;
@@ -1510,7 +1509,7 @@ begin
   phiM := phiA;
   for i := 0 to 100 do
   begin
-    psiM := PsiVonPhi(phiM, FrBasis, FrWunten2D, FrSalingH, FrMastUnten, svar);
+    psiM := TRggCalc.PsiVonPhi(phiM, FrBasis, FrWunten2D, FrSalingH, FrMastUnten, svar);
     rP.P.X := rP.P0.X + FrWunten2D * cos(phiM - FrAlpha);
     rP.P.Z := rP.P0.Z + FrWunten2D * sin(phiM - FrAlpha);
     rP.D.X := rP.D0.X + FrMastUnten * cos(psiM - FrAlpha);
@@ -1646,7 +1645,7 @@ begin
   end;
 
   { weiter im ebenen Trapez }
-  SchnittGG(TPoint3D.Zero, TempC, TempD, TempA, temp);
+  TRggCalc.SchnittGG(TPoint3D.Zero, TempC, TempD, TempA, temp);
   { Temp enthält jetzt den Schnittpunkt der Diagonalen }
   W1Strich := temp.Length;
   Saling1L := TempD.Distance(temp);
@@ -1701,7 +1700,7 @@ begin
     Radius2 = FrWoben3D bleibt gleich beim Regeln
     TempA = SchnittPunkt1 verändert sich beim Regeln }
 
-  SchnittGG(TPoint3D.Zero, TempC, TempD, TempA, temp);
+  TRggCalc.SchnittGG(TPoint3D.Zero, TempC, TempD, TempA, temp);
   { Temp enthält jetzt den Schnittpunkt der Diagonalen }
   W1Strich := temp.Length;
   Saling1L := TempD.Distance(temp);
@@ -1875,7 +1874,7 @@ begin
             MittelPunkt2 := Temp;
             Temp := SchnittPunkt1;
             s := Bemerkung;
-            s := Format(LogList_Format_String_GetVorstagNullFest, [1, s]);
+            s := Format(RggStrings.LogList_Format_String_GetVorstagNullFest, [1, s]);
             LogList.Add(s);
 
             { 2. Aufruf SchnittKK: TempP ermitteln }
@@ -1886,7 +1885,7 @@ begin
             TempP := SchnittPunkt1;
             TempP.Y := 0;
             s := Bemerkung;
-            s := Format(LogList_Format_String_GetVorstagNullFest, [2, s]);
+            s := Format(RggStrings.LogList_Format_String_GetVorstagNullFest, [2, s]);
             LogList.Add(s);
 
             { 3. Aufruf SchnittKK: Saling2d und MastUnten; TempD ermitteln }
@@ -1897,7 +1896,7 @@ begin
             TempD := SchnittPunkt1;
             TempD.Y := 0;
             s := Bemerkung;
-            s := Format(LogList_Format_String_GetVorstagNullFest, [3, s]);
+            s := Format(RggStrings.LogList_Format_String_GetVorstagNullFest, [3, s]);
             LogList.Add(s);
 
             { 4. Aufruf SchnittKK: WanteOben2d und MastOben; TempC ermitteln }
@@ -1908,7 +1907,7 @@ begin
             TempC := SchnittPunkt1;
             TempC.Y := 0;
             s := Bemerkung;
-            s := Format(LogList_Format_String_GetVorstagNullFest, [4, s]);
+            s := Format(RggStrings.LogList_Format_String_GetVorstagNullFest, [4, s]);
             LogList.Add(s);
 
             result := rP.C0.Distance(TempC);
@@ -1927,7 +1926,7 @@ begin
             TempP := SchnittPunkt1;
             TempP.Y := 0;
             s := Bemerkung;
-            s := Format(LogList_Format_String_GetVorstagNullDrehbar, [1, s]);
+            s := Format(RggStrings.LogList_Format_String_GetVorstagNullDrehbar, [1, s]);
             LogList.Add(s);
 
             Radius1 := rP.D0.Distance(rP.A0);
@@ -1937,7 +1936,7 @@ begin
             Temp := SchnittPunkt1;
             Temp.Y := 0;
             s := Bemerkung;
-            s := Format(LogList_Format_String_GetVorstagNullDrehbar, [2, s]);
+            s := Format(RggStrings.LogList_Format_String_GetVorstagNullDrehbar, [2, s]);
             LogList.Add(s);
 
             WStrich := Temp.Distance(TempC);
@@ -1950,7 +1949,7 @@ begin
             TempC := SchnittPunkt1;
             TempC.Y := 0;
             s := Bemerkung;
-            s := Format(LogList_Format_String_GetVorstagNullDrehbar, [3, s]);
+            s := Format(RggStrings.LogList_Format_String_GetVorstagNullDrehbar, [3, s]);
             LogList.Add(s);
 
             result := rP.C0.Distance(TempC);
@@ -1966,7 +1965,7 @@ begin
             TempC := SchnittPunkt1;
             TempC.Y := 0;
             s := Bemerkung;
-            s := Format(LogList_Format_String_GetVorstagNullOhne, [1, s]);
+            s := Format(RggStrings.LogList_Format_String_GetVorstagNullOhne, [1, s]);
             LogList.Add(s);
             result := rP.C0.Distance(TempC);
           end;
@@ -1976,7 +1975,7 @@ begin
   except
     on E: EMathError do
     begin
-      s := Format(LogList_Format_String_GetVorstagNullException, [E.Message]);
+      s := Format(RggStrings.LogList_Format_String_GetVorstagNullException, [E.Message]);
       LogList.Add(s);
     end;
   end;
@@ -2276,19 +2275,19 @@ function TRigg2.GetMastStatusText: string;
 var
   s: string;
 begin
-  s := Status_String_Mast;
+  s := RggStrings.Status_String_Mast;
   if FMastOK then
-    s := s + Status_String_OK
+    s := s + RggStrings.Status_String_OK
   else
   begin
     if msBiegungNegativ in FMastStatus then
-      s := s + Status_String_MastBiegungNegativ
+      s := s + RggStrings.Status_String_MastBiegungNegativ
     else if msControllerJenseits in FMastStatus then
-      s := s + Status_String_MastControllerBeyondMiddle
+      s := s + RggStrings.Status_String_MastControllerBeyondMiddle
     else if msZugKraftimMast in FMastStatus then
-      s := s + Status_String_MastControllerTooFarBack
+      s := s + RggStrings.Status_String_MastControllerTooFarBack
     else if msControllerKraftZuGross in FMastStatus then
-      s := s + Status_String_MastControllerTooFar;
+      s := s + RggStrings.Status_String_MastControllerTooFar;
   end;
   result := s;
 end;
@@ -2833,16 +2832,16 @@ begin
       { D ist Null, wenn FU1 und FU2 auf einer Geraden liegen. }
       FU1 := 0;
       FU2 := 0;
-      s := LogString_SolveKG21_Except;
+      s := RggStrings.LogString_SolveKG21_Except;
       if W1 = 0 then
-        s := s + LogString_W1;
+        s := s + RggStrings.LogString_W1;
       if W2 = 0 then
-        s := s + LogString_W2;
+        s := s + RggStrings.LogString_W2;
       if W3 = 0 then
-        s := s + LogString_W3;
+        s := s + RggStrings.LogString_W3;
       if D = 0 then
-        s := s + LogString_D;
-      s := s + LogString_AreNull;
+        s := s + RggStrings.LogString_D;
+      s := s + RggStrings.LogString_AreNull;
       Main.Logger.Info(s);
     end;
   end;
@@ -2915,14 +2914,14 @@ begin
   case SalingTyp of
     stFest, stDrehbar, stOhneBiegt:
     begin
-      SchnittGG(rP.D0, rP.C, rP.P, rP.D, SPSaling);
-      SchnittGG(rP.D0, rP.C, rP.E, rP.E0, SPController);
+      TRggCalc.SchnittGG(rP.D0, rP.C, rP.P, rP.D, SPSaling);
+      TRggCalc.SchnittGG(rP.D0, rP.C, rP.E, rP.E0, SPController);
       ld := rP.D0.Distance(SPSaling);
       le := rP.D0.Distance(SPController);
       lc := rL.D0C;
       EC := rP.C.Distance(rP.E);
-      hd := Hoehe(lc - 0.0001, rL.D0D, rL.DC, k2);
-      he := Hoehe(lc - 0.0001, rL.D0E, EC, k1);
+      hd := TRggCalc.Hoehe(lc - 0.0001, rL.D0D, rL.DC, k2);
+      he := TRggCalc.Hoehe(lc - 0.0001, rL.D0E, EC, k1);
       if SPSaling.X - rP.D.X > 0 then
         hd := -hd;
       if SPController.X - rP.E.X > 0 then
@@ -2931,13 +2930,13 @@ begin
 
     stOhneStarr:
     begin
-      SchnittGG(rP.D0, rP.C, rP.E, rP.E0, SPController);
+      TRggCalc.SchnittGG(rP.D0, rP.C, rP.E, rP.E0, SPController);
       ld := rL.D0D;
       le := rP.D0.Distance(SPController);
       lc := rL.D0C;
       EC := rP.C.Distance(rP.E);
       hd := 0; { Null gesetzt, da nicht relevant }
-      he := Hoehe(lc - 0.0001, rL.D0E, EC, k1);
+      he := TRggCalc.Hoehe(lc - 0.0001, rL.D0E, EC, k1);
       if SPController.X - rP.E.X > 0 then
         he := -he;
     end;
@@ -2985,7 +2984,7 @@ begin
         begin
           FE := 0;
           FD := 0;
-          Main.Logger.Info(LogString_ZeroDivideAlpha);
+          Main.Logger.Info(RggStrings.LogString_ZeroDivideAlpha);
         end;
       end;
       FLvon1 := FE * sin(alpha1);
@@ -3020,7 +3019,7 @@ begin
         begin
           FE := 0;
           FD := 0;
-          Main.Logger.Info(LogString_ZeroDivideAlpha);
+          Main.Logger.Info(RggStrings.LogString_ZeroDivideAlpha);
         end;
       end;
       FLvon1 := FE * sin(alpha1);
@@ -3125,15 +3124,15 @@ function TRigg2.GetRiggStatusText: string;
 var
   s: string;
 begin
-  s := Status_String_Rigg;
+  s := RggStrings.Status_String_Rigg;
   if RiggOK then
-    s := s + Status_String_RiggLetzteRechnungOK;
+    s := s + RggStrings.Status_String_RiggLetzteRechnungOK;
   if rsNichtEntspannbar in FRiggStatus then
-    s := s + Status_String_RiggNichtEntspannbar;
+    s := s + RggStrings.Status_String_RiggNichtEntspannbar;
   if rsWanteAufDruck in FRiggStatus then
-    s := s + Status_String_RiggWanteAufDruck;
+    s := s + RggStrings.Status_String_RiggWanteAufDruck;
   if rsKraftZuGross in FRiggStatus then
-    s := s + Status_String_RiggForceTooBig;
+    s := s + RggStrings.Status_String_RiggForceTooBig;
   Result := s;
 end;
 
@@ -3286,7 +3285,7 @@ begin
     begin
       FRiggOK := False;
       Include(FRiggStatus, rsWanteAufDruck);
-      LogList.Add(LogList_String_WanteAufDruck);
+      LogList.Add(RggStrings.LogList_String_WanteAufDruck);
     end;
   end;
 end;
@@ -3314,7 +3313,7 @@ begin
     rF.B0C0 := F1;
     rF.A0C0 := F1;
     if abs(l1 - rL.B0C0) > 0.01 then
-      LogList.Add(LogList_String_LengthDeviation);
+      LogList.Add(RggStrings.LogList_String_LengthDeviation);
 
     { Punkt D0 }
     h := P0D0;
@@ -3397,7 +3396,7 @@ begin
     begin
       FRiggOK := False;
       Include(FRiggStatus, rsKraftZuGross);
-      LogList.Add(Format(LogList_Format_String_BetragTooBig, [j]));
+      LogList.Add(Format(RggStrings.LogList_Format_String_BetragTooBig, [j]));
     end;
   end;
 end;
@@ -3435,12 +3434,12 @@ begin
     { Probe Punkt A0 }
     temptest := Probe(ooA0, ooA, ooB0, ooC0, ooD0, 8, 6, 3, 5);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooA0], tempResult]));
+    LogList.Add(Format(RggStrings.LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooA0], tempResult]));
     test := test and temptest;
     { Probe Punkt B0 }
     temptest := Probe(ooB0, ooA0, ooB, ooC0, ooD0, 6, 7, 2, 4);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooB0], tempResult]));
+    LogList.Add(Format(RggStrings.LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooB0], tempResult]));
     test := test and temptest;
     { Probe Punkt C0 }
     KnotenLastC0.X := rF.E0E * -cos(delta1);
@@ -3449,42 +3448,42 @@ begin
     TetraF.KnotenLast := KnotenLastC0;
     temptest := Probe(ooC0, ooA0, ooB0, ooD0, ooC, 3, 2, 1, 14);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooC0], tempResult]));
+    LogList.Add(Format(RggStrings.LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooC0], tempResult]));
     TetraF.KnotenLast := TPoint3D.Zero;
     test := test and temptest;
     { Probe Punkt D0 }
     TetraF.KnotenLast := KnotenLastD0;
     temptest := Probe(ooD0, ooA0, ooB0, ooC0, ooC, 5, 4, 1, 0);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooD0], tempResult]));
+    LogList.Add(Format(RggStrings.LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooD0], tempResult]));
     TetraF.KnotenLast := TPoint3D.Zero;
     test := test and temptest;
     { Probe Punkt A }
     temptest := Probe(ooA, ooA0, ooB, ooC, ooD, 8, 11, 13, 10);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooA], tempResult]));
+    LogList.Add(Format(RggStrings.LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooA], tempResult]));
     test := test and temptest;
     { Probe Punkt B }
     temptest := Probe(ooB, ooA, ooB0, ooC, ooD, 11, 7, 12, 9);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooB], tempResult]));
+    LogList.Add(Format(RggStrings.LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooB], tempResult]));
     test := test and temptest;
     { Probe Punkt C }
     TetraF.KnotenLast := KnotenLastC;
     temptest := Probe(ooC, ooA, ooB, ooC0, ooD0, 13, 12, 14, 0);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooC], tempResult]));
+    LogList.Add(Format(RggStrings.LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooC], tempResult]));
     TetraF.KnotenLast := TPoint3D.Zero;
     test := test and temptest;
 
     if test = False then
     begin
       FRiggOK := False;
-      LogList.Add(LogList_String_ProbeFalsch);
-      Main.Logger.Info(LogList_String_ProbeFalsch);
+      LogList.Add(RggStrings.LogList_String_ProbeFalsch);
+      Main.Logger.Info(RggStrings.LogList_String_ProbeFalsch);
     end
     else
-      LogList.Add(LogList_String_ProbeOK);
+      LogList.Add(RggStrings.LogList_String_ProbeOK);
   end;
 
   if (SalingTyp = stOhneStarr) or (SalingTyp = stOhneBiegt) then
@@ -3492,12 +3491,12 @@ begin
     { Probe Punkt A0 }
     temptest := Probe(ooA0, ooA, ooB0, ooC0, ooD0, 8, 6, 3, 5);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooA0], tempResult]));
+    LogList.Add(Format(RggStrings.LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooA0], tempResult]));
     test := test and temptest;
     { Probe Punkt B0 }
     test := test and Probe(ooB0, ooA0, ooB, ooC0, ooD0, 6, 7, 2, 4);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooB0], tempResult]));
+    LogList.Add(Format(RggStrings.LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooB0], tempResult]));
     test := test and temptest;
     { Probe Punkt C0 }
     KnotenLastC0.X := rF.E0E * -cos(delta1);
@@ -3506,32 +3505,32 @@ begin
     TetraF.KnotenLast := KnotenLastC0;
     temptest := Probe(ooC0, ooA0, ooB0, ooD0, ooC, 3, 2, 1, 14);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooC0], tempResult]));
+    LogList.Add(Format(RggStrings.LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooC0], tempResult]));
     TetraF.KnotenLast := TPoint3D.Zero;
     test := test and temptest;
     { Probe Punkt D0 }
     TetraF.KnotenLast := KnotenLastD0;
     temptest := Probe(ooD0, ooA0, ooB0, ooC0, ooC, 5, 4, 1, 0);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooD0], tempResult]));
+    LogList.Add(Format(RggStrings.LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooD0], tempResult]));
     TetraF.KnotenLast := TPoint3D.Zero;
     test := test and temptest;
     { Probe Punkt C }
     TetraF.KnotenLast := KnotenLastC;
     temptest := Probe(ooC, ooA, ooB, ooC0, ooD0, 13, 12, 14, 0);
     tempResult := TetraF.ProbeErgebnis;
-    LogList.Add(Format(LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooC], tempResult]));
+    LogList.Add(Format(RggStrings.LogList_Format_String_ProbeOfPoint, [KoordTexteXML[ooC], tempResult]));
     TetraF.KnotenLast := TPoint3D.Zero;
     test := test and temptest;
 
     if test = False then
     begin
       FRiggOK := False;
-      LogList.Add(LogList_String_ProbeFalsch);
-      Main.Logger.Info(LogList_String_ProbeFalsch);
+      LogList.Add(RggStrings.LogList_String_ProbeFalsch);
+      Main.Logger.Info(RggStrings.LogList_String_ProbeFalsch);
     end
     else
-      LogList.Add(LogList_String_ProbeOK);
+      LogList.Add(RggStrings.LogList_String_ProbeOK);
   end;
 end;
 
@@ -3610,7 +3609,7 @@ begin
     end;
   except
     on E: EMathError do
-      LogList.Add(LogList_String_MakeRumpfKoordExcept + E.Message);
+      LogList.Add(RggStrings.LogList_String_MakeRumpfKoordExcept + E.Message);
   end;
 end;
 
@@ -3648,7 +3647,7 @@ begin
       MittelPunkt2 := Temp;
       Temp := SchnittPunkt1;
       s := Bemerkung;
-      s := Format(LogList_Format_String_MakeKoord, [1, s]);
+      s := Format(RggStrings.LogList_Format_String_MakeKoord, [1, s]);
       LogList.Add(s);
 
       if Status = bmEntfernt then
@@ -3666,7 +3665,7 @@ begin
       rPe.A := SchnittPunkt1;
       rPe.A.Y := -rLe.V[11] / 2;
       s := Bemerkung;
-      s := Format(LogList_Format_String_MakeKoord, [2, s]);
+      s := Format(RggStrings.LogList_Format_String_MakeKoord, [2, s]);
       LogList.Add(s);
 
       if Status = bmK1inK2 then
@@ -3688,7 +3687,7 @@ begin
       rPe.D := SchnittPunkt1;
       rPe.D.Y := 0;
       s := Bemerkung;
-      s := Format(LogList_Format_String_MakeKoord, [3, s]);
+      s := Format(RggStrings.LogList_Format_String_MakeKoord, [3, s]);
       LogList.Add(s);
 
       { 4. Aufruf SchnittKK: WanteOben2d und MastOben; ooC ermitteln }
@@ -3699,7 +3698,7 @@ begin
       rPe.C := SchnittPunkt1;
       rPe.C.Y := 0;
       s := Bemerkung;
-      s := Format(LogList_Format_String_MakeKoord, [4, s]);
+      s := Format(RggStrings.LogList_Format_String_MakeKoord, [4, s]);
       LogList.Add(s);
     end;
 
@@ -3709,7 +3708,7 @@ begin
 
   except
     on E: EMathError do
-      LogList.Add(LogList_String_MakeKoordExept + E.Message);
+      LogList.Add(RggStrings.LogList_String_MakeKoordExept + E.Message);
   end;
 end;
 
@@ -3738,7 +3737,7 @@ begin
       TempA := SchnittPunkt1;
       TempA.Y := 0;
       s := Bemerkung;
-      s := Format(LogList_FormatString_MakeKoordDS, [1, s]);
+      s := Format(RggStrings.LogList_FormatString_MakeKoordDS, [1, s]);
       LogList.Add(s);
 
       if Status = bmEntfernt then
@@ -3754,7 +3753,7 @@ begin
       TempA0 := SchnittPunkt1;
       TempA0.Y := 0;
       s := Bemerkung;
-      s := Format(LogList_FormatString_MakeKoordDS, [2, s]);
+      s := Format(RggStrings.LogList_FormatString_MakeKoordDS, [2, s]);
       LogList.Add(s);
 
       if Status = bmEntfernt then
@@ -3773,7 +3772,7 @@ begin
       rPe.C := SchnittPunkt1;
       rPe.C.Y := 0;
       s := Bemerkung;
-      s := Format(LogList_FormatString_MakeKoordDS, [3, s]);
+      s := Format(RggStrings.LogList_FormatString_MakeKoordDS, [3, s]);
       LogList.Add(s);
 
       if Status = bmK1inK2 then
@@ -3783,7 +3782,7 @@ begin
       end;
 
       { weiter in der Ebene }
-      SchnittGG(TempA0, TempC, TempD, TempA, Temp);
+      TRggCalc.SchnittGG(TempA0, TempC, TempD, TempA, Temp);
       { Temp enthält jetzt den Schnittpunkt der Diagonalen }
       W1Strich := TempA0.Distance(Temp);
       Saling1L := TempD.Distance(Temp);
@@ -3819,7 +3818,7 @@ begin
 
   except
     on E: EMathError do
-      LogList.Add(LogList_String_MakeKoordDSExept + E.Message);
+      LogList.Add(RggStrings.LogList_String_MakeKoordDSExept + E.Message);
   end;
 end;
 
@@ -3973,7 +3972,7 @@ begin
       MittelPunkt2 := rPe.D0;
       rPe.C := SchnittPunkt1;
       s := Bemerkung;
-      s := Format(LogList_Format_String_MakeKoordOS, [1, s]);
+      s := Format(RggStrings.LogList_Format_String_MakeKoordOS, [1, s]);
       LogList.Add(s);
 
       if Status = bmK1inK2 then
@@ -4006,7 +4005,7 @@ begin
 
   except
     on E: EMathError do
-      LogList.Add(LogList_String_MakeKoordExeptOS + E.Message);
+      LogList.Add(RggStrings.LogList_String_MakeKoordExeptOS + E.Message);
   end;
 end;
 
@@ -4205,14 +4204,14 @@ begin
   try
     GetDocument(Document);
     s := ExtractFileExt(FileName);
-    if s = RGI_File_Extension then
+    if s = RggStrings.RGI_File_Extension then
     begin
       Document.WriteToIniFile(FileName);
     end
-    else if s = RGG_File_Extension then
+    else if s = RggStrings.RGG_File_Extension then
     begin
       { write as .rgi, .rgg no longer supported }
-      s := ChangeFileExt(FileName, RGI_File_Extension);
+      s := ChangeFileExt(FileName, RggStrings.RGI_File_Extension);
       Document.WriteToIniFile(s);
       // Document.SaveToFile(FileName);
     end;
@@ -4229,7 +4228,7 @@ begin
   Document := TRggDocument.Create;
   try
     s := ExtractFileExt(FileName);
-    if s = RGI_File_Extension then
+    if s = RggStrings.RGI_File_Extension then
     begin
       Document.LoadFromIniFile(FileName);
       SetDocument(Document);

@@ -1,14 +1,13 @@
-﻿unit RggChartModel;
+﻿unit RiggVar.Chart.Model;
 
 interface
 
 uses
-  RiggVar.FB.ActionConst,
-  RggStrings,
-  RggTypes,
-  RggDoc,
-  RggSaling3Eck,
+  RiggVar.App.Strings,
   RiggVar.App.Model,
+  RiggVar.FB.ActionConst,
+  RiggVar.RG.Types,
+  RiggVar.RG.Doc,
   System.SysUtils,
   System.Classes,
   System.Types,
@@ -17,40 +16,80 @@ uses
   System.Math,
   System.Math.Vectors;
 
-const
-  ANr = 6; { MaxCurves, maximale Anzahl Kurven, d.h. berechneter Y Werte }
-  PNr = 5; { MaxParamCount, maximale Anzahl der Werte des Parameters }
-  VNr = 14; { CountOfAvailableCurves, Anzahl der zur Auswahl stehenden Y Werte }
-  LNr = 50; { CountOfPointsInPolyLine - 1, Anzahl der Punkte im Diagramm - 1 }
-  ErrorIndex = 999;
-  D180 = 180 / PI;
-  P180 = PI / 180;
-
 type
-  TLineDataR = TLineDataR50; { needs to match LNr }
+  TSalingDreieck = class
+  private
+    FSalingHMin, FSalingH, FSalingHMax: single;
+    FSalingAMin, FSalingA, FSalingAMax: single;
 
-  TxpName = (
-    xpController,
-    xpWinkel,
-    xpVorstag,
-    xpWante,
-    xpWoben,
-    xpSalingH,
-    xpSalingA,
-    xpSalingL,
-    xpVorstagOS,
-    xpWPowerOS,
-    xpSalingW);
+    procedure SetSalingH(Value: single);
+    procedure SetSalingA(Value: single);
+    procedure SetSalingL(Value: single);
+    procedure SetSalingW(Value: single);
 
-  TxpNameSet = set of TXpName;
+    function GetSalingL: single;
+    function GetSalingW: single;
 
-  TChartStatus = (csBerechnet, csGeladen);
-  TYLineArray = array[0..ANr-1] of TLineDataR;
-  TYAchseSortedList = array[0..VNr-1] of TYAchseValue;
-  TYAchseSet = set of TYAchseValue; { die berechneten Kurven }
-  TYAchseStringArray = array[0..PNr-1] of string;
+    function GetSalingLMin: single;
+    function GetSalingLMax: single;
+    function GetSalingWMin: single;
+    function GetSalingWMax: single;
+  public
+    constructor Create;
+    procedure CopyFromRigg(Rigg: IRigg);
+    procedure GetLW(H, A: single; out L, W: single);
+
+    property Saling_H: single read FSalingH write SetSalingH;
+    property Saling_A: single read FSalingH write SetSalingA;
+    property Saling_L: single read GetSalingL write SetSalingL;
+    property Saling_W: single read GetSalingW write SetSalingW;
+
+    property Saling_AMin: single read FSalingAMin write FSalingAMin;
+    property Saling_AMax: single read FSalingAMax write FSalingAMax;
+    property Saling_HMin: single read FSalingHMin write FSalingHMin;
+    property Saling_HMax: single read FSalingHMax write FSalingHMax;
+
+    property Saling_LMin: single read GetSalingLMin;
+    property Saling_LMax: single read GetSalingLMax;
+    property Saling_WMin: single read GetSalingWMin;
+    property Saling_WMax: single read GetSalingWMax;
+  end;
 
   TChartModel = class
+  public const
+    ANr = 6; { MaxCurves, maximale Anzahl Kurven, d.h. berechneter Y Werte }
+    PNr = 5; { MaxParamCount, maximale Anzahl der Werte des Parameters }
+    VNr = 14; { CountOfAvailableCurves, Anzahl der zur Auswahl stehenden Y Werte }
+    LNr = 50; { CountOfPointsInPolyLine - 1, Anzahl der Punkte im Diagramm - 1 }
+    ErrorIndex = 999;
+    D180 = 180 / PI;
+    P180 = PI / 180;
+
+  public type
+    TLineDataR = TLineDataR50; { needs to match LNr }
+
+    TxpName = (
+      xpController,
+      xpWinkel,
+      xpVorstag,
+      xpWante,
+      xpWoben,
+      xpSalingH,
+      xpSalingA,
+      xpSalingL,
+      xpVorstagOS,
+      xpWPowerOS,
+      xpSalingW);
+
+    TxpNameSet = set of TXpName;
+
+    TChartStatus = (csBerechnet, csGeladen);
+    TYLineArray = array[0..ANr-1] of TLineDataR;
+    TYAchseSortedList = array[0..VNr-1] of TYAchseValue;
+    TYAchseSet = set of TYAchseValue; { die berechneten Kurven }
+    TYAchseStringArray = array[0..PNr-1] of string;
+
+
   public
     FSalingTyp: TSalingTyp;
 
@@ -272,20 +311,131 @@ uses
   RiggVar.App.Main,
   RiggVar.FB.Classes,
   RiggVar.RG.Def,
-  RggScroll;
+  RiggVar.RG.Scroll;
+
+{ TSalingDreieck }
+
+constructor TSalingDreieck.Create;
+begin
+  FSalingHMin := 150;
+  FSalingH := 200;
+  FSalingHMax := 300;
+  FSalingAMin := 700;
+  FSalingA := 850;
+  FSalingAMax := 1100;
+end;
+
+procedure TSalingDreieck.GetLW(H, A: single; out L, W: single);
+begin
+  L := Hypot(H, A / 2);
+  W := arctan2(H, A / 2);
+end;
+
+function TSalingDreieck.GetSalingL: single;
+begin
+  result := Hypot(FSalingH, FSalingA / 2);
+end;
+
+function TSalingDreieck.GetSalingW: single;
+begin
+  result := arctan2(FSalingH, FSalingA / 2);
+end;
+
+procedure TSalingDreieck.SetSalingH(Value: single);
+begin
+  if Value < FSalingHMin then
+    FSalingH := FSalingHMin
+  else if Value > FSalingHMax then
+    FSalingH := FSalingHMax
+  else
+    FSalingH := Value;
+end;
+
+procedure TSalingDreieck.SetSalingA(Value: single);
+begin
+  if Value < FSalingAMin then
+    FSalingA := FSalingAMin
+  else if Value > FSalingHMax then
+    FSalingA := FSalingAMax
+  else
+    FSalingA := Value;
+end;
+
+procedure TSalingDreieck.SetSalingL(Value: single);
+var
+  temp: single;
+begin
+  temp := Value / Saling_L;
+  FSalingH := temp * FSalingH;
+  FSalingA := temp * FSalingA;
+end;
+
+procedure TSalingDreieck.SetSalingW(Value: single);
+var
+  tempW, tempL: single;
+begin
+  tempW := DegToRad(Value);
+  tempL := Saling_L;
+  FSalingH := tempL * sin(tempW);
+  FSalingA := 2 * tempL * cos(tempW);
+end;
+
+function TSalingDreieck.GetSalingLMin: single;
+var
+  tempL, tempW: single;
+begin
+  GetLW(FSalingHMin, FSalingAMin, tempL, tempW);
+  result := tempL;
+end;
+
+function TSalingDreieck.GetSalingLMax: single;
+var
+  tempL, tempW: single;
+begin
+  GetLW(FSalingHMax, FSalingAMax, tempL, tempW);
+  result := tempL;
+end;
+
+function TSalingDreieck.GetSalingWMin: single;
+var
+  tempL, tempW: single;
+begin
+  GetLW(FSalingHMin, FSalingAMax, tempL, tempW);
+  result := tempW;
+end;
+
+function TSalingDreieck.GetSalingWMax: single;
+var
+  tempL, tempW: single;
+begin
+  GetLW(FSalingHMax, FSalingAMin, tempL, tempW);
+  result := tempW;
+end;
+
+procedure TSalingDreieck.CopyFromRigg(Rigg: IRigg);
+begin
+  FSalingHMin := Rigg.RggFA.SalingH.Min;
+  FSalingHMax := Rigg.RggFA.SalingH.Max;
+  FSalingH := Rigg.RggFA.SalingH.Ist;
+  FSalingAMin := Rigg.RggFA.SalingA.Min;
+  FSalingAMax := Rigg.RggFA.SalingA.Max;
+  FSalingA := Rigg.RggFA.SalingA.Ist;
+end;
+
+{ TChartModel }
 
 procedure TChartModel.InitXComboItems;
 var
   ML: TStrings;
 begin
   ML := XComboItems;
-  ML.Add(ControllerString);
-  ML.Add(WinkelString);
-  ML.Add(VorstagString);
-  ML.Add(WanteString);
-  ML.Add(WanteObenString);
-  ML.Add(SalingHString);
-  ML.Add(SalingAString);
+  ML.Add(RggStrings.ControllerString);
+  ML.Add(RggStrings.WinkelString);
+  ML.Add(RggStrings.VorstagString);
+  ML.Add(RggStrings.WanteString);
+  ML.Add(RggStrings.WanteObenString);
+  ML.Add(RggStrings.SalingHString);
+  ML.Add(RggStrings.SalingAString);
 end;
 
 procedure TChartModel.InitPComboItems;
@@ -293,8 +443,8 @@ var
   ML: TStrings;
 begin
   ML := PComboItems;
-  ML.Add(SalingAString);
-  ML.Add(SalingHString);
+  ML.Add(RggStrings.SalingAString);
+  ML.Add(RggStrings.SalingHString);
 end;
 
 procedure TChartModel.InitYComboItems;
@@ -302,12 +452,12 @@ var
   ML: TStrings;
 begin
   ML := YComboItems;
-  ML.Add(DurchbiegungHDString);
-  ML.Add(ElasticityPointCString);
-  ML.Add(MastfallF0CString);
-  ML.Add(MastfallF0FString);
-  ML.Add(VorstagSpannungString);
-  ML.Add(WantenSpannungString);
+  ML.Add(RggStrings.DurchbiegungHDString);
+  ML.Add(RggStrings.ElasticityPointCString);
+  ML.Add(RggStrings.MastfallF0CString);
+  ML.Add(RggStrings.MastfallF0FString);
+  ML.Add(RggStrings.VorstagSpannungString);
+  ML.Add(RggStrings.WantenSpannungString);
 end;
 
 constructor TChartModel.Create(ARigg: IRigg);
@@ -331,17 +481,17 @@ begin
 
   DarkColors := False;
 
-  PColorText[0] := BlueString;
-  PColorText[1] := RedString;
-  PColorText[2] := GreenString;
-  PColorText[3] := WhiteString;
-  PColorText[4] := YellowString;
+  PColorText[0] := RggStrings.BlueString;
+  PColorText[1] := RggStrings.RedString;
+  PColorText[2] := RggStrings.GreenString;
+  PColorText[3] := RggStrings.WhiteString;
+  PColorText[4] := RggStrings.YellowString;
 
   RggDocument := TRggDocument.Create;
   SalingDreieck := TSalingDreieck.Create;
 
   MemoLines := TStringList.Create;
-  MemoLines.Add(AnfangsZustandString);
+  MemoLines.Add(RggStrings.AnfangsZustandString);
 
   XComboItems := TStringList.Create;
   YComboItems := TStringList.Create;
@@ -352,8 +502,8 @@ begin
   Rigg := ARigg;
   FSalingTyp := Rigg.SalingTyp;
 
-  FXTextClicked := VorstagString;
-  FPTextClicked := SalingHString;
+  FXTextClicked := RggStrings.VorstagString;
+  FPTextClicked := RggStrings.SalingHString;
   UpdateXCombo(FSalingTyp);
   InitYComboItems;
   YComboItemIndex := 3;
@@ -396,7 +546,7 @@ begin
   PLEDFillColor := claRed;
   DrawInternal;
   MemoLines.Clear;
-  MemoLines.Add(ResetMessageString);
+  MemoLines.Add(RggStrings.ResetMessageString);
 end;
 
 procedure TChartModel.SetDarkColors(const Value: Boolean);
@@ -521,7 +671,7 @@ begin
 
     FBusy := True;
 
-    if PComboSelectedText = NoParamString then
+    if PComboSelectedText = RggStrings.NoParamString then
     begin
       PMinEditValue := 0;
       PMaxEditValue := 0;
@@ -613,14 +763,14 @@ begin
      InputRec.SalingL]);
 
   case FSalingTyp of
-    stFest: st := SalingFestString;
-    stDrehbar: st := SalingDrehbarString;
-    stOhneBiegt: st := OhneSalingString;
-    stOhneStarr: st := OhneSalingStarrString;
+    stFest: st := RggStrings.SalingFestString;
+    stDrehbar: st := RggStrings.SalingDrehbarString;
+    stOhneBiegt: st := RggStrings.OhneSalingString;
+    stOhneStarr: st := RggStrings.OhneSalingStarrString;
   end;
 
   TopTitle := Format('(%s/%s)', [TopTitle, st]);
-  TopTitle := TopTitleString + ' - ' + DateToStr(Date) + ' - ' + TopTitle;
+  TopTitle := RggStrings.TopTitleString + ' - ' + DateToStr(Date) + ' - ' + TopTitle;
 
   Rigg.ProofRequired := False;
 
@@ -632,9 +782,9 @@ begin
     for p := 0 to ParamCount - 1 do
     begin
       if ParamCount > 1 then
-        ProgressCaption := Format(ProgressCaptionFormatString, [p + 1, ParamCount])
+        ProgressCaption := Format(RggStrings.ProgressCaptionFormatString, [p + 1, ParamCount])
       else
-        ProgressCaption := ProgressCaptionString;
+        ProgressCaption := RggStrings.ProgressCaptionString;
 
       if ParamCount > 1 then
       begin
@@ -732,8 +882,8 @@ begin
         { Berechnen / do some number crunching within the model (Rigg) }
         if FSalingTyp = stFest then
         begin
-          if (XComboSelectedText = WinkelString) or
-             (PComboSelectedText = WinkelString) then
+          if (XComboSelectedText = RggStrings.WinkelString) or
+             (PComboSelectedText = RggStrings.WinkelString) then
             Rigg.UpdateGetriebeFS
           else
             Rigg.BerechneWinkel;
@@ -872,15 +1022,15 @@ begin
   end
   else
   begin
-    TopTitle := TopTitleTestString;
-    XTitle := BottomTitleTestString;
-    PTitle := ParamTitleTestString;
+    TopTitle := RggStrings.TopTitleTestString;
+    XTitle := RggStrings.BottomTitleTestString;
+    PTitle := RggStrings.ParamTitleTestString;
     if FStatus = [] then
-      YTitle := StatusResetString // 'Diagramm wurde zurückgesetzt'
+      YTitle := RggStrings.StatusResetString // 'Diagramm wurde zurückgesetzt'
     else if csBerechnet in FStatus then
-      YTitle := StatusNotComputedString // 'Kurve wurde nicht berechnet!'
+      YTitle := RggStrings.StatusNotComputedString // 'Kurve wurde nicht berechnet!'
     else if csGeladen in FStatus then
-      YTitle := StatusNotLoadedString; // 'Kurve wurde nicht geladen!';
+      YTitle := RggStrings.StatusNotLoadedString; // 'Kurve wurde nicht geladen!';
 
     Xmin := 0;
     Xmax := 100;
@@ -916,16 +1066,16 @@ begin
   if (YComboItemIndex < 0) or (YComboItemIndex > VNr-1) then
   begin
     FValid := False;
-    YMinEditText := YMinEditString;
-    YMaxEditText := YMaxEditString;
+    YMinEditText := RggStrings.YMinEditString;
+    YMaxEditText := RggStrings.YMaxEditString;
     DrawInternal;
     Exit;
   end;
   j := ComboIndexToCurve(YComboItemIndex);
   if not Valid then
   begin
-    YMinEditText := YMinString;
-    YMaxEditText := YMaxString;
+    YMinEditText := RggStrings.YMinString;
+    YMaxEditText := RggStrings.YMaxString;
     DrawInternal;
     Exit;
   end;
@@ -1012,13 +1162,13 @@ begin
   end;
 
   FValid := True;
-  YMinEditText := YMinString;
-  YMaxEditText := YMaxString;
+  YMinEditText := RggStrings.YMinString;
+  YMaxEditText := RggStrings.YMaxString;
 
   TopTitle := '';
-  YTitle := AllCurvesNormalizedString; // 'Alle Kurven normiert [%]';
+  YTitle := RggStrings.AllCurvesNormalizedString; // 'Alle Kurven normiert [%]';
   XTitle := XAchseText;
-  PTitle := Format('%s%d', [PIdentString, ParamNo]); //Nr.1
+  PTitle := Format('%s%d', [RggStrings.PIdentString, ParamNo]); //Nr.1
 
   Xmin := XAchseMin;
   Xmax := XAchseMax;
@@ -1059,8 +1209,8 @@ begin
   if not Valid then
   begin
     { MessageBeep(MB_ICONEXCLAMATION); }
-    YMinEditText := YMinString;
-    YMaxEditText := YMaxString;
+    YMinEditText := RggStrings.YMinString;
+    YMaxEditText := RggStrings.YMaxString;
     Exit;
   end;
   TempF := af[p, j];
@@ -1084,14 +1234,14 @@ begin
   { Maximum und Minimum suchen über alle Parameter hinweg }
   if RggDocument.CalcTyp = ctQuerKraftBiegung then
   begin
-    if (YComboSelectedText = VorstagSpannungString) or
-       (YComboSelectedText = WantenSpannungString) then
+    if (YComboSelectedText = RggStrings.VorstagSpannungString) or
+       (YComboSelectedText = RggStrings.WantenSpannungString) then
     begin
       Ymax := 5000; { 5000 N }
       Ymin := -1000; { -1000 N }
       Exit;
     end;
-    if (YComboSelectedText = ElasticityPointCString) then
+    if (YComboSelectedText = RggStrings.ElasticityPointCString) then
     begin
       YMax := 1000; { 1000 mm }
       YMin := 0;
@@ -1104,8 +1254,8 @@ begin
   if not Valid then
   begin
     { MessageBeep(MB_ICONEXCLAMATION); }
-    YMinEditText := YMinString;
-    YMaxEditText := YMaxString;
+    YMinEditText := RggStrings.YMinString;
+    YMaxEditText := RggStrings.YMaxString;
     Exit;
   end;
   Ymax := af[p, j, 0];
@@ -1330,36 +1480,36 @@ begin
     Clear;
     if SalingTyp = stFest then
     begin
-      Add(ControllerString);
-      Add(VorstagString);
-      Add(WinkelString);
-      Add(WanteString);
-      Add(WanteObenString);
-      Add(SalingHString);
-      Add(SalingAString);
-      Add(SalingLString);
-      Add(SalingWString);
+      Add(RggStrings.ControllerString);
+      Add(RggStrings.VorstagString);
+      Add(RggStrings.WinkelString);
+      Add(RggStrings.WanteString);
+      Add(RggStrings.WanteObenString);
+      Add(RggStrings.SalingHString);
+      Add(RggStrings.SalingAString);
+      Add(RggStrings.SalingLString);
+      Add(RggStrings.SalingWString);
     end;
     if SalingTyp = stDrehbar then
     begin
-      Add(ControllerString);
-      Add(VorstagString);
-      Add(WanteString);
-      Add(WanteObenString);
-      Add(SalingLString);
+      Add(RggStrings.ControllerString);
+      Add(RggStrings.VorstagString);
+      Add(RggStrings.WanteString);
+      Add(RggStrings.WanteObenString);
+      Add(RggStrings.SalingLString);
     end;
     if SalingTyp = stOhneBiegt then
     begin
-      Add(ControllerString);
-      Add(VorstagString);
-      Add(WanteString);
+      Add(RggStrings.ControllerString);
+      Add(RggStrings.VorstagString);
+      Add(RggStrings.WanteString);
     end;
     if SalingTyp = stOhneStarr then
     begin
-      Add(VorstagString);
+      Add(RggStrings.VorstagString);
     end;
   end;
-  XComboItemIndex := XComboItems.IndexOf(VorstagString);
+  XComboItemIndex := XComboItems.IndexOf(RggStrings.VorstagString);
   for i := 0 to XComboItems.Count-1 do
     if (XComboItems[i] = FXTextClicked) then
     begin
@@ -1376,176 +1526,176 @@ begin
   with PComboItems do
   begin
     Clear;
-    Add(NoParamString);
-    if XComboSelectedText = ControllerString then
+    Add(RggStrings.NoParamString);
+    if XComboSelectedText = RggStrings.ControllerString then
     begin
       if SalingTyp = stFest then
       begin
-        Add(VorstagString);
-        Add(WinkelString);
-        Add(WanteString);
-        Add(WanteObenString);
-        Add(SalingHString);
-        Add(SalingAString);
-        Add(SalingLString);
-        Add(SalingWString);
+        Add(RggStrings.VorstagString);
+        Add(RggStrings.WinkelString);
+        Add(RggStrings.WanteString);
+        Add(RggStrings.WanteObenString);
+        Add(RggStrings.SalingHString);
+        Add(RggStrings.SalingAString);
+        Add(RggStrings.SalingLString);
+        Add(RggStrings.SalingWString);
       end;
       if SalingTyp = stDrehbar then
       begin
-        Add(VorstagString);
-        Add(WanteString);
-        Add(WanteObenString);
-        Add(SalingLString);
+        Add(RggStrings.VorstagString);
+        Add(RggStrings.WanteString);
+        Add(RggStrings.WanteObenString);
+        Add(RggStrings.SalingLString);
       end;
       if SalingTyp = stOhneBiegt then
       begin
-        Add(VorstagString);
-        Add(WanteString);
+        Add(RggStrings.VorstagString);
+        Add(RggStrings.WanteString);
       end;
     end
-    else if XComboSelectedText = VorstagString then
+    else if XComboSelectedText = RggStrings.VorstagString then
     begin
       if SalingTyp = stFest then
       begin
-        Add(ControllerString);
-        Add(WanteString);
-        Add(WanteObenString);
-        Add(SalingHString);
-        Add(SalingAString);
-        Add(SalingLString);
-        Add(SalingWString);
+        Add(RggStrings.ControllerString);
+        Add(RggStrings.WanteString);
+        Add(RggStrings.WanteObenString);
+        Add(RggStrings.SalingHString);
+        Add(RggStrings.SalingAString);
+        Add(RggStrings.SalingLString);
+        Add(RggStrings.SalingWString);
       end;
       if SalingTyp = stDrehbar then
       begin
-        Add(ControllerString);
-        Add(WanteString);
-        Add(WanteObenString);
-        Add(SalingLString);
+        Add(RggStrings.ControllerString);
+        Add(RggStrings.WanteString);
+        Add(RggStrings.WanteObenString);
+        Add(RggStrings.SalingLString);
       end;
       if SalingTyp = stOhneBiegt then
       begin
-        Add(ControllerString);
-        Add(WanteString);
+        Add(RggStrings.ControllerString);
+        Add(RggStrings.WanteString);
       end;
     end
-    else if XComboSelectedText = WinkelString then
+    else if XComboSelectedText = RggStrings.WinkelString then
     begin
       if SalingTyp = stFest then
       begin
-        Add(ControllerString);
-        Add(WanteString);
-        Add(WanteObenString);
-        Add(SalingHString);
-        Add(SalingAString);
-        Add(SalingLString);
-        Add(SalingWString);
+        Add(RggStrings.ControllerString);
+        Add(RggStrings.WanteString);
+        Add(RggStrings.WanteObenString);
+        Add(RggStrings.SalingHString);
+        Add(RggStrings.SalingAString);
+        Add(RggStrings.SalingLString);
+        Add(RggStrings.SalingWString);
       end;
     end
-    else if XComboSelectedText = WanteString then
+    else if XComboSelectedText = RggStrings.WanteString then
     begin
       if SalingTyp = stFest then
       begin
-        Add(ControllerString);
-        Add(VorstagString);
-        Add(WinkelString);
-        Add(WanteObenString);
-        Add(SalingHString);
-        Add(SalingAString);
-        Add(SalingLString);
-        Add(SalingWString);
+        Add(RggStrings.ControllerString);
+        Add(RggStrings.VorstagString);
+        Add(RggStrings.WinkelString);
+        Add(RggStrings.WanteObenString);
+        Add(RggStrings.SalingHString);
+        Add(RggStrings.SalingAString);
+        Add(RggStrings.SalingLString);
+        Add(RggStrings.SalingWString);
       end;
       if SalingTyp = stDrehbar then
       begin
-        Add(ControllerString);
-        Add(VorstagString);
-        Add(WanteObenString);
-        Add(SalingLString);
+        Add(RggStrings.ControllerString);
+        Add(RggStrings.VorstagString);
+        Add(RggStrings.WanteObenString);
+        Add(RggStrings.SalingLString);
       end;
       if SalingTyp = stOhneBiegt then
       begin
-        Add(ControllerString);
-        Add(VorstagString);
+        Add(RggStrings.ControllerString);
+        Add(RggStrings.VorstagString);
       end;
     end
-    else if (XComboSelectedText = WanteObenString) then
+    else if (XComboSelectedText = RggStrings.WanteObenString) then
     begin
       if SalingTyp = stFest then
       begin
-        Add(ControllerString);
-        Add(VorstagString);
-        Add(WinkelString);
-        Add(WanteString);
-        Add(SalingHString);
-        Add(SalingAString);
-        Add(SalingLString);
-        Add(SalingWString);
+        Add(RggStrings.ControllerString);
+        Add(RggStrings.VorstagString);
+        Add(RggStrings.WinkelString);
+        Add(RggStrings.WanteString);
+        Add(RggStrings.SalingHString);
+        Add(RggStrings.SalingAString);
+        Add(RggStrings.SalingLString);
+        Add(RggStrings.SalingWString);
       end;
       if SalingTyp = stDrehbar then
       begin
-        Add(ControllerString);
-        Add(VorstagString);
-        Add(WanteString);
-        Add(SalingLString);
+        Add(RggStrings.ControllerString);
+        Add(RggStrings.VorstagString);
+        Add(RggStrings.WanteString);
+        Add(RggStrings.SalingLString);
       end;
     end
-    else if (XComboSelectedText = SalingHString) then
+    else if (XComboSelectedText = RggStrings.SalingHString) then
     begin
       if SalingTyp = stFest then
       begin
-        Add(ControllerString);
-        Add(VorstagString);
-        Add(WinkelString);
-        Add(WanteString);
-        Add(WanteObenString);
-        Add(SalingAString);
-        Add(SalingLString);
-        Add(SalingWString);
+        Add(RggStrings.ControllerString);
+        Add(RggStrings.VorstagString);
+        Add(RggStrings.WinkelString);
+        Add(RggStrings.WanteString);
+        Add(RggStrings.WanteObenString);
+        Add(RggStrings.SalingAString);
+        Add(RggStrings.SalingLString);
+        Add(RggStrings.SalingWString);
       end;
     end
-    else if (XComboSelectedText = SalingAString) then
+    else if (XComboSelectedText = RggStrings.SalingAString) then
     begin
       if SalingTyp = stFest then
       begin
-        Add(ControllerString);
-        Add(VorstagString);
-        Add(WinkelString);
-        Add(WanteString);
-        Add(WanteObenString);
-        Add(SalingHString);
-        Add(SalingLString);
-        Add(SalingWString);
+        Add(RggStrings.ControllerString);
+        Add(RggStrings.VorstagString);
+        Add(RggStrings.WinkelString);
+        Add(RggStrings.WanteString);
+        Add(RggStrings.WanteObenString);
+        Add(RggStrings.SalingHString);
+        Add(RggStrings.SalingLString);
+        Add(RggStrings.SalingWString);
       end;
     end
-    else if (XComboSelectedText = SalingLString) then
+    else if (XComboSelectedText = RggStrings.SalingLString) then
     begin
       if SalingTyp = stFest then
       begin
-        Add(ControllerString);
-        Add(VorstagString);
-        Add(WinkelString);
-        Add(WanteString);
-        Add(WanteObenString);
-        Add(SalingHString);
-        Add(SalingAString);
-        Add(SalingWString);
+        Add(RggStrings.ControllerString);
+        Add(RggStrings.VorstagString);
+        Add(RggStrings.WinkelString);
+        Add(RggStrings.WanteString);
+        Add(RggStrings.WanteObenString);
+        Add(RggStrings.SalingHString);
+        Add(RggStrings.SalingAString);
+        Add(RggStrings.SalingWString);
       end;
       if SalingTyp = stDrehbar then
       begin
-        Add(ControllerString);
-        Add(VorstagString);
-        Add(WanteString);
-        Add(WanteObenString);
+        Add(RggStrings.ControllerString);
+        Add(RggStrings.VorstagString);
+        Add(RggStrings.WanteString);
+        Add(RggStrings.WanteObenString);
       end;
     end
-    else if (XComboSelectedText = SalingWString) then
+    else if (XComboSelectedText = RggStrings.SalingWString) then
     begin
       if SalingTyp = stFest then
       begin
-        Add(ControllerString);
-        Add(VorstagString);
-        Add(WinkelString);
-        Add(WanteString);
-        Add(WanteObenString);
+        Add(RggStrings.ControllerString);
+        Add(RggStrings.VorstagString);
+        Add(RggStrings.WinkelString);
+        Add(RggStrings.WanteString);
+        Add(RggStrings.WanteObenString);
       end;
     end;
   end;
@@ -1564,15 +1714,15 @@ function TChartModel.GetXText(Text: string): string;
 var
   s: string;
 begin
-  if Text = ControllerString then s := ControllerText
-  else if Text = WinkelString then s := WinkelText
-  else if Text = VorstagString then s := VorstagText
-  else if Text = WanteString then s := WanteText
-  else if Text = WanteObenString then s := WanteObenText
-  else if Text = SalingHString then s := SalingHText
-  else if Text = SalingAString then s := SalingAText
-  else if Text = SalingLString then s := SalingLText
-  else if Text = SalingWString then s := SalingWText;
+  if Text = RggStrings.ControllerString then s := RggStrings.ControllerText
+  else if Text = RggStrings.WinkelString then s := RggStrings.WinkelText
+  else if Text = RggStrings.VorstagString then s := RggStrings.VorstagText
+  else if Text = RggStrings.WanteString then s := RggStrings.WanteText
+  else if Text = RggStrings.WanteObenString then s := RggStrings.WanteObenText
+  else if Text = RggStrings.SalingHString then s := RggStrings.SalingHText
+  else if Text = RggStrings.SalingAString then s := RggStrings.SalingAText
+  else if Text = RggStrings.SalingLString then s := RggStrings.SalingLText
+  else if Text = RggStrings.SalingWString then s := RggStrings.SalingWText;
   result := s;
 end;
 
@@ -1580,15 +1730,15 @@ function TChartModel.GetPText(Text: string): string;
 var
   s: string;
 begin
-  if Text = ControllerString then s := ControllerText
-  else if Text = WinkelString then s := WinkelText
-  else if Text = VorstagString then s := VorstagText
-  else if Text = WanteString then s := WanteText
-  else if Text = WanteObenString then s := WanteObenText
-  else if Text = SalingHString then s := SalingHText
-  else if Text = SalingAString then s := SalingAText
-  else if Text = SalingLString then s := SalingLText
-  else if Text = SalingWString then s := SalingWText;
+  if Text = RggStrings.ControllerString then s := RggStrings.ControllerText
+  else if Text = RggStrings.WinkelString then s := RggStrings.WinkelText
+  else if Text = RggStrings.VorstagString then s := RggStrings.VorstagText
+  else if Text = RggStrings.WanteString then s := RggStrings.WanteText
+  else if Text = RggStrings.WanteObenString then s := RggStrings.WanteObenText
+  else if Text = RggStrings.SalingHString then s := RggStrings.SalingHText
+  else if Text = RggStrings.SalingAString then s := RggStrings.SalingAText
+  else if Text = RggStrings.SalingLString then s := RggStrings.SalingLText
+  else if Text = RggStrings.SalingWString then s := RggStrings.SalingWText;
   result := s;
 end;
 
@@ -1597,16 +1747,16 @@ var
   xp: TxpName;
 begin
   xp := xpController;
-  if Value = WinkelString then xp := xpWinkel
-  else if Value = VorstagString then xp := xpVorstag
-  else if Value = WanteString then xp := xpWante
-  else if Value = WanteObenString then xp := xpWoben
-  else if Value = SalingHString then xp := xpSalingH
-  else if Value = SalingAString then xp := xpSalingA
-  else if Value = SalingLString then xp := xpSalingL
-  else if Value = SalingWString then xp := xpSalingW
-  else if Value = VorstagOhneSalingString then xp := xpVorstagOS
-  else if Value = WantenkraftOhneSalingString then xp := xpWPowerOS;
+  if Value = RggStrings.WinkelString then xp := xpWinkel
+  else if Value = RggStrings.VorstagString then xp := xpVorstag
+  else if Value = RggStrings.WanteString then xp := xpWante
+  else if Value = RggStrings.WanteObenString then xp := xpWoben
+  else if Value = RggStrings.SalingHString then xp := xpSalingH
+  else if Value = RggStrings.SalingAString then xp := xpSalingA
+  else if Value = RggStrings.SalingLString then xp := xpSalingL
+  else if Value = RggStrings.SalingWString then xp := xpSalingW
+  else if Value = RggStrings.VorstagOhneSalingString then xp := xpVorstagOS
+  else if Value = RggStrings.WantenkraftOhneSalingString then xp := xpWPowerOS;
   result := xp;
 end;
 
@@ -1692,7 +1842,7 @@ var
   f: TRggSB;
 begin
   s := PComboSelectedText;
-  if s = NoParamString then
+  if s = RggStrings.NoParamString then
   begin
     PMinEditText := IntToStr(0);
     PMaxEditText := IntToStr(0);
@@ -1773,9 +1923,9 @@ end;
 function  TChartModel.CheckBeforeCalc: Boolean;
 begin
   result := True;
-  if (XMinEditText = XMinEditString) or (XMaxEditText = XMaxEditString) then
+  if (XMinEditText = RggStrings.XMinEditString) or (XMaxEditText = RggStrings.XMaxEditString) then
     UpdateXMinMax;
-  if (PMinEditText = PMinEditString) or (PMaxEditText = PMaxEditString) then
+  if (PMinEditText = RggStrings.PMinEditString) or (PMaxEditText = RggStrings.PMaxEditString) then
     UpdatePMinMax;
 end;
 
@@ -1852,15 +2002,15 @@ end;
 procedure TChartModel.SuperInit;
 begin
   { Auswahl Anrieb (Definitionsbereich X): Wantenlänge }
-  XComboItemIndex := XComboItems.IndexOf(WanteString);
+  XComboItemIndex := XComboItems.IndexOf(RggStrings.WanteString);
   XComboChange(nil);
 
   { Auswahl Parameter: SalingHöhe }
-  PComboItemIndex := PComboItems.IndexOf(SalingHString);
+  PComboItemIndex := PComboItems.IndexOf(RggStrings.SalingHString);
   PComboChange(nil);
 
   { Selektierer Y-Wert: Mastfall F0F }
-  YComboItemIndex := YComboItems.IndexOf(MastfallF0FString);
+  YComboItemIndex := YComboItems.IndexOf(RggStrings.MastfallF0FString);
   YComboChange(nil);
 end;
 

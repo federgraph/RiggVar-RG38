@@ -28,7 +28,7 @@ uses
   System.UIConsts,
   System.Math,
   System.Math.Vectors,
-  RggTypes,
+  RiggVar.RG.Types,
   RiggVar.FB.ActionConst,
   RiggVar.RG.Graph,
   RiggVar.FD.Drawing00,

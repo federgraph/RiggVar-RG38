@@ -1,11 +1,11 @@
-unit RiggVar.FD.SchnittKK;
+﻿unit RiggVar.FD.SchnittKK;
 
 interface
 
 uses
   System.Math,
   System.Math.Vectors,
-  RggSchnittKK,
+  RiggVar.RG.Calc,
   RiggVar.FD.Elements;
 
 type

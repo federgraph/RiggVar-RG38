@@ -1,4 +1,4 @@
-﻿unit RggCtrls;
+﻿unit RiggVar.DT.Ctrls;
 
 interface
 
@@ -14,8 +14,8 @@ uses
   FMX.Types,
   FMX.Graphics,
   FMX.Objects,
-  RggTypes,
-  RggProfile;
+  RiggVar.RG.Types,
+  RiggVar.DT.Profile;
 
 type
   TFigure = (

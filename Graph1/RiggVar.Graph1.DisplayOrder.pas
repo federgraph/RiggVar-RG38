@@ -1,10 +1,10 @@
-﻿unit RggDisplayOrder;
+﻿unit RiggVar.Graph1.DisplayOrder;
 
 interface
 
 uses
-  RggTypes,
-  RggDisplayTypes,
+  RiggVar.RG.Types,
+  RiggVar.Graph1.DisplayTypes,
   RiggVar.FB.Classes,
   System.SysUtils,
   System.Classes,

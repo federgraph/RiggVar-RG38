@@ -1,4 +1,4 @@
-﻿unit RggDoc;
+﻿unit RiggVar.RG.Doc;
 
 (*
 -
@@ -57,8 +57,8 @@ uses
   Xml.XmlDoc,
   Xml.XmlIntf,
 {$endif}
-  RggScroll,
-  RggTypes;
+  RiggVar.RG.Scroll,
+  RiggVar.RG.Types;
 
 const
   RggDocSignature: string = 'RGGDOC01';

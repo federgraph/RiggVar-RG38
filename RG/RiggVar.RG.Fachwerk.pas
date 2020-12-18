@@ -1,4 +1,4 @@
-﻿unit RggFachwerk;
+﻿unit RiggVar.RG.Fachwerk;
 
 (*
 -
@@ -20,16 +20,19 @@ interface
 
 uses
   System.Math,
-  RggTypes;
+  RiggVar.RG.Types;
 
 type
+  TFachwerk = class
+
+  public type
   TGeometrie = array [0 .. 1, 1 .. 9] of Integer;
   TKnotenVektor = array [1 .. 6] of single;
   TStabVektor = array [1 .. 9] of single;
   Lagerkraefte = (AX, AY, BX, BY);
   TAufLager = array [Lagerkraefte] of single;
 
-const
+  public const
   { Geometriematrix, Stab in Spalte verbindet die beiden Knoten }
   constantG: TGeometrie =
    ((1, 1, 2, 2, 3, 3, 4, 4, 5),
@@ -54,8 +57,6 @@ const
   ClearVektorK: TKnotenVektor = (0, 0, 0, 0, 0, 0);
   ClearVektorS: TStabVektor = (0, 0, 0, 0, 0, 0, 0, 0, 0);
 
-type
-  TFachwerk = class
   public
     K: Integer; { Anzahl der Knoten }
     K1: Integer; { KnotenNr. des Festlagers A }

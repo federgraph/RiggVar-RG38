@@ -1,4 +1,4 @@
-unit RggTrimmTabGraph;
+﻿unit RiggVar.DT.TrimmTabGraph;
 
 interface
 
@@ -14,8 +14,8 @@ uses
   FMX.Types,
   FMX.Graphics,
   FMX.Objects,
-  RggTypes,
-  RggTrimmTab;
+  RiggVar.RG.Types,
+  RiggVar.RG.TrimmTab;
 
 type
   TTrimmTabGraph = class

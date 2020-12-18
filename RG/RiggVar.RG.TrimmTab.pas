@@ -1,4 +1,4 @@
-﻿unit RggTrimmTab;
+﻿unit RiggVar.RG.TrimmTab;
 
 (*
 -
@@ -26,21 +26,41 @@ uses
   System.Math,
   System.Math.Vectors,
   System.UIConsts,
-  RggTypes;
+  RiggVar.RG.Types;
 
-const
+type
+  TrimmTab = class
+  const
   PunkteMax = 20; { maximale Anzahl Punkte im MemoScript }
   { Konstanten für Bezierkurve }
   BezierKurveVomGrad = 2; { quadratische Bezierkurve, 3 Control Points }
   AnzahlKurvenPunkte = 100; { AnzahlKurvenPunkte + 1 KurvenPunkte }
 
-type
+  public type
   { for TTabellenTyp, see RggTypes }
   { TTabellenTyp = (itKonstante, itGerade, itParabel, itBezier); }
 
-  TBezier = class;
+    TTrimmTabKurve = array [1 .. PunkteMax] of TPoint;
+  end;
 
-  TTrimmTabKurve = array [1 .. PunkteMax] of TPoint;
+  TBezier = class
+  private type
+    TControlPunkte = array [1 .. TrimmTab.BezierKurveVomGrad + 1] of TPoint3D;
+    TBezierKurve = array [1 .. TrimmTab.AnzahlKurvenPunkte + 1] of TPoint3D;
+    TKoeffizientenArray = array [1 .. TrimmTab.BezierKurveVomGrad + 1] of Integer;
+  private
+    c: TKoeffizientenArray; { n+1 }
+    n: Integer; { there are n+1 Control Points }
+    m: Integer; { there are m+1 points along the interval of 0 <= u <= 1 }
+    function BlendingValue(u: single; k: Integer): single;
+    procedure ComputePoint(u: single; out pt: TPoint3D);
+  public
+    Curve: TBezierKurve; { m+1 }
+    Controls: TControlPunkte; { n+1 }
+    constructor Create;
+    procedure ComputeCoefficients;
+    procedure GenerateCurve;
+  end;
 
   TTrimmTabGraphModel = class
   public
@@ -52,7 +72,7 @@ type
     EndwertKraft: Integer;
 
     PunkteAnzahl: Integer;
-    Kurve: TTrimmTabKurve; { Punkt 0 ist der NullPunkt }
+    Kurve: TrimmTab.TTrimmTabKurve; { Punkt 0 ist der NullPunkt }
 
     LineDataX: TLineDataR100;
     LineDataY: TLineDataR100;
@@ -125,7 +145,7 @@ type
     function GetTrimmTabDaten: TTrimmTabDaten; virtual;
   public
     FScale: single;
-    Kurve: TTrimmTabKurve; { Punkt 0 ist der NullPunkt }
+    Kurve: TrimmTab.TTrimmTabKurve; { Punkt 0 ist der NullPunkt }
     PunkteAnzahl: Integer; { tatsächliche Anzahl Punkte entsprechend Memo }
     EndKraftMin, EndWegMin, KraftMax, WegMax: Integer;
     Bezier: TBezier;
@@ -154,25 +174,6 @@ type
     property EndwertKraft: Integer read GetEndwertKraft write SetEndwertKraft;
     property EndwertWeg: Integer read GetEndwertWeg write SetEndwertWeg;
     property TrimmtabDaten: TTrimmTabDaten read GetTrimmTabDaten write SetTrimmTabDaten;
-  end;
-
-  TControlPunkte = array [1 .. BezierKurveVomGrad + 1] of TPoint3D;
-  TBezierKurve = array [1 .. AnzahlKurvenPunkte + 1] of TPoint3D;
-  TKoeffizientenArray = array [1 .. BezierKurveVomGrad + 1] of Integer;
-
-  TBezier = class
-  private
-    c: TKoeffizientenArray; { n+1 }
-    n: Integer; { there are n+1 Control Points }
-    m: Integer; { there are m+1 points along the interval of 0 <= u <= 1 }
-    function BlendingValue(u: single; k: Integer): single;
-    procedure ComputePoint(u: single; out pt: TPoint3D);
-  public
-    Curve: TBezierKurve; { m+1 }
-    Controls: TControlPunkte; { n+1 }
-    constructor Create;
-    procedure ComputeCoefficients;
-    procedure GenerateCurve;
   end;
 
 implementation
@@ -828,7 +829,7 @@ begin
       Continue;
     end;
 
-    if PunkteAnzahl < PunkteMax then
+    if PunkteAnzahl < TrimmTab.PunkteMax then
     begin
       Inc(PunkteAnzahl);
       Kurve[PunkteAnzahl] := Punkt;
@@ -897,10 +898,10 @@ end;
 constructor TBezier.Create;
 begin
   { there are n+1 Control Points }
-  n := BezierKurveVomGrad;
+  n := TrimmTab.BezierKurveVomGrad;
 
-  { there are m+1 points along the interval of 0<= u <= 1 }
-  m := AnzahlKurvenPunkte;
+  { there are m+1 points along the interval of 0 <= u <= 1 }
+  m := TrimmTab.AnzahlKurvenPunkte;
 end;
 
 procedure TBezier.ComputeCoefficients;

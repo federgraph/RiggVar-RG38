@@ -1,4 +1,4 @@
-﻿unit RggDisplay;
+﻿unit RiggVar.Graph1.DisplayList;
 
 interface
 
@@ -14,10 +14,10 @@ uses
   System.Generics.Defaults,
   FMX.Types,
   FMX.Graphics,
-  RggTypes,
-  RggCalc,
-  RggDisplayTypes,
-  RggDisplayOrder;
+  RiggVar.RG.Types,
+  RiggVar.RG.Calc,
+  RiggVar.Graph1.DisplayTypes,
+  RiggVar.Graph1.DisplayOrder;
 
 type
   TDisplayItem = class

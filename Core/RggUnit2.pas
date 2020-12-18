@@ -25,9 +25,9 @@ uses
   System.Types,
   System.Math,
   System.Math.Vectors,
-  RggStrings,
-  RggTypes,
-  RggCalc,
+  RiggVar.App.Strings,
+  RiggVar.RG.Types,
+  RiggVar.RG.Calc,
   RggUnit1;
 
 type
@@ -222,19 +222,19 @@ function TMast.GetMastStatusText: string;
 var
   s: string;
 begin
-  s := Status_String_Mast;
+  s := RggStrings.Status_String_Mast;
   if FMastOK then
-    s := s + Status_String_OK
+    s := s + RggStrings.Status_String_OK
   else
   begin
     if msBiegungNegativ in FMastStatus then
-      s := s + Status_String_MastBiegungNegativ
+      s := s + RggStrings.Status_String_MastBiegungNegativ
     else if msControllerJenseits in FMastStatus then
-      s := s + Status_String_MastControllerBeyondMiddle
+      s := s + RggStrings.Status_String_MastControllerBeyondMiddle
     else if msZugKraftimMast in FMastStatus then
-      s := s + Status_String_MastControllerTooFarBack
+      s := s + RggStrings.Status_String_MastControllerTooFarBack
     else if msControllerKraftZuGross in FMastStatus then
-      s := s + Status_String_MastControllerTooFar;
+      s := s + RggStrings.Status_String_MastControllerTooFar;
   end;
   result := s;
 end;
@@ -250,13 +250,13 @@ var
   tempEI: Integer;
 begin
   inherited WriteToIniFile(ini);
-  s := Rigg_IniSectionString;
-  ini.WriteInteger(s, ControllerTyp_IniString, Ord(FControllerTyp));
-  ini.WriteInteger(s, CalcTyp_IniString, Ord(FCalcTyp));
+  s := RggStrings.Rigg_IniSectionString;
+  ini.WriteInteger(s, RggStrings.ControllerTyp_IniString, Ord(FControllerTyp));
+  ini.WriteInteger(s, RggStrings.CalcTyp_IniString, Ord(FCalcTyp));
 
-  s := Mast_IniSectionString;
+  s := RggStrings.Mast_IniSectionString;
   tempEI := Round(EI / 1E6);
-  ini.WriteInteger(s, EI_IniString, tempEI);
+  ini.WriteInteger(s, RggStrings.EI_IniString, tempEI);
 end;
 
 procedure TMast.LoadFromIniFile(ini: TIniFile);
@@ -264,12 +264,12 @@ var
   s: String;
 begin
   inherited LoadFromIniFile(ini);
-  s := Rigg_IniSectionString;
-  ControllerTyp := TControllerTyp(ini.ReadInteger(S, ControllerTyp_IniString, Ord(ctDruck)));
-  CalcTyp := TCalcTyp(ini.ReadInteger(S, CalcTyp_IniString, Ord(ctBiegeKnicken)));
+  s := RggStrings.Rigg_IniSectionString;
+  ControllerTyp := TControllerTyp(ini.ReadInteger(S, RggStrings.ControllerTyp_IniString, Ord(ctDruck)));
+  CalcTyp := TCalcTyp(ini.ReadInteger(S, RggStrings.CalcTyp_IniString, Ord(ctBiegeKnicken)));
 
-  s := Mast_IniSectionString;
-  EI := ini.ReadInteger(S, EI_IniString, 14700) * 1E6;
+  s := RggStrings.Mast_IniSectionString;
+  EI := ini.ReadInteger(S, RggStrings.EI_IniString, 14700) * 1E6;
 end;
 
 procedure TMast.GetEpsilon;
@@ -821,16 +821,16 @@ begin
       { D ist Null, wenn FU1 und FU2 auf einer Geraden liegen. }
       FU1 := 0;
       FU2 := 0;
-      s := LogString_SolveKG21_Except;
+      s := RggStrings.LogString_SolveKG21_Except;
       if W1 = 0 then
-        s := s + LogString_W1;
+        s := s + RggStrings.LogString_W1;
       if W2 = 0 then
-        s := s + LogString_W2;
+        s := s + RggStrings.LogString_W2;
       if W3 = 0 then
-        s := s + LogString_W3;
+        s := s + RggStrings.LogString_W3;
       if D = 0 then
-        s := s + LogString_D;
-      s := s + LogString_AreNull;
+        s := s + RggStrings.LogString_D;
+      s := s + RggStrings.LogString_AreNull;
       Main.Logger.Info(s);
     end;
   end;
@@ -903,14 +903,14 @@ begin
   case SalingTyp of
     stFest, stDrehbar, stOhneBiegt:
     begin
-      SchnittGG(rP.D0, rP.C, rP.P, rP.D, SPSaling);
-      SchnittGG(rP.D0, rP.C, rP.E, rP.E0, SPController);
+      TRggCalc.SchnittGG(rP.D0, rP.C, rP.P, rP.D, SPSaling);
+      TRggCalc.SchnittGG(rP.D0, rP.C, rP.E, rP.E0, SPController);
       ld := rP.D0.Distance(SPSaling);
       le := rP.D0.Distance(SPController);
       lc := rL.D0C;
       EC := rP.C.Distance(rP.E);
-      hd := Hoehe(lc - 0.0001, rL.D0D, rL.DC, k2);
-      he := Hoehe(lc - 0.0001, rL.D0E, EC, k1);
+      hd := TRggCalc.Hoehe(lc - 0.0001, rL.D0D, rL.DC, k2);
+      he := TRggCalc.Hoehe(lc - 0.0001, rL.D0E, EC, k1);
       if SPSaling.X - rP.D.X > 0 then
         hd := -hd;
       if SPController.X - rP.E.X > 0 then
@@ -919,13 +919,13 @@ begin
 
     stOhneStarr:
     begin
-      SchnittGG(rP.D0, rP.C, rP.E, rP.E0, SPController);
+      TRggCalc.SchnittGG(rP.D0, rP.C, rP.E, rP.E0, SPController);
       ld := rL.D0D;
       le := rP.D0.Distance(SPController);
       lc := rL.D0C;
       EC := rP.C.Distance(rP.E);
       hd := 0; { Null gesetzt, da nicht relevant }
-      he := Hoehe(lc - 0.0001, rL.D0E, EC, k1);
+      he := TRggCalc.Hoehe(lc - 0.0001, rL.D0E, EC, k1);
       if SPController.X - rP.E.X > 0 then
         he := -he;
     end;
@@ -973,7 +973,7 @@ begin
         begin
           FE := 0;
           FD := 0;
-          Main.Logger.Info(LogString_ZeroDivideAlpha);
+          Main.Logger.Info(RggStrings.LogString_ZeroDivideAlpha);
         end;
       end;
       FLvon1 := FE * sin(alpha1);
@@ -1008,7 +1008,7 @@ begin
         begin
           FE := 0;
           FD := 0;
-          Main.Logger.Info(LogString_ZeroDivideAlpha);
+          Main.Logger.Info(RggStrings.LogString_ZeroDivideAlpha);
         end;
       end;
       FLvon1 := FE * sin(alpha1);

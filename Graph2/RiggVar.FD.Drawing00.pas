@@ -23,7 +23,7 @@
 interface
 
 uses
-  RggTypes,
+  RiggVar.RG.Types,
   System.UIConsts,
   System.Math.Vectors,
   RiggVar.FD.Elements,

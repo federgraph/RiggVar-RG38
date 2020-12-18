@@ -6,7 +6,7 @@ uses
   System.SysUtils,
   System.Classes,
   System.UITypes,
-  RggSchnittKK,
+  RiggVar.RG.Calc,
   RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;

@@ -1,14 +1,14 @@
-﻿unit RggInter;
+﻿unit RiggVar.RG.Inter;
 
 interface
 
 uses
   System.Math.Vectors,
   System.Classes,
-  RggTypes,
-  RggScroll,
-  RggDoc,
-  RggTrimmTab,
+  RiggVar.RG.Types,
+  RiggVar.RG.Scroll,
+  RiggVar.RG.Doc,
+  RiggVar.RG.TrimmTab,
   RiggVar.RG.Data;
 
 type

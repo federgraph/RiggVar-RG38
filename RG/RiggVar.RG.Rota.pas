@@ -15,10 +15,10 @@ interface
 {$endif}
 
 uses
-  RggTypes,
+  RiggVar.RG.Types,
   RiggVar.RG.Graph,
 {$ifdef WantRotaForm1}
-  RggRota,
+  RiggVar.Graph1.Rota,
 {$endif}
 {$ifdef WantRotaForm2}
   RiggVar.FD.Rota,

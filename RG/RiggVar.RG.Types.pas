@@ -1,4 +1,4 @@
-﻿unit RggTypes;
+﻿unit RiggVar.RG.Types;
 
 (*
 -
@@ -23,8 +23,7 @@ uses
   System.Classes,
   System.Types,
   System.Math,
-  System.Math.Vectors,
-  RiggVar.RG.Def;
+  System.Math.Vectors;
 
 const
   LineCount = 100;
@@ -113,21 +112,7 @@ type
 
   TsbName = TFederParam.fpController .. TFederParam.fpWPowerOS;
 
-//  TsbName = (
-//    Controller,
-//    Winkel,
-//    Vorstag,
-//    Wante,
-//    Woben,
-//    SalingH,
-//    SalingA,
-//    SalingL,
-//    VorstagOS,
-//    WPowerOS
-//    );
-
   TsbParam = (IstValue, MinValue, MaxValue, TinyStep, BigStep);
-//  TsbArray = array [TsbName, TsbParam] of Integer;
   TsbLabelArray = array [TsbName] of string;
   TTabellenTyp = (itKonstante, itGerade, itParabel, itBezier);
   TViewPoint = (vpSeite, vpAchtern, vpTop, vp3D);
@@ -392,14 +377,22 @@ type
     KurveF: TChartLine;
   end;
 
-const
-  { in KN / cm^2 }
-  EModulStahl = 210E3; { N/mm^2 }
-  EModulAlu = 70E3; { N/mm^2 }
+  TRggTestData = class
+  public
+    class function GetKoordinaten420: TRiggPoints; static;
+    class function GetMastKurve420: TMastKurve; static;
+  end;
+
+  RggMaterial = record
+  const
+    EModulStahl = 210E3; { N / mm^2 }
+    EModulAlu = 70E3; { N / mm^2 }
   EAgross = 100E6; { N }
   EARumpf = 10E6; { N }
   EASaling = 1E6; { N }
+  end;
 
+const
   ZeroCtrl: TTrimmControls = (
     Controller: 0;
     Winkel: 0;
@@ -430,10 +423,10 @@ const
 
   DefaultTrimmTabDaten: TTrimmTabDaten = (
     TabellenTyp: TTabellenTyp.itGerade;
-    a0: 0; {zur Zeit nicht verwendet}
+    a0: 0; { not used }
     a1: 0.1;
     a2: 0;
-    x0: 0; {zur Zeit nicht verwendet}
+    x0: 0; { not used }
     x1: 500;
     x2: 1000
     );
@@ -518,43 +511,43 @@ const
     { SalingH: } 'Höhe des Salingdreiecks [mm]',
     { SalingA: } 'Saling-Abstand [mm]',
     { SalingL: } 'Saling-Länge [mm]',
-    { VorstagOS: } 'Vorstaglänge [mm]', { wird nicht benutzt }
-    { WPowerOS: } 'Wantenspannung [N]' { wird nicht benutzt }
+    { VorstagOS: } 'Vorstaglänge [mm]', { not used }
+    { WPowerOS: } 'Wantenspannung [N]' { not used }
     );
 
   XMLSBName: array[TsbName] of string = (
-    'E0E', // Controller
-    'Alpha', // Winkel
-    'C0C', // Vorstag
-    'A0AC', // Wante
-    'AC', // Woben
-    'PD', // SalingH
-    'AB', // SalingA
-    'AD', // SalingL
-    'VorstagOS', // VorstagOS
-    'WKraftOS' // WPowerOS
+    'E0E',
+    'Alpha',
+    'C0C',
+    'A0AC',
+    'AC',
+    'PD',
+    'AB',
+    'AD',
+    'VorstagOS',
+    'WKraftOS'
     );
 
   XMLSBNameLabels: array[TsbName] of string = (
-    'Controller', // Controller
-    'Winkel', // Winkel
-    'Vorstag', // Vorstag
-    'Wante', // Wante
-    'WanteOben', // Woben
-    'SalingHoehe', // SalingH
-    'SalingAbstand', // SalingA
-    'SalingLaenge', // SalingL
-    'VorstagOS', // VorstagOS
-    'WantenspannungOS' // WPowerOS
+    'Controller',
+    'Winkel',
+    'Vorstag',
+    'Wante',
+    'WanteOben',
+    'SalingHoehe',
+    'SalingAbstand',
+    'SalingLaenge',
+    'VorstagOS',
+    'WantenspannungOS'
     );
 
   XMLSBParamLabels: array[TsbParam] of string = (
-    'Value', //Ist
-    'Min', // Min
-    'Max', // Max
-    'Small', // TinyStep
-    'Big' // BigStep
-    );
+    'Value',
+    'Min',
+    'Max',
+    'Small',
+    'Big'
+   );
 
 procedure InitYAchseRecordList(out RecordList: TYAchseRecordList);
 function StrToRiggPoint(const s: string): TRiggPoint;
@@ -586,14 +579,14 @@ begin
   end;
   with RecordList[yavVorstagSpannung] do
   begin
-    ComboText := 'Vorstag-Spannung'; { Kraft Vorstag [rF14] }
+    ComboText := 'Vorstag-Spannung';
     Text := 'Vorstagspannung [N]';
     ComboIndex := 3;
     ArrayIndex := 3;
   end;
   with RecordList[yavWantenSpannung] do
   begin
-    ComboText := 'Wanten-Spannung'; { Kraft WanteUnten rF[8] }
+    ComboText := 'Wanten-Spannung';
     Text := 'Wantenspannung [N]';
     ComboIndex := 4;
     ArrayIndex := 4;
@@ -607,56 +600,56 @@ begin
   end;
   with RecordList[yavRF00] do
   begin
-    ComboText := 'rF[0] MastDruck'; { Kraft Mast rF[0] }
+    ComboText := 'rF[0] MastDruck';
     Text := 'Kraft im Stab D0C [N]';
     ComboIndex := -1;
     ArrayIndex := -1;
   end;
   with RecordList[yavRF01] do
   begin
-    ComboText := 'rF[1] Kraft D0C0'; { Kraft Kiel rF[1] }
+    ComboText := 'rF[1] Kraft D0C0';
     Text := 'Kraft im Stab D0C0 [N]';
     ComboIndex := -1;
     ArrayIndex := -1;
   end;
   with RecordList[yavRF03] do
   begin
-    ComboText := 'rF[3] Kraft A0C0'; { Kraft PüttingVorstag rF[3] }
+    ComboText := 'rF[3] Kraft A0C0';
     Text := 'Kraft im Stab A0C0 [N]';
     ComboIndex := -1;
     ArrayIndex := -1;
   end;
   with RecordList[yavRF05] do
   begin
-    ComboText := 'rF[5] Kraft A0D0'; { Kraft PüttingMastfuß rF[5] }
+    ComboText := 'rF[5] Kraft A0D0';
     Text := 'Kraft im Stab A0D0 [N]';
     ComboIndex := -1;
     ArrayIndex := -1;
   end;
   with RecordList[yavRF06] do
   begin
-    ComboText := 'rF[6] Kraft A0B0'; { Kraft PüttingVerbindung rF[6] }
+    ComboText := 'rF[6] Kraft A0B0';
     Text := 'Kraft im Stab A0B0 [N]';
     ComboIndex := -1;
     ArrayIndex := -1;
   end;
   with RecordList[yavRF10] do
   begin
-    ComboText := 'rF[10] Kraft AD'; { Kraft Saling [10] }
+    ComboText := 'rF[10] Kraft AD';
     Text := 'Kraft im Stab AD [N]';
     ComboIndex := -1;
     ArrayIndex := -1;
   end;
   with RecordList[yavRF11] do
   begin
-    ComboText := 'rF[11] Kraft AB'; { Kraft SalingVerbindung rF[11] }
+    ComboText := 'rF[11] Kraft AB';
     Text := 'Kraft im Stab AB [N]';
     ComboIndex := -1;
     ArrayIndex := -1;
   end;
   with RecordList[yavRF13] do
   begin
-    ComboText := 'rF[13] Kraft AC'; { Kraft WanteOben rF[13] }
+    ComboText := 'rF[13] Kraft AC';
     Text := 'Kraft im Stab AC [N]';
     ComboIndex := -1;
     ArrayIndex := -1;
@@ -719,6 +712,136 @@ begin
     18: result := 'D0E';
     19: result := 'E0E Controller';
   end;
+end;
+
+class function TRggTestData.GetKoordinaten420: TRiggPoints;
+var
+  rp: TRiggPoints;
+begin
+  rp.A.X := 2398;
+  rp.A.Y := -425;
+  rp.A.Z := 2496;
+
+  rp.B.X := 2398;
+  rp.B.Y := 425;
+  rp.B.Z := 2496;
+
+  rp.C.X := 2354;
+  rp.C.Y := 0;
+  rp.C.Z := 4470;
+
+  rp.D.X := 2618;
+  rp.D.Y := 0;
+  rp.D.Z := 2488;
+
+  rp.E.X := 2870;
+  rp.E.Y := 0;
+  rp.E.Z := 450;
+
+  rp.F.X := 2142;
+  rp.F.Y := 0;
+  rp.F.Z := 5970;
+
+  rp.P.X := 2398;
+  rp.P.Y := 0;
+  rp.P.Z := 2496;
+
+  rp.A0.X := 2560;
+  rp.A0.Y := -765;
+  rp.A0.Z := 430;
+
+  rp.B0.X := 2560;
+  rp.B0.Y := 765;
+  rp.B0.Z := 430;
+
+  rp.C0.X := 4140;
+  rp.C0.Y := 0;
+  rp.C0.Z := 340;
+
+  rp.D0.X := 2870;
+  rp.D0.Y := 0;
+  rp.D0.Z := -100;
+
+  rp.E0.X := 2970;
+  rp.E0.Y := 0;
+  rp.E0.Z := 450;
+
+  rp.F0.X := -30;
+  rp.F0.Y := 0;
+  rp.F0.Z := 300;
+
+  rp.P0.X := 2560;
+  rp.P0.Y := 0;
+  rp.P0.Z := 430;
+
+  rp.M.X := 0;
+  rp.M.Y := 0;
+  rp.M.Z := 0;
+
+  result := rp;
+end;
+
+class function TRggTestData.GetMastKurve420: TMastKurve;
+
+  procedure Add(i: Integer; u, w: single);
+  begin
+    result[i].X := u;
+    result[i].Y := 0;
+    result[i].Z := w;
+  end;
+
+begin
+  Add(0, 2870, -100);
+  Add(1, 2861.97363891765, -8.3355171003159);
+  Add(2, 2853.94047232883, 83.328196833267);
+  Add(3, 2845.89369591162, 174.990372968493);
+  Add(4, 2837.82650439645, 266.650242366029);
+  Add(5, 2829.73209132921, 358.307035952698);
+  Add(6, 2821.60365309872, 449.959984976552);
+  Add(7, 2813.43438467231, 541.608320525026);
+  Add(8, 2805.21748101735, 633.251273685558);
+  Add(9, 2796.94613520588, 724.888075331433);
+  Add(10, 2788.61354315291, 816.517956657164);
+  Add(11, 2780.21290077342, 908.140148857262);
+  Add(12, 2771.73740019184, 999.753882697938);
+  Add(13, 2763.18024111372, 1091.35838980201);
+  Add(14, 2754.53461376821, 1182.95290072153);
+  Add(15, 2745.79371407029, 1274.53664665101);
+  Add(16, 2736.95073983023, 1366.10885899912);
+  Add(17, 2727.99887938189, 1457.66876810377);
+  Add(18, 2718.9313381167, 1549.21560623022);
+  Add(19, 2709.74130057792, 1640.74860328808);
+  Add(20, 2700.42196647111, 1732.26699090016);
+  Add(21, 2690.9665279207, 1823.76999983268);
+  Add(22, 2681.36818463225, 1915.25686170844);
+  Add(23, 2671.62012873018, 2006.72680729367);
+  Add(24, 2661.71555233891, 2098.17906735456);
+  Add(25, 2651.647655164, 2189.61287351393);
+  Add(26, 2641.40962932988, 2281.02745653800);
+  Add(27, 2630.99467075153, 2372.42204762127);
+  Add(28, 2620.39597534394, 2463.79587795826);
+  Add(29, 2609.60753125263, 2555.14826825899);
+  Add(30, 2598.6323974729, 2646.47956416471);
+  Add(31, 2587.47937572365, 2737.79076019706);
+  Add(32, 2576.15735869758, 2829.08286115696);
+  Add(33, 2564.67524287799, 2920.35687227365);
+  Add(34, 2553.0419209576, 3011.13798348070);
+  Add(35, 2541.26628562912, 3102.85464418115);
+  Add(36, 2529.35723716643, 3194.08041543042);
+  Add(37, 2517.32366636695, 3285.29211668267);
+  Add(38, 2505.17446781869, 3376.49075295298);
+  Add(39, 2492.91853610965, 3467.67732925643);
+  Add(40, 2480.56476582785, 3558.85285060811);
+  Add(41, 2468.12205156128, 3650.01832202311);
+  Add(42, 2455.59928600265, 3741.17474830234);
+  Add(43, 2443.00536563528, 3832.32313467506);
+  Add(44, 2430.34918504716, 3923.46448615634);
+  Add(45, 2417.639636931, 4014.59980754712);
+  Add(46, 2404.8856177701, 4105.73010407663);
+  Add(47, 2392.09601978336, 4196.85638049227);
+  Add(48, 2379.27973898025, 4287.97964196973);
+  Add(49, 2366.44566947495, 4379.10089347056);
+  Add(50, 2353.60270538165, 4470.22113995631);
 end;
 
 end.

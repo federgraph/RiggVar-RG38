@@ -1,4 +1,4 @@
-﻿unit RggDisplayTypes;
+﻿unit RiggVar.Graph1.DisplayTypes;
 
 interface
 
@@ -8,8 +8,8 @@ uses
   System.Math,
   System.Types,
   System.Math.Vectors,
-  RggTypes,
-  RggCalc;
+  RiggVar.RG.Types,
+  RiggVar.RG.Calc;
 
 type
   TDisplayEdge = (
@@ -499,7 +499,7 @@ end;
 
 function TRggLinePair.IsParallel: Boolean;
 begin
-  result := not SchnittGG(L1.A.P, L1.B.P, L2.A.P, L2.B.P, SP);
+  result := not TRggCalc.SchnittGG(L1.A.P, L1.B.P, L2.A.P, L2.B.P, SP);
 end;
 
 function TRggLinePair.DoesNotHaveVisibleCrossing: Boolean;

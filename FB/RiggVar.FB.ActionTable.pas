@@ -18,7 +18,7 @@
 
 interface
 
-{$ifdef FPC}
+{$ifdef fpc}
 {$mode delphi}
 {$endif}
 

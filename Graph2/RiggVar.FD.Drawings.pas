@@ -25,7 +25,7 @@ uses
   System.Generics.Collections,
   System.Generics.Defaults,
   System.Math.Vectors,
-  RggSchnittKK,
+  RiggVar.RG.Calc,
   FMX.Graphics,
   FMX.StdCtrls,
   RiggVar.FD.TransformHelper,

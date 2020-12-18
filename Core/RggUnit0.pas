@@ -24,12 +24,12 @@ uses
   System.IniFiles,
   System.Math,
   System.Math.Vectors,
+  RiggVar.App.Strings,
+  RiggVar.RG.Calc,
   RiggVar.RG.Def,
-  RggStrings,
-  RggScroll,
-  RggTypes,
-  RggSchnittKK,
-  RggTrimmTab;
+  RiggVar.RG.Scroll,
+  RiggVar.RG.Types,
+  RiggVar.RG.TrimmTab;
 
 type
   TGetriebe = class(TInterfacedObject)
@@ -347,7 +347,7 @@ begin
     tempWS := arctan2(tempSinus, tempCosinus);
   except
     on EMathError do
-      Main.Logger.Error(Ebenen_senkrecht_in_GetSalingDaten_String);
+      Main.Logger.Error(RggStrings.Ebenen_senkrecht_in_GetSalingDaten_String);
   end;
 
   SD.SalingH := FrSalingH;
@@ -441,17 +441,17 @@ function TGetriebe.GetGetriebeStatusText: string;
 var
   s: string;
 begin
-  s := Status_String_Getriebe;
+  s := RggStrings.Status_String_Getriebe;
   if FGetriebeOK then
-    s := s + Status_String_OK
+    s := s + RggStrings.Status_String_OK
   else
   begin
     if gsWanteZukurz in FGetriebeStatus then
-      s := s + Status_String_WanteZuKurz
+      s := s + RggStrings.Status_String_WanteZuKurz
     else if gsWanteZulang in FGetriebeStatus then
-      s := s + Format(Status_Format_String_WanteZuLang, [FrWanteZulang])
+      s := s + Format(RggStrings.Status_Format_String_WanteZuLang, [FrWanteZulang])
     else if gsErrorPsivonPhi in FGetriebeStatus then
-      s := s + SalingHTooSmallString;
+      s := s + RggStrings.SalingHTooSmallString;
   end;
   result := s;
 end;
@@ -703,179 +703,179 @@ procedure TGetriebe.WriteToIniFile(ini: TIniFile);
 var
   s: string;
 begin
-  s := Rigg_IniSectionString;
-  ini.WriteInteger(s, SalingTyp_IniString, Ord(FSalingTyp));
+  s := RggStrings.Rigg_IniSectionString;
+  ini.WriteInteger(s, RggStrings.SalingTyp_IniString, Ord(FSalingTyp));
   TrimmTab.WriteToIniFile(ini);
 
-  s := Mast_IniSectionString;
-  ini.WriteInteger(s, MastL_IniString, Round(FrMastLength));
-  ini.WriteInteger(s, Mastunten_IniString, Round(FrMastUnten));
-  ini.WriteInteger(s, Mastoben_IniString, Round(FrMastOben));
-  ini.WriteInteger(s, MastfallVorlauf_IniString, Round(FrMastfallVorlauf));
+  s := RggStrings.Mast_IniSectionString;
+  ini.WriteInteger(s, RggStrings.MastL_IniString, Round(FrMastLength));
+  ini.WriteInteger(s, RggStrings.Mastunten_IniString, Round(FrMastUnten));
+  ini.WriteInteger(s, RggStrings.Mastoben_IniString, Round(FrMastOben));
+  ini.WriteInteger(s, RggStrings.MastfallVorlauf_IniString, Round(FrMastfallVorlauf));
 
-  s := Ist_IniSectionString;
-  ini.WriteInteger(s, Controller_IniString, Round(FrController));
-  ini.WriteInteger(s, WinkelString, Round(FWinkelDegrees));
-  ini.WriteInteger(s, VorstagString, Round(FrVorstag));
-  ini.WriteInteger(s, WanteString, Round(FrWunten3D + FrWoben3D));
-  ini.WriteInteger(s, Woben_IniString, Round(FrWoben3D));
-  ini.WriteInteger(s, SalingH_IniString, Round(FrSalingH));
-  ini.WriteInteger(s, SalingA_IniString, Round(FrSalingA));
-  ini.WriteInteger(s, WPowerOS_IniString, Round(FWPowerOS));
+  s := RggStrings.Ist_IniSectionString;
+  ini.WriteInteger(s, RggStrings.Controller_IniString, Round(FrController));
+  ini.WriteInteger(s, RggStrings.WinkelString, Round(FWinkelDegrees));
+  ini.WriteInteger(s, RggStrings.VorstagString, Round(FrVorstag));
+  ini.WriteInteger(s, RggStrings.WanteString, Round(FrWunten3D + FrWoben3D));
+  ini.WriteInteger(s, RggStrings.Woben_IniString, Round(FrWoben3D));
+  ini.WriteInteger(s, RggStrings.SalingH_IniString, Round(FrSalingH));
+  ini.WriteInteger(s, RggStrings.SalingA_IniString, Round(FrSalingA));
+  ini.WriteInteger(s, RggStrings.WPowerOS_IniString, Round(FWPowerOS));
 
-  s := Min_IniSectionString;
-  ini.WriteInteger(s, Controller_IniString, Round(GSB.Controller.Min));
-  ini.WriteInteger(s, Winkel_IniString, Round(GSB.Winkel.Min));
-  ini.WriteInteger(s, Vorstag_IniString, Round(GSB.Vorstag.Min));
-  ini.WriteInteger(s, Wante_IniString, Round(GSB.Wante.Min));
-  ini.WriteInteger(s, Woben_IniString, Round(GSB.Woben.Min));
-  ini.WriteInteger(s, SalingH_IniString, Round(GSB.SalingH.Min));
-  ini.WriteInteger(s, SalingA_IniString, Round(GSB.SalingA.Min));
-  ini.WriteInteger(s, SalingL_IniString, Round(GSB.SalingL.Min));
-  ini.WriteInteger(s, VorstagOS_IniString, Round(GSB.VorstagOS.Min));
-  ini.WriteInteger(s, WPowerOS_IniString, Round(GSB.WPowerOS.Min));
+  s := RggStrings.Min_IniSectionString;
+  ini.WriteInteger(s, RggStrings.Controller_IniString, Round(GSB.Controller.Min));
+  ini.WriteInteger(s, RggStrings.Winkel_IniString, Round(GSB.Winkel.Min));
+  ini.WriteInteger(s, RggStrings.Vorstag_IniString, Round(GSB.Vorstag.Min));
+  ini.WriteInteger(s, RggStrings.Wante_IniString, Round(GSB.Wante.Min));
+  ini.WriteInteger(s, RggStrings.Woben_IniString, Round(GSB.Woben.Min));
+  ini.WriteInteger(s, RggStrings.SalingH_IniString, Round(GSB.SalingH.Min));
+  ini.WriteInteger(s, RggStrings.SalingA_IniString, Round(GSB.SalingA.Min));
+  ini.WriteInteger(s, RggStrings.SalingL_IniString, Round(GSB.SalingL.Min));
+  ini.WriteInteger(s, RggStrings.VorstagOS_IniString, Round(GSB.VorstagOS.Min));
+  ini.WriteInteger(s, RggStrings.WPowerOS_IniString, Round(GSB.WPowerOS.Min));
 
-  s := Max_IniSectionString;
-  ini.WriteInteger(s, Controller_IniString, Round(GSB.Controller.Max));
-  ini.WriteInteger(s, Winkel_IniString, Round(GSB.Winkel.Max));
-  ini.WriteInteger(s, Vorstag_IniString, Round(GSB.Vorstag.Max));
-  ini.WriteInteger(s, Wante_IniString, Round(GSB.Wante.Max));
-  ini.WriteInteger(s, Woben_IniString, Round(GSB.Woben.Max));
-  ini.WriteInteger(s, SalingH_IniString, Round(GSB.SalingH.Max));
-  ini.WriteInteger(s, SalingA_IniString, Round(GSB.SalingA.Max));
-  ini.WriteInteger(s, SalingL_IniString, Round(GSB.SalingL.Max));
-  ini.WriteInteger(s, VorstagOS_IniString, Round(GSB.VorstagOS.Max));
-  ini.WriteInteger(s, WPowerOS_IniString, Round(GSB.WPowerOS.Max));
+  s := RggStrings.Max_IniSectionString;
+  ini.WriteInteger(s, RggStrings.Controller_IniString, Round(GSB.Controller.Max));
+  ini.WriteInteger(s, RggStrings.Winkel_IniString, Round(GSB.Winkel.Max));
+  ini.WriteInteger(s, RggStrings.Vorstag_IniString, Round(GSB.Vorstag.Max));
+  ini.WriteInteger(s, RggStrings.Wante_IniString, Round(GSB.Wante.Max));
+  ini.WriteInteger(s, RggStrings.Woben_IniString, Round(GSB.Woben.Max));
+  ini.WriteInteger(s, RggStrings.SalingH_IniString, Round(GSB.SalingH.Max));
+  ini.WriteInteger(s, RggStrings.SalingA_IniString, Round(GSB.SalingA.Max));
+  ini.WriteInteger(s, RggStrings.SalingL_IniString, Round(GSB.SalingL.Max));
+  ini.WriteInteger(s, RggStrings.VorstagOS_IniString, Round(GSB.VorstagOS.Max));
+  ini.WriteInteger(s, RggStrings.WPowerOS_IniString, Round(GSB.WPowerOS.Max));
 
-  s := Koordinaten_Rumpf_IniSectionString;
-  ini.WriteInteger(s, A0x_IniString, Round(rP.A0.X));
-  ini.WriteInteger(s, A0y_IniString, Round(rP.A0.Y));
-  ini.WriteInteger(s, A0z_IniString, Round(rP.A0.Z));
-  ini.WriteInteger(s, B0x_IniString, Round(rP.B0.X));
-  ini.WriteInteger(s, B0y_IniString, Round(rP.B0.Y));
-  ini.WriteInteger(s, B0z_IniString, Round(rP.B0.Z));
-  ini.WriteInteger(s, C0x_IniString, Round(rP.C0.X));
-  ini.WriteInteger(s, C0y_IniString, Round(rP.C0.Y));
-  ini.WriteInteger(s, C0z_IniString, Round(rP.C0.Z));
-  ini.WriteInteger(s, D0x_IniString, Round(rP.D0.X));
-  ini.WriteInteger(s, D0y_IniString, Round(rP.D0.Y));
-  ini.WriteInteger(s, D0z_IniString, Round(rP.D0.Z));
-  ini.WriteInteger(s, E0x_IniString, Round(rP.E0.X));
-  ini.WriteInteger(s, E0y_IniString, Round(rP.E0.Y));
-  ini.WriteInteger(s, E0z_IniString, Round(rP.E0.Z));
-  ini.WriteInteger(s, F0x_IniString, Round(rP.F0.X));
-  ini.WriteInteger(s, F0y_IniString, Round(rP.F0.Y));
-  ini.WriteInteger(s, F0z_IniString, Round(rP.F0.Z));
+  s := RggStrings.Koordinaten_Rumpf_IniSectionString;
+  ini.WriteInteger(s, RggStrings.A0x_IniString, Round(rP.A0.X));
+  ini.WriteInteger(s, RggStrings.A0y_IniString, Round(rP.A0.Y));
+  ini.WriteInteger(s, RggStrings.A0z_IniString, Round(rP.A0.Z));
+  ini.WriteInteger(s, RggStrings.B0x_IniString, Round(rP.B0.X));
+  ini.WriteInteger(s, RggStrings.B0y_IniString, Round(rP.B0.Y));
+  ini.WriteInteger(s, RggStrings.B0z_IniString, Round(rP.B0.Z));
+  ini.WriteInteger(s, RggStrings.C0x_IniString, Round(rP.C0.X));
+  ini.WriteInteger(s, RggStrings.C0y_IniString, Round(rP.C0.Y));
+  ini.WriteInteger(s, RggStrings.C0z_IniString, Round(rP.C0.Z));
+  ini.WriteInteger(s, RggStrings.D0x_IniString, Round(rP.D0.X));
+  ini.WriteInteger(s, RggStrings.D0y_IniString, Round(rP.D0.Y));
+  ini.WriteInteger(s, RggStrings.D0z_IniString, Round(rP.D0.Z));
+  ini.WriteInteger(s, RggStrings.E0x_IniString, Round(rP.E0.X));
+  ini.WriteInteger(s, RggStrings.E0y_IniString, Round(rP.E0.Y));
+  ini.WriteInteger(s, RggStrings.E0z_IniString, Round(rP.E0.Z));
+  ini.WriteInteger(s, RggStrings.F0x_IniString, Round(rP.F0.X));
+  ini.WriteInteger(s, RggStrings.F0y_IniString, Round(rP.F0.Y));
+  ini.WriteInteger(s, RggStrings.F0z_IniString, Round(rP.F0.Z));
 
-  s := Koordinaten_Rigg_IniSectionString;
-  ini.WriteInteger(s, Ax_IniString, Round(rP.A.X));
-  ini.WriteInteger(s, Ay_IniString, Round(rP.A.Y));
-  ini.WriteInteger(s, Az_IniString, Round(rP.A.Z));
-  ini.WriteInteger(s, Bx_IniString, Round(rP.B.X));
-  ini.WriteInteger(s, By_IniString, Round(rP.B.Y));
-  ini.WriteInteger(s, Bz_IniString, Round(rP.B.Z));
-  ini.WriteInteger(s, Cx_IniString, Round(rP.C.X));
-  ini.WriteInteger(s, Cy_IniString, Round(rP.C.Y));
-  ini.WriteInteger(s, Cz_IniString, Round(rP.C.Z));
-  ini.WriteInteger(s, Dx_IniString, Round(rP.D.X));
-  ini.WriteInteger(s, Dy_IniString, Round(rP.D.Y));
-  ini.WriteInteger(s, Dz_IniString, Round(rP.D.Z));
-  ini.WriteInteger(s, Ex_IniString, Round(rP.E.X));
-  ini.WriteInteger(s, Ey_IniString, Round(rP.E.Y));
-  ini.WriteInteger(s, Ez_IniString, Round(rP.E.Z));
-  ini.WriteInteger(s, Fx_IniString, Round(rP.F.X));
-  ini.WriteInteger(s, Fy_IniString, Round(rP.F.Y));
-  ini.WriteInteger(s, Fz_IniString, Round(rP.F.Z));
+  s := RggStrings.Koordinaten_Rigg_IniSectionString;
+  ini.WriteInteger(s, RggStrings.Ax_IniString, Round(rP.A.X));
+  ini.WriteInteger(s, RggStrings.Ay_IniString, Round(rP.A.Y));
+  ini.WriteInteger(s, RggStrings.Az_IniString, Round(rP.A.Z));
+  ini.WriteInteger(s, RggStrings.Bx_IniString, Round(rP.B.X));
+  ini.WriteInteger(s, RggStrings.By_IniString, Round(rP.B.Y));
+  ini.WriteInteger(s, RggStrings.Bz_IniString, Round(rP.B.Z));
+  ini.WriteInteger(s, RggStrings.Cx_IniString, Round(rP.C.X));
+  ini.WriteInteger(s, RggStrings.Cy_IniString, Round(rP.C.Y));
+  ini.WriteInteger(s, RggStrings.Cz_IniString, Round(rP.C.Z));
+  ini.WriteInteger(s, RggStrings.Dx_IniString, Round(rP.D.X));
+  ini.WriteInteger(s, RggStrings.Dy_IniString, Round(rP.D.Y));
+  ini.WriteInteger(s, RggStrings.Dz_IniString, Round(rP.D.Z));
+  ini.WriteInteger(s, RggStrings.Ex_IniString, Round(rP.E.X));
+  ini.WriteInteger(s, RggStrings.Ey_IniString, Round(rP.E.Y));
+  ini.WriteInteger(s, RggStrings.Ez_IniString, Round(rP.E.Z));
+  ini.WriteInteger(s, RggStrings.Fx_IniString, Round(rP.F.X));
+  ini.WriteInteger(s, RggStrings.Fy_IniString, Round(rP.F.Y));
+  ini.WriteInteger(s, RggStrings.Fz_IniString, Round(rP.F.Z));
 end;
 
 procedure TGetriebe.LoadFromIniFile(ini: TIniFile);
 var
   s: string;
 begin
-  s := Rigg_IniSectionString;
-  SalingTyp := TSalingTyp(ini.ReadInteger(s, SalingTyp_IniString, Ord(stFest)));
+  s := RggStrings.Rigg_IniSectionString;
+  SalingTyp := TSalingTyp(ini.ReadInteger(s, RggStrings.SalingTyp_IniString, Ord(stFest)));
 
   TrimmTab.LoadFromIniFile(ini);
 
-  s := Mast_IniSectionString;
-  FrMastLength := ini.ReadInteger(s, MastL_IniString, Round(FrMastLength));
-  FrMastUnten := ini.ReadInteger(s, Mastunten_IniString, Round(FrMastUnten));
-  FrMastOben := ini.ReadInteger(s, Mastoben_IniString, Round(FrMastOben));
-  FrMastfallVorlauf := ini.ReadInteger(s, MastfallVorlauf_IniString, Round(FrMastfallVorlauf));
+  s := RggStrings.Mast_IniSectionString;
+  FrMastLength := ini.ReadInteger(s, RggStrings.MastL_IniString, Round(FrMastLength));
+  FrMastUnten := ini.ReadInteger(s, RggStrings.Mastunten_IniString, Round(FrMastUnten));
+  FrMastOben := ini.ReadInteger(s, RggStrings.Mastoben_IniString, Round(FrMastOben));
+  FrMastfallVorlauf := ini.ReadInteger(s, RggStrings.MastfallVorlauf_IniString, Round(FrMastfallVorlauf));
 
-  s := Ist_IniSectionString;
-  FrController := ini.ReadInteger(s, Controller_IniString, Round(FrController));
-  FrWinkel := ini.ReadInteger(s, Winkel_IniString, Round(FrWinkel));
-  FrVorstag := ini.ReadInteger(s, Vorstag_IniString, Round(FrVorstag));
-  FrWoben3D := ini.ReadInteger(s, Woben_IniString, Round(FrWoben3D));
-  FrWunten3D := ini.ReadInteger(s, Wante_IniString, Round(FrWunten3D + FrWoben3D - FrWoben3D));
-  FrSalingH := ini.ReadInteger(s, SalingH_IniString, Round(FrSalingH));
-  FrSalingA := ini.ReadInteger(s, SalingA_IniString, Round(FrSalingA));
-  FWPowerOS := ini.ReadInteger(s, WPowerOS_IniString, Round(FWPowerOS));
+  s := RggStrings.Ist_IniSectionString;
+  FrController := ini.ReadInteger(s, RggStrings.Controller_IniString, Round(FrController));
+  FrWinkel := ini.ReadInteger(s, RggStrings.Winkel_IniString, Round(FrWinkel));
+  FrVorstag := ini.ReadInteger(s, RggStrings.Vorstag_IniString, Round(FrVorstag));
+  FrWoben3D := ini.ReadInteger(s, RggStrings.Woben_IniString, Round(FrWoben3D));
+  FrWunten3D := ini.ReadInteger(s, RggStrings.Wante_IniString, Round(FrWunten3D + FrWoben3D - FrWoben3D));
+  FrSalingH := ini.ReadInteger(s, RggStrings.SalingH_IniString, Round(FrSalingH));
+  FrSalingA := ini.ReadInteger(s, RggStrings.SalingA_IniString, Round(FrSalingA));
+  FWPowerOS := ini.ReadInteger(s, RggStrings.WPowerOS_IniString, Round(FWPowerOS));
 
-  s := Min_IniSectionString;
-  GSB.Controller.Min := ini.ReadInteger(s, Controller_IniString, Round(GSB.Controller.Min));
-  GSB.Winkel.Min := ini.ReadInteger(s, Winkel_IniString, Round(GSB.Winkel.Min));
-  GSB.Vorstag.Min := ini.ReadInteger(s, Vorstag_IniString, Round(GSB.Vorstag.Min));
-  GSB.Wante.Min := ini.ReadInteger(s, Wante_IniString, Round(GSB.Wante.Min));
-  GSB.Woben.Min := ini.ReadInteger(s, Woben_IniString, Round(GSB.Woben.Min));
-  GSB.SalingH.Min := ini.ReadInteger(s, SalingH_IniString, Round(GSB.SalingH.Min));
-  GSB.SalingA.Min := ini.ReadInteger(s, SalingA_IniString, Round(GSB.SalingA.Min));
-  GSB.SalingL.Min := ini.ReadInteger(s, SalingL_IniString, Round(GSB.SalingL.Min));
-  GSB.VorstagOS.Min := ini.ReadInteger(s, VorstagOS_IniString, Round(GSB.VorstagOS.Min));
-  GSB.WPowerOS.Min := ini.ReadInteger(s, WPowerOS_IniString, Round(GSB.WPowerOS.Min));
+  s := RggStrings.Min_IniSectionString;
+  GSB.Controller.Min := ini.ReadInteger(s, RggStrings.Controller_IniString, Round(GSB.Controller.Min));
+  GSB.Winkel.Min := ini.ReadInteger(s, RggStrings.Winkel_IniString, Round(GSB.Winkel.Min));
+  GSB.Vorstag.Min := ini.ReadInteger(s, RggStrings.Vorstag_IniString, Round(GSB.Vorstag.Min));
+  GSB.Wante.Min := ini.ReadInteger(s, RggStrings.Wante_IniString, Round(GSB.Wante.Min));
+  GSB.Woben.Min := ini.ReadInteger(s, RggStrings.Woben_IniString, Round(GSB.Woben.Min));
+  GSB.SalingH.Min := ini.ReadInteger(s, RggStrings.SalingH_IniString, Round(GSB.SalingH.Min));
+  GSB.SalingA.Min := ini.ReadInteger(s, RggStrings.SalingA_IniString, Round(GSB.SalingA.Min));
+  GSB.SalingL.Min := ini.ReadInteger(s, RggStrings.SalingL_IniString, Round(GSB.SalingL.Min));
+  GSB.VorstagOS.Min := ini.ReadInteger(s, RggStrings.VorstagOS_IniString, Round(GSB.VorstagOS.Min));
+  GSB.WPowerOS.Min := ini.ReadInteger(s, RggStrings.WPowerOS_IniString, Round(GSB.WPowerOS.Min));
 
-  s := Max_IniSectionString;
-  GSB.Controller.Max := ini.ReadInteger(s, Controller_IniString, Round(GSB.Controller.Max));
-  GSB.Winkel.Max := ini.ReadInteger(s, Winkel_IniString, Round(GSB.Winkel.Max));
-  GSB.Vorstag.Max := ini.ReadInteger(s, Vorstag_IniString, Round(GSB.Vorstag.Max));
-  GSB.Wante.Max := ini.ReadInteger(s, Wante_IniString, Round(GSB.Wante.Max));
-  GSB.Woben.Max := ini.ReadInteger(s, Woben_IniString, Round(GSB.Woben.Max));
-  GSB.SalingH.Max := ini.ReadInteger(s, SalingH_IniString, Round(GSB.SalingH.Max));
-  GSB.SalingA.Max := ini.ReadInteger(s, SalingA_IniString, Round(GSB.SalingA.Max));
-  GSB.SalingL.Max := ini.ReadInteger(s, SalingL_IniString, Round(GSB.SalingL.Max));
-  GSB.VorstagOS.Max := ini.ReadInteger(s, VorstagOS_IniString, Round(GSB.VorstagOS.Max));
-  GSB.WPowerOS.Max := ini.ReadInteger(s, WPowerOS_IniString, Round(GSB.WPowerOS.Max));
+  s := RggStrings.Max_IniSectionString;
+  GSB.Controller.Max := ini.ReadInteger(s, RggStrings.Controller_IniString, Round(GSB.Controller.Max));
+  GSB.Winkel.Max := ini.ReadInteger(s, RggStrings.Winkel_IniString, Round(GSB.Winkel.Max));
+  GSB.Vorstag.Max := ini.ReadInteger(s, RggStrings.Vorstag_IniString, Round(GSB.Vorstag.Max));
+  GSB.Wante.Max := ini.ReadInteger(s, RggStrings.Wante_IniString, Round(GSB.Wante.Max));
+  GSB.Woben.Max := ini.ReadInteger(s, RggStrings.Woben_IniString, Round(GSB.Woben.Max));
+  GSB.SalingH.Max := ini.ReadInteger(s, RggStrings.SalingH_IniString, Round(GSB.SalingH.Max));
+  GSB.SalingA.Max := ini.ReadInteger(s, RggStrings.SalingA_IniString, Round(GSB.SalingA.Max));
+  GSB.SalingL.Max := ini.ReadInteger(s, RggStrings.SalingL_IniString, Round(GSB.SalingL.Max));
+  GSB.VorstagOS.Max := ini.ReadInteger(s, RggStrings.VorstagOS_IniString, Round(GSB.VorstagOS.Max));
+  GSB.WPowerOS.Max := ini.ReadInteger(s, RggStrings.WPowerOS_IniString, Round(GSB.WPowerOS.Max));
 
-  s := Koordinaten_Rumpf_IniSectionString;
-  rP.A0.X := ini.ReadInteger(s, A0x_IniString, Round(rP.A0.X));
-  rP.A0.Y := ini.ReadInteger(s, A0y_IniString, Round(rP.A0.Y));
-  rP.A0.Z := ini.ReadInteger(s, A0z_IniString, Round(rP.A0.Z));
-  rP.B0.X := ini.ReadInteger(s, B0x_IniString, Round(rP.B0.X));
-  rP.B0.Y := ini.ReadInteger(s, B0y_IniString, Round(rP.B0.Y));
-  rP.B0.Z := ini.ReadInteger(s, B0z_IniString, Round(rP.B0.Z));
-  rP.C0.X := ini.ReadInteger(s, C0x_IniString, Round(rP.C0.X));
-  rP.C0.Y := ini.ReadInteger(s, C0y_IniString, Round(rP.C0.Y));
-  rP.C0.Z := ini.ReadInteger(s, C0z_IniString, Round(rP.C0.Z));
-  rP.D0.X := ini.ReadInteger(s, D0x_IniString, Round(rP.D0.X));
-  rP.D0.Y := ini.ReadInteger(s, D0y_IniString, Round(rP.D0.Y));
-  rP.D0.Z := ini.ReadInteger(s, D0z_IniString, Round(rP.D0.Z));
-  rP.E0.X := ini.ReadInteger(s, E0x_IniString, Round(rP.E0.X));
-  rP.E0.Y := ini.ReadInteger(s, E0y_IniString, Round(rP.E0.Y));
-  rP.E0.Z := ini.ReadInteger(s, E0z_IniString, Round(rP.E0.Z));
-  rP.F0.X := ini.ReadInteger(s, F0x_IniString, Round(rP.F0.X));
-  rP.F0.Y := ini.ReadInteger(s, F0y_IniString, Round(rP.F0.Y));
-  rP.F0.Z := ini.ReadInteger(s, F0z_IniString, Round(rP.F0.Z));
+  s := RggStrings.Koordinaten_Rumpf_IniSectionString;
+  rP.A0.X := ini.ReadInteger(s, RggStrings.A0x_IniString, Round(rP.A0.X));
+  rP.A0.Y := ini.ReadInteger(s, RggStrings.A0y_IniString, Round(rP.A0.Y));
+  rP.A0.Z := ini.ReadInteger(s, RggStrings.A0z_IniString, Round(rP.A0.Z));
+  rP.B0.X := ini.ReadInteger(s, RggStrings.B0x_IniString, Round(rP.B0.X));
+  rP.B0.Y := ini.ReadInteger(s, RggStrings.B0y_IniString, Round(rP.B0.Y));
+  rP.B0.Z := ini.ReadInteger(s, RggStrings.B0z_IniString, Round(rP.B0.Z));
+  rP.C0.X := ini.ReadInteger(s, RggStrings.C0x_IniString, Round(rP.C0.X));
+  rP.C0.Y := ini.ReadInteger(s, RggStrings.C0y_IniString, Round(rP.C0.Y));
+  rP.C0.Z := ini.ReadInteger(s, RggStrings.C0z_IniString, Round(rP.C0.Z));
+  rP.D0.X := ini.ReadInteger(s, RggStrings.D0x_IniString, Round(rP.D0.X));
+  rP.D0.Y := ini.ReadInteger(s, RggStrings.D0y_IniString, Round(rP.D0.Y));
+  rP.D0.Z := ini.ReadInteger(s, RggStrings.D0z_IniString, Round(rP.D0.Z));
+  rP.E0.X := ini.ReadInteger(s, RggStrings.E0x_IniString, Round(rP.E0.X));
+  rP.E0.Y := ini.ReadInteger(s, RggStrings.E0y_IniString, Round(rP.E0.Y));
+  rP.E0.Z := ini.ReadInteger(s, RggStrings.E0z_IniString, Round(rP.E0.Z));
+  rP.F0.X := ini.ReadInteger(s, RggStrings.F0x_IniString, Round(rP.F0.X));
+  rP.F0.Y := ini.ReadInteger(s, RggStrings.F0y_IniString, Round(rP.F0.Y));
+  rP.F0.Z := ini.ReadInteger(s, RggStrings.F0z_IniString, Round(rP.F0.Z));
 
-  s := Koordinaten_Rigg_IniSectionString;
-  rP.A.X := ini.ReadInteger(s, Ax_IniString, Round(rP.A.X));
-  rP.A.Y := ini.ReadInteger(s, Ay_IniString, Round(rP.A.Y));
-  rP.A.Z := ini.ReadInteger(s, Az_IniString, Round(rP.A.Z));
-  rP.B.X := ini.ReadInteger(s, Bx_IniString, Round(rP.B.X));
-  rP.B.Y := ini.ReadInteger(s, By_IniString, Round(rP.B.Y));
-  rP.B.Z := ini.ReadInteger(s, Bz_IniString, Round(rP.B.Z));
-  rP.C.X := ini.ReadInteger(s, Cx_IniString, Round(rP.C.X));
-  rP.C.Y := ini.ReadInteger(s, Cy_IniString, Round(rP.C.Y));
-  rP.C.Z := ini.ReadInteger(s, Cz_IniString, Round(rP.C.Z));
-  rP.D.X := ini.ReadInteger(s, Dx_IniString, Round(rP.D.X));
-  rP.D.Y := ini.ReadInteger(s, Dy_IniString, Round(rP.D.Y));
-  rP.D.Z := ini.ReadInteger(s, Dz_IniString, Round(rP.D.Z));
-  rP.E.X := ini.ReadInteger(s, Ex_IniString, Round(rP.E.X));
-  rP.E.Y := ini.ReadInteger(s, Ey_IniString, Round(rP.E.Y));
-  rP.E.Z := ini.ReadInteger(s, Ez_IniString, Round(rP.E.Z));
-  rP.F.X := ini.ReadInteger(s, Fx_IniString, Round(rP.F.X));
-  rP.F.Y := ini.ReadInteger(s, Fy_IniString, Round(rP.F.Y));
-  rP.F.Z := ini.ReadInteger(s, Fz_IniString, Round(rP.F.Z));
+  s := RggStrings.Koordinaten_Rigg_IniSectionString;
+  rP.A.X := ini.ReadInteger(s, RggStrings.Ax_IniString, Round(rP.A.X));
+  rP.A.Y := ini.ReadInteger(s, RggStrings.Ay_IniString, Round(rP.A.Y));
+  rP.A.Z := ini.ReadInteger(s, RggStrings.Az_IniString, Round(rP.A.Z));
+  rP.B.X := ini.ReadInteger(s, RggStrings.Bx_IniString, Round(rP.B.X));
+  rP.B.Y := ini.ReadInteger(s, RggStrings.By_IniString, Round(rP.B.Y));
+  rP.B.Z := ini.ReadInteger(s, RggStrings.Bz_IniString, Round(rP.B.Z));
+  rP.C.X := ini.ReadInteger(s, RggStrings.Cx_IniString, Round(rP.C.X));
+  rP.C.Y := ini.ReadInteger(s, RggStrings.Cy_IniString, Round(rP.C.Y));
+  rP.C.Z := ini.ReadInteger(s, RggStrings.Cz_IniString, Round(rP.C.Z));
+  rP.D.X := ini.ReadInteger(s, RggStrings.Dx_IniString, Round(rP.D.X));
+  rP.D.Y := ini.ReadInteger(s, RggStrings.Dy_IniString, Round(rP.D.Y));
+  rP.D.Z := ini.ReadInteger(s, RggStrings.Dz_IniString, Round(rP.D.Z));
+  rP.E.X := ini.ReadInteger(s, RggStrings.Ex_IniString, Round(rP.E.X));
+  rP.E.Y := ini.ReadInteger(s, RggStrings.Ey_IniString, Round(rP.E.Y));
+  rP.E.Z := ini.ReadInteger(s, RggStrings.Ez_IniString, Round(rP.E.Z));
+  rP.F.X := ini.ReadInteger(s, RggStrings.Fx_IniString, Round(rP.F.X));
+  rP.F.Y := ini.ReadInteger(s, RggStrings.Fy_IniString, Round(rP.F.Y));
+  rP.F.Z := ini.ReadInteger(s, RggStrings.Fz_IniString, Round(rP.F.Z));
 end;
 
 end.

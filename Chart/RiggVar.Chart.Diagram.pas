@@ -1,4 +1,4 @@
-﻿unit RggDiagram;
+﻿unit RiggVar.Chart.Diagram;
 
 interface
 
@@ -14,8 +14,8 @@ uses
   FMX.Graphics,
   FMX.StdCtrls,
   FMX.Objects,
-  RggChartModel,
-  RggChartModel01;
+  RiggVar.Chart.Model,
+  RiggVar.Chart.Model01;
 
 type
   TRggBox = class
@@ -58,7 +58,7 @@ implementation
 
 uses
   RiggVar.App.Main,
-  RggTypes;
+  RiggVar.RG.Types;
 
 { TChartGraph }
 
@@ -204,9 +204,9 @@ begin
     P.X := Box.X;
     P.Y := Box.Y + Round(Limit(tempY));
     LineToPoint := PointF(P.X, P.Y);
-    for i := 1 to LNr do
+    for i := 1 to TChartModel.LNr do
     begin
-      tempX := Box.Width * (i / LNr);
+      tempX := Box.Width * (i / TChartModel.LNr);
       tempY := Box.Height - Box.Height * (CM.bf[param, i] - CM.Ymin) / (yrange);
       P.X := Box.X + Round(Limit(tempX));
       P.Y := Box.Y + Round(Limit(tempY));
@@ -219,9 +219,9 @@ begin
       g.Stroke.Thickness := 1.0;
       g.Stroke.Color := claWhite;
       g.Fill.Color := CM.cf[param];
-      for i := 0 to LNr do
+      for i := 0 to TChartModel.LNr do
       begin
-        tempX := Box.Width * i / LNr;
+        tempX := Box.Width * i / TChartModel.LNr;
         tempY := Box.Height - Box.Height * (CM.bf[param, i] - CM.Ymin) / yrange;
         P.X := Box.X + Round(Limit(tempX));
         P.Y := Box.Y + Round(Limit(tempY));

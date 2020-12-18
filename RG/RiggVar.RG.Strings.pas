@@ -1,8 +1,10 @@
-﻿unit RggStrings;
+﻿unit RiggVar.RG.Strings;
 
 interface
 
-const
+type
+  RggStrings0 = class
+  const
   { from RggUnit0 }
   Ebenen_senkrecht_in_GetSalingDaten_String: string = 'Ebenen senkrecht in GetSalingDaten!';
 
@@ -320,6 +322,7 @@ const
   EA_L_Key: string = 'EA Large';
 
   SWarningText: string = 'Änderungen in %s sichern?';
+  end;
 
 implementation
 

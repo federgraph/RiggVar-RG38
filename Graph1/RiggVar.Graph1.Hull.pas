@@ -1,4 +1,4 @@
-﻿unit RggHull;
+﻿unit RiggVar.Graph1.Hull;
 
 interface
 
@@ -10,19 +10,23 @@ uses
   System.Types,
   System.Math.Vectors,
   FMX.Graphics,
-  RggTypes,
-  RggCalc,
-  RggMatrix,
-  RggDisplay,
-  RggDisplayTypes,
-  RggRaumGraph,
-  RggTransformer,
-  RggZug;
+  RiggVar.RG.Types,
+  RiggVar.RG.Calc,
+  RiggVar.Graph1.DisplayList,
+  RiggVar.Graph1.DisplayTypes,
+  RiggVar.Graph1.Rigg,
+  RiggVar.Graph1.Transform;
 
 type
-  TConColors = array [0 .. 15] of TAlphaColor;
-
   THullGraph0 = class
+  private const
+    maxvert = 400;
+    maxcon = 1000;
+  protected type
+  TConColors = array [0 .. 15] of TAlphaColor;
+    TVertArrayF = array [0 .. maxvert] of single;
+    TVertArrayI = array [0 .. maxvert] of Integer;
+    TConArray = array [0 .. maxcon] of Integer;
   private
     FColor: TAlphaColor;
     FColored: Boolean;

@@ -24,6 +24,7 @@ interface
 
 uses
   System.Math.Vectors,
+  RiggVar.RG.Types,
   RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
@@ -43,10 +44,6 @@ type
   end;
 
 implementation
-
-uses
-  RggTypes,
-  RggTestData;
 
 { TRggDrawingD05 }
 

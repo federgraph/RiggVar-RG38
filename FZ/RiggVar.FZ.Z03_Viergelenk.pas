@@ -6,9 +6,8 @@ uses
   System.SysUtils,
   System.Math,
   System.Math.Vectors,
-  RggTypes,
-  RggCalc,
-  RggSchnittKK,
+  RiggVar.RG.Types,
+  RiggVar.RG.Calc,
   RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
@@ -265,7 +264,7 @@ begin
   phiM := phiA;
   for i := 0 to Count-1 do
   begin
-    psiM := PsiVonPhi(phiM, FrBasis, FrWunten2D, FrSalingH, FrMastUnten, svar);
+    psiM := TRggCalc.PsiVonPhi(phiM, FrBasis, FrWunten2D, FrSalingH, FrMastUnten, svar);
     rP.A.X := rP.A0.X + FrWunten2D * cos(phiM - FrAlpha);
     rP.A.Y := rP.A0.Y - FrWunten2D * sin(phiM - FrAlpha);
     rP.B.X := rP.B0.X + FrMastUnten * cos(psiM - FrAlpha);

@@ -18,8 +18,8 @@ uses
   FMX.Types,
   FMX.Objects3D,
   RiggVar.RG.Graph,
-  RggTypes,
-  RggCalc,
+  RiggVar.RG.Types,
+  RiggVar.RG.Calc,
   RiggVar.FG.Objects;
 
 type

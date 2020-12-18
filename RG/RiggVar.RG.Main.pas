@@ -29,11 +29,11 @@ uses
   RiggVar.RG.Def,
   RiggVar.RG.Track,
   RiggVar.RG.Graph,
-  RggStrings,
-  RggScroll,
-  RggTypes,
-  RggCalc,
-  RggDoc,
+  RiggVar.App.Strings,
+  RiggVar.RG.Scroll,
+  RiggVar.RG.Types,
+  RiggVar.RG.Calc,
+  RiggVar.RG.Doc,
   System.UIConsts,
   RiggVar.App.Model,
   RiggVar.FB.Action,
@@ -860,41 +860,41 @@ end;
 function TRggMain.Text2Param(T: string): TFederParam;
 begin
   result := fpVorstag;
-  if T = ControllerString then
+  if T = RggStrings.ControllerString then
     result := fpController
-  else if T = WinkelString then
+  else if T = RggStrings.WinkelString then
     result := fpWinkel
-  else if T = VorstagString then
+  else if T = RggStrings.VorstagString then
     result := fpVorstag
-  else if T = WanteString then
+  else if T = RggStrings.WanteString then
     result := fpWante
-  else if (T = WanteObenString) or (T = 'Woben') then
+  else if (T = RggStrings.WanteObenString) or (T = 'Woben') then
     result := fpWoben
-  else if (T = SalingHString) or (T = 'SalingH') then
+  else if (T = RggStrings.SalingHString) or (T = 'SalingH') then
     result := fpSalingH
-  else if (T = SalingAString) or (T = 'SalingA') then
+  else if (T = RggStrings.SalingAString) or (T = 'SalingA') then
     result := fpSalingA
-  else if (T = SalingLString) or (T = 'SalingL') then
+  else if (T = RggStrings.SalingLString) or (T = 'SalingL') then
     result := fpSalingL
-  else if (T = SalingWString) or (T = 'SalingW') then
+  else if (T = RggStrings.SalingWString) or (T = 'SalingW') then
     result := fpSalingW
-  else if T = MastfallF0CString then
+  else if T = RggStrings.MastfallF0CString then
     result := fpMastfallF0C
-  else if T = MastfallF0FString then
+  else if T = RggStrings.MastfallF0FString then
     result := fpMastfallF0F
-  else if T = MastfallVorlaufString then
+  else if T = RggStrings.MastfallVorlaufString then
     result := fpMastfallVorlauf
-  else if T = BiegungString then
+  else if T = RggStrings.BiegungString then
     result := fpBiegung
-  else if T = MastFootD0XString then
+  else if T = RggStrings.MastFootD0XString then
     result := fpD0X
-  else if T = APWidthString then
+  else if T = RggStrings.APWidthString then
     result := fpAPW
-  else if T = EAHullString then
+  else if T = RggStrings.EAHullString then
     result := fpEAH
-  else if T = EARiggString then
+  else if T = RggStrings.EARiggString then
     result := fpEAR
-  else if T = EIMastString then
+  else if T = RggStrings.EIMastString then
     result := fpEI
     ;
 end;
@@ -903,41 +903,41 @@ function TRggMain.Param2Text(P: TFederParam): string;
 begin
   result := '';
   if P = fpController then
-    result := ControllerString
+    result := RggStrings.ControllerString
   else if P = fpWinkel then
-    result := WinkelString
+    result := RggStrings.WinkelString
   else if P = fpVorstag then
-    result := VorstagString
+    result := RggStrings.VorstagString
   else if P = fpWante then
-    result := WanteString
+    result := RggStrings.WanteString
   else if P = fpWoben then
-    result := WanteObenString
+    result := RggStrings.WanteObenString
   else if P = fpSalingH then
-    result := SalingHString
+    result := RggStrings.SalingHString
   else if P = fpSalingA then
-    result := SalingAString
+    result := RggStrings.SalingAString
   else if P = fpSalingL then
-    result := SalingLString
+    result := RggStrings.SalingLString
   else if P = fpSalingW then
-    result := SalingWString
+    result := RggStrings.SalingWString
   else if P = fpMastfallF0C then
-    result := MastfallF0CString
+    result := RggStrings.MastfallF0CString
   else if P = fpMastfallF0F then
-    result := MastfallF0FString
+    result := RggStrings.MastfallF0FString
   else if P = fpMastfallVorlauf then
-    result := MastfallVorlaufString
+    result := RggStrings.MastfallVorlaufString
   else if P = fpBiegung then
-    result := BiegungString
+    result := RggStrings.BiegungString
   else if P = fpD0X then
-    result := MastfootD0XString
+    result := RggStrings.MastfootD0XString
   else if P = fpAPW then
-    result := APWidthString
+    result := RggStrings.APWidthString
   else if P = fpEAH then
-    result := EAHullString
+    result := RggStrings.EAHullString
   else if P = fpEAR then
-    result := EARiggString
+    result := RggStrings.EARiggString
   else if P = fpEI then
-    result := EIMastString
+    result := RggStrings.EIMastString
     ;
 end;
 
@@ -1079,20 +1079,20 @@ begin
   ML.Clear;
   TML := ML;
 
-  AL(VOString, fpVorstag);
-  AL(WAString, fpWante);
-  AL(WOString, fpWoben);
-  AL(SHString, fpSalingH);
-  AL(SAString, fpSalingA);
-  AL(SLString, fpSalingL);
-  AL(SWString, fpSalingW);
-  AL(MVString, fpMastfallVorlauf);
+  AL(RggStrings.VOString, fpVorstag);
+  AL(RggStrings.WAString, fpWante);
+  AL(RggStrings.WOString, fpWoben);
+  AL(RggStrings.SHString, fpSalingH);
+  AL(RggStrings.SAString, fpSalingA);
+  AL(RggStrings.SLString, fpSalingL);
+  AL(RggStrings.SWString, fpSalingW);
+  AL(RggStrings.MVString, fpMastfallVorlauf);
 
-  BL(MFString, Mastfall);
-  AL(F0FString, fpMastfallF0F);
-  AL(F0CString, fpMastfallF0C);
-  AL(BieString, fpBiegung);
-  BL(BGFString, FormatValue(BiegungGF));
+  BL(RggStrings.MFString, Mastfall);
+  AL(RggStrings.F0FString, fpMastfallF0F);
+  AL(RggStrings.F0CString, fpMastfallF0C);
+  AL(RggStrings.BieString, fpBiegung);
+  BL(RggStrings.BGFString, FormatValue(BiegungGF));
 end;
 
 procedure TRggMain.SetupTrackbarForRgg;
@@ -1115,15 +1115,15 @@ begin
 
   { get unit string }
   case Param of
-    fpWinkel, fpSalingW: us := GradString;
-    fpEAH, fpEAR: us := KiloNewtonString;
-    fpEI: us := NewtonMeterSquareString;
+    fpWinkel, fpSalingW: us := RggStrings.GradString;
+    fpEAH, fpEAR: us := RggStrings.KiloNewtonString;
+    fpEI: us := RggStrings.NewtonMeterSquareString;
   else
-    us := MilimeterString;
+    us := RggStrings.MilimeterString;
   end;
 
   { get format string }
-  fs := NoDigitRealPlusUnitFormatString;
+  fs := RggStrings.NoDigitRealPlusUnitFormatString;
 
   MinValCaption := Format(fs, [sb.Min, us]);
   MaxValCaption := Format(fs, [sb.Max, us]);
@@ -1137,14 +1137,14 @@ var
   us: string;
 begin
   case Param of
-    fpWinkel, fpSalingW: us := GradString;
-    fpEAH, fpEAR: us := KiloNewtonString;
-    fpEI: us := NewtonMeterSquareString;
+    fpWinkel, fpSalingW: us := RggStrings.GradString;
+    fpEAH, fpEAR: us := RggStrings.KiloNewtonString;
+    fpEI: us := RggStrings.NewtonMeterSquareString;
   else
-    us := MilimeterString;
+    us := RggStrings.MilimeterString;
   end;
 
-  fs := NoDigitRealPlusUnitFormatString;
+  fs := RggStrings.NoDigitRealPlusUnitFormatString;
   IstValCaption := Format(fs, [RggTrackbar.Value, us]);
 
   ParamValue[FParam] := Round(RggTrackbar.Value);
@@ -1253,7 +1253,7 @@ begin
     b := pf.Distance(kh);
     c := kh.Distance(kg);
 
-    h := Hoehe(a-0.00001, b, c, k);
+    h := TRggCalc.Hoehe(a-0.00001, b, c, k);
 
     BiegungGFDiff := BiegungGF-h;
     BiegungGF := h;
@@ -1320,7 +1320,7 @@ begin
     c := kh.Distance(kg);
 
     ML.Add('');
-    h := Hoehe(a-0.00001, b, c, k);
+    h := TRggCalc.Hoehe(a-0.00001, b, c, k);
     ML.Add('Triangle abc = (GF, FH, HG)');
     ML.Add(Format('(%.2f, %.2f, %.2f)', [a, b, c]));
     ML.Add(Format('Hoehe BGF at H = %.2f', [h]));

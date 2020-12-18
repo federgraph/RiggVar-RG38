@@ -40,9 +40,9 @@ uses
 {$ifdef WantMenu}
   RiggVar.FederModel.Menu,
 {$endif}
-  RggCtrls,
-  RggChartGraph,
-  RggTypes,
+  RiggVar.DT.Ctrls,
+  RiggVar.Chart.Graph,
+  RiggVar.RG.Types,
   System.SysUtils,
   System.Classes,
   System.Types,

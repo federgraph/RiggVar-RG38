@@ -25,6 +25,7 @@ uses
   System.UIConsts,
   System.Math,
   System.Math.Vectors,
+  RiggVar.RG.Calc,
   RiggVar.FB.Color,
   RiggVar.FD.Chart,
   RiggVar.FD.Elements,
@@ -155,9 +156,6 @@ type
   end;
 
 implementation
-
-uses
-  RggSchnittKK;
 
 { TRggDrawingD12 }
 

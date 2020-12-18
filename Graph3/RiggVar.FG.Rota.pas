@@ -5,7 +5,7 @@ interface
 {.$define WantOrtho}
 
 uses
-  RggTypes,
+  RiggVar.RG.Types,
   System.SysUtils,
   System.Classes,
   System.Math,

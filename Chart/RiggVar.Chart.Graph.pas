@@ -1,4 +1,4 @@
-﻿unit RggChartGraph;
+﻿unit RiggVar.Chart.Graph;
 
 interface
 
@@ -15,7 +15,7 @@ uses
   FMX.Graphics,
   FMX.StdCtrls,
   FMX.Objects,
-  RggChartModel;
+  RiggVar.Chart.Model;
 
 type
   TRggBox = class
@@ -55,7 +55,7 @@ implementation
 
 uses
   RiggVar.App.Main,
-  RggTypes;
+  RiggVar.RG.Types;
 
 { TChartGraph }
 
