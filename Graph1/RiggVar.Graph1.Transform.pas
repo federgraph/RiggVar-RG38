@@ -48,11 +48,11 @@ type
   end;
 
   TPolarKar = class
-  public const
+  private const
     xVec: TPoint3D = (x: 1; y: 0; z: 0);
     yVec: TPoint3D = (x: 0; y: 1; z: 0);
     zVec: TPoint3D = (x: 0; y: 0; z: 1);
-  public type
+  private type
     TCalcAngleEvent = procedure(Sender: TObject; var wx, wy, wz: single) of object;
     TRotationAngle = (raPhi, raTheta, raGamma, raXrot, raYrot, raZrot);
   private
@@ -282,7 +282,7 @@ end;
 
 procedure TPolarKar.SetTheta(Value: single);
 begin
-  FTheta := Value * pi / 180;
+  FTheta := DegToRad(Value);
   FValid := False;
 end;
 
@@ -750,17 +750,10 @@ begin
 end;
 
 function TRggTransformer.TransformPoint(p: TPoint3D): TPoint3D;
-var
-  p1, p2: TPoint3D;
 begin
   if not Updated then
     BuildMatrix;
-
-  p1 := TPoint3D.Create(p.X, p.Y, p.Z);
-  p2 := p1 * Matrix;
-  result.X := p2.X;
-  result.Y := p2.Y;
-  result.Z := p2.Z;
+  result := p * Matrix;
 end;
 
 end.
