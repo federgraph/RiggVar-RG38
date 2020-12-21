@@ -152,7 +152,7 @@ begin
     faActionPageS: result := 'Action Page S';
     faActionPageX: result := 'Action Page X';
 
-    faToggleAllText: result := 'Toggle all text';
+    faToggleAllText: result := 'Toggle All Text';
     faToggleTouchFrame: result := 'Toggle Touch Frame';
     faToggleSpeedPanel: result := 'Toggle Speed Panel';
 

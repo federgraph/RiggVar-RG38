@@ -26,6 +26,7 @@ type
 
     LegendBtn: TSpeedButton;
     LineColorBtn: TSpeedButton;
+    HullBtn: TSpeedButton;
   public
     procedure InitSpeedButtons; override;
   end;
@@ -129,6 +130,12 @@ begin
   LineColorBtn := sb;
   sb.StaysPressed := True;
   sb.Tag := faToggleLineColor;
+  InitSpeedButton(sb);
+
+  sb := AddSpeedBtn('HullBtn', 0);
+  HullBtn := sb;
+  sb.StaysPressed := True;
+  sb.Tag := faRggHull;
   InitSpeedButton(sb);
 end;
 
