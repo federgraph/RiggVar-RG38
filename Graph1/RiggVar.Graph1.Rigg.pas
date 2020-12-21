@@ -727,6 +727,7 @@ end;
 procedure TRaumGraph.SetMastKurve(const Value: TMastKurve);
 begin
   Kurve := Value;
+  Updated := False;
 end;
 
 procedure TRaumGraph.SetSalingTyp(const Value: TSalingTyp);
@@ -776,7 +777,7 @@ begin
   MinAbstand := 1000;
   for i := 0 to j - 1 do
   begin
-    a := (P - Kurve[i]).Length;
+    a := P.Distance(Kurve[i]);
     if a < MinAbstand then
     begin
       MinAbstand := a;
@@ -1066,8 +1067,8 @@ begin
       DL.Line('B0-C0', deB0C0, B0, C0, ZugRumpf[1], ZugRumpf[2], claDodgerBlue);
       DL.Line('C0-A0', deA0C0, C0, A0, ZugRumpf[2], ZugRumpf[0], claCornflowerblue);
 
-      DL.Line('A0-D0', deA0D0, A0, D0, ZugRumpf[0], ZugRumpf[4], claRed);
-      DL.Line('B0-D0', deB0D0, B0, D0, ZugRumpf[1], ZugRumpf[4], claGreen);
+      DL.Line('A0-D0', deA0D0, A0, D0, ZugRumpf[0], ZugRumpf[4], claGreen);
+      DL.Line('B0-D0', deB0D0, B0, D0, ZugRumpf[1], ZugRumpf[4], claRed);
       DL.Line('C0-D0', deC0D0, C0, D0, ZugRumpf[2], ZugRumpf[4], claYellow);
     end;
 

@@ -1,5 +1,21 @@
 ﻿unit RiggVar.Graph1.Rota;
 
+(*
+-
+-     F
+-    * * *
+-   *   *   G
+-  *     * *   *
+- E - - - H - - - I
+-  *     * *         *
+-   *   *   *           *
+-    * *     *             *
+-     D-------A---------------B
+-              *
+-              (C) federgraph.de
+-
+*)
+
 interface
 
 {$define Rigg19}
@@ -1003,7 +1019,7 @@ begin
 
   if RumpfItemChecked then
   begin
-    HullGraph.Coloriert := True;
+    HullGraph.WantLineColors := WantLineColors;
     HullGraph.Update;
     HullGraph.AddToDisplayList(RaumGraph.DL);
   end;
@@ -1018,7 +1034,7 @@ begin
     and not UseDisplayList
     and (not MouseDown or (MouseDown and FDrawAlways)) then
   begin
-    HullGraph.Coloriert := True;
+    HullGraph.WantLineColors := WantLineColors;
     HullGraph.Update;
     HullGraph.DrawToCanvas(g);
   end;
