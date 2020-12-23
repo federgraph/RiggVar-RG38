@@ -100,6 +100,8 @@ type
     property WantLineColors: Boolean read FWantLineColors write SetWantLineColors;
   end;
 
+  THullGraph = THullGraph0;
+
 implementation
 
 uses

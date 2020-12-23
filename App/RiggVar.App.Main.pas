@@ -18,9 +18,18 @@
 
 interface
 
+{$define WantColorScheme}
+{.$define WantDummyController}
+
 uses
+{$ifdef WantColorScheme}
   RiggVar.FB.Scheme,
+{$endif}
+{$ifdef WantDummyController}
+  RiggVar.App.Controller;
+{$else}
   RiggVar.RG.Main;
+{$endif}
 
 type
   TMain = TRggMain;
@@ -48,7 +57,9 @@ type
     AppIsClosing: Boolean;
     ShowDebugData: Boolean;
     WantOnResize: Boolean;
+{$ifdef WantColorScheme}
     ColorScheme: TColorScheme;
+{$endif}
     Raster: Integer;
     ScaledRaster: Integer;
     Scale: single;
@@ -66,7 +77,9 @@ implementation
 class constructor MainVar.Create;
 begin
   IsSandboxed := true;
+{$ifdef WantColorScheme}
   ColorScheme := TColorScheme.Create(5);
+{$endif}
   Raster := 70;
   Scale := 1.0;
 end;

@@ -48,7 +48,7 @@ begin
     Exit;
 
   M.HandleAction(fa);
-  M.FederText.CheckState;
+  M.FederTextCheckState;
 end;
 
 function TFederActionHandler.GetChecked(fa: TFederAction): Boolean;

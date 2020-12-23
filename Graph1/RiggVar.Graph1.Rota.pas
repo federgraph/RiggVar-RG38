@@ -193,7 +193,7 @@ type
     IsUp: Boolean;
     Image: TOriginalImage; // injected
 
-    HullGraph: THullGraph0;
+    HullGraph: THullGraph;
     RaumGraph: TRaumGraph;
     UseDisplayList: Boolean;
     BackgroundColor: TAlphaColor;
@@ -317,7 +317,7 @@ end;
 
 procedure TRotaForm1.InitHullGraph;
 begin
-  HullGraph := THullGraph0.Create;
+  HullGraph := THullGraph.Create;
   HullGraph.Transformer := Transformer;
 end;
 

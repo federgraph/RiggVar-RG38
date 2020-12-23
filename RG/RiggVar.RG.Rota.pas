@@ -201,6 +201,7 @@ end;
 procedure TRotaForm.Draw;
 begin
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.Draw;
 {$endif}
@@ -217,6 +218,7 @@ function TRotaForm.GetChecked(fa: Integer): Boolean;
 begin
   result := False;
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: result := RotaForm1.GetChecked(fa);
 {$endif}
@@ -248,6 +250,7 @@ end;
 procedure TRotaForm.LegendBtnClick(Sender: TObject);
 begin
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.LegendBtnClick(Sender);
 {$endif}
@@ -263,6 +266,7 @@ end;
 procedure TRotaForm.MatrixItemClick(Sender: TObject);
 begin
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.MatrixItemClick(Sender);
 {$endif}
@@ -278,6 +282,7 @@ end;
 procedure TRotaForm.RotateZ(delta: single);
 begin
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.RotateZ(delta);
 {$endif}
@@ -298,6 +303,7 @@ procedure TRotaForm.SetBackgroundColor(const Value: TAlphaColor);
 begin
   FBackgroundColor := Value;
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.BackgroundColor := Value;
 {$endif}
@@ -313,6 +319,7 @@ end;
 procedure TRotaForm.SetChecked(fa: Integer; Value: Boolean);
 begin
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.SetChecked(fa, Value);
 {$endif}
@@ -329,6 +336,7 @@ procedure TRotaForm.SetDarkMode(const Value: Boolean);
 begin
   FDarkMode := Value;
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.DarkMode := Value;
 {$endif}
@@ -358,6 +366,7 @@ end;
 procedure TRotaForm.SetLegendItemChecked(const Value: Boolean);
 begin
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.LegendItemChecked := Value;
 {$endif}
@@ -374,6 +383,7 @@ function TRotaForm.GetLegendItemChecked: Boolean;
 begin
   result := False;
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: result := RotaForm1.LegendItemChecked;
 {$endif}
@@ -389,6 +399,7 @@ end;
 procedure TRotaForm.SetMatrixItemChecked(const Value: Boolean);
 begin
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.MatrixItemChecked := Value;
 {$endif}
@@ -405,6 +416,7 @@ function TRotaForm.GetMatrixItemChecked: Boolean;
 begin
   result := False;
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: result := RotaForm1.MatrixItemChecked;
 {$endif}
@@ -419,6 +431,7 @@ end;
 procedure TRotaForm.SetUseDisplayList(const Value: Boolean);
 begin
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.UseDisplayList := Value;
 {$endif}
@@ -435,6 +448,7 @@ function TRotaForm.GetUseDisplayList: Boolean;
 begin
   result := False;
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: result := RotaForm1.UseDisplayList;
 {$endif}
@@ -450,6 +464,7 @@ end;
 procedure TRotaForm.SetUseQuickSort(const Value: Boolean);
 begin
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.UseQuickSort := Value;
 {$endif}
@@ -466,6 +481,7 @@ function TRotaForm.GetUseQuickSort: Boolean;
 begin
   result := False;
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: result := RotaForm1.UseQuickSort;
 {$endif}
@@ -482,6 +498,7 @@ procedure TRotaForm.SetViewPoint(const Value: TViewPoint);
 begin
   FViewPoint := Value;
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.ViewPoint := Value;
 {$endif}
@@ -497,6 +514,7 @@ end;
 procedure TRotaForm.SetWantLineColors(const Value: Boolean);
 begin
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.WantLineColors := Value;
 {$endif}
@@ -513,6 +531,7 @@ function TRotaForm.GetWantLineColors: Boolean;
 begin
   result := False;
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: result := RotaForm1.WantLineColors;
 {$endif}
@@ -528,6 +547,7 @@ end;
 procedure TRotaForm.SetWantOverlayedRiggs(const Value: Boolean);
 begin
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.WantOverlayedRiggs := Value;
 {$endif}
@@ -544,6 +564,7 @@ function TRotaForm.GetWantOverlayedRiggs: Boolean;
 begin
   result := False;
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: result := RotaForm1.WantOverlayedRiggs;
 {$endif}
@@ -559,6 +580,7 @@ end;
 procedure TRotaForm.UseDisplayListBtnClick(Sender: TObject);
 begin
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.UseDisplayListBtnClick(Sender);
 {$endif}
@@ -574,6 +596,7 @@ end;
 procedure TRotaForm.UseQuickSortBtnClick(Sender: TObject);
 begin
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.UseQuickSortBtnClick(Sender);
 {$endif}
@@ -589,6 +612,7 @@ end;
 procedure TRotaForm.Zoom(delta: single);
 begin
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.Zoom(delta);
 {$endif}
@@ -604,6 +628,7 @@ end;
 procedure TRotaForm.ZoomInBtnClick(Sender: TObject);
 begin
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.ZoomInBtnClick(Sender);
 {$endif}
@@ -619,6 +644,7 @@ end;
 procedure TRotaForm.ZoomOutBtnClick(Sender: TObject);
 begin
   case FCurrent of
+    0: ;
 {$ifdef WantRotaForm1}
     1: RotaForm1.ZoomOutBtnClick(Sender);
 {$endif}
@@ -634,6 +660,7 @@ end;
 procedure TRotaForm.SwapRota(Selected: Integer);
 begin
   case Selected of
+    0: ;
 {$ifdef WantRotaForm1}
     1:
     begin

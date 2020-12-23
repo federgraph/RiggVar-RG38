@@ -76,6 +76,7 @@ uses
   RiggVar.RG.Speed04 in 'RG\RiggVar.RG.Speed04.pas',
   RiggVar.RG.Speed05 in 'RG\RiggVar.RG.Speed05.pas',
   RiggVar.RG.Track in 'RG\RiggVar.RG.Track.pas',
+  RiggVar.RG.View in 'RG\RiggVar.RG.View.pas',
   RiggVar.Graph1.DisplayList in 'Graph1\RiggVar.Graph1.DisplayList.pas',
   RiggVar.Graph1.DisplayOrder in 'Graph1\RiggVar.Graph1.DisplayOrder.pas',
   RiggVar.Graph1.DisplayTypes in 'Graph1\RiggVar.Graph1.DisplayTypes.pas',

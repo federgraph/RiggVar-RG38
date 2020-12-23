@@ -31,9 +31,9 @@ interface
 
 uses
   RiggVar.App.Model,
+  RiggVar.RG.View,
   RiggVar.FB.SpeedColor,
   RiggVar.FB.SpeedBar,
-  RiggVar.RG.Def,
   RiggVar.RG.Report,
   RiggVar.RG.Rota,
   RiggVar.FD.Image,
@@ -73,7 +73,7 @@ uses
   FMX.Controls.Presentation;
 
 type
-  TFormMain = class(TForm)
+  TFormMain = class(TForm, IFormMain)
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -111,10 +111,9 @@ type
     TL: TStrings;
     procedure InitParamListbox;
   public
+    FWantButtonReport: Boolean;
     procedure ShowTrimm;
     procedure ShowTrimmData;
-  public
-    FWantButtonReport: Boolean;
     procedure UpdateReport;
     property WantButtonReport: Boolean read FWantButtonReport;
   public
@@ -244,6 +243,8 @@ type
     function GetActionFromKeyChar(KeyChar: char): Integer;
     function GetChecked(fa: Integer): Boolean;
     procedure HandleAction(fa: Integer);
+    procedure RotaFormRotateZ(Delta: single);
+    procedure RotaFormZoom(Delta: single);
   public
     RotaForm: TRotaForm;
     procedure HandleSegment(fa: Integer);
@@ -448,7 +449,7 @@ begin
   Rigg := TModelFactory.NewRigg;
   Rigg.ControllerTyp := ctOhne;
 
-  Main := TMain.Create(Rigg);
+  Main := TMain.Create(Rigg, Self, Self);
   Main.Logger.Verbose := True;
   Main.IsUp := True;
 
@@ -1979,6 +1980,10 @@ begin
     faMemoryBtn: result := False;
     faMultiBtn: result := RotaForm.WantOverlayedRiggs;
 
+    faToggleDataText: result := ShowDataText;
+    faToggleDiffText: result := ShowDiffText;
+    faToggleTrimmText: result := ShowTrimmText;
+
     faChartRect..faChartReset: result := ChartGraph.GetChecked(fa);
     faToggleChartGraph: result := ChartImage.IsVisible;
     faToggleSalingGraph: result := SalingImage.IsVisible;
@@ -2564,5 +2569,15 @@ begin
   end;
 end;
 {$endif}
+
+procedure TFormMain.RotaFormRotateZ(Delta: single);
+begin
+  RotaForm.RotateZ(Delta);
+end;
+
+procedure TFormMain.RotaFormZoom(Delta: single);
+begin
+  RotaForm.Zoom(Delta);
+end;
 
 end.
