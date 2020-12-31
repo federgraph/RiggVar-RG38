@@ -706,12 +706,12 @@ var
   j, k: Integer;
 begin
   temp1 := cos(pi / 2 - Beta);
-  temp2 := cos(beta);
+  temp2 := cos(Beta);
   temp3 := sin(pi / 2 - Beta);
-  temp4 := sin(beta);
+  temp4 := sin(Beta);
   for j := 0 to BogenMax do
   begin
-    k := Round(100 / BogenMax * j);
+    k := Round(j * 100 / BogenMax);
     tempL := j * L / BogenMax;
     Kurve[j].X := rP.D0.X - tempL * temp1 + Value[k] * temp2;
     Kurve[j].Y := 0;

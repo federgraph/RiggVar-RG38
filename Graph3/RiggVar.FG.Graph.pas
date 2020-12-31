@@ -64,15 +64,20 @@ type
 
     SB: TStringBuilder;
 
-    OldX, OldY: single;
+    OldX: single;
+    OldY: single;
     Down: Boolean;
 
     mmfmk: TFederMessageKind;
-    mmX, mmY, mmDelta: single;
+    mmX: single;
+    mmY: single;
+    mmDelta: single;
 
     FLastTrack: TBorderTrack;
-    RasterR, RasterB: single;
-    RasterW, RasterH: single;
+    RasterR: single;
+    RasterB: single;
+    RasterW: single;
+    RasterH: single;
 
     WantLinearMove: Boolean;
     WantLinearZoom: Boolean;
@@ -141,9 +146,7 @@ type
 
     InitOK: Boolean;
 
-    class var RggGlobalOffsetX: single;
-    class var RggGlobalOffsetY: single;
-    class var RggGlobalOffsetZ: single;
+    class var RggGlobalOffset: TPoint3D;
     class var RggGlobalScale: single;
 
     constructor Create;
@@ -236,9 +239,9 @@ begin
   GlobalZoomMax := 500.0;
   GlobalZoomSpeed := 0.2;
 
-  RggGlobalOffsetX := 2870;
-  RggGlobalOffsetY := 0;
-  RggGlobalOffsetZ := -100;
+  RggGlobalOffset.X := 2870;
+  RggGlobalOffset.Y := 0;
+  RggGlobalOffset.Z := -100;
   RggGlobalScale := 500;
 
   FWheelBetrag := GlobalZoom;
@@ -967,7 +970,7 @@ begin
   end
   else if ssCtrl in Shift then
   begin
-    DoZoomTimed(-WheelDelta/120);
+    DoZoomTimed(-WheelDelta / 120);
   end
   else
   begin

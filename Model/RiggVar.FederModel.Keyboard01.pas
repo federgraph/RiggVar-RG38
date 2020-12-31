@@ -34,7 +34,7 @@ type
 implementation
 
 uses
-  FrmMain;
+  RiggVar.App.Main;
 
 { TFederKeyboard01 }
 
@@ -48,9 +48,9 @@ function TFederKeyboard01.KeyUpAction(var Key: Word; var KeyChar: Char; Shift: T
 var
   fa: Integer;
 begin
-  fa := FormMain.GetActionFromKey(Shift, Key);
+  fa := Main.MainView.GetActionFromKey(Shift, Key);
   if fa = faNoop then
-    fa := FormMain.GetActionFromKeyChar(KeyChar);
+    fa := Main.MainView.GetActionFromKeyChar(KeyChar);
   result := fa;
 end;
 

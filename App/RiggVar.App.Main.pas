@@ -67,6 +67,8 @@ type
     ClientHeight: Integer;
     WantFederText: Boolean;
     StatusBarHeight: Integer;
+    WantLocalizedText: Boolean;
+    WantGermanText: Boolean;
     class constructor Create;
   end;
 

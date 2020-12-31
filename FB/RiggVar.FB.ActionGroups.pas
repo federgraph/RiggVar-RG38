@@ -125,11 +125,11 @@ begin
   AddSpecial(ActionGroupMemeFormat, 'MemeFormat');
   AddSpecial(ActionGroupReset, 'Reset');
   AddSpecial(ActionGroupViewType, 'ViewType');
-
-{$ifdef WantAll}
   AddSpecial(ActionGroupDropTarget, 'DropTarget');
   AddSpecial(ActionGroupLanguage, 'Language');
   AddSpecial(ActionGroupCopyPaste, 'CopyPaste');
+
+{$ifdef WantAll}
   AddSpecial(ActionGroupViewOptions, 'ViewOptions');
   AddSpecial(ActionGroupHullMesh, 'HullMesh');
   AddSpecial(ActionGroupBitmapCycle, 'BitmapCycle');

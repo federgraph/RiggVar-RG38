@@ -1,4 +1,4 @@
-﻿unit RiggVar.FB.ActionLong;
+﻿unit RiggVar.FB.ActionLongDE;
 
 (*
 -
@@ -24,11 +24,11 @@ uses
   System.SysUtils,
   RiggVar.FB.ActionConst;
 
-function GetFederActionLong(fa: TFederAction): string;
+function GetFederActionLongDE(fa: TFederAction): string;
 
 implementation
 
-function GetFederActionLong(fa: TFederAction): string;
+function GetFederActionLongDE(fa: TFederAction): string;
 begin
   result := '??';
   case fa of
@@ -389,7 +389,7 @@ begin
     faViewTypeOrtho: result := 'Set view type to orthographic';
     faViewTypePerspective: result := 'Set view type to perspective';
 
-    faToggleLanguage: result := 'Toggle Language';
+    faToggleLanguage: result := 'Toggle Language'; // 'Lokalisierter Text';
 
     faToggleDropTarget: result := 'Drop target';
 

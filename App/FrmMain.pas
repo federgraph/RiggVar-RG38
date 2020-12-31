@@ -31,6 +31,7 @@ interface
 
 uses
   RiggVar.App.Model,
+  RiggVar.App.Strings,
   RiggVar.RG.View,
   RiggVar.FB.SpeedColor,
   RiggVar.FB.SpeedBar,
@@ -105,6 +106,9 @@ type
     procedure InitZOrderInfo;
     procedure ShowHelpText(fa: Integer);
     function GetCanShowMemo: Boolean;
+    procedure ToggleLanguage;
+    procedure UpdateParamListboxText;
+    procedure UpdateReportListboxText;
   protected
     HL: TStringList;
     RL: TStrings;
@@ -350,6 +354,8 @@ procedure TFormMain.FormCreate(Sender: TObject);
 begin
   FormatSettings.DecimalSeparator := '.';
 
+  MainVar.WantLocalizedText := True;
+  MainVar.WantGermanText := True;
   MainVar.WantFederText := True;
   MainVar.ClientWidth := Round(ClientWidth);
   MainVar.ClientHeight := Round(ClientHeight);
@@ -451,7 +457,6 @@ begin
 
   Main := TMain.Create(Rigg, Self, Self);
   Main.Logger.Verbose := True;
-  Main.IsUp := True;
 
   RotaForm := TRotaForm.Create;
   RotaForm.Image := Image;
@@ -518,6 +523,7 @@ begin
   InitControllerGraph;
   InitChartGraph;
 
+  Main.IsUp := True;
   Main.Draw;
   Main.MemoryBtnClick;
 
@@ -748,7 +754,9 @@ begin
   begin
     FormShown := True;
 
-    { ClientHeigt is now available }
+    Main.CycleToolSet(0);
+
+    { ClientHeight is now available }
     LayoutComponents;
     LayoutImages;
 
@@ -974,6 +982,8 @@ end;
 procedure TFormMain.HandleAction(fa: Integer);
 begin
   case fa of
+    faToggleLanguage: ToggleLanguage;
+
     faToggleAllText: ToggleAllText;
     faToggleSpeedPanel: ToggleSpeedPanel;
     faToggleButtonSize: ToggleButtonSize;
@@ -2578,6 +2588,55 @@ end;
 procedure TFormMain.RotaFormZoom(Delta: single);
 begin
   RotaForm.Zoom(Delta);
+end;
+
+procedure TFormMain.ToggleLanguage;
+begin
+  MainVar.WantGermanText := not MainVar.WantGermanText;
+  RggLocalizedStrings.UpdateText;
+{$ifdef WantMenu}
+  FederMenu.UpdateText(MainMenu);
+{$endif}
+  SpeedPanel.UpdateText;
+  Main.CycleToolSet(0);
+  UpdateReportListboxText;
+  UpdateParamListboxText;
+  Main.ParamCaption := Main.Param2Text(Main.Param);
+  ShowTrimm;
+
+  if (FormConfig <> nil) and not (FormConfig.Visible) then
+    FreeAndNil(FormConfig);
+end;
+
+procedure TFormMain.UpdateParamListboxText;
+var
+  ii: Integer;
+begin
+  if ParamListbox <> nil then
+  begin
+    ii := ParamListbox.ItemIndex;
+    ParamListbox.OnChange := nil;
+    InitParamListbox;
+    ParamListbox.ItemIndex := ii;
+    ParamListbox.OnChange := ParamListboxChange;
+    SetupListboxItems(ParamListbox, claAqua);
+  end;
+end;
+
+procedure TFormMain.UpdateReportListboxText;
+var
+  ii: Integer;
+begin
+  if ReportListbox <> nil then
+  begin
+    ii := ReportListbox.ItemIndex;
+    ReportListbox.OnChange := nil;
+    ReportListbox.Clear;
+    ReportManager.InitLB(ReportListbox.Items);
+    ReportListbox.ItemIndex := ii;
+    ReportListbox.OnChange := ReportListboxChange;
+    SetupListboxItems(ReportListbox, claAquamarine);
+  end;
 end;
 
 end.

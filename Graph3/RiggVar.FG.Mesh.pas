@@ -69,15 +69,15 @@ procedure THullMesh.UpdatePosition;
 begin
   if WrapMode = TMeshWrapMode.Original then
   begin
-    Position.X := -TRotaForm3.RggGlobalOffsetX / TRotaForm3.RggGlobalScale;
-    Position.Y := -TRotaForm3.RggGlobalOffsetY / TRotaForm3.RggGlobalScale;
-    Position.Z := -TRotaForm3.RggGlobalOffsetZ / TRotaForm3.RggGlobalScale;
+    Position.X := -TRotaForm3.RggGlobalOffset.X / TRotaForm3.RggGlobalScale;
+    Position.Y := -TRotaForm3.RggGlobalOffset.Y / TRotaForm3.RggGlobalScale;
+    Position.Z := -TRotaForm3.RggGlobalOffset.Z / TRotaForm3.RggGlobalScale;
   end
   else
   begin
-    Position.X := ( (MeshData.xmin + MeshData.xmax) / 2 - TRotaForm3.RggGlobalOffsetX) / TRotaForm3.RggGlobalScale;
-    Position.Y := ( (MeshData.ymin + MeshData.ymax) / 2 - TRotaForm3.RggGlobalOffsetY) / TRotaForm3.RggGlobalScale;
-    Position.Z := ( (MeshData.zmin + MeshData.zmax) / 2 - TRotaForm3.RggGlobalOffsetZ) / TRotaForm3.RggGlobalScale;
+    Position.X := ( (MeshData.xmin + MeshData.xmax) / 2 - TRotaForm3.RggGlobalOffset.X) / TRotaForm3.RggGlobalScale;
+    Position.Y := ( (MeshData.ymin + MeshData.ymax) / 2 - TRotaForm3.RggGlobalOffset.Y) / TRotaForm3.RggGlobalScale;
+    Position.Z := ( (MeshData.zmin + MeshData.zmax) / 2 - TRotaForm3.RggGlobalOffset.Z) / TRotaForm3.RggGlobalScale;
   end;
 end;
 

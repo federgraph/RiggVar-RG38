@@ -2,8 +2,8 @@
 
 interface
 
-{.$define WantUserConfusingReports }
-{$define WantXMLReports }
+{.$define WantUserConfusingReports}
+{$define WantXMLReports}
 
 uses
   System.SysUtils,
@@ -105,6 +105,8 @@ type
     procedure InitRD;
     procedure SetCurrentIndex(const Value: Integer);
     procedure SetCurrentReport(const Value: TRggReport);
+    function GetReportCaptionDE(r: TRggReport): string;
+    function GetReportCaptionEN(r: TRggReport): string;
   public
     constructor Create(MemoLines: TStrings);
     destructor Destroy; override;
@@ -148,6 +150,14 @@ end;
 
 function TRggReportManager.GetReportCaption(r: TRggReport): string;
 begin
+  if MainVar.WantLocalizedText and MainVar.WantGermanText then
+    result := GetReportCaptionDE(r)
+  else
+    result := GetReportCaptionEN(r);
+end;
+
+function TRggReportManager.GetReportCaptionDE(r: TRggReport): string;
+begin
   case r of
     rgLog: result := 'Log';
     rgJson: result := 'RggData.WriteJson';
@@ -165,6 +175,34 @@ begin
     rgAusgabeRPE: result := 'Ausgabe rPE';
     rgAusgabeDiffL: result := 'Ausgabe Diff L';
     rgAusgabeDiffP: result := 'Ausgabe Diff P';
+    rgXML: result := 'Write XML';
+    rgDebugReport: result := 'Debug Report';
+    rgReadme: result := 'Readme';
+    rgNone: result := 'Do Nothing';
+    else
+      result := 'Unknown';
+  end;
+end;
+
+function TRggReportManager.GetReportCaptionEN(r: TRggReport): string;
+begin
+  case r of
+    rgLog: result := 'Log';
+    rgJson: result := 'RggData.WriteJson';
+    rgData: result := 'RggData.WriteReport';
+    rgShort: result := 'Trimm-Item Short';
+    rgLong: result := 'Trimm-Item Long';
+    rgTrimmText: result := 'Trimm Text';
+    rgJsonText: result := 'Json Text';
+    rgDataText: result := 'Data Text';
+    rgDiffText: result := 'Diff Text';
+    rgAusgabeDetail: result := 'Ausgabe Detail';
+    rgAusgabeRL: result := 'Output rL';
+    rgAusgabeRP: result := 'Output rP';
+    rgAusgabeRLE: result := 'Output rLE';
+    rgAusgabeRPE: result := 'Output rPE';
+    rgAusgabeDiffL: result := 'Output Diff L';
+    rgAusgabeDiffP: result := 'Output Diff P';
     rgXML: result := 'Write XML';
     rgDebugReport: result := 'Debug Report';
     rgReadme: result := 'Readme';

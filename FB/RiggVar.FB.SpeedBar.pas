@@ -65,6 +65,7 @@ type
     procedure UpdateLayout;
     procedure UpdateColor;
     procedure ToggleBigMode;
+    procedure UpdateText;
 
     procedure InitSpeedButtons; virtual;
 
@@ -219,7 +220,7 @@ begin
     if cr is TSpeedButton then
     begin
       sb := cr as TSpeedButton;
-      sb.Text := GetFederActionLong(sb.Tag);
+      sb.Hint := GetFederActionLong(sb.Tag);
     end;
   end;
 end;
@@ -268,9 +269,7 @@ begin
 
   if SB.Tag <> faNoop then
   begin
-    sb.Text := GetFederActionShort(SB.Tag);
-    sb.Hint := GetFederActionLong(SB.Tag);
-    sb.Action := Main.ActionList.GetFederAction(sb.Tag, True);
+    sb.Action := Main.ActionList.GetFederAction(sb.Tag, MainVar.WantLocalizedText, True);
   end;
 
   { Text must be set before changing Font.Size }
@@ -325,6 +324,25 @@ begin
 //    cr.PressedColor := cla;
     cr.Font.Size := SpeedPanelFontSize;
   end;
+end;
+
+procedure TActionSpeedBar.UpdateText;
+var
+  cr: TFmxObject;
+  sb: TSpeedButton;
+begin
+  for cr in Children do
+  begin
+    if cr is TSpeedButton then
+    begin
+      sb := cr as TSpeedButton;
+      if sb.Tag <> faNoop then
+      begin
+        sb.Action := Main.ActionList.GetFederAction(sb.Tag, MainVar.WantLocalizedText , True);
+      end;
+    end;
+  end;
+
 end;
 
 function TActionSpeedBar.FindStyleByName(AParent: TFMXObject; AName: string): TFMXObject;

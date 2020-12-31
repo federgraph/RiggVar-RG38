@@ -323,6 +323,8 @@ type
     procedure SchnittKraefte;
     procedure ChangeRigg(CurrentParam: TFederParam; Value: single);
     procedure AusgabeText(ML: TStrings; WantAll: Boolean = True; WantForce: Boolean = False);
+    procedure AusgabeTextDE(ML: TStrings; WantAll: Boolean; WantForce: Boolean);
+    procedure AusgabeTextEN(ML: TStrings; WantAll: Boolean; WantForce: Boolean);
     procedure ComputeKraftKurven(KK: TKraftKurven);
     procedure AusgabeKommentar(ML: TStrings);
 
@@ -4627,15 +4629,26 @@ begin
 end;
 
 procedure TRigg2.AusgabeText(ML: TStrings; WantAll: Boolean = True; WantForce: Boolean = False);
-var
-  tempSalingDaten: TSalingDaten;
 begin
-  tempSalingDaten := SalingDaten;
-
 //  MemoPosY := SendMessage(OutputForm.DisplayMemo.Handle, EM_GETFIRSTVISIBLELINE, 0, 0);
 //  ML := OutputForm.DisplayMemo.Lines;
 //  ML.BeginUpdate;
 //  ML.Clear;
+
+  if MainVar.WantLocalizedText and MainVar.WantGermanText then
+    AusgabeTextDE(ML, WantAll, WantForce)
+  else
+    AusgabeTextEN(ML, WantAll, WantForce);
+
+//  SendMessage(OutputForm.DisplayMemo.Handle, EM_LINESCROLL, 0, MemoPosY);
+//  ML.EndUpdate;
+end;
+
+procedure TRigg2.AusgabeTextDE(ML: TStrings; WantAll: Boolean; WantForce: Boolean);
+var
+  t: TSalingDaten;
+begin
+  t := SalingDaten;
 
   { Text setzen }
 //  lbMastFall := Format('Mastfall = %5.1f cm', [Rigg.Trimm.Mastfall / 10]);
@@ -4650,12 +4663,12 @@ begin
 
   ML.Add('');
   ML.Add('Saling:');
-  ML.Add(Format('  Saling Länge   = %6.2f mm', [tempSalingDaten.SalingL]));
-  ML.Add(Format('  Saling Höhe    = %6.2f mm', [tempSalingDaten.SalingH]));
-  ML.Add(Format('  Saling Abstand = %6.2f mm', [tempSalingDaten.SalingA]));
-  ML.Add(Format('  Saling Winkel  = %6.2f Grad', [tempSalingDaten.SalingW]));
-  ML.Add(Format('  Wanten Winkel  = %6.2f Grad', [tempSalingDaten.WantenWinkel]));
-  ML.Add(Format('  Kraft Winkel   = %6.2f Grad', [tempSalingDaten.KraftWinkel]));
+  ML.Add(Format('  Saling Länge   = %6.2f mm', [t.SalingL]));
+  ML.Add(Format('  Saling Höhe    = %6.2f mm', [t.SalingH]));
+  ML.Add(Format('  Saling Abstand = %6.2f mm', [t.SalingA]));
+  ML.Add(Format('  Saling Winkel  = %6.2f Grad', [t.SalingW]));
+  ML.Add(Format('  Wanten Winkel  = %6.2f Grad', [t.WantenWinkel]));
+  ML.Add(Format('  Kraft Winkel   = %6.2f Grad', [t.KraftWinkel]));
 
   ML.Add('');
   ML.Add('Winkel:');
@@ -4708,9 +4721,85 @@ begin
   ML.Add(Format('  FwSchnittOhne      = %8.2f mm', [FwSchnittOhne]));
   ML.Add(Format('  FwSchnittMit       = %8.2f mm', [FwSchnittMit]));
   ML.Add(Format('  FwSchnittOffset    = %8.2f mm', [FwSchnittOffset]));
+end;
 
-//  SendMessage(OutputForm.DisplayMemo.Handle, EM_LINESCROLL, 0, MemoPosY);
-//  ML.EndUpdate;
+procedure TRigg2.AusgabeTextEN(ML: TStrings; WantAll: Boolean; WantForce: Boolean);
+var
+  t: TSalingDaten;
+begin
+  t := SalingDaten;
+
+  { Text setzen }
+//  lbMastFall := Format('Mastfall = %5.1f cm', [Rigg.Trimm.Mastfall / 10]);
+//  lbSpannung := Format('Spannung = %5.0f N', [Rigg.rF[14]]);
+//  lbBiegung := Format('Biegung  = %5.1f cm', [Rigg.hd / 10]);
+
+  ML.Add('Trim:');
+  ML.Add(Format('  Distance F0F     = %8.0f mm', [rP.F0.Distance(rP.F)]));
+  if WantForce then
+  ML.Add(Format('  Headstay tension = %8.0f N', [rF.C0C]));
+  ML.Add(Format('  Displacement hd  = %8.0f mm', [hd]));
+
+  ML.Add('');
+  ML.Add('Spreaders:');
+  ML.Add(Format('  Spreader Length   = %6.2f mm', [t.SalingL]));
+  ML.Add(Format('  Spreader Height   = %6.2f mm', [t.SalingH]));
+  ML.Add(Format('  Spreader Distance = %6.2f mm', [t.SalingA]));
+  ML.Add(Format('  Spreader Angle    = %6.2f Grad', [t.SalingW]));
+  ML.Add(Format('  Shroud Angle      = %6.2f Grad', [t.WantenWinkel]));
+  ML.Add(Format('  Force Angle       = %6.2f Grad', [t.KraftWinkel]));
+
+  ML.Add('');
+  ML.Add('System angles:');
+  ML.Add(Format('  phi       = %6.2f degrees', [RadToDeg(Phi)]));
+  ML.Add(Format('  psi       = %6.2f degrees', [RadToDeg(psi)]));
+  ML.Add(Format('  alpha     = %6.2f degrees', [RadToDeg(alpha)]));
+  ML.Add(Format('  phi-alpha = %6.2f degrees (Mast-Tilt)', [RadToDeg(Phi-alpha)]));
+  ML.Add(Format('  psi-alpha = %6.2f degrees (Shroud-Tilt)', [RadToDeg(psi-alpha)]));
+
+  ML.Add('');
+  ML.Add('Mast angles:');
+  ML.Add(Format('  epsB = %6.2f degrees', [RadToDeg(epsB)]));
+  ML.Add(Format('  eps2 = %6.2f degrees', [RadToDeg(eps2)]));
+  ML.Add(Format('  eps1 = %6.2f degrees', [RadToDeg(eps1)]));
+  ML.Add(Format('  epsA = %6.2f degrees', [RadToDeg(epsA)]));
+  ML.Add(Format('  Epsilon  = %6.2f degrees', [RadToDeg(epsilon)]));
+
+  ML.Add('');
+  ML.Add('Intersection angles:');
+  ML.Add(Format('  alpha1 = %6.2f degrees', [RadToDeg(alpha1)]));
+  ML.Add(Format('  alpha2 = %6.2f degrees', [RadToDeg(alpha2)]));
+  ML.Add(Format('  delta1 = %6.2f degrees', [RadToDeg(delta1)]));
+  ML.Add(Format('  delta2 = %6.2f degrees', [RadToDeg(delta2)]));
+  ML.Add(Format('  gamma  = %6.2f degrees', [RadToDeg(gamma)]));
+  ML.Add(Format('  beta   = %6.2f degrees', [RadToDeg(beta)]));
+
+  if not WantAll then
+    Exit;
+
+  ML.Add('');
+  ML.Add('Force values:');
+  ML.Add(Format('  FC  = %8.2f N    (Mastdruckkraft)', [FC]));
+  ML.Add(Format('  FB  = %8.2f N    (Wanten/Vorstag)', [FB]));
+  ML.Add(Format('  F2  = %8.2f N    (Saling)', [F2]));
+  ML.Add(Format('  F1  = %8.2f N    (Controller)', [F1]));
+  ML.Add(Format('  FA  = %8.2f N    (Mastfuß)', [FA]));
+  ML.Add(Format('  hd  = %8.2f mm   (Saling Durchbiegung)', [hd]));
+  ML.Add(Format('  he  = %8.2f mm   (Controller Durchbiegung)', [he]));
+  ML.Add(Format('  sd  = %8.2f mm   (hd-FSalingWegKnick)', [hd-FSalingWegKnick]));
+
+  ML.Add('');
+  ML.Add('BiegeKnicken:');
+  ML.Add(Format('  KoppelFaktor       = %8.5f', [FKoppelFaktor]));
+  ML.Add(Format('  SalingAlpha        = %8.5f mm/N', [FSalingAlpha]));
+  ML.Add(Format('  ControllerAlpha    = %8.5f mm/N', [FControllerAlpha]));
+  ML.Add(Format('  SalingWeg          = %8.2f mm', [FSalingWeg]));
+  ML.Add(Format('  SalingWegKnick     = %8.2f mm', [FSalingWegKnick]));
+  ML.Add(Format('  ControllerWeg      = %8.2f mm', [FControllerWeg]));
+  ML.Add(Format('  FSchnittPunktKraft = %8.2f N', [FSchnittPunktKraft]));
+  ML.Add(Format('  FwSchnittOhne      = %8.2f mm', [FwSchnittOhne]));
+  ML.Add(Format('  FwSchnittMit       = %8.2f mm', [FwSchnittMit]));
+  ML.Add(Format('  FwSchnittOffset    = %8.2f mm', [FwSchnittOffset]));
 end;
 
 procedure TRigg2.AusgabeKommentar(ML: TStrings);
@@ -5173,12 +5262,12 @@ var
   j, k: Integer;
 begin
   temp1 := cos(pi / 2 - Beta);
-  temp2 := cos(beta);
+  temp2 := cos(Beta);
   temp3 := sin(pi / 2 - Beta);
-  temp4 := sin(beta);
+  temp4 := sin(Beta);
   for j := 0 to BogenMax do
   begin
-    k := Round(100 / BogenMax * j);
+    k := Round(j * 100 / BogenMax);
     tempL := j * L / BogenMax;
     FMastKurve[j].X := rP.D0.X - tempL * temp1 + Value[k] * temp2;
     FMastKurve[j].Y := 0;

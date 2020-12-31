@@ -35,6 +35,28 @@ type
     FrSpannungW: single;
     psiStart: single;
     psiEnde: single;
+    tempD: TPoint3D;
+    tempC: TPoint3D;
+    tempP: TPoint3D;
+    LoopCounterS: Integer;
+    LoopCounterE: Integer;
+    LoopCounterT: Integer;
+    Msg: string;
+    HasError: Boolean;
+    procedure UpdateGetriebeTemp(anglePsi: single);
+    procedure ComputeStartAngle1;
+    procedure ComputeStartAngle2;
+    procedure ComputeEndAngle1;
+    procedure ComputeEndAngle2;
+    procedure LoopForPsi;
+    function GetVorstagLaenge(psi: single): single;
+    procedure ComputeWinkel;
+    procedure TestWante;
+    procedure BerechneWinkel1;
+    procedure BerechneWinkel2;
+    procedure RecordInitialPosition;
+    procedure ComputeInitialPosition(angle: single);
+  protected
     procedure BerechneF; virtual;
     procedure KorrekturF(tempH, k1, k2: single; var k3, Beta, Gamma: single); virtual; //deprecated;
   public
@@ -209,6 +231,11 @@ begin
 end;
 
 procedure TGetriebeFS.BerechneWinkel;
+begin
+  BerechneWinkel2;
+end;
+
+procedure TGetriebeFS.BerechneWinkel1;
 { FrVorstag gegeben, FrWinkel gesucht }
 var
   Counter: Integer;
@@ -1040,6 +1067,343 @@ begin
     stDrehbar:
       MakeSalingLBiggerDS(FrSalingL);
   end;
+end;
+
+procedure TGetriebeFS.ComputeStartAngle1;
+var
+  localC: TPoint3D;
+begin
+  { 1. Startwinkel ermitteln - Durchbiegung Null, Mast gerade,
+    linke Totlage für Winkel psi im Viergelenk D0 D C C0 }
+
+  SKK.SchnittEbene := seXZ;
+  SKK.Radius1 := FrMastUnten + FrMastOben;
+  SKK.Radius2 := FrVorstag;
+  SKK.MittelPunkt1 := rP.D0;
+  SKK.MittelPunkt2 := rP.C0;
+  localC := SKK.SchnittPunkt1;
+
+  if not SKK.SPVorhanden then
+  begin
+    Msg := 'ComputeStartAngle - cannot compute localC';
+    HasError := True;
+  end;
+
+  psiStart := arctan2( (rP.D0.X - localC.X), (localC.Z - rP.D0.Z) );
+  psiStart := pi / 2 + psiStart;
+end;
+
+procedure TGetriebeFS.ComputeStartAngle2;
+var
+  Test: Boolean;
+  v1, v2, v: TPoint3D;
+begin
+  { 1. Startwinkel ermitteln - Durchbiegung Null, Mast gerade,
+    linke Totlage für Winkel psi im Viergelenk D0 D C C0 }
+
+  psiStart := DegToRad(110);
+
+  LoopCounterS := 0;
+  repeat
+    LoopCounterS := LoopCounterS + 1;
+    psiStart := psiStart - DegToRad(0.5);
+    UpdateGetriebeTemp(psiStart);
+    v1 := (rP.D0 - tempD).Normalize;
+    v2 := (tempD - tempC).Normalize;
+    v := v1.CrossProduct(v2);
+    Test := abs(v.Y) < 0.01;
+  until Test or (LoopCounterS = 200);
+
+  if LoopCounterS >= 200 then
+  begin
+    Msg := 'ComputeStartAngle2 - psiStart not found';
+    HasError := True;
+  end;
+end;
+
+procedure TGetriebeFS.ComputeEndAngle1;
+var
+  localC: TPoint3D;
+begin
+  { 2. Endwinkel ermitteln - MastOben parallel zu Vorstag
+    rechte Totlage für Winkel psi im Viergelenk D0 D C C0 }
+  SKK.SchnittEbene := seXZ;
+  SKK.Radius1 := FrMastUnten;
+  SKK.Radius2 := FrVorstag - FrMastOben;
+  SKK.MittelPunkt1 := rP.D0;
+  SKK.MittelPunkt2 := rP.C0;
+  localC := SKK.SchnittPunkt1;
+
+  if not SKK.SPVorhanden then
+  begin
+    Msg := 'ComputeEndAngle1 - cannot compute LocalC';
+  end;
+
+  psiEnde := arctan2((rP.D0.X - localC.X), (localC.Z - rP.D0.Z));
+  psiEnde := pi / 2 + psiEnde;
+end;
+
+procedure TGetriebeFS.ComputeEndAngle2;
+var
+  Test: Boolean;
+  v1, v2, v: TPoint3D;
+begin
+  { 2. Endwinkel ermitteln - MastOben parallel zu Vorstag
+    rechte Totlage für Winkel psi im Viergelenk D0 D C C0 }
+
+  psiEnde := psiStart;
+
+  LoopCounterE := 0;
+  repeat
+    LoopCounterE := LoopCounterE + 1;
+    psiEnde := psiEnde - DegToRad(0.5);
+    UpdateGetriebeTemp(psiEnde);
+    v1 := (rP.C0 - tempC).Normalize;
+    v2 := (tempD - tempC).Normalize;
+    v := v1.CrossProduct(v2);
+    Test := abs(v.Y) < 0.01;
+  until Test or (LoopCounterE = 200);
+
+  if LoopCounterE >= 200 then
+  begin
+    Msg := 'EndAngle not found';
+    HasError := True;
+  end;
+end;
+
+procedure TGetriebeFS.LoopForPsi;
+var
+  VorstagIst: single;
+  Diff: single;
+  psiA: single;
+  psiB: single;
+begin
+  { 3. Winkel ermitteln, für den gilt: VorstagIst gleich FrVorstag
+    Viergelenk P0 P D D0, Koppelpunkt C }
+  psiB := psiStart - DegToRad(0.01);
+  psiA := psiEnde + DegToRad(0.01);
+
+  Temp1 := RadToDeg(psiA);
+  Temp2 := RadToDeg(psiB);
+
+  LoopCounterT := 0;
+  repeat
+    LoopCounterT := LoopCounterT + 1;
+    psi := (psiA + psiB) / 2;
+    VorstagIst := GetVorstagLaenge(psi);
+    Diff := VorstagIst - FrVorstag;
+    if Diff > 0 then
+      psiB := psi
+    else
+      psiA := psi;
+  until (abs(Diff) < 0.1) or (LoopCounterT = 200);
+
+  Temp3 := LoopCounterT;
+
+  if LoopCounterT >= 200 then
+  begin
+    Msg := 'LoopForPsi - cannot find psi';
+    HasError := True;
+  end;
+end;
+
+procedure TGetriebeFS.UpdateGetriebeTemp(anglePsi: single);
+var
+  localP0: TPoint3D;
+  localD0: TPoint3D;
+begin
+  localP0 := rP.P0;
+  localD0 := rP.D0;
+
+  { tempD }
+  tempD.X := localD0.X + FrMastUnten * cos(anglePsi);
+  tempD.Y := 0;
+  tempD.Z := localD0.Z + FrMastUnten * sin(anglePsi);
+
+  { tempP }
+  SKK.SchnittEbene := seXZ;
+  SKK.Radius1 := FrWunten2D;
+  SKK.Radius2 := FrSalingH;
+  SKK.MittelPunkt1 := localP0;
+  SKK.MittelPunkt2 := tempD;
+  tempP := SKK.SchnittPunkt1;
+
+  if not SKK.SPVorhanden then
+  begin
+    Msg := 'UpdateGetriebeTemp - cannot compute tempP';
+    HasError := True;
+  end;
+
+  { tempC }
+  SKK.SchnittEbene := seXZ;
+  SKK.Radius1 := FrWoben2D;
+  SKK.Radius2 := FrMastOben;
+  SKK.MittelPunkt1 := tempP;
+  SKK.MittelPunkt2 := tempD;
+  tempC := SKK.SchnittPunkt1;
+
+  if not SKK.SPVorhanden then
+  begin
+    Msg := 'UpdateGetriebeTemp - cannot compute tempC';
+    HasError := True;
+  end;
+end;
+
+function TGetriebeFS.GetVorstagLaenge(psi: single): single;
+{ Viergelenk P0 P D D0, Koppelpunkt C }
+begin
+  UpdateGetriebeTemp(psi);
+  result := tempC.Distance(rP.C0);
+end;
+
+procedure TGetriebeFS.TestWante;
+var
+  localP0: TPoint3D;
+  localD0: TPoint3D;
+  localC0: TPoint3D;
+
+  localPsi: single;
+
+  WDiff: single;
+begin
+  { Test ob Wante locker bei Mast gerade und Vorstaglänge = FrVorstag. }
+
+  localD0 := rP.D0;
+  localP0 := rP.P0;
+  localC0 := rP.C0;
+
+  with SKK do
+  begin
+    SchnittEbene := seXZ;
+    Radius1 := FrMastUnten + FrMastOben;
+    Radius2 := FrVorstag;
+    MittelPunkt1 := localD0;
+    MittelPunkt2 := localC0;
+    tempC := SchnittPunkt1;
+  end;
+
+  localPsi := arctan2((localD0.X - tempC.X), (tempC.Z - localD0.Z));
+  localPsi := pi / 2 + localPsi;
+
+  tempD.X := localD0.X + FrMastUnten * cos(localPsi);
+  tempD.Y := 0;
+  tempD.Z := localD0.Z + FrMastUnten * sin(localPsi);
+
+  with SKK do
+  begin
+    SchnittEbene := seXZ;
+    Radius1 := FrSalingH;
+    Radius2 := FrWoben2D;
+    MittelPunkt1 := tempD;
+    MittelPunkt2 := tempC;
+    tempP := SchnittPunkt1;
+  end;
+
+  WDiff := tempP.Distance(localP0) + tempC.Distance(tempP) - (FrWunten2D + FrWoben2D);
+  if WDiff < 0 then
+  begin
+    FGetriebeOK := False;
+    Include(FGetriebeStatus, gsWanteZulang);
+    Msg := 'TestWante - no tension in shroud';
+    HasError := True;
+  end;
+
+  FrWanteZulang := wDiff;
+end;
+
+procedure TGetriebeFS.RecordInitialPosition;
+begin
+  rP.D := tempD;
+  rP.P := tempP;
+  rP.C := tempC;
+  FrPsi := psiStart + FrAlpha;
+end;
+
+procedure TGetriebeFS.ComputeInitialPosition(angle: single);
+begin
+  UpdateGetriebeTemp(angle);
+  rP.D := tempD;
+  rP.C := tempC;
+  rP.P := tempP;
+  FrPsi := angle + FrAlpha;
+end;
+
+procedure TGetriebeFS.ComputeWinkel;
+begin
+  { FrVorstag gegeben, FrWinkel gesucht }
+
+  Msg := 'ok';
+  HasError := False;
+
+  psi := 0.0;
+
+  ComputeStartAngle1;
+
+  TestWante; // and record initial position in case of WanteZulang
+  if HasError then
+  begin
+    RecordInitialPosition;
+//    ComputeInitialPosition(psiStart); // that would be a little different
+    Exit;
+  end;
+
+  ComputeEndAngle1;
+  if HasError then
+  begin
+//    ComputeInitialPosition(psiStart);
+    Exit;
+  end;
+
+  LoopForPsi;
+  if HasError then
+  begin
+//    ComputeInitialPosition(psiStart);
+    Exit;
+  end;
+
+  ComputeInitialPosition(psi);
+  if HasError then
+  begin
+    Msg := 'Compute Winkel has Error';
+    Exit;
+  end;
+end;
+
+procedure TGetriebeFS.BerechneWinkel2;
+{ FrVorstag gegeben, FrWinkel gesucht }
+var
+  svar: Boolean;
+begin
+  ResetStatus;
+  Wanten3dTo2d;
+
+  ComputeWinkel;
+
+  { aktualisieren }
+  rP.A := rP.P;
+  rP.A.Y := -FrSalingA / 2;
+  rP.B := rP.P;
+  rP.B.Y := -rP.A.Y;
+  { We actually want PhiVonPsi, but we can use function PsiVonPhi;
+    imagine we are looking from behind - the mechanism appears mirrored,
+    angle Psi needs to be transformed back and forth,
+    and member length values passed according to mirrored model. }
+  FrPhi := pi - TRggCalc.PsiVonPhi(pi - FrPsi, FrBasis, FrMastUnten, FrSalingH, FrWunten2D, svar);
+  if FrPhi > 2 * PI then
+    FrPhi := FrPhi - 2 * PI;
+
+  if svar = False then
+  begin
+    FGetriebeOK := False;
+    Include(FGetriebeStatus, gsErrorPsivonPhi);
+    LogList.Add(RggStrings.LogList_String_InBerechneWinkel);
+    LogList.Add(RggStrings.LogList_String_FalseInPsiVonPhi);
+    Inc(ExitCounter2);
+    Exit;
+  end;
+  FrWinkel := FrPhi - FrAlpha;
+  FrSalingL := sqrt(sqr(FrSalingH) + sqr(FrSalingA / 2));
+  Rest;
 end;
 
 function TGetriebeFS.GetCounterValue(Idx: Integer): Integer;

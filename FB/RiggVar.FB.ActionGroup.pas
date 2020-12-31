@@ -394,7 +394,6 @@ ActionGroupViewType: TActionGroup = [
   faViewTypeOrtho,
   faViewTypePerspective];
 
-{$ifdef WantAll}
 ActionGroupDropTarget: TActionGroup = [
   faToggleDropTarget];
 
@@ -409,6 +408,7 @@ ActionGroupCopyPaste: TActionGroup = [
   faPaste,
   faShare];
 
+{$ifdef WantAll}
 ActionGroupViewOptions: TActionGroup = [
   faToggleMoveMode,
   faLinearMove,

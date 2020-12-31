@@ -45,20 +45,6 @@ type
     fpE2
   );
 
-  TFederMessageKind = (
-    fmkNoop,
-    fmkAction,
-    fmkParam,
-    fmkParamValue,
-
-    fmkTX,
-    fmkTY,
-    fmkRX,
-    fmkRY,
-    fmkRZ,
-    fmkCZ
-  );
-
 const
   claRumpf = claSilver;
   claMast = claBlue;

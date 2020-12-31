@@ -1,4 +1,4 @@
-﻿unit RiggVar.FB.ActionLong;
+﻿unit RiggVar.FB.ActionLongEN;
 
 (*
 -
@@ -24,32 +24,32 @@ uses
   System.SysUtils,
   RiggVar.FB.ActionConst;
 
-function GetFederActionLong(fa: TFederAction): string;
+function GetFederActionLongEN(fa: TFederAction): string;
 
 implementation
 
-function GetFederActionLong(fa: TFederAction): string;
+function GetFederActionLongEN(fa: TFederAction): string;
 begin
   result := '??';
   case fa of
     faNoop: result := 'Noop';
 
     faController: result := 'Controller';
-    faWinkel: result := 'Winkel';
-    faVorstag: result := 'Vorstag';
-    faWante: result := 'Wante';
-    faWoben: result := 'Wante oben';
-    faSalingH: result := 'Saling Höhe';
-    faSalingA: result := 'Saling Abstand';
-    faSalingL: result := 'Saling Länge';
-    faSalingW: result := 'Saling Winkel';
+    faWinkel: result := 'Angle';
+    faVorstag: result := 'Headstay';
+    faWante: result := 'Shroud';
+    faWoben: result := 'Shroud upper';
+    faSalingH: result := 'Spreader Height';
+    faSalingA: result := 'Spreader Distance';
+    faSalingL: result := 'Spreader Length';
+    faSalingW: result := 'Spreader Angle';
     faMastfallF0F: result := 'Mastfall F0F';
     faMastfallF0C: result := 'Mastfall F0C';
     faMastfallVorlauf: result := 'Mastfall Vorlauf';
-    faBiegung: result := 'Biegung';
-    faMastfussD0X: result := 'Mastfuss D0X';
-    faVorstagOS: result := 'Vorstag OS';
-    faWPowerOS: result := 'WP ower OS';
+    faBiegung: result := 'Bending';
+    faMastfussD0X: result := 'Mastfoot D0X';
+    faVorstagOS: result := 'Headstay WS';
+    faWPowerOS: result := 'Shroud force WS';
 
     faFixpointA0 : result := 'Fixpoint oA0';
     faFixpointA : result := 'Fixpoint oA';
@@ -64,43 +64,43 @@ begin
     faFixpointF0 : result := 'Fixpoint oF0';
     faFixpointF : result := 'Fixpoint oF';
 
-    faTrimm0: result := 'Trimm 0';
-    faTrimm1: result := 'Trimm 1';
-    faTrimm2: result := 'Trimm 2';
-    faTrimm3: result := 'Trimm 3';
-    faTrimm4: result := 'Trimm 4';
-    faTrimm5: result := 'Trimm 5';
-    faTrimm6: result := 'Trimm 6';
-    fa420: result := 'Init 420'; //Trimm 7
-    faLogo: result := 'Init Logo'; //Trimm 8
+    faTrimm0: result := 'Trim 0';
+    faTrimm1: result := 'Trim 1';
+    faTrimm2: result := 'Trim 2';
+    faTrimm3: result := 'Trim 3';
+    faTrimm4: result := 'Trim 4';
+    faTrimm5: result := 'Trim 5';
+    faTrimm6: result := 'Trim 6';
+    fa420: result := 'Init 420'; //Trim 7
+    faLogo: result := 'Init Logo'; //Trim 8
 
-    faUpdateTrimm0: result := 'Update Trimm 0';
+    faUpdateTrimm0: result := 'Update Trim 0';
     faCopyAndPaste: result := 'Memory - Copy And Paste';
-    faReadTrimmFile: result := 'Read Trimm File';
-    faCopyTrimmFile: result := 'Copy Trimm File';
-    faSaveTrimmFile: result := 'Save Trimm File';
+    faReadTrimmFile: result := 'Read Trim File';
+    faCopyTrimmFile: result := 'Copy Trim File';
+    faSaveTrimmFile: result := 'Save Trim File';
 
-    faSalingTypFest: result := 'Feste Salinge';
-    faSalingTypDrehbar: result := 'Drehbare Salinge';
-    faSalingTypOhne: result := 'Ohne Salinge';
-    faSalingTypOhneStarr: result := 'Ohne Salinge Starr';
+    faSalingTypFest: result := 'Fixed Spreader';
+    faSalingTypDrehbar: result := 'Rotatable Spreader';
+    faSalingTypOhne: result := 'Without Spreaders';
+    faSalingTypOhneStarr: result := 'Witout Spreaders Stiff';
 
     faCalcTypQuer: result := 'Querkraftbiegung';
     faCalcTypKnick: result := 'Biegeknicken';
-    faCalcTypGemessen: result := 'Kraft gemessen';
+    faCalcTypGemessen: result := 'Force measured';
 
-    faWantRenderH: result := 'Want render H (Hull-Tetraeder)';
-    faWantRenderP: result := 'Want render P (Fachwerk)';
+    faWantRenderH: result := 'Want render H (Hull-Tetrahedron)';
+    faWantRenderP: result := 'Want render P (Framework)';
     faWantRenderF: result := 'Want render F (Mastfall)';
-    faWantRenderE: result := 'Want render E (Kugeln E0-E)';
-    faWantRenderS: result := 'Want render S (Stäbe)';
+    faWantRenderE: result := 'Want render E (Sphere E0-E)';
+    faWantRenderS: result := 'Want render S (Rods)';
 
-    faViewpointS: result := 'Viewpoint Seite';
-    faViewpointA: result := 'Viewpoint Achtern';
+    faViewpointS: result := 'Viewpoint Side';
+    faViewpointA: result := 'Viewpoint Stern';
     faViewpointT: result := 'Viewpoint Top';
     faViewpoint3: result := 'Viewpoint 3D';
 
-    faToggleTrimmText: result := 'Toggle rgg trimm text';
+    faToggleTrimmText: result := 'Toggle rgg trim text';
     faToggleDataText: result := 'Toggle rgg data text';
     faToggleDiffText: result := 'Toggle rgg diff text';
     faToggleDebugText: result := 'Toggle debug text';
@@ -108,15 +108,15 @@ begin
 
     faRggHull: result := 'Toggle visibility of hull';
     faDemo: result := 'Toggle Demo / Pro mode';
-    faCopyTrimmItem: result := 'Copy Trimm-Item';
-    faPasteTrimmItem: result := 'Paste Trimm-Item or Trimm-File';
+    faCopyTrimmItem: result := 'Copy Trim-Item';
+    faPasteTrimmItem: result := 'Paste Trim-Item or Trim-File';
 
     faShowMemo: result := 'Form Memo';
     faShowActions: result := 'Form Actions';
     faShowOptions: result := 'Form Options';
     faShowDrawings: result := 'Form Drawings';
     faShowConfig: result := 'Form Config';
-    faShowTrimmTab: result := 'Form Trimm Tab';
+    faShowTrimmTab: result := 'Form Trim Tabble';
     faShowKreis: result := 'Form Kreis';
     faShowInfo: result := 'Form Info';
     faShowSplash: result := 'Form Splash';
@@ -127,12 +127,12 @@ begin
     faShowDiagQ: result := 'Form Diagramm Quick';
 
     faShowChart: result := 'Form Chart';
-    faShowText: result := 'Form Text-Ausgabe';
+    faShowText: result := 'Form Text-Output';
 
     faShowForce: result := 'Form Force';
     faShowDetail: result := 'Form Detail';
-    faShowTabelle: result := 'Form Tabelle';
-    faShowSaling: result := 'Form Saling';
+    faShowTabelle: result := 'Form Table';
+    faShowSaling: result := 'Form Spreader';
     faShowController: result := 'Form Controller';
 
     faWheelLeft: result := 'Wheel -1';
@@ -222,19 +222,19 @@ begin
     faReportJsonText: result := 'Json Text Report';
     faReportDataText: result := 'Data Text Report';
     faReportDiffText: result := 'Diff Text Report';
-    faReportAusgabeDetail: result := 'Ausgabe Rigg Detail';
-    faReportAusgabeRL: result := 'Ausgabe Rigg Längen';
-    faReportAusgabeRP: result := 'Ausgabe Rigg Koordinaten';
-    faReportAusgabeRLE: result := 'Ausgabe Rigg Längen Entspannt';
-    faReportAusgabeRPE: result := 'Ausabe Rigg Koordinaten Entspannt';
-    faReportAusgabeDiffL: result := 'Ausgabe Diff Längen';
-    faReportAusgabeDiffP: result := 'Ausgabe Diff Koordinaten';
+    faReportAusgabeDetail: result := 'Output Rigg Detail';
+    faReportAusgabeRL: result := 'Output Rigg Length';
+    faReportAusgabeRP: result := 'Output Rigg Coordinates';
+    faReportAusgabeRLE: result := 'Output Rigg Lengths Relaxed';
+    faReportAusgabeRPE: result := 'Output Rigg Coordinates Relaxed';
+    faReportAusgabeDiffL: result := 'Output Diff Lengths';
+    faReportAusgabeDiffP: result := 'Output Diff Coordinates';
     faReportXML: result := 'XML Report';
     faReportDebugReport: result := 'Debug Report';
     faReportReadme: result := 'Readme Report';
 
     faToggleSandboxed: result := 'Toggle Sandboxed';
-    faToggleAllProps: result := 'Toggle All Trimm Props';
+    faToggleAllProps: result := 'Toggle All Trim Props';
     faToggleAllTags: result := 'Toggle All Xml Tags';
 
     faToggleLineColor: result := 'Toggle Line Color Scheme';
@@ -255,28 +255,28 @@ begin
     faToggleUseQuickSort: result := 'Toggle Use Quicksort';
     faToggleShowLegend: result := 'Toggle Show DL Legend';
 
-    faRggBogen: result := 'Show Mast-Bogen';
-    faRggKoppel: result := 'Show Koppel-Kurve';
+    faRggBogen: result := 'Show Mast-Bending';
+    faRggKoppel: result := 'Show Linkage-Curve';
 
-    faToggleSalingGraph: result := 'Toggle Saling Graph';
+    faToggleSalingGraph: result := 'Toggle Spreader Graph';
     faToggleControllerGraph: result := 'Toggle Controller Graph';
     faToggleChartGraph: result := 'Toggle Chart Graph';
-    faToggleKraftGraph: result := 'Toggle Kraft Graph';
+    faToggleKraftGraph: result := 'Toggle Force Graph';
     faToggleMatrixText: result := 'Toggle Matrix Text';
 
     faMemoryBtn: result := 'Memory Btn';
     faMemoryRecallBtn: result := 'Memory Recall Btn';
 
-    faKorrigiertItem: result := 'Korrigiert Item';
-    faSofortBtn: result := 'Sofort Berechnen Btn';
-    faGrauBtn: result := 'Grau Btn';
-    faBlauBtn: result := 'Blau Btn';
+    faKorrigiertItem: result := 'Corrected Item';
+    faSofortBtn: result := 'Compute Immediately Btn';
+    faGrauBtn: result := 'Gray Btn';
+    faBlauBtn: result := 'Blue Btn';
     faMultiBtn: result := 'Multi Btn';
 
     faSuperSimple: result := 'Super Simple';
     faSuperNormal: result := 'Super Normal';
-    faSuperGrau: result := 'Super Grau';
-    faSuperBlau: result := 'Super Blau';
+    faSuperGrau: result := 'Super Gray';
+    faSuperBlau: result := 'Super Blue';
     faSuperMulti: result := 'Super Multi';
     faSuperDisplay: result := 'Super Disp';
     faSuperQuick: result := 'Super Quick';
@@ -328,16 +328,16 @@ begin
     faCirclesSelectC2: result := 'Select Circle 2';
     faCircleParamR1: result := 'Radius 1';
     faCircleParamR2: result := 'Radius 2';
-    faCircleParamM1X: result := 'Mittelpunkt C1.X';
-    faCircleParamM1Y: result := 'Mittelpunkt C1.Y';
-    faCircleParamM2X: result := 'Mittelpunkt C2.X';
-    faCircleParamM2Y: result := 'Mittelpunkt C2.Y';
+    faCircleParamM1X: result := 'Center Point C1.X';
+    faCircleParamM1Y: result := 'Center Point C1.Y';
+    faCircleParamM2X: result := 'Center Point C2.X';
+    faCircleParamM2Y: result := 'Center Point C2.Y';
     faLineParamA1: result := 'Line Segment 1 Angle';
     faLineParamA2: result := 'Line Segment 2 Angle';
     faLineParamE1: result := 'Line Segment 1 Elevation';
     faLineParamE2: result := 'Line Segment 2 Elevation';
-    faCircleParamM1Z: result := 'Mittelpunkt C1.Z';
-    faCircleParamM2Z: result := 'Mittelpunkt C2.Z';
+    faCircleParamM1Z: result := 'Center Point C1.Z';
+    faCircleParamM2Z: result := 'Center Point C2.Z';
 
     faPlusOne: result := 'Plus One';
     faPlusTen: result := 'Plus Ten';
@@ -354,7 +354,7 @@ begin
 
     faParamAPW: result := 'Param AP Width';
     faParamEAH: result := 'Param EA Hull';
-    faParamEAR: result := 'Param EA Rigg';
+    faParamEAR: result := 'Param EA Rig';
     faParamEI: result := 'Param EI Mast';
 
     faRotaForm1: result := 'Use RotaForm 1';
@@ -389,7 +389,7 @@ begin
     faViewTypeOrtho: result := 'Set view type to orthographic';
     faViewTypePerspective: result := 'Set view type to perspective';
 
-    faToggleLanguage: result := 'Toggle Language';
+    faToggleLanguage: result := 'Toggle Language'; //'Use Localized Language';
 
     faToggleDropTarget: result := 'Drop target';
 

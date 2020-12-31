@@ -915,6 +915,7 @@ end;
 
 procedure TRotaForm1.SetMastLineData(const Value: TLineDataR100; L, Beta: single);
 begin
+  RaumGraph.Koordinaten := RPN;
   RaumGraph.SetMastLineData(Value, L, Beta);
 end;
 

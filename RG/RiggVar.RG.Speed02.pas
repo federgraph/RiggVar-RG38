@@ -58,7 +58,6 @@ type
 implementation
 
 uses
-  FrmMain,
   RiggVar.App.Main,
   RiggVar.FB.ActionConst;
 

@@ -395,8 +395,6 @@ faToggleViewType: result := 'faToggleViewType';
 faViewTypeOrtho: result := 'faViewTypeOrtho';
 faViewTypePerspective: result := 'faViewTypePerspective';
 
-{$ifdef WantAll}
-
 { DropTarget }
 faToggleDropTarget: result := 'faToggleDropTarget';
 
@@ -410,6 +408,8 @@ faOpen: result := 'faOpen';
 faCopy: result := 'faCopy';
 faPaste: result := 'faPaste';
 faShare: result := 'faShare';
+
+{$ifdef WantAll}
 
 { ViewOptions }
 faToggleMoveMode: result := 'faToggleMoveMode';

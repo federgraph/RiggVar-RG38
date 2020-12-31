@@ -2,11 +2,17 @@
 
 interface
 
+uses
+  System.Classes;
+
 type
   IFormMain = interface
   ['{6309C56E-FD06-413A-923E-1C808A7DD459}']
     procedure HandleAction(fa: Integer);
     function GetChecked(fa: Integer): Boolean;
+
+    function GetActionFromKey(Shift: TShiftState; Key: Word): Integer;
+    function GetActionFromKeyChar(KeyChar: char): Integer;
 
     procedure ShowTrimm;
     procedure UpdateColorScheme;
@@ -59,6 +65,9 @@ type
     procedure HandleAction(fa: Integer);
     function GetChecked(fa: Integer): Boolean;
 
+    function GetActionFromKey(Shift: TShiftState; Key: Word): Integer;
+    function GetActionFromKeyChar(KeyChar: char): Integer;
+
     procedure ShowTrimm;
     procedure UpdateColorScheme;
     procedure ToggleButtonSize;
@@ -87,6 +96,17 @@ uses
   RiggVar.App.Main;
 
 { TDummmyMain }
+
+function TDummmyFormMain.GetActionFromKey(Shift: TShiftState;
+  Key: Word): Integer;
+begin
+  result := 0;
+end;
+
+function TDummmyFormMain.GetActionFromKeyChar(KeyChar: char): Integer;
+begin
+  result := 0;
+end;
 
 function TDummmyFormMain.GetChecked(fa: Integer): Boolean;
 begin

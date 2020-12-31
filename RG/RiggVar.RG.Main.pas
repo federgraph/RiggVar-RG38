@@ -407,7 +407,6 @@ const
 
 constructor TRggMain.Create(ARigg: IRigg; AMainView: IFormMain; AMainParent: TFmxObject);
 begin
-  inherited Create;
   MainParent := AMainParent;
   MainView := AMainView;
   Rigg := ARigg;
@@ -546,7 +545,7 @@ begin
   StrokeRigg.KoordinatenE := Rigg.RelaxedRiggPoints;
   StrokeRigg.SetKoppelKurve(Rigg.KoppelKurve);
   StrokeRigg.SetMastKurve(Rigg.MastKurve);
-  StrokeRigg.SetMastLineData(Rigg.MastLinie, Rigg.MastLC, Rigg.MastBeta);
+//  StrokeRigg.SetMastLineData(Rigg.MastLinie, Rigg.MastLC, Rigg.MastBeta);
 
   StrokeRigg.DoOnUpdateStrokeRigg;
 end;
@@ -865,41 +864,41 @@ end;
 function TRggMain.Text2Param(T: string): TFederParam;
 begin
   result := fpVorstag;
-  if T = RggStrings.ControllerString then
+  if T = RggLocalizedStrings.ControllerString then
     result := fpController
-  else if T = RggStrings.WinkelString then
+  else if T = RggLocalizedStrings.WinkelString then
     result := fpWinkel
-  else if T = RggStrings.VorstagString then
+  else if T = RggLocalizedStrings.VorstagString then
     result := fpVorstag
-  else if T = RggStrings.WanteString then
+  else if T = RggLocalizedStrings.WanteString then
     result := fpWante
-  else if (T = RggStrings.WanteObenString) or (T = 'Woben') then
+  else if (T = RggLocalizedStrings.WanteObenString) or (T = 'Woben') then
     result := fpWoben
-  else if (T = RggStrings.SalingHString) or (T = 'SalingH') then
+  else if (T = RggLocalizedStrings.SalingHString) or (T = 'SalingH') then
     result := fpSalingH
-  else if (T = RggStrings.SalingAString) or (T = 'SalingA') then
+  else if (T = RggLocalizedStrings.SalingAString) or (T = 'SalingA') then
     result := fpSalingA
-  else if (T = RggStrings.SalingLString) or (T = 'SalingL') then
+  else if (T = RggLocalizedStrings.SalingLString) or (T = 'SalingL') then
     result := fpSalingL
-  else if (T = RggStrings.SalingWString) or (T = 'SalingW') then
+  else if (T = RggLocalizedStrings.SalingWString) or (T = 'SalingW') then
     result := fpSalingW
-  else if T = RggStrings.MastfallF0CString then
+  else if T = RggLocalizedStrings.MastfallF0CString then
     result := fpMastfallF0C
-  else if T = RggStrings.MastfallF0FString then
+  else if T = RggLocalizedStrings.MastfallF0FString then
     result := fpMastfallF0F
-  else if T = RggStrings.MastfallVorlaufString then
+  else if T = RggLocalizedStrings.MastfallVorlaufString then
     result := fpMastfallVorlauf
-  else if T = RggStrings.BiegungString then
+  else if T = RggLocalizedStrings.BiegungString then
     result := fpBiegung
-  else if T = RggStrings.MastFootD0XString then
+  else if T = RggLocalizedStrings.MastFootD0XString then
     result := fpD0X
-  else if T = RggStrings.APWidthString then
+  else if T = RggLocalizedStrings.APWidthString then
     result := fpAPW
-  else if T = RggStrings.EAHullString then
+  else if T = RggLocalizedStrings.EAHullString then
     result := fpEAH
-  else if T = RggStrings.EARiggString then
+  else if T = RggLocalizedStrings.EARiggString then
     result := fpEAR
-  else if T = RggStrings.EIMastString then
+  else if T = RggLocalizedStrings.EIMastString then
     result := fpEI
     ;
 end;
@@ -908,41 +907,41 @@ function TRggMain.Param2Text(P: TFederParam): string;
 begin
   result := '';
   if P = fpController then
-    result := RggStrings.ControllerString
+    result := RggLocalizedStrings.ControllerString
   else if P = fpWinkel then
-    result := RggStrings.WinkelString
+    result := RggLocalizedStrings.WinkelString
   else if P = fpVorstag then
-    result := RggStrings.VorstagString
+    result := RggLocalizedStrings.VorstagString
   else if P = fpWante then
-    result := RggStrings.WanteString
+    result := RggLocalizedStrings.WanteString
   else if P = fpWoben then
-    result := RggStrings.WanteObenString
+    result := RggLocalizedStrings.WanteObenString
   else if P = fpSalingH then
-    result := RggStrings.SalingHString
+    result := RggLocalizedStrings.SalingHString
   else if P = fpSalingA then
-    result := RggStrings.SalingAString
+    result := RggLocalizedStrings.SalingAString
   else if P = fpSalingL then
-    result := RggStrings.SalingLString
+    result := RggLocalizedStrings.SalingLString
   else if P = fpSalingW then
-    result := RggStrings.SalingWString
+    result := RggLocalizedStrings.SalingWString
   else if P = fpMastfallF0C then
-    result := RggStrings.MastfallF0CString
+    result := RggLocalizedStrings.MastfallF0CString
   else if P = fpMastfallF0F then
-    result := RggStrings.MastfallF0FString
+    result := RggLocalizedStrings.MastfallF0FString
   else if P = fpMastfallVorlauf then
-    result := RggStrings.MastfallVorlaufString
+    result := RggLocalizedStrings.MastfallVorlaufString
   else if P = fpBiegung then
-    result := RggStrings.BiegungString
+    result := RggLocalizedStrings.BiegungString
   else if P = fpD0X then
-    result := RggStrings.MastfootD0XString
+    result := RggLocalizedStrings.MastfootD0XString
   else if P = fpAPW then
-    result := RggStrings.APWidthString
+    result := RggLocalizedStrings.APWidthString
   else if P = fpEAH then
-    result := RggStrings.EAHullString
+    result := RggLocalizedStrings.EAHullString
   else if P = fpEAR then
-    result := RggStrings.EARiggString
+    result := RggLocalizedStrings.EARiggString
   else if P = fpEI then
-    result := RggStrings.EIMastString
+    result := RggLocalizedStrings.EIMastString
     ;
 end;
 
@@ -2552,6 +2551,7 @@ begin
     Exit;
 
   case fa of
+    faToggleLanguage: result := MainVar.WantGermanText;
     faController: result := Param = fpController;
     faWinkel: result := Param = fpWinkel;
     faVorstag: result := Param = fpVorstag;

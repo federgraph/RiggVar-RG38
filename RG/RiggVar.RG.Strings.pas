@@ -85,7 +85,7 @@ type
   LogList_Format_String_GetVorstagNullOhne: string = 'GetVorstagOhne, stDrehbar/%d: %s';
   LogList_Format_String_GetVorstagNullException: string = 'GetVorstagNull: %s';
 
-  {from RggUnit2 }
+    { from RggUnit2 }
   Status_String_Mast: string = '  Mast:';
   Status_String_MastBiegungNegativ: string = ' Mastbiegung negativ';
   Status_String_MastControllerBeyondMiddle: string = ' Controller set beyond middle';
@@ -105,7 +105,7 @@ type
 
   LogString_ZeroDivideAlpha: string = 'FanOut: EZeroDivide; cos(alpha?) = 0';
 
-  {from RggUnit3}
+   { from RggUnit3 }
   EA_IniString: string = 'EA';
   Status_String_Rigg: string = '  Rigg:';
   Status_String_RiggLetzteRechnungOK: string = '    Letzte Rechnung O.K.';
@@ -205,7 +205,7 @@ type
   ProgressCaptionString: string = 'Kurve wird berechnet';
   ProgressCaptionFormatString: string = 'Parameter %d von %d';
 
-  TopTitleString = 'RiggChart';
+    TopTitleString: string = 'RiggChart';
 
   SalingFestString: string = 'fest';
   SalingDrehbarString: string = 'drehbar';
@@ -246,7 +246,7 @@ type
 
   PIdentString: string = 'Nr.';
 
-  { added from FormConfig }
+  { from FormConfig }
 
   Material_IniSectionString: string = 'Material';
   Profile_IniSectionString: string = 'Profile';

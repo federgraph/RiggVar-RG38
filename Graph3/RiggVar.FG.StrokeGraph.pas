@@ -267,15 +267,8 @@ begin
   o1 := TStrokeRigg.rP.V[oo1];
   o2 := TStrokeRigg.rP.V[oo2];
 
-  StartPoint := Point3D(
-    o1.X - TRotaForm3.RggGlobalOffsetX,
-    o1.Y - TRotaForm3.RggGlobalOffsetY,
-    o1.Z - TRotaForm3.RggGlobalOffsetZ) * (1.0 / TRotaForm3.RggGlobalScale);
-
-  EndPoint := Point3D(
-    o2.X - TRotaForm3.RggGlobalOffsetX,
-    o2.Y - TRotaForm3.RggGlobalOffsetY,
-    o2.Z - TRotaForm3.RggGlobalOffsetZ) * (1.0 / TRotaForm3.RggGlobalScale);
+  StartPoint := (o1 - TRotaForm3.RggGlobalOffset) * (1.0 / TRotaForm3.RggGlobalScale);
+  EndPoint := (o2 - TRotaForm3.RggGlobalOffset) * (1.0 / TRotaForm3.RggGlobalScale);
 
   inherited;
 end;
@@ -1027,9 +1020,7 @@ end;
 
 procedure TStrokeRigg.UpdateOffset;
 begin
-  o.X := TRotaForm3.RggGlobalOffsetX;
-  o.Y := TRotaForm3.RggGlobalOffsetY;
-  o.Z := TRotaForm3.RggGlobalOffsetZ;
+  o := TRotaForm3.RggGlobalOffset;
 end;
 
 procedure TStrokeRigg.HideAll;

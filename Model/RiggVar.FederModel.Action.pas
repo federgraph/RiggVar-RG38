@@ -29,12 +29,18 @@ type
   public
     procedure Execute(fa: TFederAction); override;
     function GetChecked(fa: TFederAction): Boolean; override;
+    function GetCaption(fa: TFederAction): string; override;
+    function GetShortCaption(fa: TFederAction): string; override;
   end;
 
 implementation
 
 uses
-  RiggVar.App.Main;
+  RiggVar.App.Main,
+  RiggVar.FB.ActionShortEN,
+  RiggVar.FB.ActionShortDE,
+  RiggVar.FB.ActionLongEN,
+  RiggVar.FB.ActionLongDE;
 
 procedure TFederActionHandler.Execute(fa: TFederAction);
 var
@@ -63,6 +69,48 @@ begin
     Exit;
 
     result := Main.GetChecked(fa);
+end;
+
+function TFederActionHandler.GetShortCaption(fa: TFederAction): string;
+var
+  M: TMain;
+begin
+  result := '';
+  M := Main;
+
+  if not Assigned(M) then
+    Exit;
+  if not M.IsUp then
+    Exit;
+
+  if not MainVar.WantLocalizedText then
+  begin
+    result := inherited
+  end
+  else
+  begin
+    if MainVar.WantGermanText then
+      result := GetFederActionShortDE(fa)
+    else
+      result := GetFederActionShortEN(fa)
+  end;
+end;
+
+function TFederActionHandler.GetCaption(fa: TFederAction): string;
+begin
+  result := '';
+
+  if not MainVar.WantLocalizedText then
+  begin
+    result := inherited
+  end
+  else
+  begin
+    if MainVar.WantGermanText then
+      result := GetFederActionLongDE(fa)
+    else
+      result := GetFederActionLongEN(fa)
+  end;
 end;
 
 end.

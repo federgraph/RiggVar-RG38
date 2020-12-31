@@ -59,7 +59,7 @@ type
     procedure SetBackgroundColor(const Value: TAlphaColor);
     procedure SetDarkMode(const Value: Boolean);
   public
-    ModelID: Integer;
+//    ModelID: Integer;
     IsRetina: Boolean;
 
     constructor Create;
@@ -165,16 +165,6 @@ end;
 function TRotaForm3.GetChecked(fa: TFederAction): Boolean;
 begin
   result := False;
-//  case fa of
-//    faRggBogen: result := StrokeRigg.Bogen;
-//    faRggKoppel: result := StrokeRigg.Koppel;
-
-    { current Viewpoint shall not be indicated }
-//    faViewpointS: result := StrokeRigg.ViewPoint = TViewPoint.vpSeite;
-//    faViewpointA: result := StrokeRigg.ViewPoint = TViewPoint.vpAchtern;
-//    faViewpointT: result := StrokeRigg.ViewPoint = TViewPoint.vpTop;
-//    faViewpoint3: result := StrokeRigg.ViewPoint = TViewPoint.vp3D;
-//  end;
 end;
 
 function TRotaForm3.GetMastKurvePoint(const Index: Integer): TPoint3D;
@@ -296,7 +286,6 @@ end;
 procedure TRotaForm3.SetBackgroundColor(const Value: TAlphaColor);
 begin
   FBackgroundColor := Value;
-//  Viewport.Color := MainVar.ColorScheme.claBackground;
   Viewport.Color := Value;
 end;
 
@@ -327,9 +316,7 @@ end;
 
 procedure TRotaForm3.SetFixPoint(const Value: TRiggPoint);
 begin
-  RggGlobalOffsetX := Main.FixPunkt.X;
-  RggGlobalOffsetY := Main.FixPunkt.Y;
-  RggGlobalOffsetZ := Main.FixPunkt.Z;
+  RggGlobalOffset := Main.FixPunkt;
   StrokeRigg.FixPoint := Value;
   Draw;
 end;

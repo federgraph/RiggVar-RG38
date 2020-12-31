@@ -1,4 +1,4 @@
-﻿unit RiggVar.FB.ActionShort;
+﻿unit RiggVar.FB.ActionShortDE;
 
 (*
 -
@@ -24,11 +24,11 @@ uses
   System.SysUtils,
   RiggVar.FB.ActionConst;
 
-function GetFederActionShort(fa: TFederAction): string;
+function GetFederActionShortDE(fa: TFederAction): string;
 
 implementation
 
-function GetFederActionShort(fa: TFederAction): string;
+function GetFederActionShortDE(fa: TFederAction): string;
 begin
   result := '??';
   case fa of

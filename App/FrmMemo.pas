@@ -96,11 +96,10 @@ var
 implementation
 
 uses
-  RiggVar.App.Main,
 {$ifdef WantDriverTest}
   RiggVar.FG.DriverTest,
 {$endif}
-  FrmMain;
+  RiggVar.App.Main;
 
 {$R *.fmx}
 

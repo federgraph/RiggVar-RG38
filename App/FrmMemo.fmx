@@ -1,4 +1,4 @@
-﻿object FormMemo: TFormMemo
+object FormMemo: TFormMemo
   Left = 0
   Top = 0
   Caption = 'Memo'
@@ -25,8 +25,8 @@
     Size.Height = 310.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
-    Viewport.Width = 235.000000000000000000
-    Viewport.Height = 306.000000000000000000
+    Viewport.Width = 239.000000000000000000
+    Viewport.Height = 310.000000000000000000
   end
   object ToolbarPanel: TPanel
     Align = Top

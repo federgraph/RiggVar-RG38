@@ -397,7 +397,6 @@ faToggleViewType = 294;
 faViewTypeOrtho = 295;
 faViewTypePerspective = 296;
 
-{$ifdef WantAll}
 { DropTarget }
 faToggleDropTarget = 297;
 
@@ -411,6 +410,8 @@ faOpen = 301;
 faCopy = 302;
 faPaste = 303;
 faShare = 304;
+
+{$ifdef WantAll}
 
 { ViewOptions }
 faToggleMoveMode = 305;
@@ -435,7 +436,7 @@ faToggleContour = 317;
 {$ifdef WantAll}
 faMax = 318;
 {$else}
-faMax = 297;
+faMax = 305;
 {$endif}
 
 ParamsRange = [
