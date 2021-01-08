@@ -199,7 +199,11 @@ type
     E0E // Controller
   );
 
+  TRiggPointIndexRange = 0 .. 15;
   TRiggPoints = record
+    class function CoordShortName(Index: TRiggPoint): string; static;
+    class function CoordName(Index: TRiggPoint): string; static;
+    class function CoordNameEN(Index: TRiggPoint): string; static;
     case Integer of
       0: (V: array [TRiggPoint] of TPoint3D);
       1: (
@@ -225,7 +229,9 @@ type
 
   TRiggRodIndexRange = 0 .. 19;
   TRiggRods = record
+    class function AbstandShortName(Index: TRiggRodIndexRange): string; static;
     class function AbstandName(Index: TRiggRodIndexRange): string; static;
+    class function AbstandNameEN(Index: TRiggRodIndexRange): string; static;
     case Integer of
       0: (V: array [0 .. 19] of single);
       1: (
@@ -401,9 +407,9 @@ type
   const
     EModulStahl = 210E3; { N / mm^2 }
     EModulAlu = 70E3; { N / mm^2 }
-  EAgross = 100E6; { N }
-  EARumpf = 10E6; { N }
-  EASaling = 1E6; { N }
+    EAgross = 100E6; { N }
+    EARumpf = 10E6; { N }
+    EASaling = 1E6; { N }
   end;
 
 const
@@ -445,24 +451,24 @@ const
     x2: 1000
     );
 
-  KoordLabels: TKoordLabels = (
-    'Basispunkt',
-    'Pütting Stb',
-    'Pütting Bb',
-    'Vorstag Boot',
-    'Mastfuß',
-    'Controller E0',
-    'SpiegelPunkt',
-    'Punkt P0',
-    'Saling Stb',
-    'Saling Bb',
-    'Vorstag',
-    'Saling Mast',
-    'Controller',
-    'Masttop',
-    'Punkt P',
-    'Punkt M'
-    );
+//  KoordLabels: TKoordLabels = (
+//    'Basispunkt',
+//    'Pütting Stb',
+//    'Pütting Bb',
+//    'Vorstag Boot',
+//    'Mastfuß',
+//    'Controller E0',
+//    'SpiegelPunkt',
+//    'Punkt P0',
+//    'Saling Stb',
+//    'Saling Bb',
+//    'Vorstag',
+//    'Saling Mast',
+//    'Controller',
+//    'Masttop',
+//    'Punkt P',
+//    'Punkt M'
+//    );
 
   XMLKoordLabels: TKoordLabels = (
     'Basispunkt',
@@ -490,44 +496,44 @@ const
 
   KoordTexteXML: TKoordLabels = ('N0',
     'A0', 'B0', 'C0', 'D0', 'E0', 'F0', 'P0',
-    'A', 'B', 'C', 'D', 'E', 'F', 'P', 'M'
+    'A',  'B',  'C',  'D',  'E',  'F',  'P',  'M'
     );
 
-  AbstandLabels: array[0..19] of string = (
-    'D0C Mast',
-    'C0D0 Vorstag - Mastfuß',
-    'B0C0 Pütting Bb - Vorstag',
-    'A0C0 Pütting Stb - Vorstag',
-    'B0D0 Pütting Bb - Mastfuß',
-    'A0D0 Pütting Stb - Mastfuß',
-    'A0B0 Püttingabstand',
-    'B0B Wante unten Bb',
-    'A0A Wante unten Stb',
-    'BD Saling Bb',
-    'AD Saling Stb',
-    'AB Saling-Verbindung',
-    'BC Wante oben Bb',
-    'AC Wante oben Stb',
-    'C0C Vorstag',
-    'DC Mast',
-    'D0D Mast',
-    'ED Mast',
-    'D0E Mast',
-    'E0E Controller'
-    );
+//  AbstandLabels: array[0..19] of string = (
+//    'D0C Mast',
+//    'C0D0 Vorstag - Mastfuß',
+//    'B0C0 Pütting Bb - Vorstag',
+//    'A0C0 Pütting Stb - Vorstag',
+//    'B0D0 Pütting Bb - Mastfuß',
+//    'A0D0 Pütting Stb - Mastfuß',
+//    'A0B0 Püttingabstand',
+//    'B0B Wante unten Bb',
+//    'A0A Wante unten Stb',
+//    'BD Saling Bb',
+//    'AD Saling Stb',
+//    'AB Saling-Verbindung',
+//    'BC Wante oben Bb',
+//    'AC Wante oben Stb',
+//    'C0C Vorstag',
+//    'DC Mast',
+//    'D0D Mast',
+//    'ED Mast',
+//    'D0E Mast',
+//    'E0E Controller'
+//    );
 
-  ParamLabels: TsbLabelArray = (
-    { Controller: } 'Zustellung Mast-Controller [mm]',
-    { Winkel: } 'Winkel [Grad]',
-    { Vorstag: } 'Vorstaglänge [mm]',
-    { Wante: } 'Wantenlänge [mm]',
-    { Woben: } 'Länge des oberen Wantenabschnitts [mm]',
-    { SalingH: } 'Höhe des Salingdreiecks [mm]',
-    { SalingA: } 'Saling-Abstand [mm]',
-    { SalingL: } 'Saling-Länge [mm]',
-    { VorstagOS: } 'Vorstaglänge [mm]', { not used }
-    { WPowerOS: } 'Wantenspannung [N]' { not used }
-    );
+//  ParamLabels: TsbLabelArray = (
+//    { Controller: } 'Zustellung Mast-Controller [mm]',
+//    { Winkel: } 'Winkel [Grad]',
+//    { Vorstag: } 'Vorstaglänge [mm]',
+//    { Wante: } 'Wantenlänge [mm]',
+//    { Woben: } 'Länge des oberen Wantenabschnitts [mm]',
+//    { SalingH: } 'Höhe des Salingdreiecks [mm]',
+//    { SalingA: } 'Saling-Abstand [mm]',
+//    { SalingL: } 'Saling-Länge [mm]',
+//    { VorstagOS: } 'Vorstaglänge [mm]', { not used }
+//    { WPowerOS: } 'Wantenspannung [N]' { not used }
+//    );
 
   XMLSBName: array[TsbName] of string = (
     'E0E',
@@ -701,9 +707,35 @@ end;
 
 { TRiggLrecord }
 
-class function TRiggRods.AbstandName(Index: TRiggRodIndexRange): string;
+class function TRiggRods.AbstandShortName(Index: TRiggRodIndexRange): string;
 begin
 
+  case Index of
+    0: result := 'D0C';
+    1: result := 'C0D0';
+    2: result := 'B0C0';
+    3: result := 'A0C0';
+    4: result := 'B0D0';
+    5: result := 'A0D0';
+    6: result := 'A0B0';
+    7: result := 'B0B';
+    8: result := 'A0A';
+    9: result := 'BD';
+    10: result := 'AD';
+    11: result := 'AB';
+    12: result := 'BC';
+    13: result := 'AC';
+    14: result := 'C0C';
+    15: result := 'DC';
+    16: result := 'D0D';
+    17: result := 'ED';
+    18: result := 'D0E';
+    19: result := 'E0E';
+  end;
+end;
+
+class function TRiggRods.AbstandName(Index: TRiggRodIndexRange): string;
+begin
   case Index of
     0: result := 'D0C Mast';
     1: result := 'C0D0 Vorstag - Mastfuß';
@@ -725,6 +757,32 @@ begin
     17: result := 'ED';
     18: result := 'D0E';
     19: result := 'E0E Controller';
+  end;
+end;
+
+class function TRiggRods.AbstandNameEN(Index: TRiggRodIndexRange): string;
+begin
+  case Index of
+    0: result := 'D0C Mast';
+    1: result := 'C0D0 Headstay - Mastfoot';
+    2: result := 'B0C0 Chain plate left - Headstay';
+    3: result := 'A0C0 Chain plate right - Headstay';
+    4: result := 'B0D0 Chain plate left - Mastfoot';
+    5: result := 'A0D0 Chain plate right - Mastfoot';
+    6: result := 'A0B0 Chain plate distance';
+    7: result := 'B0B Shroud lower part left';
+    8: result := 'A0A Shroud lower part right';
+    9: result := 'BD Spreader left';
+    10: result := 'AD Spreader right';
+    11: result := 'AB Spreader - Connection';
+    12: result := 'BC Shroud upper part left';
+    13: result := 'AC Shroud upper part right';
+    14: result := 'C0C Headstay';
+    15: result := 'DC';
+    16: result := 'D0D';
+    17: result := 'ED';
+    18: result := 'D0E';
+    19: result := 'E0E Mast controller';
   end;
 end;
 
@@ -856,6 +914,74 @@ begin
   Add(48, 2379.27973898025, 4287.97964196973);
   Add(49, 2366.44566947495, 4379.10089347056);
   Add(50, 2353.60270538165, 4470.22113995631);
+end;
+
+{ TRiggPoints }
+
+class function TRiggPoints.CoordName(Index: TRiggPoint): string;
+begin
+  case Index of
+    ooN0: result := 'N0';
+    ooA0: result := 'A0';
+    ooB0: result := 'B0';
+    ooC0: result := 'C0';
+    ooD0: result := 'D0';
+    ooE0: result := 'E0';
+    ooF0: result := 'F0';
+    ooP0: result := 'P0';
+    ooA: result := 'A';
+    ooB: result := 'B';
+    ooC: result := 'C';
+    ooD: result := 'D';
+    ooE: result := 'E';
+    ooF: result := 'F';
+    ooP: result := 'P';
+    ooM: result := 'M';
+  end;
+end;
+
+class function TRiggPoints.CoordNameEN(Index: TRiggPoint): string;
+begin
+  case Index of
+    ooN0: result := 'Base Point N0';
+    ooA0: result := 'Chain Plate Stb';
+    ooB0: result := 'Chain Plate Bb';
+    ooC0: result := 'Headstay Hull';
+    ooD0: result := 'Mastfoot D0';
+    ooE0: result := 'Controller E0';
+    ooF0: result := 'Stern Point F0';
+    ooP0: result := 'Point P0';
+    ooA: result := 'Spreader Stb';
+    ooB: result := 'Spreader Bb';
+    ooC: result := 'Headstay';
+    ooD: result := 'Sreader Mast';
+    ooE: result := 'Controller';
+    ooF: result := 'Mast Top';
+    ooP: result := 'Point P';
+    ooM: result := 'Point M';
+  end;
+end;
+
+class function TRiggPoints.CoordShortName(Index: TRiggPoint): string;
+begin
+  case Index of
+    ooN0: result := 'Basispunkt';
+    ooA0: result := 'Pütting Stb';
+    ooB0: result := 'Pütting Bb';
+    ooC0: result := 'Vorstag Boot';
+    ooD0: result := 'Mastfuß';
+    ooE0: result := 'Controller E0';
+    ooF0: result := 'SpiegelPunkt';
+    ooP0: result := 'Punkt P0';
+    ooA: result := 'Saling Stb';
+    ooB: result := 'Saling Bb';
+    ooC: result := 'Vorstag';
+    ooD: result := 'Saling Mast';
+    ooE: result := 'Controller';
+    ooF: result := 'Masttop';
+    ooP: result := 'Punkt P';
+    ooM: result := 'Punkt M';
+  end;
 end;
 
 end.

@@ -26,6 +26,8 @@ interface
 {.$define WantDeviceCheck}
 {.$define WantResizeEnd}
 {.$define WantMenu}
+{$define WantFormConfig}
+{.$define WantCombos}
 
 {$define FMX}
 
@@ -465,12 +467,7 @@ begin
 {$endif}
 
   RotaForm.Init;
-
-{$ifdef WantRotaForm3}
-  RotaForm.SwapRota(3);
-{$else}
   RotaForm.SwapRota(1);
-{$endif}
 
   { Params }
   if ParamListbox <> nil then
@@ -2604,8 +2601,10 @@ begin
   Main.ParamCaption := Main.Param2Text(Main.Param);
   ShowTrimm;
 
+{$ifdef WantFormConfig}
   if (FormConfig <> nil) and not (FormConfig.Visible) then
     FreeAndNil(FormConfig);
+{$endif}
 end;
 
 procedure TFormMain.UpdateParamListboxText;

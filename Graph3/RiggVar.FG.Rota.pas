@@ -59,7 +59,6 @@ type
     procedure SetBackgroundColor(const Value: TAlphaColor);
     procedure SetDarkMode(const Value: Boolean);
   public
-//    ModelID: Integer;
     IsRetina: Boolean;
 
     constructor Create;

@@ -50,9 +50,9 @@ type
     procedure DrawToCanvas(g: TCanvas);
     procedure DrawToImage(g: TCanvas);
   private
-    procedure PaintBox3DMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: single);
-    procedure PaintBox3DMouseMove(Sender: TObject; Shift: TShiftState; X, Y: single);
-    procedure PaintBox3DMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: single);
+    procedure ImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: single);
+    procedure ImageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: single);
+    procedure ImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: single);
   protected
     KeepInsideItemChecked: Boolean;
     procedure PositionSaveItemClick(Sender: TObject);
@@ -106,7 +106,8 @@ type
     MouseDown: Boolean;
     MouseButton: TMouseButton;
     Painted: Boolean;
-    prevx, prevy: single;
+    prevx: single;
+    prevy: single;
     MouseDownX, MouseDownY: single;
     SavedXPos, SavedYPos: single;
     AlwaysShowAngle: Boolean;
@@ -765,7 +766,7 @@ begin
   Draw;
 end;
 
-procedure TRotaForm1.PaintBox3DMouseDown(Sender: TObject;
+procedure TRotaForm1.ImageMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: single);
 begin
   MouseDown := True;
@@ -782,7 +783,7 @@ begin
     (Abs(NullPunktOffset.y - Y) < TKR);
 end;
 
-procedure TRotaForm1.PaintBox3DMouseMove(Sender: TObject;
+procedure TRotaForm1.ImageMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: single);
 var
   wx, wy, wz: single;
@@ -791,15 +792,15 @@ begin
     Exit;
   if MouseButton = TMouseButton.mbLeft then
   begin
-    wx := (x - prevx) * 0.15;
-    wy := (y - prevy) * 0.15;
+    wx := (X - prevx) * 0.15;
+    wy := (Y - prevy) * 0.15;
     wz := 0;
   end
   else if MouseButton = TMouseButton.mbRight then
   begin
     wx := 0;
     wy := 0;
-    wz := (x - prevx) * 0.3;
+    wz := (X - prevx) * 0.3;
   end
   else
   begin
@@ -810,18 +811,18 @@ begin
   begin
     Painted := False;
     if (ssCtrl in Shift) then
-      Translate(x,y)
+      Translate(X, Y)
     else if FTranslation or (Shift = [ssLeft, ssRight]) then
-      Translate(x,y)
+      Translate(X, Y)
     else
       Rotate(0, 0, 0, wx, wy, wz);
     Draw;
-    prevx := x;
-    prevy := y;
+    prevx := X;
+    prevy := Y;
   end;
 end;
 
-procedure TRotaForm1.PaintBox3DMouseUp(Sender: TObject;
+procedure TRotaForm1.ImageMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: single);
 begin
   MouseDown := False;
@@ -1102,9 +1103,9 @@ end;
 
 procedure TRotaForm1.Swap;
 begin
-  Image.OnMouseDown := PaintBox3DMouseDown;
-  Image.OnMouseMove := PaintBox3DMouseMove;
-  Image.OnMouseUp := PaintBox3DMouseUp;
+  Image.OnMouseDown := ImageMouseDown;
+  Image.OnMouseMove := ImageMouseMove;
+  Image.OnMouseUp := ImageMouseUp;
   Image.OnScreenScaleChanged := ImageScreenScaleChanged;
 end;
 

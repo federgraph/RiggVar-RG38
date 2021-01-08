@@ -364,6 +364,7 @@ type
     Poly: TPolygon;
     constructor Create(ACaption: string; ACount: Integer); overload;
     destructor Destroy; override;
+    procedure AssignPoly(const APoly: TPolygon);
     procedure Draw(g: TCanvas); override;
     property Count: Integer read FCount;
   end;
@@ -2294,13 +2295,26 @@ end;
 
 { TRggPolyCurve }
 
+procedure TRggPolyCurve.AssignPoly(const APoly: TPolygon);
+var
+  l: Integer;
+begin
+  l := Length(APoly);
+  Poly := APoly;
+  if l <> Count then
+  begin
+    FCount := l;
+    SetLength(TransformedPoly, l);
+  end;
+end;
+
 constructor TRggPolyCurve.Create(ACaption: string; ACount: Integer);
 begin
   inherited Create;
   TypeName := 'PolyCurve';
   Caption := ACaption;
   PD := TPathData.Create;
-  if (ACount > 2) and (ACount < 202) then
+  if (ACount > 2) and (ACount < 361) then
   begin
     FCount := ACount;
     SetLength(Poly, Count);

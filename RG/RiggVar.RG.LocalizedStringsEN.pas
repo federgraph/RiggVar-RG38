@@ -248,6 +248,29 @@ begin
   EA_L_Key := 'EA Large';
 
   SWarningText := 'Save changes in %s?';
+
+  { Ausgabe }
+  AusgabeRLHeading := 'Length values under load in mm (vector rL)';
+  AusgabeRLEHeading := 'Length values relaxed in mm (vector rLe)';
+  AusgabeDiffLHeading := 'Length value diff in mm  (rLe[i]-rL[i])';
+  AusgabeRPHeading := 'Coordinates under load in mm (vector rP)';
+  AusgabeRPEHeading := 'Coordinates of relaxed position in mm (vector rPe)';
+  AusgabeDiffPHeading := 'Point displacement in mm (rPe[i]-rP[i])';
+  AusgabeRFHeading := 'Force in N (vector rF)';
+  AusgabeWinkelHeading := 'Angles';
+  AusgabeTrimmControlsHeading := 'Settings (TTrimmControls)';
+  AusgabeSalingDatenHeading := 'Spreader settings (TSalingDaten)';
+  AusgabeLogHeading := 'Log';
+  AusgabeVerschiebungenHeading := 'Displacement of points';
+
+  AusgabeTokenGrad := 'Degrees';
+  AusgabeTokenUpdatedOnly := 'updated only in mode SofortBerechnen';
+  AusgabeTokenAuflagerKraftN := 'Point force in N';
+  AusgabeTokenBelastungN := 'Load in N';
+  AusgabeTokenKoordinatenMM := 'Point coordinates in mm';
+  AusgabeTokenStabKraftN := 'Rod force in N';
+  AusgabeTokenEAN := 'EA value in KN';
+  AusgabeTokenStabElast := 'Elasticity in µm/N';
 end;
 
 end.

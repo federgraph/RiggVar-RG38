@@ -432,4 +432,3 @@ ActionGroupBitmapCycle: TActionGroup = [
 implementation
 
 end.
-

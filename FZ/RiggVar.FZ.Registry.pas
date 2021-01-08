@@ -37,7 +37,8 @@ uses
   RiggVar.FZ.Z19_Chart,
   RiggVar.FZ.Z20_Epsilon,
   RiggVar.FZ.Z21_Rotations,
-  RiggVar.FZ.Z22_BigArc;
+  RiggVar.FZ.Z22_BigArc,
+  RiggVar.FZ.Z23_Federgraph;
 
 class procedure TRggDrawingRegistry.Init(DL: TRggDrawings);
 begin
@@ -71,6 +72,7 @@ begin
   DL.Add(TRggDrawingZ20.Create); // Epsilon
   DL.Add(TRggDrawingZ21.Create); // Rotations
   DL.Add(TRggDrawingZ22.Create); // BigArc
+  DL.Add(TRggDrawingZ23.Create); // Federgraph
 end;
 
 end.

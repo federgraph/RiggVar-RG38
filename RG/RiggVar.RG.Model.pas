@@ -4726,6 +4726,8 @@ end;
 procedure TRigg2.AusgabeTextEN(ML: TStrings; WantAll: Boolean; WantForce: Boolean);
 var
   t: TSalingDaten;
+  s: string;
+  fs: string;
 begin
   t := SalingDaten;
 
@@ -4733,6 +4735,8 @@ begin
 //  lbMastFall := Format('Mastfall = %5.1f cm', [Rigg.Trimm.Mastfall / 10]);
 //  lbSpannung := Format('Spannung = %5.0f N', [Rigg.rF[14]]);
 //  lbBiegung := Format('Biegung  = %5.1f cm', [Rigg.hd / 10]);
+
+  s := RggLocalizedStrings.AusgabeTokenGrad;
 
   ML.Add('Trim:');
   ML.Add(Format('  Distance F0F     = %8.0f mm', [rP.F0.Distance(rP.F)]));
@@ -4745,34 +4749,35 @@ begin
   ML.Add(Format('  Spreader Length   = %6.2f mm', [t.SalingL]));
   ML.Add(Format('  Spreader Height   = %6.2f mm', [t.SalingH]));
   ML.Add(Format('  Spreader Distance = %6.2f mm', [t.SalingA]));
-  ML.Add(Format('  Spreader Angle    = %6.2f Grad', [t.SalingW]));
-  ML.Add(Format('  Shroud Angle      = %6.2f Grad', [t.WantenWinkel]));
-  ML.Add(Format('  Force Angle       = %6.2f Grad', [t.KraftWinkel]));
+  ML.Add(Format('  Spreader Angle    = %6.2f %s', [t.SalingW, s]));
+  ML.Add(Format('  Shroud Angle      = %6.2f %s', [t.WantenWinkel, s]));
+  ML.Add(Format('  Force Angle       = %6.2f %s', [t.KraftWinkel, s]));
 
   ML.Add('');
   ML.Add('System angles:');
-  ML.Add(Format('  phi       = %6.2f degrees', [RadToDeg(Phi)]));
-  ML.Add(Format('  psi       = %6.2f degrees', [RadToDeg(psi)]));
-  ML.Add(Format('  alpha     = %6.2f degrees', [RadToDeg(alpha)]));
-  ML.Add(Format('  phi-alpha = %6.2f degrees (Mast-Tilt)', [RadToDeg(Phi-alpha)]));
-  ML.Add(Format('  psi-alpha = %6.2f degrees (Shroud-Tilt)', [RadToDeg(psi-alpha)]));
+  ML.Add(Format('  phi       = %6.2f %s', [RadToDeg(Phi), s]));
+  ML.Add(Format('  psi       = %6.2f %s', [RadToDeg(psi), s]));
+  ML.Add(Format('  alpha     = %6.2f %s', [RadToDeg(alpha), s]));
+  ML.Add(Format('  phi-alpha = %6.2f %s (Mast-Tilt)', [RadToDeg(Phi-alpha), s]));
+  ML.Add(Format('  psi-alpha = %6.2f %s (Shroud-Tilt)', [RadToDeg(psi-alpha), s]));
 
   ML.Add('');
   ML.Add('Mast angles:');
-  ML.Add(Format('  epsB = %6.2f degrees', [RadToDeg(epsB)]));
-  ML.Add(Format('  eps2 = %6.2f degrees', [RadToDeg(eps2)]));
-  ML.Add(Format('  eps1 = %6.2f degrees', [RadToDeg(eps1)]));
-  ML.Add(Format('  epsA = %6.2f degrees', [RadToDeg(epsA)]));
-  ML.Add(Format('  Epsilon  = %6.2f degrees', [RadToDeg(epsilon)]));
+  ML.Add(Format('  epsB = %6.2f %s', [RadToDeg(epsB), s]));
+  ML.Add(Format('  eps2 = %6.2f %s', [RadToDeg(eps2), s]));
+  ML.Add(Format('  eps1 = %6.2f %s', [RadToDeg(eps1), s]));
+  ML.Add(Format('  epsA = %6.2f %s', [RadToDeg(epsA), s]));
+  ML.Add(Format('  Epsilon  = %6.2f %s', [RadToDeg(epsilon), s]));
 
+  fs := '  %6s = %6.2f %s';
   ML.Add('');
   ML.Add('Intersection angles:');
-  ML.Add(Format('  alpha1 = %6.2f degrees', [RadToDeg(alpha1)]));
-  ML.Add(Format('  alpha2 = %6.2f degrees', [RadToDeg(alpha2)]));
-  ML.Add(Format('  delta1 = %6.2f degrees', [RadToDeg(delta1)]));
-  ML.Add(Format('  delta2 = %6.2f degrees', [RadToDeg(delta2)]));
-  ML.Add(Format('  gamma  = %6.2f degrees', [RadToDeg(gamma)]));
-  ML.Add(Format('  beta   = %6.2f degrees', [RadToDeg(beta)]));
+  ML.Add(Format(fs, ['alpha1', RadToDeg(alpha1), s]));
+  ML.Add(Format(fs, ['alpha2', RadToDeg(alpha2), s]));
+  ML.Add(Format(fs, ['delta1', RadToDeg(delta1), s]));
+  ML.Add(Format(fs, ['delta2', RadToDeg(delta2), s]));
+  ML.Add(Format(fs, ['gamma', RadToDeg(gamma), s]));
+  ML.Add(Format(fs, ['beta', RadToDeg(beta), s]));
 
   if not WantAll then
     Exit;

@@ -37,7 +37,6 @@ uses
   FMX.Objects,
   FMX.ListView,
   FMX.Edit,
-  RiggVar.RG.Def,
   FMX.Layouts,
   FMX.ListBox;
 

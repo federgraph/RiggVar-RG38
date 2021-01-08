@@ -248,6 +248,30 @@ begin
   EA_L_Key := 'EA Large';
 
   SWarningText := 'Änderungen in %s sichern?';
+
+  { Ausgabe }
+  AusgabeRLHeading := 'Längen belastet in mm (Vektor rL)';
+  AusgabeRLEHeading := 'Längen entlastet in mm (Vektor rLe)';
+  AusgabeDiffLHeading := 'Längenänderungen in mm  (rLe[i]-rL[i])';
+  AusgabeRPHeading := 'Koordinaten belastet in mm (Vektor rP)';
+  AusgabeRPEHeading := 'Koordinaten entlastet in mm (Vektor rPe)';
+  AusgabeDiffPHeading := 'Punktverschiebungen in mm (rPe[i]-rP[i])';
+  AusgabeRFHeading := 'Kräfte in N (Vektor rF)';
+  AusgabeWinkelHeading := 'Winkel';
+  AusgabeTrimmControlsHeading := 'Einstellungen (TTrimmControls)';
+  AusgabeSalingDatenHeading := 'Salinge (TSalingDaten)';
+  AusgabeLogHeading := 'Log';
+  AusgabeVerschiebungenHeading := 'Verschiebungen der Knotenpunkte';
+
+  AusgabeTokenGrad := 'Grad';
+  AusgabeTokenUpdatedOnly := 'aktualisiert nur im Modus SofortBerechnen';
+  AusgabeTokenAuflagerKraftN := 'Auflagerkräfte in N';
+  AusgabeTokenBelastungN := 'Belastung der Knotenpunkte in N';
+  AusgabeTokenKoordinatenMM := 'Koordinaten der Knotenpunkte in mm';
+  AusgabeTokenStabKraftN := 'Stabkräfte in N';
+  AusgabeTokenEAN := 'EA in KN';
+  AusgabeTokenStabElast := 'Stabelastizitäten in µm/N';
+
 end;
 
 end.
