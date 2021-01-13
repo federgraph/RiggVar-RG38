@@ -296,7 +296,7 @@ var
   ci: Integer;
   StartPoint, EndPoint: TPointF;
   rp1, rp2: TPoint3D;
-  cla: TColor;
+  cla: TAlphaColor;
   s: string;
 begin
   if nvert <= 0 then

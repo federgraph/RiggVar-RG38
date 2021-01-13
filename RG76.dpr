@@ -1,4 +1,4 @@
-program RG76;
+﻿program RG76;
 
 uses
   System.StartUpCopy,
@@ -48,12 +48,12 @@ uses
   RiggVar.FZ.Z20_Epsilon in 'FZ\RiggVar.FZ.Z20_Epsilon.pas',
   RiggVar.FZ.Z21_Rotations in 'FZ\RiggVar.FZ.Z21_Rotations.pas',
   RiggVar.FZ.Z22_BigArc in 'FZ\RiggVar.FZ.Z22_BigArc.pas',
+  RiggVar.FZ.Z23_Federgraph in 'FZ\RiggVar.FZ.Z23_Federgraph.pas',
   RiggVar.RG.Calc in 'RG\RiggVar.RG.Calc.pas',
   RiggVar.RG.Types in 'RG\RiggVar.RG.Types.pas',
   RiggVar.FederModel.Circle in 'Model\RiggVar.FederModel.Circle.pas',
   RiggVar.FB.Equation in 'FB\RiggVar.FB.Equation.pas',
   RiggVar.FB.Formula in 'FB\RiggVar.FB.Formula.pas',
-  RiggVar.FZ.Z23_Federgraph in 'FZ\RiggVar.FZ.Z23_Federgraph.pas',
   RiggVar.FB.Classes in 'FB\RiggVar.FB.Classes.pas';
 
 {$R *.res}

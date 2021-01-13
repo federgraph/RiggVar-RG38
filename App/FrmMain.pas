@@ -2477,7 +2477,6 @@ begin
 end;
 
 {$ifdef WantRotaForm3}
-
 procedure TFormMain.ApplicationEventsIdle(Sender: TObject; var Done: Boolean);
 begin
   if IsUp then
@@ -2534,7 +2533,6 @@ begin
   Inc(ClearStateCounter);
   Caption := Format('%d - %d', [ClearStateCounter, Main.ResizeCounter]);
 end;
-
 {$endif}
 
 {$ifdef WantMenu}
