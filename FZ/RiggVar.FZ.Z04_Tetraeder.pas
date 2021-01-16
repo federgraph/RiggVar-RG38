@@ -134,7 +134,7 @@ begin
   ML.Add('Tetreder = Tetrahedron = 3D drawing sample.');
   ML.Add('');
   ML.Add('Click in white space on image and drag the mouse.');
-  ML.Add('Try dragging  with right mouse button down.');
+  ML.Add('Try dragging horizontally with right mouse button down.');
   ML.Add('');
   ML.Add('Select different circles and drag them with mouse.');
   ML.Add('  by starting the drag within the selection shape.');

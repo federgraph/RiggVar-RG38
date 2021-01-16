@@ -271,9 +271,6 @@ begin
   ML.Add('I created the drawing elements out of a need to document stuff,');
   ML.Add('  in 2020 using Delphi.');
   ML.Add('Drawing elements need an attached caption and should be live!');
-  ML.Add('Once they are live you may find out that they are not working,');
-  ML.Add('  but most of them can be fixed?');
-  ML.Add('We will find out, because it is easy to create new drawings.');
   result := ML.Text;
   ML.Clear;
 end;

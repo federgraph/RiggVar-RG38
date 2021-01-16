@@ -215,7 +215,7 @@ begin
   ML.Add('  Scroll the wheel.');
   ML.Add('    Examine code at GitHub:');
   ML.Add('');
-  ML.Add('see github.com/federgraph/RiggVar-RG38/');
+  ML.Add('see github.com/federgraph/');
   ML.Add('  repository RiggVar-RG38');
   ML.Add('    drawings are in folder FZ');
   result := ML.Text;

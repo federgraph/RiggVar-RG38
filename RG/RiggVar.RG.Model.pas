@@ -4260,7 +4260,6 @@ begin
     end;
     Exit;
   end;
-//  inherited Assign(Source);
 end;
 
 procedure TRigg2.GetDocument(Doc: TRggDocument);
@@ -5414,4 +5413,3 @@ begin
 end;
 
 end.
-

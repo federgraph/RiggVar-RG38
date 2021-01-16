@@ -2,6 +2,8 @@
 
 interface
 
+{$define WantMultipleLists}
+
 uses
   RiggVar.FB.Color,
   RiggVar.FD.Elements,
@@ -129,7 +131,9 @@ begin
   ML.Add('case Key of');
   ML.Add('  vkEscape: DoReset;');
   ML.Add('  vkF11: SwapLayout;');
+{$ifdef WantMultipleLists}
   ML.Add('  vkF6 : SwapDrawingLists;');
+{$endif}
   ML.Add('  vkF3 : SwapThickLines;');
   ML.Add('  vkF1 : ShowInfo;');
   ML.Add('  vkF2 : SwapColorScheme;');
@@ -138,7 +142,9 @@ begin
   ML.Add('  C: SwapColorScheme;');
   ML.Add('  G: GlobalShowCaptionBtnClick(nil);');
   ML.Add('  R: DoReset;');
+{$ifdef WantMultipleLists}
   ML.Add('  L: SwapDrawingLists;');
+{$endif}
   ML.Add('  T: SwapLayout;');
   ML.Add('  W: SwapThickLines;');
   ML.Add('');

@@ -404,7 +404,7 @@ var
   begin
     p := rP.V[oo];
     t := p - q;
-    s := KoordTexteXML[oo];
+    s := TRiggPoints.CoordName(oo);
     cr.Center.X := OffsetX + t.X * InitialZoom;
     cr.Center.Y := OffsetY - t.Z * InitialZoom;
     cr.Center.Z := t.Y * InitialZoom;

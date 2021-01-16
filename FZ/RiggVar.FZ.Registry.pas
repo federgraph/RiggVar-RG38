@@ -47,27 +47,27 @@ end;
 
 class procedure TRggDrawingRegistry.InitFZ(DL: TRggDrawings);
 begin
-  DL.Add(TRggDrawingZ01.Create); // Viereck
+  DL.Add(TRggDrawingZ01.Create); // Quadrilateral
   DL.Add(TRggDrawingZ02.Create); // Logo
   DL.Add(TRggDrawingZ03.Create); // Viergelenk
-  DL.Add(TRggDrawingZ04.Create); // Tetraeder
+  DL.Add(TRggDrawingZ04.Create); // Tetrahedron
   DL.Add(TRggDrawingZ05.Create); // TestRigg
-  DL.Add(TRggDrawingZ06.Create); // Höhe
+  DL.Add(TRggDrawingZ06.Create); // Triangle Height
   DL.Add(TRggDrawingZ07.Create); // Triangle
   DL.Add(TRggDrawingZ08.Create); // Arc
   DL.Add(TRggDrawingZ09.Create); // Axis
-  DL.Add(TRggDrawingZ10.Create); // Lager
+  DL.Add(TRggDrawingZ10.Create); // Bearing
   DL.Add(TRggDrawingZ11.Create); // Above
 
   DL.Add(TRggDrawingZ12.Create); // Atan2
   DL.Add(TRggDrawingZ12.Create(1)); // Atan
 
-  DL.Add(TRggDrawingZ13.Create); // SchnittKK
-  DL.Add(TRggDrawingZ14.Create); // SplitF
-  DL.Add(TRggDrawingZ15.Create); // SchnitttGG
+  DL.Add(TRggDrawingZ13.Create); // Intersection Circle Circle (SchnittKK)
+  DL.Add(TRggDrawingZ14.Create); // SplitForce (SplitF)
+  DL.Add(TRggDrawingZ15.Create); // Intersection Line Line (SchnittGG)
   DL.Add(TRggDrawingZ16.Create); // Shrink
-  DL.Add(TRggDrawingZ17.Create); // Feder
-  DL.Add(TRggDrawingZ18.Create); // BerechneWinkel
+  DL.Add(TRggDrawingZ17.Create); // Spring (Feder)
+  DL.Add(TRggDrawingZ18.Create); // ComputeAngle (BerechneWinkel)
   DL.Add(TRggDrawingZ19.Create); // Chart
   DL.Add(TRggDrawingZ20.Create); // Epsilon
   DL.Add(TRggDrawingZ21.Create); // Rotations
