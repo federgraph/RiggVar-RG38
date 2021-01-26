@@ -279,17 +279,17 @@ begin
   EndP.IsComputed := True;
 
   ParamV := TRggParam.Create;
-  ParamV.Caption := 'Vo';
+  ParamV.Caption := 'Vorstag';
   ParamV.StartPoint.Y := 1 * Raster;
   Add(ParamV);
 
   ParamS := TRggParam.Create;
-  ParamS.Caption := 'Sa';
+  ParamS.Caption := 'Start Angle';
   ParamS.StartPoint.Y := 2 * Raster;
   Add(ParamS);
 
   ParamE := TRggParam.Create;
-  ParamE.Caption := 'Ea';
+  ParamE.Caption := 'End Angle';
   ParamE.StartPoint.Y := 3 * Raster;
   Add(ParamE);
 
@@ -339,6 +339,7 @@ begin
   P0D0 := L;
 
   L := TRggLine.Create('P0P');
+  L.IsComputed := True;
   L.StrokeColor := TRggColors.Red;
   L.Point1 := P0;
   L.Point2 := P;
@@ -346,6 +347,7 @@ begin
   P0P := L;
 
   L := TRggRotaLine.Create('D0D');
+  L.IsComputed := True;
   L.StrokeColor := TRggColors.Blue;
   L.Point1 := D0;
   L.Point2 := D;
@@ -353,6 +355,7 @@ begin
   D0D := L;
 
   L := TRggLine.Create('PD');
+  L.IsComputed := True;
   L.StrokeColor := TRggColors.Lime;
   L.Point1 := P;
   L.Point2 := D;
@@ -369,6 +372,7 @@ begin
   PC := L;
 
   L := TRggLine.Create('DC');
+  L.IsComputed := True;
   L.StrokeColor := TRggColors.Lime;
   L.Point1 := D;
   L.Point2 := C;

@@ -24,6 +24,7 @@
 {$define WantDrawingList}
 {$define WantDynamicFixPoint}
 {$define WantMemoOutput}
+{$define WantMemo}
 
 {$define FMX}
 {.$define VCL}
@@ -68,7 +69,9 @@ type
     procedure FormShow(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
   private
+{$ifdef WantMemo}
     Memo: TMemo;
+{$endif}
 {$ifdef WantDrawingList}
     DrawingList: TListView;
 {$endif}
@@ -123,7 +126,9 @@ type
     procedure CreateComponents;
     procedure InitComponentProps;
     procedure LinkComponents;
+{$ifdef WantMemo}
     procedure SetupMemo(MM: TMemo);
+{$endif}
     procedure UpdateMemo;
     procedure HandleWheel(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; var Handled: Boolean);
     procedure UpdateInplacePosition;
@@ -135,7 +140,7 @@ type
     procedure ClearImage;
     procedure InitSpecialButtons;
     procedure DoOnUpdateDrawing(Sender: TObject);
-  procedure DoDrawToCanvas(Sender: TObject);
+    procedure DoDrawToCanvas(Sender: TObject);
     procedure DoShowRotation(Sender: TObject);
     procedure ShowPoint3D(P: TPoint3D; WantClear: Boolean = True);
   protected
@@ -170,7 +175,9 @@ type
     procedure CreateDrawings;
     procedure Draw;
   private
+{$ifdef WantMemo}
     CodeBtn: TSpeedButton;
+{$endif}
     GlobalShowCaptionBtn: TSpeedButton;
     ToggleShowCaptionBtn: TSpeedButton;
     ResetBtn: TSpeedButton;
@@ -196,6 +203,7 @@ type
     ButtonGroup: TRggButtonGroup;
 
     DummyControl: TControl;
+    procedure CopyBitmap;
   public
     ML: TStrings;
     TH: TTransformHelper;
@@ -216,6 +224,7 @@ implementation
 {$R *.fmx}
 
 uses
+  FMX.Platform,
   RiggVar.FZ.Registry;
 
 procedure TFormDrawing.FormShow(Sender: TObject);
@@ -229,7 +238,7 @@ begin
     SelectDrawing(DrawingList.ItemIndex);
     DrawingList.SetFocus;
 {$else}
-    SelectDrawing(0);
+    SelectDrawing(TRggDrawingRegistry.DefaultIndex);
 {$endif}
   end;
 end;
@@ -334,10 +343,12 @@ begin
   Self.OnShow := FormShow;
   Self.OnKeyUp := FormKeyUp;
 
+{$ifdef WantMemo}
   ML := Memo.Lines;
   ML.Clear;
   SetupMemo(Memo);
   WantMemoOutput := True;
+{$endif}
 
   CreateDrawings;
 
@@ -394,8 +405,10 @@ begin
   Image.OnMouseWheel := ImageMouseWheel;
   Image.OnScreenScaleChanged := ImageScreenScaleChanged;
 
+{$ifdef WantMemo}
   Memo := TMemo.Create(Self);
   Memo.Parent := Self;
+{$endif}
 
   InplaceShape := TCircle.Create(Self);
   InplaceShape.Parent := Self;
@@ -408,9 +421,11 @@ begin
   InplaceShape.OnMouseUp := InplaceShapeMouseUp;
   InplaceShape.OnMouseWheel := ImageMouseWheel;
 
+{$ifdef WantMemo}
   CodeBtn := TSpeedButton.Create(Self);
   CodeBtn.Parent := Self;
   CodeBtn.Text := 'Code';
+{$endif}
 
   GlobalShowCaptionBtn := TSpeedButton.Create(Self);
   GlobalShowCaptionBtn.Parent := Self;
@@ -543,6 +558,8 @@ begin
     'i': ShowInfo;
     't': ToggleShowCaptionBtnClick(nil);
     'v': UpdateLayout(False);
+
+    'Ü': CopyBitmap;
   end;
 end;
 
@@ -627,13 +644,16 @@ end;
 
 procedure TFormDrawing.CodeBtnClick(Sender: TObject);
 begin
+{$ifdef WantMemo}
   if CurrentDrawing <> nil then
   begin
     Memo.Lines.Clear;
     CurrentDrawing.WriteCode(Memo.Lines);
   end;
+{$endif}
 end;
 
+{$ifdef WantMemo}
 procedure TFormDrawing.SetupMemo(MM: TMemo);
 begin
   if MM = nil then
@@ -664,6 +684,7 @@ begin
   MM.ScrollBars := TScrollStyle.ssBoth;
 {$endif}
 end;
+{$endif}
 
 procedure TFormDrawing.StackH(c: TControl);
 begin
@@ -692,7 +713,9 @@ end;
 
 procedure TFormDrawing.ResetBtnClick(Sender: TObject);
 begin
+{$ifdef WantMemo}
   Memo.Lines.Clear;
+{$endif}
   DoReset;
   ShowInfo;
 end;
@@ -755,7 +778,9 @@ procedure TFormDrawing.InitComponentProps;
 begin
   ToggleShowCaptionBtn.Hint := 'toggle ShowCaption for RggElement';
   GlobalShowCaptionBtn.Hint := 'toggle global ShowCaption';
+{$ifdef WantMemo}
   CodeBtn.Hint := 'write Code to Memo';
+{$endif}
   ResetBtn.Hint := 'Reset Transform';
 end;
 
@@ -765,7 +790,9 @@ var
 begin
   w := 40;
 
+{$ifdef WantMemo}
   CodeBtn.Width := w;
+{$endif}
   GlobalShowCaptionBtn.Width := w;
   ToggleShowCaptionBtn.Width := w;
   ResetBtn.Width := w;
@@ -799,7 +826,9 @@ begin
   ElementList.Width := ListboxWidth;
   ElementList.Height := 100;
 
+{$ifdef WantMemo}
   Memo.Width := MemoWidth;
+{$endif}
 end;
 
 procedure TFormDrawing.InplaceShapeMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
@@ -881,11 +910,16 @@ procedure TFormDrawing.LayoutComponentsH;
 begin
   ResetLayout;
 
-  CodeBtn.Position.X := Margin;
-  CodeBtn.Position.Y := Margin;
-
+{$ifdef WantMemo}
   cr := CodeBtn;
+  cr.Position.X := Margin;
+  cr.Position.Y := Margin;
   StackH(GlobalShowCaptionBtn);
+{$else}
+  cr := GlobalShowCaptionBtn;
+  cr.Position.X := Margin;
+  cr.Position.Y := Margin;
+{$endif}
   StackH(ToggleShowCaptionBtn);
   StackH(ResetBtn);
 
@@ -911,7 +945,11 @@ begin
   StackH(BtnE);
   StackH(BtnF);
 
+{$ifdef WantMemo}
   cr := CodeBtn;
+{$else}
+  cr := GlobalShowCaptionBtn;
+{$endif}
 {$ifdef WantDrawingList}
   StackV(DrawingList);
   StackH(ElementList);
@@ -919,7 +957,9 @@ begin
   StackV(ElementList);
 {$endif}
   StackH(Image);
+{$ifdef WantMemo}
   StackH(Memo);
+{$endif}
 
   AdjustWH;
 
@@ -928,18 +968,25 @@ begin
 {$endif}
   AnchorV(ElementList);
   AnchorV(Image);
+{$ifdef WantMemo}
   AnchorHV(Memo);
+{$endif}
 end;
 
 procedure TFormDrawing.LayoutComponentsV;
 begin
   ResetLayout;
 
-  CodeBtn.Position.X := Margin;
-  CodeBtn.Position.Y := Margin;
-
+{$ifdef WantMemo}
   cr := CodeBtn;
+  cr.Position.X := Margin;
+  cr.Position.Y := Margin;
   StackV(GlobalShowCaptionBtn);
+{$else}
+  cr := GlobalShowCaptionBtn;
+  cr.Position.X := Margin;
+  cr.Position.Y := Margin;
+{$endif}
   StackV(ToggleShowCaptionBtn);
   StackV(ResetBtn);
 
@@ -965,12 +1012,18 @@ begin
   StackV(BtnE);
   StackV(BtnF);
 
+{$ifdef WantMemo}
   cr := CodeBtn;
+{$else}
+  cr := GlobalShowCaptionBtn;
+{$endif}
 {$ifdef WantDrawingList}
   StackH(DrawingList);
 {$endif}
   StackH(ElementList);
+{$ifdef WantMemo}
   StackH(Memo);
+{$endif}
   StackH(Image);
 
   AdjustWH;
@@ -979,7 +1032,9 @@ begin
   AnchorV(DrawingList);
 {$endif}
   AnchorV(ElementList);
+{$ifdef WantMemo}
   AnchorV(Memo);
+{$endif}
   AnchorHV(Image);
 end;
 
@@ -1030,7 +1085,9 @@ end;
 
 procedure TFormDrawing.LinkComponents;
 begin
+{$ifdef WantMemo}
   CodeBtn.OnClick := CodeBtnClick;
+{$endif}
   GlobalShowCaptionBtn.OnClick := GlobalShowCaptionBtnClick;
   ToggleShowCaptionBtn.OnClick := ToggleShowCaptionBtnClick;
   ResetBtn.OnClick := ResetBtnClick;
@@ -1241,12 +1298,19 @@ end;
 
 procedure TFormDrawing.UpdateMemo;
 begin
+{$ifdef WantMemo}
   if CurrentDrawing.WantMemoLines then
     Memo.Text := CurrentDrawing.ML.Text;
+{$endif}
 end;
 
 procedure TFormDrawing.ShowInfo;
 begin
+  if not WantMemoOutput then
+    Exit;
+  if ML = nil then
+    Exit;
+
 {$ifdef FMX}
   ML.Add('W and H:');
   ML.Add(Format('PosID  = %d, %d, %d', [FScreenPosID, FAdjustW, FAdjustH]));
@@ -1257,7 +1321,9 @@ begin
   ML.Add(Format('Client = (%d, %d)', [ClientWidth, ClientHeight]));
   ML.Add(Format('Bitmap = (%d, %d)', [Image.Bitmap.Width, Image.Bitmap.Height]));
   ML.Add(Format('Image  = (%.1f, %.1f)', [Image.Width, Image.Height]));
+{$ifdef WantMemo}
   ML.Add(Format('Memo   = (%.1f, %.1f)', [Memo.Width, Memo.Height]));
+{$endif}
 {$ifdef WantDrawingList}
   ML.Add(Format('DL     = (%.1f, %.1f)', [DrawingList.Width, DrawingList.Height]));
 {$endif}
@@ -1321,7 +1387,7 @@ begin
 {$endif}
 
   InitDrawings;
-  SelectDrawing(0);
+  SelectDrawing(TRggDrawingRegistry.DefaultIndex);
 end;
 
 procedure TFormDrawing.ResetLayout;
@@ -1331,8 +1397,9 @@ begin
   AnchorReset(DrawingList);
 {$endif}
   AnchorReset(ElementList);
+{$ifdef WantMemo}
   AnchorReset(Memo);
-
+{$endif}
 {$ifdef WantDrawingList}
   DrawingList.Width := ListboxWidth;
   DrawingList.Height := 200;
@@ -1344,9 +1411,10 @@ begin
   Image.Width := BitmapWidth;
   Image.Height := BitmapHeight;
 
+{$ifdef WantMemo}
   Memo.Width := MemoWidth;
   Memo.Height := 200;
-
+{$endif}
   FMaxRight := 0;
   FMaxBottom := 0;
 end;
@@ -1489,6 +1557,14 @@ end;
 procedure TFormDrawing.ImageScreenScaleChanged(Sender: TObject);
 begin
   Draw;
+end;
+
+procedure TFormDrawing.CopyBitmap;
+var
+  Svc: IFMXClipboardService;
+begin
+  if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, Svc) then
+    Svc.SetClipboard(Image.Bitmap);
 end;
 
 end.

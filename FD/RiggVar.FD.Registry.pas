@@ -8,6 +8,8 @@ uses
 type
   TRggDrawingRegistry00 = class
   public
+    class var
+      DefaultIndex: Integer;
     class procedure InitFD(DL: TRggDrawings);
   end;
 
@@ -41,6 +43,8 @@ begin
   DL.Add(RiggVar.FD.Drawing10.TRggDrawingD10.Create); // Lager
   DL.Add(RiggVar.FD.Drawing11.TRggDrawingD11.Create); // Above
   DL.Add(RiggVar.FD.Drawing12.TRggDrawingD12.Create); // Playground
+
+  DefaultIndex := DL.DrawingList.Count-1;
 end;
 
 end.

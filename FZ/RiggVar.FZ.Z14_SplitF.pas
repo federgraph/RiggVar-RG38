@@ -158,6 +158,7 @@ begin
   AC := TRggLine.Create('AC');
   L := AC;
   L.ShowCaption := False;
+  L.IsComputed := True;
   L.StrokeColor := TRggColors.Plum;
   L.Point1 := A;
   L.Point2 := C;
@@ -166,6 +167,7 @@ begin
   BC := TRggLine.Create;
   L := BC;
   L.Caption := 'l1';
+  L.IsComputed := True;
   L.StrokeColor := TRggColors.Plum;
   L.Point1 := B;
   L.Point2 := C;
@@ -173,6 +175,7 @@ begin
 
   L := TRggLine.Create;
   L.Caption := 'h';
+  L.IsComputed := True;
   L.ShowCaption := False;
   L.StrokeThickness := 1;
   L.StrokeColor := TRggColors.Gray;
@@ -182,6 +185,7 @@ begin
 
   CF := TRggLine.Create('F');
   L := CF;
+  L.IsComputed := True;
   L.StrokeThickness := 4;
   L.StrokeColor := TRggColors.Dodgerblue;
   L.Point1 := C;

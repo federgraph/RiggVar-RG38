@@ -168,6 +168,7 @@ begin
 
   L := TRggLine.Create;
   L.Caption := '(k) * a';
+  L.IsComputed := True;
   L.StrokeColor := TRggColors.Red;
   L.Point1 := C;
   L.Point2 := D;
@@ -175,6 +176,7 @@ begin
 
   L := TRggLine.Create;
   L.Caption := '(1-k) * a';
+  L.IsComputed := True;
   L.StrokeColor := TRggColors.Red;
   L.Point1 := D;
   L.Point2 := B;
@@ -183,6 +185,7 @@ begin
   { --- }
 
   L := TRggLine.Create('h');
+  L.IsComputed := True;
   L.StrokeColor := TRggColors.Black;
   L.Point1 := A;
   L.Point2 := D;

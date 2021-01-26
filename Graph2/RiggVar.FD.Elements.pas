@@ -32,6 +32,29 @@ uses
   FMX.Graphics;
 
 type
+  TRggPoint3D = record
+    function Rotate(const AAngle: Single): TRggPoint3D;
+    function Angle(const APoint: TRggPoint3D): single;
+    function Length: single;
+    function Normalize: TRggPoint3D;
+    function Distance(const APoint: TRggPoint3D): single;
+    class function Zero: TRggPoint3D; static;
+
+    class operator Add(const APoint1, APoint2: TRggPoint3D): TRggPoint3D;
+    class operator Subtract(const APoint1, APoint2: TRggPoint3D): TRggPoint3D;
+
+    case Integer of
+      0: (X: single;
+          Y: single;
+          Z: single;);
+      1: (C: TPoint3D);
+      2: (P: TPointF;
+          T: single;);
+      3: (V: TVectorArray;);
+  end;
+
+  TRggPoly = array of TRggPoint3D;
+
   TRggColorScheme = record
     TextColor: TAlphaColor;
     BackgroundColor: TAlphaColor;
@@ -58,29 +81,6 @@ type
     ccSame,
     ccUnknown
   );
-
-  TRggPoint3D = record
-    function Rotate(const AAngle: Single): TRggPoint3D;
-    function Angle(const APoint: TRggPoint3D): single;
-    function Length: single;
-    function Normalize: TRggPoint3D;
-    function Distance(const APoint: TRggPoint3D): single;
-    class function Zero: TRggPoint3D; static;
-
-    class operator Add(const APoint1, APoint2: TRggPoint3D): TRggPoint3D;
-    class operator Subtract(const APoint1, APoint2: TRggPoint3D): TRggPoint3D;
-
-    case Integer of
-      0: (X: single;
-          Y: single;
-          Z: single;);
-      1: (C: TPoint3D);
-      2: (P: TPointF;
-          T: single;);
-      3: (V: TVectorArray;);
-  end;
-
-  TRggPoly = array of TRggPoint3D;
 
   TRggDrawingBase = class
   private
@@ -134,12 +134,13 @@ type
     SpecialDraw: Boolean;
     Painted: Boolean;
     IsComputed: Boolean;
+    IndentItem: Boolean;
     Visible: Boolean;
     Drawing: TRggDrawingBase;
 
     const
       Eps = 0.0001;
-      DefaultTextAngle: single = 45 * PI / 180;
+      DefaultTextAngle: single = 45 * Pi / 180;
       DefaultTextRadius: single = 30.0;
 
     class var
@@ -572,8 +573,8 @@ end;
 function TRggElement.GetListCaption: string;
 begin
   result := TypeName + ' ' + Caption;
-  if IsComputed then
-    result := '-- ' + result;
+  if IsComputed or IndentItem then
+    result := '-- ' + result
 end;
 
 procedure TRggElement.Param1(Delta: single);
@@ -1138,6 +1139,7 @@ constructor TRggTriangle.Create;
 begin
   inherited;
   TypeName := 'Triangle';
+  IndentItem := True;
   SetLength(Poly, 3);
 end;
 
@@ -1165,6 +1167,7 @@ begin
   inherited Create;
   FTextRadiusFactor := 1.2;
   Caption := ACaption;
+  IndentItem := True;
   TypeName := 'Arc';
   Radius := 50;
   StrokeThickness := 2;
@@ -2118,6 +2121,7 @@ end;
 constructor TRggFederLine.Create(ACaption: string);
 begin
   inherited Create(ACaption, 8);
+  TypeName := 'Feder';
 end;
 
 procedure TRggFederLine.Draw(g: TCanvas);
@@ -2302,6 +2306,7 @@ begin
   inherited Create;
   TypeName := 'PolyCurve';
   Caption := ACaption;
+  IndentItem := True;
   PD := TPathData.Create;
   if (ACount > 2) and (ACount < 361) then
   begin

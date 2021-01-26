@@ -168,17 +168,20 @@ begin
   D1 := TRggCircle.Create('D1');
   D1.StrokeColor := TRggColors.Dodgerblue;
   D1.ShowCaption := False;
+  D1.IndentItem := True;
   Add(D1);
 
   D2 := TRggCircle.Create('D2');
   D2.StrokeColor := TRggColors.Dodgerblue;
   D2.ShowCaption := False;
+  D2.IndentItem := True;
   Add(D2);
 
   Diameter := TRggLine.Create('Diameter');
   Diameter.Point1 := D1;
   Diameter.Point2 := D2;
   Diameter.ShowCaption := False;
+  Diameter.IndentItem := True;
   Diameter.StrokeThickness := 1;
   Diameter.StrokeColor := TRggColors.Dodgerblue;
   Add(Diameter);

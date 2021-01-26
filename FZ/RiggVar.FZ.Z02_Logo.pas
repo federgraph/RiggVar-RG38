@@ -60,7 +60,7 @@ begin
   P0.Center.Y := oy - 4 * f;
   P0.Center.Z := 0;
 
-  C0.Center.X := ox +15 * f;
+  C0.Center.X := ox + 15 * f;
   C0.Center.Y := oy - 4 * f;
   C0.Center.Z := 0;
 
