@@ -908,7 +908,7 @@ end;
 function TRiggReport.AbstandLabelText(i: Integer): string;
 begin
   if MainVar.WantGermanText then
-    result := TRiggRods.AbstandName(i)
+    result := TRiggRods.AbstandNameDE(i)
   else
     result := TRiggRods.AbstandNameEN(i);
 end;
@@ -916,9 +916,9 @@ end;
 function TRiggReport.KoordLabelText(i: TRiggPoint): string;
 begin
   if MainVar.WantGermanText then
-    result := TRiggPoints.CoordName(i)
+    result := TRiggPoints.CoordLongNameDE(i)
   else
-    result := TRiggPoints.CoordNameEN(i);
+    result := TRiggPoints.CoordLongNameEN(i);
 end;
 
 end.
