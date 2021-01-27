@@ -284,7 +284,7 @@ end;
 
 function TRggDrawingZ03.GetHelpText: string;
 begin
-  ML.Add('Viergelenk A0ABB0 = mechanism A0 A B B0 = a four bar linkage?');
+  ML.Add('Viergelenk A0ABB0 = mechanism A0 A B B0 = a four bar linkage');
   ML.Add('');
   ML.Add('Line Element AB is called "Koppel".');
   ML.Add('  Points A, B and C are located in a plain, the "Koppelebene".');

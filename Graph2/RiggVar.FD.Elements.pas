@@ -574,7 +574,7 @@ function TRggElement.GetListCaption: string;
 begin
   result := TypeName + ' ' + Caption;
   if IsComputed or IndentItem then
-    result := '-- ' + result
+    result := '-- ' + result;
 end;
 
 procedure TRggElement.Param1(Delta: single);

@@ -347,6 +347,10 @@ begin
   ML := Memo.Lines;
   ML.Clear;
   SetupMemo(Memo);
+  WantMemoOutput := False;
+{$endif}
+
+{$ifdef WantMemoOutput}
   WantMemoOutput := True;
 {$endif}
 
