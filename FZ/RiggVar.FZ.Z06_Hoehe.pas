@@ -247,8 +247,6 @@ begin
   ML.Add('    result := 0');
   ML.Add('  else');
   ML.Add('    result := sqrt(t);');
-  ML.Add('  if IsNan(result) then');
-  ML.Add('    result := 0;');
   ML.Add('end;');
 
   result := ML.Text;

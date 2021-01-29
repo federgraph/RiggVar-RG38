@@ -210,6 +210,12 @@ class function TRggCalc.Hoehe(a, b, c: single; out k: single): single;
 var
   t: single;
 begin
+  if a < 0.0001 then
+  begin
+    k := 0;
+    result := b;
+    Exit;
+  end;
   k := sqr(a) + sqr(b) - sqr(c);
   k := k / 2 / a / a;
   t := sqr(b) - sqr(k) * sqr(a);

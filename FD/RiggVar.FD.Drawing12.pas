@@ -658,8 +658,8 @@ var
   j: single;
   k: single;
 begin
-  k := (psiEnde - psiStart) / Chart.Count;
-  for i := 0 to Chart.Count do
+  k := (psiEnde - psiStart) / Chart.IntervalCount;
+  for i := 0 to Chart.IntervalCount do
   begin
     j := psiStart + i * k;
     Chart.Poly[i] := GetVorstagLaenge(j);

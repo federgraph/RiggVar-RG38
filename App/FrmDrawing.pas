@@ -41,10 +41,10 @@ uses
   System.UIConsts,
   System.Math,
   System.Math.Vectors,
-  RiggVar.FD.TransformHelper,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings,
   RiggVar.FD.Image,
+  RiggVar.FD.TransformHelper,
   FMX.Types,
   FMX.Controls,
   FMX.Forms,
@@ -348,10 +348,9 @@ begin
   ML.Clear;
   SetupMemo(Memo);
   WantMemoOutput := False;
-{$endif}
-
 {$ifdef WantMemoOutput}
   WantMemoOutput := True;
+{$endif}
 {$endif}
 
   CreateDrawings;

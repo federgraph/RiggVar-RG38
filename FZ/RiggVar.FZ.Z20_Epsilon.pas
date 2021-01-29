@@ -17,6 +17,7 @@ uses
 type
   TRggDrawingZ20 = class(TRggDrawingKK)
   private
+    IntervalCount: Integer;
     Raster: single;
     function GetHelpText: string;
   public
@@ -125,7 +126,9 @@ begin
   ParamR.StartPoint.Y := 5 * Raster;
   Add(ParamR);
 
-  ChartX := TRggChart.Create(51);
+  IntervalCount := 51;
+
+  ChartX := TRggChart.Create(IntervalCount);
   ChartX.Caption := 'SP.X';
   ChartX.StrokeThickness := 1;
   ChartX.StrokeColor := TRggColors.Dodgerblue;
@@ -138,7 +141,7 @@ begin
   ChartX.WantCurve := True;
   Add(ChartX);
 
-  ChartY := TRggChart.Create(51);
+  ChartY := TRggChart.Create(IntervalCount);
   ChartY.Caption := 'SP.Y';
   ChartY.StrokeThickness := 1;
   ChartY.StrokeColor := TRggColors.Tomato;
@@ -168,6 +171,8 @@ var
   Range: single;
   StartValue: single;
 begin
+  { update the visible intersection Circles, and the Label }
+
   SKK.SchnittEbene := seXY;
   SKK.Radius1 := 300;
   SKK.Radius2 := 300;
@@ -177,6 +182,8 @@ begin
   S2.Center.C := SKK.SchnittPunkt2;
 
   Bem.Text := 'Bemerkung: ' + SKK.Bemerkung;
+
+  { now reuse SKK to do the Chart }
 
   SKK.MittelPunkt1 := TPoint3D.Zero;
   SKK.SchnittEbene := seXY;
@@ -189,8 +196,23 @@ begin
   P.Y := ParamA.RelativeValue;
   P.Z := 0;
 
-  k := Range / ChartX.Count;
-  for i := 0 to ChartX.Count do
+  {
+    A Chart has IntervalCount + 1 points.
+
+    At minimum we need one interval, or at least two points,
+      a start point and an end point.
+
+    If x is in 0..2 and IntervalWidth = 1 then 3 samples are taken at 0, 1, 2.
+
+    For x in -2..2 and IntervalWidth = 1, 5 samples will be taken at -2, -1, 0, 1, 2.
+      We need 5 = 2 * 2 + 1 samples.
+      We need 5 - 1 = 4 Intervals. --> TRggChart.Create(4);
+  }
+  Assert(IntervalCount > 0);
+  Assert(IntervalCount = ChartX.IntervalCount);
+  Assert(IntervalCount = ChartY.IntervalCount);
+  k := Range / IntervalCount;
+  for i := 0 to IntervalCount do
   begin
     P.X := StartValue + i * k;
     SKK.MittelPunkt2 := P;
@@ -217,6 +239,7 @@ begin
   ML.Add('');
   ML.Add('see github.com/federgraph/');
   ML.Add('  repository RiggVar-RG38');
+  ML.Add('  or repository documentation-drawings');
   ML.Add('    drawings are in folder FZ');
   result := ML.Text;
   ML.Clear;
