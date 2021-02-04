@@ -1,8 +1,9 @@
-unit RiggVar.FZ.Z24_Template;
+﻿unit RiggVar.FZ.Z24_Template;
 
 interface
 
 uses
+  System.SysUtils,
   RiggVar.FB.Color,
   RiggVar.FD.Elements,
   RiggVar.FD.Drawings;
@@ -11,15 +12,20 @@ type
   TRggDrawingZ24 = class(TRggDrawing)
   private
     function GetHelpText: string;
+    procedure BtnAClick(Sender: TObject);
+    procedure BtnBClick(Sender: TObject);
   public
-    A0: TRggCircle;
-    B0: TRggCircle;
     A: TRggCircle;
     B: TRggCircle;
     HT: TRggLabel;
+
+    Param: TRggParam;
+
+
     constructor Create;
     procedure InitDefaultPos; override;
-//    procedure Compute; override;
+    procedure Compute; override;
+    procedure InitButtons(BG: TRggButtonGroup); override;
   end;
 
 implementation
@@ -29,12 +35,36 @@ implementation
 procedure TRggDrawingZ24.InitDefaultPos;
 begin
   A.Center.X := 100;
-  A.Center.Y := 100;
+  A.Center.Y := 200;
   A.Center.Z := 0;
 
   B.Center.X := 400;
-  B.Center.Y := 100;
+  B.Center.Y := 200;
   B.Center.Z := 0;
+
+  Param.ParamValue := 3;
+end;
+
+procedure TRggDrawingZ24.InitButtons(BG: TRggButtonGroup);
+begin
+  inherited;
+  BG.BtnA.OnClick := BtnAClick;
+  BG.BtnB.OnClick := BtnBClick;
+
+  BG.BtnA.Text := 'A*';
+  BG.BtnB.Text := 'B*';
+end;
+
+procedure TRggDrawingZ24.BtnAClick(Sender: TObject);
+begin
+  ML.Text := 'Btn A clicked.';
+  UpdateDrawing;
+end;
+
+procedure TRggDrawingZ24.BtnBClick(Sender: TObject);
+begin
+  ML.Text := 'Btn B clicked.';
+  UpdateDrawing;
 end;
 
 constructor TRggDrawingZ24.Create;
@@ -44,6 +74,16 @@ begin
   inherited;
   Name := 'Z24-Template';
   WantSort := False;
+
+  { Parameter }
+
+  Param := TRggParam.Create;
+  Param.Caption := 'Test';
+  Param.StrokeColor := TRggColors.Teal;
+  Param.StartPoint.Y := 50;
+  Param.BaseValue := 3;
+  Param.Scale := 2 / Param.OriginValue;
+  Add(Param);
 
   { Help Text }
 
@@ -76,6 +116,8 @@ begin
   { Add points last so that they stay in front. }
   Add(A);
   Add(B);
+
+  WantMemoLines := True;
 end;
 
 function TRggDrawingZ24.GetHelpText: string;
@@ -95,6 +137,12 @@ begin
   ML.Add('  For other keyboard shortcuts see drawing Z10-Lager.');
   result := ML.Text;
   ML.Clear;
+end;
+
+procedure TRggDrawingZ24.Compute;
+begin
+  inherited;
+  Param.Text := Format('ParamValue = %.2f', [Param.ParamValue]);
 end;
 
 end.

@@ -240,8 +240,8 @@ end;
 
 procedure TRggDrawingZ23.Compute;
 begin
-  FederModel.ParamBahnAngle := ParamA.RelativeValue;
-  FederModel.ParamBahnRadius := ParamR.RelativeValue;
+  FederModel.ParamBahnAngle := ParamA.ParamValue;
+  FederModel.ParamBahnRadius := ParamR.ParamValue;
 
   Circle.Center := D.Center;
   Circle.Radius := FederModel.ParamBahnRadius;
@@ -273,8 +273,8 @@ begin
     Poly.AssignPoly(FederModel.LL);
   end;
 
-  ParamA.Text := Format('Param A = %.2f', [ParamA.RelativeValue]);
-  ParamR.Text := Format('Param R = %.2f', [ParamR.RelativeValue]);
+  ParamA.Text := Format('Param A = %.2f', [ParamA.ParamValue]);
+  ParamR.Text := Format('Param R = %.2f', [ParamR.ParamValue]);
 end;
 
 procedure TRggDrawingZ23.InitButtons(BG: TRggButtonGroup);

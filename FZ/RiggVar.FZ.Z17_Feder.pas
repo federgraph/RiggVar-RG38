@@ -88,20 +88,18 @@ function TRggDrawingZ17.GetHelpText: string;
 begin
   ML.Add('Element captions can be toggled on or off.');
   ML.Add('- make sure button GSC is NOT pressed');
-  ML.Add('- select a circle element');
+  ML.Add('- select a Circle element');
   ML.Add('- use key t to toggle caption visibility.');
   ML.Add('');
-  ML.Add('If button GSC (Global Show CaptionElement) is pressed');
+  ML.Add('If button GSC (Global Show Caption) is pressed');
   ML.Add('  then all element captions are shown.');
   ML.Add('');
-  ML.Add('Element captions may be moved with mouse wheel.');
-  ML.Add('  by changing radius and angle relative to center.');
-  ML.Add('- select a Circle');
+  ML.Add('Element captions can be moved by scrolling the mouse wheel.');
+  ML.Add('For a Circle:');
   ML.Add('- use Ctrl-Wheel: angle (Param 3)');
   ML.Add('- use Shift-Ctrl-Wheel: radius (Param 4)');
   ML.Add('');
   ML.Add('Moving caption text may be different for other elements.');
-  ML.Add('  Arc element has caption position radius mapped to Shift-Wheel.');
 
   result := ML.Text;
   ML.Clear;

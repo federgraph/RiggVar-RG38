@@ -266,7 +266,7 @@ begin
   ML.Add('');
   ML.Add('If the Mast bends - distance AB (D0C) will shorten, but how much?');
   ML.Add('  This is a sample based on paper and pencil work for RiggVar,');
-  ML.Add('    in the 90th.');
+  ML.Add('    from the Nineties.');
   ML.Add('');
   ML.Add('I created the drawing elements out of a need to document stuff,');
   ML.Add('  in 2020 using Delphi.');

@@ -634,15 +634,15 @@ begin
   Inc(ComputeCounter);
   ML.Clear;
 
-  FrVorstag := ParamV.RelativeValue;
+  FrVorstag := ParamV.ParamValue;
 
   BerechneWinkel;
 
   UpdateChart;
 
-  ParamV.Text := Format('Param Vo = %.2f', [ParamV.RelativeValue]);
-  ParamS.Text := Format('Param Sa = %.2f', [ParamS.RelativeValue]);
-  ParamE.Text := Format('Param Ea = %.2f', [ParamE.RelativeValue]);
+  ParamV.Text := Format('Param Vo = %.2f', [ParamV.ParamValue]);
+  ParamS.Text := Format('Param Sa = %.2f', [ParamS.ParamValue]);
+  ParamE.Text := Format('Param Ea = %.2f', [ParamE.ParamValue]);
 
   Label1.Text := Format('Psi = %.2f (%.2f .. %.2f)', [psiDegrees, psiStartDegrees, psiEndeDegrees]);
   Label2.Text := Format('Counter = %d (%d, %d, %d)', [ComputeCounter, LoopCounterS, LoopCounterE, LoopCounterT]);
@@ -815,7 +815,7 @@ begin
   case StartAngleMode of
     AngleMode1: ComputeStartAngle1;
     AngleMode2: ComputeStartAngle2;
-    Manual: psiStart := DegToRad(ParamS.RelativeValue);
+    Manual: psiStart := DegToRad(ParamS.ParamValue);
   end;
   psiStartDegrees := RadToDeg(psiStart);
   psi := psiStart;
@@ -826,7 +826,7 @@ begin
   case EndAngleMode of
     AngleMode1: ComputeEndAngle1;
     AngleMode2: ComputeEndAngle2;
-    Manual: psiEnde := DegToRad(ParamE.RelativeValue);
+    Manual: psiEnde := DegToRad(ParamE.ParamValue);
   end;
   psiEndeDegrees := RadToDeg(psiEnde);
 end;

@@ -57,6 +57,8 @@ begin
   B.Center.X := ox + 400;
   B.Center.Y := oy;
   B.Center.Z := 0;
+
+  Param.ParamValue := 0;
 end;
 
 procedure TRggDrawingZ14.Compute;
@@ -70,7 +72,7 @@ begin
 
   D.Center.C := A.Center.C + (B.Center.C - A.Center.C) * 0.5;
 
-  ff := 0.75 * Param.Value / Param.OriginalValue;
+  ff := 0.75 * Param.PixelValue / Param.OriginValue;
   F.Center.C := C.Center.C + (D.Center.C - C.Center.C) * ff;
   E.Center.C := C.Center.C + (F.Center.C - C.Center.C) * 0.5;
 
@@ -91,6 +93,10 @@ var
 begin
   inherited;
   Name := 'Z14-SplitF';
+
+  Param := TRggParam.Create;
+  Param.Caption := 'Force F';
+  Add(Param);
 
   HT := TRggLabel.Create;
   HT.Caption := 'HelpText';
@@ -197,10 +203,6 @@ begin
   Alpha.Point2 := A;
   Alpha.Point3 := D;
   Add(Alpha);
-
-  Param := TRggParam.Create;
-  Param.Caption := 'Force F';
-  Add(Param);
 
   C.L1 := AC;
   C.L2 := BC;
