@@ -25,6 +25,7 @@
 {$define WantDynamicFixPoint}
 {$define WantMemoOutput}
 {$define WantMemo}
+{.$define WantBetterListView}
 
 {$define FMX}
 {.$define VCL}
@@ -45,6 +46,7 @@ uses
   RiggVar.FD.Drawings,
   RiggVar.FD.Image,
   RiggVar.FD.TransformHelper,
+  RiggVar.FB.Color,
   FMX.Types,
   FMX.Controls,
   FMX.Forms,
@@ -174,6 +176,12 @@ type
     ShowPointCounter: Integer;
     procedure CreateDrawings;
     procedure Draw;
+  private
+    MemoBackgroundRect: TRectangle;
+    procedure SetupMemoBackground(cla: TAlphaColor);
+{$ifdef WantBetterListView}
+    procedure UpdateListViewColors;
+{$endif}
   private
 {$ifdef WantMemo}
     CodeBtn: TSpeedButton;
@@ -391,7 +399,7 @@ begin
   ElementList := TListView.Create(Self);
   ElementList.Parent := Self;
   ElementList.ItemAppearanceName := 'ListItem';
-  ElementList.ItemAppearance.ItemHeight := 29;
+  ElementList.ItemAppearance.ItemHeight := 24;
   ElementList.ItemAppearanceObjects.ItemObjects.Accessory.Visible := False;
   ElementList.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'Consolas';
   ElementList.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
@@ -1367,7 +1375,11 @@ begin
 end;
 
 procedure TFormDrawing.SwapDrawingLists;
+var
+  WasDark: Boolean;
 begin
+  WasDark := DL.UseDarkColorScheme;
+
   CurrentDrawing := nil;
   CurrentElement := nil;
 
@@ -1391,6 +1403,9 @@ begin
 
   InitDrawings;
   SelectDrawing(TRggDrawingRegistry.DefaultIndex);
+
+  DL.UseDarkColorScheme := not WasDark;
+  SwapColorScheme;
 end;
 
 procedure TFormDrawing.ResetLayout;
@@ -1440,15 +1455,74 @@ begin
 
   if DL.UseDarkColorScheme then
   begin
+    Fill.Kind := TBrushKind.Solid;
+    Fill.Color := claGray;
     InplaceShape.Stroke.Color := claAntiquewhite;
+    SetupMemoBackground(claGray);
   end
   else
   begin
+    Fill.Kind := TBrushKind.Solid;
+    Fill.Color := TRggColors.WindowWhite;
     InplaceShape.Stroke.Color := claBlack;
+    SetupMemoBackground(claWhite);
   end;
+
+{$ifdef WantBetterListView}
+  UpdateListViewColors;
+{$endif}
 
   Draw;
 end;
+
+{$ifdef WantBetterListView}
+procedure TFormDrawing.UpdateListViewColors;
+var
+  cla: TAlphaColor;
+  LV: TListView;
+begin
+  if DL.UseDarkColorScheme then
+  begin
+    cla := CurrentDrawing.Colors.BackgroundColor;
+
+{$ifdef WantDrawingList}
+    LV := DrawingList;
+    LV.SetColorItemFill(cla);
+    LV.SetColorBackground(claDarkGray);
+    LV.SetColorItemSeparator(claDarkgray);
+    LV.SetColorItemSelected(claDarkgray);
+    LV.SetColorText(claAquamarine);
+{$endif}
+
+    LV := ElementList;
+    LV.SetColorItemFill(cla);
+    LV.SetColorBackground(claDarkGray);
+    LV.SetColorItemSeparator(claDarkGray);
+    LV.SetColorItemSelected(claDarkgray);
+    LV.SetColorText(claAntiquewhite);
+  end
+  else
+  begin
+    cla := claWhite;
+
+{$ifdef WantDrawingList}
+    LV := DrawingList;
+    LV.SetColorBackground(cla);
+    LV.SetColorItemFill(cla);
+    LV.SetColorItemSeparator(TRggColors.WindowWhite);
+    LV.SetColorItemSelected(TRggColors.Azure);
+    LV.SetColorText(claDodgerblue);
+{$endif}
+
+    LV := ElementList;
+    LV.SetColorBackground(cla);
+    LV.SetColorItemFill(cla);
+    LV.SetColorItemSeparator(TRggColors.WindowWhite);
+    LV.SetColorItemSelected(TRggColors.Aliceblue);
+    LV.SetColorText(claTomato);
+  end;
+end;
+{$endif}
 
 procedure TFormDrawing.SwapThickLines;
 var
@@ -1568,6 +1642,52 @@ var
 begin
   if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, Svc) then
     Svc.SetClipboard(Image.Bitmap);
+end;
+
+procedure TFormDrawing.SetupMemoBackground(cla: TAlphaColor);
+var
+  cr: TFmxObject;
+  R: TRectangle;
+begin
+  if not WantMemoOutput then
+    Exit;
+
+  if MemoBackgroundRect = nil then
+  begin
+    cr := Memo.FindStyleResource('background');
+    if cr <> nil then
+    begin
+      R := TRectangle.Create(cr);
+      cr.AddObject(R);
+      R.Align := TAlignLayout.Client;
+      R.Fill.Color := cla;
+      R.HitTest := False;
+      R.SendToBack;
+      MemoBackgroundRect := R;
+    end
+    else
+    begin
+      WantMemoOutput := False;
+      Exit;
+    end;
+  end;
+
+  if MemoBackgroundRect = nil then
+    Exit;
+
+  R := MemoBackgroundRect;
+
+  if DL.UseDarkColorScheme then
+  begin
+    Memo.TextSettings.FontColor := claAntiquewhite;
+    R.Fill.Color := cla;
+  end
+  else
+  begin
+    Memo.TextSettings.FontColor := claDodgerBlue;
+    R.Fill.Color := cla;
+  end;
+
 end;
 
 end.
