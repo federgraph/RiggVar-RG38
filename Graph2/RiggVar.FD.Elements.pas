@@ -2378,7 +2378,7 @@ end;
 procedure TRggColorScheme.GoDark;
 begin
   TextColor := TRggColors.White;
-  BackgroundColor := TRggColors.Color333333;
+  BackgroundColor := TRggColors.BackgroundGray;
   LabelColor := TRggColors.Antiquewhite;
 end;
 
