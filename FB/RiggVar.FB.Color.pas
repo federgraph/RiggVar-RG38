@@ -36,24 +36,27 @@ type
   TRggColorBase = class
   private
     class procedure InitColorMap;
+    class function IntToIdent(Int: Integer; var Ident: string; const Map: array of TRggColorMapEntry): Boolean;
+    class function IdentToInt(const Ident: string; var Int: Integer; const Map: array of TRggColorMapEntry): Boolean;
+    class function ColorToIdent(Color: Integer; var Ident: string): Boolean;
+    class function ColorToMapEntry(Value: TRggColor; var MapEntry: TRggColorMapEntry): Integer;
+    class function GetColorMapEntry(Value: TRggColor): TRggColorMapEntry;
   public
-    const
-    Alpha = TAlphaColor($FF000000);
-    Null = claNull;
     class var
     ColorMap: array of TRggColorMapEntry;
     class constructor Create;
+
     class function ColorFromRGB(R, G, B: Byte): TRggColor;
-    class procedure GetColorValues(Proc: TRggGetColorInfoProc);
-    class function ColorToIdent(Color: Integer; var Ident: string): Boolean;
-    class function ColorToString(Value: TRggColor): string;
-    class function ColorToMapEntry(Value: TRggColor; var MapEntry: TRggColorMapEntry): Integer;
-    class function ColorToKind(Value: TRggColor): TRggColorKind;
-    class function ColorToInt(const Ident: string; var Int: Integer; const Map: array of TRggColorMapEntry): Boolean;
-    class function GetColorToMapEntry(Value: TRggColor): TRggColorMapEntry;
-    class function IntToColor(Int: Integer; var Ident: string; const Map: array of TRggColorMapEntry): Boolean;
-    class function GetMapIndexOfColor(Value: TRggColor): Integer;
+    class function ColorFromName(const s: string): TRggColor;
+
+    class procedure EnumerateColors(Proc: TRggGetColorInfoProc);
     class procedure UpdateColorName(c: TRggColor; s: string);
+
+    class function ColorToString(Value: TRggColor): string;
+    class function ColorToKind(Value: TRggColor): TRggColorKind;
+
+    class function GetColorIndex(Value: TRggColor): Integer;
+    class function GetColorKindString(Value: TRggColor): string;
   end;
 
   TRggWebColors = class(TRggColorBase)
@@ -204,6 +207,9 @@ type
   TRggCustomColors = class(TRggWebColors)
   public
     const
+    Alpha = claBlack; // TRggColor($FF000000);
+    Null = claNull;
+
     Windowgray = TRggColor($FFF0F0F0);
     Porcelain = TRggColor($FFE0E0E0);
     Mercury = TRggColor($FFA0A0A0);
@@ -449,6 +455,16 @@ begin
   InitColorMap;
 end;
 
+class function TRggColorBase.ColorFromName(const s: string): TRggColor;
+var
+  i: Integer;
+begin
+  if IdentToInt(s, i, ColorMap) then
+    result := TColor(i)
+  else
+    result := TRggColors.White;
+end;
+
 class function TRggColorBase.ColorFromRGB(R, G, B: Byte): TRggColor;
 var
   acr: TAlphaColorRec;
@@ -462,7 +478,7 @@ end;
 
 class function TRggColorBase.ColorToIdent(Color: Integer; var Ident: string): Boolean;
 begin
-  result := IntToColor(Color, Ident, ColorMap);
+  result := IntToIdent(Color, Ident, ColorMap);
   if not result then
   begin
     AlphaColorToIdent(Color, Ident); // return value ignored
@@ -488,7 +504,12 @@ begin
     end;
 end;
 
-class function TRggColorBase.GetColorToMapEntry(Value: TRggColor): TRggColorMapEntry;
+class function TRggColorBase.GetColorKindString(Value: TRggColor): string;
+begin
+  result := TRggColorMapEntry.ColorKindToString(TRggColors.GetColorMapEntry(Value).Kind);
+end;
+
+class function TRggColorBase.GetColorMapEntry(Value: TRggColor): TRggColorMapEntry;
 var
   I: Integer;
 begin
@@ -511,7 +532,7 @@ begin
     result := TRggColorKind.Unknown;
 end;
 
-class procedure TRggColorBase.GetColorValues(Proc: TRggGetColorInfoProc);
+class procedure TRggColorBase.EnumerateColors(Proc: TRggGetColorInfoProc);
 var
   i: Integer;
 begin
@@ -521,14 +542,14 @@ begin
   end;
 end;
 
-class function TRggColorBase.GetMapIndexOfColor(Value: TRggColor): Integer;
+class function TRggColorBase.GetColorIndex(Value: TRggColor): Integer;
 var
   cme: TRggColorMapEntry;
 begin
   result := ColorToMapEntry(Value, cme);
 end;
 
-class function TRggColorBase.ColorToInt(const Ident: string; var Int: Integer; const Map: array of TRggColorMapEntry): Boolean;
+class function TRggColorBase.IdentToInt(const Ident: string; var Int: Integer; const Map: array of TRggColorMapEntry): Boolean;
 var
   I: Integer;
 begin
@@ -542,7 +563,7 @@ begin
   Result := False;
 end;
 
-class function TRggColorBase.IntToColor(Int: Integer; var Ident: string; const Map: array of TRggColorMapEntry): Boolean;
+class function TRggColorBase.IntToIdent(Int: Integer; var Ident: string; const Map: array of TRggColorMapEntry): Boolean;
 var
   I: Integer;
 begin
@@ -581,14 +602,14 @@ class procedure TRggColorBase.UpdateColorName(c: TRggColor; s: string);
 var
   i: Integer;
 begin
-  i := GetMapIndexOfColor(c);
+  i := GetColorIndex(c);
   if i > -1 then
     ColorMap[i].Name := s;
 end;
 
 class procedure TRggCustomColors.UpdateColorNames;
 begin
-  { use custom names }
+  { update ColorMap with custom names }
   UpdateColorName(Darkgray, 'DarkSilver');
   UpdateColorName(Dimgray, 'Dovegray');
 
@@ -652,7 +673,7 @@ var
 
   procedure Test(c: TRggColor);
   begin
-    k := TRggColorMapEntry.ColorKindToChar(GetColorToMapEntry(c).Kind);
+    k := TRggColorMapEntry.ColorKindToChar(GetColorMapEntry(c).Kind);
     s := ColorToString(c);
     r := TAlphaColorRec(c).R;
     g := TAlphaColorRec(c).G;
@@ -697,7 +718,7 @@ var
 
   procedure Test(c: TRggColor);
   begin
-    k := TRggColorMapEntry.ColorKindToChar(GetColorToMapEntry(c).Kind);
+    k := TRggColorMapEntry.ColorKindToChar(GetColorMapEntry(c).Kind);
     s := ColorToString(c);
     r := TAlphaColorRec(c).R;
     g := TAlphaColorRec(c).G;
