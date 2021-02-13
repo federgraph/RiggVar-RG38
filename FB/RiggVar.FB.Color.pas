@@ -37,9 +37,10 @@ type
   private
     class procedure InitColorMap;
   public
+    const
+    Alpha = TAlphaColor($FF000000);
+    Null = claNull;
     class var
-    Alpha: TRggColor;
-    Null: TRggColor;
     ColorMap: array of TRggColorMapEntry;
     class constructor Create;
     class function ColorFromRGB(R, G, B: Byte): TRggColor;
@@ -57,183 +58,175 @@ type
 
   TRggWebColors = class(TRggColorBase)
   public
-    class var
-    Aliceblue: TRggColor;
-    Antiquewhite: TRggColor;
-    Aqua: TRggColor;
-    Aquamarine: TRggColor;
-    Azure: TRggColor;
-    Beige: TRggColor;
-    Bisque: TRggColor;
-    Black: TRggColor;
-    Blanchedalmond: TRggColor;
-    Blue: TRggColor;
-    Blueviolet: TRggColor;
-    Brown: TRggColor;
-    Burlywood: TRggColor;
-    Cadetblue: TRggColor;
-    Chartreuse: TRggColor;
-    Chocolate: TRggColor;
-    Coral: TRggColor;
-    Cornflowerblue: TRggColor;
-    Cornsilk: TRggColor;
-    Crimson: TRggColor;
-    Cyan: TRggColor;
-    Darkblue: TRggColor;
-    Darkcyan: TRggColor;
-    Darkgoldenrod: TRggColor;
-    Darkgray: TRggColor;
-    Darkgreen: TRggColor;
-    Darkkhaki: TRggColor;
-    Darkmagenta: TRggColor;
-    Darkolivegreen: TRggColor;
-    Darkorange: TRggColor;
-    Darkorchid: TRggColor;
-    Darkred: TRggColor;
-    Darksalmon: TRggColor;
-    Darkseagreen: TRggColor;
-    Darkslateblue: TRggColor;
-    Darkslategray: TRggColor;
-    Darkturquoise: TRggColor;
-    Darkviolet: TRggColor;
-    Deeppink: TRggColor;
-    Deepskyblue: TRggColor;
-    Dimgray: TRggColor;
-    Dodgerblue: TRggColor;
-    Firebrick: TRggColor;
-    Floralwhite: TRggColor;
-    Forestgreen: TRggColor;
-    Fuchsia: TRggColor;
-    Gainsboro: TRggColor;
-    Ghostwhite: TRggColor;
-    Gold: TRggColor;
-    Goldenrod: TRggColor;
-    Gray: TRggColor;
-    Green: TRggColor;
-    Greenyellow: TRggColor;
-    Honeydew: TRggColor;
-    Hotpink: TRggColor;
-    Indianred: TRggColor;
-    Indigo: TRggColor;
-    Ivory: TRggColor;
-    Khaki: TRggColor;
-    Lavender: TRggColor;
-    Lavenderblush: TRggColor;
-    Lawngreen: TRggColor;
-    Lemonchiffon: TRggColor;
-    Lightblue: TRggColor;
-    Lightcoral: TRggColor;
-    Lightcyan: TRggColor;
-    Lightgoldenrodyellow: TRggColor;
-    Lightgray: TRggColor;
-    Lightgreen: TRggColor;
-    Lightpink: TRggColor;
-    Lightsalmon: TRggColor;
-    Lightseagreen: TRggColor;
-    Lightskyblue: TRggColor;
-    Lightslategray: TRggColor;
-    Lightsteelblue: TRggColor;
-    Lightyellow: TRggColor;
-    Lime: TRggColor;
-    Limegreen: TRggColor;
-    Linen: TRggColor;
-    Magenta: TRggColor;
-    Maroon: TRggColor;
-    Mediumaquamarine: TRggColor;
-    Mediumblue: TRggColor;
-    Mediumorchid: TRggColor;
-    Mediumpurple: TRggColor;
-    Mediumseagreen: TRggColor;
-    Mediumslateblue: TRggColor;
-    Mediumspringgreen: TRggColor;
-    Mediumturquoise: TRggColor;
-    Mediumvioletred: TRggColor;
-    Midnightblue: TRggColor;
-    Mintcream: TRggColor;
-    Mistyrose: TRggColor;
-    Moccasin: TRggColor;
-    Navajowhite: TRggColor;
-    Navy: TRggColor;
-    Oldlace: TRggColor;
-    Olive: TRggColor;
-    Olivedrab: TRggColor;
-    Orange: TRggColor;
-    Orangered: TRggColor;
-    Orchid: TRggColor;
-    Palegoldenrod: TRggColor;
-    Palegreen: TRggColor;
-    Paleturquoise: TRggColor;
-    Palevioletred: TRggColor;
-    Papayawhip: TRggColor;
-    Peachpuff: TRggColor;
-    Peru: TRggColor;
-    Pink: TRggColor;
-    Plum: TRggColor;
-    Powderblue: TRggColor;
-    Purple: TRggColor;
-    Red: TRggColor;
-    Rosybrown: TRggColor;
-    Royalblue: TRggColor;
-    Saddlebrown: TRggColor;
-    Salmon: TRggColor;
-    Sandybrown: TRggColor;
-    Seagreen: TRggColor;
-    Seashell: TRggColor;
-    Sienna: TRggColor;
-    Silver: TRggColor;
-    Skyblue: TRggColor;
-    Slateblue: TRggColor;
-    Slategray: TRggColor;
-    Snow: TRggColor;
-    Springgreen: TRggColor;
-    Steelblue: TRggColor;
-    Tan: TRggColor;
-    Teal: TRggColor;
-    Thistle: TRggColor;
-    Tomato: TRggColor;
-    Turquoise: TRggColor;
-    Violet: TRggColor;
-    Wheat: TRggColor;
-    White: TRggColor;
-    Whitesmoke: TRggColor;
-    Yellow: TRggColor;
-    Yellowgreen: TRggColor;
-    class constructor Create;
+    const
+    Aliceblue = claAliceblue;
+    Antiquewhite = claAntiquewhite;
+    Aqua = claAqua;
+    Aquamarine = claAquamarine;
+    Azure = claAzure;
+    Beige = claBeige;
+    Bisque = claBisque;
+    Black = claBlack;
+    Blanchedalmond = claBlanchedalmond;
+    Blue = claBlue;
+    Blueviolet = claBlueviolet;
+    Brown = claBrown;
+    Burlywood = claBurlywood;
+    Cadetblue = claCadetblue;
+    Chartreuse = claChartreuse;
+    Chocolate = claChocolate;
+    Coral = claCoral;
+    Cornflowerblue = claCornflowerBlue;
+    Cornsilk = claCornsilk;
+    Crimson = claCrimson;
+    Cyan = claCyan;
+    Darkblue = claDarkblue;
+    Darkcyan = claDarkcyan;
+    Darkgoldenrod = claDarkgoldenrod;
+    Darkgray = claDarkgray;
+    Darkgreen = claDarkgreen;
+    Darkkhaki = claDarkkhaki;
+    Darkmagenta = claDarkmagenta;
+    Darkolivegreen = claDarkolivegreen;
+    Darkorange = claDarkorange;
+    Darkorchid = claDarkorchid;
+    Darkred = claDarkred;
+    Darksalmon = claDarksalmon;
+    Darkseagreen = claDarkseagreen;
+    Darkslateblue = claDarkslateblue;
+    Darkslategray = claDarkslategray;
+    Darkturquoise = claDarkturquoise;
+    Darkviolet = claDarkviolet;
+    Deeppink = claDeeppink;
+    Deepskyblue = claDeepskyblue;
+    Dimgray = claDimgray;
+    Dodgerblue = claDodgerblue;
+    Firebrick = claFirebrick;
+    Floralwhite = claFloralwhite;
+    Forestgreen = claForestgreen;
+    Fuchsia = claFuchsia;
+    Gainsboro = claGainsboro;
+    Ghostwhite = claGhostwhite;
+    Gold = claGold;
+    Goldenrod = claGoldenrod;
+    Gray = claGray;
+    Green = claGreen;
+    Greenyellow = claGreenyellow;
+    Honeydew = claHoneydew;
+    Hotpink = claHotpink;
+    Indianred = claIndianred;
+    Indigo = claIndigo;
+    Ivory = claIvory;
+    Khaki = claKhaki;
+    Lavender = claLavender;
+    Lavenderblush = claLavenderblush;
+    Lawngreen = claLawngreen;
+    Lemonchiffon = claLemonchiffon;
+    Lightblue = claLightblue;
+    Lightcoral = claLightcoral;
+    Lightcyan = claLightcyan;
+    Lightgoldenrodyellow = claLightgoldenrodyellow;
+    Lightgray = claLightgray;
+    Lightgreen = claLightgreen;
+    Lightpink = claLightpink;
+    Lightsalmon = claLightsalmon;
+    Lightseagreen = claLightseagreen;
+    Lightskyblue = claLightskyblue;
+    Lightslategray = claLightslategray;
+    Lightsteelblue = claLightsteelblue;
+    Lightyellow = claLightyellow;
+    Lime = claLime;
+    Limegreen = claLimegreen;
+    Linen = claLinen;
+    Magenta = claMagenta;
+    Maroon = claMaroon;
+    Mediumaquamarine = claMediumaquamarine;
+    Mediumblue = claMediumblue;
+    Mediumorchid = claMediumorchid;
+    Mediumpurple = claMediumpurple;
+    Mediumseagreen = claMediumseagreen;
+    Mediumslateblue = claMediumslateblue;
+    Mediumspringgreen = claMediumspringgreen;
+    Mediumturquoise = claMediumturquoise;
+    Mediumvioletred = claMediumvioletred;
+    Midnightblue = claMidnightblue;
+    Mintcream = claMintcream;
+    Mistyrose = claMistyrose;
+    Moccasin = claMoccasin;
+    Navajowhite = claNavajowhite;
+    Navy = claNavy;
+    Oldlace = claOldlace;
+    Olive = claOlive;
+    Olivedrab = claOlivedrab;
+    Orange = claOrange;
+    Orangered = claOrangered;
+    Orchid = claOrchid;
+    Palegoldenrod = claPalegoldenrod;
+    Palegreen = claPalegreen;
+    Paleturquoise = claPaleturquoise;
+    Palevioletred = claPalevioletred;
+    Papayawhip = claPapayawhip;
+    Peachpuff = claPeachpuff;
+    Peru = claPeru;
+    Pink = claPink;
+    Plum = claPlum;
+    Powderblue = claPowderblue;
+    Purple = claPurple;
+    Red = claRed;
+    Rosybrown = claRosybrown;
+    Royalblue = claRoyalblue;
+    Saddlebrown = claSaddlebrown;
+    Salmon = claSalmon;
+    Sandybrown = claSandybrown;
+    Seagreen = claSeagreen;
+    Seashell = claSeashell;
+    Sienna = claSienna;
+    Silver = claSilver;
+    Skyblue = claSkyblue;
+    Slateblue = claSlateblue;
+    Slategray = claSlategray;
+    Snow = claSnow;
+    Springgreen = claSpringgreen;
+    Steelblue = claSteelblue;
+    Tan = claTan;
+    Teal = claTeal;
+    Thistle = claThistle;
+    Tomato = claTomato;
+    Turquoise = claTurquoise;
+    Violet = claViolet;
+    Wheat = claWheat;
+    White = claWhite;
+    Whitesmoke = claWhitesmoke;
+    Yellow = claYellow;
+    Yellowgreen = claYellowgreen;
   end;
 
   TRggCustomColors = class(TRggWebColors)
   public
-    class var
-    Windowgray: TRggColor; // 245 F0
-    Porcelain: TRggColor; // 240 E0
-    Mercury: TRggColor; // A0 160
+    const
+    Windowgray = TRggColor($FFF0F0F0);
+    Porcelain = TRggColor($FFE0E0E0);
+    Mercury = TRggColor($FFA0A0A0);
 
-    BackgroundWhite: TRggColor;
-    BackgroundBlue: TRggColor;
-    BackgroundGray: TRggColor;
+    BackgroundWhite = TAlphaColor($FFF9F9F9);
+    BackgroundBlue = TAlphaColor($FF372E69);
+    BackgroundGray = TAlphaColor($FF333333);
 
-    { Alternative names can be used when assigning a color in code. }
+    MoneyGreen = TAlphaColor($FFC0DCC0);
+    LegacySkyBlue = TAlphaColor($FFF0CAA6);
+    Cream = TAlphaColor($FFF0FBFF);
 
-    { Alternatives for Windowgray }
-    WindowWhite: TRggColor;
-    BtnFace: TRggColor;
-    ButtonFace: TRggColor;
+    { Alternative names may be used when assigning a color in code. }
+    WindowWhite = Windowgray;
+    BtnFace = Windowgray;
+    ButtonFace = Windowgray;
+    RectangleGray = Porcelain;
+    QuickSilver = Mercury;
+    MedGray = Mercury;
+    MediumGray = Mercury;
+    DarkSilver = claDarkgray;
+    Dovegray = claDimgray;
 
-    { Alternative for Porcelain }
-    RectangleGray: TRggColor;
-
-    { Alternatives for Mercury }
-    QuickSilver: TRggColor;
-    MedGray: TRggColor;
-    MediumGray: TRggColor;
-
-    { Alternative for Darkgray - a web color }
-    DarkSilver: TRggColor;
-
-    { Alternative for Dimgray - a web color }
-    Dovegray: TRggColor;
-
-    class constructor Create;
     class procedure UpdateColorNames;
     class procedure RevertColorNames;
   end;
@@ -248,7 +241,19 @@ type
     class procedure OutputAlternativeNameTable(ML: TStrings); static;
   end;
 
-implementation
+  TRggGrayColors = record
+  const
+    Whitesmoke = claWhiteSmoke;
+    Windowgray = TAlphaColor($FFF0F0F0);
+    Porcelain = TAlphaColor($FFE0E0E0);
+    Gainsboro = claGainsboro;
+    Lightgray = claLightgray;
+    Silver = claSilver;
+    DarkSilver = claDarkgray;
+    Mercury = TAlphaColor($FFA0A0A0);
+    Gray = claGray;
+    Dovegray = claDimgray;
+  end;
 
 const
   { all 140 web colors }
@@ -395,6 +400,8 @@ const
     (Kind: TRggColorKind.WebColor; Value: Integer($FF9ACD32); Name: 'Yellowgreen')
   );
 
+implementation
+
 { TRggColorMapEntry }
 
 class function TRggColorMapEntry.Create(
@@ -438,8 +445,6 @@ end;
 
 class constructor TRggColorBase.Create;
 begin
-  Alpha := TAlphaColor($FF000000);
-  Null := Alpha or TAlphaColor($FFFFFF);
   InitColorMap;
 end;
 
@@ -576,190 +581,8 @@ var
   i: Integer;
 begin
   i := GetMapIndexOfColor(c);
-  if i > 0 then
+  if i > -1 then
     ColorMap[i].Name := s;
-end;
-
-{ TRggWebColors }
-
-class constructor TRggWebColors.Create;
-begin
-  inherited;
-  Aliceblue := Alpha or TAlphaColor($F0F8FF);
-  Antiquewhite := Alpha or TAlphaColor($FAEBD7);
-  Aqua := Alpha or TAlphaColor($00FFFF);
-  Aquamarine := Alpha or TAlphaColor($7FFFD4);
-  Azure := Alpha or TAlphaColor($F0FFFF);
-  Beige := Alpha or TAlphaColor($F5F5DC);
-  Bisque := Alpha or TAlphaColor($FFE4C4);
-  Black := Alpha or TAlphaColor($000000);
-  Blanchedalmond := Alpha or TAlphaColor($FFEBCD);
-  Blue := Alpha or TAlphaColor($0000FF);
-  Blueviolet := Alpha or TAlphaColor($8A2BE2);
-  Brown := Alpha or TAlphaColor($A52A2A);
-  Burlywood := Alpha or TAlphaColor($DEB887);
-  Cadetblue := Alpha or TAlphaColor($5F9EA0);
-  Chartreuse := Alpha or TAlphaColor($7FFF00);
-  Chocolate := Alpha or TAlphaColor($D2691E);
-  Coral := Alpha or TAlphaColor($FF7F50);
-  Cornflowerblue := Alpha or TAlphaColor($6495ED);
-  Cornsilk := Alpha or TAlphaColor($FFF8DC);
-  Crimson := Alpha or TAlphaColor($DC143C);
-  Cyan := Alpha or TAlphaColor($00FFFF);
-  Darkblue := Alpha or TAlphaColor($00008B);
-  Darkcyan := Alpha or TAlphaColor($008B8B);
-  Darkgoldenrod := Alpha or TAlphaColor($B8860B);
-  Darkgray := Alpha or TAlphaColor($A9A9A9);
-  Darkgreen := Alpha or TAlphaColor($006400);
-  Darkkhaki := Alpha or TAlphaColor($BDB76B);
-  Darkmagenta := Alpha or TAlphaColor($8B008B);
-  Darkolivegreen := Alpha or TAlphaColor($556B2F);
-  Darkorange := Alpha or TAlphaColor($FF8C00);
-  Darkorchid := Alpha or TAlphaColor($9932CC);
-  Darkred := Alpha or TAlphaColor($8B0000);
-  Darksalmon := Alpha or TAlphaColor($E9967A);
-  Darkseagreen := Alpha or TAlphaColor($8FBC8F);
-  Darkslateblue := Alpha or TAlphaColor($483D8B);
-  Darkslategray := Alpha or TAlphaColor($2F4F4F);
-  Darkturquoise := Alpha or TAlphaColor($00CED1);
-  Darkviolet := Alpha or TAlphaColor($9400D3);
-  Deeppink := Alpha or TAlphaColor($FF1493);
-  Deepskyblue := Alpha or TAlphaColor($00BFFF);
-  Dimgray := Alpha or TAlphaColor($696969);
-  Dodgerblue := Alpha or TAlphaColor($1E90FF);
-  Firebrick := Alpha or TAlphaColor($B22222);
-  Floralwhite := Alpha or TAlphaColor($FFFAF0);
-  Forestgreen := Alpha or TAlphaColor($228B22);
-  Fuchsia := Alpha or TAlphaColor($FF00FF);
-  Gainsboro := Alpha or TAlphaColor($DCDCDC);
-  Ghostwhite := Alpha or TAlphaColor($F8F8FF);
-  Gold := Alpha or TAlphaColor($FFD700);
-  Goldenrod := Alpha or TAlphaColor($DAA520);
-  Gray := Alpha or TAlphaColor($808080);
-  Green := Alpha or TAlphaColor($008000);
-  Greenyellow := Alpha or TAlphaColor($ADFF2F);
-  Honeydew := Alpha or TAlphaColor($F0FFF0);
-  Hotpink := Alpha or TAlphaColor($FF69B4);
-  Indianred := Alpha or TAlphaColor($CD5C5C);
-  Indigo := Alpha or TAlphaColor($4B0082);
-  Ivory := Alpha or TAlphaColor($FFFFF0);
-  Khaki := Alpha or TAlphaColor($F0E68C);
-  Lavender := Alpha or TAlphaColor($E6E6FA);
-  Lavenderblush := Alpha or TAlphaColor($FFF0F5);
-  Lawngreen := Alpha or TAlphaColor($7CFC00);
-  Lemonchiffon := Alpha or TAlphaColor($FFFACD);
-  Lightblue := Alpha or TAlphaColor($ADD8E6);
-  Lightcoral := Alpha or TAlphaColor($F08080);
-  Lightcyan := Alpha or TAlphaColor($E0FFFF);
-  Lightgoldenrodyellow := Alpha or TAlphaColor($FAFAD2);
-  Lightgray := Alpha or TAlphaColor($D3D3D3);
-  Lightgreen := Alpha or TAlphaColor($90EE90);
-  Lightpink := Alpha or TAlphaColor($FFB6C1);
-  Lightsalmon := Alpha or TAlphaColor($FFA07A);
-  Lightseagreen := Alpha or TAlphaColor($20B2AA);
-  Lightskyblue := Alpha or TAlphaColor($87CEFA);
-  Lightslategray := Alpha or TAlphaColor($778899);
-  Lightsteelblue := Alpha or TAlphaColor($B0C4DE);
-  Lightyellow := Alpha or TAlphaColor($FFFFE0);
-  Lime := Alpha or TAlphaColor($00FF00);
-  Limegreen := Alpha or TAlphaColor($32CD32);
-  Linen := Alpha or TAlphaColor($FAF0E6);
-  Magenta := Alpha or TAlphaColor($FF00FF);
-  Maroon := Alpha or TAlphaColor($800000);
-  Mediumaquamarine := Alpha or TAlphaColor($66CDAA);
-  Mediumblue := Alpha or TAlphaColor($0000CD);
-  Mediumorchid := Alpha or TAlphaColor($BA55D3);
-  Mediumpurple := Alpha or TAlphaColor($9370DB);
-  Mediumseagreen := Alpha or TAlphaColor($3CB371);
-  Mediumslateblue := Alpha or TAlphaColor($7B68EE);
-  Mediumspringgreen := Alpha or TAlphaColor($00FA9A);
-  Mediumturquoise := Alpha or TAlphaColor($48D1CC);
-  Mediumvioletred := Alpha or TAlphaColor($C71585);
-  Midnightblue := Alpha or TAlphaColor($191970);
-  Mintcream := Alpha or TAlphaColor($F5FFFA);
-  Mistyrose := Alpha or TAlphaColor($FFE4E1);
-  Moccasin := Alpha or TAlphaColor($FFE4B5);
-  Navajowhite := Alpha or TAlphaColor($FFDEAD);
-  Navy := Alpha or TAlphaColor($000080);
-  Oldlace := Alpha or TAlphaColor($FDF5E6);
-  Olive := Alpha or TAlphaColor($808000);
-  Olivedrab := Alpha or TAlphaColor($6B8E23);
-  Orange := Alpha or TAlphaColor($FFA500);
-  Orangered := Alpha or TAlphaColor($FF4500);
-  Orchid := Alpha or TAlphaColor($DA70D6);
-  Palegoldenrod := Alpha or TAlphaColor($EEE8AA);
-  Palegreen := Alpha or TAlphaColor($98FB98);
-  Paleturquoise := Alpha or TAlphaColor($AFEEEE);
-  Palevioletred := Alpha or TAlphaColor($DB7093);
-  Papayawhip := Alpha or TAlphaColor($FFEFD5);
-  Peachpuff := Alpha or TAlphaColor($FFDAB9);
-  Peru := Alpha or TAlphaColor($CD853F);
-  Pink := Alpha or TAlphaColor($FFC0CB);
-  Plum := Alpha or TAlphaColor($DDA0DD);
-  Powderblue := Alpha or TAlphaColor($B0E0E6);
-  Purple := Alpha or TAlphaColor($800080);
-  Red := Alpha or TAlphaColor($FF0000);
-  Rosybrown := Alpha or TAlphaColor($BC8F8F);
-  Royalblue := Alpha or TAlphaColor($4169E1);
-  Saddlebrown := Alpha or TAlphaColor($8B4513);
-  Salmon := Alpha or TAlphaColor($FA8072);
-  Sandybrown := Alpha or TAlphaColor($F4A460);
-  Seagreen := Alpha or TAlphaColor($2E8B57);
-  Seashell := Alpha or TAlphaColor($FFF5EE);
-  Sienna := Alpha or TAlphaColor($A0522D);
-  Silver := Alpha or TAlphaColor($C0C0C0);
-  Skyblue := Alpha or TAlphaColor($87CEEB);
-  Slateblue := Alpha or TAlphaColor($6A5ACD);
-  Slategray := Alpha or TAlphaColor($708090);
-  Snow := Alpha or TAlphaColor($FFFAFA);
-  Springgreen := Alpha or TAlphaColor($00FF7F);
-  Steelblue := Alpha or TAlphaColor($4682B4);
-  Tan := Alpha or TAlphaColor($D2B48C);
-  Teal := Alpha or TAlphaColor($008080);
-  Thistle := Alpha or TAlphaColor($D8BFD8);
-  Tomato := Alpha or TAlphaColor($FF6347);
-  Turquoise := Alpha or TAlphaColor($40E0D0);
-  Violet := Alpha or TAlphaColor($EE82EE);
-  Wheat := Alpha or TAlphaColor($F5DEB3);
-  White := Alpha or TAlphaColor($FFFFFF);
-  Whitesmoke := Alpha or TAlphaColor($F5F5F5);
-  Yellow := Alpha or TAlphaColor($FFFF00);
-  Yellowgreen := Alpha or TAlphaColor($9ACD32);
-end;
-
-{ TRggCustomColors }
-
-class constructor TRggCustomColors.Create;
-begin
-  inherited;
-
-  Windowgray := Alpha or TAlphaColor($F0F0F0);
-  Porcelain := Alpha or TAlphaColor($E0E0E0);
-  Mercury := Alpha or TAlphaColor($A0A0A0);
-
-//  MoneyGreen := Alpha or TAlphaColor($C0DCC0);
-//  LegacySkyBlue := Alpha or TAlphaColor($F0CAA6);
-//  Cream := Alpha or TAlphaColor($F0FBFF);
-
-  BackgroundWhite := Alpha or TAlphaColor($F9F9F9);
-  BackgroundBlue := Alpha or TAlphaColor($372E69);
-  BackgroundGray := Alpha or TAlphaColor($333333);
-
-  { Alternative color names }
-
-  WindowWhite := Windowgray;
-  BtnFace := Windowgray;
-  ButtonFace := Windowgray;
-
-  RectangleGray := Porcelain;
-
-  QuickSilver := Mercury;
-  MedGray := Mercury;
-  MediumGray := Mercury;
-
-  DarkSilver := Darkgray;
-
-  Dovegray := Dimgray;
 end;
 
 class procedure TRggCustomColors.UpdateColorNames;
