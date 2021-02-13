@@ -264,7 +264,7 @@ begin
 
   { Background }
   Fill.Kind := TBrushKind.Solid; // because it is still TBrushKind.None
-  Fill.Color := TRggColors.Color333333;
+  Fill.Color := TRggColors.BackgroundGray;
 
   Caption := HelpCaptionText;
 
