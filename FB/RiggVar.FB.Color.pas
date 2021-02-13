@@ -212,11 +212,12 @@ type
     BackgroundBlue = TAlphaColor($FF372E69);
     BackgroundGray = TAlphaColor($FF333333);
 
-    MoneyGreen = TAlphaColor($FFC0DCC0);
-    LegacySkyBlue = TAlphaColor($FFF0CAA6);
-    Cream = TAlphaColor($FFF0FBFF);
+    { no color names for these }
+    MoneyGreen = claBlack or TAlphaColor($C0DCC0);
+    LegacySkyBlue = claBlack or TAlphaColor($A6CAF0);
+    Cream = claBlack or TAlphaColor($FFFBF0);
 
-    { Alternative names may be used when assigning a color in code. }
+    { Alternative names, may be used when assigning a color in code. }
     WindowWhite = Windowgray;
     BtnFace = Windowgray;
     ButtonFace = Windowgray;
@@ -665,7 +666,7 @@ begin
   Test(TRggColors.Whitesmoke);
   Test(TRggColors.WindowWhite);
   Test(TRggColors.RectangleGray);
-  Test(tRggColors.Gainsboro);
+  Test(TRggColors.Gainsboro);
   Test(TRggColors.Lightgray);
   Test(TRggColors.Silver);
   Test(TRggColors.Darkgray);
