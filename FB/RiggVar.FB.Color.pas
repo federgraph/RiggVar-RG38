@@ -208,14 +208,14 @@ type
     Porcelain = TRggColor($FFE0E0E0);
     Mercury = TRggColor($FFA0A0A0);
 
-    BackgroundWhite = TAlphaColor($FFF9F9F9);
-    BackgroundBlue = TAlphaColor($FF372E69);
-    BackgroundGray = TAlphaColor($FF333333);
+    BackgroundWhite = TRggColor($FFF9F9F9);
+    BackgroundBlue = TRggColor($FF372E69);
+    BackgroundGray = TRggColor($FF333333);
 
     { no color names for these }
-    MoneyGreen = claBlack or TAlphaColor($C0DCC0);
-    LegacySkyBlue = claBlack or TAlphaColor($A6CAF0);
-    Cream = claBlack or TAlphaColor($FFFBF0);
+    MoneyGreen = TRggColor($FFC0DCC0);
+    LegacySkyBlue = TRggColor($FFA6CAF0);
+    Cream = TRggColor($FFFFFBF0);
 
     { Alternative names, may be used when assigning a color in code. }
     WindowWhite = Windowgray;
