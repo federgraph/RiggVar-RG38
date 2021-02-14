@@ -3,6 +3,7 @@
 interface
 
 uses
+  System.Generics.Collections,
   System.SysUtils,
   System.Classes,
   System.UIConsts,
@@ -64,7 +65,7 @@ type
     const
     Aliceblue = claAliceblue;
     Antiquewhite = claAntiquewhite;
-    Aqua = claAqua;
+//    Aqua = claAqua; // duplicate of Cyan
     Aquamarine = claAquamarine;
     Azure = claAzure;
     Beige = claBeige;
@@ -107,7 +108,7 @@ type
     Firebrick = claFirebrick;
     Floralwhite = claFloralwhite;
     Forestgreen = claForestgreen;
-    Fuchsia = claFuchsia;
+//    Fuchsia = claFuchsia; // duplicate of Pink
     Gainsboro = claGainsboro;
     Ghostwhite = claGhostwhite;
     Gold = claGold;
@@ -207,7 +208,7 @@ type
   TRggCustomColors = class(TRggWebColors)
   public
     const
-    Alpha = claBlack; // TRggColor($FF000000);
+    Alpha = claBlack;
     Null = claNull;
 
     Windowgray = TRggColor($FFF0F0F0);
@@ -218,7 +219,6 @@ type
     BackgroundBlue = TRggColor($FF372E69);
     BackgroundGray = TRggColor($FF333333);
 
-    { no color names for these }
     MoneyGreen = TRggColor($FFC0DCC0);
     LegacySkyBlue = TRggColor($FFA6CAF0);
     Cream = TRggColor($FFFFFBF0);
@@ -234,6 +234,9 @@ type
     DarkSilver = claDarkgray;
     Dovegray = claDimgray;
 
+    Aqua = claAqua;
+    Fuchsia = claPink;
+
     class procedure UpdateColorNames;
     class procedure RevertColorNames;
   end;
@@ -242,9 +245,10 @@ type
 
   TRggColorTest = class(TRggColors)
   public
-    class procedure OutputWebColorTable(ML: TStrings);
-    class procedure OutputColorTable(ML: TStrings; WebOnly: Boolean = False);
-    class procedure OutputGrayTable(ML: TStrings);
+    class procedure TestUniqueValuesInColorMap; static;
+    class procedure OutputWebColorTable(ML: TStrings); static;
+    class procedure OutputColorTable(ML: TStrings; WebOnly: Boolean = False); static;
+    class procedure OutputGrayTable(ML: TStrings); static;
     class procedure OutputAlternativeNameTable(ML: TStrings); static;
   end;
 
@@ -263,11 +267,11 @@ type
   end;
 
 const
-  { all 140 web colors }
-  WebColors: array [0..139] of TRggColorMapEntry = (
+  { all 138 unique web colors }
+  WebColors: array [0..137] of TRggColorMapEntry = (
     (Kind: TRggColorKind.WebColor; Value: Integer($FFF0F8FF); Name: 'Aliceblue'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFFAEBD7); Name: 'Antiquewhite'),
-    (Kind: TRggColorKind.WebColor; Value: Integer($FF00FFFF); Name: 'Aqua'),
+//    (Kind: TRggColorKind.WebColor; Value: Integer($FF00FFFF); Name: 'Aqua'), // see Cyan
     (Kind: TRggColorKind.WebColor; Value: Integer($FF7FFFD4); Name: 'Aquamarine'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFF0FFFF); Name: 'Azure'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFF5F5DC); Name: 'Beige'),
@@ -289,7 +293,7 @@ const
     (Kind: TRggColorKind.WebColor; Value: Integer($FF00008B); Name: 'Darkblue'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FF008B8B); Name: 'Darkcyan'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFB8860B); Name: 'Darkgoldenrod'),
-    (Kind: TRggColorKind.WebColor; Value: Integer($FFA9A9A9); Name: 'Darkgray'), //DarkSilver
+    (Kind: TRggColorKind.WebColor; Value: Integer($FFA9A9A9); Name: 'Darkgray'), // DarkSilver
     (Kind: TRggColorKind.WebColor; Value: Integer($FF006400); Name: 'Darkgreen'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFBDB76B); Name: 'Darkkhaki'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FF8B008B); Name: 'Darkmagenta'),
@@ -310,7 +314,7 @@ const
     (Kind: TRggColorKind.WebColor; Value: Integer($FFB22222); Name: 'Firebrick'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFFFFAF0); Name: 'Floralwhite'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FF228B22); Name: 'Forestgreen'),
-    (Kind: TRggColorKind.WebColor; Value: Integer($FFFF00FF); Name: 'Fuchsia'),
+//    (Kind: TRggColorKind.WebColor; Value: Integer($FFFF00FF); Name: 'Fuchsia'), // see Pink
     (Kind: TRggColorKind.WebColor; Value: Integer($FFDCDCDC); Name: 'Gainsboro'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFF8F8FF); Name: 'Ghostwhite'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFFFD700); Name: 'Gold'),
@@ -319,7 +323,7 @@ const
     (Kind: TRggColorKind.WebColor; Value: Integer($FF008000); Name: 'Green'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFADFF2F); Name: 'Greenyellow'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFF0FFF0); Name: 'Honeydew'),
-    (Kind: TRggColorKind.WebColor; Value: Integer($FFFF69B4); Name: 'claHotpink'),
+    (Kind: TRggColorKind.WebColor; Value: Integer($FFFF69B4); Name: 'Hotpink'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFCD5C5C); Name: 'Indianred'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FF4B0082); Name: 'Indigo'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFFFFFF0); Name: 'Ivory'),
@@ -581,21 +585,24 @@ class procedure TRggColorBase.InitColorMap;
 var
   i: Integer;
 begin
-  { 140 + 6 = 146 entries }
-  SetLength(ColorMap, 146);
+  { 140 - 2 + 9 = 147 entries }
+  SetLength(ColorMap, 147);
 
+  Assert(High(WebColors) = 137);
   for i := Low(WebColors) to High(WebColors) do
     ColorMap[i] := WebColors[i];
 
-  Assert(High(WebColors) = 139);
+  ColorMap[138] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFF0F0F0), 'Windowgray');
+  ColorMap[139] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFE0E0E0), 'Porcelain');
+  ColorMap[140] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFA0A0A0), 'Mercury');
 
-  ColorMap[140] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFF0F0F0), 'Windowgray');
-  ColorMap[141] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFE0E0E0), 'Porcelain');
-  ColorMap[142] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFA0A0A0), 'Mercury');
+  ColorMap[141] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFF9F9F9), 'BackgroundWhite');
+  ColorMap[142] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FF372E69), 'BackgroundBlue');
+  ColorMap[143] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FF333333), 'BackgroundGray');
 
-  ColorMap[143] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFF9F9F9), 'BackgroundWhite');
-  ColorMap[144] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FF372E69), 'BackgroundBlue');
-  ColorMap[145] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FF333333), 'BackgroundGray');
+  ColorMap[144] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFC0DCC0), 'MoneyGreen');
+  ColorMap[145] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFA6CAF0), 'LegacySkyBlue');
+  ColorMap[146] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFFFFBF0), 'Cream');
 end;
 
 class procedure TRggColorBase.UpdateColorName(c: TRggColor; s: string);
@@ -635,6 +642,22 @@ end;
 class procedure TRggColorTest.OutputWebColorTable(ML: TStrings);
 begin
   OutputColorTable(ML, True);
+end;
+
+class procedure TRggColorTest.TestUniqueValuesInColorMap;
+var
+  i: Integer;
+  ColorValueDict: TDictionary<Integer, string>;
+begin
+  ColorValueDict := TDictionary<Integer, string>.Create;
+  try
+    for i := 0 to Length(ColorMap)-1 do
+    begin
+      ColorValueDict.Add(ColorMap[i].Value, ColorMap[i].Name);
+    end;
+  finally
+    ColorValueDict.Free;
+  end;
 end;
 
 class procedure TRggColorTest.OutputColorTable(ML: TStrings; WebOnly: Boolean = False);
