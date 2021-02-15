@@ -238,8 +238,8 @@ type
     DarkSilver = claDarkgray;
     Dovegray = claDimgray;
 
-    Aqua = claAqua;
-    Fuchsia = claPink;
+    Aqua = claCyan;
+    Fuchsia = claMagenta;
 
     class procedure UpdateColorNames;
     class procedure RevertColorNames;
@@ -764,17 +764,16 @@ begin
   Test(TRggColors.Gray);
   Test(TRggColors.Dimgray);
 
-//0: [   Whitesmoke F5 245]:   Whitesmoke = FFF5F5F5 = (245, 245, 245)
-//1: [  WindowWhite F0 240]:   Windowgray = FFF0F0F0 = (240, 240, 240)
-//2: [RectangleGray E0 224]:    Porcelain = FFE0E0E0 = (224, 224, 224)
-//3: [    Gainsboro DC 220]:    Gainsboro = FFDCDCDC = (220, 220, 220)
-//4: [    Lightgray D3 211]:    Lightgray = FFD3D3D3 = (211, 211, 211)
-//5: [       Silver C0 192]:       Silver = FFC0C0C0 = (192, 192, 192)
-//6: [   DarkSilver A9 169]:     Darkgray = FFA9A9A9 = (169, 169, 169)
-//7: [  QuickSilver A0 160]:      Mercury = FFA0A0A0 = (160, 160, 160)
-//8: [         Gray 80 128]:         Gray = FF808080 = (128, 128, 128)
-//9: [     Dovegray 69 105]:      Dimgray = FF696969 = (105, 105, 105)
-
+//  0 | W |           Whitesmoke = FFF5F5F5 = (245, 245, 245)
+//  1 | C |          WindowWhite = FFF0F0F0 = (240, 240, 240)
+//  2 | C |        RectangleGray = FFE0E0E0 = (224, 224, 224)
+//  3 | W |            Gainsboro = FFDCDCDC = (220, 220, 220)
+//  4 | W |            Lightgray = FFD3D3D3 = (211, 211, 211)
+//  5 | W |               Silver = FFC0C0C0 = (192, 192, 192)
+//  6 | W |           DarkSilver = FFA9A9A9 = (169, 169, 169)
+//  7 | C |          QuickSilver = FFA0A0A0 = (160, 160, 160)
+//  8 | W |                 Gray = FF808080 = (128, 128, 128)
+//  9 | W |             Dovegray = FF696969 = (105, 105, 105)
 end;
 
 class procedure TRggColorTest.OutputAlternativeNameTable(ML: TStrings);
