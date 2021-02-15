@@ -36,6 +36,10 @@ type
 
   TRggColorBase = class
   private
+    const
+    WebColorCount = 140;
+    UniqueWebColorCount = WebColorCount - 2;
+    ColorMapCount = UniqueWebColorCount + 9;
     class procedure InitColorMap;
     class function IntToIdent(Int: Integer; var Ident: string; const Map: array of TRggColorMapEntry): Boolean;
     class function IdentToInt(const Ident: string; var Int: Integer; const Map: array of TRggColorMapEntry): Boolean;
@@ -108,7 +112,7 @@ type
     Firebrick = claFirebrick;
     Floralwhite = claFloralwhite;
     Forestgreen = claForestgreen;
-//    Fuchsia = claFuchsia; // duplicate of Pink
+//    Fuchsia = claFuchsia; // duplicate of Magenta
     Gainsboro = claGainsboro;
     Ghostwhite = claGhostwhite;
     Gold = claGold;
@@ -223,7 +227,7 @@ type
     LegacySkyBlue = TRggColor($FFA6CAF0);
     Cream = TRggColor($FFFFFBF0);
 
-    { Alternative names, may be used when assigning a color in code. }
+    { Alternative names may be used when assigning a color in code. }
     WindowWhite = Windowgray;
     BtnFace = Windowgray;
     ButtonFace = Windowgray;
@@ -245,7 +249,8 @@ type
 
   TRggColorTest = class(TRggColors)
   public
-    class procedure TestUniqueValuesInColorMap; static;
+    class function TestForDuplicateNamesInColorMap(ML: TStrings): Integer; static;
+    class function TestForDuplicateValuesInColorMap(ML: TStrings): Integer; static;
     class procedure OutputWebColorTable(ML: TStrings); static;
     class procedure OutputColorTable(ML: TStrings; WebOnly: Boolean = False); static;
     class procedure OutputGrayTable(ML: TStrings); static;
@@ -267,8 +272,7 @@ type
   end;
 
 const
-  { all 138 unique web colors }
-  WebColors: array [0..137] of TRggColorMapEntry = (
+  WebColors: array [0..TRggWebColors.UniqueWebColorCount-1] of TRggColorMapEntry = (
     (Kind: TRggColorKind.WebColor; Value: Integer($FFF0F8FF); Name: 'Aliceblue'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFFAEBD7); Name: 'Antiquewhite'),
 //    (Kind: TRggColorKind.WebColor; Value: Integer($FF00FFFF); Name: 'Aqua'), // see Cyan
@@ -314,7 +318,7 @@ const
     (Kind: TRggColorKind.WebColor; Value: Integer($FFB22222); Name: 'Firebrick'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFFFFAF0); Name: 'Floralwhite'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FF228B22); Name: 'Forestgreen'),
-//    (Kind: TRggColorKind.WebColor; Value: Integer($FFFF00FF); Name: 'Fuchsia'), // see Pink
+//    (Kind: TRggColorKind.WebColor; Value: Integer($FFFF00FF); Name: 'Fuchsia'), // see Magenta
     (Kind: TRggColorKind.WebColor; Value: Integer($FFDCDCDC); Name: 'Gainsboro'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFF8F8FF); Name: 'Ghostwhite'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFFFD700); Name: 'Gold'),
@@ -585,24 +589,28 @@ class procedure TRggColorBase.InitColorMap;
 var
   i: Integer;
 begin
-  { 140 - 2 + 9 = 147 entries }
-  SetLength(ColorMap, 147);
+  SetLength(ColorMap, ColorMapCount);
 
-  Assert(High(WebColors) = 137);
+  Assert(Low(WebColors) = 0);
+  Assert(High(WebColors) = UniqueWebColorCount-1);
+  Assert(ColorMapCount >= UniqueWebColorCount);
+
+  { add entries for web colors }
   for i := Low(WebColors) to High(WebColors) do
     ColorMap[i] := WebColors[i];
 
-  ColorMap[138] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFF0F0F0), 'Windowgray');
-  ColorMap[139] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFE0E0E0), 'Porcelain');
-  ColorMap[140] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFA0A0A0), 'Mercury');
+  { add entries for custom colors }
+  ColorMap[UniqueWebColorCount + 0] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFF0F0F0), 'Windowgray');
+  ColorMap[UniqueWebColorCount + 1] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFE0E0E0), 'Porcelain');
+  ColorMap[UniqueWebColorCount + 2] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFA0A0A0), 'Mercury');
 
-  ColorMap[141] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFF9F9F9), 'BackgroundWhite');
-  ColorMap[142] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FF372E69), 'BackgroundBlue');
-  ColorMap[143] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FF333333), 'BackgroundGray');
+  ColorMap[UniqueWebColorCount + 3] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFF9F9F9), 'BackgroundWhite');
+  ColorMap[UniqueWebColorCount + 4] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FF372E69), 'BackgroundBlue');
+  ColorMap[UniqueWebColorCount + 5] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FF333333), 'BackgroundGray');
 
-  ColorMap[144] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFC0DCC0), 'MoneyGreen');
-  ColorMap[145] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFA6CAF0), 'LegacySkyBlue');
-  ColorMap[146] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFFFFBF0), 'Cream');
+  ColorMap[UniqueWebColorCount + 6] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFC0DCC0), 'MoneyGreen');
+  ColorMap[UniqueWebColorCount + 7] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFA6CAF0), 'LegacySkyBlue');
+  ColorMap[UniqueWebColorCount + 8] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFFFFBF0), 'Cream');
 end;
 
 class procedure TRggColorBase.UpdateColorName(c: TRggColor; s: string);
@@ -644,16 +652,54 @@ begin
   OutputColorTable(ML, True);
 end;
 
-class procedure TRggColorTest.TestUniqueValuesInColorMap;
+class function TRggColorTest.TestForDuplicateNamesInColorMap(ML: TStrings): Integer;
+var
+  i: Integer;
+  ColorNameDict: TDictionary<string, Integer>;
+  j: Integer;
+  s: string;
+begin
+  result := 0;
+  ColorNameDict := TDictionary<string, Integer>.Create;
+  try
+    for i := 0 to Length(ColorMap)-1 do
+    begin
+      s := ColorMap[i].Name;
+      j := ColorMap[i].Value;
+      if not ColorNameDict.ContainsKey(s) then
+        ColorNameDict.Add(s, j)
+      else
+      begin
+        ML.Add(s);
+        Inc(result);
+      end;
+    end;
+  finally
+    ColorNameDict.Free;
+  end;
+end;
+
+class function TRggColorTest.TestForDuplicateValuesInColorMap(ML: TStrings): Integer;
 var
   i: Integer;
   ColorValueDict: TDictionary<Integer, string>;
+  j: Integer;
+  s: string;
 begin
+  result := 0;
   ColorValueDict := TDictionary<Integer, string>.Create;
   try
     for i := 0 to Length(ColorMap)-1 do
     begin
-      ColorValueDict.Add(ColorMap[i].Value, ColorMap[i].Name);
+      j := ColorMap[i].Value;
+      s := ColorMap[i].Name;
+      if not ColorValueDict.ContainsKey(j) then
+        ColorValueDict.Add(j, s)
+      else
+      begin
+        ML.Add(s);
+        Inc(result);
+      end;
     end;
   finally
     ColorValueDict.Free;
