@@ -9,6 +9,12 @@ uses
   System.UIConsts,
   System.UITypes;
 
+const
+  WebColorCount = 141;
+  UniqueWebColorCount = WebColorCount - 2;
+  CustomColorCount = 16;
+  ColorMapCount = UniqueWebColorCount + CustomColorCount;
+
 type
   TRggColor = TAlphaColor;
 
@@ -18,53 +24,22 @@ type
     Unknown
   );
 
-  TRggColorMapEntry = record
-    Kind: TRggColorKind;
-    Value: Integer;
-    Name: string;
-    class function Create(AKind: TRggColorKind; AValue: Integer; const AName: string): TRggColorMapEntry; static;
-    class function ColorKindToString(Value: TRggColorKind): string; static;
-    class function ColorKindToChar(Value: TRggColorKind): char; static;
-    class function GetEmtpyMapEntry: TRggColorMapEntry; static;
-  end;
+  TRggWebColorGroup = (
+    CombinedGroup,
+    PinkGroup,
+    PurpleGroup,
+    RedGroup,
+    OrangeGroup,
+    YellowGroup,
+    BrownGroup,
+    GreenGroup,
+    CyanGroup,
+    BlueGroup,
+    WhiteGroup,
+    GrayGroup
+  );
 
-  TRggGetColorInfoProc = procedure(
-    i: Integer;
-    k: TRggColorKind;
-    c: TRggColor;
-    const s: string) of object;
-
-  TRggColorBase = class
-  private
-    const
-    WebColorCount = 140;
-    UniqueWebColorCount = WebColorCount - 2;
-    ColorMapCount = UniqueWebColorCount + 9;
-    class procedure InitColorMap;
-    class function IntToIdent(Int: Integer; var Ident: string; const Map: array of TRggColorMapEntry): Boolean;
-    class function IdentToInt(const Ident: string; var Int: Integer; const Map: array of TRggColorMapEntry): Boolean;
-    class function ColorToIdent(Color: Integer; var Ident: string): Boolean;
-    class function ColorToMapEntry(Value: TRggColor; var MapEntry: TRggColorMapEntry): Integer;
-    class function GetColorMapEntry(Value: TRggColor): TRggColorMapEntry;
-  public
-    class var
-    ColorMap: array of TRggColorMapEntry;
-    class constructor Create;
-
-    class function ColorFromRGB(R, G, B: Byte): TRggColor;
-    class function ColorFromName(const s: string): TRggColor;
-
-    class procedure EnumerateColors(Proc: TRggGetColorInfoProc);
-    class procedure UpdateColorName(c: TRggColor; s: string);
-
-    class function ColorToString(Value: TRggColor): string;
-    class function ColorToKind(Value: TRggColor): TRggColorKind;
-
-    class function GetColorIndex(Value: TRggColor): Integer;
-    class function GetColorKindString(Value: TRggColor): string;
-  end;
-
-  TRggWebColors = class(TRggColorBase)
+  TRggWebColors = class
   public
     const
     Aliceblue = claAliceblue;
@@ -207,6 +182,7 @@ type
     Whitesmoke = claWhitesmoke;
     Yellow = claYellow;
     Yellowgreen = claYellowgreen;
+    Rebeccapurple = TRggColor($FF663399);
   end;
 
   TRggCustomColors = class(TRggWebColors)
@@ -227,6 +203,15 @@ type
     LegacySkyBlue = TRggColor($FFA6CAF0);
     Cream = TRggColor($FFFFFBF0);
 
+    Gray35 = TRggColor($FFA5A5A5); // A5
+    Gray15 = TRggColor($FFD9D9D9); // D9
+    Gray05 = TRggColor($FFF2F2F2); // F2
+
+    Darkbrown = TRggColor($FF333300);
+    Lightorange = TRggColor($FFFF9900);
+    Sea = TRggColor($FF339966);
+    Paleblue = TRggColor($FF99CCFF);
+
     { Alternative names may be used when assigning a color in code. }
     WindowWhite = Windowgray;
     BtnFace = Windowgray;
@@ -241,38 +226,47 @@ type
     Aqua = claCyan;
     Fuchsia = claMagenta;
 
-    class procedure UpdateColorNames;
-    class procedure RevertColorNames;
+    Gray80 = BackgroundGray;
+    Gray50 = TRggWebColors.Gray;
+    Gray25 = TRggWebColors.Silver;
   end;
 
-  TRggColors = class(TRggCustomColors);
-
-  TRggColorTest = class(TRggColors)
-  public
-    class function TestForDuplicateNamesInColorMap(ML: TStrings): Integer; static;
-    class function TestForDuplicateValuesInColorMap(ML: TStrings): Integer; static;
-    class procedure OutputWebColorTable(ML: TStrings); static;
-    class procedure OutputColorTable(ML: TStrings; WebOnly: Boolean = False); static;
-    class procedure OutputGrayTable(ML: TStrings); static;
-    class procedure OutputAlternativeNameTable(ML: TStrings); static;
-  end;
-
-  TRggGrayColors = record
-  const
-    Whitesmoke = claWhiteSmoke;
-    Windowgray = TAlphaColor($FFF0F0F0);
-    Porcelain = TAlphaColor($FFE0E0E0);
-    Gainsboro = claGainsboro;
-    Lightgray = claLightgray;
-    Silver = claSilver;
-    DarkSilver = claDarkgray;
-    Mercury = TAlphaColor($FFA0A0A0);
-    Gray = claGray;
-    Dovegray = claDimgray;
+  TRggColorMapEntry = record
+    Kind: TRggColorKind;
+    Value: Integer;
+    Name: string;
+    class function Create(AKind: TRggColorKind; AValue: Integer; const AName: string): TRggColorMapEntry; static;
+    class function ColorKindToString(Value: TRggColorKind): string; static;
+    class function ColorKindToChar(Value: TRggColorKind): char; static;
+    class function GetEmtpyMapEntry: TRggColorMapEntry; static;
   end;
 
 const
-  WebColors: array [0..TRggWebColors.UniqueWebColorCount-1] of TRggColorMapEntry = (
+
+  CustomColors: array [0..CustomColorCount-1] of TRggColorMapEntry = (
+    (Kind: TRggColorKind.CustomColor; Value: Integer($FFF0F0F0); Name: 'Windowgray'),
+    (Kind: TRggColorKind.CustomColor; Value: Integer($FFE0E0E0); Name: 'Porcelain'),
+    (Kind: TRggColorKind.CustomColor; Value: Integer($FFA0A0A0); Name: 'Mercury'),
+
+    (Kind: TRggColorKind.CustomColor; Value: Integer($FFF9F9F9); Name: 'BackgroundWhite'),
+    (Kind: TRggColorKind.CustomColor; Value: Integer($FF372E69); Name: 'BackgroundBlue'),
+    (Kind: TRggColorKind.CustomColor; Value: Integer($FF333333); Name: 'BackgroundGray'),
+
+    (Kind: TRggColorKind.CustomColor; Value: Integer($FFC0DCC0); Name: 'MoneyGreen'),
+    (Kind: TRggColorKind.CustomColor; Value: Integer($FFA6CAF0); Name: 'LegacySkyBlue'),
+    (Kind: TRggColorKind.CustomColor; Value: Integer($FFFFFBF0); Name: 'Cream'),
+
+    (Kind: TRggColorKind.CustomColor; Value: Integer($FFA5A5A5); Name: 'Gray35'),
+    (Kind: TRggColorKind.CustomColor; Value: Integer($FFD9D9D9); Name: 'Gray15'),
+    (Kind: TRggColorKind.CustomColor; Value: Integer($FFF2F2F2); Name: 'Gray05'),
+
+    (Kind: TRggColorKind.CustomColor; Value: Integer($FF333300); Name: 'Darkbrown'),
+    (Kind: TRggColorKind.CustomColor; Value: Integer($FFFF9900); Name: 'Lightorange'),
+    (Kind: TRggColorKind.CustomColor; Value: Integer($FF339966); Name: 'Sea'),
+    (Kind: TRggColorKind.CustomColor; Value: Integer($FF99CCFF); Name: 'Paleblue')
+  );
+
+  WebColors: array [0..UniqueWebColorCount-1] of TRggColorMapEntry = (
     (Kind: TRggColorKind.WebColor; Value: Integer($FFF0F8FF); Name: 'Aliceblue'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFFAEBD7); Name: 'Antiquewhite'),
 //    (Kind: TRggColorKind.WebColor; Value: Integer($FF00FFFF); Name: 'Aqua'), // see Cyan
@@ -412,8 +406,72 @@ const
     (Kind: TRggColorKind.WebColor; Value: Integer($FFFFFFFF); Name: 'White'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFF5F5F5); Name: 'Whitesmoke'),
     (Kind: TRggColorKind.WebColor; Value: Integer($FFFFFF00); Name: 'Yellow'),
-    (Kind: TRggColorKind.WebColor; Value: Integer($FF9ACD32); Name: 'Yellowgreen')
+    (Kind: TRggColorKind.WebColor; Value: Integer($FF9ACD32); Name: 'Yellowgreen'),
+    (Kind: TRggColorKind.WebColor; Value: Integer($FF663399); Name: 'Rebeccapurple')
   );
+
+type
+  TRggGetColorInfoProc = procedure(
+    i: Integer;
+    k: TRggColorKind;
+    c: TRggColor;
+    const s: string) of object;
+
+  TRggColorPool = class(TRggCustomColors)
+  strict private
+    class procedure InitColorMap;
+    class function IntToIdent(Int: Integer; var Ident: string; const Map: array of TRggColorMapEntry): Boolean;
+    class function IdentToInt(const Ident: string; var Int: Integer; const Map: array of TRggColorMapEntry): Boolean;
+    class function ColorToIdent(Color: Integer; var Ident: string): Boolean;
+    class function ColorToMapEntry(Value: TRggColor; var MapEntry: TRggColorMapEntry): Integer;
+  protected
+    class function GetColorMapEntry(Value: TRggColor): TRggColorMapEntry;
+  public
+    class var
+    ColorMap: array of TRggColorMapEntry;
+    class constructor Create;
+
+    class function ColorFromRGB(R, G, B: Byte): TRggColor;
+    class function ColorFromName(const s: string): TRggColor;
+
+    class procedure EnumerateColors(Proc: TRggGetColorInfoProc);
+    class procedure UpdateColorName(c: TRggColor; s: string);
+
+    class function ColorToString(Value: TRggColor): string;
+    class function ColorToKind(Value: TRggColor): TRggColorKind;
+
+    class function GetColorIndex(Value: TRggColor): Integer;
+    class function GetColorKindString(Value: TRggColor): string;
+
+    class procedure UpdateColorNames;
+    class procedure RevertColorNames;
+  end;
+
+  TRggColors = class(TRggCustomColors);
+
+  TRggGrayColors = record
+  const
+    Whitesmoke = TRggWebColors.Whitesmoke;
+    Windowgray = TRggCustomColors.Windowgray;
+    Porcelain = TRggCustomColors.Porcelain;
+    Gainsboro = TRggWebColors.Gainsboro;
+    Lightgray = TRggWebColors.Lightgray;
+    Silver = TRggWebColors.Silver;
+    DarkSilver = TRggCustomColors.DarkSilver;
+    Mercury = TRggCustomColors.Mercury;
+    Gray = TRggWebColors.Gray;
+    Dovegray = TRggWebColors.Dimgray;
+  end;
+
+  TRggPercentGrayColors = record
+  const
+    Gray80 = TRggCustomColors.BackgroundGray; // 33
+    Gray50 = TRggWebColors.Gray; // 80
+    Gray35 = TRggCustomColors.Gray35; // A5
+    Gray25 = TRggWebColors.Silver; // C0
+    Gray15 = TRggCustomColors.Gray15; // D9
+    Gray05 = TRggCustomColors.Gray05; // F2
+  end;
 
 implementation
 
@@ -456,14 +514,14 @@ begin
   end;
 end;
 
-{ TRggColorBase }
+{ TRggColorPool }
 
-class constructor TRggColorBase.Create;
+class constructor TRggColorPool.Create;
 begin
   InitColorMap;
 end;
 
-class function TRggColorBase.ColorFromName(const s: string): TRggColor;
+class function TRggColorPool.ColorFromName(const s: string): TRggColor;
 var
   i: Integer;
 begin
@@ -473,7 +531,7 @@ begin
     result := TRggColors.White;
 end;
 
-class function TRggColorBase.ColorFromRGB(R, G, B: Byte): TRggColor;
+class function TRggColorPool.ColorFromRGB(R, G, B: Byte): TRggColor;
 var
   acr: TAlphaColorRec;
 begin
@@ -484,7 +542,7 @@ begin
   result := acr.Color;
 end;
 
-class function TRggColorBase.ColorToIdent(Color: Integer; var Ident: string): Boolean;
+class function TRggColorPool.ColorToIdent(Color: Integer; var Ident: string): Boolean;
 begin
   result := IntToIdent(Color, Ident, ColorMap);
   if not result then
@@ -493,12 +551,12 @@ begin
   end;
 end;
 
-class function TRggColorBase.ColorToString(Value: TRggColor): string;
+class function TRggColorPool.ColorToString(Value: TRggColor): string;
 begin
   ColorToIdent(Integer(Value), Result);
 end;
 
-class function TRggColorBase.ColorToMapEntry(Value: TRggColor; var MapEntry: TRggColorMapEntry): Integer;
+class function TRggColorPool.ColorToMapEntry(Value: TRggColor; var MapEntry: TRggColorMapEntry): Integer;
 var
   I: Integer;
 begin
@@ -512,12 +570,12 @@ begin
     end;
 end;
 
-class function TRggColorBase.GetColorKindString(Value: TRggColor): string;
+class function TRggColorPool.GetColorKindString(Value: TRggColor): string;
 begin
-  result := TRggColorMapEntry.ColorKindToString(TRggColors.GetColorMapEntry(Value).Kind);
+  result := TRggColorMapEntry.ColorKindToString(GetColorMapEntry(Value).Kind);
 end;
 
-class function TRggColorBase.GetColorMapEntry(Value: TRggColor): TRggColorMapEntry;
+class function TRggColorPool.GetColorMapEntry(Value: TRggColor): TRggColorMapEntry;
 var
   I: Integer;
 begin
@@ -530,7 +588,7 @@ begin
   result := TRggColorMapEntry.GetEmtpyMapEntry;
 end;
 
-class function TRggColorBase.ColorToKind(Value: TRggColor): TRggColorKind;
+class function TRggColorPool.ColorToKind(Value: TRggColor): TRggColorKind;
 var
   cme: TRggColorMapEntry;
 begin
@@ -540,7 +598,7 @@ begin
     result := TRggColorKind.Unknown;
 end;
 
-class procedure TRggColorBase.EnumerateColors(Proc: TRggGetColorInfoProc);
+class procedure TRggColorPool.EnumerateColors(Proc: TRggGetColorInfoProc);
 var
   i: Integer;
 begin
@@ -550,14 +608,14 @@ begin
   end;
 end;
 
-class function TRggColorBase.GetColorIndex(Value: TRggColor): Integer;
+class function TRggColorPool.GetColorIndex(Value: TRggColor): Integer;
 var
   cme: TRggColorMapEntry;
 begin
   result := ColorToMapEntry(Value, cme);
 end;
 
-class function TRggColorBase.IdentToInt(const Ident: string; var Int: Integer; const Map: array of TRggColorMapEntry): Boolean;
+class function TRggColorPool.IdentToInt(const Ident: string; var Int: Integer; const Map: array of TRggColorMapEntry): Boolean;
 var
   I: Integer;
 begin
@@ -571,7 +629,7 @@ begin
   Result := False;
 end;
 
-class function TRggColorBase.IntToIdent(Int: Integer; var Ident: string; const Map: array of TRggColorMapEntry): Boolean;
+class function TRggColorPool.IntToIdent(Int: Integer; var Ident: string; const Map: array of TRggColorMapEntry): Boolean;
 var
   I: Integer;
 begin
@@ -585,35 +643,32 @@ begin
   Result := False;
 end;
 
-class procedure TRggColorBase.InitColorMap;
+class procedure TRggColorPool.InitColorMap;
 var
   i: Integer;
+  j: Integer;
+  k: Integer;
 begin
-  SetLength(ColorMap, ColorMapCount);
+  SetLength(ColorMap, High(WebColors) + High(CustomColors) + 2);
 
   Assert(Low(WebColors) = 0);
   Assert(High(WebColors) = UniqueWebColorCount-1);
   Assert(ColorMapCount >= UniqueWebColorCount);
 
-  { add entries for web colors }
-  for i := Low(WebColors) to High(WebColors) do
+  { web colors }
+  for i := 0 to High(WebColors) do
     ColorMap[i] := WebColors[i];
 
-  { add entries for custom colors }
-  ColorMap[UniqueWebColorCount + 0] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFF0F0F0), 'Windowgray');
-  ColorMap[UniqueWebColorCount + 1] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFE0E0E0), 'Porcelain');
-  ColorMap[UniqueWebColorCount + 2] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFA0A0A0), 'Mercury');
-
-  ColorMap[UniqueWebColorCount + 3] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFF9F9F9), 'BackgroundWhite');
-  ColorMap[UniqueWebColorCount + 4] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FF372E69), 'BackgroundBlue');
-  ColorMap[UniqueWebColorCount + 5] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FF333333), 'BackgroundGray');
-
-  ColorMap[UniqueWebColorCount + 6] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFC0DCC0), 'MoneyGreen');
-  ColorMap[UniqueWebColorCount + 7] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFA6CAF0), 'LegacySkyBlue');
-  ColorMap[UniqueWebColorCount + 8] := TRggColorMapEntry.Create(TRggColorKind.CustomColor, Integer($FFFFFBF0), 'Cream');
+  { custom colors }
+  k := High(WebColors);
+  for i := 0 to High(CustomColors) do
+  begin
+    j := k + 1 + i;
+    ColorMap[j] := CustomColors[i];
+  end;
 end;
 
-class procedure TRggColorBase.UpdateColorName(c: TRggColor; s: string);
+class procedure TRggColorPool.UpdateColorName(c: TRggColor; s: string);
 var
   i: Integer;
 begin
@@ -622,7 +677,7 @@ begin
     ColorMap[i].Name := s;
 end;
 
-class procedure TRggCustomColors.UpdateColorNames;
+class procedure TRggColorPool.UpdateColorNames;
 begin
   { update ColorMap with custom names }
   UpdateColorName(Darkgray, 'DarkSilver');
@@ -633,7 +688,7 @@ begin
   UpdateColorName(Mercury, 'QuickSilver');
 end;
 
-class procedure TRggCustomColors.RevertColorNames;
+class procedure TRggColorPool.RevertColorNames;
 begin
   { revert to original web color names }
   UpdateColorName(Darkgray, 'Darkgray');
@@ -643,167 +698,6 @@ begin
   UpdateColorName(Windowgray, 'Windowgray');
   UpdateColorName(Porcelain, 'Porcelain');
   UpdateColorName(Mercury, 'Mercury');
-end;
-
-{ TRggColorTest }
-
-class procedure TRggColorTest.OutputWebColorTable(ML: TStrings);
-begin
-  OutputColorTable(ML, True);
-end;
-
-class function TRggColorTest.TestForDuplicateNamesInColorMap(ML: TStrings): Integer;
-var
-  i: Integer;
-  ColorNameDict: TDictionary<string, Integer>;
-  j: Integer;
-  s: string;
-begin
-  result := 0;
-  ColorNameDict := TDictionary<string, Integer>.Create;
-  try
-    for i := 0 to Length(ColorMap)-1 do
-    begin
-      s := ColorMap[i].Name;
-      j := ColorMap[i].Value;
-      if not ColorNameDict.ContainsKey(s) then
-        ColorNameDict.Add(s, j)
-      else
-      begin
-        ML.Add(s);
-        Inc(result);
-      end;
-    end;
-  finally
-    ColorNameDict.Free;
-  end;
-end;
-
-class function TRggColorTest.TestForDuplicateValuesInColorMap(ML: TStrings): Integer;
-var
-  i: Integer;
-  ColorValueDict: TDictionary<Integer, string>;
-  j: Integer;
-  s: string;
-begin
-  result := 0;
-  ColorValueDict := TDictionary<Integer, string>.Create;
-  try
-    for i := 0 to Length(ColorMap)-1 do
-    begin
-      j := ColorMap[i].Value;
-      s := ColorMap[i].Name;
-      if not ColorValueDict.ContainsKey(j) then
-        ColorValueDict.Add(j, s)
-      else
-      begin
-        ML.Add(s);
-        Inc(result);
-      end;
-    end;
-  finally
-    ColorValueDict.Free;
-  end;
-end;
-
-class procedure TRggColorTest.OutputColorTable(ML: TStrings; WebOnly: Boolean = False);
-var
-  fs: string;
-  s: string;
-  i: Integer;
-  c: TRggColor;
-  r, g, b: Byte;
-  ck: TRggColorKind;
-  k: Char;
-begin
-  fs := '%3d | %s | %20s = %x = (%3d, %3d, %3d)';
-  for i := 0 to Length(ColorMap)-1 do
-  begin
-    ck := ColorMap[i].Kind;
-    k := TRggColorMapEntry.ColorKindToChar(ck);
-    if WebOnly and (ck <> TRggColorKind.WebColor) then
-      Continue;
-    c := ColorMap[i].Value;
-    s := ColorToString(c);
-    r := TAlphaColorRec(c).R;
-    g := TAlphaColorRec(c).G;
-    b := TAlphaColorRec(c).B;
-    ML.Add(Format(fs, [i, k, s, c, r, g, b]));
-  end;
-end;
-
-class procedure TRggColorTest.OutputGrayTable(ML: TStrings);
-var
-  i: Integer;
-  fs: string;
-  s: string;
-  r, g, b: Byte;
-  k: char;
-
-  procedure Test(c: TRggColor);
-  begin
-    k := TRggColorMapEntry.ColorKindToChar(GetColorMapEntry(c).Kind);
-    s := ColorToString(c);
-    r := TAlphaColorRec(c).R;
-    g := TAlphaColorRec(c).G;
-    b := TAlphaColorRec(c).B;
-    ML.Add(Format(fs, [i, k, s, c, r, g, b]));
-    Inc(i);
-  end;
-begin
-  i := 0;
-  fs := '%3d | %s | %20s = %x = (%3d, %3d, %3d)';
-  Test(TRggColors.Whitesmoke);
-  Test(TRggColors.WindowWhite);
-  Test(TRggColors.RectangleGray);
-  Test(TRggColors.Gainsboro);
-  Test(TRggColors.Lightgray);
-  Test(TRggColors.Silver);
-  Test(TRggColors.Darkgray);
-  Test(TRggColors.QuickSilver);
-  Test(TRggColors.Gray);
-  Test(TRggColors.Dimgray);
-
-//  0 | W |           Whitesmoke = FFF5F5F5 = (245, 245, 245)
-//  1 | C |          WindowWhite = FFF0F0F0 = (240, 240, 240)
-//  2 | C |        RectangleGray = FFE0E0E0 = (224, 224, 224)
-//  3 | W |            Gainsboro = FFDCDCDC = (220, 220, 220)
-//  4 | W |            Lightgray = FFD3D3D3 = (211, 211, 211)
-//  5 | W |               Silver = FFC0C0C0 = (192, 192, 192)
-//  6 | W |           DarkSilver = FFA9A9A9 = (169, 169, 169)
-//  7 | C |          QuickSilver = FFA0A0A0 = (160, 160, 160)
-//  8 | W |                 Gray = FF808080 = (128, 128, 128)
-//  9 | W |             Dovegray = FF696969 = (105, 105, 105)
-end;
-
-class procedure TRggColorTest.OutputAlternativeNameTable(ML: TStrings);
-var
-  i: Integer;
-  fs: string;
-  s: string;
-  r, g, b: Byte;
-  k: char;
-
-  procedure Test(c: TRggColor);
-  begin
-    k := TRggColorMapEntry.ColorKindToChar(GetColorMapEntry(c).Kind);
-    s := ColorToString(c);
-    r := TAlphaColorRec(c).R;
-    g := TAlphaColorRec(c).G;
-    b := TAlphaColorRec(c).B;
-    ML.Add(Format(fs, [i, k, s, c, r, g, b]));
-    Inc(i);
-  end;
-begin
-  i := 0;
-  fs := '%3d | %s | %20s = %x = (%3d, %3d, %3d)';
-
-  Test(TRggColors.WindowWhite);
-  Test(TRggColors.RectangleGray);
-  Test(TRggColors.QuickSilver);
-
-  Test(TRggColors.Darkgray);
-  Test(TRggColors.Dimgray);
 end;
 
 end.
