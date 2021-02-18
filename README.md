@@ -116,7 +116,7 @@ but it cannot be reused in your closed source project.
 
 ## Contributions
 
-Contributions are welcome. There is a still lot of work to do, for example:
+Contributions are welcome. There is still a lot of work to do, for example:
 
 - Change the text for the key terms and let me look at the changes.
 - Provide better default data that is closer to reality.
@@ -135,8 +135,9 @@ Similar projects are available for VCL and LCL:
 
 | Project | Platform | Note |
 | :-- | :- | :- |
+| RG10 | FMX | minimal UI version of RG |
 | [RG19](https://github.com/federgraph/RiggVar-RG19) | VCL | original RiggVar project |
-| RG38 | FMX | Trimm 420 |
+| RG38 | FMX | Trimm 420 full project |
 | [RG51](https://github.com/federgraph/RiggVar-RG51) | LCL | FPC / Lazarus project using TBGRABitmap |
 | RG76 | FMX | local documentation drawings project |
 | [RG79](https://github.com/federgraph/documentation-drawings) | FMX | standalone documentation drawings repo |

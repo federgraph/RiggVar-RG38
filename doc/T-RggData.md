@@ -70,7 +70,7 @@ you may want to save the current model data back to the slot it was loaded from.
 You do this by copy and paste,
 which is certainly odd, but yes, copy and paste is an existing way to save data back to a slot.
 This is valid for any of the slots, Trimm1-Trimm8.
-The short caption of the button corresponding to the copy and save action is *cap*.
+The short caption of the button corresponding to the copy and paste action is *cap*.
 
 Trimm0 is special, it is used for comparison only - it cannot be selected as the current Trimm -
 but the UI of the real app can show the diff between current and Trimm0.
@@ -127,7 +127,7 @@ You can watch the state within Rigg by watching the graphics of course and/or by
 DataText and JsonText are live reports.
 - There are buttons to show these reports (**~D** and **~J**)
 - and maybe alternative buttons (**~DT** and **~JT**)
-- and maybe buttons that toggle on and off (**data**).
+- and maybe buttons that toggle the display on and off (**data**).
 
 There is probably a reason why there are alternative buttons for apparently the same thing.
 Perhaps because of the VCL application where text is shown in a Memo,

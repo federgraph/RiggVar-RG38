@@ -3,7 +3,7 @@
 RotaForm1 is the default graphical display for the Rigg, rig, Rgg, or RG model.
 
 ```pascal
-  // see RggRota.pas in folder Graph
+  // see RiggVar.Graph1.Rota.pas in folder Graph1
   TRotaForm1 = class(TInterfacedObject, IStrokeRigg)
   private
     //...
@@ -300,8 +300,8 @@ Good news is that this project allows to use all graph implementations side by s
 
 Special applications that may be derived for certain platforms from this one will have to decide
 - whether they want to support the computation of forces,
-- what kind of graph should be used
-- how data will be stored.
+- what kind of graph should be used,
+- and how data will be stored.
 
 The most interesting part of RotaForm1 is probably not the drawing itself but how input is handled to change the view.
 This differs between the views, but should perhaps be generalized and optimized.
