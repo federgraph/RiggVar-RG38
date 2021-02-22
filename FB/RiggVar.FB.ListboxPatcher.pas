@@ -3,6 +3,11 @@
 interface
 
 type
+  { Tested on Windows with 10.2 Tokyo and 10.3 Rio.
+    Without the patch, a right click on item will mess up the selection.
+    https://en.delphipraxis.net/topic/3264-tlistbox-onclick-not-working-just-on-some-machines/?do=findComment&comment=26918
+  }
+
   TListBoxPatcher = class
   private
     const MSF_MethodName = 'MouseSelectFinish';
@@ -35,8 +40,11 @@ procedure FixedMouseSelectFinish(Self: TListBoxSelector;
   const Button: TMouseButton;
   const Shift: TShiftState);
 begin
+  { begin of addition to original code }
   if Button <> TMouseButton.mbLeft then
     Self.DoMouseSelectStart(Item, Shift);
+  { end of addition }
+
   Self.DoMouseSelectFinish(Item, Shift);
 end;
 
@@ -96,7 +104,7 @@ begin
   LContext := TRttiContext.Create;
   try
     LType := LContext.GetType(CT);
-    LMethods := LType.GetMethods('MouseSelectFinish');
+    LMethods := LType.GetMethods(MSF_MethodName);
     l := Length(LMethods);
     if l > 0 then
     begin

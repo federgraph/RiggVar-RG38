@@ -2,6 +2,9 @@
 
 interface
 
+{ This is a very slim FMX 'runtime' color list box component.
+  It can show colors from a group of web colors only, if you want. }
+
 uses
   RiggVar.FB.Color,
   RiggVar.FB.ColorGroup,
@@ -17,10 +20,10 @@ type
   private
     FColorList: TRggColorList;
     FColorGroup: TRggColorGroup;
-    function GetColor: TAlphaColor;
+    function GetColor: TRggColor;
     procedure DoItemApplyStyleLookup(Sender: TObject);
     procedure SetColorGroup(const Value: TRggColorGroup);
-    procedure SetColor(const Value: TAlphaColor);
+    procedure SetColor(const Value: TRggColor);
   protected
     procedure RebuildList;
     function GetDefaultStyleLookupName: string; override;
@@ -28,7 +31,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     property ColorGroup: TRggColorGroup read FColorGroup write SetColorGroup;
-    property Color: TAlphaColor read GetColor write SetColor;
+    property Color: TRggColor read GetColor write SetColor;
     property OnChange;
   end;
 
@@ -80,7 +83,7 @@ begin
   EndUpdate;
 end;
 
-procedure TRggWebColorListBox.SetColor(const Value: TAlphaColor);
+procedure TRggWebColorListBox.SetColor(const Value: TRggColor);
 var
   I: Integer;
 begin
@@ -103,7 +106,7 @@ begin
   RebuildList;
 end;
 
-function TRggWebColorListBox.GetColor: TAlphaColor;
+function TRggWebColorListBox.GetColor: TRggColor;
 begin
   if (ItemIndex >= 0) and (ItemIndex < Count) then
     Result := FColorList[ItemIndex].Color

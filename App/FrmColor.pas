@@ -155,15 +155,13 @@ procedure TFormColor.UpdateText;
 var
   cr: TAlphaColorRec;
 begin
-  Rectangle.Fill.Color := FColor;
-
   cr.Color := FColor;
 
   ML.Clear;
 
   ML.Add(Format('Index = %d', [TRggColorPool.GetColorIndex(FColor)]));
   ML.Add(Format('Name  = %s', [TRggColorPool.ColorToString(FColor)]));
-  ML.Add(Format('Group = %s', [ TRggColorPool.ColorGroupToGroupName(FColorGroup)]));
+  ML.Add(Format('Group = %s', [TRggColorPool.ColorGroupToGroupName(FColorGroup)]));
   ML.Add(Format('Kind  = %s', [TRggColorPool.GetColorKindString(FColor)]));
   ML.Add(Format('Hex   = (%3.2x, %3.2x, %3.2x)', [cr.R, cr.G, cr.B]));
   ML.Add(Format('RBG   = (%3d, %3d, %3d)', [cr.R, cr.G, cr.B]));

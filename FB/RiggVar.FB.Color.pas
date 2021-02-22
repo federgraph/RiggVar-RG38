@@ -2,6 +2,13 @@
 
 interface
 
+{ I wanted a unique set of color values,
+    which includes web colors (all) and a few custom colors.
+  All colors shall support 'picking by name' in the IDE code editor.
+  https://en.delphipraxis.net/topic/4412-about-medgray-and-windowwhite
+  Special color listbox components serve as 'proof of concept'.
+  }
+
 uses
   System.Generics.Collections,
   System.SysUtils,
@@ -533,7 +540,7 @@ var
   i: Integer;
 begin
   if IdentToInt(s, i, ColorMap) then
-    result := TColor(i)
+    result := TRggColor(i)
   else
     result := TRggColors.White;
 end;

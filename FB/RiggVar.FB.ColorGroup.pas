@@ -2,6 +2,14 @@
 
 interface
 
+{ This will enable intellisense in the IDE when assigning a color.
+  Keep it in sync,
+  - the Enum, used to interate over a color group,
+  - the Array, used to access a color value with the enum value as index,
+  - the Record, used to pick a color in the IDI with 'intellisense'.
+  I have placed enum, array, and record adjacent to each other.
+  You may want to change the order of the colors in a group. }
+
 uses
   RiggVar.FB.Color;
 

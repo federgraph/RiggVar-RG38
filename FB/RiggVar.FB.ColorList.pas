@@ -2,6 +2,9 @@
 
 interface
 
+{ this is much leaner than the color list in
+    https://github.com/jackdp/JPLib/blob/master/Graphics/JPL.Colors.List.pas }
+
 uses
   RiggVar.FB.Color,
   RiggVar.FB.ColorGroup;
@@ -29,7 +32,6 @@ type
     function GetName(Index: Integer): string;
     procedure SetName(Index: Integer; const Value: string);
 
-    function AddColor(const Color: TRggColor; const ColorName: string; const No: Integer): Integer; overload;
     function AddColor(const Item: TRggColorListItem): Integer; overload;
   public
     constructor Create;
@@ -77,17 +79,12 @@ begin
   SetLength(FArray, 0);
 end;
 
-function TRggColorList.AddColor(const Color: TRggColor; const ColorName: string; const No: Integer): Integer;
+function TRggColorList.AddColor(const Color: TRggColor; const ColorName: string): Integer;
 begin
   SetLength(FArray, Length(FArray) + 1);
   FArray[High(FArray)].Color := Color;
   FArray[High(FArray)].ColorName := ColorName;
   Result := High(FArray);
-end;
-
-function TRggColorList.AddColor(const Color: TRggColor; const ColorName: string): Integer;
-begin
-  Result := AddColor(Color, ColorName, Length(FArray) + 1);
 end;
 
 function TRggColorList.AddColor(const Item: TRggColorListItem): Integer;

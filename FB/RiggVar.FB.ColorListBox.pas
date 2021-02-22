@@ -2,6 +2,8 @@
 
 interface
 
+{ This is a 'runtime' color-list-box component for TRggColors. }
+
 uses
   System.SysUtils,
   System.Classes,
