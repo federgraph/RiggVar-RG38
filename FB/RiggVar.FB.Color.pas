@@ -425,6 +425,8 @@ type
     class function IdentToInt(const Ident: string; var Int: Integer; const Map: array of TRggColorMapEntry): Boolean;
     class function ColorToIdent(Color: Integer; var Ident: string): Boolean;
     class function ColorToMapEntry(Value: TRggColor; var MapEntry: TRggColorMapEntry): Integer;
+  private
+    class function GetCount: Integer; static;
   protected
     class function GetColorMapEntry(Value: TRggColor): TRggColorMapEntry;
   public
@@ -440,12 +442,16 @@ type
 
     class function ColorToString(Value: TRggColor): string;
     class function ColorToKind(Value: TRggColor): TRggColorKind;
+    class function ColorToGroup(Value: TRggColor): TRggColorGroup;
+    class function ColorGroupToGroupName(g: TRggColorGroup): string;
+    class function ColorToGroupName(Value: TRggColor): string;
 
     class function GetColorIndex(Value: TRggColor): Integer;
     class function GetColorKindString(Value: TRggColor): string;
 
     class procedure UpdateColorNames;
     class procedure RevertColorNames;
+    class property Count: Integer read GetCount;
   end;
 
   TRggColors = class(TRggCustomColors);
@@ -589,6 +595,11 @@ begin
   result := TRggColorMapEntry.GetEmtpyMapEntry;
 end;
 
+class function TRggColorPool.GetCount: Integer;
+begin
+  result := Length(ColorMap);
+end;
+
 class function TRggColorPool.ColorToKind(Value: TRggColor): TRggColorKind;
 var
   cme: TRggColorMapEntry;
@@ -699,6 +710,48 @@ begin
   UpdateColorName(Windowgray, 'Windowgray');
   UpdateColorName(Porcelain, 'Porcelain');
   UpdateColorName(Mercury, 'Mercury');
+end;
+
+class function TRggColorPool.ColorToGroup(Value: TRggColor): TRggColorGroup;
+var
+  I: Integer;
+begin
+  result := CombinedGroup;
+  for I := 0 to Length(ColorMap)-1 do
+    if ColorMap[I].Value = Integer(Value) then
+    begin
+      Result := ColorMap[I].Group;
+      Exit;
+    end;
+end;
+
+class function TRggColorPool.ColorGroupToGroupName(g: TRggColorGroup): string;
+begin
+  result := '';
+  case g of
+    CombinedGroup: result := 'Combined';
+    PinkGroup: result := 'Pink';
+    PurpleGroup: result := 'Purple';
+    RedGroup: result := 'Red';
+    OrangeGroup: result := 'Orange';
+    YellowGroup: result := 'Yellow';
+    BrownGroup: result := 'Brown';
+    GreenGroup: result := 'Green';
+    CyanGroup: result := 'Cyan';
+    BlueGroup: result := 'Blue';
+    WhiteGroup: result := 'White';
+    GrayGroup: result := 'Gray';
+    CustomGroup: result := 'Custom';
+  end;
+  result := result + 'Group';
+end;
+
+class function TRggColorPool.ColorToGroupName(Value: TRggColor): string;
+var
+  g: TRggColorGroup;
+begin
+  g := ColorToGroup(Value);
+  result := ColorGroupToGroupName(g);
 end;
 
 end.

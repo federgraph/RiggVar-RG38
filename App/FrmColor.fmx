@@ -1,0 +1,14 @@
+﻿object FormColor: TFormColor
+  Left = 0
+  Top = 0
+  Caption = 'FormColor'
+  ClientHeight = 480
+  ClientWidth = 746
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnKeyUp = FormKeyUp
+  DesignerMasterStyle = 0
+end

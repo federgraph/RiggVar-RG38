@@ -139,5 +139,6 @@ Similar projects are available for VCL and LCL:
 | [RG19](https://github.com/federgraph/RiggVar-RG19) | VCL | original RiggVar project |
 | RG38 | FMX | Trimm 420 full project |
 | [RG51](https://github.com/federgraph/RiggVar-RG51) | LCL | FPC / Lazarus project using TBGRABitmap |
+| RG69 | FMX | local color test project |
 | RG76 | FMX | local documentation drawings project |
 | [RG79](https://github.com/federgraph/documentation-drawings) | FMX | standalone documentation drawings repo |

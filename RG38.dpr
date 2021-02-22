@@ -151,7 +151,8 @@ uses
   RiggVar.FederModel.Circle in 'Model\RiggVar.FederModel.Circle.pas',
   RiggVar.FB.Equation in 'FB\RiggVar.FB.Equation.pas',
   RiggVar.FB.Formula in 'FB\RiggVar.FB.Formula.pas',
-  RiggVar.FZ.Z24_Template in 'FZ\RiggVar.FZ.Z24_Template.pas';
+  RiggVar.FZ.Z24_Template in 'FZ\RiggVar.FZ.Z24_Template.pas',
+  RiggVar.FB.ColorGroup in 'FB\RiggVar.FB.ColorGroup.pas';
 
 {$R *.res}
 
