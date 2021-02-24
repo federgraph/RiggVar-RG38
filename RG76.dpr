@@ -55,7 +55,8 @@ uses
   RiggVar.FederModel.Circle in 'Model\RiggVar.FederModel.Circle.pas',
   RiggVar.FB.Equation in 'FB\RiggVar.FB.Equation.pas',
   RiggVar.FB.Formula in 'FB\RiggVar.FB.Formula.pas',
-  RiggVar.FB.Classes in 'FB\RiggVar.FB.Classes.pas';
+  RiggVar.FB.Classes in 'FB\RiggVar.FB.Classes.pas',
+  RiggVar.FB.ColorGroup in 'FB\RiggVar.FB.ColorGroup.pas';
 
 {$R *.res}
 

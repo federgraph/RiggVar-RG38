@@ -85,7 +85,8 @@ uses
   RiggVar.FB.ActionLongDE in 'FB\RiggVar.FB.ActionLongDE.pas',
   RiggVar.FB.ActionLongEN in 'FB\RiggVar.FB.ActionLongEN.pas',
   RiggVar.FB.ActionShortDE in 'FB\RiggVar.FB.ActionShortDE.pas',
-  RiggVar.FB.ActionShortEN in 'FB\RiggVar.FB.ActionShortEN.pas';
+  RiggVar.FB.ActionShortEN in 'FB\RiggVar.FB.ActionShortEN.pas',
+  RiggVar.FB.ColorGroup in 'FB\RiggVar.FB.ColorGroup.pas';
 
 {$R *.res}
 

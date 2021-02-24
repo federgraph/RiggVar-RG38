@@ -47,6 +47,8 @@ type
     CustomGroup
   );
 
+  TWebColorGroupSet = set of TRggColorGroup;
+
   TRggWebColors = class
   public
     const
@@ -163,6 +165,7 @@ type
     Plum = claPlum;
     Powderblue = claPowderblue;
     Purple = claPurple;
+    Rebeccapurple = TRggColor($FF663399);
     Red = claRed;
     Rosybrown = claRosybrown;
     Royalblue = claRoyalblue;
@@ -190,7 +193,6 @@ type
     Whitesmoke = claWhitesmoke;
     Yellow = claYellow;
     Yellowgreen = claYellowgreen;
-    Rebeccapurple = TRggColor($FF663399);
   end;
 
   TRggCustomColors = class(TRggWebColors)
@@ -241,6 +243,8 @@ type
 
   TRggColorMapEntry = record
     Kind: TRggColorKind;
+    IndexA: Integer;
+    IndexN: Integer;
     Group: TRggColorGroup;
     Value: Integer;
     Name: string;
@@ -389,6 +393,7 @@ const
     (Kind: WebColor; Group: BlueGroup; Value: Integer(TRggWebColors.Powderblue); Name: 'Powderblue'),
     (Kind: WebColor; Group: PurpleGroup; Value: Integer(TRggWebColors.Purple); Name: 'Purple'),
     (Kind: WebColor; Group: RedGroup; Value: Integer(TRggWebColors.Red); Name: 'Red'),
+    (Kind: WebColor; Group: PurpleGroup; Value: Integer(TRggWebColors.Rebeccapurple); Name: 'Rebeccapurple'),
     (Kind: WebColor; Group: BrownGroup; Value: Integer(TRggWebColors.Rosybrown); Name: 'Rosybrown'),
     (Kind: WebColor; Group: BlueGroup; Value: Integer(TRggWebColors.Royalblue); Name: 'Royalblue'),
     (Kind: WebColor; Group: BrownGroup; Value: Integer(TRggWebColors.Saddlebrown); Name: 'Saddlebrown'),
@@ -414,8 +419,7 @@ const
     (Kind: WebColor; Group: WhiteGroup; Value: Integer(TRggWebColors.White); Name: 'White'),
     (Kind: WebColor; Group: WhiteGroup; Value: Integer(TRggWebColors.Whitesmoke); Name: 'Whitesmoke'),
     (Kind: WebColor; Group: YellowGroup; Value: Integer(TRggWebColors.Yellow); Name: 'Yellow'),
-    (Kind: WebColor; Group: GreenGroup; Value: Integer(TRggWebColors.Yellowgreen); Name: 'Yellowgreen'),
-    (Kind: WebColor; Group: PurpleGroup; Value: Integer(TRggWebColors.Rebeccapurple); Name: 'Rebeccapurple')
+    (Kind: WebColor; Group: GreenGroup; Value: Integer(TRggWebColors.Yellowgreen); Name: 'Yellowgreen')
   );
 
 type
@@ -425,39 +429,46 @@ type
     c: TRggColor;
     const s: string) of object;
 
+  TRggColorIndexCallback = procedure(Value: TRggColor);
+
   TRggColorPool = class(TRggCustomColors)
   strict private
+    class var
+      TempIndexN: Integer;
     class procedure InitColorMap;
     class function IntToIdent(Int: Integer; var Ident: string; const Map: array of TRggColorMapEntry): Boolean;
     class function IdentToInt(const Ident: string; var Int: Integer; const Map: array of TRggColorMapEntry): Boolean;
     class function ColorToIdent(Color: Integer; var Ident: string): Boolean;
-    class function ColorToMapEntry(Value: TRggColor; var MapEntry: TRggColorMapEntry): Integer;
   private
     class function GetCount: Integer; static;
+    class procedure ColorIndexCallback(Value: TRggColor); static;
+    class procedure EnumeratePartition(Proc: TRggColorIndexCallback); static;
   protected
+    class function ColorToMapEntry(Value: TRggColor; var MapEntry: TRggColorMapEntry): Integer;
     class function GetColorMapEntry(Value: TRggColor): TRggColorMapEntry;
   public
     class var
     ColorMap: array of TRggColorMapEntry;
     class constructor Create;
 
-    class function ColorFromRGB(R, G, B: Byte): TRggColor;
-    class function ColorFromName(const s: string): TRggColor;
+    class function ColorFromRGB(R, G, B: Byte): TRggColor; static;
+    class function ColorFromName(const s: string): TRggColor; static;
 
-    class procedure EnumerateColors(Proc: TRggGetColorInfoProc);
-    class procedure UpdateColorName(c: TRggColor; s: string);
+    class procedure EnumerateColors(Proc: TRggGetColorInfoProc); static;
+    class procedure UpdateColorName(c: TRggColor; s: string); static;
 
-    class function ColorToString(Value: TRggColor): string;
-    class function ColorToKind(Value: TRggColor): TRggColorKind;
-    class function ColorToGroup(Value: TRggColor): TRggColorGroup;
-    class function ColorGroupToGroupName(g: TRggColorGroup): string;
-    class function ColorToGroupName(Value: TRggColor): string;
+    class function ColorToString(Value: TRggColor): string; static;
+    class function ColorToKind(Value: TRggColor): TRggColorKind; static;
+    class function ColorToGroup(Value: TRggColor): TRggColorGroup; static;
+    class function ColorGroupToGroupName(g: TRggColorGroup): string; static;
+    class function ColorToGroupName(Value: TRggColor): string; static;
 
-    class function GetColorIndex(Value: TRggColor): Integer;
-    class function GetColorKindString(Value: TRggColor): string;
+    class function GetColorIndex(Value: TRggColor): Integer; static;
+    class function GetColorKindString(Value: TRggColor): string; static;
 
-    class procedure UpdateColorNames;
-    class procedure RevertColorNames;
+    class procedure UpdateIndexN; static;
+    class procedure UpdateColorNames; static;
+    class procedure RevertColorNames; static;
     class property Count: Integer read GetCount;
   end;
 
@@ -488,6 +499,9 @@ type
   end;
 
 implementation
+
+uses
+  RiggVar.FB.ColorGroup;
 
 { TRggColorMapEntry }
 
@@ -676,7 +690,10 @@ begin
 
   { web colors }
   for i := 0 to High(WebColors) do
+  begin
     ColorMap[i] := WebColors[i];
+    ColorMap[i].IndexA := i;
+  end;
 
   { custom colors }
   k := High(WebColors);
@@ -684,7 +701,10 @@ begin
   begin
     j := k + 1 + i;
     ColorMap[j] := CustomColors[i];
+    ColorMap[j].IndexA := j;
   end;
+
+  UpdateIndexN;
 end;
 
 class procedure TRggColorPool.UpdateColorName(c: TRggColor; s: string);
@@ -759,6 +779,75 @@ var
 begin
   g := ColorToGroup(Value);
   result := ColorGroupToGroupName(g);
+end;
+
+class procedure TRggColorPool.UpdateIndexN;
+begin
+  TempIndexN := 0;
+  EnumeratePartition(ColorIndexCallback);
+end;
+
+class procedure TRggColorPool.EnumeratePartition(Proc: TRggColorIndexCallback);
+var
+  pinkE: TRggPinkWebColorEnum;
+  purpleE: TRggPurpleWebColorEnum;
+  redE: TRggRedWebColorEnum;
+  orangeE: TRggOrangeWebColorEnum;
+  yellowE: TRggYellowWebColorEnum;
+  brownE: TRggBrownWebColorEnum;
+  greenE: TRggGreenWebColorEnum;
+  cyanE: TRggCyanWebColorEnum;
+  blueE: TRggBlueWebColorEnum;
+  whiteE: TRggWhiteWebColorEnum;
+  grayE: TRggGrayWebColorEnum;
+  customE: TRggCustomColorEnum;
+begin
+  for pinkE := Low(TRggPinkWebColorEnum) to High(pinkE) do
+    Proc(PinkWebColorArray[pinkE]);
+
+  for purpleE := Low(purpleE) to High(purpleE) do
+    Proc(PurpleWebColorArray[purpleE]);
+
+  for redE := Low(redE) to High(redE) do
+    Proc(RedWebColorArray[redE]);
+
+  for orangeE := Low(orangeE) to High(orangeE) do
+    Proc(OrangeWebColorArray[orangeE]);
+
+  for yellowE := Low(yellowE) to High(yellowE) do
+    Proc(YellowWebColorArray[yellowE]);
+
+  for brownE := Low(brownE) to High(brownE) do
+    Proc(BrownWebColorArray[brownE]);
+
+  for greenE := Low(greenE) to High(greenE) do
+    Proc(GreenWebColorArray[greenE]);
+
+  for cyanE := Low(cyanE) to High(cyanE) do
+    Proc(CyanWebColorArray[cyanE]);
+
+  for blueE := Low(blueE) to High(blueE) do
+    Proc(BlueWebColorArray[blueE]);
+
+  for whiteE := Low(whiteE) to High(whiteE) do
+    Proc(WhiteWebColorArray[whiteE]);
+
+  for grayE := Low(grayE) to High(grayE) do
+    Proc(GrayWebColorArray[grayE]);
+
+  for customE := Low(customE) to High(customE) do
+    Proc(CustomColorArray[customE]);
+end;
+
+class procedure TRggColorPool.ColorIndexCallback(Value: TRggColor);
+var
+  cme: TRggColorMapEntry;
+begin
+  if TRggColorPool.ColorToMapEntry(Value, cme) > -1 then
+  begin
+    ColorMap[TempIndexN].IndexN := cme.IndexA;
+  end;
+  Inc(TempIndexN);
 end;
 
 end.

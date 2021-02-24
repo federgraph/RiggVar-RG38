@@ -25,11 +25,8 @@ uses
 type
   TFormColor = class(TForm)
     procedure FormCreate(Sender: TObject);
-    procedure ColorListBoxChange(Sender: TObject);
-    procedure WebColorListBoxChange(Sender: TObject);
-    procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
-      Shift: TShiftState);
     procedure FormDestroy(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
   private
     ML: TStrings;
     FColor: TRggColor;
@@ -40,6 +37,8 @@ type
     WebColorListBox: TRggWebColorListBox;
     Rectangle: TRectangle;
     CurrentGroup: TRggColorGroup;
+    procedure ColorListBoxChange(Sender: TObject);
+    procedure WebColorListBoxChange(Sender: TObject);
     procedure UpdateText;
   end;
 

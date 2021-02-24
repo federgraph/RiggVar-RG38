@@ -6,7 +6,7 @@ interface
   Keep it in sync,
   - the Enum, used to interate over a color group,
   - the Array, used to access a color value with the enum value as index,
-  - the Record, used to pick a color in the IDI with 'intellisense'.
+  - the Record, used to pick a color in the IDE with 'intellisense'.
   I have placed enum, array, and record adjacent to each other.
   You may want to change the order of the colors in a group. }
 
@@ -575,6 +575,9 @@ type
     Windowgray,
     Porcelain,
     Mercury,
+    Gray35,
+    Gray15,
+    Gray05,
     Cream,
     Paleblue,
     LegacySkyBlue,
@@ -592,6 +595,9 @@ const
     TRggCustomColors.Windowgray,
     TRggCustomColors.Porcelain,
     TRggCustomColors.Mercury,
+    TRggCustomColors.Gray35,
+    TRggCustomColors.Gray15,
+    TRggCustomColors.Gray05,
     TRggCustomColors.Cream,
     TRggCustomColors.Paleblue,
     TRggCustomColors.LegacySkyBlue,
