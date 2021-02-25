@@ -57,7 +57,11 @@ begin
 
   Caption := 'TRggColorListbox Test';
 
+{$if CompilerVersion < 34.0 }
+  { Next line is entirely optional, and only of help before 10.4.2 }
   TListBoxPatcher.PatchListBox;
+  { See TLisBox selection bug, RSP-28235, fixed in 10.4.2 }
+{$endif}
 
   ML := TStringList.Create;
 

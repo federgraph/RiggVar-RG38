@@ -802,7 +802,7 @@ var
   grayE: TRggGrayWebColorEnum;
   customE: TRggCustomColorEnum;
 begin
-  for pinkE := Low(TRggPinkWebColorEnum) to High(pinkE) do
+  for pinkE := Low(pinkE) to High(pinkE) do
     Proc(PinkWebColorArray[pinkE]);
 
   for purpleE := Low(purpleE) to High(purpleE) do

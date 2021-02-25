@@ -1,4 +1,4 @@
-﻿object FormColor: TFormColor
+object FormColor: TFormColor
   Left = 0
   Top = 0
   Caption = 'FormColor'
