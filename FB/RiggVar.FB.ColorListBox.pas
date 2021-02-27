@@ -88,7 +88,7 @@ begin
     ItemIndex := -1
   else
     for I := 0 to TRggColorPool.Count - 1 do
-      if TRggColorPool.ColorMap[I].Value = Integer(Value) then
+      if TRggColorPool.ColorMap[I].Value = Value then
       begin
         ItemIndex := I;
         Break;

@@ -162,7 +162,7 @@ begin
 
   ML.Clear;
 
-  ML.Add(Format('Index = %d', [TRggColorPool.GetColorIndex(FColor)]));
+  ML.Add(Format('Index = %d', [TRggColorPool.ColorToIndexA(FColor)]));
   ML.Add(Format('Name  = %s', [TRggColorPool.ColorToString(FColor)]));
   ML.Add(Format('Group = %s', [TRggColorPool.ColorGroupToGroupName(FColorGroup)]));
   ML.Add(Format('Kind  = %s', [TRggColorPool.GetColorKindString(FColor)]));

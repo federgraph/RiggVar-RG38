@@ -108,6 +108,8 @@ begin
   Add(A);
   Add(B);
   Add(C);
+
+  DefaultElement := BC;
 end;
 
 procedure TRggDrawingZ07.GoDark;

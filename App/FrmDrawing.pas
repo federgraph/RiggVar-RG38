@@ -1509,7 +1509,7 @@ begin
     LV := DrawingList;
     LV.SetColorBackground(cla);
     LV.SetColorItemFill(cla);
-    LV.SetColorItemSeparator(TRggColors.WindowWhite);
+    LV.SetColorItemSeparator(TRggColors.Windowgray);
     LV.SetColorItemSelected(TRggColors.Azure);
     LV.SetColorText(claDodgerblue);
 {$endif}
@@ -1517,7 +1517,7 @@ begin
     LV := ElementList;
     LV.SetColorBackground(cla);
     LV.SetColorItemFill(cla);
-    LV.SetColorItemSeparator(TRggColors.WindowWhite);
+    LV.SetColorItemSeparator(TRggColors.Windowgray);
     LV.SetColorItemSelected(TRggColors.Aliceblue);
     LV.SetColorText(claTomato);
   end;

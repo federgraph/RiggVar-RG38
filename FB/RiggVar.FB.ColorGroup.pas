@@ -25,12 +25,12 @@ type
 
 const
   PinkWebColorArray: array[TRggPinkWebColorEnum] of TRggColor = (
-    TRggColors.Pink,
-    TRggColors.Lightpink,
-    TRggColors.Hotpink,
-    TRggColors.Deeppink,
-    TRggColors.Palevioletred,
-    TRggColors.Mediumvioletred
+    TRggWebColors.Pink,
+    TRggWebColors.Lightpink,
+    TRggWebColors.Hotpink,
+    TRggWebColors.Deeppink,
+    TRggWebColors.Palevioletred,
+    TRggWebColors.Mediumvioletred
   );
 
 type
@@ -68,25 +68,25 @@ type
 
 const
   PurpleWebColorArray: array[TRggPurpleWebColorEnum] of TRggColor = (
-    TRggColors.Lavender,
-    TRggColors.Thistle,
-    TRggColors.Plum,
-    TRggColors.Orchid,
-    TRggColors.Violet,
-//    TRggColors.Fuchsia,
-    TRggColors.Magenta,
-    TRggColors.MediumOrchid,
-    TRggColors.DarkOrchid,
-    TRggColors.DarkViolet,
-    TRggColors.BlueViolet,
-    TRggColors.DarkMagenta,
-    TRggColors.Purple,
-    TRggColors.MediumPurple,
-    TRggColors.MediumSlateBlue,
-    TRggColors.SlateBlue,
-    TRggColors.DarkSlateBlue,
-    TRggColors.RebeccaPurple,
-    TRggColors.Indigo
+    TRggWebColors.Lavender,
+    TRggWebColors.Thistle,
+    TRggWebColors.Plum,
+    TRggWebColors.Orchid,
+    TRggWebColors.Violet,
+//    TRggWebColors.Fuchsia,
+    TRggWebColors.Magenta,
+    TRggWebColors.MediumOrchid,
+    TRggWebColors.DarkOrchid,
+    TRggWebColors.DarkViolet,
+    TRggWebColors.BlueViolet,
+    TRggWebColors.DarkMagenta,
+    TRggWebColors.Purple,
+    TRggWebColors.MediumPurple,
+    TRggWebColors.MediumSlateBlue,
+    TRggWebColors.SlateBlue,
+    TRggWebColors.DarkSlateBlue,
+    TRggWebColors.RebeccaPurple,
+    TRggWebColors.Indigo
   );
 
 type
@@ -128,15 +128,15 @@ type
 
 const
   RedWebColorArray: array[TRggRedWebColorEnum] of TRggColor = (
-    TRggColors.LightSalmon,
-    TRggColors.Salmon,
-    TRggColors.DarkSalmon,
-    TRggColors.LightCoral,
-    TRggColors.IndianRed,
-    TRggColors.Crimson,
-    TRggColors.Red,
-    TRggColors.FireBrick,
-    TRggColors.DarkRed
+    TRggWebColors.LightSalmon,
+    TRggWebColors.Salmon,
+    TRggWebColors.DarkSalmon,
+    TRggWebColors.LightCoral,
+    TRggWebColors.IndianRed,
+    TRggWebColors.Crimson,
+    TRggWebColors.Red,
+    TRggWebColors.FireBrick,
+    TRggWebColors.DarkRed
   );
 
 type
@@ -163,11 +163,11 @@ type
 
 const
   OrangeWebColorArray: array[TRggOrangeWebColorEnum] of TRggColor = (
-    TRggColors.Orange,
-    TRggColors.DarkOrange,
-    TRggColors.Coral,
-    TRggColors.Tomato,
-    TRggColors.OrangeRed
+    TRggWebColors.Orange,
+    TRggWebColors.DarkOrange,
+    TRggWebColors.Coral,
+    TRggWebColors.Tomato,
+    TRggWebColors.OrangeRed
   );
 
 type
@@ -612,7 +612,7 @@ const
 type
   TRggCustomColorPicker = record
     const
-    Null = TRggColors.Null;
+    Null = TRggCustomColors.Null;
 
     Windowgray = TRggCustomColors.Windowgray;
     Porcelain = TRggCustomColors.Porcelain;

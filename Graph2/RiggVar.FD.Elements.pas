@@ -117,6 +117,7 @@ type
     procedure SetStrokeDash(const Value: TStrokeDash);
     procedure SetOpacity(const Value: single);
   protected
+    ColorIndex: Integer;
     TypeName: string;
     TextCenter: TPointF;
     TextAngle: single;
@@ -588,8 +589,23 @@ begin
 end;
 
 procedure TRggElement.Param3(Delta: single);
+var
+  i: Integer;
+  j: Integer;
 begin
+  i := ColorIndex;
 
+  if Delta < 0 then
+    Dec(i)
+  else
+    Inc(i);
+
+  if (i > -1) and (i < TRggColorPool.Count) then
+  begin
+    j := TRggColorPool.ColorMap[i].IndexN;
+    FStrokeColor := TRggColorPool.ColorMap[j].Value;
+    ColorIndex := i;
+  end;
 end;
 
 procedure TRggElement.SetOpacity(const Value: single);
@@ -598,8 +614,12 @@ begin
 end;
 
 procedure TRggElement.SetStrokeColor(const Value: TAlphaColor);
+var
+  j: Integer;
 begin
   FStrokeColor := Value;
+  j := TRggColorPool.ColorToIndexA(FStrokeColor);
+  ColorIndex := TRggColorPool.LookupIndexA(j);
 end;
 
 procedure TRggElement.SetStrokeDash(const Value: TStrokeDash);
