@@ -2,7 +2,7 @@
 
 interface
 
-{ I wanted a unique set of color values,
+{ I wanted a custom set of unique color values,
     which includes web colors (all) and a few custom colors.
   All colors shall support 'picking by name' in the IDE code editor.
   https://en.delphipraxis.net/topic/4412-about-medgray-and-windowwhite
@@ -248,7 +248,7 @@ type
     Group: TRggColorGroup;
     Value: Cardinal;
     Name: string;
-    class function Create(AKind: TRggColorKind; AValue: Integer; const AName: string): TRggColorMapEntry; static;
+    class function Create(AKind: TRggColorKind; AValue: Cardinal; const AName: string): TRggColorMapEntry; static;
     class function ColorKindToString(Value: TRggColorKind): string; static;
     class function ColorKindToChar(Value: TRggColorKind): char; static;
     class function GetEmtpyMapEntry: TRggColorMapEntry; static;
@@ -433,8 +433,7 @@ type
 
   TRggColorPool = class(TRggCustomColors)
   strict private
-    class var
-      TempIndexN: Integer;
+    class var TempIndexN: Integer;
     class procedure InitColorMap;
     class function CardinalToIdent(Int: Cardinal; var Ident: string; const Map: array of TRggColorMapEntry): Boolean;
     class function IdentToCardinal(const Ident: string; var Int: Cardinal; const Map: array of TRggColorMapEntry): Boolean;
@@ -447,8 +446,7 @@ type
     class function ColorToMapEntry(Value: TRggColor; var MapEntry: TRggColorMapEntry): Integer;
     class function GetColorMapEntry(Value: TRggColor): TRggColorMapEntry;
   public
-    class var
-    ColorMap: array of TRggColorMapEntry;
+    class var ColorMap: array of TRggColorMapEntry;
     class constructor Create;
 
     class function ColorFromRGB(R, G, B: Byte): TRggColor; static;
@@ -463,9 +461,11 @@ type
     class function ColorGroupToGroupName(g: TRggColorGroup): string; static;
     class function ColorToGroupName(Value: TRggColor): string; static;
     class function ColorToIndexA(Value: TRggColor): Integer; static;
+    class function ColorToIndexN(Value: TRggColor): Integer; static;
     class function GetColorKindString(Value: TRggColor): string; static;
 
-    class function LookupIndexA(IdxN: Integer): Integer; static;
+    class function GetColorIndex(Value: TRggColor): Integer; static;
+    class function LookupRowForIndexN(IdxN: Integer): Integer; static;
 
     class procedure UpdateIndexN; static;
     class procedure UpdateColorNames; static;
@@ -508,7 +508,7 @@ uses
 
 class function TRggColorMapEntry.Create(
   AKind: TRggColorKind;
-  AValue: Integer;
+  AValue: Cardinal;
   const AName: string): TRggColorMapEntry;
 begin
   result.Kind := AKind;
@@ -631,7 +631,20 @@ begin
   result := -1;
 end;
 
-class function TRggColorPool.LookupIndexA(IdxN: Integer): Integer;
+class function TRggColorPool.ColorToIndexN(Value: TRggColor): Integer;
+var
+  I: Integer;
+begin
+  for I := 0 to Length(ColorMap)-1 do
+    if ColorMap[I].Value = Value then
+    begin
+      result := ColorMap[I].IndexN;
+      Exit;
+    end;
+  result := -1;
+end;
+
+class function TRggColorPool.LookupRowForIndexN(IdxN: Integer): Integer;
 var
   I: Integer;
 begin
@@ -642,6 +655,11 @@ begin
       Exit;
     end;
   result := -1;
+end;
+
+class function TRggColorPool.GetColorIndex(Value: TRggColor): Integer;
+begin
+  result := LookupRowForIndexN(ColorToIndexA(Value));
 end;
 
 class function TRggColorPool.GetCount: Integer;

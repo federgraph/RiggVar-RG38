@@ -614,12 +614,9 @@ begin
 end;
 
 procedure TRggElement.SetStrokeColor(const Value: TAlphaColor);
-var
-  j: Integer;
 begin
   FStrokeColor := Value;
-  j := TRggColorPool.ColorToIndexA(FStrokeColor);
-  ColorIndex := TRggColorPool.LookupIndexA(j);
+  ColorIndex := TRggColorPool.GetColorIndex(FStrokeColor);
 end;
 
 procedure TRggElement.SetStrokeDash(const Value: TStrokeDash);

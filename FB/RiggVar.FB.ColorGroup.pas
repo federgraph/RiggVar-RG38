@@ -13,6 +13,7 @@ interface
 uses
   RiggVar.FB.Color;
 
+{$region 'Pink'}
 type
   TRggPinkWebColorEnum = (
     Pink,
@@ -43,7 +44,10 @@ type
     PaleVioletRed = TRggWebColors.Palevioletred;
     MediumVioletRed = TRggWebColors.Mediumvioletred;
   end;
+{$endregion}
 
+{$region 'Purple'}
+type
   TRggPurpleWebColorEnum = (
     Lavender,
     Thistle,
@@ -112,7 +116,9 @@ type
     RebeccaPurple = TRggWebColors.RebeccaPurple;
     Indigo = TRggWebColors.Indigo;
   end;
+{$endregion}
 
+{$region 'Red'}
 type
   TRggRedWebColorEnum = (
     LightSalmon,
@@ -152,7 +158,10 @@ type
     FireBrick = TRggWebColors.FireBrick;
     DarkRed = TRggWebColors.DarkRed;
   end;
+{$endregion}
 
+{$region 'Orange'}
+type
   TRggOrangeWebColorEnum = (
     Orange,
     DarkOrange,
@@ -179,7 +188,10 @@ type
     Tomato = TRggWebColors.Tomato;
     OrangeRed = TRggWebColors.OrangeRed;
   end;
+{$endregion}
 
+{$region 'Yellow'}
+type
   TRggYellowWebColorEnum = (
     Gold,
     Yellow,
@@ -224,7 +236,10 @@ type
     Khaki = TRggWebColors.Khaki;
     DarkKhaki = TRggWebColors.DarkKhaki;
   end;
+{$endregion}
 
+{$region 'Green'}
+type
   TRggGreenWebColorEnum = (
     GreenYellow,
     Chartreuse,
@@ -302,7 +317,10 @@ type
     DarkCyan = TRggWebColors.DarkCyan;
     Teal = TRggWebColors.Teal;
   end;
+{$endregion}
 
+{$region 'Cyan'}
+type
   TRggCyanWebColorEnum = (
 //    Aqua,
     Cyan,
@@ -338,7 +356,10 @@ type
     MediumTurquoise = TRggWebColors.MediumTurquoise;
     DarkTurquoise = TRggWebColors.DarkTurquoise;
   end;
+{$endregion}
 
+{$region 'Blue'}
+type
   TRggBlueWebColorEnum = (
     CadetBlue,
     SteelBlue,
@@ -398,7 +419,10 @@ type
     Navy = TRggWebColors.Navy;
     MidnightBlue = TRggWebColors.MidnightBlue;
   end;
+{$endregion}
 
+{$region 'Brown'}
+type
   TRggBrownWebColorEnum = (
     Cornsilk,
     BlanchedAlmond,
@@ -464,7 +488,10 @@ type
     Brown = TRggWebColors.Brown;
     Maroon = TRggWebColors.Maroon;
   end;
+{$endregion}
 
+{$region 'White'}
+type
   TRggWhiteWebColorEnum = (
     White,
     Snow,
@@ -527,7 +554,10 @@ type
     LavenderBlush = TRggWebColors.LavenderBlush;
     MistyRose = TRggWebColors.MistyRose;
   end;
+{$endregion}
 
+{$region 'Gray'}
+type
   TRggGrayWebColorEnum = (
     Gainsboro,
     LightGray,
@@ -569,7 +599,10 @@ type
     DarkSlateGray = TRggWebColors.DarkSlateGray;
     Black = TRggWebColors.Black;
   end;
+{$endregion}
 
+{$region 'Custom'}
+type
   TRggCustomColorEnum = (
     BackgroundWhite,
     Windowgray,
@@ -608,6 +641,10 @@ const
     TRggCustomColors.Darkbrown,
     TRggCustomColors.BackgroundGray
   );
+
+  { for TRggCustomColors see unit RiggVar.FB.Color }
+
+{$endregion}
 
 type
   TRggCustomColorPicker = record

@@ -37,9 +37,11 @@ type
     WebColorListBox: TRggWebColorListBox;
     Rectangle: TRectangle;
     CurrentGroup: TRggColorGroup;
+    ColorIndex: Integer;
     procedure ColorListBoxChange(Sender: TObject);
     procedure WebColorListBoxChange(Sender: TObject);
     procedure UpdateText;
+    procedure RectangleMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; var Handled: Boolean);
   end;
 
 var
@@ -82,6 +84,7 @@ begin
   Rectangle.Position.Y := Margin;
   Rectangle.Width := 145;
   Rectangle.Height := 145;
+  Rectangle.OnMouseWheel := RectangleMouseWheel;
 
   Text := TText.Create(Self);
   Text.Parent := Self;
@@ -124,6 +127,7 @@ begin
   FColor := c;
   FColorGroup := g;
   UpdateText;
+  ColorIndex := TRggColorPool.GetColorIndex(FColor);
 end;
 
 procedure TFormColor.WebColorListBoxChange(Sender: TObject);
@@ -131,6 +135,29 @@ begin
   FColor := WebColorListBox.Color;
   Rectangle.Fill.Color := FColor;
   UpdateText;
+  ColorIndex := TRggColorPool.GetColorIndex(FColor);
+end;
+
+procedure TFormColor.RectangleMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; var Handled: Boolean);
+var
+  i: Integer;
+  j: Integer;
+begin
+  i := ColorIndex;
+
+  if WheelDelta > 0 then
+    Inc(i)
+  else
+    Dec(i);
+
+  if (i > -1) and (i < TRggColorPool.Count) then
+  begin
+    j := TRggColorPool.ColorMap[i].IndexN;
+    FColor := TRggColorPool.ColorMap[j].Value;
+    Rectangle.Fill.Color := FColor;
+    ColorIndex := i;
+    UpdateText;
+  end;
 end;
 
 procedure TFormColor.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
@@ -162,7 +189,8 @@ begin
 
   ML.Clear;
 
-  ML.Add(Format('Index = %d', [TRggColorPool.ColorToIndexA(FColor)]));
+  ML.Add(Format('Index A = %d', [TRggColorPool.ColorToIndexA(FColor)]));
+  ML.Add(Format('Index N = %d', [TRggColorPool.ColorToIndexN(FColor)]));
   ML.Add(Format('Name  = %s', [TRggColorPool.ColorToString(FColor)]));
   ML.Add(Format('Group = %s', [TRggColorPool.ColorGroupToGroupName(FColorGroup)]));
   ML.Add(Format('Kind  = %s', [TRggColorPool.GetColorKindString(FColor)]));
