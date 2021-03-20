@@ -2419,10 +2419,10 @@ function TFormMain.GetCanShowMemo: Boolean;
 begin
   result := True;
 
-  if (ClientWidth < 900 * FScale) then
+  if (ClientWidth < 900) then
     result := False;
 
-  if (ClientHeight < 700 * FScale) then
+  if (ClientHeight < 700) then
     result := False;
 
   if Main.IsPhone then

@@ -316,11 +316,11 @@ begin
       rgNone: ;
       rgReadme:
       begin
-        ML.Add('On the desktop - use scroll Wheel of the mouse!');
-        ML.Add('On touch screen - use touch bar on button frame');
+        ML.Add('On the desktop - use scroll Wheel of the mouse.');
+        ML.Add('On a touch screen - use touch bar on button frame.');
         ML.Add('');
-        ML.Add('Wheel = small step change of current param value');
-        ML.Add('Shift-Wheel = big step change of current param value');
+        ML.Add('Wheel = Small step change of current param value.');
+        ML.Add('Shift-Wheel = Big step change of current param value.');
       end;
       rgLog: ML.Text := Main.Logger.TL.Text;
       rgJson: Main.RggData.WriteJSon(ML);

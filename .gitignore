@@ -1,16 +1,22 @@
 ﻿*.dproj
+
+.vscode/
+
 Deploy/
 Office/
 OSX64/
 Android/
 Android64/
 iOSDevice32/
-iOSDevice64
-iOSSimulator
+iOSDevice64/
+iOSSimulator/
 
 AndroidManifest.template.xml
 Entitlement.TemplateOSX.xml
 info.plist.TemplateOSX.xml
+
+*.ps1
+*.bat
 
 # Uncomment these types if you want even more clean repository. But be careful.
 # It can make harm to an existing project source. Read explanations below.
@@ -70,6 +76,7 @@ info.plist.TemplateOSX.xml
 *.projdata
 *.tvsconfig
 *.dsk
+*.otares
 
 # Delphi history and backups
 __history/

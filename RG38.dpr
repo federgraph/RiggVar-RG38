@@ -40,6 +40,7 @@ uses
   RiggVar.FB.ActionConst in 'FB\RiggVar.FB.ActionConst.pas',
   RiggVar.FB.Classes in 'FB\RiggVar.FB.Classes.pas',
   RiggVar.FB.Color in 'FB\RiggVar.FB.Color.pas',
+  RiggVar.FB.ColorGroup in 'FB\RiggVar.FB.ColorGroup.pas',
   RiggVar.FB.ActionGroup in 'FB\RiggVar.FB.ActionGroup.pas',
   RiggVar.FB.ActionGroups in 'FB\RiggVar.FB.ActionGroups.pas',
   RiggVar.FB.ActionKeys in 'FB\RiggVar.FB.ActionKeys.pas',
@@ -140,6 +141,7 @@ uses
   RiggVar.FZ.Z21_Rotations in 'FZ\RiggVar.FZ.Z21_Rotations.pas',
   RiggVar.FZ.Z22_BigArc in 'FZ\RiggVar.FZ.Z22_BigArc.pas',
   RiggVar.FZ.Z23_Federgraph in 'FZ\RiggVar.FZ.Z23_Federgraph.pas',
+  RiggVar.FZ.Z24_Template in 'FZ\RiggVar.FZ.Z24_Template.pas',
   RiggVar.RG.LocalizedStrings in 'RG\RiggVar.RG.LocalizedStrings.pas',
   RiggVar.RG.LocalizedStrings00 in 'RG\RiggVar.RG.LocalizedStrings00.pas',
   RiggVar.RG.LocalizedStringsDE in 'RG\RiggVar.RG.LocalizedStringsDE.pas',
@@ -150,9 +152,7 @@ uses
   RiggVar.FB.ActionShortEN in 'FB\RiggVar.FB.ActionShortEN.pas',
   RiggVar.FederModel.Circle in 'Model\RiggVar.FederModel.Circle.pas',
   RiggVar.FB.Equation in 'FB\RiggVar.FB.Equation.pas',
-  RiggVar.FB.Formula in 'FB\RiggVar.FB.Formula.pas',
-  RiggVar.FZ.Z24_Template in 'FZ\RiggVar.FZ.Z24_Template.pas',
-  RiggVar.FB.ColorGroup in 'FB\RiggVar.FB.ColorGroup.pas';
+  RiggVar.FB.Formula in 'FB\RiggVar.FB.Formula.pas';
 
 {$R *.res}
 
