@@ -1334,9 +1334,9 @@ begin
           itGerade:
           begin
             Add('  KurvenTyp: Gerade');
-            Add(Format('  Steigung: %g N/mm',[1/T.a1]));
-            Add(Format('  Maximale Kraft: %g N',[T.x2]));
-            Add(Format('  Maximale Auslenkung: %g mm',[T.a1*T.x2]));
+            Add(Format('  Steigung: %6.2f N/mm',[1/T.a1]));
+            Add(Format('  Maximale Kraft: %6.2f N',[T.x2]));
+            Add(Format('  Maximale Auslenkung: %6.2f mm',[T.a1*T.x2]));
           end;
           itParabel:
           begin

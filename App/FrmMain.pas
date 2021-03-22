@@ -2412,6 +2412,7 @@ begin
   else
   begin
     ReportText.Visible := True;
+    HelpText.Visible := False;
   end;
 end;
 
