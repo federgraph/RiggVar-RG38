@@ -272,7 +272,7 @@ end;
 procedure TRggFA.InitStepDefault;
 begin
   InitSmallStep(1);
-  InitBigStep(10)
+  InitBigStep(10);
 end;
 
 procedure TRggFA.InitSmallStep(Value: Integer);

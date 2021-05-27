@@ -804,9 +804,9 @@ end;
 function TStrokeRigg.GetPoint3D(oo: TRiggPoint): TPoint3D;
 begin
   result := Point3D(
-    (rp.V[oo].X-o.x) / TRotaForm3.RggGlobalScale,
-    (rp.V[oo].Y-o.y) / TRotaForm3.RggGlobalScale,
-    (rp.V[oo].Z-o.z) / TRotaForm3.RggGlobalScale
+    (rP.V[oo].X-o.x) / TRotaForm3.RggGlobalScale,
+    (rP.V[oo].Y-o.y) / TRotaForm3.RggGlobalScale,
+    (rP.V[oo].Z-o.z) / TRotaForm3.RggGlobalScale
     );
 end;
 
@@ -816,50 +816,50 @@ begin
   if WantRenderH then
   begin
   DrawPolygon4(
-    rp.A0,
-    rp.B0,
-    rp.C0,
-    rp.A0,
+    rP.A0,
+    rP.B0,
+    rP.C0,
+    rP.A0,
     MatRumpf);
   DrawPolygon3(
-    rp.A0,
-    rp.D0,
-    rp.B0,
+    rP.A0,
+    rP.D0,
+    rP.B0,
     MatRumpf);
   DrawPolygon2(
-    rp.C0,
-    rp.D0,
+    rP.C0,
+    rP.D0,
     MatRumpf);
    end;
 
    if WantRenderP then
    begin
     DrawPolygon4(
-      rp.D0,
-      rp.F0,
-      rp.P0,
-      rp.D0,
+      rP.D0,
+      rP.F0,
+      rP.P0,
+      rP.D0,
       MatRumpf);
     DrawPolygon2(
-      rp.P0,
-      rp.C0,
+      rP.P0,
+      rP.C0,
       MatRumpf);
     DrawPolygon3(
-      rp.D0,
-      rp.N0,
-      rp.F0,
+      rP.D0,
+      rP.N0,
+      rP.F0,
       MatRumpf);
     end;
 
    if WantRenderF then
    begin
     DrawPolygon2(
-      rp.F0,
-      rp.M,
+      rP.F0,
+      rP.M,
       MatFall);
     DrawPolygon2(
-      rp.M,
-      rp.F,
+      rP.M,
+      rP.F,
       MatRumpf);
     end;
 
@@ -870,16 +870,16 @@ begin
   end
   else if SalingTyp = stDrehbar then
     DrawPolygon3(
-      rp.A,
-      rp.D,
-      rp.B,
+      rP.A,
+      rP.D,
+      rP.B,
       MatSaling)
   else if SalingTyp = stFest then
     DrawPolygon4(
-      rp.A,
-      rp.D,
-      rp.B,
-      rp.A,
+      rP.A,
+      rP.D,
+      rP.B,
+      rP.A,
       MatSaling);
 
   { Mast }
@@ -887,37 +887,37 @@ begin
     DrawPolygon51
   else
     DrawPolygon4(
-      rp.D0,
-      rp.D,
-      rp.C,
-      rp.F,
+      rP.D0,
+      rP.D,
+      rP.C,
+      rP.F,
       MatMast);
 
   { Wanten }
   if not WanteGestrichelt then
   begin
     DrawPolygon3(
-      rp.A0,
-      rp.A,
-      rp.C,
+      rP.A0,
+      rP.A,
+      rP.C,
       MatWanteStb);
     DrawPolygon3(
-      rp.B0,
-      rp.B,
-      rp.C,
+      rP.B0,
+      rP.B,
+      rP.C,
       MatWanteBb);
   end
   else
   begin
     DrawPolygon3(
-      rp.A0,
-      rp.A,
-      rp.C,
+      rP.A0,
+      rP.A,
+      rP.C,
       MatGray);
     DrawPolygon3(
-      rp.B0,
-      rp.B,
-      rp.C,
+      rP.B0,
+      rP.B,
+      rP.C,
       MatGray);
   end;
 
@@ -925,15 +925,15 @@ begin
   if ControllerTyp <> ctOhne then
   begin
     DrawPolygon2(
-      rp.E0,
-      rp.E,
+      rP.E0,
+      rP.E,
       MatController);
   end;
 
   { Vorstag }
   DrawPolygon2(
-    rp.C0,
-    rp.C,
+    rP.C0,
+    rP.C,
     MatVorstag);
 
 end;

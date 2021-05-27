@@ -1352,11 +1352,11 @@ var
   ooTemp: TPoint3D;
   a, t: single;
 begin
-  a := rp.F0.Distance(rp.F);
+  a := rP.F0.Distance(rP.F);
   t := (a - MastfallVorlauf) / a;
-  ooTemp := rp.F - rp.F0;
-  ooTemp := rp.F0 + ooTemp * t;
-  rp.M := ooTemp;
+  ooTemp := rP.F - rP.F0;
+  ooTemp := rP.F0 + ooTemp * t;
+  rP.M := ooTemp;
 end;
 
 procedure TRigg2.BerechneWinkel;
@@ -2006,12 +2006,12 @@ var
   delta: single;
   w: single;
 begin
-  oldF := rp.F;
-  oldC := rp.C;
-  oldD := rp.D;
-  D0 := rp.D0;
-  D0F := rp.D0.Distance(rp.F);
-  D0C := rp.D0.Distance(rp.C);
+  oldF := rP.F;
+  oldC := rP.C;
+  oldD := rP.D;
+  D0 := rP.D0;
+  D0F := rP.D0.Distance(rP.F);
+  D0C := rP.D0.Distance(rP.C);
   D0D := FrMastUnten;
 
   { compute new Point F }
@@ -2029,7 +2029,7 @@ begin
 
   { compute new Points C and D }
 
-  newF := rp.F;
+  newF := rP.F;
   oldPsi := Pi/2 - SKK.AngleXZ(oldF, D0);
   newPsi := Pi/2 - SKK.AngleXZ(newF, D0);
   delta := newPsi - oldPsi;
@@ -2046,8 +2046,8 @@ begin
   newD.Y := 0;
   newD.Z := D0.Z + D0D * sin(w);
 
-  rp.C := newC;
-  rp.D := newD;
+  rP.C := newC;
+  rP.D := newD;
 
   { continue as in original BiegeUndNeigeF }
 

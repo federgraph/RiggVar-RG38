@@ -790,65 +790,65 @@ class function TRggTestData.GetKoordinaten420: TRiggPoints;
 var
   rp: TRiggPoints;
 begin
-  rp.A.X := 2398;
-  rp.A.Y := -425;
-  rp.A.Z := 2496;
+  rP.A.X := 2398;
+  rP.A.Y := -425;
+  rP.A.Z := 2496;
 
-  rp.B.X := 2398;
-  rp.B.Y := 425;
-  rp.B.Z := 2496;
+  rP.B.X := 2398;
+  rP.B.Y := 425;
+  rP.B.Z := 2496;
 
-  rp.C.X := 2354;
-  rp.C.Y := 0;
-  rp.C.Z := 4470;
+  rP.C.X := 2354;
+  rP.C.Y := 0;
+  rP.C.Z := 4470;
 
-  rp.D.X := 2618;
-  rp.D.Y := 0;
-  rp.D.Z := 2488;
+  rP.D.X := 2618;
+  rP.D.Y := 0;
+  rP.D.Z := 2488;
 
-  rp.E.X := 2870;
-  rp.E.Y := 0;
-  rp.E.Z := 450;
+  rP.E.X := 2870;
+  rP.E.Y := 0;
+  rP.E.Z := 450;
 
-  rp.F.X := 2142;
-  rp.F.Y := 0;
-  rp.F.Z := 5970;
+  rP.F.X := 2142;
+  rP.F.Y := 0;
+  rP.F.Z := 5970;
 
-  rp.P.X := 2398;
-  rp.P.Y := 0;
-  rp.P.Z := 2496;
+  rP.P.X := 2398;
+  rP.P.Y := 0;
+  rP.P.Z := 2496;
 
-  rp.A0.X := 2560;
-  rp.A0.Y := -765;
-  rp.A0.Z := 430;
+  rP.A0.X := 2560;
+  rP.A0.Y := -765;
+  rP.A0.Z := 430;
 
-  rp.B0.X := 2560;
-  rp.B0.Y := 765;
-  rp.B0.Z := 430;
+  rP.B0.X := 2560;
+  rP.B0.Y := 765;
+  rP.B0.Z := 430;
 
-  rp.C0.X := 4140;
-  rp.C0.Y := 0;
-  rp.C0.Z := 340;
+  rP.C0.X := 4140;
+  rP.C0.Y := 0;
+  rP.C0.Z := 340;
 
-  rp.D0.X := 2870;
-  rp.D0.Y := 0;
-  rp.D0.Z := -100;
+  rP.D0.X := 2870;
+  rP.D0.Y := 0;
+  rP.D0.Z := -100;
 
-  rp.E0.X := 2970;
-  rp.E0.Y := 0;
-  rp.E0.Z := 450;
+  rP.E0.X := 2970;
+  rP.E0.Y := 0;
+  rP.E0.Z := 450;
 
-  rp.F0.X := -30;
-  rp.F0.Y := 0;
-  rp.F0.Z := 300;
+  rP.F0.X := -30;
+  rP.F0.Y := 0;
+  rP.F0.Z := 300;
 
-  rp.P0.X := 2560;
-  rp.P0.Y := 0;
-  rp.P0.Z := 430;
+  rP.P0.X := 2560;
+  rP.P0.Y := 0;
+  rP.P0.Z := 430;
 
-  rp.M.X := 0;
-  rp.M.Y := 0;
-  rp.M.Z := 0;
+  rP.M.X := 0;
+  rP.M.Y := 0;
+  rP.M.Z := 0;
 
   result := rp;
 end;

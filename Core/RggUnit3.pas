@@ -659,7 +659,7 @@ begin
     Exit;
   end;
 
-  r2 := sqrt(sqr(rLe.V[5]) - sqr(rLe.V[6] / 2));
+  r2 := sqrt(r2);
   r1 := rP.P0.Length;
   if (r1 < 0.1) or (r2 < 0.1) then
   begin
