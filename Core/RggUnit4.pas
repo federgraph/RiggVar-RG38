@@ -34,6 +34,7 @@ uses
 type
   TRigg1 = class(TRiggFS, IRigg0)
   private
+    FModelEvent: TRggModelEvent;
     procedure AusgabeTextDE(ML: TStrings; WantAll, WantForce: Boolean);
     procedure AusgabeTextEN(ML: TStrings; WantAll, WantForce: Boolean);
   public
@@ -70,8 +71,14 @@ type
     procedure LoadTrimm(fd: TRggData);
     procedure SaveTrimm(fd: TRggData);
 
+    procedure Process(ModelInput: TRggModelInput);
+    procedure SetParam(const Value: TFederParam; Demo: Boolean);
+    procedure SetModelEvent(const Value: TRggModelEvent);
+
     property RealTrimm[Index: TTrimmIndex]: single read GetRealTrimm;
     property MastKurve: TMastKurve read GetMastKurve;
+
+    property ModelEvent: TRggModelEvent write SetModelEvent;
   end;
 
 implementation
@@ -1170,6 +1177,128 @@ begin
     end;
   end;
   result := MinIndex;
+end;
+
+procedure TRigg1.SetModelEvent(const Value: TRggModelEvent);
+begin
+  FModelEvent := Value;
+end;
+
+procedure TRigg1.SetParam(const Value: TFederParam; Demo: Boolean);
+begin
+  if Demo then
+  begin
+    SetDefaultDocument;
+    InitFactArray;
+    ChangeRigg(Value, RggFA.Find(Value).Ist); // Istwert zurücksetzen
+    RealGlied[fpVorstag] := RggFA.Vorstag.Ist;
+  end;
+
+  if Value = fpWinkel then
+  begin
+    { Wanten straff ziehen }
+    case SalingTyp of
+      stFest:
+        MakeSalingHBiggerFS(RggFA.SalingH.Ist);
+      stDrehbar:
+        MakeSalingLBiggerDS(RggFA.SalingL.Ist);
+    end;
+  end;
+
+  if Value = fpController then
+    ControllerTyp := ctDruck
+  else
+    ControllerTyp := ctOhne;
+
+  ManipulatorMode := (Value = fpWinkel);
+end;
+
+procedure TRigg1.Process(ModelInput: TRggModelInput);
+var
+  MO: TRggModelOutput;
+  ME: TRggModelError;
+
+  temp: Boolean;
+
+  NeedReset: Boolean;
+  WantSchnittKraefte: Boolean;
+begin
+  NeedReset := False;
+  WantSchnittKraefte := False;
+
+  if ModelInput.CurrentChanged then
+    ChangeRigg(ModelInput.CurrentParam, ModelInput.CurrentParamValue);
+
+  case ModelInput.CurrentParam of
+    fpD0X:
+    begin
+      NeedReset := True;
+    end;
+
+    fpMastfallF0C,
+    fpMastfallF0F,
+    fpBiegung:
+    begin
+      WantSchnittKraefte := True;
+    end;
+  end;
+
+  if NeedReset then
+    Reset;
+
+  MO.GrauZeichnen := False;
+  MO.RiggLED := False;
+  MO.StatusText := '';
+
+  { part one of computation }
+  UpdateGetriebe;
+
+  temp := (ModelInput.SofortBerechnen and GetriebeOK and MastOK);
+
+  if temp then
+  begin
+    { continue to do Rigg }
+    { part two of computation }
+    UpdateRigg;
+
+    MO.RiggLED := RiggOK;
+    MO.StatusText := RiggStatusText;
+    MO.Grauzeichnen := RiggOK;
+  end
+  else
+  begin
+    { be done with Getriebe only }
+    MO.RiggLED := GetriebeOK;
+    MO.StatusText := GetriebeStatusText;
+    if GetriebeOK and not MastOK then
+    begin
+      MO.RiggLED := False;
+      MO.StatusText := MastStatusText;
+    end;
+  end;
+
+  if WantSchnittKraefte then
+    SchnittKraefte;
+
+  ME.GetriebeOK := GetriebeOK;
+  ME.MastOK := MastOK;
+  ME.RiggOK := RiggOK;
+  ME.CounterG := GetCounterValue(0);
+  ME.TempValue1 := GetTempValue(1);
+  ME.TempValue2 := GetTempValue(2);
+  ME.TempValue3 := GetTempValue(3);
+
+  MO.SalingTyp := SalingTyp;
+  MO.ControllerTyp := ControllerTyp;
+  MO.Koordinaten := RiggPoints;
+  MO.KoordinatenE := RelaxedRiggPoints;
+  MO.KoppelKurve := KoppelKurve;
+  MO.MastKurve := MastKurve;
+
+  if Assigned(FModelEvent) then
+  begin
+    FModelEvent(Self, MO, ME);
+  end;
 end;
 
 end.

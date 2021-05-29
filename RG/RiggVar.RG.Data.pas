@@ -453,7 +453,7 @@ begin
   MV := 5000; // Mastfallvorlauf
   CA := 50; // Controller Anschlag
 
-  { Controller Position (E0E ) }
+  { Controller Position (E0E) }
   CPMin := 50;
   CPPos := 100;
   CPMax := 200;
@@ -1167,7 +1167,6 @@ begin
   AML.Add('');
   AML.Add('//Trimm6');
   Main.Trimm6.Save(AML);
-
 end;
 
 procedure TRggData.ReadTrimmFile(AML: TStrings);

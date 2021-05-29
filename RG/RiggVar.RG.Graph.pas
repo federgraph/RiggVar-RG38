@@ -151,7 +151,7 @@ implementation
 uses
   RiggVar.FB.ActionConst;
 
-{ TStrokeRigg }
+{ TDummyStrokeRigg }
 
 constructor TDummyStrokeRigg.Create(rgg: IRigg);
 begin

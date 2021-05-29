@@ -226,8 +226,7 @@ begin
   a := rP.F0.Distance(rP.F);
   t := (a - MastfallVorlauf) / a;
   ooTemp := rP.F - rP.F0;
-  ooTemp := rP.F0 + ooTemp * t;
-  rP.M := ooTemp;
+  rP.M := rP.F0 + ooTemp * t;
 end;
 
 procedure TGetriebeFS.BerechneWinkel;

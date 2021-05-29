@@ -12,7 +12,53 @@ uses
   RiggVar.RG.Data;
 
 type
-  IRigg0 = interface
+  TRggModelInput = record
+  public
+    CurrentChanged: Boolean;
+    CurrentParam: TFederParam;
+    CurrentParamValue: single;
+    SofortBerechnen: Boolean;
+  end;
+
+  TRggModelError = record
+  public
+    GetriebeOK: Boolean;
+    RiggOK: Boolean;
+    MastOK: Boolean;
+
+    CounterG: Integer;
+    TempValue1: single;
+    TempValue2: single;
+    TempValue3: single;
+  end;
+
+  TRggModelOutput = record
+  public
+    SalingTyp: TSalingTyp;
+    ControllerTyp: TControllerTyp;
+
+    RiggLED: Boolean;
+    GrauZeichnen: Boolean;
+    StatusText: string;
+
+    Koordinaten: TRiggPoints;
+    KoordinatenE: TRiggPoints;
+
+    KoppelKurve: TKoordLine;
+    MastKurve: TMastKurve;
+  end;
+
+  TRggModelEvent = procedure(Sender: TObject; Data: TRggModelOutput; Error: TRggModelError) of object;
+
+  IRggModelUpdate = interface
+  ['{C3BC00F9-9CF3-41E0-9B04-C69D3ECEDEAC}']
+    procedure SetParam(const Value: TFederParam; Demo: Boolean);
+    procedure Process(ModelInput: TRggModelInput);
+    procedure SetModelEvent(const Value: TRggModelEvent);
+    property ModelEvent: TRggModelEvent write SetModelEvent;
+  end;
+
+  IRigg0 = interface(IRggModelUpdate)
   ['{CA6D68C5-B9EC-4C80-AF51-56777A8963DA}']
     function GetRggFA: TRggFA;
 

@@ -2174,7 +2174,7 @@ begin
   begin
     Rigg.UpdateGlieder; { neue GSB Werte --> neue Integerwerte }
     Rigg.Reset; { neue Integerwerte --> neue Gleitkommawerte }
-    Main.UpdateGetriebe;
+    Main.UpdateGraph(False);
     UpdateReport;
   end;
 end;

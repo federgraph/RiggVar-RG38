@@ -26,6 +26,7 @@ uses
   System.Math,
   System.Math.Vectors,
   FMX.Types,
+  RiggVar.RG.Inter,
   RiggVar.RG.View,
   RiggVar.RG.Data,
   RiggVar.RG.Def,
@@ -91,6 +92,10 @@ type
 
     FOnUpdateGraph: TNotifyEvent;
     FOnUpdateChart: TNotifyEvent;
+
+    ModelInput: TRggModelInput;
+    ModelOutput: TRggModelOutput;
+    ModelError: TRggModelError;
 
     function GetShowTrimmText: Boolean;
     function GetShowDiffText: Boolean;
@@ -193,10 +198,6 @@ type
 
     RefCtrl: TTrimmControls;
 
-    RiggLED: Boolean;
-    StatusText: string;
-    GrauZeichnen: Boolean;
-
     InitialFixPoint: TRiggPoint;
 
     ActionHandler: IFederActionHandler;
@@ -239,9 +240,8 @@ type
     function GetTrimmItemReportLong: string;
 
     procedure Reset;
-    procedure UpdateGetriebe;
-    procedure UpdateGraph;
-
+    procedure UpdateGraph(CurrentChanged: Boolean = True);
+    procedure DoOnModelEvent(Sender: TObject; Data: TRggModelOutput; Error: TRggModelError);
     procedure UpdateStrokeRigg;
 
     procedure InitDefaultData;
@@ -411,6 +411,7 @@ begin
   MainView := AMainView;
   Rigg := ARigg;
   Rigg.ControllerTyp := ctOhne;
+  Rigg.ModelEvent := DoOnModelEvent;
 
   Main := self;
 
@@ -526,10 +527,10 @@ begin
   StrokeRigg.SalingTyp := Rigg.SalingTyp;
   StrokeRigg.ControllerTyp := Rigg.ControllerTyp;
   StrokeRigg.SofortBerechnen := SofortBerechnen;
-  StrokeRigg.GrauZeichnen := GrauZeichnen;
+  StrokeRigg.GrauZeichnen := ModelOutput.GrauZeichnen;
   StrokeRigg.BtnGrauDown := BtnGrauDown;
   StrokeRigg.BtnBlauDown := BtnBlauDown;
-  StrokeRigg.RiggLED := RiggLED;
+  StrokeRigg.RiggLED := ModelOutput.RiggLED;
 
   if Rigg.SalingTyp > stDrehbar then
     StrokeRigg.Koppel := False
@@ -537,16 +538,11 @@ begin
     StrokeRigg.Koppel := Koppel;
 
   StrokeRigg.Bogen := Bogen;
-  // if (FParam <> fpWinkel) then StrokeRigg.Bogen := False;
-
-  StrokeRigg.WanteGestrichelt := not Rigg.GetriebeOK;
-
-  StrokeRigg.Koordinaten := Rigg.RiggPoints;
-  StrokeRigg.KoordinatenE := Rigg.RelaxedRiggPoints;
-  StrokeRigg.SetKoppelKurve(Rigg.KoppelKurve);
-  StrokeRigg.SetMastKurve(Rigg.MastKurve);
-//  StrokeRigg.SetMastLineData(Rigg.MastLinie, Rigg.MastLC, Rigg.MastBeta);
-
+  StrokeRigg.WanteGestrichelt := not ModelError.GetriebeOK;
+  StrokeRigg.Koordinaten := ModelOutput.Koordinaten;
+  StrokeRigg.KoordinatenE := ModelOutput.KoordinatenE;
+  StrokeRigg.SetKoppelKurve(ModelOutput.KoppelKurve);
+  StrokeRigg.SetMastKurve(ModelOutput.MastKurve);
   StrokeRigg.DoOnUpdateStrokeRigg;
 end;
 
@@ -588,7 +584,7 @@ begin
   begin
     FSofortBerechnen := Value;
     if Value then
-      UpdateGetriebe
+      UpdateGraph(False)
     else
       Draw;
   end;
@@ -611,7 +607,7 @@ begin
     if Value then
       Draw
     else
-      UpdateGetriebe;
+      UpdateGraph(False);
   end;
 end;
 
@@ -641,7 +637,7 @@ end;
 procedure TRggMain.SetFixPoint(const Value: TRiggPoint);
 begin
   FFixPoint := Value;
-  FixPunkt := Rigg.GetPoint3D(Value);
+  FixPunkt := ModelOutput.Koordinaten.V[Value];
   StrokeRigg.FixPoint := Value;
 end;
 
@@ -673,7 +669,7 @@ begin
   begin
     FKorrigiert := Value;
     Rigg.Korrigiert := Value;
-    UpdateGetriebe;
+    UpdateGraph(False);
   end;
 end;
 
@@ -687,65 +683,29 @@ begin
   FOnUpdateGraph := Value;
 end;
 
-procedure TRggMain.UpdateGraph;
+procedure TRggMain.UpdateGraph(CurrentChanged: Boolean);
 begin
-  Rigg.ChangeRigg(Param, CurrentValue);
-  case FParam of
-    fpController,
-    fpWinkel,
-    fpVorstag,
-    fpWante,
-    fpWoben,
-    fpSalingH,
-    fpSalingA,
-    fpSalingL,
-    fpSalingW,
-    fpVorstagOS,
-    fpWPowerOS,
-    fpMastfallVorlauf:
-    begin
-      UpdateGetriebe;
-    end;
-
-    fpMastfallF0C,
-    fpMastfallF0F,
-    fpBiegung:
-    begin
-      UpdateGetriebe;
-      Rigg.Schnittkraefte;
-    end;
-
-    fpD0X:
-    begin
-      Rigg.Reset;
-      UpdateGetriebe;
-    end;
-
-    fpAPW:
-    begin
-      if Assigned(OnUpdateChart) then
-        FOnUpdateChart(Self);
-    end;
-
-    fpEAH:
-    begin
-      UpdateEAH(CurrentValue);
-      UpdateGetriebe;
-    end;
-
-    fpEAR:
-    begin
-      UpdateEAR(CurrentValue);
-      UpdateGetriebe;
-    end;
-
-    fpEI:
-    begin
-      Rigg.MastEI := Round(CurrentValue);
-      UpdateGetriebe;
-    end;
-
+  if FParam  = fpAPW then
+  begin
+    if Assigned(OnUpdateChart) then
+      FOnUpdateChart(Self);
+    Exit;
   end;
+
+  case FParam of
+    fpEAH: UpdateEAH(CurrentValue);
+    fpEAR: UpdateEAR(CurrentValue);
+    fpEI: Rigg.MastEI := Round(CurrentValue);
+  end;
+
+  ModelInput.CurrentChanged := CurrentChanged;
+  ModelInput.CurrentParam := Param;
+  ModelInput.CurrentParamValue := CurrentValue;
+
+  ModelInput.SofortBerechnen := SofortBerechnen;
+
+  Rigg.Process(ModelInput);
+
   if Assigned(OnUpdateGraph) then
     OnUpdateGraph(nil);
 end;
@@ -828,35 +788,13 @@ begin
   { make sure the 'pseudo-param' faPan gets cancelled }
   FAction := faNoop;
 
-  if Demo then
-  begin
-    Rigg.SetDefaultDocument;
-    Rigg.InitFactArray;
-    Rigg.ChangeRigg(Param, Rigg.RggFA.Find(FParam).Ist); // Istwert zurücksetzen
-    Rigg.RealGlied[fpVorstag] := Rigg.RggFA.Vorstag.Ist;
-  end;
-
-  if Value = fpWinkel then
-  begin
-    { Wanten straff ziehen }
-    case Rigg.SalingTyp of
-      stFest:
-        Rigg.MakeSalingHBiggerFS(Rigg.RggFA.SalingH.Ist);
-      stDrehbar:
-        Rigg.MakeSalingLBiggerDS(Rigg.RggFA.SalingL.Ist);
-    end;
-  end;
-
-  if Value = fpController then
-    Rigg.ControllerTyp := ctDruck
-  else
-    Rigg.ControllerTyp := ctOhne;
+  Rigg.SetParam(Value, Demo);
 
   StrokeRigg.ControllerTyp := Rigg.ControllerTyp;
 
-  Rigg.ManipulatorMode := (Value = fpWinkel);
   FParam := Value;
   CurrentValue := Rigg.RggFA.Find(FParam).Ist;
+
   SetupTrackBarForRgg;
   UpdateGraph;
 end;
@@ -1245,7 +1183,7 @@ var
 begin
   if StrokeRigg <> nil then
   begin
-    pf := Rigg.GetPoint3D(ooF);
+    pf := ModelOutput.Koordinaten.F;
 
     IndexG := 13;
     IndexH := 40;
@@ -1257,9 +1195,9 @@ begin
     b := pf.Distance(kh);
     c := kh.Distance(kg);
 
-    h := TRggCalc.Hoehe(a-0.00001, b, c, k);
+    h := TRggCalc.Hoehe(a - 0.00001, b, c, k);
 
-    BiegungGFDiff := BiegungGF-h;
+    BiegungGFDiff := BiegungGF - h;
     BiegungGF := h;
   end
   else
@@ -1282,7 +1220,7 @@ begin
   ML.Clear;
   if StrokeRigg <> nil then
   begin
-    pf := Rigg.GetPoint3D(ooF);
+    pf := Rigg.RiggPoints.F;
 
     bm := BogenMax;
     l := Rigg.GetRiggDistance(DC) + Rigg.GetRiggDistance(D0D);
@@ -1369,44 +1307,6 @@ begin
   ML.Text := TrimmData;
 end;
 
-procedure TRggMain.UpdateGetriebe;
-var
-  temp: Boolean;
-begin
-  GrauZeichnen := False;
-  RiggLED := False;
-  StatusText := '';
-
-  { part one of computation }
-  Rigg.UpdateGetriebe;
-
-  temp := (SofortBerechnen and Rigg.GetriebeOK and Rigg.MastOK);
-
-  if temp then
-  begin
-    { continue to do Rigg }
-    { part two of computation }
-    Rigg.UpdateRigg;
-
-    RiggLED := Rigg.RiggOK;
-    StatusText := Rigg.RiggStatusText;
-    Grauzeichnen := RiggLED;
-  end
-  else
-  begin
-    { be done with Getriebe only }
-    RiggLED := Rigg.GetriebeOK;
-    StatusText := Rigg.GetriebeStatusText;
-    if Rigg.GetriebeOK and not Rigg.MastOK then
-    begin
-      RiggLED := False;
-      StatusText := Rigg.MastStatusText;
-    end;
-  end;
-
-  Draw;
-end;
-
 procedure TRggMain.MemoryBtnClick;
 begin
 {$ifdef debug}
@@ -1423,7 +1323,7 @@ begin
   Logger.Info('in MemoryRecallBtnClick');
 {$endif}
   Rigg.Glieder := RefCtrl;
-  UpdateGetriebe;
+  UpdateGraph(False);
 end;
 
 procedure TRggMain.UpdateEAR(Value: single);
@@ -1669,7 +1569,7 @@ begin
 
   end;
 
-  UpdateGetriebe;
+  UpdateGraph(False);
   MainView.ShowTrimm;
   FederTextCheckState;
 end;
@@ -2692,6 +2592,13 @@ begin
   ActionMapPhone.CollectOne(fa, ML);
 {$endif}
 //  FederMenu.CollectOne(fa, ML);
+end;
+
+procedure TRggMain.DoOnModelEvent(Sender: TObject; Data: TRggModelOutput; Error: TRggModelError);
+begin
+  ModelOutput := Data;
+  ModelError := Error;
+  Draw;
 end;
 
 end.
