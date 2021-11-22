@@ -55,12 +55,12 @@ uses
   System.IOUtils,
 {$endif}
 {$ifdef MSWINDOWS}
-  Windows,
-  SHFolder,
-  SHLObj,
+  Winapi.Windows,
+  Winapi.SHFolder,
+  Winapi.SHLObj,
 {$endif}
-  SysUtils,
-  StrUtils,
+  System.SysUtils,
+  System.StrUtils,
   RiggVar.FB.Classes;
 
 class function TAppUtils.GetProjectDir: string;

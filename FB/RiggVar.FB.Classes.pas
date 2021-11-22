@@ -18,10 +18,6 @@
 
 interface
 
-{$ifdef FPC}
-{$mode delphi}
-{$endif}
-
 uses
   System.SysUtils,
   System.Classes,
@@ -86,8 +82,8 @@ type
     class function Cut(delim: string; s: string; var token: string): string; static;
     class function IncludeTrailingSlash(const s: string): string; static;
     class function StrToBoolDef(const Value: string; DefaultValue: Boolean): Boolean; static;
-    class function StripFirstWord(var s: string): string; static;
-    class function Round(Value: Extended; Decimals: Integer): single; static;
+    class function RoundSingle(Value: Extended; Decimals: Integer): single; static;
+    class function RoundDouble(Value: Extended; Decimals: Integer): double; static;
     class function IsEssentiallyZero(const Value: Single): Boolean; static;
   end;
 
@@ -175,37 +171,22 @@ begin
     result := s;
 end;
 
-class function TUtils.StripFirstWord(var s : string) : string;
+class function TUtils.RoundSingle(Value: Extended; Decimals: Integer): single;
 var
-  i, Size: Integer;
-  S1: String;
+  p: Extended;
 begin
-  {----------------------------------------------------
-  Strip the first word from a sentence S,
-  return word S1 and a shortened sentence S.
-  Return an empty string S1 if there is no first word.
-  -----------------------------------------------------}
+  { Mathematical Rounding }
+  p := Power(10, Decimals);
+  if Value < 0 then
+     result := Trunc(Value * p - 0.5) / p
+  else
+     result := Trunc(Value * p + 0.5) / p;
 
-  i := Pos(#32, s);
-  if i = 0 then
-  begin
-    Result := '';
-    Exit; {Kein erstes Wort, Satz bleibt gleich}
-  end;
-
-  {Erstes Wort:}
-  SetLength(S1, i-1); {Speicher reservieren!}
-  Move(S[1], S1[1], i-1);
-
-  {Verkürzter Satz:}
-  Size := (Length(S) - i);
-  Move(S[i + 1], S[1], Size);
-  SetLength(S, Size);
-
-  Result := S1;
+ { Bankers Rounding }
+ //result := Math.Round(Value * p) / p;
 end;
 
-class function TUtils.Round(Value: Extended; Decimals: Integer): single;
+class function TUtils.RoundDouble(Value: Extended; Decimals: Integer): double;
 var
   p: Extended;
 begin

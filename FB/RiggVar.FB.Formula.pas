@@ -40,7 +40,7 @@ end;
 
 procedure TFederFormulaBase.PrepareCalc;
 begin
-  //virtual, do nothing here
+  // virtual, do nothing here
 end;
 
 function TFederFormulaBase.GetValue(x, y: single): single;

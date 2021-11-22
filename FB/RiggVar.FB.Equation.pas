@@ -46,10 +46,6 @@ type
     t1, t2, t3, t4: single;
     f1, f2, f3, f4: single;
 
-    d: single;
-    d1, d2, d3, d4: single;
-    fx, fy: single;
-
     m1, m2, m3, m4: Integer;
     x1, x2, x3, x4: single;
     y1, y2, y3, y4: single;
@@ -57,6 +53,10 @@ type
     l1, l2, l3, l4: single;
     k1, k2, k3, k4: single;
     iv, iw, jv, jw: single;
+
+    d: single;
+    d1, d2, d3, d4: single;
+    fx, fy: single;
 
     y3f: single;
     l3f: single;
@@ -291,7 +291,6 @@ begin
     2: FaktorEQ := 1 * 1000;
     3: FaktorEQ := 100 * 1000;
     4: FaktorEQ := 500 * 1000;
-    //EquationS FaktorEQ := 100 * 1000;
     else FaktorEQ := 800;
   end;
 end;
@@ -303,7 +302,6 @@ begin
     2: MaxPlotFigure := 13;
     3: MaxPlotFigure := 4;
     4: MaxPlotFigure := 4;
-    //EquationS MaxPlotfigure := 4;
     else FaktorEQ := 4;
   end;
 end;
@@ -323,9 +321,7 @@ begin
     result := k * (l - l0)
   else
   begin
-    //result := k * sqr(l - l0) * 0.02;
     result := k * sqr(l - l0) * 50;
-    //result := 500 * k * Main.TrimmTab.EvalY((l-l0) / 20);
   end;
   case m of
     1:

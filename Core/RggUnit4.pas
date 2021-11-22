@@ -709,16 +709,8 @@ var
   i: TFederParam;
   sb: TRggSB;
 begin
-//  FactArray.Controller.Ist := Rigg.GSB.Controller.Ist;
-//  FactArray.Winkel.Ist := Rigg.GSB.Winkel.Ist;
-//  FactArray.Vorstag.Ist := Rigg.GSB.Vorstag.Ist;
-//  FactArray.Wante.Ist := Rigg.GSB.Wante.Ist;
-//  FactArray.Woben.Ist := Rigg.GSB.Woben.Ist;
     tempH := RggFA.SalingH.Ist;
-//  FactArray.SalingH.Ist := tempH;
     tempA := RggFA.SalingA.Ist;
-//  FactArray.SalingA.Ist := tempA;
-//  FactArray.SalingL.Ist := Rigg.GSB.SalingL.Ist;
   GSB.SalingW.Ist := Round(RadToDeg(arctan2(tempH * 2, tempA)));
 
   GSB.MastfallF0C.Ist := RealTrimm[tiMastfallF0C];
@@ -995,16 +987,8 @@ begin
   SetDefaultDocument;
   LoadFromFederData(fd);
 
-//  FactArray.Controller.Ist := Rigg.GSB.Controller.Ist;
-//  FactArray.Winkel.Ist := Rigg.GSB.Winkel.Ist;
-//  FactArray.Vorstag.Ist := Rigg.GSB.Vorstag.Ist;
-//  FactArray.Wante.Ist := Rigg.GSB.Wante.Ist;
-//  FactArray.Woben.Ist := Rigg.GSB.Woben.Ist;
   tempH := RggFA.SalingH.Ist;
-//  FactArray.SalingH.Ist := tempH;
   tempA := RggFA.SalingA.Ist;
-//  FactArray.SalingA.Ist := tempA;
-//  FactArray.SalingL.Ist := Rigg.GSB.SalingL.Ist;
   GSB.SalingW.Ist := Round(RadToDeg(arctan2(tempH * 2, tempA)));
 
   GSB.MastfallF0C.Ist := RealTrimm[tiMastfallF0C];
@@ -1061,16 +1045,10 @@ begin
   GSB.MastfallVorlauf.Min := fd.MV - 100;
   GSB.MastfallVorlauf.Max := fd.MV + 100;
 
-//  tempA := Abstand(Rigg.rP[ooF0], Rigg.rP[ooC]);
-//  tempH := GSB.MastfallF0C.Ist;
-//  temp := tempA - tempH; // = 0
   temp := GSB.MastfallF0C.Ist;
   GSB.MastfallF0C.Min := temp - 700;
   GSB.MastfallF0C.Max := temp + 500;
 
-//  tempA := Abstand(Rigg.rP[ooF0], Rigg.rP[ooF]);
-//  tempH := GSB.MastfallF0F.Ist;
-//  temp := tempA - tempH; // = 0
   temp := GSB.MastfallF0F.Ist;
   GSB.MastfallF0F.Min := temp - 700;
   GSB.MastfallF0F.Max := temp + 500;

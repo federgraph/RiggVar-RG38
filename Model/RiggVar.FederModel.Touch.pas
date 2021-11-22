@@ -170,7 +170,6 @@ begin
   CornerBtnList.Add(CornerMenu.NewBtn(cp, 2, 0, cl, fa, 17));
   CornerBtnList.Add(CornerMenu.NewBtn(cp, 3, 0, cl, fa, 18));
   CornerBtnList.Add(CornerMenu.NewBtn(cp, 4, 0, cl, fa, 19));
-
   CornerBtnList.Add(CornerMenu.NewBtn(cp, 0, 1, cl, fa, 20));
   CornerBtnList.Add(CornerMenu.NewBtn(cp, 0, 2, cl, fa, 21));
   CornerBtnList.Add(CornerMenu.NewBtn(cp, 0, 3, cl, fa, 22));

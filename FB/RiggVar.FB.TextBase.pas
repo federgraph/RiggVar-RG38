@@ -28,11 +28,9 @@ type
     FActionMap: Integer;
     FActionPage: Integer;
     FFrameVisible: Boolean;
-
     function GetActionMap: Integer; virtual;
     function GetActionPage: Integer; virtual;
     function GetFrameVisible: Boolean; virtual;
-
     procedure SetActionMap(const Value: Integer); virtual;
     procedure SetActionPage(const Value: Integer); virtual;
     procedure SetFrameVisible(const Value: Boolean); virtual;

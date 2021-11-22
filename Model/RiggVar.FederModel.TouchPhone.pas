@@ -174,19 +174,19 @@ begin
   SL00 := CornerMenu.NewBtn(cpL, 0, 0, cl, faTouchBarLeft);
 
   ST00.Text.Align := TAlignLayout.Client;
-  ST00.Text.HitTest := false;
+  ST00.Text.HitTest := False;
   ST00.Text.Font.Size := MainConst.DefaultBtnFontSize;
 
   SB00.Text.Align := TAlignLayout.Client;
-  SB00.Text.HitTest := false;
+  SB00.Text.HitTest := False;
   SB00.Text.Font.Size := MainConst.DefaultBtnFontSize;
 
   SL00.Text.Align := TAlignLayout.Client;
-  SL00.Text.HitTest := false;
+  SL00.Text.HitTest := False;
   SL00.Text.Font.Size := MainConst.DefaultBtnFontSize;
 
   SR00.Text.Align := TAlignLayout.Client;
-  SR00.Text.HitTest := false;
+  SR00.Text.HitTest := False;
   SR00.Text.Font.Size := MainConst.DefaultBtnFontSize;
 
   ST00.Text.Text := '';

@@ -60,7 +60,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure EditKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
-    procedure ListViewSItemClick(const Sender: TObject;const AItem: TListViewItem);
+    procedure ListViewSItemClick(const Sender: TObject; const AItem: TListViewItem);
     procedure ListViewGItemClick(const Sender: TObject; const AItem: TListViewItem);
     procedure ListViewActionsItemClick(const Sender: TObject; const AItem: TListViewItem);
     procedure ListViewGroupsItemClick(const Sender: TObject; const AItem: TListViewItem);

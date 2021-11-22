@@ -18,434 +18,417 @@
 
 interface
 
-{$ifdef fpc}
-{$mode delphi}
-{$endif}
-
-{.$define WantAll}
-
 type
   TFederAction = Integer;
 
-// --- generated code snippet ---
-// Note that some of the defined actions
-//   may not be implemented in this version of the app.
-
 const
+  // --- generated code snippet ---
 
-{ EmptyAction }
-faNoop = 0;
+  { EmptyAction }
+  faNoop = 0;
 
-{ Pages }
-faActionPageM = 1;
-faActionPageP = 2;
-faActionPageE = 3;
-faActionPageS = 4;
-faActionPageX = 5;
-faActionPage1 = 6;
-faActionPage2 = 7;
-faActionPage3 = 8;
-faActionPage4 = 9;
-faActionPage5 = 10;
-faActionPage6 = 11;
+  { Pages }
+  faActionPageM = 1;
+  faActionPageP = 2;
+  faActionPageE = 3;
+  faActionPageS = 4;
+  faActionPageX = 5;
+  faActionPage1 = 6;
+  faActionPage2 = 7;
+  faActionPage3 = 8;
+  faActionPage4 = 9;
+  faActionPage5 = 10;
+  faActionPage6 = 11;
 
-{ Forms }
-faRotaForm1 = 12;
-faRotaForm2 = 13;
-faRotaForm3 = 14;
-faShowMemo = 15;
-faShowActions = 16;
-faShowOptions = 17;
-faShowDrawings = 18;
-faShowConfig = 19;
-faShowKreis = 20;
-faShowInfo = 21;
-faShowSplash = 22;
-faShowForce = 23;
-faShowTabelle = 24;
-faShowDetail = 25;
-faShowSaling = 26;
-faShowController = 27;
-faShowText = 28;
-faShowTrimmTab = 29;
-faShowChart = 30;
-faShowDiagA = 31;
-faShowDiagC = 32;
-faShowDiagE = 33;
-faShowDiagQ = 34;
+  { Forms }
+  faRotaForm1 = 12;
+  faRotaForm2 = 13;
+  faRotaForm3 = 14;
+  faShowMemo = 15;
+  faShowActions = 16;
+  faShowOptions = 17;
+  faShowDrawings = 18;
+  faShowConfig = 19;
+  faShowKreis = 20;
+  faShowInfo = 21;
+  faShowSplash = 22;
+  faShowForce = 23;
+  faShowTabelle = 24;
+  faShowDetail = 25;
+  faShowSaling = 26;
+  faShowController = 27;
+  faShowText = 28;
+  faShowTrimmTab = 29;
+  faShowChart = 30;
+  faShowDiagA = 31;
+  faShowDiagC = 32;
+  faShowDiagE = 33;
+  faShowDiagQ = 34;
 
-{ TouchLayout }
-faTouchTablet = 35;
-faTouchPhone = 36;
-faTouchDesk = 37;
+  { TouchLayout }
+  faTouchTablet = 35;
+  faTouchPhone = 36;
+  faTouchDesk = 37;
 
-{ Wheel }
-faPlusOne = 38;
-faPlusTen = 39;
-faWheelLeft = 40;
-faWheelRight = 41;
-faWheelDown = 42;
-faWheelUp = 43;
-faParamValuePlus1 = 44;
-faParamValueMinus1 = 45;
-faParamValuePlus10 = 46;
-faParamValueMinus10 = 47;
+  { Wheel }
+  faPlusOne = 38;
+  faPlusTen = 39;
+  faWheelLeft = 40;
+  faWheelRight = 41;
+  faWheelDown = 42;
+  faWheelUp = 43;
+  faParamValuePlus1 = 44;
+  faParamValueMinus1 = 45;
+  faParamValuePlus10 = 46;
+  faParamValueMinus10 = 47;
 
-{ ColorScheme }
-faCycleColorSchemeM = 48;
-faCycleColorSchemeP = 49;
+  { ColorScheme }
+  faCycleColorSchemeM = 48;
+  faCycleColorSchemeP = 49;
 
-{ FederText }
-faToggleAllText = 50;
-faToggleTouchFrame = 51;
+  { FederText }
+  faToggleAllText = 50;
+  faToggleTouchFrame = 51;
 
-{ ViewParams }
-faPan = 52;
-faParamORX = 53;
-faParamORY = 54;
-faParamORZ = 55;
-faParamRX = 56;
-faParamRY = 57;
-faParamRZ = 58;
-faParamCZ = 59;
+  { ViewParams }
+  faPan = 52;
+  faParamORX = 53;
+  faParamORY = 54;
+  faParamORZ = 55;
+  faParamRX = 56;
+  faParamRY = 57;
+  faParamRZ = 58;
+  faParamCZ = 59;
 
-{ ParamT }
-faParamT1 = 60;
-faParamT2 = 61;
-faParamT3 = 62;
-faParamT4 = 63;
+  { ParamT }
+  faParamT1 = 60;
+  faParamT2 = 61;
+  faParamT3 = 62;
+  faParamT4 = 63;
 
-{ RggControls }
-faController = 64;
-faWinkel = 65;
-faVorstag = 66;
-faWante = 67;
-faWoben = 68;
-faSalingH = 69;
-faSalingA = 70;
-faSalingL = 71;
-faSalingW = 72;
-faMastfallF0C = 73;
-faMastfallF0F = 74;
-faMastfallVorlauf = 75;
-faBiegung = 76;
-faMastfussD0X = 77;
-faVorstagOS = 78;
-faWPowerOS = 79;
-faParamAPW = 80;
-faParamEAH = 81;
-faParamEAR = 82;
-faParamEI = 83;
+  { RggControls }
+  faController = 64;
+  faWinkel = 65;
+  faVorstag = 66;
+  faWante = 67;
+  faWoben = 68;
+  faSalingH = 69;
+  faSalingA = 70;
+  faSalingL = 71;
+  faSalingW = 72;
+  faMastfallF0C = 73;
+  faMastfallF0F = 74;
+  faMastfallVorlauf = 75;
+  faBiegung = 76;
+  faMastfussD0X = 77;
+  faVorstagOS = 78;
+  faWPowerOS = 79;
+  faParamAPW = 80;
+  faParamEAH = 81;
+  faParamEAR = 82;
+  faParamEI = 83;
 
-{ RggFixPoints }
-faFixpointA0 = 84;
-faFixpointA = 85;
-faFixpointB0 = 86;
-faFixpointB = 87;
-faFixpointC0 = 88;
-faFixpointC = 89;
-faFixpointD0 = 90;
-faFixpointD = 91;
-faFixpointE0 = 92;
-faFixpointE = 93;
-faFixpointF0 = 94;
-faFixpointF = 95;
+  { RggFixPoints }
+  faFixpointA0 = 84;
+  faFixpointA = 85;
+  faFixpointB0 = 86;
+  faFixpointB = 87;
+  faFixpointC0 = 88;
+  faFixpointC = 89;
+  faFixpointD0 = 90;
+  faFixpointD = 91;
+  faFixpointE0 = 92;
+  faFixpointE = 93;
+  faFixpointF0 = 94;
+  faFixpointF = 95;
 
-{ RggViewPoint }
-faViewpointS = 96;
-faViewpointA = 97;
-faViewpointT = 98;
-faViewpoint3 = 99;
+  { RggViewPoint }
+  faViewpointS = 96;
+  faViewpointA = 97;
+  faViewpointT = 98;
+  faViewpoint3 = 99;
 
-{ RggSalingType }
-faSalingTypOhne = 100;
-faSalingTypDrehbar = 101;
-faSalingTypFest = 102;
-faSalingTypOhneStarr = 103;
+  { RggSalingType }
+  faSalingTypOhne = 100;
+  faSalingTypDrehbar = 101;
+  faSalingTypFest = 102;
+  faSalingTypOhneStarr = 103;
 
-{ RggCalcType }
-faCalcTypQuer = 104;
-faCalcTypKnick = 105;
-faCalcTypGemessen = 106;
+  { RggCalcType }
+  faCalcTypQuer = 104;
+  faCalcTypKnick = 105;
+  faCalcTypGemessen = 106;
 
-{ RggAppMode }
-faDemo = 107;
-faMemoryBtn = 108;
-faMemoryRecallBtn = 109;
-faKorrigiertItem = 110;
-faSofortBtn = 111;
-faGrauBtn = 112;
-faBlauBtn = 113;
-faMultiBtn = 114;
+  { RggAppMode }
+  faDemo = 107;
+  faMemoryBtn = 108;
+  faMemoryRecallBtn = 109;
+  faKorrigiertItem = 110;
+  faSofortBtn = 111;
+  faGrauBtn = 112;
+  faBlauBtn = 113;
+  faMultiBtn = 114;
 
-{ RggSuper }
-faSuperSimple = 115;
-faSuperNormal = 116;
-faSuperGrau = 117;
-faSuperBlau = 118;
-faSuperMulti = 119;
-faSuperDisplay = 120;
-faSuperQuick = 121;
+  { RggSuper }
+  faSuperSimple = 115;
+  faSuperNormal = 116;
+  faSuperGrau = 117;
+  faSuperBlau = 118;
+  faSuperMulti = 119;
+  faSuperDisplay = 120;
+  faSuperQuick = 121;
 
-{ RggReport }
-faReportNone = 122;
-faReportLog = 123;
-faReportJson = 124;
-faReportData = 125;
-faReportShort = 126;
-faReportLong = 127;
-faReportTrimmText = 128;
-faReportJsonText = 129;
-faReportDataText = 130;
-faReportDiffText = 131;
-faReportAusgabeDetail = 132;
-faReportAusgabeRL = 133;
-faReportAusgabeRP = 134;
-faReportAusgabeRLE = 135;
-faReportAusgabeRPE = 136;
-faReportAusgabeDiffL = 137;
-faReportAusgabeDiffP = 138;
-faReportXML = 139;
-faReportDebugReport = 140;
-faReportReadme = 141;
+  { RggReport }
+  faReportNone = 122;
+  faReportLog = 123;
+  faReportJson = 124;
+  faReportData = 125;
+  faReportShort = 126;
+  faReportLong = 127;
+  faReportTrimmText = 128;
+  faReportJsonText = 129;
+  faReportDataText = 130;
+  faReportDiffText = 131;
+  faReportAusgabeDetail = 132;
+  faReportAusgabeRL = 133;
+  faReportAusgabeRP = 134;
+  faReportAusgabeRLE = 135;
+  faReportAusgabeRPE = 136;
+  faReportAusgabeDiffL = 137;
+  faReportAusgabeDiffP = 138;
+  faReportXML = 139;
+  faReportDebugReport = 140;
+  faReportReadme = 141;
 
-{ RggChart }
-faChartRect = 142;
-faChartTextRect = 143;
-faChartLegend = 144;
-faChartAP = 145;
-faChartBP = 146;
-faChartGroup = 147;
-faParamCountPlus = 148;
-faParamCountMinus = 149;
-faPComboPlus = 150;
-faPComboMinus = 151;
-faXComboPlus = 152;
-faXComboMinus = 153;
-faYComboPlus = 154;
-faYComboMinus = 155;
-faChartReset = 156;
+  { RggChart }
+  faChartRect = 142;
+  faChartTextRect = 143;
+  faChartLegend = 144;
+  faChartAP = 145;
+  faChartBP = 146;
+  faChartGroup = 147;
+  faParamCountPlus = 148;
+  faParamCountMinus = 149;
+  faPComboPlus = 150;
+  faPComboMinus = 151;
+  faXComboPlus = 152;
+  faXComboMinus = 153;
+  faYComboPlus = 154;
+  faYComboMinus = 155;
+  faChartReset = 156;
 
-{ RggGraph }
-faToggleLineColor = 157;
-faToggleUseDisplayList = 158;
-faToggleUseQuickSort = 159;
-faToggleShowLegend = 160;
-faRggBogen = 161;
-faRggKoppel = 162;
-faRggHull = 163;
-faRggZoomIn = 164;
-faRggZoomOut = 165;
-faToggleSalingGraph = 166;
-faToggleControllerGraph = 167;
-faToggleChartGraph = 168;
-faToggleKraftGraph = 169;
-faToggleMatrixText = 170;
+  { RggGraph }
+  faToggleLineColor = 157;
+  faToggleUseDisplayList = 158;
+  faToggleUseQuickSort = 159;
+  faToggleShowLegend = 160;
+  faToggleSortedRota = 161;
+  faRggBogen = 162;
+  faRggKoppel = 163;
+  faRggHull = 164;
+  faRggZoomIn = 165;
+  faRggZoomOut = 166;
+  faToggleSalingGraph = 167;
+  faToggleControllerGraph = 168;
+  faToggleChartGraph = 169;
+  faToggleKraftGraph = 170;
+  faToggleMatrixText = 171;
 
-{ RggSegment }
-faToggleSegmentF = 171;
-faToggleSegmentR = 172;
-faToggleSegmentS = 173;
-faToggleSegmentM = 174;
-faToggleSegmentV = 175;
-faToggleSegmentW = 176;
-faToggleSegmentC = 177;
-faToggleSegmentA = 178;
+  { RggSegment }
+  faToggleSegmentF = 172;
+  faToggleSegmentR = 173;
+  faToggleSegmentS = 174;
+  faToggleSegmentM = 175;
+  faToggleSegmentV = 176;
+  faToggleSegmentW = 177;
+  faToggleSegmentC = 178;
+  faToggleSegmentA = 179;
 
-{ RggRenderOptions }
-faWantRenderH = 179;
-faWantRenderP = 180;
-faWantRenderF = 181;
-faWantRenderE = 182;
-faWantRenderS = 183;
+  { RggRenderOptions }
+  faWantRenderH = 180;
+  faWantRenderP = 181;
+  faWantRenderF = 182;
+  faWantRenderE = 183;
+  faWantRenderS = 184;
 
-{ RggTrimms }
-faTrimm0 = 184;
-faTrimm1 = 185;
-faTrimm2 = 186;
-faTrimm3 = 187;
-faTrimm4 = 188;
-faTrimm5 = 189;
-faTrimm6 = 190;
-fa420 = 191;
-faLogo = 192;
+  { RggTrimms }
+  faTrimm0 = 185;
+  faTrimm1 = 186;
+  faTrimm2 = 187;
+  faTrimm3 = 188;
+  faTrimm4 = 189;
+  faTrimm5 = 190;
+  faTrimm6 = 191;
+  fa420 = 192;
+  faLogo = 193;
 
-{ RggTrimmFile }
-faCopyTrimmItem = 193;
-faPasteTrimmItem = 194;
-faCopyAndPaste = 195;
-faUpdateTrimm0 = 196;
-faReadTrimmFile = 197;
-faSaveTrimmFile = 198;
-faCopyTrimmFile = 199;
+  { RggTrimmFile }
+  faCopyTrimmItem = 194;
+  faPasteTrimmItem = 195;
+  faCopyAndPaste = 196;
+  faUpdateTrimm0 = 197;
+  faReadTrimmFile = 198;
+  faSaveTrimmFile = 199;
+  faCopyTrimmFile = 200;
 
-{ RggTrimmText }
-faToggleTrimmText = 200;
-faToggleDiffText = 201;
-faToggleDataText = 202;
-faToggleDebugText = 203;
-faUpdateReportText = 204;
+  { RggTrimmText }
+  faToggleTrimmText = 201;
+  faToggleDiffText = 202;
+  faToggleDataText = 203;
+  faToggleDebugText = 204;
+  faUpdateReportText = 205;
 
-{ RggSonstiges }
-faToggleHelp = 205;
-faToggleReport = 206;
-faToggleButtonReport = 207;
-faToggleDarkMode = 208;
-faToggleButtonSize = 209;
-faToggleSandboxed = 210;
-faToggleSpeedPanel = 211;
-faToggleAllProps = 212;
-faToggleAllTags = 213;
+  { RggSonstiges }
+  faToggleHelp = 206;
+  faToggleReport = 207;
+  faToggleButtonReport = 208;
+  faToggleDarkMode = 209;
+  faToggleButtonSize = 210;
+  faToggleSandboxed = 211;
+  faToggleSpeedPanel = 212;
+  faToggleAllProps = 213;
+  faToggleAllTags = 214;
 
-{ RggInfo }
-faShowHelpText = 214;
-faShowInfoText = 215;
-faShowNormalKeyInfo = 216;
-faShowSpecialKeyInfo = 217;
-faShowDebugInfo = 218;
-faShowZOrderInfo = 219;
+  { RggInfo }
+  faShowHelpText = 215;
+  faShowInfoText = 216;
+  faShowNormalKeyInfo = 217;
+  faShowSpecialKeyInfo = 218;
+  faShowDebugInfo = 219;
+  faShowZOrderInfo = 220;
 
-{ BtnLegendTablet }
-faTL01 = 220;
-faTL02 = 221;
-faTL03 = 222;
-faTL04 = 223;
-faTL05 = 224;
-faTL06 = 225;
-faTR01 = 226;
-faTR02 = 227;
-faTR03 = 228;
-faTR04 = 229;
-faTR05 = 230;
-faTR06 = 231;
-faTR07 = 232;
-faTR08 = 233;
-faBL01 = 234;
-faBL02 = 235;
-faBL03 = 236;
-faBL04 = 237;
-faBL05 = 238;
-faBL06 = 239;
-faBL07 = 240;
-faBL08 = 241;
-faBR01 = 242;
-faBR02 = 243;
-faBR03 = 244;
-faBR04 = 245;
-faBR05 = 246;
-faBR06 = 247;
+  { BtnLegendTablet }
+  faTL01 = 221;
+  faTL02 = 222;
+  faTL03 = 223;
+  faTL04 = 224;
+  faTL05 = 225;
+  faTL06 = 226;
+  faTR01 = 227;
+  faTR02 = 228;
+  faTR03 = 229;
+  faTR04 = 230;
+  faTR05 = 231;
+  faTR06 = 232;
+  faTR07 = 233;
+  faTR08 = 234;
+  faBL01 = 235;
+  faBL02 = 236;
+  faBL03 = 237;
+  faBL04 = 238;
+  faBL05 = 239;
+  faBL06 = 240;
+  faBL07 = 241;
+  faBL08 = 242;
+  faBR01 = 243;
+  faBR02 = 244;
+  faBR03 = 245;
+  faBR04 = 246;
+  faBR05 = 247;
+  faBR06 = 248;
 
-{ BtnLegendPhone }
-faMB01 = 248;
-faMB02 = 249;
-faMB03 = 250;
-faMB04 = 251;
-faMB05 = 252;
-faMB06 = 253;
-faMB07 = 254;
-faMB08 = 255;
+  { BtnLegendPhone }
+  faMB01 = 249;
+  faMB02 = 250;
+  faMB03 = 251;
+  faMB04 = 252;
+  faMB05 = 253;
+  faMB06 = 254;
+  faMB07 = 255;
+  faMB08 = 256;
 
-{ TouchBarLegend }
-faTouchBarTop = 256;
-faTouchBarBottom = 257;
-faTouchBarLeft = 258;
-faTouchBarRight = 259;
+  { TouchBarLegend }
+  faTouchBarTop = 257;
+  faTouchBarBottom = 258;
+  faTouchBarLeft = 259;
+  faTouchBarRight = 260;
 
-{ Circles }
-faCirclesSelectC0 = 260;
-faCirclesSelectC1 = 261;
-faCirclesSelectC2 = 262;
-faCircleParamR1 = 263;
-faCircleParamR2 = 264;
-faCircleParamM1X = 265;
-faCircleParamM1Y = 266;
-faCircleParamM2X = 267;
-faCircleParamM2Y = 268;
-faLineParamA1 = 269;
-faLineParamA2 = 270;
-faLineParamE1 = 271;
-faLineParamE2 = 272;
-faCircleParamM1Z = 273;
-faCircleParamM2Z = 274;
-faCirclesReset = 275;
+  { Circles }
+  faCirclesSelectC0 = 261;
+  faCirclesSelectC1 = 262;
+  faCirclesSelectC2 = 263;
+  faCircleParamR1 = 264;
+  faCircleParamR2 = 265;
+  faCircleParamM1X = 266;
+  faCircleParamM1Y = 267;
+  faCircleParamM2X = 268;
+  faCircleParamM2Y = 269;
+  faLineParamA1 = 270;
+  faLineParamA2 = 271;
+  faLineParamE1 = 272;
+  faLineParamE2 = 273;
+  faCircleParamM1Z = 274;
+  faCircleParamM2Z = 275;
+  faCirclesReset = 276;
 
-{ MemeFormat }
-faMemeGotoLandscape = 276;
-faMemeGotoSquare = 277;
-faMemeGotoPortrait = 278;
-faMemeFormat0 = 279;
-faMemeFormat1 = 280;
-faMemeFormat2 = 281;
-faMemeFormat3 = 282;
-faMemeFormat4 = 283;
-faMemeFormat5 = 284;
-faMemeFormat6 = 285;
-faMemeFormat7 = 286;
-faMemeFormat8 = 287;
-faMemeFormat9 = 288;
+  { MemeFormat }
+  faMemeGotoLandscape = 277;
+  faMemeGotoSquare = 278;
+  faMemeGotoPortrait = 279;
+  faMemeFormat0 = 280;
+  faMemeFormat1 = 281;
+  faMemeFormat2 = 282;
+  faMemeFormat3 = 283;
+  faMemeFormat4 = 284;
+  faMemeFormat5 = 285;
+  faMemeFormat6 = 286;
+  faMemeFormat7 = 287;
+  faMemeFormat8 = 288;
+  faMemeFormat9 = 289;
 
-{ Reset }
-faReset = 289;
-faResetPosition = 290;
-faResetRotation = 291;
-faResetZoom = 292;
+  { Reset }
+  faReset = 290;
+  faResetPosition = 291;
+  faResetRotation = 292;
+  faResetZoom = 293;
 
-faToggleSortedRota = 293;
+  { ViewType }
+  faToggleViewType = 294;
+  faViewTypeOrtho = 295;
+  faViewTypePerspective = 296;
 
-{ ViewType }
-faToggleViewType = 294;
-faViewTypeOrtho = 295;
-faViewTypePerspective = 296;
+  { DropTarget }
+  faToggleDropTarget = 297;
 
-{ DropTarget }
-faToggleDropTarget = 297;
+  { Language }
+  faToggleLanguage = 298;
 
-{ Language }
-faToggleLanguage = 298;
+  { CopyPaste }
+  faSave = 299;
+  faLoad = 300;
+  faOpen = 301;
+  faCopy = 302;
+  faPaste = 303;
+  faShare = 304;
 
-{ CopyPaste }
-faSave = 299;
-faLoad = 300;
-faOpen = 301;
-faCopy = 302;
-faPaste = 303;
-faShare = 304;
+  { ViewOptions }
+  faToggleMoveMode = 305;
+  faLinearMove = 306;
+  faExpoMove = 307;
 
-{$ifdef WantAll}
+  { HullMesh }
+  faHullMesh = 308;
+  faHullMeshOn = 309;
+  faHullMeshOff = 310;
 
-{ ViewOptions }
-faToggleMoveMode = 305;
-faLinearMove = 306;
-faExpoMove = 307;
+  { BitmapCycle }
+  faCycleBitmapM = 311;
+  faCycleBitmapP = 312;
+  faRandom = 313;
+  faRandomWhite = 314;
+  faRandomBlack = 315;
+  faBitmapEscape = 316;
+  faToggleContour = 317;
 
-{ HullMesh }
-faHullMesh = 308;
-faHullMeshOn = 309;
-faHullMeshOff = 310;
+  faMax = 318;
 
-{ BitmapCycle }
-faCycleBitmapM = 311;
-faCycleBitmapP = 312;
-faRandom = 313;
-faRandomWhite = 314;
-faRandomBlack = 315;
-faBitmapEscape = 316;
-faToggleContour = 317;
-{$endif}
-
-{$ifdef WantAll}
-faMax = 318;
-{$else}
-faMax = 305;
-{$endif}
-
-ParamsRange = [
+  ParamsRange = [
   faParamT1 .. faParamT2,
   faController .. faParamAPW,
   faParamEAH .. faParamEI];
 
-ReportsRange = [faReportNone .. faReportReadme];
-TrimmsRange = [faTrimm0 .. faLogo];
+  ReportsRange = [faReportNone .. faReportReadme];
+  TrimmsRange = [faTrimm0 .. faLogo];
 
 implementation
 

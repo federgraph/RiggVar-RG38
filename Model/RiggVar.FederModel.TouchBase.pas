@@ -26,10 +26,10 @@ uses
   System.UITypes,
   System.UIConsts,
   System.Generics.Collections,
-  FMX.Graphics,
   FMX.Types,
   FMX.Objects,
   FMX.Controls,
+  FMX.Graphics,
   RiggVar.FB.ActionConst,
   RiggVar.FB.ActionMap,
   RiggVar.FB.Action,
@@ -48,7 +48,6 @@ type
     procedure SetFederAction(const Value: TFederAction);
   protected
     procedure SetHint(const Value: string); override;
-  protected
     procedure HandleClick(Sender: TObject);
   public
     X0, Y0: Integer;

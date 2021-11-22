@@ -23,6 +23,12 @@ uses
   System.Classes;
 
 type
+  TActionField = (
+    afName,
+    afShort,
+    afLong
+  );
+
   TActionTest = class
   protected
     function TestNames: Boolean;
@@ -40,6 +46,9 @@ type
 
     procedure WriteActionConst(ML: TStrings);
     procedure WriteActionNames(ML: TStrings);
+    procedure WriteActionShort(ML: TStrings);
+    procedure WriteActionLong(ML: TStrings);
+    procedure WriteAction(ML: TStrings; af: TActionField);
 
     procedure WriteNewActionConst(ML: TStrings);
   end;
@@ -250,6 +259,8 @@ var
   l: Integer;
   al: TActionGroupList;
   cr: TActionGroup;
+const
+  Indent2 = '  ';
 begin
   k := -1;
   ML.Add('// --- generated code snippet ---');
@@ -264,34 +275,52 @@ begin
     l := Length(cr);
     gn := al.GetGroupName(i);
     ML.Add('');
-    ML.Add('{ ' + gn + ' }');
+    ML.Add(Indent2 + '{ ' + gn + ' }');
     for j := 0 to l-1 do
     begin
       fa := cr[j];
       Inc(k);
       an := GetFederActionName(fa);
       if WantNew then
-        ML.Add(Format('%s = %d;', [an, k])) //new, count up from 0
+        ML.Add(Format('%s%s = %d;', [Indent2, an, k])) //new, count up from 0
       else
-        ML.Add(Format('%s = %d;', [an, fa])); //use current
+        ML.Add(Format('%s%s = %d;', [Indent2, an, fa])); //use current
     end;
   end;
   Inc(k);
   ML.Add('');
-  ML.Add(Format('%s = %d;', ['faMax', k]));
+  ML.Add(Format('%s%s = %d;', [Indent2, 'faMax', k]));
   al.Free;
 end;
 
 procedure TActionTest.WriteActionNames(ML: TStrings);
+begin
+  WriteAction(ML, afName);
+end;
+
+procedure TActionTest.WriteActionShort(ML: TStrings);
+begin
+  WriteAction(ML, afShort);
+end;
+
+procedure TActionTest.WriteActionLong(ML: TStrings);
+begin
+  WriteAction(ML, afLong);
+end;
+
+procedure TActionTest.WriteAction(ML: TStrings; af: TActionField);
 var
   fa: Integer;
-  gn, an: string;
+  gn, an, av: string;
   i, j: Integer;
   l: Integer;
   al: TActionGroupList;
   cr: TActionGroup;
+const
+  Indent2 = '  ';
+  Indent4 = '    ';
 begin
-  ML.Add('// --- generated code snippet ---');
+  ML.Add(Indent4 + '// --- generated code snippet ---');
   al := TActionGroupList.Create;
   for i := 0 to al.Count-1 do
   begin
@@ -299,12 +328,27 @@ begin
     l := Length(cr);
     gn := al.GetGroupName(i);
     ML.Add('');
-    ML.Add('{ ' + gn + ' }');
+    ML.Add(Indent4 + '{ ' + gn + ' }');
     for j := 0 to l-1 do
     begin
       fa := cr[j];
       an := GetFederActionName(fa);
-      ML.Add(Format('%s: result := ''%s'';', [an, an]));
+      case af of
+        afName:
+        begin
+          ML.Add(Format('%s%s: result := ''%s'';', [Indent4, an, an]));
+        end;
+        afShort:
+        begin
+          av := GetFederActionShort(fa);
+          ML.Add(Format('%s%s: result := ''%s'';', [Indent4, an, av]));
+        end;
+        afLong:
+        begin
+          av := GetFederActionLong(fa);
+          ML.Add(Format('%s%s: result := ''%s'';', [Indent4, an, av]));
+        end;
+      end;
     end;
   end;
   al.Free;

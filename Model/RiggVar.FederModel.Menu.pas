@@ -18,10 +18,6 @@
 
 interface
 
-{$ifdef fpc}
-{$mode delphi}
-{$endif}
-
 uses
   System.SysUtils,
   System.Classes,
