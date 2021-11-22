@@ -422,14 +422,6 @@ const
 
   faMax = 318;
 
-  ParamsRange = [
-  faParamT1 .. faParamT2,
-  faController .. faParamAPW,
-  faParamEAH .. faParamEI];
-
-  ReportsRange = [faReportNone .. faReportReadme];
-  TrimmsRange = [faTrimm0 .. faLogo];
-
 implementation
 
 end.

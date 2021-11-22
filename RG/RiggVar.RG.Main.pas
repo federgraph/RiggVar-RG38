@@ -403,6 +403,14 @@ uses
 const
   tfs = '%-3s %s %8s %6s';
 
+  ParamsRange = [
+  faParamT1 .. faParamT2,
+  faController .. faParamAPW,
+  faParamEAH .. faParamEI];
+
+  ReportsRange = [faReportNone .. faReportReadme];
+  TrimmsRange = [faTrimm0 .. faLogo];
+
 { TRggMain }
 
 constructor TRggMain.Create(ARigg: IRigg; AMainView: IFormMain; AMainParent: TFmxObject);
