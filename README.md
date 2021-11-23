@@ -70,21 +70,12 @@ To add a new drawing is supposed to be easy.
 
 ## How to build
 
-Use the following IDE versions to build the project:
-- IDE 10.3.3 Rio CE
-- IDE 10.2.3 Tokyo Pro
+Use one of the following IDE versions to build the project:
+- IDE 10.3.3 Rio
+- IDE 10.2.3 Tokyo
+- IDE 10.1.2 Berlin
 
-I have added the dproj file to gitignore so that you can have your own icons.
-
-Before you open the project in the IDE you need to create a **new dproj file** (Delphi Project File):
-
-1. Create a new FMX project in the default new project area.
-1. Save the project as RG38
-1. Copy the new dproj file to your RG38 working directory.
-1. Open the project in the IDE and run in the debugger with **F9**.
-1. Use same procedure to create RG76.dproj.
-
-It may be necessary to use **Shift-F9** to *build again*.
+You need to [recreate the dproj](doc/How-to-recreate-the-dproj.md) file (Delphi Project File) and fix project options.
 
 ## How to use a build of the app
 
@@ -93,7 +84,7 @@ The executable - RG38.exe - can be used standalone on any current Windows 10 mac
 There is no database and no files are saved by default.
 The app can be run from a USB stick.
 
-## Download from the Store
+## Download published app from the Store
 
 > The name of the Windows Store application is **Trimm420**.
 
