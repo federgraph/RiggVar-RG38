@@ -18,8 +18,6 @@
 
 interface
 
-{.$define WantAll}
-
 uses
   System.SysUtils,
   System.Classes,
@@ -129,11 +127,9 @@ begin
   AddSpecial(ActionGroupLanguage, 'Language');
   AddSpecial(ActionGroupCopyPaste, 'CopyPaste');
 
-{$ifdef WantAll}
   AddSpecial(ActionGroupViewOptions, 'ViewOptions');
   AddSpecial(ActionGroupHullMesh, 'HullMesh');
   AddSpecial(ActionGroupBitmapCycle, 'BitmapCycle');
-{$endif}
 end;
 
 function TActionGroupList.GetGroup(fa: Integer): Integer;

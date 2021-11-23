@@ -18,8 +18,6 @@
 
 interface
 
-{.$define WantAll}
-
 uses
   RiggVar.FB.ActionConst;
 
@@ -408,7 +406,6 @@ ActionGroupCopyPaste: TActionGroup = [
   faPaste,
   faShare];
 
-{$ifdef WantAll}
 ActionGroupViewOptions: TActionGroup = [
   faToggleMoveMode,
   faLinearMove,
@@ -427,7 +424,6 @@ ActionGroupBitmapCycle: TActionGroup = [
   faRandomBlack,
   faBitmapEscape,
   faToggleContour];
-{$endif}
 
 implementation
 
