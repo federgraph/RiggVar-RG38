@@ -125,7 +125,7 @@ param (
     [string]$ProjectName = $(throw "ProjectName parameter is required.")
 )
 
-$delphiBinDir = "c:\program files (x86)\embarcadero\studio\19.0\bin"
+$delphiBinDir = "c:\program files (x86)\embarcadero\studio\18.0\bin"
 $delphiExePath = $delphiBinDir + "\bds.exe"
 
 Write-Host "Release build for" $ProjectName -ForegroundColor Magenta
