@@ -32,7 +32,7 @@ It may be necessary to use **Shift-F9** to build successfully.
 But I have tried to check it with a PowerShell script:
 
 ```ps1
-param ([string]$ProjectName = $(throw "DprojPath parameter is required."))
+param ([string]$ProjectName = $(throw "ProjectName parameter is required."))
 $dproj = $ProjectName + ".dproj"
 $DprojPath = Join-Path $PSScriptRoot $dproj
 
@@ -116,6 +116,7 @@ powershell .\DoReleaseBuild.ps1 -ProjectName RG69
 powershell .\DoReleaseBuild.ps1 -ProjectName RG76
 powershell .\DoReleaseBuild.ps1 -ProjectName RG38
 ```
+Comment out what you do not need.
 
 #### DoReleaseBuild.ps1
 
@@ -144,17 +145,19 @@ powershell .\Remove-AfterBuild.ps1
 
 ```ps1
 :: param 1 = ProjectName, without extension
-:: param 2 =  BinPath to Delphi, without TrailingPathDelimiter
+:: param 2 = BinPath to Delphi, without TrailingPathDelimiter
 @Echo off
 Set pn=%~1
 Set bp=%~2
 call "%bp%\rsvars.bat"
 msbuild %pn% /target:build /verbosity:m /p:DCC_BuildAllUnits=true /p:"Config=Release" /p:"Platform=Win32" /nologo
 ```
+Batch files can have UTF8 encoding, but without BOM!
 
 #### Remove-BeforeBuild.ps1
 
-```
+```ps1
+# remove entire sub-directories
 Remove-Item -Recurse -Force $PSScriptRoot\Win32\Release -ErrorAction Ignore
 
 Get-Childitem . -Include __history -Recurse -Force | Remove-Item -Recurse -Force
@@ -163,10 +166,11 @@ Get-Childitem . -Include __recovery -Recurse -Force | Remove-Item -Recurse -Forc
 
 #### Remove-AfterBuild.ps1
 
-```
+```ps1
+# delete all dcu files
 Get-ChildItem * -Include *.dcu -Recurse | Remove-Item
 ```
-
+ 
 #### Test-Dproj.ps1
 
 ```ps1
@@ -210,6 +214,7 @@ if (!(Test-Path $dproj)) {
     }    
 }
 ```
+If the dproj is missing this script will try to start up the Delphi IDE with the dpr as parameter so that a new dproj is created.
 
 #### Stop-Delphi.ps1
 
@@ -236,6 +241,7 @@ if ($proc) {
     Write-Host "Script has finished".
 }
 ```
+In case the Delphi IDE has been stated it should be stopped (closed).
 
 #### Start-Delphi.ps1
 
@@ -260,3 +266,4 @@ if ($c -eq 1) {
     Start-Process -FilePath $DelphiPath -ArgumentList $fn
 }
 ```
+Not used in the build script above, but it may have been.
