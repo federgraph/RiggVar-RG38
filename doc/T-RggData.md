@@ -48,7 +48,7 @@ Just briefly, from the code, to make it clear:
 - T7 and T8 are read only.
 - T7 is the default in Trimm 420 app.
 - T7 would be a little different in Trimm 470 app.
-- RggData is is temporary object.
+- RggData is a temporary object.
 - The main model object of the app is hiding in RggMain.Rigg.
 
 ## Notes
@@ -89,14 +89,14 @@ Copy Trimm-Item ( cti ) will take the current state of Rigg, serialize it into T
 
 Pasting from clipboard ( pti ) is similar to loading a Trimm-File or Trimm-Item from a file, it will initialize one or more slots.
 It is possible to move data from slot TrimmX to slot TrimmY, when you use the clipboard
-and change currently selected slot between copy and paste operations.
+and change the currently selected slot between copy and paste operations.
 
 > Maybe in the future I will make it possible to copy between slots without going through the clipboard.
 
 After a Trimm-Item was pasted from clipboard, the selected slot is updated, and the data is loaded into Rigg.
 If the text that is on the clipboard was just copied there by the application, the state of Rigg will not change.
 
-Using the buttons T1-T6, and T7 (420 default), and T8 (Logo example), should be an intuitive operation.
+Using buttons T1-T6, and T7 (420 default), and T8 (Logo example), should be an intuitive operation.
 Data stored in the slot will be loaded into Rigg.
 
 Using button cap (copy and paste) to write back current model data in Rigg to a slot is a thing which I have tried to explain.
@@ -117,7 +117,7 @@ These reports do not change when you change the current model data of TRigg via 
 So it appears as if those reports are pretty useless, perhaps only relevant while debugging.
 See conditional define *WantUserConfusingReport* in unit RiggVar.RG.Report.
 
-Under normal circumstances, any change to Rigg will immediately produce feedback through the graphics, which will change.
+Under normal circumstances, any change to Rigg will immediately produce feedback through the graphics.
 TRggData instances will only be effected when you initiate an IO operation.
 
 The current data in the Rigg model is usually not the same as the data in the slots,
@@ -161,7 +161,7 @@ whereas in the FMX application the report text is shown in a TText control on th
 
 The short captions of actions, shown on buttons, should be unique across the whole range of actions used in the app.
 
-DAT: The long report used when copying data to the clipboard. May be too long to show on screen.
+DAT: The long report used when copying data to the clipboard, it may be too long to show on screen.
 
 dat: The short report shown on screen. It can be used by humans when providing input.
 

@@ -19,11 +19,9 @@
 ```
 
 
-This is a Delphi FMX project which can be built with IDE Rio 10.3.3 CE.
-
+This is a Delphi FMX project.
 While it is technically a Delphi cross platform project, it is intended for Windows only.
-
-But it should compile for other targets.
+Lighter versions of it should compile for other targets.
 
 ## RiggVar
 
@@ -49,7 +47,8 @@ the relaxed situation, and a reference situation to compare with.
 2. A new 2D graph implementation which is created by defining drawing elements in code, which in turn will draw to the canvas.
 3. A real 3D graph.
 
-These implementations are called RotaForm1, RotaForm2, and RotaForm3.
+These implementations are called [RotaForm1](doc/RotaForm1.md), [RotaForm2](doc/RotaForm2.md), and [RotaForm3](doc/RotaForm3.md).
+
 **RotaForm** was the name of the original standalone form where you could rotate the graph around 3 axis with the mouse.
 Now you can rotate, pan and zoom with touch screen or with touch pad as well.
 
@@ -70,10 +69,10 @@ To add a new drawing is supposed to be easy.
 
 ## How to build
 
-Use one of the following IDE versions to build the project:
+The following IDE versions should be good to build the project:
 - IDE 10.3.3 Rio
 - IDE 10.2.3 Tokyo
-- IDE 10.1.2 Berlin
+- IDE 10.1.2 Berlin (currently used)
 
 You need to [recreate the dproj](doc/How-to-recreate-the-dproj.md) file (Delphi Project File) and fix project options.
 
@@ -86,9 +85,7 @@ The app can be run from a USB stick.
 
 ## Download published app from the Store
 
-> The name of the Windows Store application is **Trimm420**.
-
-The store entry for the app has a German language description.
+The name of the Windows Store application is **Trimm420**.
 
 ## License
 
@@ -98,16 +95,15 @@ and because I want the application to have a long life.
 The *library* code for the RiggVar Model (TRigg) shall always be GPL only,
 and a complete application that you build with it should always have the same license.
 
-- Since this is a complete application, it contains a number of reusable pieces of original code, besides the computation for the RiggVar model.
+Since this is a complete application, it contains a number of reusable pieces of original code, besides the computation for the RiggVar model.
 Next to the documentation drawings there is the button frame with the integrated touch bar elements, which could be regarded as a reusable piece.
 I originally created the button frame feature for the federgraph application and I use it in many projects already.
 I understand that it can now be used in your GPL project - since I have published it here - 
 but it cannot be reused in your closed source project.
-- I may publish the documentation drawing base classes in a dedicated repository.
 
-## Contributions
+## Contributions are welcome
 
-Contributions are welcome. There is still a lot of work to do, for example:
+There is still a lot of work to do, for example:
 
 - Change the text for the key terms and let me look at the changes.
 - Provide better default data that is closer to reality.
@@ -118,11 +114,9 @@ The standard use case for the application is of educational type.
 It shows how the 420 Rigg behaves in principle.
 To work with concrete values for *your boat* requires more *work*.
 
-> Do you want to adapt the project for the 470 class?
+I am still waiting for the 470 folks to adapt the application to fit the bigger boat.
 
-## About sibling projects at GitHub
-
-Similar projects are available for VCL and LCL:
+## Related projects
 
 | Project | Platform | Note |
 | :-- | :- | :- |

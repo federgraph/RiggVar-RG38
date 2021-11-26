@@ -29,7 +29,7 @@ It may be necessary to use **Shift-F9** to build successfully.
 
 > This is best done manually in the project options dialog.
 
-But I have tried to check it with a PowerShell script:
+But I have tried to automate it with a PowerShell script:
 
 ```ps1
 param ([string]$ProjectName = $(throw "ProjectName parameter is required."))
@@ -101,7 +101,7 @@ PS D:\DelphiProjects\RG\RG38>
 
 This is an exercise.
 I don't know the best way but I have tried something.
-Note that Bat and ps1 script files are in gitignore.
+Note that bat and ps1 script files are in gitignore.
 Here I will document my attempt with the following snippets.
 
 #### DoReleaseBuild.bat
@@ -241,29 +241,4 @@ if ($proc) {
     Write-Host "Script has finished".
 }
 ```
-In case the Delphi IDE has been stated it should be stopped (closed).
-
-#### Start-Delphi.ps1
-
-```ps1
-param (
-    [string]$ProjectName = $(throw "ProjectName parameter is required."),
-    [string]$DelphiPath = $(throw "DelphiPath parameter is required.")
-)
-$dproj = $ProjectName + ".dproj"
-
-$temp = Get-ChildItem -File $dproj
-
-# count of files found is expected to be one
-$c = ($temp | Measure-Object).Count
-
-if ($c -eq 1) {
-    Write-Host "Dproj exists."
-    $fn = $temp.FullName
-    Write-Host "fn =" $fn
-    Write-Host "DelphiPath =" $DelphiPath
-    Write-Host "starting up Delphi IDE..."
-    Start-Process -FilePath $DelphiPath -ArgumentList $fn
-}
-```
-Not used in the build script above, but it may have been.
+In case the Delphi IDE has been started it should be stopped (closed).

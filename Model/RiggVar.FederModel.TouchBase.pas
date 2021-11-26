@@ -609,7 +609,7 @@ begin
   begin
     if Abs(X - OldX) > 0 then
     begin
-      Main.DoTouchBarTop(X - OldX);
+      Main.DoTouchbarTop(X - OldX);
       OldX := X;
       OldY := Y;
     end;

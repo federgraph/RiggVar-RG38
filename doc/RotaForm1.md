@@ -64,8 +64,8 @@ Assert(A.Down = not SB);
 ```
 Depending on the value of Sofort Berechnen I would update the graph while scrolling - or only when scrolling ended.
 
-Even as of today I do not use a background task to update the model.
-May be in the future, but currently I am convinced that the program should do everything in the main thread.
+I do not use a background task to update the model, may be in the future,
+but currently I am convinced that the program should do everything in the main thread.
 
 Option Sofort Berechnen needs to be True to see the relaxed position of the model in the graph,
 and/or to see updated values for the relaxed position coordinates in the textual reports.
@@ -143,7 +143,7 @@ type
 ### Super Simple
 
 Sofort Berechnen is false in super simple mode, which is also fast.
-The graph will show one positions of the model only.
+The graph will show one position of the model only.
 
 ### Super Normal
 
