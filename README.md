@@ -53,7 +53,7 @@ the relaxed situation, and a reference situation to compare with.
 
 These implementations are called [RotaForm1](doc/RotaForm1.md), [RotaForm2](doc/RotaForm2.md), and [RotaForm3](doc/RotaForm3.md).
 
-<a href="images/RiggVar-RG38-02.png">*Screenshot with RotaForm2.*<br>
+<a href="doc/images/RiggVar-RG38-02.png">*Screenshot with RotaForm2.*<br>
 ![screenshot of RotaForm2](doc/images/RiggVar-RG38-02.png)</a>
 
 **RotaForm** was the name of the original standalone form where you could rotate the graph around 3 axis with the mouse.
