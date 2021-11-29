@@ -20,7 +20,7 @@
 
 
 This is a Delphi FMX project.
-While it is technically a Delphi cross platform project, it is intended for Windows only.
+While it is technically a cross platform project, it is intended for Windows only.
 Lighter versions of it should compile for other targets.
 
 ## RiggVar
@@ -32,14 +32,18 @@ Published versions before 2020 were light versions that did not surface all of t
 The intention with this repository is to rescue some of the original work
 and provide a basis for future development.
 
-<a href="doc/images/RiggVar-RG38-01.png">*RG38 is a full featured Delphi version of the RiggVar project.*<br>
+<a href="doc/images/RiggVar-RG38-01.png">*Screenshot of RG38 with RotaForm1 active.*<br>
 ![RG38 screenshot](doc/images/RiggVar-RG38-01.png)</a>
 
-> There is help text about the RiggVar project ( RG ) on the federgraph website.
+The standard use case for the application is of educational type.
+It shows how the 420 Rigg behaves in principle.
+To work with concrete values for *your boat* requires more *work*.
+
+There is some help text content about the RiggVar project ( RG ) on the federgraph website, and here in the doc folder.
 
 ## Graphics
 
-Currently there are three implementations for the Delphi platform:
+This project has three implementations of the graphical display:
 
 1. A *close to original* version of a 2D graph which is drawing to the canvas.
 This one can show overlaid instances of the model; the current situation under load,
@@ -49,13 +53,16 @@ the relaxed situation, and a reference situation to compare with.
 
 These implementations are called [RotaForm1](doc/RotaForm1.md), [RotaForm2](doc/RotaForm2.md), and [RotaForm3](doc/RotaForm3.md).
 
+<a href="images/RiggVar-RG38-02.png">*Screenshot with RotaForm2.*<br>
+![screenshot of RotaForm2](doc/images/RiggVar-RG38-02.png)</a>
+
 **RotaForm** was the name of the original standalone form where you could rotate the graph around 3 axis with the mouse.
 Now you can rotate, pan and zoom with touch screen or with touch pad as well.
 
 ## Documentation Drawings
 
-- The project includes documentation drawings.
-- Button **FD** ( see picture above )will bring up the form with the documentation drawings.
+The project includes documentation drawings.
+- Button **FD** ( see picture above ) will bring up the form with the documentation drawings.
 - This form can be used as the main form in a standalone application, see RG76.dpr.
 - In *TFormDrawing* you can select a drawing from a list and manipulate the parameters of drawing elements with the mouse wheel.
 
@@ -67,21 +74,22 @@ Captions of elements can be hidden and shown interactively.
 The drawings can be used to produce screen shots for the documentation.
 To add a new drawing is supposed to be easy.
 
+RotaForm2 for RG38 is based on the documentation drawings.
+
 ## How to build
 
 The following IDE versions should be good to build the project:
-- IDE 10.3.3 Rio
-- IDE 10.2.3 Tokyo
-- IDE 10.1.2 Berlin (currently used)
+- IDE 10.3 Rio
+- IDE 10.2 Tokyo
+- IDE 10.1 Berlin (currently used)
 
-You need to [recreate the dproj](doc/How-to-recreate-the-dproj.md) file (Delphi Project File) and fix project options.
+Please read my comments on how to [recreate the dproj](doc/How-to-recreate-the-dproj.md) file (Delphi Project File) and how to fix project options in recreated dproj file.
 
 ## How to use a build of the app
 
 The executable - RG38.exe - can be used standalone on any current Windows 10 machine.
 
 There is no database and no files are saved by default.
-The app can be run from a USB stick.
 
 ## Download published app from the Store
 
@@ -89,32 +97,8 @@ The name of the Windows Store application is **Trimm420**.
 
 ## License
 
-I have picked GPL 3.0 as a license because I mean it,
-and because I want the application to have a long life.
-
 The *library* code for the RiggVar Model (TRigg) shall always be GPL only,
 and a complete application that you build with it should always have the same license.
-
-Since this is a complete application, it contains a number of reusable pieces of original code, besides the computation for the RiggVar model.
-Next to the documentation drawings there is the button frame with the integrated touch bar elements, which could be regarded as a reusable piece.
-I originally created the button frame feature for the federgraph application and I use it in many projects already.
-I understand that it can now be used in your GPL project - since I have published it here - 
-but it cannot be reused in your closed source project.
-
-## Contributions are welcome
-
-There is still a lot of work to do, for example:
-
-- Change the text for the key terms and let me look at the changes.
-- Provide better default data that is closer to reality.
-- Build a lightweight version and test on other targets.
-- Find a new use case and describe it.
-
-The standard use case for the application is of educational type.
-It shows how the 420 Rigg behaves in principle.
-To work with concrete values for *your boat* requires more *work*.
-
-I am still waiting for the 470 folks to adapt the application to fit the bigger boat.
 
 ## Related projects
 

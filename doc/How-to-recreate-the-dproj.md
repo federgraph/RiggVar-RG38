@@ -14,7 +14,7 @@ Then you should restore the default output directories in the project options:
 .\$(Platform)\$(Config)
 ```
 
-The output dir defaults are lost when the dproj is recreated, that is why.
+The output dir defaults are lost when the dproj is recreated, see RSP-18892.
 
 ## Option 2
 
