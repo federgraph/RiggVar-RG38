@@ -3,7 +3,11 @@
 interface
 
 {$define WantRotaForm1}
+
+{$ifndef MinimalRG}
 {$define WantRotaForm2}
+{$endif}
+
 {.$define WantRotaForm3}
 
 {$if defined(WantRotaForm1) or defined(WantRotaForm2) }

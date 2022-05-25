@@ -18,12 +18,14 @@
 
 interface
 
+{$ifndef MinimalRG}
 {$define WantColorScheme}
 {$define WantFederText}
 {$define WantFederAction}
 {$define WantFederKeyboard}
 {$define WantOnUpdateChart}
 {$define WantOnUpdateGraph}
+{$endif}
 
 uses
   System.SysUtils,

@@ -18,7 +18,14 @@
 
 interface
 
+{ 'MinimalRG' should be defined in project options (for RG03),
+  in order to exclude stuff not needed for the minimal app. }
+
+{ If MinimalRG is NOT defined, then go ahead and define stuff, for RG38: }
+{$ifndef MinimalRG}
 {$define WantColorScheme}
+{$endif}
+
 {.$define WantDummyController}
 
 uses

@@ -85,6 +85,8 @@ The following IDE versions should be good to build the project:
 
 Please read my comments on how to [recreate the dproj](doc/How-to-recreate-the-dproj.md) file (Delphi Project File) and how to fix project options in recreated dproj file.
 
+> For minimal project RG03 you need set the conditional define **MinimalRG** in the project options.
+
 ## How to use a build of the app
 
 The executable - RG38.exe - can be used standalone on any current Windows 10 machine.
@@ -104,7 +106,8 @@ and a complete application that you build with it should always have the same li
 
 | Project | Platform | Note |
 | :-- | :- | :- |
-| RG10 | FMX | minimal UI version of RG |
+| RG03 | FMX | minimal desktop version of RG |
+| RG10 | FMX | mini version of RG |
 | [RG19](https://github.com/federgraph/RiggVar-RG19) | VCL | original RiggVar project |
 | RG38 | FMX | Trimm 420 full project |
 | [RG51](https://github.com/federgraph/RiggVar-RG51) | LCL | FPC / Lazarus project using TBGRABitmap |

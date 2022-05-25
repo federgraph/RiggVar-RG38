@@ -18,9 +18,11 @@
 
 interface
 
+{$ifndef MinimalRG}
 {$define Rigg19}
 {$define WantHull}
 {$define WantDisplayList}
+{$endif}
 
 uses
   RiggVar.FD.Image,

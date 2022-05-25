@@ -128,7 +128,8 @@ end;
 
 procedure TDisplayItem.DrawLegend(g: TCanvas; j: Integer);
 var
-  x, y, w, h: single;
+  x, y: single;
+  w, h: single;
   R: TRectF;
 
   procedure TextOut(s: string);
@@ -301,7 +302,7 @@ begin
     r := 0;
   end
 
-  { returning r = 0 does help at all with sort algorithm }
+  { returning r = 0 does not help at all with sort algorithm }
 //  else if LP.DoesNotHaveVisibleCrossing then
 //  begin
 //    Inc(CounterNoVisibleCrossing);

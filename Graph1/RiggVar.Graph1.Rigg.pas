@@ -2,7 +2,9 @@
 
 interface
 
+{$ifndef MinimalRG}
 {$define WantDisplayList}
+{$endif}
 
 uses
   System.IniFiles,
