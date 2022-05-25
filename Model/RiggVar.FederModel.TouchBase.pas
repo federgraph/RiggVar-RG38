@@ -232,7 +232,7 @@ begin
     else
       r.Corners := [
         TCorner.TopLeft,
-  //      TCorner.TopRight, // not a round corner to indicate true state
+  //      TCorner.TopRight,
         TCorner.BottomLeft,
         TCorner.BottomRight
         ];

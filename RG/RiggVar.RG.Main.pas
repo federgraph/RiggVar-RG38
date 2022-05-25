@@ -18,13 +18,19 @@
 
 interface
 
+{$define WantColorScheme}
 {$define WantFederText}
+{$define WantFederAction}
+{$define WantFederKeyboard}
+{$define WantOnUpdateChart}
+{$define WantOnUpdateGraph}
 
 uses
   System.SysUtils,
   System.Classes,
   System.Math,
   System.Math.Vectors,
+  System.UIConsts,
   FMX.Types,
   RiggVar.RG.Inter,
   RiggVar.RG.View,
@@ -37,18 +43,19 @@ uses
   RiggVar.RG.Types,
   RiggVar.RG.Calc,
   RiggVar.RG.Doc,
-  System.UIConsts,
   RiggVar.App.Model,
-  RiggVar.FB.Action,
+  RiggVar.FB.Classes,
   RiggVar.FB.ActionConst,
+{$ifdef WantFederAction}
+  RiggVar.FB.Action,
   RiggVar.FB.ActionGroups,
   RiggVar.FB.ActionTable,
   RiggVar.FB.ActionKeys,
   RiggVar.FB.ActionTest,
-  RiggVar.FB.Classes,
   RiggVar.FederModel.Action,
   RiggVar.FederModel.ActionList,
   RiggVar.FederModel.Binding,
+{$endif}
 {$ifdef WantFederText}
   RiggVar.FB.ActionMap,
   RiggVar.FB.TextBase,
@@ -90,8 +97,13 @@ type
 
     FTouch: Integer;
 
+{$ifdef WantOnUpdateGraph}
     FOnUpdateGraph: TNotifyEvent;
+{$endif}
+
+{$ifdef WantOnUpdateChart}
     FOnUpdateChart: TNotifyEvent;
+{$endif}
 
     ModelInput: TRggModelInput;
     ModelOutput: TRggModelOutput;
@@ -142,8 +154,6 @@ type
     procedure SetBtnBlauDown(const Value: Boolean);
     procedure SetBtnGrauDown(const Value: Boolean);
     procedure SetSofortBerechnen(const Value: Boolean);
-    procedure SetOnUpdateGraph(const Value: TNotifyEvent);
-    procedure SetOnUpdateChart(const Value: TNotifyEvent);
     procedure UpdateEAR(Value: single);
     procedure UpdateEAH(Value: single);
     procedure SetSuperRadio(const Value: TGraphRadio);
@@ -162,6 +172,8 @@ type
     procedure TrackBarChange(Sender: TObject);
     procedure RggSpecialDoOnTrackBarChange;
     procedure SetParam(const Value: TFederParam);
+
+    procedure InternalDraw;
   public
     IsUp: Boolean;
     Rigg: IRigg; // injected via constructor
@@ -200,9 +212,13 @@ type
 
     InitialFixPoint: TRiggPoint;
 
+{$ifdef WantFederAction}
     ActionHandler: IFederActionHandler;
     ActionHelper: TActionHelper;
     ActionList: TRggActionList;
+    ActionGroupList: TActionGroupList;
+    ActionTest: TActionTest;
+{$endif}
 
 {$ifdef WantFederText}
     ActionMap1: TActionMap;
@@ -211,17 +227,18 @@ type
     FederText2: TFederTouchPhone;
 {$endif}
 
+{$ifdef WantFederKeyboard}
     FederKeyboard: TFederKeyboard;
-
-    ActionGroupList: TActionGroupList;
-    ActionTest: TActionTest;
     FederBinding: TFederBinding;
+{$endif}
     BackgroundLock: Boolean;
 
     CurrentRotaForm: Integer;
 
     ReportCounter: Integer;
     ResizeCounter: Integer;
+
+    UseTimedDrawing: Boolean;
 
     constructor Create(ARigg: IRigg; AMainView: IFormMain; AMainParent: TFMXObject);
     destructor Destroy; override;
@@ -240,7 +257,7 @@ type
     function GetTrimmItemReportLong: string;
 
     procedure Reset;
-    procedure UpdateGraph(CurrentChanged: Boolean = True);
+    procedure UpdateGraph(CurrentChanged: Boolean);
     procedure DoOnModelEvent(Sender: TObject; Data: TRggModelOutput; Error: TRggModelError);
     procedure UpdateStrokeRigg;
 
@@ -361,8 +378,12 @@ type
 
     property GraphRadio: TGraphRadio read FGraphRadio write SetSuperRadio;
 
-    property OnUpdateGraph: TNotifyEvent read FOnUpdateGraph write SetOnUpdateGraph;
-    property OnUpdateChart: TNotifyEvent read FOnUpdateChart write SetOnUpdateChart;
+{$ifdef WantOnUpdateGraph}
+    property OnUpdateGraph: TNotifyEvent read FOnUpdateGraph write FOnUpdateGraph;
+{$endif}
+{$ifdef WantOnUpdateChart}
+    property OnUpdateChart: TNotifyEvent read FOnUpdateChart write FOnUpdateChart;
+{$endif}
 
     property ShowTrimmText: Boolean read GetShowTrimmText write SetShowTrimmText;
     property ShowDiffText: Boolean read GetShowDiffText write SetShowDiffText;
@@ -378,7 +399,9 @@ type
     property ColorScheme: Integer read GetColorScheme write SetColorScheme;
     property Touch: Integer read FTouch write SetTouch;
 
+{$ifdef WantFederKeyboard}
     property Keyboard: TFederKeyboard read FederKeyboard;
+{$endif}
 {$ifdef WantFederText}
     property FederText: TFederTouchBase read GetFederText;
     property ActionMapTablet: TActionMap read ActionMap1;
@@ -393,12 +416,14 @@ uses
   FMX.PlatForm,
   FMX.Layouts,
   RiggVar.App.Main,
-  RiggVar.Util.AppUtils,
 {$ifdef WantFederText}
   RiggVar.FederModel.ActionMapPhone,
   RiggVar.FederModel.ActionMapTablet,
 {$endif}
-  RiggVar.FederModel.Keyboard01;
+{$ifdef WantFederKeyboard}
+  RiggVar.FederModel.Keyboard01,
+{$endif}
+  RiggVar.Util.AppUtils;
 
 const
   tfs = '%-3s %s %8s %6s';
@@ -422,8 +447,6 @@ begin
   Rigg.ModelEvent := DoOnModelEvent;
 
   Main := self;
-
-  ActionList := TRggActionList.Create(nil);
 
   { this should not be necessary, beause it will be injected in a moment }
   StrokeRigg := TDummyStrokeRigg.Create(Rigg);
@@ -468,8 +491,11 @@ begin
 
   InitTrimmData;
 
+{$ifdef WantFederAction}
+  ActionList := TRggActionList.Create(nil);
   ActionGroupList := TActionGroupList.Create;
   ActionTest := TActionTest.Create;
+{$endif}
 
   InitRaster;
 
@@ -483,11 +509,16 @@ begin
   FederText2 := TFederTouchPhone.Create(nil);
   FederText2.Name := 'FederText2';
 {$endif}
+
+{$ifdef WantFederKeyboard}
   FederKeyboard := TFederKeyboard01.Create;
   FederBinding := TFederBinding.Create;
+{$endif}
 
+{$ifdef WantFederAction}
   ActionHandler := TFederActionHandler.Create;
   ActionHelper := TActionHelper.Create(ActionHandler);
+{$endif}
 
   InitText;
 end;
@@ -496,8 +527,9 @@ destructor TRggMain.Destroy;
 begin
   MainVar.AppIsClosing := True;
 
+{$ifdef WantFederAction}
   ActionHelper.Free;
-  FederKeyboard.Free;
+{$endif}
 
 {$ifdef WantFederText}
   ActionMap1.Free;
@@ -506,9 +538,16 @@ begin
   FederText2.Free;
 {$endif}
 
+{$ifdef WantFederAction}
   ActionGroupList.Free;
   ActionTest.Free;
+  ActionList.Free;
+{$endif}
+
+{$ifdef WantFederKeyboard}
+  FederKeyboard.Free;
   FederBinding.Free;
+{$endif}
 
   RggData.Free;
   Trimm0.Free;
@@ -521,7 +560,6 @@ begin
   Trimm7.Free;
   Trimm8.Free;
 
-  ActionList.Free;
   RggTrackbar.Free;
 
   Logger.Free;
@@ -551,6 +589,7 @@ begin
   StrokeRigg.KoordinatenE := ModelOutput.KoordinatenE;
   StrokeRigg.SetKoppelKurve(ModelOutput.KoppelKurve);
   StrokeRigg.SetMastKurve(ModelOutput.MastKurve);
+
   StrokeRigg.DoOnUpdateStrokeRigg;
 end;
 
@@ -594,7 +633,7 @@ begin
     if Value then
       UpdateGraph(False)
     else
-      Draw;
+      InternalDraw;
   end;
 end;
 
@@ -603,7 +642,7 @@ begin
   if FBtnBlauDown <> Value then
   begin
     FBtnBlauDown := Value;
-    Draw;
+    InternalDraw;
   end;
 end;
 
@@ -613,7 +652,7 @@ begin
   begin
     FBtnGrauDown := Value;
     if Value then
-      Draw
+      InternalDraw
     else
       UpdateGraph(False);
   end;
@@ -655,20 +694,20 @@ begin
   begin
     FHullVisible := Value;
     StrokeRigg.HullVisible := Value;
-    Draw;
+    InternalDraw;
   end;
 end;
 
 procedure TRggMain.SetBogen(const Value: Boolean);
 begin
   FBogen := Value;
-  Draw;
+  InternalDraw;
 end;
 
 procedure TRggMain.SetKoppel(const Value: Boolean);
 begin
   FKoppel := Value;
-  Draw;
+  InternalDraw;
 end;
 
 procedure TRggMain.SetKorrigiert(const Value: Boolean);
@@ -681,24 +720,16 @@ begin
   end;
 end;
 
-procedure TRggMain.SetOnUpdateChart(const Value: TNotifyEvent);
-begin
-  FOnUpdateChart := Value;
-end;
-
-procedure TRggMain.SetOnUpdateGraph(const Value: TNotifyEvent);
-begin
-  FOnUpdateGraph := Value;
-end;
-
 procedure TRggMain.UpdateGraph(CurrentChanged: Boolean);
 begin
+{$ifdef WantOnUpdateChart}
   if FParam  = fpAPW then
   begin
     if Assigned(OnUpdateChart) then
       FOnUpdateChart(Self);
     Exit;
   end;
+{$endif}
 
   case FParam of
     fpEAH: UpdateEAH(CurrentValue);
@@ -712,10 +743,12 @@ begin
 
   ModelInput.SofortBerechnen := SofortBerechnen;
 
-  Rigg.Process(ModelInput);
+  Rigg.Process(ModelInput); // --> Draw via ModelEvent
 
+{$ifdef WantOnUpdateGraph}
   if Assigned(OnUpdateGraph) then
     OnUpdateGraph(nil);
+{$endif}
 end;
 
 procedure TRggMain.SetParamValue(idx: TFederParam; const Value: single);
@@ -734,7 +767,7 @@ begin
     else
       sb.Ist := Value;
 
-    UpdateGraph;
+    UpdateGraph(True);
   end;
 end;
 
@@ -803,8 +836,8 @@ begin
   FParam := Value;
   CurrentValue := Rigg.RggFA.Find(FParam).Ist;
 
+  UpdateGraph(True);
   SetupTrackBarForRgg;
-  UpdateGraph;
 end;
 
 function TRggMain.Text2Param(T: string): TFederParam;
@@ -896,7 +929,7 @@ begin
   Rigg.SetDefaultDocument;
   Rigg.ControllerTyp := ctOhne;
   Rigg.InitFactArray;
-  UpdateGraph;
+  UpdateGraph(True);
 end;
 
 procedure TRggMain.LoadTrimm(fd: TRggData);
@@ -1100,17 +1133,23 @@ begin
   ParamValue[FParam] := Round(RggTrackbar.Value);
 end;
 
+procedure TRggMain.InternalDraw;
+begin
+  if not UseTimedDrawing then
+    Draw;
+  Rigg.UpdateFactArray(Param);
+end;
+
 procedure TRggMain.Draw;
 begin
   UpdateStrokeRigg;
   StrokeRigg.Draw;
-  Rigg.UpdateFactArray(Param);
 end;
 
 procedure TRggMain.ToggleRenderOption(fa: TFederAction);
 begin
   StrokeRigg.ToggleRenderOption(fa);
-  Draw;
+  InternalDraw;
 end;
 
 procedure TRggMain.TrackBarChange(Sender: TObject);
@@ -1322,7 +1361,7 @@ begin
 {$endif}
   RefCtrl := Rigg.Glieder;
   StrokeRigg.KoordinatenR := Rigg.RiggPoints;
-  Draw;
+  InternalDraw;
 end;
 
 procedure TRggMain.MemoryRecallBtnClick;
@@ -1692,11 +1731,13 @@ end;
 
 procedure TRggMain.SetColorScheme(const Value: Integer);
 begin
+{$ifdef WantColorScheme}
   if not BackgroundLock then
   begin
     MainVar.ColorScheme.Scheme := Value;
     MainVar.ColorScheme.Init(Value);
   end;
+{$endif}
 
   if IsUp then
   begin
@@ -1714,15 +1755,21 @@ end;
 
 procedure TRggMain.ToggleDarkMode;
 begin
+{$ifdef WantColorScheme}
   if MainVar.ColorScheme.IsDark then
     ColorScheme := MainVar.ColorScheme.Light
   else
     ColorScheme := MainVar.ColorScheme.Dark;
+{$endif}
 end;
 
 function TRggMain.GetColorScheme: Integer;
 begin
+{$ifdef WantColorScheme}
   result := MainVar.ColorScheme.Scheme;
+{$else}
+  result := 0;
+{$endif}
 end;
 
 procedure TRggMain.SetTouch(const Value: Integer);
@@ -1743,10 +1790,13 @@ begin
 end;
 
 procedure TRggMain.CycleColorSchemeM;
+{$ifdef WantColorScheme}
 var
   i: Integer;
   l: Boolean;
+{$endif}
 begin
+{$ifdef WantColorScheme}
   l := BackgroundLock;
   BackgroundLock := false;
   i := ColorScheme;
@@ -1759,13 +1809,17 @@ begin
   MainVar.ColorScheme.SchemeDefault := i;
   ColorScheme := i;
   BackgroundLock := l;
+{$endif}
 end;
 
 procedure TRggMain.CycleColorSchemeP;
+{$ifdef WantColorScheme}
 var
   i: Integer;
   l: Boolean;
+{$endif}
 begin
+{$ifdef WantColorScheme}
   l := BackgroundLock;
   BackgroundLock := false;
   i := ColorScheme;
@@ -1778,6 +1832,7 @@ begin
   MainVar.ColorScheme.SchemeDefault := i;
   ColorScheme := i;
   BackgroundLock := l;
+{$endif}
 end;
 
 {$ifdef WantFederText}
@@ -2241,7 +2296,9 @@ begin
 
   ML.Add('Report:');
   ML.Add('  ReportCounter = ' + IntToStr(ReportCounter));
+{$ifdef WantColorScheme}
   ML.Add('  ColorScheme = ' + IntToStr(MainVar.ColorScheme.Scheme));
+{$endif}
   ML.Add('  Scale = ' + FloatToStr(MainVar.Scale));
   ML.Add('  Sandboxed = ' + BoolStr[MainVar.IsSandboxed]);
   ML.Add('  WantOnResize = ' + BoolStr[MainVar.WantOnResize]);
@@ -2538,7 +2595,9 @@ begin
     faToggleDiffText: result := ShowDiffText;
     faToggleTrimmText: result := ShowTrimmText;
 
+{$ifdef WantColorScheme}
     faToggleDarkMode: result := MainVar.ColorScheme.IsDark;
+{$endif}
 
     else
       result := MainView.GetChecked(fa);
@@ -2593,7 +2652,9 @@ end;
 
 procedure TRggMain.CollectShortcuts(fa: Integer; ML: TStrings);
 begin
+{$ifdef WantFederKeyboard}
   Keyboard.GetShortcuts(fa, ML);
+{$endif}
 //  Main.ActionMap0.CollectOne(fa, ML);
 {$ifdef WantFederText}
   ActionMapTablet.CollectOne(fa, ML);
@@ -2606,7 +2667,7 @@ procedure TRggMain.DoOnModelEvent(Sender: TObject; Data: TRggModelOutput; Error:
 begin
   ModelOutput := Data;
   ModelError := Error;
-  Draw;
+  InternalDraw;
 end;
 
 end.

@@ -19,6 +19,8 @@
 interface
 
 {$define Rigg19}
+{$define WantHull}
+{$define WantDisplayList}
 
 uses
   RiggVar.FD.Image,
@@ -35,8 +37,10 @@ uses
   RiggVar.RG.Graph,
   RiggVar.RG.Types,
   RiggVar.Graph1.Rigg,
-  RiggVar.Graph1.Transform,
-  RiggVar.Graph1.Hull;
+{$ifdef WantHull}
+  RiggVar.Graph1.Hull,
+{$endif}
+  RiggVar.Graph1.Transform;
 
 type
   TRotaForm1 = class(TInterfacedObject, IStrokeRigg)
@@ -178,10 +182,14 @@ type
     FUseQuickSort: Boolean;
     procedure InitGraph;
     procedure InitRaumGraph;
+{$ifdef WantHull}
     procedure InitHullGraph;
     procedure DrawHullNormal(g: TCanvas);
+{$endif}
     procedure UpdateGraphFromTestData;
+{$ifdef WantDisplayList}
     procedure UpdateDisplayListForBoth(WithKoord: Boolean);
+{$endif}
     procedure SetZoomIndex(const Value: Integer);
     procedure SetOnBeforeDraw(const Value: TNotifyEvent);
     procedure SetOnAfterDraw(const Value: TNotifyEvent);
@@ -194,7 +202,9 @@ type
     IsUp: Boolean;
     Image: TOriginalImage; // injected
 
+{$ifdef WantHull}
     HullGraph: THullGraph;
+{$endif}
     RaumGraph: TRaumGraph;
     UseDisplayList: Boolean;
     BackgroundColor: TAlphaColor;
@@ -251,7 +261,9 @@ type
 implementation
 
 uses
+{$ifdef WantHull}
   RiggVar.Graph1.DisplayList,
+{$endif}
   RiggVar.FB.ActionConst,
   RiggVar.RG.Def;
 
@@ -274,7 +286,9 @@ destructor TRotaForm1.Destroy;
 begin
   Image := nil;
   RaumGraph.Free;
+{$ifdef WantHull}
   HullGraph.Free;
+{$endif}
   Rotator.Free;
   Transformer.Free;
   inherited;
@@ -291,7 +305,9 @@ begin
 
   InitGraph;
   InitRaumGraph;
+{$ifdef WantHull}
   InitHullGraph;
+{$endif}
   UpdateGraphFromTestData;
   SetViewPoint(FViewPoint);
 end;
@@ -316,11 +332,13 @@ begin
   RaumGraph.Bogen := FBogen;
 end;
 
+{$ifdef WantHull}
 procedure TRotaForm1.InitHullGraph;
 begin
   HullGraph := THullGraph.Create;
   HullGraph.Transformer := Transformer;
 end;
+{$endif}
 
 procedure TRotaForm1.UpdateGraphFromTestData;
 begin
@@ -536,6 +554,7 @@ begin
     DrawMatrix(g);
   end;
 
+{$ifdef WantDisplayList}
   if UseDisplayList then
   begin
     UpdateDisplayListForBoth(False);
@@ -547,9 +566,16 @@ begin
   begin
     RaumGraph.DrawToCanvas(g);
   end;
+{$endif}
 
+{$ifndef WantDisplayList}
+  RaumGraph.DrawToCanvas(g);
+{$endif}
+
+{$ifdef WantHull}
   { This method will first check whether this should be done at all. }
   DrawHullNormal(g);
+{$endif}
 
   g.Fill.Color := TAlphaColors.Null;
 end;
@@ -674,7 +700,9 @@ end;
 
 procedure TRotaForm1.UseQuickSortBtnClick(Sender: TObject);
 begin
+{$ifdef WantDisplayList}
   RaumGraph.DL.UseQuickSort := not RaumGraph.DL.UseQuickSort;
+{$endif}
   RaumGraph.Update;
   Draw;
 end;
@@ -715,8 +743,9 @@ begin
   RaumGraph.FixPoint := FixPoint; // --> Transformer.FixPoint
 
   RaumGraph.Update;
+{$ifdef WantHull}
   HullGraph.Update;
-
+{$endif}
   { Neuzeichnen }
   EraseBK := True;
   Draw;
@@ -1005,6 +1034,7 @@ begin
   Draw;
 end;
 
+{$ifdef WantDisplayList}
 procedure TRotaForm1.UpdateDisplayListForBoth(WithKoord: Boolean);
 begin
   if not UseDisplayList then
@@ -1029,7 +1059,9 @@ begin
   if Assigned(OnBeforeDraw) then
     OnBeforeDraw(Self);
 end;
+{$endif}
 
+{$ifdef WantHull}
 procedure TRotaForm1.DrawHullNormal(g: TCanvas);
 begin
   if RumpfItemChecked
@@ -1041,6 +1073,7 @@ begin
     HullGraph.DrawToCanvas(g);
   end;
 end;
+{$endif}
 
 function TRotaForm1.SingleDraw: Boolean;
 begin
@@ -1144,7 +1177,9 @@ begin
   FIncrementW := RotaData.IncrementW;
 
   RaumGraph.Update;
+{$ifdef WantHull}
   HullGraph.Update;
+{$endif}
   EraseBK := True;
   Draw;
 end;
@@ -1172,13 +1207,17 @@ end;
 procedure TRotaForm1.SetWantLineColors(const Value: Boolean);
 begin
   FWantLineColors := Value;
+{$ifdef WantDisplayList}
   RaumGraph.DL.WantLineColors := Value;
+{$endif}
 end;
 
 procedure TRotaForm1.SetUseQuickSort(const Value: Boolean);
 begin
   FUseQuickSort := Value;
+{$ifdef WantDisplayList}
   RaumGraph.DL.UseQuickSort := True;
+{$endif}
 end;
 
 end.

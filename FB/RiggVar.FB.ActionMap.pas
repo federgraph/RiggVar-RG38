@@ -89,7 +89,7 @@ uses
   RiggVar.FB.ActionShort,
   RiggVar.FB.ActionLong;
 
-{ TActionMap }
+{ TActionMapBase }
 
 procedure TActionMapBase.InitActions(Layout: Integer);
 begin

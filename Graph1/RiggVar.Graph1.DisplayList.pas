@@ -14,10 +14,10 @@ uses
   System.Generics.Defaults,
   FMX.Types,
   FMX.Graphics,
-  RiggVar.RG.Types,
-  RiggVar.RG.Calc,
   RiggVar.Graph1.DisplayTypes,
-  RiggVar.Graph1.DisplayOrder;
+  RiggVar.Graph1.DisplayOrder,
+  RiggVar.RG.Types,
+  RiggVar.RG.Calc;
 
 type
   TDisplayItem = class
@@ -220,7 +220,7 @@ var
 begin
   if Left = nil then
   begin
-    Left.Bemerkung := ccNil;
+//    Left.Bemerkung := ccNil;
     Inc(CounterLeftNil);
     result := 0;
     Exit;

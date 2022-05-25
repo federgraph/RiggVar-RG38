@@ -75,14 +75,12 @@ var
 
 { TFederKeyboard }
 
-function TFederKeyboard.KeyDownAction(var Key: Word; var KeyChar: Char;
-  Shift: TShiftState): Integer;
+function TFederKeyboard.KeyDownAction(var Key: Word; var KeyChar: Char; Shift: TShiftState): Integer;
 begin
   result := faNoop;
 end;
 
-function TFederKeyboard.KeyUpAction(var Key: Word; var KeyChar: Char;
-  Shift: TShiftState): Integer;
+function TFederKeyboard.KeyUpAction(var Key: Word; var KeyChar: Char; Shift: TShiftState): Integer;
 begin
   result := faNoop;
 end;

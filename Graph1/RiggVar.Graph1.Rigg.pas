@@ -2,6 +2,8 @@
 
 interface
 
+{$define WantDisplayList}
+
 uses
   System.IniFiles,
   System.Types,
@@ -16,9 +18,11 @@ uses
   RiggVar.RG.Def,
   RiggVar.RG.Calc,
   RiggVar.RG.Types,
+{$ifdef WantDisplayList}
   RiggVar.Graph1.DisplayTypes,
   RiggVar.Graph1.DisplayList,
   RiggVar.Graph1.DisplayOrder,
+{$endif}
   RiggVar.Graph1.Transform;
 
 type
@@ -116,7 +120,10 @@ type
     { transformed coordinates of Rigg }
     A0, B0, C0, D0, E0, F0, P0: TPoint3D;
     A,  B,  C,  D,  E,  F,  P:  TPoint3D;
-    M, N: TPoint3D;
+    M: TPoint3D;
+{$ifdef WantDisplayList}
+    N: TPoint3D;
+{$endif}
     Zug3D: TZug3DBase; // injected via constructor
 
     FSalingTyp: TSalingTyp;
@@ -156,8 +163,10 @@ type
     rP: TRiggPoints;
     Kurve: TMastKurve;
 
+{$ifdef WantDisplayList}
     DF: TRggFrame;
     DL: TRggDisplayList;
+{$endif}
     PD: TPathData;
 
     WantFixPunkt: Boolean;
@@ -171,7 +180,6 @@ type
 
     WantRenderE: Boolean;
     WantRenderF: Boolean;
-//    WantRenderH: Boolean;
     WantRenderP: Boolean;
     WantRenderS: Boolean;
 
@@ -191,7 +199,9 @@ type
     function GetMastKurvePoint(const Index: Integer): TPoint3D;
 
     procedure Update;
+{$ifdef WantDisplayList}
     procedure UpdateDisplayList;
+{$endif}
     procedure DrawToCanvas(g: TCanvas);
 
     procedure SetChecked(fa: Integer; Value: Boolean);
@@ -603,9 +613,11 @@ begin
   Zug3D.Data := RaumGraphData;
   Zug3D.Props := RaumGraphProps;
 
+{$ifdef WantDisplayList}
   DF := TRggFrame.Create;
   DL := TRggDisplayList.Create;
   DL.DF := DF;
+{$endif}
   PD := TPathData.Create;
 
   AchseN.X := 0;
@@ -632,9 +644,11 @@ end;
 destructor TRaumGraph.Destroy;
 begin
   Zug3D.Free;
+{$ifdef WantDisplayList}
   DL.Free;
-  PD.Free;
   DF.Free;
+{$endif}
+  PD.Free;
   RaumGraphData.Free;
   RaumGraphProps.Free;
   inherited;
@@ -893,8 +907,9 @@ begin
       KKT[j] := Transformer.TransformPoint(KoppelKurve[j]);
   end;
 
+{$ifdef WantDisplayList}
   DF.Koordinaten := RPT;
-
+{$endif}
   AchseNT := Transformer.TransformPoint(AchseN);
   AchseXT := Transformer.TransformPoint(AchseX);
   AchseYT := Transformer.TransformPoint(AchseY);
@@ -1041,6 +1056,7 @@ begin
   cr.RiggLED := RiggLED;
 end;
 
+{$ifdef WantDisplayList}
 procedure TRaumGraph.UpdateDisplayList;
 var
   DI: TDisplayItem;
@@ -1183,6 +1199,7 @@ begin
   DF.WantAchsen := WantAchsen;
   DF.Sort;
 end;
+{$endif}
 
 function TRaumGraph.GetChecked(fa: Integer): Boolean;
 begin

@@ -69,7 +69,6 @@ type
     procedure CaseBtnClick(Sender: TObject);
   private
     Margin: Integer;
-  private
     ofa, ofg: Integer;
     osn, oln, oan, ogn: string;
     ML: TStrings;

@@ -34,10 +34,10 @@ type
     function Diff2(i: Integer; x, y: single): single; virtual;
   public
     FaktorEQ: Integer;
-    SourceFormat: Integer;
 
     ErrorCounter: Integer;
     HasError: Boolean;
+    SourceFormat: Integer;
 
     MaxPlotFigure: Integer;
 

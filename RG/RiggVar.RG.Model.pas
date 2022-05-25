@@ -5536,7 +5536,7 @@ begin
 
   if Assigned(FModelEvent) then
   begin
-    FModelEvent(Self, MO, ME);
+    FModelEvent(Self, MO, ME); // --> Draw
   end;
 end;
 
