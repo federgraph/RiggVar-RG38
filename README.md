@@ -85,7 +85,7 @@ The following IDE versions should be good to build the project:
 
 Please read my comments on how to [recreate the dproj](doc/How-to-recreate-the-dproj.md) file (Delphi Project File) and how to fix project options in recreated dproj file.
 
-> For minimal project RG03 you need set the conditional define **MinimalRG** in the project options.
+> For minimal project [RG03](doc/Minmal-App-RG03.md) you need set the conditional define **MinimalRG** in the project options.
 
 ## How to use a build of the app
 

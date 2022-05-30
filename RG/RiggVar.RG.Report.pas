@@ -34,8 +34,7 @@ type
     procedure AusgabeStabkraefte(FS: TFachwerk.TStabVektor; S: Integer);
     procedure AusgabeStabQuerschnitte(EA: TFachwerk.TStabVektor; S: Integer);
     procedure AusgabeElastizitaeten(Q: TFachwerk.TStabVektor; S: Integer);
-    procedure AusgabeVerschiebungen
-                (FOX, FOY, FO, POX, POY: TFachwerk.TKnotenVektor; K: Integer);
+    procedure AusgabeVerschiebungen(FOX, FOY, FO, POX, POY: TFachwerk.TKnotenVektor; K: Integer);
     procedure Ausgabe(Fachwerk: TFachwerk);
     property ML: TStrings read FML;
   end;

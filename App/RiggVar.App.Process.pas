@@ -1,4 +1,4 @@
-unit RiggVar.App.Process;
+﻿unit RiggVar.App.Process;
 
 interface
 
@@ -67,15 +67,12 @@ end;
 
 procedure TIdleHandler.DoOnIdle;
 begin
-  { Do one thing at a time? }
-
   if ParamChanged then
   begin
     ParamChanged := False;
     ParamValueChanged := False;
     TextUpdateNeeded := True;
     UpdateParam;
-    Exit;
   end;
 
   if ParamValueChanged then
@@ -85,22 +82,20 @@ begin
     TextUpdateNeeded := True;
     GraphUpdateNeeded := True;
     UpdateParamValue;
-    Exit;
-  end;
-
-  if TextUpdateNeeded then
-  begin
-    TextUpdateNeeded := False;
-    UpdateText;
-    Exit;
   end;
 
   if GraphUpdateNeeded then
   begin
     GraphUpdateNeeded := False;
     UpdateGraph;
-    Exit;
   end;
+
+  if TextUpdateNeeded then
+  begin
+    TextUpdateNeeded := False;
+    UpdateText;
+  end;
+
 end;
 
 procedure TIdleHandler.UpdateParam;

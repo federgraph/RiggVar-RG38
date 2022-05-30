@@ -157,6 +157,8 @@ begin
   Rigg := TModelFactory.NewRigg;
   Rigg.ControllerTyp := ctOhne;
 
+  Processor := TIdleHandler.Create;
+
   Main := TMain.Create(Rigg, Self, Self);
   Main.Logger.Verbose := True;
   Main.UseTimedDrawing := False;
@@ -182,7 +184,6 @@ begin
   UpdateItemIndexParams;
   ShowTrimm;
 
-  Processor := TIdleHandler.Create;
   Application.OnIdle := ApplicationEventsIdle;
   IsUp := True;
 
@@ -284,7 +285,7 @@ begin
   TrackBtn.Width := 80;
   TrackBtn.Position.X := Trackbar.Position.X + Trackbar.Width + Margin;
   TrackBtn.Position.Y := Margin;
-  TrackBtn.Text := 'Center Track';
+  TrackBtn.Text := 'Center';
   TrackBtn.Hint := 'reset Trackbar thumb to center';
 
   TrimmText.Width := 400;
