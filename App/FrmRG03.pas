@@ -42,7 +42,7 @@ uses
   RiggVar.App.Process,
   RiggVar.FD.Image,
   RiggVar.RG.Model,
-  RiggVar.RG.Rota,
+  RiggVar.Graph1.Rota,
   RiggVar.RG.Types,
   RiggVar.RG.View;
 
@@ -85,7 +85,7 @@ type
     Rigg: IRigg;
     TL: TStrings;
     Processor: TIdleHandler;
-    RotaForm: TRotaForm;
+    RotaForm: TRotaForm1;
 
     procedure HandleAction(fa: Integer);
     function GetChecked(fa: Integer): Boolean;
@@ -165,10 +165,16 @@ begin
   Main.InitialFixPoint := ooD0;
   Main.FixPoint := Main.InitialFixPoint;
 
-  RotaForm := TRotaForm.Create;
+  RotaForm := TRotaForm1.Create;
   RotaForm.Image := Image;
   RotaForm.Init;
-  RotaForm.SwapRota(1);
+  RotaForm.ZoomIndex := 8;
+
+  Main.StrokeRigg := RotaForm;
+  Image.Visible := True;
+  RotaForm.Swap;
+  Main.UpdateStrokeRigg;
+  RotaForm.FixPoint := Main.FixPoint;
 
   TrackBtn.OnClick := TrackBtnClick;
   Trackbar.OnChange := TrackbarChange;
@@ -208,7 +214,10 @@ begin
   TL.Free;
 
   Image.Free;
-  RotaForm.Free;
+
+  { RotaForm1 instance is automatically freed
+    when Main.StrokeRigg reference goes out of scope. }
+//  RotaForm.Free;
 end;
 
 procedure TFormMain.FormMouseWheel(Sender: TObject; Shift: TShiftState;

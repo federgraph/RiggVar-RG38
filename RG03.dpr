@@ -1,4 +1,4 @@
-program RG03;
+﻿program RG03;
 
 uses
   System.StartUpCopy,
@@ -34,7 +34,6 @@ uses
   RiggVar.RG.Strings in 'RG\RiggVar.RG.Strings.pas',
   RiggVar.RG.View in 'RG\RiggVar.RG.View.pas',
   RiggVar.RG.Main in 'RG\RiggVar.RG.Main.pas',
-  RiggVar.RG.Rota in 'RG\RiggVar.RG.Rota.pas',
   RiggVar.Util.AppUtils in 'Util\RiggVar.Util.AppUtils.pas',
   RiggVar.Util.Logger in 'Util\RiggVar.Util.Logger.pas';
 

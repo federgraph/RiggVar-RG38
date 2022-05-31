@@ -83,5 +83,4 @@ If you wanted to port the minimal app to another language and platform, to have 
 - Of course you should create tests as you go.
 - If something is wrong, you will likely see it immediately while watching the graph.
 
-Please notify me in case of success, if you have reproduced the minimal app on another platform,
-because I may be of help, if I like it.
+Please notify me in case of success.
