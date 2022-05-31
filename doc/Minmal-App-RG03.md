@@ -83,4 +83,16 @@ If you wanted to port the minimal app to another language and platform, to have 
 - Of course you should create tests as you go.
 - If something is wrong, you will likely see it immediately while watching the graph.
 
-Please notify me in case of success.
+Tip: The first class that you may want to port over to a new platform is TSchnittKK in unit RiggVar.RG.Calc.
+
+## SK03
+
+Application SK03 can be used to test TSchnittKK within an application.
+
+As a model in SK03 we have two circles.
+Radius and center point coordinates are the parameters;
+and the graph will show the intersection points, if any.
+
+This is very straight forward and (no argument) the absolute best possible starting point for any new development.
+
+( Please notify me in case of success with porting the SK03 application to a new platform. )
