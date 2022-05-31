@@ -89,10 +89,14 @@ Tip: The first class that you may want to port over to a new platform is TSchnit
 
 Application SK03 can be used to test TSchnittKK within an application.
 
+<a href="images/RiggVar-SK03-01.png">*SK03 test application*<br>
+![SK03](images/RiggVar-SK03-01.png)</a>
+
 As a model in SK03 we have two circles.
-Radius and center point coordinates are the parameters;
+Radius and center point coordinates are the parameters, for each of the circles,
 and the graph will show the intersection points, if any.
 
 This is very straight forward and (no argument) the absolute best possible starting point for any new development.
 
-( Please notify me in case of success with porting the SK03 application to a new platform. )
+In case of success with porting SK03 to a new platform,
+this would be a good point in time to notify me of the new development!
