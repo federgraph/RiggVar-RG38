@@ -56,6 +56,7 @@ type
     SortBtn: TButton;
     HideBtn: TButton;
     CaseBtn: TButton;
+    ExecuteBtn: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -67,6 +68,7 @@ type
     procedure SortBtnClick(Sender: TObject);
     procedure HideBtnClick(Sender: TObject);
     procedure CaseBtnClick(Sender: TObject);
+    procedure ExecuteBtnClick(Sender: TObject);
   private
     Margin: Integer;
     ofa, ofg: Integer;
@@ -74,6 +76,7 @@ type
     ML: TStrings;
     GroupsSorted: Boolean;
     InsensitiveSearch: Boolean;
+    CurrentAction: Integer;
     procedure ListGroups;
     procedure ListGroupsSorted;
     procedure ListGroup(g: Integer);
@@ -110,6 +113,11 @@ uses
 procedure TFormAction.EditKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
   DoSearch;
+end;
+
+procedure TFormAction.ExecuteBtnClick(Sender: TObject);
+begin
+  Main.ActionHandler.Execute(CurrentAction);
 end;
 
 procedure TFormAction.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -158,6 +166,8 @@ begin
   ListGroups;
 
   UpdateCaseBtnCaption;
+
+  CurrentAction := faNoop;
 end;
 
 procedure TFormAction.FormDestroy(Sender: TObject);
@@ -399,6 +409,8 @@ begin
       lvi.Height := 24;
     end;
   end;
+
+  CurrentAction := fa;
 end;
 
 procedure TFormAction.UpdateVars(fa: Integer);

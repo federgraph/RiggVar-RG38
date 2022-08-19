@@ -1,4 +1,4 @@
-object FormAction: TFormAction
+﻿object FormAction: TFormAction
   Left = 0
   Top = 0
   Caption = 'FC Actions'
@@ -57,7 +57,7 @@ object FormAction: TFormAction
   end
   object TextCaption: TText
     AutoSize = True
-    Position.X = 104.000000000000000000
+    Position.X = 16.000000000000000000
     Position.Y = 8.000000000000000000
     Size.Width = 441.617187500000000000
     Size.Height = 31.921875000000000000
@@ -84,9 +84,9 @@ object FormAction: TFormAction
     HeaderAppearanceClassName = 'TListHeaderObjects'
     FooterAppearanceClassName = 'TListHeaderObjects'
     Position.X = 176.000000000000000000
-    Position.Y = 88.000000000000000000
+    Position.Y = 144.000000000000000000
     Size.Width = 305.000000000000000000
-    Size.Height = 489.000000000000000000
+    Size.Height = 433.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 2
   end
@@ -115,7 +115,7 @@ object FormAction: TFormAction
   object TextDetail: TText
     AutoSize = True
     Position.X = 176.000000000000000000
-    Position.Y = 64.000000000000000000
+    Position.Y = 120.000000000000000000
     Size.Width = 77.130859375000000000
     Size.Height = 15.960937500000000000
     Size.PlatformDefault = False
@@ -154,5 +154,15 @@ object FormAction: TFormAction
     TabOrder = 11
     Text = 'SO'
     OnClick = CaseBtnClick
+  end
+  object ExecuteBtn: TButton
+    Position.X = 232.000000000000000000
+    Position.Y = 88.000000000000000000
+    Size.Width = 225.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 12
+    Text = 'Execute Selected Action'
+    OnClick = ExecuteBtnClick
   end
 end
