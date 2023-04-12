@@ -27,17 +27,19 @@ type
   TFederEquation = class(TFederFormulaBase)
   private
     function GetSampleInfo: string;
+    function GetCapValue: single;
   protected
+    FaktorEQ: Integer;
+    FaktorG3: single;
     function Kraft(k, l, l0: single): single;
     function Force(k, l, l0: single; m: Integer): single;
     function Diff1(i: Integer; x, y: single): single; virtual;
     function Diff2(i: Integer; x, y: single): single; virtual;
   public
-    FaktorEQ: Integer;
+    SourceFormat: Integer;
 
     ErrorCounter: Integer;
     HasError: Boolean;
-    SourceFormat: Integer;
 
     MaxPlotFigure: Integer;
 
@@ -63,11 +65,12 @@ type
     Lf: single;
 
     fcap: single;
-    pcap: Integer;
-    mcap: Integer;
+    pcap: single;
+    mcap: single;
 
-    Gain: Integer;
-    Limit: Integer;
+    Gain: single;
+    Limit: single;
+
     Figure: Integer;
     Plot: Integer;
     Dim: Integer;
@@ -85,29 +88,32 @@ type
     WantDiff: Boolean;
     WantDiffOnce: Boolean;
 
-    OffsetZ: Integer;
+    OffsetZ: single;
 
     Hub: Integer;
     Sample: Integer;
 
-    constructor Create; override;
+    constructor Create(AModelID: Integer = 1); override;
 
-    function GetValue(x, y : single): single; override;
+    function GetValue(x, y: single): single; override;
     procedure PrepareCalc; override;
 
+    procedure Reset;
     procedure InitFormula;
     procedure InitRandom(ID: Integer);
     function CalcFederFormula(x, y: single): single;
 
     procedure InitKoord; virtual;
-    procedure InitFaktorEQ;
-    procedure InitMaxPlotFigure;
     procedure InitMemo(ML: TStrings); virtual;
     procedure CalcBF(x, y: single); virtual;
-    function CalcRaw(x, y : single): single; virtual;
-    function CalcValue(x, y : single; af: Integer): single; virtual;
+    function CalcRaw(x, y: single): single; virtual;
+    function CalcValue(x, y: single; af: Integer): single; virtual;
     function GetStatusLine: string; virtual;
+
     property SampleInfo: string read GetSampleInfo;
+    property FactorEQ: Integer read FaktorEQ;
+    property FactorG3: single read FaktorG3;
+    property CapValue: single read GetCapValue;
   end;
 
 resourcestring
@@ -131,7 +137,7 @@ resourcestring
 
 implementation
 
-{ TFederEquation }
+{ TFederEquation, https://federgraph.de/feder-formula.html }
 
 procedure TFederEquation.CalcBF(x, y: single);
 begin
@@ -150,12 +156,14 @@ end;
 
 function TFederEquation.CalcValue(x, y: single; af: Integer): single;
 begin
-  result := 0;
+  result := CalcFederFormula(x, y);
 end;
 
-constructor TFederEquation.Create;
+constructor TFederEquation.Create(AModelID: Integer = 1);
 begin
-  inherited Create;
+  inherited Create(AModelID);
+  FaktorG3 := 1.0;
+  FaktorEQ := 1;
 
   DiffMode := 2;
   Randomize;
@@ -165,6 +173,40 @@ begin
   jv := 150;
   jw := 5;
   InitKoord;
+end;
+
+procedure TFederEquation.Reset;
+begin
+  Plot := 10;
+//  TakesAbsolute := True;
+
+  x1 := -64.95;
+  x2 := 64.95;
+  x3 := 0;
+
+  y1 := 37.5;
+  y2 := 37.5;
+  y3 := -75;
+
+  z1 := 0;
+  z2 := 0;
+  z3 := 0;
+
+  l1 := 90;
+  l2 := 90;
+  l3 := 90;
+
+  k1 := 1;
+  k2 := 1;
+  k3 := 1;
+
+  m1 := 0;
+  m2 := 0;
+  m3 := 0;
+
+  fcap := 500000;
+
+  ForceMode := 0;
 end;
 
 procedure TFederEquation.InitFormula;
@@ -192,6 +234,8 @@ begin
   m1 := 0;
   m2 := 0;
   m3 := 0;
+
+  fcap := 500000;
 
   ForceMode := 0;
 end;
@@ -233,7 +277,12 @@ begin
 end;
 
 function TFederEquation.CalcFederFormula(x, y: single): single;
+var
+  u, u1, u2, u3: single;
 begin
+  if fcap < 1 then
+    fcap := 1;
+
   a1 := sqr(x-x1) + sqr(y-y1);
   a2 := sqr(x-x2) + sqr(y-y2);
   a3 := sqr(x-x3) + sqr(y-y3);
@@ -242,11 +291,23 @@ begin
   t2 := sqrt(a2 + sqr(z2));
   t3 := sqrt(a3 + sqr(z3));
 
-  b1 := t2 * t3 * (t1-l1) * k1;
-  b2 := t1 * t3 * (t2-l2) * k2;
-  b3 := t1 * t2 * (t3-l3) * k3;
+  b1 := t2 * t3 * (t1-l1);
+  b2 := t1 * t3 * (t2-l2);
+  b3 := t1 * t2 * (t3-l3);
 
-  result := abs( (b1 * (x-x1) + b2 * (x-x2) + b3 * (x-x3)) / 1000000);
+  u1 := b1 * (x-x1);
+  u2 := b2 * (x-x2);
+  u3 := b3 * (x-x3);
+
+  u := u1 + u2 + u3;
+
+  result := u / fcap;
+
+  if result > MaxInt then
+    result := MaxInt;
+  if result < -MaxInt then
+    result := -MaxInt;
+  result := abs(result);
 end;
 
 function TFederEquation.CalcRaw(x, y: single): single;
@@ -280,30 +341,7 @@ end;
 
 procedure TFederEquation.InitKoord;
 begin
-  InitFaktorEQ;
-  InitMaxPlotFigure;
-end;
 
-procedure TFederEquation.InitFaktorEQ;
-begin
-  case SpringCount of
-    1: FaktorEQ := 1;
-    2: FaktorEQ := 1 * 1000;
-    3: FaktorEQ := 100 * 1000;
-    4: FaktorEQ := 500 * 1000;
-    else FaktorEQ := 800;
-  end;
-end;
-
-procedure TFederEquation.InitMaxPlotFigure;
-begin
-  case SpringCount of
-    1: MaxPlotFigure := 2;
-    2: MaxPlotFigure := 13;
-    3: MaxPlotFigure := 4;
-    4: MaxPlotFigure := 4;
-    else FaktorEQ := 4;
-  end;
 end;
 
 procedure TFederEquation.InitMemo(ML: TStrings);
@@ -321,7 +359,7 @@ begin
     result := k * (l - l0)
   else
   begin
-    result := k * sqr(l - l0) * 50;
+    result := k * sqr(l - l0) * 0.02;
   end;
   case m of
     1:
@@ -351,14 +389,15 @@ begin
   else
     gain2 := sqr(10) * 100 * 1000;
 
-  case SpringCount of
-    1: gain3 := 0.005;
-    2: gain3 := 1;
-    3: gain3 := 500;
-    4: gain3 := 25;
-    else
-      gain3 := 1;
-  end;
+    gain3 := FaktorG3;
+//  case SpringType of
+//    1: gain3 := 0.005;
+//    2: gain3 := 1;
+//    3: gain3 := 500;
+//    4: gain3 := 25;
+//    N: gain := 1;
+//    S: gain3 := 500;
+//  end;
 
   gain4 := (1000 + gain2) * gain3;
 
@@ -370,7 +409,7 @@ begin
     5: fcap := gain4 * 1000;
   end;
 
-  pcap := 100 + Limit;
+  pcap := CapValue;
   mcap := -pcap;
 end;
 
@@ -384,6 +423,11 @@ function TFederEquation.Diff2(i: Integer; x, y: single): single;
 begin
   //virtual
   result := 0;
+end;
+
+function TFederEquation.GetCapValue: single;
+begin
+  result := 100 + Limit;
 end;
 
 end.

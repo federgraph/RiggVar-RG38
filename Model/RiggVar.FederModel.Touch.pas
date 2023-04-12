@@ -18,6 +18,8 @@
 
 interface
 
+{$define WantToolBtn}
+
 uses
   System.Classes,
   System.UITypes,
@@ -74,6 +76,7 @@ procedure TFederTouch.InitShapes;
 begin
   if not InitOK then
   begin
+{$ifdef WantToolBtn}
     ToolBtn := TCircle.Create(OwnerComponent);
     { Position set in TFederTouchBase.UpdateShape }
     ToolBtn.Width := MainVar.Raster;
@@ -82,6 +85,7 @@ begin
     ToolBtn.Fill.Color := MainVar.ColorScheme.claToolBtnFill;
     ToolBtn.OnClick := ToolBtnClick;
     ParentObject.AddObject(ToolBtn);
+{$endif}
 
     InitCornerMenu;
 
@@ -132,7 +136,7 @@ procedure TFederTouch.InitCornerMenu;
 var
   cp: TCornerPos;
   cl: TAlphaColor;
-  fa: Integer;
+  fa: TFederAction;
 begin
   TCornerBtn.OffsetX := 0;
   TCornerBtn.OffsetY := 0;

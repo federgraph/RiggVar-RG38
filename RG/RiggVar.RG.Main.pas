@@ -301,6 +301,7 @@ type
     procedure CycleToolSet(i: Integer);
 {$endif}
 
+    function IsTouchBtnEnabled(ABtn: TTouchBtn): Boolean;
     procedure DoTouchbarLeft(Delta: single);
     procedure DoTouchbarRight(Delta: single);
     procedure DoTouchbarBottom(Delta: single);
@@ -2670,6 +2671,11 @@ begin
   ModelOutput := Data;
   ModelError := Error;
   InternalDraw;
+end;
+
+function TRggMain.IsTouchBtnEnabled(ABtn: TTouchBtn): Boolean;
+begin
+  result := True;
 end;
 
 end.

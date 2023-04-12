@@ -85,7 +85,7 @@ end;
 
 function TActionTest.TestNames: Boolean;
 var
-  fa: Integer;
+  fa: TFederAction;
   s, t: string;
 begin
   result := True; // assume OK
@@ -109,7 +109,7 @@ end;
 
 function TActionTest.TestShortCaptions: Boolean;
 var
-  fa: Integer;
+  fa: TFederAction;
   s, t: string;
 begin
   result := True; // assume OK
@@ -133,7 +133,7 @@ end;
 
 function TActionTest.TestLongCaptions: Boolean;
 var
-  fa: Integer;
+  fa: TFederAction;
   s, t: string;
 begin
   result := True; // assume OK
@@ -157,7 +157,7 @@ end;
 
 function TActionTest.TestUniqueShortCaptions: Boolean;
 var
-  fa: Integer;
+  fa: TFederAction;
   s, t: string;
   ML: TStringList;
 begin
@@ -191,7 +191,7 @@ end;
 
 function TActionTest.TestGroupUsage: Boolean;
 var
-  fa: Integer;
+  fa: TFederAction;
   s, n: string;
   i: Integer;
   j: Integer;
@@ -206,8 +206,8 @@ begin
   al := TActionGroupList.Create;
   TL := TStringList.Create;
 
-  for i := 0 to faMax-1 do
-    TL.Add(Format('%d=0', [i]));
+  for fa := 0 to faMax - 1 do
+    TL.Add(Format('%d=0', [fa]));
 
   sOne := '1';
   for i := 0 to al.Count-1 do
@@ -253,7 +253,7 @@ end;
 
 procedure TActionTest.WriteActionConst(ML: TStrings);
 var
-  fa: Integer;
+  fa: TFederAction;
   gn, an: string;
   i, j, k: Integer;
   l: Integer;
@@ -310,7 +310,7 @@ end;
 
 procedure TActionTest.WriteAction(ML: TStrings; af: TActionField);
 var
-  fa: Integer;
+  fa: TFederAction;
   gn, an, av: string;
   i, j: Integer;
   l: Integer;

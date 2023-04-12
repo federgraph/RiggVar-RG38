@@ -25,6 +25,7 @@ uses
 type
   TColorScheme = record
   public
+    JokerColor: TAlphaColor;
     WantBlackText: Boolean;
 
     Scheme: Integer;
@@ -84,6 +85,7 @@ begin
   Dark := 5;
   Light := 2;
   WantBlackText := True;
+  JokerColor := claCornflowerblue;
   claTouchbarText := claBlack;
   SchemeDefault := cs;
   Scheme := SchemeDefault;
@@ -125,7 +127,7 @@ begin
     end;
     3:
     begin
-      claBackground := claCornflowerblue;
+      claBackground := JokerColor;
       claToolBtnFill := claWhite;
       claTouchBtnFill := claWhite;
       claCornerScrollbar := claWhite;

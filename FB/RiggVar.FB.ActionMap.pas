@@ -41,6 +41,7 @@ type
     procedure InitAction(BtnID: Integer; Action: Integer);
     procedure IAC(BtnID, Action: Integer; cla: TAlphaColor); virtual;
   public
+    class var CurrentPageCaption: string;
     constructor Create;
     procedure InitActions(Layout: Integer); virtual;
     property ActionProc: TInitActionProc read FActionProc write SetActionProc;

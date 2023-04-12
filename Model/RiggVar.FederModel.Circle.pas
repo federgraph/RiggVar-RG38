@@ -145,7 +145,7 @@ begin
     u := ox + ParamBahnRadius * cphi;
     v := oy + ParamBahnRadius * sphi;
 
-    p.Z := EQ.GetValue(u, v);
+    p.Z := EQ.GetValue(u, v) / 50;
     p.X := ox + (ParamBahnRadius + p.Z) * cphi;
     p.Y := oy + (ParamBahnRadius + p.Z) * sphi;
 
@@ -157,7 +157,7 @@ end;
 procedure TFederPoly.InitLL;
 var
   i: Integer;
-  Z: single;
+  z: single;
   u, v: single;
   mx, ms: single;
   msx: single;
@@ -188,9 +188,9 @@ begin
 
     u := v3.X;
     v := v3.Y;
-    Z := EQ.GetValue(u, v);
+    z := EQ.GetValue(u, v);
 
-    v4 := vz * Flip * Z;
+    v4 := vz * Flip * z;
     v5 := v3 + v4;
 
     if i = 0 then

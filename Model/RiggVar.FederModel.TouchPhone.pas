@@ -18,6 +18,8 @@
 
 interface
 
+{$define WantToolBtn}
+
 uses
   System.Math,
   System.SysUtils,
@@ -76,6 +78,7 @@ procedure TFederTouchPhone.InitShapes;
 begin
   if not InitOK then
   begin
+{$ifdef WantToolBtn}
     ToolBtn := TCircle.Create(OwnerComponent);
     ToolBtn.Position.X := MainVar.Raster;
     ToolBtn.Position.Y := MainVar.Raster;
@@ -85,6 +88,7 @@ begin
     ToolBtn.Fill.Color := MainVar.ColorScheme.claToolBtnFill;
     ToolBtn.OnClick := ToolBtnClick;
     ParentObject.AddObject(ToolBtn);
+{$endif}
 
     InitCornerMenu;
 
@@ -115,7 +119,9 @@ var
   b: TCornerBtn;
   tc1, tc2: TAlphaColor;
 begin
+{$ifdef WantToolBtn}
   ToolBtn.Fill.Color := MainVar.ColorScheme.claToolBtnFill;
+{$endif}
 
   for b in CornerBtnList do
     b.Text.Color := MainVar.ColorScheme.claCornerBtnText;

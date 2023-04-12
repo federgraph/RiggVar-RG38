@@ -173,7 +173,6 @@ end;
 procedure TFormMemo.WriteHullPoints(Sender: TObject);
 begin
   MemoBeginUpdate;
-  Memo.Lines.Clear;
   Main.FederBinding.InitHullPoints(Memo.Lines);
   MemoEndUpdate;
 end;
@@ -181,7 +180,6 @@ end;
 procedure TFormMemo.InfoText(Sender: TObject);
 begin
   MemoBeginUpdate;
-  Memo.Lines.Clear;
   Main.FederBinding.InitInfoText(Memo.Lines);
   MemoEndUpdate;
 end;
@@ -189,7 +187,6 @@ end;
 procedure TFormMemo.HelpText(Sender: TObject);
 begin
   MemoBeginUpdate;
-  Memo.Lines.Clear;
   Main.FederBinding.InitHelpText(Memo.Lines);
   MemoEndUpdate;
 end;
@@ -197,7 +194,6 @@ end;
 procedure TFormMemo.HelpTextForIO(Sender: TObject);
 begin
   MemoBeginUpdate;
-  Memo.Lines.Clear;
   Main.FederBinding.InitHelpTextForIO(Memo.Lines);
   MemoEndUpdate;
 end;
@@ -205,7 +201,6 @@ end;
 procedure TFormMemo.DeviceReportBtnClick(Sender: TObject);
 begin
   MemoBeginUpdate;
-  Memo.Lines.Clear;
 {$ifdef WantDriverTest}
   { DeviceCheck instance should already have been created in dpr file. }
   { Viewport instance should have been injected into DeviceCheck in FormMain }
@@ -221,7 +216,6 @@ end;
 procedure TFormMemo.ActionTestBtnClick(Sender: TObject);
 begin
   MemoBeginUpdate;
-  Memo.Lines.Clear;
   Main.ActionTest.TestAll;
   Memo.Lines.Text := Main.ActionTest.SL.Text;
   MemoEndUpdate;
@@ -230,7 +224,6 @@ end;
 procedure TFormMemo.WriteNewActionConstBtnClick(Sender: TObject);
 begin
   MemoBeginUpdate;
-  Memo.Lines.Clear;
   Main.ActionTest.WriteNewActionConst(Memo.Lines);
   MemoEndUpdate;
 end;
@@ -238,7 +231,6 @@ end;
 procedure TFormMemo.WriteActionConstBtnClick(Sender: TObject);
 begin
   MemoBeginUpdate;
-  Memo.Lines.Clear;
   Main.ActionTest.WriteActionConst(Memo.Lines);
   MemoEndUpdate;
 end;
@@ -246,7 +238,6 @@ end;
 procedure TFormMemo.WriteActionNamesBtnClick(Sender: TObject);
 begin
   MemoBeginUpdate;
-  Memo.Lines.Clear;
   Main.ActionTest.WriteActionNames(Memo.Lines);
   MemoEndUpdate;
 end;
@@ -254,7 +245,6 @@ end;
 procedure TFormMemo.WriteShortcuts(Sender: TObject);
 begin
   MemoBeginUpdate;
-  Memo.Lines.Clear;
   Main.ActionHelper.GetShortcutReport(Memo.Lines);
   MemoEndUpdate;
 end;

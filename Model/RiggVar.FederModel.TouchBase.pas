@@ -16,6 +16,8 @@
 -
 *)
 
+{$define WantToolBtn}
+
 interface
 
 uses
@@ -40,6 +42,7 @@ type
   private
     FID: Integer;
     FCaption: string;
+    FColor: TAlphaColor;
     FText: TText;
     FShape: TShape;
     FFederAction: TFederAction;
@@ -78,11 +81,11 @@ type
   end;
 
   TCornerPos = (
-    cpTL, //TopLeft corner
+    cpTL, // TopLeft corner
     cpTR,
     cpBL,
     cpBR,
-    cpT, //top side
+    cpT, // top side
     cpR,
     cpB,
     cpL
@@ -131,7 +134,9 @@ type
     Down: Boolean;
     FOwnsMouse: Boolean;
 
+{$ifdef WantToolBtn}
     ToolBtn: TCircle;
+{$endif}
 
     procedure OnMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: single);
     procedure OnMouseMove(Sender: TObject; Shift: TShiftState; X, Y: single);
@@ -214,20 +219,26 @@ end;
 
 procedure TTouchBtn.HandleClick(Sender: TObject);
 begin
-  Main.ActionHandler.Execute(FederAction);
-  Main.FederTextCheckState; // if not done in Execute
+  if Enabled then
+  begin
+    if Main.IsTouchBtnEnabled(Self) then
+      Main.ActionHandler.Execute(FederAction);
+  end;
 end;
 
 procedure TTouchBtn.CheckState;
 var
   r: TRectangle;
-  b: Boolean;
+  e: Boolean;
+  c: Boolean;
 begin
   if FShape is TRectangle then
   begin
-    b := Main.ActionHandler.GetChecked(FederAction);
     r := FShape as TRectangle;
-    if not b then
+
+    c := Main.ActionHandler.GetChecked(FederAction);
+    e := Main.ActionHandler.GetEnabled(FederAction);
+    if not c then
       r.Corners := [TCorner.TopLeft, TCorner.TopRight, TCorner.BottomLeft, TCorner.BottomRight]
     else
       r.Corners := [
@@ -236,6 +247,13 @@ begin
         TCorner.BottomLeft,
         TCorner.BottomRight
         ];
+
+     if not e then
+       r.Fill.Color := claSilver
+     else
+       r.Fill.Color := FColor;
+
+     Enabled := e;
   end;
 end;
 
@@ -269,6 +287,7 @@ end;
 
 procedure TTouchBtn.SetColor(const Value: TAlphaColor);
 begin
+  FColor := Value;
   if Assigned(FShape) then
   begin
     FShape.Fill.Color := Value;
@@ -580,10 +599,12 @@ var
 begin
   FFrameVisible := Value;
 
+{$ifdef WantToolBtn}
   if Value then
     ToolBtn.Opacity := 0.1
   else
     ToolBtn.Opacity := 0.05;
+{$endif}
 
   for b in CornerBtnList do
     b.Visible := Value;
@@ -712,9 +733,11 @@ begin
     SL00.Height := MainVar.ClientHeight - (TCornerMenu.LCount) * MainVar.Raster;
     SR00.Height := MainVar.ClientHeight - (TCornerMenu.RCount) * MainVar.Raster;
 
+{$ifdef WantToolBtn}
     ToolBtn.Position.X := MainVar.Raster;
     ToolBtn.Position.Y := MainVar.Raster;
     ToolBtn.Width := MainVar.Raster;
+{$endif}
   end;
 end;
 
@@ -826,6 +849,7 @@ procedure TFederTouchBase.ToggleTouchFrame;
 begin
   FrameVisible := not FrameVisible;
 
+{$ifdef WantToolBtn}
   if FrameVisible then
   begin
     ToolBtn.Opacity := 0.1;
@@ -834,6 +858,7 @@ begin
   begin
     ToolBtn.Opacity := 0.05;
   end;
+{$endif}
 end;
 
 end.
