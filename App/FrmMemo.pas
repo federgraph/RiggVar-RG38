@@ -42,6 +42,11 @@ uses
   FMX.ListView;
 
 type
+  TAutoUpdateReport = (
+    Nothing,
+    TrimmItem
+  );
+
   TMemoAction = record
   public
     Tag: Integer;
@@ -88,6 +93,13 @@ type
     procedure WriteNewActionConstBtnClick(Sender: TObject);
     procedure WriteActionConstBtnClick(Sender: TObject);
     procedure WriteActionNamesBtnClick(Sender: TObject);
+
+    procedure NotImplemented;
+    procedure AutoUpdateOff;
+  public
+    CounterNotImplemented: Integer;
+    AutoUpdateID: TAutoUpdateReport;
+    procedure AutoUpdate;
   end;
 
 var
@@ -160,6 +172,7 @@ begin
   Main.WriteTrimmItem;
   Memo.Lines.Text := Main.FLText;
   MemoEndUpdate;
+  AutoUpdateID := TrimmItem;
 end;
 
 procedure TFormMemo.WriteTrimmFile(Sender: TObject);
@@ -322,7 +335,9 @@ end;
 
 procedure TFormMemo.MemoBeginUpdate;
 begin
+  AutoUpdateID := Nothing;
   Memo.Lines.BeginUpdate;
+  Memo.Lines.Clear;
 end;
 
 procedure TFormMemo.MemoEndUpdate;
@@ -331,6 +346,26 @@ begin
 {$ifdef MSWINDOWS}
   Memo.ContentBounds := TRectF.Empty;
 {$endif}
+end;
+
+procedure TFormMemo.NotImplemented;
+begin
+  Memo.Lines.Clear;
+  Inc(CounterNotImplemented);
+  Memo.Lines.Add(Format('Not implemented (%d) [%s]', [CounterNotImplemented, DateTimeToStr(Now)]));
+  AutoUpdateID := Nothing;
+end;
+
+procedure TFormMemo.AutoUpdateOff;
+begin
+  AutoUpdateID := Nothing;
+end;
+
+procedure TFormMemo.AutoUpdate;
+begin
+  case AutoUpdateID of
+    TrimmItem: WriteTrimmItem(nil);
+  end;
 end;
 
 end.

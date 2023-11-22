@@ -136,6 +136,7 @@
     Position.Y = 24.000000000000000000
     TabOrder = 6
     Text = 'Sort Groups'
+    TextSettings.Trimming = None
     OnClick = SortBtnClick
   end
   object HideBtn: TButton
@@ -143,6 +144,7 @@
     Position.Y = 24.000000000000000000
     TabOrder = 7
     Text = 'Hide Groups'
+    TextSettings.Trimming = None
     OnClick = HideBtnClick
   end
   object CaseBtn: TButton
@@ -153,6 +155,7 @@
     Size.PlatformDefault = False
     TabOrder = 11
     Text = 'SO'
+    TextSettings.Trimming = None
     OnClick = CaseBtnClick
   end
   object ExecuteBtn: TButton
@@ -163,6 +166,7 @@
     Size.PlatformDefault = False
     TabOrder = 12
     Text = 'Execute Selected Action'
+    TextSettings.Trimming = None
     OnClick = ExecuteBtnClick
   end
 end

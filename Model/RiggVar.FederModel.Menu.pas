@@ -291,7 +291,9 @@ begin
   fag.Add(faReportAusgabeRPE);
   fag.Add(faReportAusgabeDiffL);
   fag.Add(faReportAusgabeDiffP);
+{$ifdef MSWINDOWS}
   fag.Add(faReportXML);
+{$endif}
   fag.Add(faReportDebugReport);
   fag.Add(faReportReadme);
   AddGroup('Report', fag);
@@ -321,7 +323,9 @@ begin
 
   fag := TFederActionGroup.Create;
   fag.Add(faToggleLanguage);
+  fag.Add(faToggleSpeedPanel);
   fag.Add(faToggleButtonSize);
+  fag.Add(faToggleAllText);
   fag.Add(faToggleDarkMode);
   AddGroup('Option', fag);
 end;

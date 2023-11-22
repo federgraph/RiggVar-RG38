@@ -139,11 +139,13 @@ begin
   TextDetail.AutoSize := True;
   TextCaption.AutoSize := True;
   TextEdit.AutoSize := True;
+  TextSearchResult.AutoSize := True;
   TextGroup.AutoSize := True;
   TextGroups.AutoSize := True;
 
   TextCaption.TextSettings.WordWrap := False;
   TextEdit.TextSettings.WordWrap := False;
+  TextSearchResult.WordWrap := False;
   TextGroup.TextSettings.WordWrap := False;
   TextGroups.TextSettings.WordWrap := False;
   TextDetail.TextSettings.WordWrap := False;

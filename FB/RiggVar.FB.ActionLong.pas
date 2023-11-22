@@ -78,16 +78,14 @@ begin
     faTouchDesk: result := 'Touch Desk';
 
     { Wheel }
-    faPlusOne: result := 'Plus One';
-    faPlusTen: result := 'Plus Ten';
-    faWheelLeft: result := 'Wheel -1';
-    faWheelRight: result := 'Wheel +1';
-    faWheelDown: result := 'Wheel +10';
-    faWheelUp: result := 'Wheel -10';
     faParamValuePlus1: result := 'Param Value + 1';
     faParamValueMinus1: result := 'Param Value - 1';
     faParamValuePlus10: result := 'Param Value + 10';
     faParamValueMinus10: result := 'Param Value - 10';
+    faWheelLeft: result := 'Wheel -1';
+    faWheelRight: result := 'Wheel +1';
+    faWheelDown: result := 'Wheel +10';
+    faWheelUp: result := 'Wheel -10';
 
     { ColorScheme }
     faCycleColorSchemeM: result := 'cycle color scheme -';
@@ -112,6 +110,11 @@ begin
     faParamT2: result := 'Param T2';
     faParamT3: result := 'Param T3';
     faParamT4: result := 'Param T4';
+
+    { Help }
+    faToggleHelp: result := 'Toggle Help Text';
+    faToggleReport: result := 'Toggle Report';
+    faToggleButtonReport: result := 'Button Frame Report';
 
     { RggControls }
     faController: result := 'Controller';
@@ -286,9 +289,6 @@ begin
     faUpdateReportText: result := 'Update report text';
 
     { RggSonstiges }
-    faToggleHelp: result := 'Toggle Help Text';
-    faToggleReport: result := 'Toggle Report';
-    faToggleButtonReport: result := 'Button Frame Report';
     faToggleDarkMode: result := 'Toggle Dark Mode';
     faToggleButtonSize: result := 'Toggle Button Size';
     faToggleSandboxed: result := 'Toggle Sandboxed';
@@ -426,6 +426,10 @@ begin
     faRandomBlack: result := 'random colors black rings';
     faBitmapEscape: result := 'Enter outer cycle';
     faToggleContour: result := 'Toggle contour rings';
+
+    { Deprecated }
+    faPlusOne: result := 'Plus One';
+    faPlusTen: result := 'Plus Ten';
   end;
 end;
 

@@ -232,8 +232,8 @@ begin
 
   SpeedPanelHeight := Raster;
 
-  BitmapWidth := Screen.Width;
-  BitmapHeight := Screen.Height;
+  BitmapWidth := Round(Screen.Width);
+  BitmapHeight := Round(Screen.Height);
 
 {$ifdef WantMenu}
   FederMenu := TFederMenu.Create;

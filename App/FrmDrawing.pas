@@ -1054,7 +1054,7 @@ var
   ss: single;
   w, h: Integer;
   d: TDisplay;
-  wa: TRect;
+  wa: TRectF;
 begin
   ss := Handle.Scale;
   w := Round(FMaxRight + Margin);

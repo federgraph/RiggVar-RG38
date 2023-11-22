@@ -212,13 +212,11 @@ begin
   case fa of
     faReset: Reset;
     faResetPosition: ResetPosition;
+    faResetRotation: ResetRotation;
     faResetZoom: ResetZoom;
 {$ifdef WantOrtho}
     faToggleViewType: IsOrthoProjection := not IsOrthoProjection;
 {$endif}
-
-    else
-      inherited;
   end;
 end;
 

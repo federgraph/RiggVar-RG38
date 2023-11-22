@@ -78,16 +78,14 @@ begin
     faTouchDesk: result := 'faTouchDesk';
 
     { Wheel }
-    faPlusOne: result := 'faPlusOne';
-    faPlusTen: result := 'faPlusTen';
-    faWheelLeft: result := 'faWheelLeft';
-    faWheelRight: result := 'faWheelRight';
-    faWheelDown: result := 'faWheelDown';
-    faWheelUp: result := 'faWheelUp';
     faParamValuePlus1: result := 'faParamValuePlus1';
     faParamValueMinus1: result := 'faParamValueMinus1';
     faParamValuePlus10: result := 'faParamValuePlus10';
     faParamValueMinus10: result := 'faParamValueMinus10';
+    faWheelLeft: result := 'faWheelLeft';
+    faWheelRight: result := 'faWheelRight';
+    faWheelDown: result := 'faWheelDown';
+    faWheelUp: result := 'faWheelUp';
 
     { ColorScheme }
     faCycleColorSchemeM: result := 'faCycleColorSchemeM';
@@ -112,6 +110,11 @@ begin
     faParamT2: result := 'faParamT2';
     faParamT3: result := 'faParamT3';
     faParamT4: result := 'faParamT4';
+
+    { Help }
+    faToggleHelp: result := 'faToggleHelp';
+    faToggleReport: result := 'faToggleReport';
+    faToggleButtonReport: result := 'faToggleButtonReport';
 
     { RggControls }
     faController: result := 'faController';
@@ -286,9 +289,6 @@ begin
     faUpdateReportText: result := 'faUpdateReportText';
 
     { RggSonstiges }
-    faToggleHelp: result := 'faToggleHelp';
-    faToggleReport: result := 'faToggleReport';
-    faToggleButtonReport: result := 'faToggleButtonReport';
     faToggleDarkMode: result := 'faToggleDarkMode';
     faToggleButtonSize: result := 'faToggleButtonSize';
     faToggleSandboxed: result := 'faToggleSandboxed';
@@ -426,6 +426,10 @@ begin
     faRandomBlack: result := 'faRandomBlack';
     faBitmapEscape: result := 'faBitmapEscape';
     faToggleContour: result := 'faToggleContour';
+
+    { Deprecated }
+    faPlusOne: result := 'faPlusOne';
+    faPlusTen: result := 'faPlusTen';
   end;
 end;
 

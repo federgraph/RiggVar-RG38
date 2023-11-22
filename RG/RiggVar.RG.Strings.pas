@@ -179,6 +179,8 @@ type
 
   BiegungString: string = 'Biegung';
   MastfallVorlaufString = 'Mastfall Vorlauf';
+  T1String = 't1';
+  T2String = 't2';
   APWidthString: string = 'AP Width';
   EAHullString: string = 'EA Hull';
   EARiggString: string = 'EA Rigg';

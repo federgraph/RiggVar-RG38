@@ -299,9 +299,9 @@ type
     procedure InitText;
 {$ifdef WantFederText}
     procedure CycleToolSet(i: Integer);
+    function IsTouchBtnEnabled(ABtn: TTouchBtn): Boolean;
 {$endif}
 
-    function IsTouchBtnEnabled(ABtn: TTouchBtn): Boolean;
     procedure DoTouchbarLeft(Delta: single);
     procedure DoTouchbarRight(Delta: single);
     procedure DoTouchbarBottom(Delta: single);
@@ -2673,9 +2673,11 @@ begin
   InternalDraw;
 end;
 
+{$ifdef WantFederText}
 function TRggMain.IsTouchBtnEnabled(ABtn: TTouchBtn): Boolean;
 begin
   result := True;
 end;
+{$endif}
 
 end.

@@ -151,7 +151,7 @@ begin
   claBogen := claDodgerblue;
   claImage := claGoldenrod;
   claMemory := claBeige;
-  claRigg := claAquamarine;
+  claRigg := claGreen;
   claView := claBeige;
   claZoom := claTeal;
 

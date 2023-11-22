@@ -103,7 +103,7 @@ end;
 
 procedure TActionSpeedBar.InitLayoutProps;
 begin
-  BtnColorHot := claBeige;
+  BtnColorHot := claRed;
   BtnColor := claBlue;
   BtnCounter := 0;
   BtnLeft := 0;

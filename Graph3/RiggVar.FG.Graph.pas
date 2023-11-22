@@ -27,6 +27,7 @@ uses
   System.Classes,
   System.UITypes,
   System.UIConsts,
+  System.Types,
   FMX.Types,
   FMX.Types3D,
   FMX.Graphics,
@@ -231,6 +232,8 @@ uses
   RiggVar.FB.ActionConst,
   RiggVar.App.Main,
   RiggVar.RG.Main;
+
+{ TFedergraph0 }
 
 constructor TFederGraph0.Create;
 begin

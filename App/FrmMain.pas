@@ -335,9 +335,15 @@ uses
   RiggVar.FB.ActionConst,
   RiggVar.FB.Classes;
 
+{$ifdef MACOS}
+const
+  HelpCaptionText = 'Trimm420 - press ? for help';
+  ApplicationTitleText = 'Trimm420';
+{$else}
 const
   HelpCaptionText = 'RG38 - press ? for help';
   ApplicationTitleText = 'RG38';
+{$endif}
 
 { TFormMain }
 
@@ -437,8 +443,8 @@ begin
   SpeedPanelHeight := Raster;
   ListboxWidth := 200;
 
-  BitmapWidth := Screen.Width;
-  BitmapHeight := Screen.Height;
+  BitmapWidth := Round(Screen.Width);
+  BitmapHeight := Round(Screen.Height);
 
 {$ifdef WantMenu}
   FederMenu := TFederMenu.Create;
@@ -1369,7 +1375,13 @@ begin
   T.Parent := Self;
   T.WordWrap := False;
   T.HorzTextAlign := TTextAlign.Leading;
+
+{$ifdef MSWINDOWS}
   T.Font.Family := 'Consolas';
+{$else}
+  T.Font.Family := 'Courier New';
+{$endif}
+
   T.Font.Size := fs;
   T.AutoSize := True;
   T.HitTest := False;
@@ -2010,9 +2022,9 @@ begin
   if Screen.Width <= 768 then
     AForm.Left := 0;
   if AForm.Left + AForm.Width > Screen.Width then
-    AForm.Width := Screen.Width - AForm.Left - 20;
-  if AForm.Top + AForm.Height > Screen.Height then
-    AForm.Height := Screen.Width - AForm.Top - 20;
+    AForm.Width := Round(Screen.Width) - AForm.Left - 20;
+  if AForm.Top + AForm.Height > Round(Screen.Height) then
+    AForm.Height := Round(Screen.Width) - AForm.Top - 20;
 end;
 
 procedure TFormMain.InitScreenPos;

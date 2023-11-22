@@ -78,16 +78,14 @@ begin
     faTouchDesk: result := 'dsk';
 
     { Wheel }
-    faPlusOne: result := 'one';
-    faPlusTen: result := 'ten';
-    faWheelLeft: result := 'wl';
-    faWheelRight: result := 'wr';
-    faWheelDown: result := 'wd';
-    faWheelUp: result := 'wu';
     faParamValuePlus1: result := '+1';
     faParamValueMinus1: result := '-1';
     faParamValuePlus10: result := '+10';
     faParamValueMinus10: result := '-10';
+    faWheelLeft: result := 'wl';
+    faWheelRight: result := 'wr';
+    faWheelDown: result := 'wd';
+    faWheelUp: result := 'wu';
 
     { ColorScheme }
     faCycleColorSchemeM: result := 'c-';
@@ -112,6 +110,11 @@ begin
     faParamT2: result := 't2';
     faParamT3: result := 't3';
     faParamT4: result := 't4';
+
+    { Help }
+    faToggleHelp: result := 'th';
+    faToggleReport: result := 'tr';
+    faToggleButtonReport: result := 'bfr';
 
     { RggControls }
     faController: result := 'Co';
@@ -286,9 +289,6 @@ begin
     faUpdateReportText: result := 'rpt';
 
     { RggSonstiges }
-    faToggleHelp: result := 'th';
-    faToggleReport: result := 'tr';
-    faToggleButtonReport: result := 'bfr';
     faToggleDarkMode: result := 'DM';
     faToggleButtonSize: result := 'BS';
     faToggleSandboxed: result := 'SX';
@@ -351,22 +351,22 @@ begin
     faTouchBarRight: result := 'tbR';
 
     { Circles }
-    faCirclesSelectC0: result := 'sC0';
-    faCirclesSelectC1: result := 'sC1';
-    faCirclesSelectC2: result := 'sC2';
-    faCircleParamR1: result := 'pR1';
-    faCircleParamR2: result := 'pR2';
+    faCirclesSelectC0: result := 'C0';
+    faCirclesSelectC1: result := 'C1';
+    faCirclesSelectC2: result := 'C2';
+    faCircleParamR1: result := 'R1';
+    faCircleParamR2: result := 'R2';
     faCircleParamM1X: result := '1.X';
     faCircleParamM1Y: result := '1.Y';
     faCircleParamM2X: result := '2.X';
     faCircleParamM2Y: result := '2.Y';
-    faLineParamA1: result := 'pA1';
-    faLineParamA2: result := 'pA2';
-    faLineParamE1: result := 'pE1';
-    faLineParamE2: result := 'pE2';
+    faLineParamA1: result := 'A1';
+    faLineParamA2: result := 'A2';
+    faLineParamE1: result := 'E1';
+    faLineParamE2: result := 'E2';
     faCircleParamM1Z: result := '1.Z';
     faCircleParamM2Z: result := '2.Z';
-    faCirclesReset: result := 'sR0';
+    faCirclesReset: result := 'R';
 
     { MemeFormat }
     faMemeGotoLandscape: result := '[L]';
@@ -426,6 +426,10 @@ begin
     faRandomBlack: result := 'rcb';
     faBitmapEscape: result := 'be';
     faToggleContour: result := 'ct';
+
+    { Deprecated }
+    faPlusOne: result := 'one';
+    faPlusTen: result := 'ten';
   end;
 end;
 
