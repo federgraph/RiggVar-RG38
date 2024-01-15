@@ -20,29 +20,44 @@ object FormMemo: TFormMemo
     TextSettings.Font.Family = 'Courier New'
     TextSettings.Font.Size = 13.000000000000000000
     Position.X = 328.000000000000000000
-    Position.Y = 72.000000000000000000
+    Position.Y = 96.000000000000000000
     Size.Width = 239.000000000000000000
-    Size.Height = 310.000000000000000000
+    Size.Height = 286.000000000000000000
     Size.PlatformDefault = False
+    StyleLookup = 'memostyle'
     TabOrder = 0
     Viewport.Width = 239.000000000000000000
-    Viewport.Height = 310.000000000000000000
+    Viewport.Height = 286.000000000000000000
   end
   object ToolbarPanel: TPanel
     Align = Top
     Size.Width = 591.000000000000000000
-    Size.Height = 41.000000000000000000
+    Size.Height = 65.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 1
     object ReadBtn: TButton
-      Position.X = 16.000000000000000000
+      Position.X = 88.000000000000000000
       Position.Y = 8.000000000000000000
-      Size.Width = 49.000000000000000000
-      Size.Height = 22.000000000000000000
+      Size.Width = 81.000000000000000000
+      Size.Height = 44.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 0
+      StyleLookup = 'buttonstyle'
+      TabOrder = 1
       Text = 'Read'
+      TextSettings.Trimming = None
       OnClick = ReadBtnClick
+    end
+    object BackBtn: TButton
+      Position.X = 24.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 44.000000000000000000
+      Size.Height = 44.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'arrowlefttoolbutton'
+      TabOrder = 0
+      Text = 'Back'
+      TextSettings.Trimming = None
+      OnClick = BackBtnClick
     end
   end
   object ListView: TListView
@@ -56,6 +71,7 @@ object FormMemo: TFormMemo
     Size.Height = 241.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 2
+    StyleLookup = 'listviewstyle'
     OnItemClick = ListViewItemClick
   end
 end

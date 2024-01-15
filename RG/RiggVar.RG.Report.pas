@@ -3,7 +3,9 @@
 interface
 
 {.$define WantUserConfusingReports}
+{$ifdef MSWINDOWS}
 {$define WantXMLReports}
+{$endif}
 
 uses
   System.SysUtils,

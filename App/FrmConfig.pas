@@ -33,10 +33,8 @@ uses
   FMX.SpinBox;
 
 {.$define WantIniFile}
+
 type
-
-  { TFormConfig }
-
   TRggComboBox = class(TComboBox)
   private
     function GetText: string;
@@ -124,6 +122,7 @@ type
     LoadIniBtn: TButton;
 
     procedure OKBtnClick(Sender: TObject);
+    procedure CancelBtnClick(Sender: TObject);
 
     procedure MastMassEditExit(Sender: TObject);
     procedure MastMassEditKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
@@ -219,6 +218,7 @@ implementation
 {$R *.fmx}
 
 uses
+  FrmMain,
   RiggVar.App.Main,
   RiggVar.RG.Def;
 
@@ -226,7 +226,7 @@ procedure TFormConfig.FormCreate(Sender: TObject);
 begin
   Caption := 'Form Config';
 
-  FScale := 1.0;
+  FScale := MainVar.Scale;
 
   FGSB := TRggFA.Create;
 
@@ -369,7 +369,7 @@ begin
   FQuerschnittList.Clear;
   FMaterialList.Clear;
 
-  if not MainConst.MustBeSandboxed then
+  if MainConst.CanReadIniFile then
   begin
     if FillIniListsFromFile then
     begin
@@ -707,6 +707,19 @@ begin
   Rigg.RggFA.Assign(FGSB); { neue Grenzen und Istwerte }
   Rigg.EA := FEAarray;
   Rigg.MastEI := FiEI;
+{$if defined(Android) or defined(IOS)}
+  Self.Hide;
+  FormMain.Show;
+  FormMain.ConfigUpdatedOK;
+{$endif}
+end;
+
+procedure TFormConfig.CancelBtnClick(Sender: TObject);
+begin
+{$if defined(Android) or defined(IOS)}
+  Self.Hide;
+  FormMain.Show;
+{$endif}
 end;
 
 procedure TFormConfig.MastTypeComboChange(Sender: TObject);
@@ -826,14 +839,18 @@ begin
   OKBtn :=  TButton.Create(Self);
   OKBtn.Parent := Self;
   OKBtn.Text := RggLocalizedStrings.OKBtnCaption;
+{$if defined(MSWINDOWS) or defined(OSX)}
   OKBtn.ModalResult := 1;
+{$endif}
 
   CancelBtn := TButton.Create(Self);
   CancelBtn.Parent := Self;
   CancelBtn.Cancel := True;
   CancelBtn.Text := RggLocalizedStrings.CancelBtnCaption;
+{$if defined(MSWINDOWS) or defined(OSX)}
   CancelBtn.Default := True;
   CancelBtn.ModalResult := 2;
+{$endif}
 
   PageControl := TTabControl.Create(Self);
   pc := PageControl;
@@ -907,7 +924,7 @@ begin
 
   ElementLabel := TLabel.Create(Self);
   ElementLabel.Parent := ts;
-  ElementLabel.Text := RggLocalizedStrings.ElementLabelCaption; //'Fachwerkstäbe';
+  ElementLabel.Text := RggLocalizedStrings.ElementLabelCaption; // 'Fachwerkstäbe';
 
   ElementCombo := TRggComboBox.Create(Self);
   ElementCombo.Parent := ts;
@@ -1034,6 +1051,7 @@ begin
   RumpfLabel.AutoSize := True;
 
   RumpfEdit := TEdit.Create(Self);
+  RumpfEdit.Width := 200;
   RumpfEdit.Parent := gb;
   RumpfEdit.Text := '10';
   RumpfEdit.ReadOnly := True;
@@ -1043,6 +1061,7 @@ begin
   RumpfBtn.Text := RggLocalizedStrings.RumpfBtnCaption; // 'Übernehmen';
 
   RumpfSpinEdit := TSpinBox.Create(Self);
+  RumpfSpinEdit.Width := 130;
   RumpfSpinEdit.Parent := gb;
   RumpfSpinEdit.Min := -32000;
   RumpfSpinEdit.Max := 32000;
@@ -1082,7 +1101,7 @@ begin
   Grid.Position.X := Margin;
   Grid.Position.Y := Margin;
   Grid.Width := 250;
-  Grid.Height := 200;
+  Grid.Height := 220;
 
   w := 60;
 
@@ -1116,12 +1135,12 @@ begin
 
   Grid.TabOrder := 0;
 
-  Grid.Cells[0, 0] := '   A0';
-  Grid.Cells[0, 1] := '   B0';
-  Grid.Cells[0, 2] := '   C0';
-  Grid.Cells[0, 3] := '   D0';
-  Grid.Cells[0, 4] := '   E0';
-  Grid.Cells[0, 5] := '   F0';
+  Grid.Cells[0, 0] := 'A0';
+  Grid.Cells[0, 1] := 'B0';
+  Grid.Cells[0, 2] := 'C0';
+  Grid.Cells[0, 3] := 'D0';
+  Grid.Cells[0, 4] := 'E0';
+  Grid.Cells[0, 5] := 'F0';
 
   FRumpfCell := Point(1, 0);
   Grid.ReadOnly := True;
@@ -1177,6 +1196,7 @@ begin
 
   { Buttons }
   OKBtn.OnClick := OKBtnClick;
+  CancelBtn.OnClick := CancelBtnClick;
 end;
 
 procedure TFormConfig.InitComponentSize;
@@ -1193,16 +1213,16 @@ begin
   GroupBoxTrimm.Width := gbw;
   GroupBoxTrimm.Height := Scale(170);
 
-  LabelMin.Width := Scale(21);
-  LabelPos.Width := Scale(24);
-  LabelMax.Width := Scale(25);
+  LabelMin.Width := Scale(30);
+  LabelPos.Width := Scale(30);
+  LabelMax.Width := Scale(30);
 
   w := Scale(40);
   MinEdit.Width := w;
   PosEdit.Width := w;
   MaxEdit.Width := w;
 
-  LengthEditLabel.Width := Scale(125);
+  LengthEditLabel.Width := Scale(140);
   TrimmComboLabel.Width := Scale(87);
   TrimmCombo.Width := Scale(150);
 
@@ -1210,36 +1230,36 @@ begin
   ElementLabel.Width := Scale(92);
   ElementCombo.Width := Scale(161);
   EAEdit.Width := Scale(105);
-  EAEditLabel.Width := Scale(52);
+  EAEditLabel.Width := Scale(70);
   TakeOverBtn.Width := Scale(170);
   TakeOverBtn.Height := Scale(25);
 
   GroupBoxMaterial.Width := gbw;
   GroupBoxMaterial.Height := Scale(150);
 
-  MaterialComboLabel.Width := Scale(48);
+  MaterialComboLabel.Width := Scale(80);
   MaterialCombo.Width := Scale(153);
   ELabel.Width := Scale(9);
-  EEdit.Width := Scale(73);
+  EEdit.Width := Scale(90);
   EEditLabel.Width := Scale(124);
-  QuerschnittComboLabel.Width := Scale(66);
+  QuerschnittComboLabel.Width := Scale(80);
   QuerschnittCombo.Width := Scale(153);
   ALabel.Width := Scale(9);
   AEdit.Width := Scale(73);
-  AEditLabel.Width := Scale(118);
+  AEditLabel.Width := Scale(130);
 
   { Mast }
   GroupBoxMast.Width := gbw;
   GroupBoxMast.Height := Scale(200);
 
-  MastTypeComboLabel.Width := Scale(30);
-  MastTypeCombo.Width := Scale(145);
+  MastTypeComboLabel.Width := Scale(50);
+  MastTypeCombo.Width := Scale(160);
   EIEdit.Width := Scale(73);
-  EILabel.Width := Scale(158);
+  EILabel.Width := Scale(180);
   MastMassComboLabel.Width := Scale(87);
   MastMassCombo.Width := Scale(145);
   MastMassEdit.Width := Scale(73);
-  MassMassEditLabel.Width := Scale(167);
+  MassMassEditLabel.Width := Scale(190);
 
   { Hull }
   GroupBoxRumpf.Width := Scale(170);
@@ -1254,7 +1274,7 @@ begin
 
   { IniMemo }
   IniMemo.Width := Scale(400);
-  IniMemo.Height := 50;
+  IniMemo.Height := Scale(50);
   SaveIniBtn.Width := Scale(81);
   SaveIniBtn.Height := Scale(25);
   LoadIniBtn.Width := Scale(81);

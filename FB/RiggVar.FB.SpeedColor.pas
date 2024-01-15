@@ -197,8 +197,8 @@ begin
 
   claHintText := claDarkorange;
   claTrimmText := claDodgerblue;
-  claReportText := claBlack;
-  claHelpText := claBlue;
+  claReportText := claDimGray;
+  claHelpText := claCornflowerblue;
 
   claParamList := claOrange;
   claReportList := claSlateblue;

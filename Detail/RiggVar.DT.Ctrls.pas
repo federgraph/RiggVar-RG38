@@ -153,7 +153,7 @@ begin
 
   { SalingL }
   Canvas.Stroke.Thickness := 35.0;
-  Canvas.Stroke.Color := TAlphaColors.Lightgreen;
+  Canvas.Stroke.Color := TAlphaColors.Dimgray;
   Canvas.DrawLine(PointF(SalingX, 0), PointF(0, SalingY), 1.0);
   Canvas.DrawLine(PointF(0, SalingY), PointF(-SalingX, 0), 1.0);
 
@@ -239,7 +239,7 @@ begin
 
   { SalingL }
   Canvas.Stroke.Thickness := 25.0;
-  Canvas.Stroke.Color := TAlphaColors.Lightgreen;
+  Canvas.Stroke.Color := TAlphaColors.Dimgray;
   MoveToLineTo(-SalingA / 2, 0, 0, -SalingH);
   LineTo(SalingA / 2, 0);
 

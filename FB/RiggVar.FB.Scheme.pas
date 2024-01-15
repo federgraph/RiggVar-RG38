@@ -25,12 +25,10 @@ uses
 type
   TColorScheme = record
   public
-    JokerColor: TAlphaColor;
-    WantBlackText: Boolean;
-
     Scheme: Integer;
     SchemeDefault: Integer;
     claBackground: TAlphaColor;
+    claHint: TAlphaColor;
 
     claToolBtnFill: TAlphaColor;
     claTouchBtnFill: TAlphaColor;
@@ -62,6 +60,7 @@ begin
   claTouchBtnFill := claGray;
   claCornerScrollbar := claGray;
   claCornerBtnText:= claBlue;
+  claHint := claYellow;
 end;
 
 procedure TColorScheme.GrayText;
@@ -70,6 +69,7 @@ begin
   claTouchBtnFill := claGray;
   claCornerScrollbar := claGray;
   claCornerBtnText:= claBlue;
+  claHint := claYellow;
 end;
 
 procedure TColorScheme.WhiteText;
@@ -78,14 +78,13 @@ begin
   claTouchBtnFill := claWhite;
   claCornerScrollbar := claGray;
   claCornerBtnText:= claWhite;
+  claHint := claBlue;
 end;
 
 constructor TColorScheme.Create(cs: Integer);
 begin
   Dark := 5;
   Light := 2;
-  WantBlackText := True;
-  JokerColor := claCornflowerblue;
   claTouchbarText := claBlack;
   SchemeDefault := cs;
   Scheme := SchemeDefault;
@@ -99,39 +98,32 @@ begin
   case cs of
     1:
     begin
-      if WantBlackText then
-      begin
-        claBackground := claSlateblue;
-        claToolBtnFill := claGray;
-        claTouchBtnFill := claGray;
-        claCornerScrollbar := claGray;
-        claCornerBtnText:= claBlue;
-      end
-      else
-      begin
-        claBackground := claLavender;
-        claToolBtnFill := claGray;
-        claTouchBtnFill := claGray;
-        claCornerScrollbar := claGray;
-        claCornerBtnText:= claBlue;
-      end;
+      IsDark := False;
+      claBackground := claBisque;
+      claToolBtnFill := claBlack;
+      claTouchBtnFill := claSilver;
+      claCornerScrollbar := claBurlywood;
+      claCornerBtnText:= claDimgray;
+      claHint := claCornflowerblue;
     end;
     2:
     begin
       IsDark := False;
-      claBackground := StringToAlphaColor('#FFF9F9F9');
-      claToolBtnFill := claGray;
-      claTouchBtnFill := claGray;
-      claCornerScrollbar := claLavender;
+      claBackground := claAntiquewhite;
+      claToolBtnFill := claBlue;
+      claTouchBtnFill := claLightblue;
+      claCornerScrollbar := claLightblue;
       claCornerBtnText:= claBlue;
+      claHint := claCornflowerblue;
     end;
     3:
     begin
-      claBackground := JokerColor;
-      claToolBtnFill := claWhite;
-      claTouchBtnFill := claWhite;
-      claCornerScrollbar := claWhite;
-      claCornerBtnText:= claWhite;
+      claBackground := claDarkslategray;
+      claToolBtnFill := claGray;
+      claTouchBtnFill := claGray;
+      claCornerScrollbar := claGray;
+      claCornerBtnText:= claBlue;
+      claHint := claYellow;
     end;
     4:
     begin
@@ -140,6 +132,7 @@ begin
       claTouchBtnFill := claWhite;
       claCornerScrollbar := claWhite;
       claCornerBtnText:= claWhite;
+      claHint := claYellow;
     end;
     5:
     begin
@@ -148,22 +141,25 @@ begin
       claTouchBtnFill := claWhite;
       claCornerScrollbar := claGray;
       claCornerBtnText:= claWhite;
+      claHint := claYellow;
     end;
     6:
     begin
-      claBackground := claBlack;
+      claBackground := StringToAlphaColor('#FF444444');
       claToolBtnFill := claWhite;
       claTouchBtnFill := claWhite;
       claCornerScrollbar := claGray;
       claCornerBtnText:= claWhite;
+      claHint := claYellow;
     end;
     7:
     begin
-      claBackground := claPurple; //claNull;
-      claToolBtnFill := claGray;
-      claTouchBtnFill := claGray;
+      claBackground := StringToAlphaColor('#FF555555');
+      claToolBtnFill := claWhite;
+      claTouchBtnFill := claWhite;
       claCornerScrollbar := claGray;
       claCornerBtnText:= claWhite;
+      claHint := claYellow;
     end;
   end;
 end;

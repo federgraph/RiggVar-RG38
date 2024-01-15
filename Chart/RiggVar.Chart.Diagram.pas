@@ -101,7 +101,7 @@ procedure TRggDiagram.SetImage(const Value: TOriginalImage);
 begin
   FImage := Value;
   InitBitmap;
-  Image.OnScreenScaleChanged := ImageScreenScaleChanged;
+  Image.OnSizeChanged := ImageScreenScaleChanged;
 end;
 
 procedure TRggDiagram.ImageScreenScaleChanged(Sender: TObject);

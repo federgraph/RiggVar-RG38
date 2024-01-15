@@ -62,7 +62,7 @@ uses
 
 constructor TTrimmTabGraph.Create;
 begin
-  FScreenScale := 1.0;
+  FScreenScale := MainVar.Scale;
   PD := TPathData.Create;
   SetLength(Poly, 101);
   Model := TTrimmTabGraphModel.Create;

@@ -24,14 +24,12 @@ uses
   System.SysUtils,
   System.Classes,
   System.Math,
-  System.Types,
   System.UITypes,
   System.UIConsts,
   System.Generics.Collections,
   FMX.Types,
   FMX.Objects,
   FMX.Controls,
-  FMX.Graphics,
   RiggVar.FB.ActionConst,
   RiggVar.FB.ActionMap,
   RiggVar.FB.Action,
@@ -128,6 +126,7 @@ type
     function GetMinCount: Integer;
   protected
     MaxPageIndex: Integer;
+    EscapePageIndex: Integer;
 
     OldX: single;
     OldY: single;
@@ -221,8 +220,7 @@ procedure TTouchBtn.HandleClick(Sender: TObject);
 begin
   if Enabled then
   begin
-    if Main.IsTouchBtnEnabled(Self) then
-      Main.ActionHandler.Execute(FederAction);
+    Main.ActionHandler.Execute(FederAction);
   end;
 end;
 
@@ -248,28 +246,40 @@ begin
         TCorner.BottomRight
         ];
 
-     if not e then
-       r.Fill.Color := claSilver
-     else
-       r.Fill.Color := FColor;
+    if not e then
+      r.Fill.Color := claSilver
+    else
+      r.Fill.Color := FColor;
 
-     Enabled := e;
+    Enabled := e;
   end;
 end;
 
 procedure TTouchBtn.CheckCircleState;
 var
-  c: TCircle;
-  b: Boolean;
+  cr: TCircle;
+  c: Boolean;
+  e: Boolean;
 begin
   if FShape is TCircle then
   begin
-    b := Main.ActionHandler.GetChecked(FederAction);
-    c := FShape as TCircle;
-    if b then
-      c.Fill.Color := claCyan
+    c := Main.ActionHandler.GetChecked(FederAction);
+    e := Main.ActionHandler.GetEnabled(FederAction);
+    cr := FShape as TCircle;
+    if e then
+    begin
+     if c then
+       cr.Fill.Color := claAqua
+     else
+        cr.Fill.Color := MainVar.ColorScheme.claTouchBtnFill;
+    end
     else
-      c.Fill.Color := MainVar.ColorScheme.claTouchBtnFill;
+    begin
+     if c then
+       cr.Fill.Color := claBlue
+    else
+      cr.Fill.Color := claGray;
+    end;
   end;
 end;
 
@@ -546,6 +556,7 @@ begin
   FFrameVisible := True;
 
   FActionPage := 1;
+  EscapePageIndex := FActionPage + 1;
   CornerBtnList := TObjectList<TCornerBtn>.Create;
   CornerBtnList.OwnsObjects := False;
   CornerMenu := TCornerMenu.Create;
@@ -575,17 +586,33 @@ end;
 
 procedure TFederTouchBase.SetActionPage(const Value: Integer);
 begin
+  if Value = -3 then
+  begin
+    if FActionPage = 1 then
+      FActionPage := EscapePageIndex
+    else
+      FActionPage := 1;
+  end
+  else if Value = -2 then
+    FActionPage := MaxPageIndex
+  else if Value = -1 then
+    FActionPage := EscapePageIndex
+  else if (Value = EscapePageIndex) and (FActionPage = EscapePageIndex + 1) then
+    FActionPage := EscapePageIndex
+  else if (Value = EscapePageIndex) and (FActionPage = EscapePageIndex - 1) then
+    FActionPage := 1
+  else
   FActionPage := Value;
 
   if FActionPage > MaxPageIndex then
     FActionPage := 1;
   if FActionPage < 1 then
-      FActionPage := MaxPageIndex;
+      FActionPage := EscapePageIndex - 1;
 
   InitActions(FActionPage);
 
-  UpdateText;
-  CheckState;
+  UpdateText; //Main.CheckStateNeeded;
+  CheckState; //Main.TextUpdateNeeded;
 end;
 
 procedure TFederTouchBase.UpdateColorScheme;
@@ -619,7 +646,7 @@ procedure TFederTouchBase.BorderTrack(Sender: TObject; X, Y: single);
 begin
   if Sender = SB00.Shape then
   begin
-    if Abs(X - OldX) > 0 then
+    if Abs(X - OldX) > 10 then
     begin
       Main.DoTouchbarBottom(X - OldX);
       OldX := X;
@@ -637,7 +664,7 @@ begin
   end
   else if Sender = SL00.Shape then
   begin
-    if Abs(Y - OldY) > 0 then
+    if Abs(Y - OldY) > 10 then
     begin
       Main.DoTouchbarLeft(OldY - Y);
       OldX := X;
@@ -646,7 +673,7 @@ begin
   end
   else if Sender = SR00.Shape then
   begin
-    if Abs(Y - OldY) > 0 then
+    if Abs(Y - OldY) > 10 then
     begin
       Main.DoTouchbarRight(OldY - Y);
       OldX := X;
@@ -775,7 +802,7 @@ end;
 
 procedure TFederTouchBase.InitActions(Layout: Integer);
 begin
-
+  { virtual }
 end;
 
 function TFederTouchBase.FindCornerBtn(id: Integer): TCornerBtn;
@@ -803,6 +830,7 @@ procedure TFederTouchBase.UpdatePageBtnText;
 begin
   PageBtnP.Text.Text := IntToStr(ActionPage);
   PageBtnM.Text.Text := IntToStr(ActionPage);
+  ST00.Text.Text := TActionMap.CurrentPageCaption;
 end;
 
 procedure TFederTouchBase.Report(ML: TStrings);
@@ -848,6 +876,8 @@ end;
 procedure TFederTouchBase.ToggleTouchFrame;
 begin
   FrameVisible := not FrameVisible;
+
+  Main.FrameVisibilityChanged;
 
 {$ifdef WantToolBtn}
   if FrameVisible then

@@ -13,6 +13,8 @@ type
     MemoryBtn: TSpeedButton;
     MemoryRecallBtn: TSpeedButton;
 
+    HomeBtn: TSpeedButton;
+
     BogenBtn: TSpeedButton;
     HullBtn: TSpeedButton;
 
@@ -51,6 +53,15 @@ begin
   sb := AddSpeedBtn('MemoryRecallBtn', 0);
   MemoryRecallBtn := sb;
   sb.Tag := faMemoryRecallBtn;
+  InitSpeedButton(sb);
+
+  { Home Button }
+
+  BtnColorValue := clvTrimm;
+
+  sb := AddSpeedBtn('HomeBtn', BtnGroupSpace);
+  HomeBtn := sb;
+  sb.Tag := faActionPage1;
   InitSpeedButton(sb);
 
   { Bogen and Hull }

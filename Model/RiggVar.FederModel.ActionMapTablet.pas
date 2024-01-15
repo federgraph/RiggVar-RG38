@@ -69,15 +69,40 @@ implementation
 const
   claForm = claCornflowerblue;
   claParam = claPlum;
-  claSample = claCyan;
+  claSample = claTeal;
   claOption = claBeige;
+  claUI = claYellow;
+  claHull = claBeige;
+  claReport = claDimgray;
+  claColorScheme = claDimgray;
+  claMemory = claBeige;
 
-  PageCountRG = 9;
+
+{$ifdef MSWINDOWS}
+  PageCountRG = 10;
+  EscapePageCountRG = 6;
+{$endif}
+
+{$ifdef OSX}
+  PageCountRG = 10;
+  EscapePageCountRG = 6;
+{$endif}
+
+{$ifdef IOS}
+  PageCountRG = 8;
+  EscapePageCountRG = 6;
+{$endif}
+
+{$ifdef Android}
+  PageCountRG = 8;
+  EscapePageCountRG = 6;
+{$endif}
 
 constructor TActionMapTablet.Create;
 begin
   inherited;
   FPageCount := PageCountRG;
+  FEscapeIndex := EscapePageCountRG;
   TestName := 'Tablet Page';
 end;
 
@@ -178,52 +203,56 @@ begin
   case Layout of
     1:
     begin
+      CurrentPageCaption := 'Home Page';
+ 
       cl := TopLeft;
-      cla := claWhite;
-      InitAC(cl, 1, faActionPageM, claYellow);
-      InitAC(cl, 2, faCopyTrimmFile, cla);
-      InitAC(cl, 3, faReadTrimmFile, cla);
-      InitAC(cl, 4, faSaveTrimmFile, cla);
-      InitAC(cl, 5, faCopyTrimmItem, cla);
-      InitAC(cl, 6, faPasteTrimmItem, cla);
+      cla := claParam;
+      //InitAC(cl, 1, faActionPageM, claYellow);
+      InitAC(cl, 2, faSalingH, cla);
+      InitAC(cl, 3, faSalingA, cla);
+      InitAC(cl, 4, faSalingL, cla);
+      InitAC(cl, 5, faSalingW, cla);
+      InitAC(cl, 6, faMastfallF0F, cla);
 
       cl := TopRight;
       cla := claWhite;
-      InitAC(cl, 1, faToggleLanguage, cla);
-      InitAC(cl, 2, faRggHull, cla);
+      InitAC(cl, 1, faViewpointA, cla);
+      InitAC(cl, 2, faViewpointT, cla);
       InitAC(cl, 3, faViewpointS, cla);
       InitAC(cl, 4, faViewpoint3, cla);
-      InitAC(cl, 5, faActionPageP, claYellow);
-      InitAC(cl, 6, faToggleDataText, cla);
-      InitAC(cl, 7, faToggleDiffText, cla);
-      InitAC(cl, 8, faToggleTrimmText, cla);
+      //InitAC(cl, 5, faActionPageP, claYellow);
+      InitAC(cl, 6, faRotaForm1, claForm);
+      InitAC(cl, 7, faRotaForm2, claForm);
+      InitAC(cl, 8, faRotaForm3, claForm);
 
       cl := BottomLeft;
-      cla := claWhite;
-      InitAC(cl, 1, faParamValuePlus10, cla);
-      InitAC(cl, 2, faShowActions, claForm);
-      InitAC(cl, 3, faShowMemo, claForm);
-      InitAC(cl, 4, faShowConfig, claForm);
-      InitAC(cl, 5, faShowTrimmTab, claForm);
-      InitAC(cl, 6, faParamValuePlus1, cla);
-      InitAC(cl, 7, faParamValueMinus1, cla);
-      InitAC(cl, 8, faParamValueMinus10, cla);
+      cla := claParam;
+      InitAC(cl, 1, faMastfussD0X, cla);
+      InitAC(cl, 2, faVorstag, cla);
+      InitAC(cl, 3, faWante, cla);
+      InitAC(cl, 4, faWOben, cla);
+      InitAC(cl, 5, faController, cla);
+      InitAC(cl, 6, faMastfallVorlauf, cla);
+      InitAC(cl, 7, faBiegung, cla);
+      InitAC(cl, 8, faMastfallF0C, cla);
 
       cl := BottomRight;
-      cla := claWhite;
-      InitAC(cl, 1, faCycleColorSchemeM, cla);
-      InitAC(cl, 2, faCycleColorSchemeP, cla);
-      InitAC(cl, 3, faToggleSpeedPanel, claPlum);
-      InitAC(cl, 4, faShowDrawings, claForm);
-      InitAC(cl, 5, faMemoryRecallBtn, cla);
-      InitAC(cl, 6, faMemoryBtn, cla);
+      cla := claOption;
+      InitAC(cl, 1, faSalingTypFest, cla);
+      InitAC(cl, 2, faSalingTypDrehbar, cla);
+      InitAC(cl, 3, faSalingTypOhne, cla);
+      InitAC(cl, 4, faSalingTypOhneStarr, cla);
+      InitAC(cl, 5, faDemo, claPlum);
+      InitAC(cl, 6, fa420, claSample);
     end;
 
     2:
     begin
+      CurrentPageCaption := 'Page 2';
+
       cl := TopLeft;
       cla := claParam;
-      InitAC(cl, 1, faActionPageM, claYellow);
+      //InitAC(cl, 1, faActionPageM, claYellow);
       InitAC(cl, 2, faSalingH, cla);
       InitAC(cl, 3, faSalingA, cla);
       InitAC(cl, 4, faSalingL, cla);
@@ -236,7 +265,7 @@ begin
       InitAC(cl, 2, faFixpointB, cla);
       InitAC(cl, 3, faFixpointC, cla);
       InitAC(cl, 4, faFixpointD, cla);
-      InitAC(cl, 5, faActionPageP, claYellow);
+      //InitAC(cl, 5, faActionPageP, claYellow);
       InitAC(cl, 6, faFixpointE, cla);
       InitAC(cl, 7, faFixpointF, cla);
       InitAC(cl, 8, fa420, claSample);
@@ -264,68 +293,70 @@ begin
 
     3:
     begin
+      CurrentPageCaption := 'Sonstiges';
+
       cl := TopLeft;
-      cla := claParam;
-      InitAC(cl, 1, faActionPageM, claYellow);
-      InitAC(cl, 2, faSalingH, cla);
-      InitAC(cl, 3, faSalingA, cla);
-      InitAC(cl, 4, faSalingL, cla);
-      InitAC(cl, 5, faSalingW, cla);
-      InitAC(cl, 6, faMastfallF0F, cla);
+      cla := claWhite;
+//      InitAC(cl, 1, faActionPageM, claYellow);
+      InitAC(cl, 2, faCycleColorSchemeM, claColorScheme);
+      InitAC(cl, 3, faCycleColorSchemeP, claColorScheme);
+      InitAC(cl, 4, faNoop, cla);
+      InitAC(cl, 5, faNoop, cla);
+      InitAC(cl, 6, faNoop, cla);
 
       cl := TopRight;
       cla := claWhite;
-      InitAC(cl, 1, faViewpointS, cla);
-      InitAC(cl, 2, faViewpointA, cla);
-      InitAC(cl, 3, faViewpointT, cla);
-      InitAC(cl, 4, faViewpoint3, cla);
-      InitAC(cl, 5, faActionPageP, claYellow);
-      InitAC(cl, 6, faToggleChartGraph, claForm);
-      InitAC(cl, 7, faToggleControllerGraph, claForm);
-      InitAC(cl, 8, faToggleSalingGraph, claForm);
+      InitAC(cl, 1, faNoop, cla);
+      InitAC(cl, 2, faToggleDataText, claReport);
+      InitAC(cl, 3, faToggleDiffText, claReport);
+      InitAC(cl, 4, faToggleTrimmText, claReport);
+//      InitAC(cl, 5, faActionPageP, claYellow);
+      InitAC(cl, 6, faPan, claWhite);
+      InitAC(cl, 7, faReset, claWhite);
+      InitAC(cl, 8, fa420, claSample);
 
       cl := BottomLeft;
-      cla := claParam;
-      InitAC(cl, 1, faMastfussD0X, cla);
-      InitAC(cl, 2, faVorstag, cla);
-      InitAC(cl, 3, faWante, cla);
-      InitAC(cl, 4, faWOben, cla);
-      InitAC(cl, 5, faController, cla);
-      InitAC(cl, 6, faMastfallVorlauf, cla);
-      InitAC(cl, 7, faBiegung, cla);
-      InitAC(cl, 8, faMastfallF0C, cla);
+      InitAC(cl, 1, faNoop, cla);
+      InitAC(cl, 2, faNoop, cla);
+      InitAC(cl, 3, faNoop, cla);
+      InitAC(cl, 4, faNoop, cla);
+      InitAC(cl, 5, faNoop, cla);
+      InitAC(cl, 6, faNoop, cla);
+      InitAC(cl, 7, faSofortBtn, claWhite);
+      InitAC(cl, 8, faToggleAllText, claWhite);
 
       cl := BottomRight;
-      cla := claOption;
-      InitAC(cl, 1, faSalingTypFest, cla);
-      InitAC(cl, 2, faSalingTypDrehbar, cla);
-      InitAC(cl, 3, faSalingTypOhne, cla);
-      InitAC(cl, 4, faSalingTypOhneStarr, cla);
-      InitAC(cl, 5, faRggZoomOut, claBeige);
-      InitAC(cl, 6, faRggZoomIn, claBeige);
+      InitAC(cl, 1, faToggleLanguage, claWhite);
+      InitAC(cl, 2, faNoop, cla);
+      InitAC(cl, 3, faToggleSpeedPanel, claUI);
+      InitAC(cl, 4, faNoop, cla);
+      InitAC(cl, 5, faNoop, cla);
+      InitAC(cl, 6, faRggHull, claHull);
     end;
 
     4:
     begin
+      CurrentPageCaption := 'Data';
+
       cl := TopLeft;
-      cla := claOption;
-      InitAC(cl, 1, faActionPageM, claYellow);
-      InitAC(cl, 2, faWantRenderH, cla);
-      InitAC(cl, 3, faWantRenderP, cla);
-      InitAC(cl, 4, faWantRenderF, cla);
-      InitAC(cl, 5, faWantRenderE, cla);
-      InitAC(cl, 6, faWantRenderS, cla);
+      cla := claWhite;
+      //InitAC(cl, 1, faActionPageM, claYellow);
+      InitAC(cl, 2, faCopyTrimmFile, cla);
+      InitAC(cl, 3, faCopyTrimmItem, cla);
+      InitAC(cl, 4, faReadTrimmFile, claCoral);
+      InitAC(cl, 5, faSaveTrimmFile, claCoral);
+      InitAC(cl, 6, faPasteTrimmItem, cla);
 
       cl := TopRight;
       cla := claWhite;
-      InitAC(cl, 1, faReset, cla);
-      InitAC(cl, 2, faResetPosition, cla);
-      InitAC(cl, 3, faResetRotation, cla);
-      InitAC(cl, 4, faResetZoom, cla);
-      InitAC(cl, 5, faActionPageP, claYellow);
-      InitAC(cl, 6, faRotaForm1, claForm);
-      InitAC(cl, 7, faRotaForm2, claForm);
-      InitAC(cl, 8, faRotaForm3, claForm);
+      InitAC(cl, 1, faNoop, cla);
+      InitAC(cl, 2, faToggleDataText, claReport);
+      InitAC(cl, 3, faToggleDiffText, claReport);
+      InitAC(cl, 4, faToggleTrimmText, claReport);
+      //InitAC(cl, 5, faActionPageP, claYellow);
+      InitAC(cl, 6, faNoop, cla);
+      InitAC(cl, 7, faNoop, cla);
+      InitAC(cl, 8, faNoop, cla);
 
       cl := BottomLeft;
       cla := claSample;
@@ -340,34 +371,36 @@ begin
 
       cl := BottomRight;
       cla := claWhite;
-      InitAC(cl, 1, faUpdateTrimm0, claSample);
-      InitAC(cl, 2, faCopyAndPaste, claSample);
-      InitAC(cl, 3, faNoop, cla);
-      InitAC(cl, 4, faPan, claPlum);
-      InitAC(cl, 5, faDemo, cla);
-      InitAC(cl, 6, faRggHull, claOption);
+      InitAC(cl, 1, faUpdateTrimm0, cla);
+      InitAC(cl, 2, faCopyAndPaste, cla);
+      InitAC(cl, 3, faToggleSpeedPanel, claUI);
+      InitAC(cl, 4, faNoop, cla);
+      InitAC(cl, 5, faMemoryRecallBtn, claMemory);
+      InitAC(cl, 6, faMemoryBtn, claMemory);
     end;
 
     5:
     begin
-      cla := claGoldenrod;
+      CurrentPageCaption := 'Reports';
+
       cl := TopLeft;
+      cla := claReport;
       //InitAC(cl, 1, faActionPageM, claYellow);
-      InitAC(cl, 2, faReportLog, cla);
-      InitAC(cl, 3, faReportJson, cla);
+      InitAC(cl, 2, faReportLong, cla);
+      InitAC(cl, 2, faReportShort, cla);
       InitAC(cl, 4, faReportData, cla);
-      InitAC(cl, 5, faReportShort, cla);
-      InitAC(cl, 6, faReportLong, cla);
+      InitAC(cl, 5, faNoop, cla);
+      InitAC(cl, 6, faToggleAllText, claWhite);
 
       cl := TopRight;
-      InitAC(cl, 1, faReportTrimmText, cla);
-      InitAC(cl, 2, faReportJsonText, cla);
-      InitAC(cl, 3, faReportDataText, cla);
-      InitAC(cl, 4, faReportDiffText, cla);
+      InitAC(cl, 1, faReportJsonText, cla);
+      InitAC(cl, 2, faReportDataText, cla);
+      InitAC(cl, 3, faReportDiffText, cla);
+      InitAC(cl, 4, faReportTrimmText, cla);
       //InitAC(cl, 5, faActionPageP, claYellow);
-      InitAC(cl, 6, faReportXml, cla);
-      InitAC(cl, 7, faToggleAllTags, claPlum);
-      InitAC(cl, 8, faToggleAllProps, claPlum);
+      InitAC(cl, 6, faPan, claWhite);
+      InitAC(cl, 7, faNoop, claWhite);
+      InitAC(cl, 8, fa420, claSample);
 
       cl := BottomLeft;
       InitAC(cl, 1, faReportAusgabeRL, cla);
@@ -376,60 +409,111 @@ begin
       InitAC(cl, 4, faReportAusgabeRPE, cla);
       InitAC(cl, 5, faReportAusgabeDiffL, cla);
       InitAC(cl, 6, faReportAusgabeDiffP, cla);
-      InitAC(cl, 7, faToggleAllText, claWhite);
+      InitAC(cl, 7, faSofortBtn, claWhite);
       InitAC(cl, 8, faNoop, claWhite);
 
       cl := BottomRight;
-      InitAC(cl, 1, faCycleColorSchemeM, claWhite);
-      InitAC(cl, 2, faCycleColorSchemeP, claWhite);
-      InitAC(cl, 3, faSofortBtn, claPlum);
-      InitAC(cl, 4, faReportDebugReport, cla);
-      InitAC(cl, 5, faReportReadme, cla);
-      InitAC(cl, 6, faReportNone, cla);
+      InitAC(cl, 1, faReportNone, cla);
+      InitAC(cl, 2, faReportReadme, cla);
+      InitAC(cl, 3, faToggleSpeedPanel, claUI);
+      InitAC(cl, 4, faNoop, claWhite);
+      InitAC(cl, 5, faActionPageE, claUI);
+      InitAC(cl, 6, faReportDebugReport, cla);
     end;
 
     6:
     begin
-      cla := claWhite;
+      CurrentPageCaption := 'Forms';
+
       cl := TopLeft;
+      cla := claOption;
       //InitAC(cl, 1, faActionPageM, claYellow);
-      InitAC(cl, 2, faMemeGotoLandscape, claPlum);
-      InitAC(cl, 3, faMemeGotoSquare, claPlum);
-      InitAC(cl, 4, faMemeGotoPortrait, claPlum);
-      InitAC(cl, 5, faNoop, claPlum);
-      InitAC(cl, 6, faNoop, cla);
+      InitAC(cl, 2, faWantRenderH, cla);
+      InitAC(cl, 3, faWantRenderP, cla);
+      InitAC(cl, 4, faWantRenderF, cla);
+      InitAC(cl, 5, faWantRenderE, cla);
+      InitAC(cl, 6, faWantRenderS, cla);
 
       cl := TopRight;
-      InitAC(cl, 1, faMemeFormat0, cla);
-      InitAC(cl, 2, faMemeFormat1, claWhite);
-      InitAC(cl, 3, faMemeFormat2, cla);
-      InitAC(cl, 4, faMemeFormat3, cla);
+      cla := claWhite;
+      InitAC(cl, 1, faNoop, cla);
+      InitAC(cl, 2, faToggleDataText, claReport);
+      InitAC(cl, 3, faToggleDiffText, claReport);
+      InitAC(cl, 4, faToggleTrimmText, claReport);
       //InitAC(cl, 5, faActionPageP, claYellow);
-      InitAC(cl, 6, faMemeFormat4, cla);
-      InitAC(cl, 7, faMemeFormat5, cla);
-      InitAC(cl, 8, faNoop, cla);
-
-      cl := BottomLeft;
-      InitAC(cl, 1, faMemeFormat6, cla);
-      InitAC(cl, 2, faMemeFormat7, cla);
-      InitAC(cl, 3, faMemeFormat8, cla);
-      InitAC(cl, 4, faNoop, cla);
-      InitAC(cl, 5, faNoop, cla);
-      InitAC(cl, 6, faMemeFormat9, cla);
+      InitAC(cl, 6, faShowDrawings, claForm);
       InitAC(cl, 7, faNoop, cla);
       InitAC(cl, 8, faNoop, cla);
 
+      cl := BottomLeft;
+      cla := claWhite;
+      InitAC(cl, 1, faParamValuePlus10, cla);
+      InitAC(cl, 2, faShowActions, claForm);
+      InitAC(cl, 3, faShowMemo, claForm);
+      InitAC(cl, 4, faShowConfig, claForm);
+      InitAC(cl, 5, faShowTrimmTab, claForm);
+      InitAC(cl, 6, faParamValuePlus1, cla);
+      InitAC(cl, 7, faParamValueMinus1, cla);
+      InitAC(cl, 8, faParamValueMinus10, cla);
+
       cl := BottomRight;
-      InitAC(cl, 1, faCycleColorSchemeM, cla);
-      InitAC(cl, 2, faCycleColorSchemeP, cla);
-      InitAC(cl, 3, faNoop, cla);
-      InitAC(cl, 4, faNoop, cla);
-      InitAC(cl, 5, faNoop, cla);
-      InitAC(cl, 6, faNoop, cla);
+      InitAC(cl, 1, faResetPosition, cla);
+      InitAC(cl, 2, faResetRotation, cla);
+      InitAC(cl, 3, faToggleSpeedPanel, claUI);
+      InitAC(cl, 4, faResetZoom, cla);
+      InitAC(cl, 5, faActionPageX, claUI);
+      InitAC(cl, 6, faRggHull, claHull);
     end;
 
     7:
     begin
+      CurrentPageCaption := 'Extra';
+
+      cl := TopLeft;
+      cla := claWhite;
+      //InitAC(cl, 1, faActionPageM, claYellow);
+      InitAC(cl, 2, faToggleUseDisplayList, claPlum);
+      InitAC(cl, 3, faToggleUseQuickSort, claPlum);
+      InitAC(cl, 4, faNoop, cla);
+      InitAC(cl, 5, faNoop, cla);
+      InitAC(cl, 6, faToggleShowLegend, claPlum);
+
+      cl := TopRight;
+//      cla := claWhite;
+      InitAC(cl, 1, faToggleSalingGraph, claCornflowerblue);
+      InitAC(cl, 2, faToggleControllerGraph, claCornflowerblue);
+      InitAC(cl, 3, faToggleChartGraph, claCornflowerblue);
+      InitAC(cl, 4, faToggleMatrixText, claCornflowerblue);
+      //InitAC(cl, 5, faActionPageP, claYellow);
+      InitAC(cl, 6, faRotaForm1, claForm);
+      InitAC(cl, 7, faRotaForm2, claForm);
+      InitAC(cl, 8, faRotaForm3, claForm);
+
+      cl := BottomLeft;
+      cla := claAqua;
+      InitAC(cl, 1, faToggleSegmentF, cla);
+      InitAC(cl, 2, faToggleSegmentR, cla);
+      InitAC(cl, 3, faToggleSegmentS, cla);
+      InitAC(cl, 4, faToggleSegmentM, cla);
+      InitAC(cl, 5, faToggleSegmentV, cla);
+      InitAC(cl, 6, faToggleSegmentW, cla);
+      InitAC(cl, 7, faToggleSegmentC, cla);
+      InitAC(cl, 8, faToggleSegmentA, cla);
+
+      cl := BottomRight;
+      cla := claWhite;
+      InitAC(cl, 1, faSofortBtn, cla);
+      InitAC(cl, 2, faGrauBtn, cla);
+      InitAC(cl, 3, faBlauBtn, cla);
+      InitAC(cl, 4, faMultiBtn, cla);
+      InitAC(cl, 5, faRggKoppel, cla);
+      InitAC(cl, 6, faRggBogen, cla);
+    end;
+
+    8:
+    begin
+      CurrentPageCaption := 'Legend';
+
       cla := claWhite;
       cl := TopLeft;
       //InitAC(cl, 1, faActionPageM, claYellow);
@@ -468,51 +552,10 @@ begin
       InitAC(cl, 6, faBR06, cla);
     end;
 
-    8:
-    begin
-      cl := TopLeft;
-      cla := claWhite;
-      //InitAC(cl, 1, faActionPageM, claYellow);
-      InitAC(cl, 2, faToggleUseDisplayList, claPlum);
-      InitAC(cl, 3, faToggleUseQuickSort, claPlum);
-      InitAC(cl, 4, faNoop, cla);
-      InitAC(cl, 5, faNoop, cla);
-      InitAC(cl, 6, faToggleShowLegend, claPlum);
-
-      cl := TopRight;
-      cla := claCornflowerblue;
-      InitAC(cl, 1, faToggleSalingGraph, cla);
-      InitAC(cl, 2, faToggleControllerGraph, cla);
-      InitAC(cl, 3, faToggleChartGraph, cla);
-      InitAC(cl, 4, faToggleMatrixText, cla);
-      //InitAC(cl, 5, faActionPageP, claYellow);
-      InitAC(cl, 6, faNoop, claWhite);
-      InitAC(cl, 7, faRggZoomIn, claBeige);
-      InitAC(cl, 8, faRggZoomOut, claBeige);
-
-      cl := BottomLeft;
-      cla := claAqua;
-      InitAC(cl, 1, faToggleSegmentF, cla);
-      InitAC(cl, 2, faToggleSegmentR, cla);
-      InitAC(cl, 3, faToggleSegmentS, cla);
-      InitAC(cl, 4, faToggleSegmentM, cla);
-      InitAC(cl, 5, faToggleSegmentV, cla);
-      InitAC(cl, 6, faToggleSegmentW, cla);
-      InitAC(cl, 7, faToggleSegmentC, cla);
-      InitAC(cl, 8, faToggleSegmentA, cla);
-
-      cl := BottomRight;
-      cla := claWhite;
-      InitAC(cl, 1, faSofortBtn, cla);
-      InitAC(cl, 2, faGrauBtn, cla);
-      InitAC(cl, 3, faBlauBtn, cla);
-      InitAC(cl, 4, faMultiBtn, cla);
-      InitAC(cl, 5, faRggKoppel, cla);
-      InitAC(cl, 6, faRggBogen, cla);
-    end;
-
     9:
     begin
+      CurrentPageCaption := 'Chart';
+
       cla := claWhite;
       cl := TopLeft;
       //InitAC(cl, 1, faActionPageM, claYellow);
@@ -543,12 +586,54 @@ begin
       InitAC(cl, 8, faParamAPW, claPlum);
 
       cl := BottomRight;
-      InitAC(cl, 1, faCycleColorSchemeM, cla);
-      InitAC(cl, 2, faCycleColorSchemeP, cla);
+      InitAC(cl, 1, faNoop, cla);
+      InitAC(cl, 2, faNoop, cla);
       InitAC(cl, 3, faToggleChartGraph, claForm);
       InitAC(cl, 4, faShowDiagE, claForm);
       InitAC(cl, 5, faShowDiagQ, claForm);
       InitAC(cl, 6, faShowDiagC, claForm);
+    end;
+
+    10:
+    begin
+      CurrentPageCaption := 'Format';
+
+      cla := claWhite;
+      cl := TopLeft;
+      //InitAC(cl, 1, faActionPageM, claYellow);
+      InitAC(cl, 2, faMemeGotoLandscape, claPlum);
+      InitAC(cl, 3, faMemeGotoSquare, claPlum);
+      InitAC(cl, 4, faMemeGotoPortrait, claPlum);
+      InitAC(cl, 5, faNoop, cla);
+      InitAC(cl, 6, faNoop, cla);
+
+      cl := TopRight;
+      InitAC(cl, 1, faMemeFormat0, cla);
+      InitAC(cl, 2, faMemeFormat1, claWhite);
+      InitAC(cl, 3, faMemeFormat2, cla);
+      InitAC(cl, 4, faMemeFormat3, cla);
+      //InitAC(cl, 5, faActionPageP, claYellow);
+      InitAC(cl, 6, faMemeFormat4, cla);
+      InitAC(cl, 7, faMemeFormat5, cla);
+      InitAC(cl, 8, faNoop, cla);
+
+      cl := BottomLeft;
+      InitAC(cl, 1, faMemeFormat6, cla);
+      InitAC(cl, 2, faMemeFormat7, cla);
+      InitAC(cl, 3, faMemeFormat8, cla);
+      InitAC(cl, 4, faNoop, cla);
+      InitAC(cl, 5, faNoop, cla);
+      InitAC(cl, 6, faMemeFormat9, cla);
+      InitAC(cl, 7, faNoop, cla);
+      InitAC(cl, 8, faNoop, cla);
+
+      cl := BottomRight;
+      InitAC(cl, 1, faNoop, cla);
+      InitAC(cl, 2, faNoop, cla);
+      InitAC(cl, 3, faNoop, cla);
+      InitAC(cl, 4, faNoop, cla);
+      InitAC(cl, 5, faNoop, cla);
+      InitAC(cl, 6, faNoop, cla);
     end;
 
   end;

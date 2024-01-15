@@ -265,6 +265,12 @@ end;
 procedure TActionSpeedBar.InitSpeedButton(SB: TSpeedBtn);
 var
   cr: TButtonStyleTextObject;
+{$ifdef MACOS}
+  cr2: TButtonStyleObject;
+{$endif}
+{$ifdef Android}
+  cr2: TButtonStyleObject;
+{$endif}
   cla: TAlphaColor;
 begin
   cla := SpeedColorScheme.GetColor(BtnColorValue);
@@ -284,6 +290,28 @@ begin
     cr.PressedColor := cla;
     cr.Font.Size := SpeedPanelFontSize;
   end;
+
+  {$ifdef OSX}
+  cr2 := FindStyleByName(SB, 'background') as TButtonStyleObject;
+  if cr2 <> nil then
+  begin
+    cr2.Opacity := 0.0;
+  end;
+  {$endif}
+  {$ifdef IOS}
+  cr2 := FindStyleByName(SB, 'background') as TButtonStyleObject;
+  if cr2 <> nil then
+  begin
+    cr2.Opacity := 0.2;
+  end;
+  {$endif}
+  {$ifdef Android}
+  cr2 := FindStyleByName(SB, 'background') as TButtonStyleObject;
+  if cr2 <> nil then
+  begin
+    cr2.Opacity := 0.5;
+  end;
+  {$endif}
 
   SB.ColorValue := BtnColorValue;
   if TempGroupSpace = BtnGroupSpace then

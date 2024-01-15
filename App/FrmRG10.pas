@@ -82,6 +82,7 @@ type
     procedure UpdateItemIndexParams;
     procedure UpdateItemIndexReports;
     procedure UpdateItemIndexTrimms;
+    procedure UpdateHintText(fa: Integer);
   public
     function GetShowDataText: Boolean;
     function GetShowDiffText: Boolean;
@@ -122,6 +123,7 @@ type
     function GetActionFromKey(Shift: TShiftState; Key: Word): Integer;
     function GetActionFromKeyChar(KeyChar: char): Integer;
     function GetChecked(fa: Integer): Boolean;
+    function GetEnabled(fa: Integer): Boolean;
     procedure HandleAction(fa: Integer);
     procedure RotaFormRotateZ(Delta: single);
     procedure RotaFormZoom(Delta: single);
@@ -366,7 +368,7 @@ begin
     Image.Align := TAlignLayout.Client;
 
     RotaForm.IsUp := True;
-    RotaForm.Draw;
+    RotaForm.ViewPoint := vp3D;
   end;
 end;
 
@@ -649,6 +651,24 @@ begin
     Exit;
 
   case fa of
+    faToggleSandboxed: result := MainVar.IsSandboxed;
+    faToggleAllProps: result := MainVar.AllProps;
+    faToggleAllTags: result := MainVar.AllTags;
+    faToggleButtonSize: result := SpeedPanel.BigMode;
+
+//    faToggleHelp: result := HelpText.Visible;
+//    faToggleReport: result := ReportText.Visible;
+//    faToggleButtonReport: result := WantButtonReport;
+    faReportNone..faReportReadme: result := ReportManager.GetChecked(fa);
+    faToggleSegmentF..faToggleSegmentA: result := RotaForm.GetChecked(fa);
+
+    faToggleLineColor: result := RotaForm.WantLineColors;
+    faToggleShowLegend: result := RotaForm.LegendItemChecked;
+
+    faToggleUseDisplayList: result := RotaForm.UseDisplayList;
+    faToggleUseQuickSort: result := RotaForm.UseQuickSort;
+    faToggleSortedRota:result := RotaForm.GetChecked(fa);
+
     faRggBogen: result := Main.Bogen;
     faRggKoppel: result := Main.Koppel;
 
@@ -658,12 +678,68 @@ begin
     faMemoryBtn: result := False;
     faMultiBtn: result := RotaForm.WantOverlayedRiggs;
 
-    faToggleReport: result := False; //ReportText.Visible;
-    faReportNone..faReportReadme: result := ReportManager.GetChecked(fa);
-
     faToggleDataText: result := ShowDataText;
     faToggleDiffText: result := ShowDiffText;
     faToggleTrimmText: result := ShowTrimmText;
+
+//    faChartRect..faChartReset: result := ChartGraph.GetChecked(fa);
+//    faToggleChartGraph: result := ChartImage.IsVisible;
+//    faToggleSalingGraph: result := SalingImage.IsVisible;
+//    faToggleControllerGraph: result := ControllerImage.IsVisible;
+    faToggleMatrixText: result := RotaForm.MatrixItemChecked;
+
+    faRotaForm1: result := RotaForm.Current = 1;
+    faRotaForm2: result := RotaForm.Current = 2;
+    faRotaForm3: result := RotaForm.Current = 3;
+  end;
+end;
+
+function TFormMain10.GetEnabled(fa: Integer): Boolean;
+begin
+  { ToDo: Make sure that RotaFormX  is enabled, when implemented }
+  case fa of
+    faRotaForm1: result := True;
+    faRotaForm2: result := True;
+    faRotaForm3: result := False;
+
+    faToggleSpeedPanel: result := not Main.IsPhone;
+
+    faSalingTypDrehbar,
+    faSalingTypOhne,
+    faSalingTypOhneStarr: result := not Main.Demo;
+
+    faWantRenderH,
+    faWantRenderP,
+    faWantRenderF,
+    faWantRenderS: result := (RotaForm.Current = 3) or ((RotaForm.Current = 1) and RotaForm.UseDisplayList);
+
+    faWantRenderE: result := RotaForm.Current = 3;
+
+    faToggleUseDisplayList,
+    faToggleUseQuickSort,
+    faToggleShowLegend: result := RotaForm.Current = 2;
+
+    faToggleMatrixText: result := RotaForm.Current = 1;
+
+    faToggleSegmentF,
+    faToggleSegmentR,
+    faToggleSegmentS,
+    faToggleSegmentM,
+    faToggleSegmentV,
+    faToggleSegmentW,
+    faToggleSegmentA: result := RotaForm.Current = 2;
+
+    faToggleSegmentC: result := (RotaForm.Current = 2) and (Main.Param = fpController);
+
+    faGrauBtn,
+    faBlauBtn,
+    faMultiBtn: result := RotaForm.Current = 1;
+
+    faRggKoppel: result := RotaForm.Current <> 3;
+    faRggHull: result := RotaForm.Current <> 2;
+
+    else
+      result := True;
   end;
 end;
 
@@ -722,6 +798,11 @@ end;
 procedure TFormMain10.UpdateFederText;
 begin
   Main.FederTextUpdateCaption;
+end;
+
+procedure TFormMain10.UpdateHintText(fa: Integer);
+begin
+
 end;
 
 procedure TFormMain10.CenterRotaForm;

@@ -159,9 +159,9 @@ begin
     faViewpoint3: result := 'Viewpoint 3D';
 
     { RggSalingType }
-    faSalingTypOhne: result := 'Ohne Salinge';
-    faSalingTypDrehbar: result := 'Drehbare Salinge';
     faSalingTypFest: result := 'Feste Salinge';
+    faSalingTypDrehbar: result := 'Drehbare Salinge';
+    faSalingTypOhne: result := 'Ohne Salinge';
     faSalingTypOhneStarr: result := 'Ohne Salinge Starr';
 
     { RggCalcType }
@@ -345,10 +345,10 @@ begin
     faMB08: result := 'Mobile Btn 8';
 
     { TouchBarLegend }
-    faTouchBarTop: result := 'TouchBar Top: Rotation Z';
-    faTouchBarBottom: result := 'TouchBar Bottom: Zoom';
-    faTouchBarLeft: result := 'TouchBar Left: Big Step';
-    faTouchBarRight: result := 'TouchBar Right: Small Step ';
+    faTouchBarTop: result := 'TouchBar Top';
+    faTouchBarBottom: result := 'TouchBar Bottom';
+    faTouchBarLeft: result := 'TouchBar Left';
+    faTouchBarRight: result := 'TouchBar Right';
 
     { Circles }
     faCirclesSelectC0: result := 'Unselect Circle';

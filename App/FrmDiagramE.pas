@@ -30,6 +30,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
+    BackBtn: TButton;
     UpdateBtn: TButton;
     XBtn: TButton;
     CalcBtn: TButton;
@@ -52,6 +53,7 @@ type
     Memo: TMemo;
     AuswahlBtn: TButton;
 
+    procedure BackBtnClick(Sender: TObject);
     procedure AuswahlBtnClick(Sender: TObject);
     procedure UpdateBtnClick(Sender: TObject);
 
@@ -84,6 +86,7 @@ type
     procedure UpdateAutoCaption;
     procedure UpdateACaption;
     procedure UpdateGCaption;
+    procedure SetupListbox(LB: TListBox);
   protected
     TempR: single;
     TempB: single;
@@ -135,7 +138,7 @@ begin
   Height := Round(800 * FScale);
 
   BoxWidth := Round(200 * FScale);
-  BoxHeight := Round(160 * FScale);
+  BoxHeight := Round(190 * FScale);
   MemoWidth := Round(350 * FScale);
 
   WantAutoUpdate := True;
@@ -175,6 +178,10 @@ end;
 
 procedure TFormDiagramE.CreateComponents;
 begin
+  BackBtn := TButton.Create(Self);
+  BackBtn.Parent := Self;
+  BackBtn.StyleLookup := 'arrowlefttoolbutton';
+
   UpdateBtn := TButton.Create(Self);
   UpdateBtn.Parent := Self;
   UpdateBtn.Text := 'Update UI';
@@ -250,6 +257,26 @@ begin
 
   InitComponentSize;
   InitComponentLinks;
+
+  SetupListBox(XBox);
+  SetupListBox(PBox);
+  SetupListBox(YBox);
+end;
+
+procedure TFormDiagramE.SetupListbox(LB: TListBox);
+begin
+  if LB = nil then
+    Exit;
+
+//  LB.ShowScrollBars := False;
+  LB.StyleLookup := 'listboxstyle';
+
+{$ifdef Android}
+  LB.ItemHeight := 24;
+{$endif}
+{$ifdef IOS}
+  LB.ItemHeight := 24;
+{$endif}
 end;
 
 procedure TFormDiagramE.InitComponentSize;
@@ -275,6 +302,7 @@ begin
   PBox.OnChange := PBoxChange;
   YBox.OnChange := YBoxChange;
 
+  BackBtn.OnClick := BackBtnClick;
   UpdateBtn.OnClick := UpdateBtnClick;
   XBtn.OnClick := XBtnClick;
   CalcBtn.OnClick := CalcBtnClick;
@@ -353,6 +381,11 @@ begin
 
   PBox.Items := ChartModel.PComboItems;
   PBox.ItemIndex := ChartModel.PComboItemIndex;
+end;
+
+procedure TFormDiagramE.BackBtnClick(Sender: TObject);
+begin
+  Self.Hide;
 end;
 
 procedure TFormDiagramE.UpdateBtnClick(Sender: TObject);
@@ -482,10 +515,12 @@ begin
   FMaxRight := 0;
   FMaxBottom := 0;
 
-  UpdateBtn.Position.X := Margin;
-  UpdateBtn.Position.Y := Margin;
+  BackBtn.Position.X := Margin;
+  BackBtn.Position.Y := Margin;
 
-  cr := UpdateBtn;
+  cr := BackBtn;
+
+  StackH(UpdateBtn);
   StackH(XBtn);
   StackH(CalcBtn);
   StackH(AuswahlBtn);
@@ -504,7 +539,8 @@ end;
 procedure TFormDiagramE.LayoutComponentsV;
 begin
   { Vertical ListBoxes }
-  cr := UpdateBtn;
+  cr := BackBtn;
+  StackV(UpdateBtn);
   StackV(XBox);
 
   StackV(PBox);
@@ -537,7 +573,7 @@ end;
 procedure TFormDiagramE.LayoutComponentsH;
 begin
   { Horizontal ListBoxes }
-  cr := UpdateBtn;
+  cr := BackBtn;
   StackV(XBox);
   StackH(PBox);
   StackH(YBox);

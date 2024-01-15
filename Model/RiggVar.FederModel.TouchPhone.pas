@@ -211,7 +211,9 @@ end;
 procedure TFederTouchPhone.SetActionMap(const Value: Integer);
 begin
   inherited;
+
   MaxPageIndex := Main.ActionMapPhone.PageCount;
+  EscapePageIndex := Main.ActionMapPhone.EscapeIndex;
 end;
 
 end.

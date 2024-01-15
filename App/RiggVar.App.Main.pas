@@ -47,10 +47,10 @@ var
 type
   MainConst = class
   const
+    CanReadIniFile = False;
     ColorSchemeCount = 7;
     DefaultBtnFontSize = 24;
     TrackbarFrequency = 0.1;
-    MustBeSandboxed: Boolean = true;
     TrimmFileName = 'Trimm-File.txt';
     TrimmFileNameAuto = 'Trimm-File-Auto.txt';
   end;
@@ -85,7 +85,19 @@ implementation
 
 class constructor MainVar.Create;
 begin
+{$ifdef MSWINDOWS}
   IsSandboxed := true;
+{$endif}
+{$ifdef OSX}
+  IsSandboxed := true;
+{$endif}
+{$ifdef Android}
+  IsSandboxed := false;
+{$endif}
+{$ifdef iOS}
+  IsSandboxed := false;
+{$endif}
+
 {$ifdef WantColorScheme}
   ColorScheme := TColorScheme.Create(5);
 {$endif}

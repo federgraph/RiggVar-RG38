@@ -24,6 +24,7 @@ type
     class function GetProjectDir: string;
     class function GetFullExeName: string;
     class function GetFileNameWithoutExtension: string;
+    class function GetMonspacedFontFamilyName: string;
 {$ifdef IOS}
     class function GetIOSDataDirectory: string;
 {$endif}
@@ -34,14 +35,19 @@ type
     class function GetAppDataDir: string;
     class function GetDocumentDirectory: string;
     class function GetUserPicturesDir: string;
+    const AppFolder = 'Federgraph/RG/';
 {$endif}
 {$ifdef MSWINDOWS}
+    class function GetIniFilePath(CanCreate: Boolean): string;
     class function GetSystem32Dir: string;
     class function GetUserDocumentsDir: string;
     class function GetUserPicturesDir: string;
     class function GetRoamingDir: string;
     class function GetLocalDir: string;
+    class function GetAppDataDir: string;
     class function GetSpecialFolderPath(Folder: Integer; CanCreate: Boolean): string;
+    const AppFolder = 'Federgraph\RG\';
+    const AppSettingsFolder = AppFolder + 'Settings\';
 {$endif}
   end;
 
@@ -60,8 +66,7 @@ uses
   Winapi.SHLObj,
 {$endif}
   System.SysUtils,
-  System.StrUtils,
-  RiggVar.FB.Classes;
+  System.StrUtils;
 
 class function TAppUtils.GetProjectDir: string;
 var
@@ -103,6 +108,15 @@ begin
 end;
 
 {$ifdef MSWINDOWS}
+class function TAppUtils.GetIniFilePath(CanCreate: Boolean): string;
+begin
+  result := TAppUtils.GetSpecialFolderPath(CSIDL_APPDATA, True);
+  result := IncludeTrailingPathDelimiter(result) + AppSettingsFolder;
+  if CanCreate then
+    ForceDirectories(result);
+  Result := IncludeTrailingPathDelimiter(Result) + GetFileNameWithoutExtension + '.ini';
+end;
+
 class function TAppUtils.GetSpecialFolderPath(Folder: Integer; CanCreate: Boolean): string;
 var
   FilePath: array [0..255] of char;
@@ -111,17 +125,22 @@ begin
   Result := FilePath;
 end;
 
+class function TAppUtils.GetAppDataDir: string;
+begin
+  result := GetLocalDir;
+end;
+
 class function TAppUtils.GetLocalDir: string;
 begin
-  result := GetSpecialFolderPath(CSIDL_APPDATA, True);
-  result := IncludeTrailingPathDelimiter(result) + 'RiggVar\RG\';
+  result := GetSpecialFolderPath(CSIDL_LOCAL_APPDATA, True);
+  result := IncludeTrailingPathDelimiter(result) + AppFolder;
   ForceDirectories(result);
 end;
 
 class function TAppUtils.GetRoamingDir: string;
 begin
-  result := GetSpecialFolderPath(CSIDL_LOCAL_APPDATA, True);
-  result := IncludeTrailingPathDelimiter(result) + 'RiggVar\RG\';
+  result := GetSpecialFolderPath(CSIDL_APPDATA, True);
+  result := IncludeTrailingPathDelimiter(result) + AppFolder;
   ForceDirectories(result);
 end;
 
@@ -143,11 +162,9 @@ class function TAppUtils.GetSystem32Dir: string;
 begin
   result := GetSpecialFolderPath(CSIDL_SYSTEM, False);
 end;
-
 {$endif}
 
 {$ifdef MACOS}
-
 class function TAppUtils.GetDocumentDirectory: string;
 begin
   result := GetHomePath + PathDelim + 'Documents' + PathDelim;
@@ -161,7 +178,7 @@ end;
 class function TAppUtils.GetAppDataDir: string;
 begin
   result := GetHomePath;
-  result := IncludeTrailingPathDelimiter(result) + 'RiggVar/RG/';
+  result := IncludeTrailingPathDelimiter(result) + AppFolder;
   ForceDirectories(result);
 end;
 {$endif}
@@ -179,6 +196,22 @@ begin
   result := TPath.GetDocumentsPath + PathDelim;
 end;
 {$endif}
+
+class function TAppUtils.GetMonspacedFontFamilyName: string;
+begin
+{$ifdef MSWINDOWS}
+  result := 'Consolas';
+{$endif}
+{$ifdef OSX}
+  result := 'CourierNewPSMT';
+{$endif}
+{$ifdef IOS}
+  result := 'Courier';
+{$endif}
+{$ifdef Android}
+  result := 'monospace';
+{$endif}
+end;
 
 end.
 

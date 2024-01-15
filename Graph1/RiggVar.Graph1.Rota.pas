@@ -263,6 +263,7 @@ type
 implementation
 
 uses
+  RiggVar.Util.AppUtils,
 {$ifdef WantHull}
   RiggVar.Graph1.DisplayList,
 {$endif}
@@ -444,7 +445,7 @@ var
   end;
 
 begin
-  ox := 1320;
+  ox := Image.Width - 70 - 20 - 250;
   oy := 150;
   w := 250;
   h := 20;
@@ -452,7 +453,7 @@ begin
   g.Stroke.Thickness := 0.2;
   g.Stroke.Color := claWhite;
   g.Fill.Color := claSilver;
-  g.Font.Family := 'Consolas';
+  g.Font.Family := TAppUtils.GetMonspacedFontFamilyName;
   g.Font.Size := 16;
   TextOut(ox, oy + 0 * th, MatrixTextU);
   TextOut(ox, oy + 1 * th, MatrixTextV);
@@ -537,6 +538,10 @@ begin
 end;
 
 procedure TRotaForm1.DrawToCanvas(g: TCanvas);
+{$ifdef OSX}
+var
+  temp: TRectF;
+{$endif}
 begin
   if SkipOnceFlag then
   begin
@@ -544,7 +549,15 @@ begin
   end
   else if not PaintItemChecked or EraseBK then
   begin
+{$ifdef OSX}
+    temp := TRectF.Empty;
+    temp.Width := g.Width;
+    temp.Height := g.Height;
+    temp.Offset(-g.Offset);
+    g.ClearRect(temp, TAlphaColors.Null);
+{$else}
     g.Clear(TAlphaColors.Null);
+{$endif}
     EraseBK := False;
   end;
 
@@ -915,7 +928,7 @@ end;
 procedure TRotaForm1.ToggleRenderOption(const fa: Integer);
 begin
   case fa of
-    faWantRenderE: RaumGraph.WantRenderE := not RaumGraph.WantRenderP;
+    faWantRenderE: RaumGraph.WantRenderE := not RaumGraph.WantRenderE;
     faWantRenderF: RaumGraph.WantRenderF := not RaumGraph.WantRenderF;
     faWantRenderH: RaumGraph.WantRenderH := not RaumGraph.WantRenderH;
     faWantRenderP: RaumGraph.WantRenderP := not RaumGraph.WantRenderP;
@@ -931,6 +944,10 @@ begin
     faWantRenderH: result := RaumGraph.WantRenderH;
     faWantRenderP: result := RaumGraph.WantRenderP;
     faWantRenderS: result := RaumGraph.WantRenderS;
+
+{$ifdef WantDisplayList}
+    faToggleUseQuickSort: result := not RaumGraph.DL.UseQuickSort;
+{$endif}
 
     faRggBogen: result := RaumGraph.Bogen;
     faRggKoppel: result := RaumGraph.Koppel;
@@ -1108,13 +1125,13 @@ end;
 
 procedure TRotaForm1.UpdateCameraX(Delta: single);
 begin
-  FXPos := FXPos + Delta * 5;
+  FXPos := FXPos + Delta * 1;
   Draw;
 end;
 
 procedure TRotaForm1.UpdateCameraY(Delta: single);
 begin
-  FYPos := FYPos - Delta * 5;
+  FYPos := FYPos - Delta * 1;
   Draw;
 end;
 
@@ -1141,7 +1158,7 @@ begin
   Image.OnMouseDown := ImageMouseDown;
   Image.OnMouseMove := ImageMouseMove;
   Image.OnMouseUp := ImageMouseUp;
-  Image.OnScreenScaleChanged := ImageScreenScaleChanged;
+  Image.OnSizeChanged := ImageScreenScaleChanged;
 end;
 
 procedure TRotaForm1.HandleAction(fa: Integer);

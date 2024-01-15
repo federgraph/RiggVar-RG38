@@ -87,9 +87,10 @@ begin
   SL.Add('Info about Trimm 420 App');
   SL.Add('');
   SL.Add('see www.federgraph.de');
-  SL.Add('see federgraph''s GitHub repository: RiggVar-RG38');
+  SL.Add('see GitHub repository:');
+  SL.Add('  federgraph/RiggVar-RG38');
 
-{$ifdef MSWINDOWS}
+//{$ifdef MSWINDOWS}
   SL.Add('');
   SL.Add('');
   SL.Add('-     F');
@@ -104,7 +105,7 @@ begin
   SL.Add('-              *');
   SL.Add('-              (C) federgraph.de');
   SL.Add('-');
-{$endif}
+//{$endif}
 end;
 
 procedure TFederBinding.InitHelpText(SL: TStrings);
@@ -407,7 +408,6 @@ begin
   SL.Add('B : faFixpointB0');
   SL.Add('d : faFixpointD');
   SL.Add('D : faFixpointD0');
-  SL.Add('f : faFixpointF');
   SL.Add('F : faFixpointF0');
 
   SL.Add('');

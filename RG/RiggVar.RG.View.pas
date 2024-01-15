@@ -10,6 +10,7 @@ type
   ['{6309C56E-FD06-413A-923E-1C808A7DD459}']
     procedure HandleAction(fa: Integer);
     function GetChecked(fa: Integer): Boolean;
+    function GetEnabled(fa: Integer): Boolean;
 
     function GetActionFromKey(Shift: TShiftState; Key: Word): Integer;
     function GetActionFromKeyChar(KeyChar: char): Integer;
@@ -28,6 +29,7 @@ type
     procedure UpdateItemIndexParams;
     procedure UpdateItemIndexReports;
     procedure UpdateItemIndexTrimms;
+    procedure UpdateHintText(fa: Integer);
 
     function GetClientHeight: Integer;
     function GetClientWidth: Integer;
@@ -64,6 +66,7 @@ type
   public
     procedure HandleAction(fa: Integer);
     function GetChecked(fa: Integer): Boolean;
+    function GetEnabled(fa: Integer): Boolean;
 
     function GetActionFromKey(Shift: TShiftState; Key: Word): Integer;
     function GetActionFromKeyChar(KeyChar: char): Integer;
@@ -82,6 +85,7 @@ type
     procedure UpdateItemIndexParams;
     procedure UpdateItemIndexReports;
     procedure UpdateItemIndexTrimms;
+    procedure UpdateHintText(fa: Integer);
 
     property ClientWidth: Integer read GetClientWidth write SetClientWidth;
     property ClientHeight: Integer read GetClientHeight write SetClientHeight;
@@ -121,6 +125,11 @@ end;
 function TDummmyFormMain.GetClientWidth: Integer;
 begin
   result := MainVar.ClientWidth;
+end;
+
+function TDummmyFormMain.GetEnabled(fa: Integer): Boolean;
+begin
+  result := True;
 end;
 
 function TDummmyFormMain.GetOpenFileName(dn, fn: string): string;
@@ -199,6 +208,11 @@ begin
 end;
 
 procedure TDummmyFormMain.UpdateColorScheme;
+begin
+
+end;
+
+procedure TDummmyFormMain.UpdateHintText(fa: Integer);
 begin
 
 end;

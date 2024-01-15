@@ -201,6 +201,20 @@ begin
   AddGroup('Forms', fag);
 
   fag := TFederActionGroup.Create;
+  fag.Add(faCopyTrimmFile);
+  fag.Add(faCopyTrimmItem);
+  fag.Add(faPasteTrimmItem);
+  fag.Add(faReadTrimmFile);
+  fag.Add(faSaveTrimmFile);
+  AddGroup('File', fag);
+
+  fag := TFederActionGroup.Create;
+  fag.Add(faMemoryBtn);
+  fag.Add(faMemoryRecallBtn);
+  fag.Add(faCopyAndPaste);
+  AddGroup('Memory', fag);
+
+  fag := TFederActionGroup.Create;
   fag.Add(faController);
   fag.Add(faWinkel);
   fag.Add(faVorstag);

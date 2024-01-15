@@ -213,7 +213,7 @@ begin
   Image.OnMouseMove := ImageMouseMove;
   Image.OnMouseUp := ImageMouseUp;
 //  Image.OnMouseWheel := ImageMouseWheel; { FormMain.FormMouseWheel used }
-  Image.OnScreenScaleChanged := ImageScreenScaleChanged;
+  Image.OnSizeChanged := ImageScreenScaleChanged;
 end;
 
 function TRotaForm2.QueryRenderOption(const fa: Integer): Boolean;

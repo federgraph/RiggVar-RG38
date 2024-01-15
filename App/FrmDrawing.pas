@@ -20,12 +20,11 @@
   {$mode delphi}
 {$endif}
 
+{$define WantBackBtn}
 {$define WantMultipleLists}
-{$define WantDrawingList}
 {$define WantDynamicFixPoint}
 {$define WantMemoOutput}
 {$define WantMemo}
-{.$define WantBetterListView}
 
 {$define FMX}
 {.$define VCL}
@@ -74,9 +73,7 @@ type
 {$ifdef WantMemo}
     Memo: TMemo;
 {$endif}
-{$ifdef WantDrawingList}
     DrawingList: TListView;
-{$endif}
     ElementList: TListView;
     Image: TOriginalImage;
     InplaceShape: TCircle;
@@ -90,11 +87,12 @@ type
     procedure InplaceShapeMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
     procedure InplaceShapeMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
 
-{$ifdef WantDrawingList}
     procedure DrawingListItemClick(const Sender: TObject; const AItem: TListViewItem);
-{$endif}
     procedure ElementListChange(Sender: TObject);
 
+    procedure BackBtnClick(Sender: TObject);
+    procedure DrawingListBtnClick(Sender: TObject);
+    procedure LayoutBtnClick(Sender: TObject);
     procedure CodeBtnClick(Sender: TObject);
     procedure GlobalShowCaptionBtnClick(Sender: TObject);
     procedure ToggleShowCaptionBtnClick(Sender: TObject);
@@ -118,7 +116,6 @@ type
 {$ifdef WantMultipleLists}
     WantExampleDrawings: Boolean;
 {$endif}
-    WantVerticalButtons: Boolean;
     WantThickLines: Boolean;
     procedure InitComponentSize;
     procedure LayoutComponents;
@@ -170,6 +167,7 @@ type
     procedure ResetLayout;
     procedure UpdateLayout(Horz: Boolean);
   protected
+    IsVerticalLayout: Boolean;
     WantMemoOutput: Boolean;
     DrawCounter: Integer;
     ClickCounter: Integer;
@@ -177,12 +175,15 @@ type
     procedure CreateDrawings;
     procedure Draw;
   private
+{$ifdef WantMemo}
     MemoBackgroundRect: TRectangle;
     procedure SetupMemoBackground(cla: TAlphaColor);
-{$ifdef WantBetterListView}
-    procedure UpdateListViewColors;
 {$endif}
   private
+    WantDrawingList: Boolean;
+    BackBtn: TSpeedButton;
+    DrawingListBtn: TSpeedButton;
+    LayoutBtn: TSpeedButton;
 {$ifdef WantMemo}
     CodeBtn: TSpeedButton;
 {$endif}
@@ -212,6 +213,7 @@ type
 
     DummyControl: TControl;
     procedure CopyBitmap;
+    procedure InitSpeedButtonTextAlign;
   public
     ML: TStrings;
     TH: TTransformHelper;
@@ -241,13 +243,11 @@ begin
   begin
     FormShown := True;
     LayoutComponents;
-{$ifdef WantDrawingList}
     DrawingList.ItemIndex := DL.DrawingList.Count-1;
     SelectDrawing(DrawingList.ItemIndex);
     DrawingList.SetFocus;
-{$else}
+    WantDrawingList := False;
     SelectDrawing(TRggDrawingRegistry.DefaultIndex);
-{$endif}
   end;
 end;
 
@@ -259,20 +259,16 @@ begin
 end;
 
 procedure TFormDrawing.InitDrawings;
-{$ifdef WantDrawingList}
 var
   i: Integer;
   li: TListViewItem;
-{$endif}
 begin
   DL.InitItems(TempList);
-{$ifdef WantDrawingList}
   for i := 0 to TempList.Count-1 do
   begin
     li := DrawingList.Items.Add;
     li.Text := TempList[i];
   end;
-{$endif}
 end;
 
 procedure TFormDrawing.InitElements;
@@ -328,6 +324,7 @@ begin
   Caption := 'Rgg test and documentation drawings';
 
   FScale := Handle.Scale;
+
   BitmapWidth := 800;
   BitmapHeight := 800;
 
@@ -382,7 +379,6 @@ end;
 
 procedure TFormDrawing.CreateComponents;
 begin
-{$ifdef WantDrawingList}
   DrawingList := TListView.Create(Self);
   DrawingList.Parent := Self;
   DrawingList.ItemAppearanceName := 'ListItem';
@@ -394,7 +390,6 @@ begin
   DrawingList.ItemAppearanceObjects.HeaderObjects.Text.Visible := False;
   DrawingList.ItemAppearanceObjects.FooterObjects.Text.Visible := False;
   DrawingList.OnItemClick := DrawingListItemClick;
-{$endif}
 
   ElementList := TListView.Create(Self);
   ElementList.Parent := Self;
@@ -414,7 +409,7 @@ begin
   Image.OnMouseMove := ImageMouseMove;
   Image.OnMouseUp := ImageMouseUp;
   Image.OnMouseWheel := ImageMouseWheel;
-  Image.OnScreenScaleChanged := ImageScreenScaleChanged;
+  Image.OnSizeChanged := ImageScreenScaleChanged;
 
 {$ifdef WantMemo}
   Memo := TMemo.Create(Self);
@@ -431,6 +426,19 @@ begin
   InplaceShape.OnMouseMove := InplaceShapeMouseMove;
   InplaceShape.OnMouseUp := InplaceShapeMouseUp;
   InplaceShape.OnMouseWheel := ImageMouseWheel;
+
+  BackBtn := TSpeedButton.Create(Self);
+  BackBtn.Parent := Self;
+  BackBtn.Text := 'Back';
+//  BackBtn.StyleLookup := 'arrowlefttoolbutton';
+
+  DrawingListBtn := TSpeedButton.Create(Self);
+  DrawingListBtn.Parent := Self;
+  DrawingListBtn.Text := 'Drawings';
+
+  LayoutBtn := TSpeedButton.Create(Self);
+  LayoutBtn.Parent := Self;
+  LayoutBtn.Text := 'Layout';
 
 {$ifdef WantMemo}
   CodeBtn := TSpeedButton.Create(Self);
@@ -653,6 +661,26 @@ begin
     FMaxBottom := TempB;
 end;
 
+procedure TFormDrawing.BackBtnClick(Sender: TObject);
+begin
+{$ifdef WantBackBtn}
+  if Application.Title.ToUpper <> 'RG76' then
+    Self.Hide;
+{$endif}
+end;
+
+procedure TFormDrawing.LayoutBtnClick(Sender: TObject);
+begin
+  SwapLayout;
+end;
+
+procedure TFormDrawing.DrawingListBtnClick(Sender: TObject);
+begin
+  WantDrawingList := not WantDrawingList;
+  LayoutComponents;
+  DoOnUpdateDrawing(nil);
+end;
+
 procedure TFormDrawing.CodeBtnClick(Sender: TObject);
 begin
 {$ifdef WantMemo}
@@ -793,13 +821,33 @@ begin
   CodeBtn.Hint := 'write Code to Memo';
 {$endif}
   ResetBtn.Hint := 'Reset Transform';
+  InitSpeedButtonTextAlign;
+end;
+
+procedure TFormDrawing.InitSpeedButtonTextAlign;
+var
+  i: Integer;
+  btn: TSpeedButton;
+begin
+  for i := 0 to ComponentCount - 1 do
+  begin
+    if components[i] is TSpeedButton then
+    begin
+      btn := Components[i] as TSpeedButton;
+      btn.TextAlign := TTextAlign.Leading;
+    end;
+  end;
 end;
 
 procedure TFormDrawing.InitComponentSize;
 var
   w: single;
 begin
-  w := 40;
+  BackBtn.Width := 50;
+  DrawingListBtn.Width := 80;
+  LayoutBtn.Width := 70;
+
+  w := 50;
 
 {$ifdef WantMemo}
   CodeBtn.Width := w;
@@ -808,9 +856,14 @@ begin
   ToggleShowCaptionBtn.Width := w;
   ResetBtn.Width := w;
 
+  w := 40;
+
   Btn1.Width := w;
   Btn2.Width := w;
   Btn3.Width := w;
+
+  w := 22;
+
   Btn4.Width := w;
   Btn5.Width := w;
   Btn6.Width := w;
@@ -827,12 +880,10 @@ begin
   BtnF.Width := w;
 
   ListboxWidth := 200;
-  MemoWidth := 220;
+  MemoWidth := 200;
 
-{$ifdef WantDrawingList}
   DrawingList.Width := ListboxWidth;
   DrawingList.Height := 300;
-{$endif}
 
   ElementList.Width := ListboxWidth;
   ElementList.Height := 100;
@@ -919,17 +970,20 @@ end;
 
 procedure TFormDrawing.LayoutComponentsH;
 begin
+  BackBtn.Width := 50;
+  IsVerticalLayout := False;
   ResetLayout;
 
-{$ifdef WantMemo}
-  cr := CodeBtn;
+  cr := BackBtn;
   cr.Position.X := Margin;
   cr.Position.Y := Margin;
+
+  StackH(DrawingListBtn);
+  StackH(LayoutBtn);
   StackH(GlobalShowCaptionBtn);
-{$else}
-  cr := GlobalShowCaptionBtn;
-  cr.Position.X := Margin;
-  cr.Position.Y := Margin;
+
+{$ifdef WantMemo}
+  StackH(CodeBtn);
 {$endif}
   StackH(ToggleShowCaptionBtn);
   StackH(ResetBtn);
@@ -956,17 +1010,15 @@ begin
   StackH(BtnE);
   StackH(BtnF);
 
-{$ifdef WantMemo}
-  cr := CodeBtn;
-{$else}
-  cr := GlobalShowCaptionBtn;
-{$endif}
-{$ifdef WantDrawingList}
-  StackV(DrawingList);
-  StackH(ElementList);
-{$else}
-  StackV(ElementList);
-{$endif}
+  cr := BackBtn;
+  DrawingList.Visible := WantDrawingList;
+  if WantDrawingList then
+  begin
+    StackV(DrawingList);
+    StackH(ElementList);
+  end
+  else
+    StackV(ElementList);
   StackH(Image);
 {$ifdef WantMemo}
   StackH(Memo);
@@ -974,9 +1026,8 @@ begin
 
   AdjustWH;
 
-{$ifdef WantDrawingList}
-  AnchorV(DrawingList);
-{$endif}
+ if WantDrawingList then
+   AnchorV(DrawingList);
   AnchorV(ElementList);
   AnchorV(Image);
 {$ifdef WantMemo}
@@ -986,18 +1037,21 @@ end;
 
 procedure TFormDrawing.LayoutComponentsV;
 begin
+  BackBtn.Width := 80;
+  IsVerticalLayout := True;
   ResetLayout;
 
+  cr := BackBtn;
+  cr.Position.X := Margin;
+  cr.Position.Y := Margin;
+
+  StackV(DrawingListBtn);
+  StackV(LayoutBtn);
+
 {$ifdef WantMemo}
-  cr := CodeBtn;
-  cr.Position.X := Margin;
-  cr.Position.Y := Margin;
-  StackV(GlobalShowCaptionBtn);
-{$else}
-  cr := GlobalShowCaptionBtn;
-  cr.Position.X := Margin;
-  cr.Position.Y := Margin;
+  StackV(CodeBtn);
 {$endif}
+  StackV(GlobalShowCaptionBtn);
   StackV(ToggleShowCaptionBtn);
   StackV(ResetBtn);
 
@@ -1023,14 +1077,12 @@ begin
   StackV(BtnE);
   StackV(BtnF);
 
-{$ifdef WantMemo}
-  cr := CodeBtn;
-{$else}
-  cr := GlobalShowCaptionBtn;
-{$endif}
-{$ifdef WantDrawingList}
-  StackH(DrawingList);
-{$endif}
+  cr := BackBtn;
+
+  DrawingList.Visible := WantDrawingList;
+  if WantDrawingList then
+    StackH(DrawingList);
+
   StackH(ElementList);
 {$ifdef WantMemo}
   StackH(Memo);
@@ -1039,9 +1091,9 @@ begin
 
   AdjustWH;
 
-{$ifdef WantDrawingList}
-  AnchorV(DrawingList);
-{$endif}
+  if WantDrawingList then
+    AnchorV(DrawingList);
+
   AnchorV(ElementList);
 {$ifdef WantMemo}
   AnchorV(Memo);
@@ -1065,7 +1117,7 @@ begin
 
   if (Left + w) * ss > wa.Right then
   begin
-    Width := Round((wa.Right - Left) / ss);
+    Width := Round(wa.Right - Left);
     FAdjustW := 1;
   end
   else
@@ -1074,28 +1126,32 @@ begin
     FAdjustW := 2;
     if (Left + w) * ss > wa.Right - (Width - ClientWidth) then
     begin
-      Width := Round((wa.Right - Left) / ss);
+      Width := Round(wa.Right - Left);
     end
   end;
 
   if (Top + h) * ss > wa.Bottom then
   begin
-    Height := Round((wa.Bottom - Top) / ss);
+    Height := Round(wa.Bottom - Top);
     FAdjustH := 1;
   end
   else
   begin
     ClientHeight := h;
     FAdjustH := 2;
-    if (Top + h) * ss > wa.Bottom - (Height - ClientHeight) then
+    if (Top + h) > wa.Bottom - (Height - ClientHeight) then
     begin
-      Height := Round((wa.Bottom - Top) / ss);
+      Height := Round(wa.Bottom - Top);
     end;
   end;
 end;
 
 procedure TFormDrawing.LinkComponents;
 begin
+  BackBtn.OnClick := BackBtnClick;
+  DrawingListBtn.OnClick := DrawingListBtnClick;
+  LayoutBtn.OnClick := LayoutBtnClick;
+
 {$ifdef WantMemo}
   CodeBtn.OnClick := CodeBtnClick;
 {$endif}
@@ -1112,7 +1168,6 @@ begin
   InplaceShape.OnMouseUp := InplaceShapeMouseUp;
 end;
 
-{$ifdef WantDrawingList}
 procedure TFormDrawing.DrawingListItemClick(const Sender: TObject; const AItem: TListViewItem);
 var
   ii: Integer;
@@ -1123,7 +1178,6 @@ begin
     SelectDrawing(ii);
   end;
 end;
-{$endif}
 
 procedure TFormDrawing.SelectDrawing(ii: Integer);
 begin
@@ -1325,8 +1379,8 @@ begin
 {$ifdef FMX}
   ML.Add('W and H:');
   ML.Add(Format('PosID  = %d, %d, %d', [FScreenPosID, FAdjustW, FAdjustH]));
-  ML.Add(Format('Screen = (%d, %d)', [Screen.Width, Screen.Height]));
-  ML.Add(Format('WA     = (%d, %d)', [Screen.WorkAreaWidth, Screen.WorkAreaHeight]));
+  ML.Add(Format('Screen = (%d, %d)', [Round(Screen.Width), Round(Screen.Height)]));
+  ML.Add(Format('WA     = (%d, %d)', [Round(Screen.WorkAreaWidth), Round(Screen.WorkAreaHeight)]));
   ML.Add(Format('FormLT = (%d, %d)', [Left, Top]));
   ML.Add(Format('FormWH = (%d, %d)', [Width, Height]));
   ML.Add(Format('Client = (%d, %d)', [ClientWidth, ClientHeight]));
@@ -1335,9 +1389,7 @@ begin
 {$ifdef WantMemo}
   ML.Add(Format('Memo   = (%.1f, %.1f)', [Memo.Width, Memo.Height]));
 {$endif}
-{$ifdef WantDrawingList}
   ML.Add(Format('DL     = (%.1f, %.1f)', [DrawingList.Width, DrawingList.Height]));
-{$endif}
   ML.Add(Format('Scale  = %.2f', [Handle.Scale]));
   ML.Add(Format('ImgSS  = %.2f', [Image.ScreenScale]));
   ML.Add(Format('R1     = (%.1f, %.1f)', [Image.R1.Width, Image.R1.Height]));
@@ -1383,9 +1435,7 @@ begin
   CurrentDrawing := nil;
   CurrentElement := nil;
 
-{$ifdef WantDrawingList}
   DrawingList.Items.Clear;
-{$endif}
   ElementList.Items.Clear;
 
   DL.Free;
@@ -1411,17 +1461,18 @@ end;
 procedure TFormDrawing.ResetLayout;
 begin
   AnchorReset(Image);
-{$ifdef WantDrawingList}
   AnchorReset(DrawingList);
-{$endif}
   AnchorReset(ElementList);
 {$ifdef WantMemo}
   AnchorReset(Memo);
 {$endif}
-{$ifdef WantDrawingList}
-  DrawingList.Width := ListboxWidth;
-  DrawingList.Height := 200;
-{$endif}
+
+  DrawingList.Visible := WantDrawingList;
+  if WantDrawingList then
+  begin
+    DrawingList.Width := ListboxWidth;
+    DrawingList.Height := 200;
+  end;
 
   ElementList.Height := ListboxWidth;
   ElementList.Height := 200;
@@ -1433,19 +1484,18 @@ begin
   Memo.Width := MemoWidth;
   Memo.Height := 200;
 {$endif}
+
   FMaxRight := 0;
   FMaxBottom := 0;
 end;
 
 procedure TFormDrawing.SwapLayout;
 begin
-  WantVerticalButtons := not WantVerticalButtons;
-  if WantVerticalButtons then
-    LayoutComponentsV
+  if IsVerticalLayout then
+    LayoutComponentsH
   else
-    LayoutComponentsH;
-
-  Draw;
+    LayoutComponentsV;
+  DoOnUpdateDrawing(nil);
 end;
 
 procedure TFormDrawing.SwapColorScheme;
@@ -1458,71 +1508,22 @@ begin
     Fill.Kind := TBrushKind.Solid;
     Fill.Color := claGray;
     InplaceShape.Stroke.Color := claAntiquewhite;
+{$ifdef WantMemo}
     SetupMemoBackground(claGray);
+{$endif}
   end
   else
   begin
     Fill.Kind := TBrushKind.Solid;
     Fill.Color := TRggColors.Windowgray;
     InplaceShape.Stroke.Color := claBlack;
+{$ifdef WantMemo}
     SetupMemoBackground(claWhite);
-  end;
-
-{$ifdef WantBetterListView}
-  UpdateListViewColors;
 {$endif}
+  end;
 
   Draw;
 end;
-
-{$ifdef WantBetterListView}
-procedure TFormDrawing.UpdateListViewColors;
-var
-  cla: TAlphaColor;
-  LV: TListView;
-begin
-  if DL.UseDarkColorScheme then
-  begin
-    cla := CurrentDrawing.Colors.BackgroundColor;
-
-{$ifdef WantDrawingList}
-    LV := DrawingList;
-    LV.SetColorItemFill(cla);
-    LV.SetColorBackground(claDimGray);
-    LV.SetColorItemSeparator(claDarkgray);
-    LV.SetColorItemSelected(claDarkgray);
-    LV.SetColorText(claAquamarine);
-{$endif}
-
-    LV := ElementList;
-    LV.SetColorItemFill(cla);
-    LV.SetColorBackground(claDimGray);
-    LV.SetColorItemSeparator(claDarkGray);
-    LV.SetColorItemSelected(claDarkgray);
-    LV.SetColorText(claAntiquewhite);
-  end
-  else
-  begin
-    cla := claWhite;
-
-{$ifdef WantDrawingList}
-    LV := DrawingList;
-    LV.SetColorBackground(cla);
-    LV.SetColorItemFill(cla);
-    LV.SetColorItemSeparator(TRggColors.Windowgray);
-    LV.SetColorItemSelected(TRggColors.Azure);
-    LV.SetColorText(claDodgerblue);
-{$endif}
-
-    LV := ElementList;
-    LV.SetColorBackground(cla);
-    LV.SetColorItemFill(cla);
-    LV.SetColorItemSeparator(TRggColors.Windowgray);
-    LV.SetColorItemSelected(TRggColors.Aliceblue);
-    LV.SetColorText(claTomato);
-  end;
-end;
-{$endif}
 
 procedure TFormDrawing.SwapThickLines;
 var
@@ -1582,8 +1583,8 @@ begin
     { Normal HD screen with FScale = 1.0 }
     Left := 200;
     Top := 50;
-    Width := 1000;
-    Height := 960;
+    Width := Round(1000);
+    Height := Round(960);
     FScreenPosID := 1;
   end
   else
@@ -1591,8 +1592,8 @@ begin
     { smaller screen at }
     Left := 20;
     Top := 20;
-    Width := 1000;
-    Height := 700;
+    Width := Round(1000);
+    Height := Round(700);
     FScreenPosID := 2;
   end;
 end;
@@ -1603,8 +1604,8 @@ begin
   begin
     Left := 200;
     Top := 50;
-    Width := 1540;
-    Height := 860;
+    Width := Round(1540 * FScale);
+    Height := Round(860 * FScale);
     FScreenPosID := 3;
   end
   else
@@ -1612,8 +1613,8 @@ begin
     { Microsoft Surface Tablet with FScale = 2.0 }
     Left := 0;
     Top := 0;
-    Width := 1350; { maximal 2736 div 2 = 1368 }
-    Height := 750; { maximal 1744 div 2 = 872 based on Screen.WorkAreaHeight }
+    Width := Round(1350 * FScale); { maximal 2736 div 2 = 1368 }
+    Height := Round(750 * FScale); { maximal 1744 div 2 = 872 based on Screen.WorkAreaHeight }
     FScreenPosID := 4;
   end;
 end;
@@ -1644,6 +1645,7 @@ begin
     Svc.SetClipboard(Image.Bitmap);
 end;
 
+{$ifdef WantMemo}
 procedure TFormDrawing.SetupMemoBackground(cla: TAlphaColor);
 var
   cr: TFmxObject;
@@ -1689,5 +1691,6 @@ begin
   end;
 
 end;
+{$endif}
 
 end.

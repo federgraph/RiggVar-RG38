@@ -22,14 +22,15 @@ interface
 {.$define ResizeEndSupported}
 
 {.$define WantInitTimer}
+{$define WantRotaForm1}
+{$define WantRotaForm2}
 {.$define WantRotaForm3}
 {.$define WantDeviceCheck}
 {.$define WantResizeEnd}
 {.$define WantMenu}
 {$define WantFormConfig}
 {.$define WantCombos}
-
-{$define FMX}
+{$define WantListboxes}
 
 uses
   RiggVar.App.Model,
@@ -51,6 +52,8 @@ uses
   System.Types,
   System.UITypes,
   System.UIConsts,
+  System.Math,
+  System.Messaging,
   FMX.Platform,
   FMX.Graphics,
   FMX.Types,
@@ -84,38 +87,48 @@ type
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
     procedure FormMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; var Handled: Boolean);
   private
-    procedure UpdateFormat(w, h: Integer);
-    procedure GotoLandscape;
-    procedure GotoNormal;
-    procedure GotoPortrait;
-    procedure GotoSquare;
-    procedure InitScreenPos;
-    procedure InitScreenPos1;
-    procedure InitScreenPos2;
-  private
     FScale: single;
     FWantResizeNormalizing: Boolean;
     DefaultCaption: string;
     FormShown: Boolean;
     InitTimerCalled: Boolean;
+    DrawingNeeded: Boolean;
     procedure ApplicationEventsException(Sender: TObject; E: Exception);
+    procedure ApplicationEventsIdle(Sender: TObject; var Done: Boolean);
+    procedure DoOrientationChanged(const Sender: TObject; const M: TMessage);
+    procedure RegisterForAppEvents;
+    function HandleAppEvent(AAppEvent: TApplicationEvent; AContext: TObject): Boolean;
+
     procedure FormCreate2(Sender: TObject);
     procedure FormDestroy2(Sender: TObject);
     procedure HandleShowHint(Sender: TObject);
     procedure Flash(s: string);
+    procedure Log(s: string);
     procedure Reset;
     procedure InitDebugInfo;
     procedure InitZOrderInfo;
     procedure ShowHelpText(fa: Integer);
     function GetCanShowMemo: Boolean;
     procedure ToggleLanguage;
+{$ifdef WantListboxes}
     procedure UpdateParamListboxText;
     procedure UpdateReportListboxText;
+{$endif}
+    procedure InitScreenPos;
+    procedure InitScreenPos1;
+    procedure InitScreenPos2;
+    procedure UpdateFormat(w, h: Integer);
+    procedure GotoLandscape;
+    procedure GotoNormal;
+    procedure GotoPortrait;
+    procedure GotoSquare;
   protected
     HL: TStringList;
     RL: TStrings;
     TL: TStrings;
+{$ifdef WantListboxes}
     procedure InitParamListbox;
+{$endif}
   public
     FWantButtonReport: Boolean;
     procedure ShowTrimm;
@@ -132,16 +145,21 @@ type
     HelpText: TText;
     ReportText: TText;
     TrimmText: TText;
+{$ifdef WantListboxes}
     ParamListbox: TListBox;
     ReportListbox: TListBox;
+{$endif}
     ReportLabel: TText;
-    function FindItemIndexOfParam(ML: TStrings): Integer;
     procedure UpdateItemIndexParams;
-    procedure UpdateItemIndexParamsLB;
     procedure UpdateItemIndexReports;
     procedure UpdateItemIndexTrimms;
+{$ifdef WantListboxes}
+    function FindItemIndexOfParam(ML: TStrings): Integer;
+    procedure UpdateItemIndexParamsLB;
     procedure ParamListboxChange(Sender: TObject);
     procedure ReportListboxChange(Sender: TObject);
+{$endif}
+    procedure UpdateHintText(fa: Integer);
   public
     procedure ShowReport(const Value: TRggReport);
     function GetShowDataText: Boolean;
@@ -167,6 +185,7 @@ type
   public
     Raster: Integer;
     Margin: Integer;
+    SpeedPanelMargin: Integer;
     ListboxWidth: Integer;
     ReportMemoWidth: Integer;
     SpeedPanelHeight: Integer;
@@ -226,28 +245,26 @@ type
   public
     NewControlSize: TControlSize;
     InitTimer: TTimer;
-{$ifdef WantRotaForm3}
     ExitSizeMoveCounter: Integer;
     ClearStateCounter: Integer;
 
+{$ifdef WantRotaForm3}
     Viewport: TViewport3D;
-
-    procedure FormResizeEnd(Sender: TObject);
-    procedure ApplicationEventsIdle(Sender: TObject; var Done: Boolean);
-    procedure FormActivate(Sender: TObject);
+{$endif}
 
     procedure HandleClearStateException;
+    procedure FormActivate(Sender: TObject);
+    procedure FormResizeEnd(Sender: TObject);
     procedure DoOnResize;
     procedure DoOnResizeEnd;
-{$endif}
     procedure InitTimerTimer(Sender: TObject);
-    procedure InitIsSandboxed;
     procedure InitWantOnResize;
     procedure UpdateColorScheme;
     procedure LayoutComponents;
     function GetActionFromKey(Shift: TShiftState; Key: Word): Integer;
     function GetActionFromKeyChar(KeyChar: char): Integer;
     function GetChecked(fa: Integer): Boolean;
+    function GetEnabled(fa: Integer): Boolean;
     procedure HandleAction(fa: Integer);
     procedure RotaFormRotateZ(Delta: single);
     procedure RotaFormZoom(Delta: single);
@@ -266,11 +283,11 @@ type
     property IsUp: Boolean read GetIsUp write SetIsUp;
     property CanShowMemo: Boolean read GetCanShowMemo;
   public
-    BitmapWidth: Integer;
-    BitmapHeight: Integer;
     Image: TOriginalImage;
     ImagePositionX: single;
     ImagePositionY: single;
+    BitmapWidth: Integer;
+    BitmapHeight: Integer;
     TextPositionX: single;
     TextPositionY: single;
     procedure UpdateFederText;
@@ -291,6 +308,7 @@ type
     procedure UpdateControllerGraph;
     procedure UpdateChartGraph;
     procedure LayoutImages;
+    procedure ConfigUpdatedOK;
   protected
     procedure DestroyForms;
     procedure ShowDiagramC;
@@ -325,6 +343,7 @@ uses
   FrmDiagramC,
   FrmDiagramE,
   FrmDiagramQ,
+  RiggVar.Util.AppUtils,
   RiggVar.RG.Main,
   RiggVar.RG.Speed01,
   RiggVar.RG.Speed02,
@@ -335,7 +354,7 @@ uses
   RiggVar.FB.ActionConst,
   RiggVar.FB.Classes;
 
-{$ifdef MACOS}
+{$ifdef OSX}
 const
   HelpCaptionText = 'Trimm420 - press ? for help';
   ApplicationTitleText = 'Trimm420';
@@ -358,6 +377,34 @@ begin
     Main.Logger.Info(E.Message);
 end;
 
+procedure TFormMain.ApplicationEventsIdle(Sender: TObject; var Done: Boolean);
+begin
+  if IsUp then
+  begin
+    if Main <> nil then
+    begin
+      if not MainVar.AppIsClosing then
+      begin
+
+        if IsUp then
+        begin
+{$ifdef WantRotaForm3}
+          RotaForm.DoOnIdle;
+{$endif}
+        end;
+
+        if DrawingNeeded then
+        begin
+          DrawingNeeded := False;
+          Main.Draw;
+        end;
+
+      end;
+    end;
+  end;
+  Done := True;
+end;
+
 procedure TFormMain.FormCreate(Sender: TObject);
 begin
   FormatSettings.DecimalSeparator := '.';
@@ -376,11 +423,7 @@ begin
 
   NewControlSize := TControlSize.Create(TSizeF.Create(0, 0));
 
-  InitIsSandboxed;
-
-{$ifdef WantRotaForm3}
   InitWantOnResize;
-{$endif}
 
 {$ifdef WantInitTimer}
   InitTimer := TTimer.Create(Self);
@@ -388,13 +431,15 @@ begin
   InitTimer.OnTimer := InitTimerTimer; { will call FormCreate2 and FormShow }
   InitTimer.Enabled := True;
   Exit;
-{$endif}
-
+{$else}
   FormCreate2(Sender);
+{$endif}
 end;
 
 procedure TFormMain.FormDestroy(Sender: TObject);
 begin
+  TMessageManager.DefaultManager.Unsubscribe(TOrientationChangedMessage, DoOrientationChanged);
+
   MainVar.AppIsClosing := True;
 
   FormDestroy2(Sender);
@@ -418,33 +463,33 @@ end;
 
 procedure TFormMain.FormCreate2(Sender: TObject);
 begin
+{$ifdef MSWINDOWS}
 {$if defined(Debug) and not defined(WantRotaForm3) }
   ReportMemoryLeaksOnShutdown := True; // there is a small systematic Memory leak when using RotaForm3
+{$endif}
 {$endif}
 
   FScale := 1.0;
 {$ifdef MSWINDOWS}
-  { On MACOS Screen.WorkAreaHeight is not scaled,
-    so it would be wrong to div by scale.
-
-    On Windows Screen.WorkAreaHeight is scaled and should be divved. }
   FScale := Handle.Scale;
 {$endif}
+  MainVar.Scale := FScale;
 
   Application.OnException := ApplicationEventsException;
+  Application.OnIdle := ApplicationEventsIdle;
 
   InitScreenPos;
 
-  Margin := 2;
+  SpeedPanelMargin := 2;
+  Margin := 10;
   Raster := MainVar.Raster;
-  MainVar.Scale := FScale;
   MainVar.ScaledRaster := Raster;
 
   SpeedPanelHeight := Raster;
   ListboxWidth := 200;
 
-  BitmapWidth := Round(Screen.Width);
-  BitmapHeight := Round(Screen.Height);
+  BitmapWidth := Ceil(Screen.WorkAreaWidth);
+  BitmapHeight := Ceil(Screen.WorkAreaHeight);
 
 {$ifdef WantMenu}
   FederMenu := TFederMenu.Create;
@@ -457,8 +502,10 @@ begin
 
   CreateComponents;
 
+{$ifdef WantListboxes}
   SetupListbox(ParamListbox);
   SetupListbox(ReportListbox);
+{$endif}
 
   Rigg := TModelFactory.NewRigg;
   Rigg.ControllerTyp := ctOhne;
@@ -473,8 +520,10 @@ begin
 {$endif}
 
   RotaForm.Init;
+
   RotaForm.SwapRota(1);
 
+{$ifdef WantListboxes}
   { Params }
   if ParamListbox <> nil then
   begin
@@ -482,12 +531,18 @@ begin
     ParamListbox.OnChange := ParamListboxChange;
     ParamListbox.ItemIndex := ParamListbox.Items.IndexOf('Vorstag');
   end;
+{$endif}
 
   { Reports }
   HL := TStringList.Create;
   RL := TStringList.Create;
   ReportManager := TRggReportManager.Create(RL);
-  ReportManager.CurrentReport := rgDiffText;
+  if Main.IsPhone then
+    ReportManager.CurrentReport := rgTrimmText
+  else
+    ReportManager.CurrentReport := rgDiffText;
+
+{$ifdef WantListboxes}
   if ReportListbox <> nil then
   begin
     ReportManager.InitLB(ReportListbox.Items);
@@ -495,6 +550,7 @@ begin
     ReportListbox.ItemIndex := ReportListbox.Items.IndexOf(
     ReportManager.GetReportCaption(ReportManager.CurrentReport));
   end;
+{$endif}
 
   HintText.TextSettings.FontColor := claYellow;
 
@@ -547,13 +603,14 @@ begin
   Self.OnResize := FormResize;
   Self.OnKeyUp := FormKeyUp;
 
-{$ifdef WantRotaForm3}
   if not MainVar.IsSandBoxed then
     Main.ReadTrimmFile0;
 
+{$ifdef WantRotaForm3}
   Self.OnActivate := FormActivate;
-  Application.OnIdle := ApplicationEventsIdle;
 {$endif}
+
+Application.OnIdle := ApplicationEventsIdle;
 
 {$ifdef WantResizeEnd}
   Self.OnResizeEnd := FormResizeEnd;
@@ -570,6 +627,9 @@ begin
 {$ifdef WantMenu}
   PopulateMenu;
 {$endif}
+
+  TMessageManager.DefaultManager.SubscribeToMessage(TOrientationChangedMessage, DoOrientationChanged);
+  RegisterForAppEvents;
 end;
 
 procedure TFormMain.FormDestroy2(Sender: TObject);
@@ -603,7 +663,9 @@ begin
 
   if Viewport.IsFocused then
   begin
+{$ifdef WantListboxes}
     ParamListbox.SetFocus;
+{$endif}
     Exit;
   end;
 {$endif}
@@ -662,17 +724,31 @@ begin
   ClientWidth := w;
   ClientHeight := h;
   Flash(Format('%d x %d', [ClientWidth, ClientHeight]));
-{$ifdef WantRotaForm3}
   DoOnResizeEnd;
+end;
+
+procedure TFormMain.UpdateHintText(fa: Integer);
+begin
+  if (HintText <> nil) and HintText.Visible then
+  begin
+{$if defined(IOS) or defined(Android)}
+  if fa <> faNoop then
+    HintText.Text := Main.ActionHandler.GetCaption(fa) + #10 + Main.ActionHandler.GetShortcutString(fa)
+  else
+    HintText.Text := '';
 {$endif}
+  end;
 end;
 
 procedure TFormMain.UpdateItemIndexParams;
 begin
+{$ifdef WantListboxes}
   UpdateItemIndexParamsLB;
+{$endif}
   ShowTrimm;
 end;
 
+{$ifdef WantListboxes}
 procedure TFormMain.UpdateItemIndexParamsLB;
 var
   ii: Integer;
@@ -706,12 +782,16 @@ begin
     end;
   end;
 end;
+{$endif}
 
 procedure TFormMain.UpdateItemIndexReports;
+{$ifdef WantListboxes}
 var
   ii: Integer;
   ij: Integer;
+{$endif}
 begin
+{$ifdef WantListboxes}
   if ReportListbox = nil then
     Exit;
   ii := ReportListbox.ItemIndex;
@@ -722,6 +802,7 @@ begin
     ReportListbox.ItemIndex := ij;
     ReportListbox.OnChange := ReportListboxChange;
   end;
+{$endif}
 end;
 
 procedure TFormMain.UpdateItemIndexTrimms;
@@ -732,6 +813,7 @@ procedure TFormMain.FormMouseWheel(Sender: TObject; Shift: TShiftState;
   WheelDelta: Integer; var Handled: Boolean);
 begin
 {$ifdef WantRotaForm3}
+  { MouseWheel messages will be handled by TViewport3D }
   if RotaForm.Current = 3 then
     Exit;
 {$endif}
@@ -741,14 +823,11 @@ end;
 
 procedure TFormMain.FormShow(Sender: TObject);
 begin
-{$ifdef WantRotaForm3}
-  { this eventhandler is most likely not even assigned (iOS) }
   if Main = nil then
     Exit;
 
   Main.Logger.Info('in FormShow');
   DoOnResizeEnd;
-{$endif}
 
   if (InitTimer <> nil) and not InitTimerCalled then
     Exit;
@@ -757,21 +836,25 @@ begin
   begin
     FormShown := True;
 
-    Main.CycleToolSet(0);
+    Main.FederText1.UpdateToolSet(0);
+    Main.FederText2.UpdateToolSet(0);
+    ShowTrimm;
 
     { ClientHeight is now available }
     LayoutComponents;
     LayoutImages;
 
+{$ifdef WantListboxes}
     SetupListboxItems(ParamListbox, claAqua);
     SetupListboxItems(ReportListbox, claAquamarine);
+{$endif}
 
     Image.Align := TAlignLayout.Client;
 
     UpdateReport;
 
     RotaForm.IsUp := True;
-    RotaForm.Draw;
+    ViewPoint := vp3D;
   end;
 end;
 
@@ -780,9 +863,7 @@ begin
   if (Main <> nil) and Main.IsUp then
   begin
     MainVar.Scale := Handle.Scale;
-{$ifdef WantRotaForm3}
     DoOnResize;
-{$endif}
     Inc(Main.ResizeCounter);
     Main.UpdateTouch;
     UpdateFederText;
@@ -805,7 +886,9 @@ procedure TFormMain.CheckSpaceForListbox;
 begin
   if not FormShown then
     Exit;
+{$ifdef WantListboxes}
   ReportListbox.Visible := ClientHeight > 910;
+{$endif}
 end;
 
 procedure TFormMain.CheckSpaceForMemo;
@@ -817,6 +900,7 @@ begin
 
   if not CanShowMemo then
   begin
+    { Phone screen }
     if RotaForm.LegendItemChecked then
     begin
       RotaForm.LegendBtnClick(nil);
@@ -825,23 +909,42 @@ begin
     SpeedPanel.Visible := False;
 
     TrimmText.Visible := False;
+
+{$ifdef WantListboxes}
     ParamListbox.Visible := False;
     if ReportListbox <> nil then
       ReportListbox.Visible := False;
+{$endif}
 
-    HelpText.Position.X := Raster + 30;
-    ReportText.Position.X := Raster + 30;
+    HintText.Position.X := 2 * Raster + Margin;
+    HintText.Position.Y := 1 * Raster + Margin;
+
+    HelpText.Position.X := Raster + Margin;
+    HelpText.Position.Y := 2 * Raster + Margin;
+
+    ReportText.Position.X := Raster + Margin;
+    ReportText.Position.Y := 2 * Raster + Margin;
   end
   else
   begin
+    { Tablet screen }
     SpeedPanel.Visible := True;
 
     TrimmText.Visible := True;
+
+{$ifdef WantListboxes}
     ParamListbox.Visible := True;
     ReportListbox.Visible := True;
+{$endif}
+
+    HintText.Position.X := TextPositionX;
+    HintText.Position.Y := 2 * Raster + Margin;
 
     HelpText.Position.X := TextPositionX;
+    HelpText.Position.Y := TextPositionY;
+
     ReportText.Position.X := TextPositionX;
+    ReportText.Position.Y := TextPositionY;
   end;
 end;
 
@@ -850,11 +953,11 @@ begin
   if not ComponentsCreated then
     Exit;
 
-  { At aplication start up FormResize is called serveral times,
-    but always before FormShow always called. }
+  { At application startup FormResize is called several times,
+    but always before FormShow is called. }
 
   { ClientWidth and ClientHeight are not yet available when starting up.
-    ClientHeigt is available when FormShow is called. }
+    ClientHeight is available when FormShow is called. }
 
   if FormShown then
   begin
@@ -913,20 +1016,18 @@ begin
   GotoNormal;
   if Screen.Width > Screen.Height then
   begin
-    Height := Round(Screen.WorkAreaHeight / FScale);
+    Height := Round(Screen.WorkAreaHeight);
     ClientWidth := Round(ClientHeight * 4 / 3);
     Top := 0;
   end
   else
   begin
-    Width := Round(Screen.WorkAreaWidth / FScale);
+    Width := Round(Screen.WorkAreaWidth);
     ClientHeight := Round(ClientWidth * 3 / 4);
     Left := 0;
   end;
   Flash('Landscape');
-{$ifdef WantRotaForm3}
   DoOnResizeEnd;
-{$endif}
 end;
 
 procedure TFormMain.GotoPortrait;
@@ -934,21 +1035,19 @@ begin
   GotoNormal;
   if Screen.Width > Screen.Height then
   begin
-    Height := Round(Screen.WorkAreaHeight / FScale);
+    Height := Round(Screen.WorkAreaHeight);
     ClientWidth := Round(ClientHeight * 3 / 4);
     Top := 0;
   end
   else
   begin
-    Width := Round(Screen.WorkAreaWidth / FScale);
+    Width := Round(Screen.WorkAreaWidth);
     ClientHeight := Round(ClientWidth * 4 / 3);
     Left := 0;
     Top := 0;
   end;
   Flash('Portrait');
-{$ifdef WantRotaForm3}
   DoOnResizeEnd;
-{$endif}
 end;
 
 procedure TFormMain.GotoSquare;
@@ -956,20 +1055,18 @@ begin
   GotoNormal;
   if Screen.Width > Screen.Height then
   begin
-    Height := Round(Screen.WorkAreaHeight / FScale);
+    Height := Round(Screen.WorkAreaHeight);
     ClientWidth := Round(ClientHeight);
     Top := 0;
   end
   else
   begin
-    Width := Round(Screen.WorkAreaWidth / FScale);
+    Width := Round(Screen.WorkAreaWidth);
     ClientHeight := Round(ClientWidth);
     Left := 0
   end;
   Flash('Square');
-{$ifdef WantRotaForm3}
   DoOnResizeEnd;
-{$endif}
 end;
 
 procedure TFormMain.Flash(s: string);
@@ -979,7 +1076,9 @@ end;
 
 procedure TFormMain.HandleShowHint(Sender: TObject);
 begin
+{$if defined(MSWINDOWS) or defined(OSX)}
   HintText.Text := Application.Hint;
+{$endif}
 end;
 
 procedure TFormMain.HandleAction(fa: Integer);
@@ -1092,7 +1191,7 @@ begin
     faShowDiagE: ShowDiagramE;
     faShowDiagQ: ShowDiagramQ;
 
-    faToggleSandboxed: MainVar.IsSandboxed := MainConst.MustBeSandboxed or (not MainVar.IsSandboxed);
+    faToggleSandboxed: ;
     faToggleAllProps: MainVar.AllProps := not MainVar.AllProps;
     faToggleAllTags: MainVar.AllTags := not MainVar.AllTags;
 
@@ -1104,6 +1203,11 @@ begin
     faResetPosition,
     faResetRotation,
     faResetZoom: RotaForm.HandleAction(fa);
+
+    faSalingTypFest,
+    faSalingTypDrehbar,
+    faSalingTypOhne,
+    faSalingTypOhneStarr: UpdateReport;
 
 {$ifdef WantRotaForm3}
     faToggleViewType: RotaForm.HandleAction(fa);
@@ -1271,6 +1375,8 @@ end;
 
 function TFormMain.GetOpenFileName(dn, fn: string): string;
 begin
+  Main.Logger.Info('in TFormMain.GetOpenFileName');
+
   if not Assigned(OpenDialog) then
     OpenDialog := TOpenDialog.Create(self);
 
@@ -1286,11 +1392,15 @@ begin
   if OpenDialog.Execute then
     result := OpenDialog.FileName
   else
+  begin
     result := '';
+    Main.Logger.Info('  FileName is empty string');
+  end;
 end;
 
 function TFormMain.GetSaveFileName(dn, fn: string): string;
 begin
+  Main.Logger.Info('in TFormMain.GetSaveFileName');
   if not Assigned(SaveDialog) then
     SaveDialog := TSaveDialog.Create(self);
 
@@ -1307,7 +1417,10 @@ begin
   if SaveDialog.Execute then
     result := SaveDialog.FileName
   else
+  begin
     result := '';
+    Main.Logger.Info('  FileName is empty string');
+  end;
 end;
 
 function TFormMain.GetShowDataText: Boolean;
@@ -1375,33 +1488,11 @@ begin
   T.Parent := Self;
   T.WordWrap := False;
   T.HorzTextAlign := TTextAlign.Leading;
-
-{$ifdef MSWINDOWS}
-  T.Font.Family := 'Consolas';
-{$else}
-  T.Font.Family := 'Courier New';
-{$endif}
+  T.Font.Family := TAppUtils.GetMonspacedFontFamilyName;
 
   T.Font.Size := fs;
   T.AutoSize := True;
   T.HitTest := False;
-end;
-
-procedure TFormMain.SetupListbox(LB: TListBox);
-begin
-  if LB = nil then
-    Exit;
-
-{$ifdef FMX}
-  LB.ShowScrollBars := False;
-  LB.StyleLookup := 'transparentlistboxstyle';
-{$endif}
-
-{$ifdef Vcl}
-  LB.Font.Name := 'Consolas';
-  LB.Font.Size := 11;
-  LB.Font.Color := clBlue;
-{$endif}
 end;
 
 procedure TFormMain.SetupMemo(MM: TMemo);
@@ -1409,22 +1500,12 @@ begin
   if MM = nil then
     Exit;
 
-{$ifdef FMX}
   MM.ControlType := TControlType.Styled;
   MM.StyledSettings := [];
   MM.ShowScrollBars := True;
-  MM.TextSettings.Font.Family := 'Consolas';
+  MM.TextSettings.Font.Family := TAppUtils.GetMonspacedFontFamilyName;
   MM.TextSettings.Font.Size := 14;
   MM.TextSettings.FontColor := claBlue;
-{$endif}
-
-{$ifdef Vcl}
-  MM.Parent := Self;
-  MM.Font.Name := 'Consolas';
-  MM.Font.Size := 11;
-  MM.Font.Color := clTeal;
-  MM.ScrollBars := TScrollStyle.ssBoth;
-{$endif}
 end;
 
 procedure TFormMain.CreateComponents;
@@ -1458,6 +1539,7 @@ begin
   SetupText(TrimmText);
 
   Image := TOriginalImage.Create(Self, BitmapWidth, BitmapHeight);
+  Image.WantWorkArea := True;
   Image.Name := 'Image';
   Image.Parent := Self;
 
@@ -1498,6 +1580,7 @@ begin
 
   SpeedPanel := SpeedPanel01;
 
+{$ifdef WantListboxes}
   ParamListbox := TListbox.Create(Self);
   ParamListbox.Name := 'ParamListbox';
   ParamListbox.Parent := Self;
@@ -1507,12 +1590,19 @@ begin
   ReportListbox.Name := 'ReportListbox';
   ReportListbox.Parent := Self;
   ReportListbox.Opacity := OpacityValue;
+{$endif}
 
   ComponentsCreated := True;
 end;
 
 procedure TFormMain.ToggleSpeedPanel;
 begin
+  if Main.IsPhone then
+  begin
+    SpeedPanel.Visible := False;
+    Exit;
+  end;
+
   if SpeedPanel = SpeedPanel01 then
     SwapSpeedPanel(RotaForm.Current)
   else
@@ -1523,6 +1613,12 @@ procedure TFormMain.SwapSpeedPanel(Value: Integer);
 begin
   SpeedPanel.Visible := False;
 
+  if Main.IsPhone then
+    Exit;
+
+  if Main.IsPortrait then
+    Exit;
+
     case Value of
       1: SpeedPanel := SpeedPanel03;
       2: SpeedPanel := SpeedPanel04;
@@ -1531,7 +1627,7 @@ begin
         SpeedPanel := SpeedPanel01;
     end;
 
-  SpeedPanel.Width := ClientWidth - 3 * Raster - Margin;
+  SpeedPanel.Width := ClientWidth - 3 * Raster - SpeedPanelMargin;
   SpeedPanel.Visible := True;
   SpeedPanel.UpdateLayout;;
   SpeedPanel.DarkMode := MainVar.ColorScheme.IsDark;
@@ -1541,9 +1637,9 @@ end;
 procedure TFormMain.LayoutSpeedPanel(SP: TActionSpeedBar);
 begin
   SP.Anchors := [];
-  SP.Position.X := 2 * Raster + Margin;
+  SP.Position.X := 2 * Raster + SpeedPanelMargin;
   SP.Position.Y := Raster + Margin;
-  SP.Width := ClientWidth - 3 * Raster - 2 * Margin;
+  SP.Width := ClientWidth - 3 * Raster - 2 * SpeedPanelMargin;
   SP.Height := SpeedPanelHeight;
   SP.Anchors := [TAnchorKind.akLeft, TAnchorKind.akTop, TAnchorKind.akRight];
   SP.UpdateLayout;
@@ -1570,6 +1666,7 @@ begin
   TrimmText.Width := ListboxWidth;
   TrimmText.Height := 150;
 
+{$ifdef WantListboxes}
   ParamListbox.Position.X := TrimmText.Position.X;
   ParamListbox.Position.Y := TrimmText.Position.Y + TrimmText.Height + Margin;
   ParamListbox.Width := ListboxWidth;
@@ -1580,23 +1677,25 @@ begin
   ReportListbox.Width := ParamListbox.Width;
   ReportListbox.Height := ClientHeight - ReportListbox.Position.Y - Raster - Margin;
   ReportListbox.Anchors := ReportListbox.Anchors + [TAnchorKind.akBottom];
+{$endif}
 
   ImagePositionX := TrimmText.Position.X + ListboxWidth + Margin;
   ImagePositionY := TrimmText.Position.Y;
 
-  HintText.Position.X := ImagePositionX + 150;
-  HintText.Position.Y := ImagePositionY;
+  HintText.Position.X := Raster + ListboxWidth + 2 * Margin;
+  HintText.Position.Y := 2 * Raster + Margin;
 
-  HelpText.Position.X := ImagePositionX + 150;
-  HelpText.Position.Y := ImagePositionY + 30 + Margin;
+  HelpText.Position.X := HintText.Position.X;
+  HelpText.Position.Y := HintText.Position.Y + 60;
 
   ReportText.Position.X := HelpText.Position.X;
   ReportText.Position.Y := HelpText.Position.Y;
 
+  { remember text postions for tablet }
   TextPositionX := ReportText.Position.X;
   TextPositionY := ReportText.Position.Y;
 
-  SpeedPanel.Width := ClientWidth - 3 * Raster - Margin;
+  SpeedPanel.Width := ClientWidth - 3 * Raster - SpeedPanelMargin;
 end;
 
 procedure TFormMain.LineColorBtnClick(Sender: TObject);
@@ -1774,7 +1873,11 @@ begin
   SalingImage.Position.Y := PosY + ControllerImage.Height + Margin;
   SalingImage.Anchors := [TAnchorKind.akTop, TAnchorKind.akRight];
 
+{$if defined(pfAndroid) or defined(iOS)}
+  ChartImage.Position.X := ImagePositionX + 200;
+{$else}
   ChartImage.Position.X := ImagePositionX + 400;
+{$endif}
   ChartImage.Position.Y := ImagePositionY + 0;
 end;
 
@@ -1784,6 +1887,7 @@ begin
   RotaForm.ViewPoint := Value;
 end;
 
+{$ifdef WantListboxes}
 procedure TFormMain.ReportListboxChange(Sender: TObject);
 var
   ii: Integer;
@@ -1845,6 +1949,7 @@ begin
   s := rm.Param2Text(fp);
   ParamListbox.ItemIndex := LI.IndexOf(s);
 end;
+{$endif}
 
 procedure TFormMain.ShowTrimmData;
 begin
@@ -1872,6 +1977,19 @@ begin
     UpdateFederText;
   end;
   UpdateReport;
+end;
+
+procedure TFormMain.SetupListbox(LB: TListBox);
+begin
+  if LB = nil then
+    Exit;
+
+  LB.ShowScrollBars := False;
+  LB.StyleLookup := 'transparentlistboxstyle';
+
+{$if defined(IOS) or defined(Android)}
+  LB.ItemHeight := 24;
+{$endif}
 end;
 
 procedure TFormMain.SetupListboxItems(LB: TListbox; cla: TAlphaColor);
@@ -1903,7 +2021,19 @@ begin
   T := cr.FindStyleResource('text') as TText;
   if Assigned(T) then
   begin
+{$ifdef MSWINDOWS}
     T.Font.Size := 14;
+{$endif}
+{$ifdef OSX}
+    T.Font.Size := 14;
+{$endif}
+{$ifdef Android}
+    T.Font.Size := 16;
+{$endif}
+{$ifdef IOS}
+    T.Font.Size := 16;
+{$endif}
+
     T.TextSettings.FontColor := Cardinal(cr.Tag);
   end;
 end;
@@ -2012,6 +2142,57 @@ begin
     faRotaForm1: result := RotaForm.Current = 1;
     faRotaForm2: result := RotaForm.Current = 2;
     faRotaForm3: result := RotaForm.Current = 3;
+  end;
+end;
+
+function TFormMain.GetEnabled(fa: TFederAction): Boolean;
+begin
+  { ToDo: Make sure that RotaFormX  is enabled, when implemented }
+  case fa of
+    faRotaForm1: result := True;
+    faRotaForm2: result := True;
+    faRotaForm3: result := False;
+
+    faToggleSpeedPanel: result := not Main.IsPhone;
+
+    faSalingTypDrehbar,
+    faSalingTypOhne,
+    faSalingTypOhneStarr: result := not Main.Demo;
+
+    faWantRenderH,
+    faWantRenderP,
+    faWantRenderF,
+    faWantRenderS: result := (RotaForm.Current = 3) or ((RotaForm.Current = 1) and RotaForm.UseDisplayList);
+
+    faWantRenderE: result := RotaForm.Current = 3;
+
+    faToggleUseDisplayList,
+    faToggleUseQuickSort,
+    faToggleShowLegend: result := RotaForm.Current = 2;
+
+    faToggleMatrixText: result := RotaForm.Current = 1;
+
+    faToggleSegmentF,
+    faToggleSegmentR,
+    faToggleSegmentS,
+    faToggleSegmentM,
+    faToggleSegmentV,
+    faToggleSegmentW,
+    faToggleSegmentA: result := RotaForm.Current = 2;
+
+    faToggleSegmentC: result := (RotaForm.Current = 2) and (Main.Param = fpController);
+
+    faGrauBtn,
+    faBlauBtn,
+    faMultiBtn: result := RotaForm.Current = 1;
+
+    faRggKoppel: result := RotaForm.Current <> 3;
+    faRggHull: result := RotaForm.Current <> 2;
+
+    faToggleSandboxed: result := False;
+
+    else
+      result := True;
   end;
 end;
 
@@ -2125,7 +2306,7 @@ begin
     CheckFormBounds(FormChart);
   end;
   FormChart.Visible := True;
-  FormChart.Show; //needed on Mac
+  FormChart.Show; // needed on Mac
 end;
 
 procedure TFormMain.ShowDiagramC;
@@ -2139,13 +2320,13 @@ begin
 
     if not ChartImage.Visible then
     begin
-      Main.FederText.ActionPage := 9;
+//      Main.FederText.ActionPage := 9;
       ChartImageBtnClick(nil);
     end;
   end;
 
   FormDiagramC.Visible := True;
-  FormDiagramC.Show; //needed on Mac
+  FormDiagramC.Show; // needed on Mac
 end;
 
 procedure TFormMain.ShowDiagramE;
@@ -2156,7 +2337,7 @@ begin
     FormDiagramE.Parent := self; // needed for Alt-Tab
   end;
   FormDiagramE.Visible := True;
-  FormDiagramE.Show; //needed on Mac
+  FormDiagramE.Show; // needed on Mac
 end;
 
 procedure TFormMain.ShowDiagramQ;
@@ -2167,11 +2348,12 @@ begin
     FormDiagramQ.Parent := self; // needed for Alt-Tab
   end;
   FormDiagramQ.Visible := True;
-  FormDiagramQ.Show; //needed on Mac
+  FormDiagramQ.Show; // needed on Mac
 end;
 
 procedure TFormMain.ConfigBtnClick(Sender: TObject);
 begin
+{$if defined(MSWINDOWS) or defined(OSX)}
   if FormConfig = nil then
   begin
     FormConfig := TFormConfig.Create(Application);
@@ -2184,15 +2366,40 @@ begin
   FormConfig.ShowModal;
   if FormConfig.ModalResult = mrOK then
   begin
+    ConfigUpdatedOK;
+  end;
+{$endif}
+
+{$if defined(IOS) or defined(Android)}
+  if FormConfig = nil then
+  begin
+    FormConfig := TFormConfig.Create(nil);
+    FormConfig.Parent := self;
+    FormConfig.Init(Rigg);
+  end;
+
+  { Istwerte in GSB aktualisieren für aktuelle Werte in Optionform }
+  Rigg.UpdateGSB;
+  FormConfig.Show;
+{$endif}
+end;
+
+procedure TFormMain.ConfigUpdatedOK;
+begin
+  { when Form is not shown modally }
+
+//  if FormConfig.ModalResult = mrOK then
+//  begin
     Rigg.UpdateGlieder; { neue GSB Werte --> neue Integerwerte }
     Rigg.Reset; { neue Integerwerte --> neue Gleitkommawerte }
     Main.UpdateGraph(False);
     UpdateReport;
-  end;
+//  end;
 end;
 
 procedure TFormMain.TrimmTabBtnClick(Sender: TObject);
 begin
+{$if defined(MSWINDOWS) or defined(OSX)}
   if not Assigned(FormTrimmTab) then
   begin
     FormTrimmTab := TFormTrimmTab.Create(Application);
@@ -2205,6 +2412,22 @@ begin
   begin
     UpdateReport;
   end;
+{$endif}
+
+{$if defined(IOS) or defined(Android)}
+  if not Assigned(FormTrimmTab) then
+  begin
+    FormTrimmTab := TFormTrimmTab.Create(nil);
+    FormTrimmTab.Parent := self;
+    FormTrimmTab.Init(Rigg);
+  end;
+
+  FormTrimmTab.Show;
+//  if FormTrimmTab.ModalResult = mrOK then
+//  begin
+//    UpdateReport; // done from within FormTrimmTab
+//  end;
+{$endif}
 end;
 
 procedure TFormMain.DestroyForms;
@@ -2249,13 +2472,15 @@ begin
   if ReportLabel <> nil then
     ReportLabel.TextSettings.FontColor := SpeedColorScheme.claReport;
 
-  HintText.TextSettings.FontColor := SpeedColorScheme.claHintText;
+  HintText.TextSettings.FontColor := MainVar.ColorScheme.claHint;
   ReportText.TextSettings.FontColor := SpeedColorScheme.claReportText;
   HelpText.TextSettings.FontColor := SpeedColorScheme.claHelpText;
   TrimmText.TextSettings.FontColor := SpeedColorScheme.claTrimmText;
 
+{$ifdef WantListboxes}
   SetupListboxItems(ParamListbox, SpeedColorScheme.claParamList);
   SetupListboxItems(ReportListbox, SpeedColorScheme.claReportList);
+{$endif}
 
   ControllerGraph.BackgroundColor := MainVar.ColorScheme.claBackground;
   UpdateControllerGraph;
@@ -2399,33 +2624,44 @@ end;
 procedure TFormMain.ToggleAllText;
 var
   b: Boolean;
+  c: Boolean;
 begin
   if not Main.FederText.Visible then
     Exit;
 
-  if Main.FederText = Main.FederText2 then
+  if Main.FederText = Main.FederTextPhone then
     Exit;
 
+  { determine the current situation }
+  b := ReportText.Visible or HelpText.Visible;
+
+  { deal with ReportText and HelpText,
+    toggle text visibility
+    make sure that ReportText is shown when switching AllText on }
+  ReportText.Visible := not b;
+  HelpText.Visible := False;
+
+  { now deal with SpeedPanel, Listboxes and TrimmText, if any }
+  c := ReportText.Visible; // go in sync with text visibility
   if not CanShowMemo then
-    Exit;
-
-  b := not ParamListbox.Visible;
-
-  SpeedPanel.Visible := b;
-  TrimmText.Visible := b;
-  ParamListbox.Visible := b;
-  ReportListbox.Visible := b;
-
-  if not b then
   begin
-    ReportText.Visible := False;
-    HelpText.Visible := False;
-  end
-  else
-  begin
-    ReportText.Visible := True;
-    HelpText.Visible := False;
+    { force off
+        when on phone target
+        or when not enough space on tablet }
+    c := False;
   end;
+  SpeedPanel.Visible := c;
+  TrimmText.Visible := c;
+{$ifdef WantListboxes}
+  ParamListbox.Visible := c;
+  ReportListbox.Visible := c;
+{$endif}
+
+  { test this out on the desktop with keyboard shortcuts for
+    faToggleAllText (q),
+    faToggleReport (r),
+    faToggleHelp (H)
+  }
 end;
 
 function TFormMain.GetCanShowMemo: Boolean;
@@ -2444,11 +2680,8 @@ end;
 
 procedure TFormMain.InitWantOnResize;
 begin
-{$ifdef MACOS}
   MainVar.WantOnResize := True;
-{$endif}
 
-  MainVar.WantOnResize := True;
 {$ifdef MSWINDOWS}
   { see RSP-18851 }
 {$ifdef ResizeEndSupported}
@@ -2456,25 +2689,6 @@ begin
   MainVar.WantOnResize := False;
 {$endif}
 {$endif}
-{$endif}
-
-{$ifdef IOS}
-  MainVar.WantOnResize := True;
-{$endif}
-end;
-
-procedure TFormMain.InitIsSandboxed;
-begin
-{$ifdef MACOS}
-  MainVar.IsSandboxed := True;
-{$endif}
-
-{$ifdef MSWINDOWS}
-  MainVar.IsSandboxed := MainConst.MustBeSandboxed;
-{$endif}
-
-{$ifdef IOS}
-  MainVar.IsSandboxed := False;
 {$endif}
 end;
 
@@ -2489,22 +2703,14 @@ begin
   end;
 end;
 
-{$ifdef WantRotaForm3}
-procedure TFormMain.ApplicationEventsIdle(Sender: TObject; var Done: Boolean);
-begin
-  if IsUp then
-  begin
-    RotaForm.DoOnIdle;
-  end;
-  Done := True;
-end;
-
 procedure TFormMain.FormActivate(Sender: TObject);
 begin
+{$ifdef WantRotaForm3}
   if IsUp then
   begin
     Viewport.SetFocus;
   end;
+{$endif}
 {$ifdef MSWINDOWS}
 {$ifdef WantDeviceCheck}
   if DeviceCheck <> nil then
@@ -2531,10 +2737,15 @@ begin
   begin
     NewControlSize.Width := ClientWidth;
     NewControlSize.Height := ClientHeight;
-    Viewport.Size := NewControlSize;
+{$ifdef WantRotaForm3}
+    if not (Viewport.Align = TAlignLayout.Client) then
+      Viewport.Size := NewControlSize;
+{$endif}
+    if not (Image.Align = TAlignLayout.Client) then
+      Image.Size := NewControlSize;
 
-    MainVar.ClientWidth := Round(ClientWidth);
-    MainVar.ClientHeight := Round(ClientHeight);
+    MainVar.ClientWidth := ClientWidth;
+    MainVar.ClientHeight := ClientHeight;
     Main.UpdateTouch;
     CenterRotaForm;
     RotaForm.DoOnResizeEnd;
@@ -2543,10 +2754,11 @@ end;
 
 procedure TFormMain.HandleClearStateException;
 begin
+{$ifdef WantRotaForm3}
   Inc(ClearStateCounter);
   Caption := Format('%d - %d', [ClearStateCounter, Main.ResizeCounter]);
-end;
 {$endif}
+end;
 
 {$ifdef WantMenu}
 procedure TFormMain.PopulateMenu;
@@ -2607,8 +2819,10 @@ begin
 {$endif}
   SpeedPanel.UpdateText;
   Main.CycleToolSet(0);
+{$ifdef WantListboxes}
   UpdateReportListboxText;
   UpdateParamListboxText;
+{$endif}
   Main.ParamCaption := Main.Param2Text(Main.Param);
   ShowTrimm;
 
@@ -2618,6 +2832,7 @@ begin
 {$endif}
 end;
 
+{$ifdef WantListboxes}
 procedure TFormMain.UpdateParamListboxText;
 var
   ii: Integer;
@@ -2646,6 +2861,83 @@ begin
     ReportListbox.ItemIndex := ii;
     ReportListbox.OnChange := ReportListboxChange;
     SetupListboxItems(ReportListbox, claAquamarine);
+  end;
+end;
+{$endif}
+
+procedure TFormMain.DoOrientationChanged(const Sender: TObject; const M: TMessage);
+var
+  screenService: IFMXScreenService;
+begin
+  if TPlatformServices.Current.SupportsPlatformService(IFMXScreenService, screenService) then
+  begin
+    DrawingNeeded := True;
+  end;
+end;
+
+procedure TFormMain.RegisterForAppEvents;
+var aFMXApplicationEventService: IFMXApplicationEventService;
+begin
+  if TPlatformServices.Current.SupportsPlatformService(IFMXApplicationEventService, IInterface(aFMXApplicationEventService)) then
+    aFMXApplicationEventService.SetApplicationEventHandler(HandleAppEvent)
+  else
+    Log('Application Event Service is not supported.');
+end;
+
+function TFormMain.HandleAppEvent(AAppEvent: TApplicationEvent; AContext: TObject): Boolean;
+begin
+  case AAppEvent of
+    TApplicationEvent.FinishedLaunching:
+    begin
+      Log('Finished Launching');
+      DrawingNeeded := True;
+    end;
+    TApplicationEvent.BecameActive:
+    begin
+//      if Assigned(Main) then
+//        Main.UpdateLED;
+      Log('Became Active');
+      DrawingNeeded := True;
+    end;
+    TApplicationEvent.WillBecomeInactive:
+    begin
+//      MainVar.ShouldRecycleSocket := True;
+      Log('Will Become Inactive');
+    end;
+    TApplicationEvent.EnteredBackground:
+    begin
+//      MainVar.ShouldRecycleSocket := True;
+      Log('Entered Background');
+    end;
+    TApplicationEvent.WillBecomeForeground:
+    begin
+      Log('Will Become Foreground');
+    end;
+    TApplicationEvent.WillTerminate:
+    begin
+      Log('Will Terminate');
+    end;
+    TApplicationEvent.LowMemory:
+    begin
+      Log('Low Memory');
+    end;
+    TApplicationEvent.TimeChange:
+    begin
+      Log('Time Change');
+    end;
+    TApplicationEvent.OpenURL:
+    begin
+      Log('Open URL');
+    end;
+  end;
+  result := True;
+end;
+
+procedure TFormMain.Log(s: string);
+begin
+  if IsUp then
+  begin
+    Main.Logger.Info(s);
   end;
 end;
 

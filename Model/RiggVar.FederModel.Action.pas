@@ -28,9 +28,11 @@ type
   TFederActionHandler = class(TFederActionHandlerBase)
   public
     procedure Execute(fa: TFederAction); override;
+    function GetEnabled(fa: TFederAction): Boolean; override;
     function GetChecked(fa: TFederAction): Boolean; override;
     function GetCaption(fa: TFederAction): string; override;
     function GetShortCaption(fa: TFederAction): string; override;
+    function GetShortcutString(fa: TFederAction): string; override;
   end;
 
 implementation
@@ -71,6 +73,14 @@ begin
     result := Main.GetChecked(fa);
 end;
 
+function TFederActionHandler.GetEnabled(fa: TFederAction): Boolean;
+begin
+  if (Main <> nil) and (Main.MainView <> nil) then
+    result := Main.MainView.GetEnabled(fa)
+    else
+      result := True;
+end;
+
 function TFederActionHandler.GetShortCaption(fa: TFederAction): string;
 var
   M: TMain;
@@ -94,6 +104,11 @@ begin
     else
       result := GetFederActionShortEN(fa)
   end;
+end;
+
+function TFederActionHandler.GetShortcutString(fa: TFederAction): string;
+begin
+  result := Main.Keyboard.GetShortcut(fa);
 end;
 
 function TFederActionHandler.GetCaption(fa: TFederAction): string;

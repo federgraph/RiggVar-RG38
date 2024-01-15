@@ -138,10 +138,10 @@ begin
   { The intention is to never call this method in FR38!
     But please double check again, convince yourself,
     with Ctrl-Shift-Enter on 'SaveToFile'. }
-  if not MainConst.MustBeSandboxed then
+  if MainConst.CanReadIniFile then
   begin
     { This is how it used to be. }
-    WriteToIniFile(FileName);
+//    WriteToIniFile(FileName);
     { How should that be done in the future, if at all? }
   end;
 end;

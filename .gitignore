@@ -1,23 +1,29 @@
-﻿*.dproj
+*.dproj
+*.deployproj
+*.ps1
+*.bat
 
+# Output directories
 .vscode/
-
 Deploy/
 Office/
+Win32/
+Win64/
 OSX64/
+OSXARM64/
 Android/
 Android64/
 iOSDevice32/
 iOSDevice64/
 iOSSimulator/
+iOSSimARM64/
+LaunchScreen.TemplateiOS/
 
 AndroidManifest.template.xml
 Entitlement.TemplateOSX.xml
 info.plist.TemplateOSX.xml
 
-*.ps1
-*.bat
-
+### Delphi ###
 # Uncomment these types if you want even more clean repository. But be careful.
 # It can make harm to an existing project source. Read explanations below.
 #
@@ -27,15 +33,15 @@ info.plist.TemplateOSX.xml
 #
 # Type library file (binary). In old Delphi versions it should be stored.
 # Since Delphi 2009 it is produced from .ridl file and can safely be ignored.
-#*.tlb
+*.tlb
 #
 # Diagram Portfolio file. Used by the diagram editor up to Delphi 7.
 # Uncomment this if you are not using diagrams or use newer Delphi version.
-#*.ddp
+*.ddp
 #
 # Visual LiveBindings file. Added in Delphi XE2.
 # Uncomment this if you are not using LiveBindings Designer.
-#*.vlb
+*.vlb
 #
 # Deployment Manager configuration file for your project. Added in Delphi XE2.
 # Uncomment this if it is not mobile development and you do not use remote debug feature.
@@ -43,10 +49,10 @@ info.plist.TemplateOSX.xml
 #
 # C++ object files produced when C/C++ Output file generation is configured.
 # Uncomment this if you are not using external objects (zlib library for example).
-#*.obj
+*.obj
 #
 
-# Delphi compiler-generated binaries (safe to delete)
+# Delphi and Lazarus compiler-generated binaries (safe to delete)
 *.exe
 *.dll
 *.bpl
@@ -60,6 +66,7 @@ info.plist.TemplateOSX.xml
 *.rsm
 *.tds
 *.dcu
+*.ppu
 *.lib
 *.a
 *.o
@@ -83,8 +90,6 @@ __history/
 __recovery/
 *.~*
 
-# Castalia statistics file (since XE7 Castalia is distributed with Delphi)
+# Castalia statistics file
 *.stat
 
-# Boss dependency manager vendor folder https://github.com/HashLoad/boss
-modules/

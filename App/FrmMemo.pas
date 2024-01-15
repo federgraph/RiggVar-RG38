@@ -33,6 +33,7 @@ uses
   FMX.Dialogs,
   FMX.Layouts,
   FMX.Memo,
+  FMX.Memo.Types,
   FMX.StdCtrls,
   FMX.Controls.Presentation,
   FMX.ScrollBox,
@@ -65,19 +66,23 @@ type
     ListView: TListView;
     Memo: TMemo;
     ReadBtn: TButton;
+    BackBtn: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure ReadBtnClick(Sender: TObject);
     procedure ListViewItemClick(const Sender: TObject; const AItem: TListViewItem);
+    procedure BackBtnClick(Sender: TObject);
   private
     SL: TStringList;
     MemoActionList: TMemoActionList;
     procedure InitItems;
     procedure InitList;
-    procedure MemoBeginUpdate;
+    procedure MemoBeginUpdate(ClearMemo: Boolean = True);
     procedure MemoEndUpdate;
   protected
+    procedure WriteLogBtnClick(Sender: TObject);
+
     procedure WriteTrimmItem(Sender: TObject);
     procedure WriteTrimmFile(Sender: TObject);
     procedure WriteHullPoints(Sender: TObject);
@@ -95,11 +100,11 @@ type
     procedure WriteActionNamesBtnClick(Sender: TObject);
 
     procedure NotImplemented;
-    procedure AutoUpdateOff;
   public
     CounterNotImplemented: Integer;
     AutoUpdateID: TAutoUpdateReport;
     procedure AutoUpdate;
+    procedure AutoUpdateOff;
   end;
 
 var
@@ -108,6 +113,7 @@ var
 implementation
 
 uses
+  RiggVar.Util.AppUtils,
 {$ifdef WantDriverTest}
   RiggVar.FG.DriverTest,
 {$endif}
@@ -130,22 +136,44 @@ begin
   SL := TStringList.Create;
 
   ListView.Align := TAlignLayout.Left;
+  ListView.StyleLookup := 'listviewstyle';
   ListView.ItemAppearanceName := 'ListItem';
-  ListView.ItemAppearance.ItemHeight := 24;
-  ListView.ItemAppearanceObjects.ItemObjects.Accessory.Visible := False;
-  ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'Consolas';
-  ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
-  ListView.ItemAppearanceObjects.ItemObjects.Text.TextColor := TAlphaColors.Dodgerblue;
   ListView.ItemAppearanceObjects.HeaderObjects.Text.Visible := False;
   ListView.ItemAppearanceObjects.FooterObjects.Text.Visible := False;
+  ListView.ItemAppearanceObjects.ItemObjects.Text.TextColor := TAlphaColors.Dodgerblue;
+  ListView.ItemAppearanceObjects.ItemObjects.Accessory.Visible := False;
+{$ifdef MSWINDOWS}
+  ListView.ItemAppearance.ItemHeight := 24;
+  ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'Consolas';
+  ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
+{$endif}
+{$ifdef OSX}
+  ListView.ItemAppearance.ItemHeight := 24;
+//  ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'CourierNewPSMT';
+  ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
+{$endif}
+{$ifdef IOS}
+  ListView.ItemAppearance.ItemHeight := 24;
+//  ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'Courier';
+  ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
+{$endif}
+{$ifdef Android}
+  ListView.ItemAppearance.ItemHeight := 28;
+//  ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'monospace';
+  ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
+{$endif}
 
   Memo.Align := TAlignLayout.Client;
   Memo.ControlType := TControlType.Styled;
-  Memo.StyledSettings := [];
   Memo.ShowScrollBars := True;
-  Memo.TextSettings.Font.Family := 'Consolas';
+  Memo.StyleLookup := 'memostyle';
+  Memo.StyledSettings := [TStyledSetting.FontColor, TStyledSetting.Other];
+  Memo.TextSettings.Font.Family := TAppUtils.GetMonspacedFontFamilyName;
   Memo.TextSettings.Font.Size := 14;
-  Memo.TextSettings.FontColor := claBlack;
+
+{ because of StyleLookup memostyle
+  background can be black on iOS when dark theme is activated at night time }
+//  Memo.TextSettings.FontColor := claBlack;
 
   MemoActionList := TMemoActionList.Create;
   InitList;
@@ -160,7 +188,7 @@ end;
 
 procedure TFormMemo.ReadBtnClick(Sender: TObject);
 begin
-  MemoBeginUpdate;
+  MemoBeginUpdate(False);
   SL.Text := Memo.Lines.Text;
   Main.ReadText(SL);
   MemoEndUpdate;
@@ -262,21 +290,29 @@ begin
   MemoEndUpdate;
 end;
 
+procedure TFormMemo.WriteLogBtnClick(Sender: TObject);
+begin
+  MemoBeginUpdate;
+  Memo.Lines.Text := Main.Logger.TL.Text;
+  MemoEndUpdate;
+end;
+
 procedure TFormMemo.InitList;
 begin
+  MemoActionList.AddMemoAction('Write Log', WriteLogBtnClick);
+
   MemoActionList.AddMemoAction('Show Trimm Item', WriteTrimmItem);
   MemoActionList.AddMemoAction('Show Trimm File', WriteTrimmFile);
   MemoActionList.AddMemoAction('Show Hull Points', WriteHullPoints);
   MemoActionList.AddMemoAction('Info Text', InfoText);
   MemoActionList.AddMemoAction('Manual Shortcuts', HelpText);
+  MemoActionList.AddMemoAction('Auto Shortcuts', WriteShortcuts);
 
 {$ifdef MSWINDOWS}
 //  MemoActionList.AddMemoAction('Help Text for IO', HelpTextForIO);
-  MemoActionList.AddMemoAction('Auto Shortcuts', WriteShortcuts);
 {$ifdef WantDriverTest}
   MemoActionList.AddMemoAction('Device Report', DeviceReportBtnClick);
 {$endif}
-
   MemoActionList.AddMemoAction('Action Test', ActionTestBtnClick);
   MemoActionList.AddMemoAction('Write Action Const', WriteActionConstBtnClick);
   MemoActionList.AddMemoAction('Write New Action Const', WriteNewActionConstBtnClick);
@@ -333,18 +369,21 @@ begin
     end;
 end;
 
-procedure TFormMemo.MemoBeginUpdate;
+procedure TFormMemo.MemoBeginUpdate(ClearMemo: Boolean = True);
 begin
   AutoUpdateID := Nothing;
   Memo.Lines.BeginUpdate;
-  Memo.Lines.Clear;
+  if ClearMemo then
+    Memo.Lines.Clear;
 end;
 
 procedure TFormMemo.MemoEndUpdate;
 begin
   Memo.Lines.EndUpdate;
 {$ifdef MSWINDOWS}
+{$if CompilerVersion < 35}
   Memo.ContentBounds := TRectF.Empty;
+{$endif}
 {$endif}
 end;
 
@@ -366,6 +405,12 @@ begin
   case AutoUpdateID of
     TrimmItem: WriteTrimmItem(nil);
   end;
+end;
+
+procedure TFormMemo.BackBtnClick(Sender: TObject);
+begin
+  Self.Hide;
+//  FormMain.Show;
 end;
 
 end.

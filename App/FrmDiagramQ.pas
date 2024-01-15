@@ -28,6 +28,7 @@ type
     procedure FormShow(Sender: TObject);
   private
     LayoutBtn: TButton;
+    BackBtn: TButton;
     XBox: TListBox;
     PBox: TListBox;
     YBox: TListBox;
@@ -41,6 +42,7 @@ type
     procedure XBtnClick(Sender: TObject);
     procedure CalcBtnClick(Sender: TObject);
     procedure LayoutBtnClick(Sender: TObject);
+    procedure BackBtnClick(Sender: TObject);
 
     procedure XBoxChange(Sender: TObject);
     procedure YBoxChange(Sender: TObject);
@@ -64,6 +66,7 @@ type
     procedure UpDownChange(Sender: TObject);
     procedure UpdateACaption;
     procedure UpdateGCaption;
+    procedure SetupListbox(LB: TListBox);
   protected
     TempR: single;
     TempB: single;
@@ -111,7 +114,7 @@ begin
   Height := Round(800 * FScale);
 
   BoxWidth := Round(200 * FScale);
-  BoxHeight := Round(160 * FScale);
+  BoxHeight := Round(190 * FScale);
 
   WantAutoUpdate := True;
 
@@ -144,6 +147,10 @@ begin
   LayoutBtn := TButton.Create(Self);
   LayoutBtn.Parent := Self;
   LayoutBtn.Text := 'Layout';
+
+  BackBtn := TButton.Create(Self);
+  BackBtn.Parent := Self;
+  BackBtn.StyleLookup := 'arrowlefttoolbutton';
 
   AToggle := TSwitch.Create(Self);
   AToggle.Parent := Self;
@@ -185,6 +192,26 @@ begin
 
   InitComponentSize;
   InitComponentLinks;
+
+  SetupListBox(XBox);
+  SetupListBox(PBox);
+  SetupListBox(YBox);
+end;
+
+procedure TFormDiagramQ.SetupListbox(LB: TListBox);
+begin
+  if LB = nil then
+    Exit;
+
+//  LB.ShowScrollBars := False;
+  LB.StyleLookup := 'listboxstyle';
+
+{$ifdef Android}
+  LB.ItemHeight := 24;
+{$endif}
+{$ifdef IOS}
+  LB.ItemHeight := 24;
+{$endif}
 end;
 
 procedure TFormDiagramQ.InitComponentSize;
@@ -202,6 +229,7 @@ end;
 procedure TFormDiagramQ.InitComponentLinks;
 begin
   LayoutBtn.OnClick := LayoutBtnClick;
+  BackBtn.OnClick := BackBtnClick;
 
   XBox.OnChange := XBoxChange;
   PBox.OnChange := PBoxChange;
@@ -380,6 +408,11 @@ begin
   LayoutComponents;
 end;
 
+procedure TFormDiagramQ.BackBtnClick(Sender: TObject);
+begin
+  Self.Hide;
+end;
+
 procedure TFormDiagramQ.LayoutComponents;
 begin
   FMaxRight := 0;
@@ -408,6 +441,7 @@ begin
 
   cr := PBox;
   StackV(LayoutBtn);
+  StackH(BackBtn);
 
   cr := XBox;
   StackH(YBox);
@@ -433,6 +467,7 @@ begin
   cr := XBox;
   StackV(Image);
   StackH(LayoutBtn);
+  StackV(BackBtn);
 end;
 
 end.

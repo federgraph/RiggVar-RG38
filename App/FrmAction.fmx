@@ -1,21 +1,23 @@
-﻿object FormAction: TFormAction
+object FormAction: TFormAction
   Left = 0
   Top = 0
   Caption = 'FC Actions'
   ClientHeight = 598
-  ClientWidth = 992
+  ClientWidth = 946
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
   OnClose = FormClose
   OnDestroy = FormDestroy
-  DesignerMasterStyle = 0
+  DesignerMasterStyle = 3
   object Edit: TEdit
     Touch.InteractiveGestures = [LongTap, DoubleTap]
+    StyleLookup = 'editstyle'
     TabOrder = 0
-    Position.X = 16.000000000000000000
-    Position.Y = 88.000000000000000000
+    Text = 'abc'
+    Position.X = 23.000000000000000000
+    Position.Y = 80.000000000000000000
     OnKeyUp = EditKeyUp
   end
   object ListViewS: TListView
@@ -23,7 +25,7 @@
     ItemEditAppearanceClassName = 'TListItemShowCheckAppearance'
     HeaderAppearanceClassName = 'TListHeaderObjects'
     FooterAppearanceClassName = 'TListHeaderObjects'
-    Position.X = 16.000000000000000000
+    Position.X = 23.000000000000000000
     Position.Y = 144.000000000000000000
     Size.Width = 145.000000000000000000
     Size.Height = 433.000000000000000000
@@ -36,9 +38,9 @@
     ItemEditAppearanceClassName = 'TListItemShowCheckAppearance'
     HeaderAppearanceClassName = 'TListHeaderObjects'
     FooterAppearanceClassName = 'TListHeaderObjects'
-    Position.X = 496.000000000000000000
+    Position.X = 466.000000000000000000
     Position.Y = 88.000000000000000000
-    Size.Width = 241.000000000000000000
+    Size.Width = 223.000000000000000000
     Size.Height = 489.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 3
@@ -47,7 +49,7 @@
   object TextEdit: TText
     AutoSize = True
     Position.X = 16.000000000000000000
-    Position.Y = 64.000000000000000000
+    Position.Y = 56.000000000000000000
     Size.Width = 39.261718750000000000
     Size.Height = 15.960937500000000000
     Size.PlatformDefault = False
@@ -69,7 +71,7 @@
   end
   object TextGroup: TText
     AutoSize = True
-    Position.X = 496.000000000000000000
+    Position.X = 466.000000000000000000
     Position.Y = 64.000000000000000000
     Size.Width = 79.738281250000000000
     Size.Height = 15.960937500000000000
@@ -85,7 +87,7 @@
     FooterAppearanceClassName = 'TListHeaderObjects'
     Position.X = 176.000000000000000000
     Position.Y = 144.000000000000000000
-    Size.Width = 305.000000000000000000
+    Size.Width = 282.000000000000000000
     Size.Height = 433.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 2
@@ -95,7 +97,7 @@
     ItemEditAppearanceClassName = 'TListItemShowCheckAppearance'
     HeaderAppearanceClassName = 'TListHeaderObjects'
     FooterAppearanceClassName = 'TListHeaderObjects'
-    Position.X = 752.000000000000000000
+    Position.X = 713.000000000000000000
     Position.Y = 88.000000000000000000
     Size.Width = 225.000000000000000000
     Size.Height = 489.000000000000000000
@@ -105,7 +107,7 @@
   end
   object TextGroups: TText
     AutoSize = True
-    Position.X = 752.000000000000000000
+    Position.X = 704.000000000000000000
     Position.Y = 64.000000000000000000
     Size.Width = 59.212890625000000000
     Size.Height = 15.960937500000000000
@@ -132,41 +134,52 @@
     Text = 'Search Results'
   end
   object SortBtn: TButton
-    Position.X = 784.000000000000000000
-    Position.Y = 24.000000000000000000
+    Position.X = 664.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 137.000000000000000000
+    Size.Height = 38.000000000000000000
+    Size.PlatformDefault = False
+    StyleLookup = 'buttonstyle'
     TabOrder = 6
     Text = 'Sort Groups'
     TextSettings.Trimming = None
     OnClick = SortBtnClick
   end
-  object HideBtn: TButton
-    Position.X = 872.000000000000000000
-    Position.Y = 24.000000000000000000
-    TabOrder = 7
-    Text = 'Hide Groups'
-    TextSettings.Trimming = None
-    OnClick = HideBtnClick
-  end
   object CaseBtn: TButton
-    Position.X = 128.000000000000000000
-    Position.Y = 88.000000000000000000
-    Size.Width = 33.000000000000000000
-    Size.Height = 22.000000000000000000
+    StyledSettings = [Family, Size, FontColor]
+    Position.X = 136.000000000000000000
+    Position.Y = 64.000000000000000000
+    Size.Width = 73.000000000000000000
+    Size.Height = 38.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 11
+    StyleLookup = 'buttonstyle'
+    TabOrder = 10
     Text = 'SO'
     TextSettings.Trimming = None
     OnClick = CaseBtnClick
   end
   object ExecuteBtn: TButton
-    Position.X = 232.000000000000000000
-    Position.Y = 88.000000000000000000
-    Size.Width = 225.000000000000000000
-    Size.Height = 22.000000000000000000
+    Position.X = 272.000000000000000000
+    Position.Y = 64.000000000000000000
+    Size.Width = 129.000000000000000000
+    Size.Height = 38.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 12
-    Text = 'Execute Selected Action'
+    StyleLookup = 'buttonstyle'
+    TabOrder = 11
+    Text = 'Execute'
     TextSettings.Trimming = None
     OnClick = ExecuteBtnClick
+  end
+  object BackBtn: TButton
+    Position.X = 552.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 95.000000000000000000
+    Size.Height = 38.000000000000000000
+    Size.PlatformDefault = False
+    StyleLookup = 'buttonstyle'
+    TabOrder = 14
+    Text = 'Back'
+    TextSettings.Trimming = None
+    OnClick = BackBtnClick
   end
 end

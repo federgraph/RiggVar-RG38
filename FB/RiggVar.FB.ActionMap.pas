@@ -67,7 +67,7 @@ type
     procedure CollectAll(ML: TStrings);
   end;
 
-  TEscapableActionMap = class(TActionMapBase)
+  TEscapableActionMap = class(TCollectibleActionMap)
   private
     function GetEscapeIndex: Integer;
     procedure SetEscapeIndex(const Value: Integer);
@@ -82,7 +82,7 @@ type
     property EscapeIndex: Integer read GetEscapeIndex write SetEscapeIndex;
   end;
 
-  TActionMap = TCollectibleActionMap;
+  TActionMap = TEscapableActionMap;
 
 implementation
 
@@ -94,7 +94,7 @@ uses
 
 procedure TActionMapBase.InitActions(Layout: Integer);
 begin
-  //virtual
+  { virtual }
 end;
 
 constructor TActionMapBase.Create;

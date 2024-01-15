@@ -18,10 +18,7 @@
 
 interface
 
-{.$define WantAll}
-
 uses
-  System.SysUtils,
   RiggVar.FB.ActionConst;
 
 function GetFederActionShortEN(fa: TFederAction): string;
@@ -32,8 +29,93 @@ function GetFederActionShortEN(fa: TFederAction): string;
 begin
   result := '??';
   case fa of
+
+    { EmptyAction }
     faNoop: result := '';
 
+    { Pages }
+    faActionPageM: result := 'P-';
+    faActionPageP: result := 'P+';
+    faActionPageE: result := 'PE';
+    faActionPageS: result := 'PS';
+    faActionPageX: result := 'LP';
+    faActionPage1: result := 'HP';
+    faActionPage2: result := 'SP';
+    faActionPage3: result := 'ap3';
+    faActionPage4: result := 'ap4';
+    faActionPage5: result := 'ap5';
+    faActionPage6: result := 'ap6';
+
+    { Forms }
+     faRotaForm1: result := 'RF1';
+    faRotaForm2: result := 'RF2';
+    faRotaForm3: result := 'RF3';
+    faShowMemo: result := 'FM';
+    faShowActions: result := 'FA';
+    faShowOptions: result := 'FO';
+    faShowDrawings: result := 'FD';
+    faShowConfig: result := 'FC';
+    faShowKreis: result := 'FK';
+    faShowInfo: result := 'FI';
+    faShowSplash: result := 'FS';
+    faShowForce: result := 'sF';
+    faShowTabelle: result := 'sT';
+    faShowDetail: result := 'sD';
+    faShowSaling: result := 'sS';
+    faShowController: result := 'sC';
+    faShowText: result := 'TA';
+    faShowTrimmTab: result := 'TT';
+    faShowChart: result := 'CF';
+    faShowDiagA: result := 'sDA';
+    faShowDiagC: result := 'sDC';
+    faShowDiagE: result := 'sDE';
+    faShowDiagQ: result := 'sDQ';
+
+    { TouchLayout }
+    faTouchTablet: result := 'tab';
+    faTouchPhone: result := 'pho';
+    faTouchDesk: result := 'dsk';
+
+    { Wheel }
+     faParamValuePlus1: result := '+1';
+    faParamValueMinus1: result := '-1';
+    faParamValuePlus10: result := '+10';
+    faParamValueMinus10: result := '-10';
+    faWheelLeft: result := 'wl';
+    faWheelRight: result := 'wr';
+    faWheelDown: result := 'wd';
+    faWheelUp: result := 'wu';
+
+    { ColorScheme }
+    faCycleColorSchemeM: result := 'c-';
+    faCycleColorSchemeP: result := 'c+';
+
+    { FederText }
+    faToggleAllText: result := 'tat';
+    faToggleTouchFrame: result := 'fra';
+
+    { ViewParams }
+    faPan: result := 'pan';
+    faParamORX: result := 'orx';
+    faParamORY: result := 'ory';
+    faParamORZ: result := 'orz';
+    faParamRX: result := 'rx';
+    faParamRY: result := 'ry';
+    faParamRZ: result := 'rz';
+    faParamCZ: result := 'cz';
+
+    { ParamT }
+    faParamT1: result := 't1';
+    faParamT2: result := 't2';
+    faParamT3: result := 't3';
+    faParamT4: result := 't4';
+
+    { Help }
+    faToggleHelp: result := 'th';
+    faToggleReport: result := 'tr';
+    faToggleButtonReport: result := 'bfr';
+
+    { RggControls }
     faController: result := 'Co';
     faWinkel: result := 'Wi';
     faVorstag: result := 'Vo';
@@ -48,167 +130,64 @@ begin
     faMastfallVorlauf: result := 'MV';
     faBiegung: result := 'Bie';
     faMastfussD0X: result := 'D0X';
+    faVorstagOS: result := 'vos';
+    faWPowerOS: result := 'wos';
+    faParamAPW: result := 'apw';
+    faParamEAH: result := 'EAH';
+    faParamEAR: result := 'EAR';
+    faParamEI: result := 'EI';
 
-    faFixpointA0 : result := 'oA0';
-    faFixpointA : result := 'oA';
-    faFixpointB0 : result := 'oB0';
-    faFixpointB : result := 'oB';
-    faFixpointC0 : result := 'oC0';
-    faFixpointC : result := 'oC';
-    faFixpointD0 : result := 'oD0';
-    faFixpointD : result := 'oD';
-    faFixpointE0 : result := 'oE0';
-    faFixpointE : result := 'oE';
-    faFixpointF0 : result := 'oF0';
-    faFixpointF : result := 'oF';
+    { RggFixPoints }
+    faFixpointA0: result := 'oA0';
+    faFixpointA: result := 'oA';
+    faFixpointB0: result := 'oB0';
+    faFixpointB: result := 'oB';
+    faFixpointC0: result := 'oC0';
+    faFixpointC: result := 'oC';
+    faFixpointD0: result := 'oD0';
+    faFixpointD: result := 'oD';
+    faFixpointE0: result := 'oE0';
+    faFixpointE: result := 'oE';
+    faFixpointF0: result := 'oF0';
+    faFixpointF: result := 'oF';
 
-    faTrimm0: result := 'T0';
-    faTrimm1: result := 'T1';
-    faTrimm2: result := 'T2';
-    faTrimm3: result := 'T3';
-    faTrimm4: result := 'T4';
-    faTrimm5: result := 'T5';
-    faTrimm6: result := 'T6';
-
-    faSalingTypFest: result := 'fs';
-    faSalingTypDrehbar: result := 'ds';
-    faSalingTypOhne: result := 'os';
-    faSalingTypOhneStarr: result := 'oss';
-
-    faCalcTypQuer: result := 'cQ';
-    faCalcTypKnick: result := 'cK';
-    faCalcTypGemessen: result := 'cM';
-
-    fa420: result := '420';
-    faLogo: result := 'logo';
-    faDemo: result := 'mod';
-
-    faUpdateTrimm0: result := 'ct0';
-    faCopyAndPaste: result := 'cap';
-    faCopyTrimmItem: result := 'cti';
-    faPasteTrimmItem: result := 'pti';
-    faReadTrimmFile: result := 'rtf';
-    faSaveTrimmFile: result := 'stf';
-    faCopyTrimmFile: result := 'ctf';
-
-    faToggleTrimmText: result := 'trim';
-    faToggleDataText: result := 'data';
-    faToggleDiffText: result := 'diff';
-    faToggleDebugText: result := 'log';
-    faUpdateReportText: result := 'rpt';
-
-    faWantRenderH: result := 'rH';
-    faWantRenderP: result := 'rP';
-    faWantRenderF: result := 'rF';
-    faWantRenderE: result := 'rE';
-    faWantRenderS: result := 'rS';
-
+    { RggViewPoint }
     faViewpointS: result := 'vpS';
     faViewpointA: result := 'vpA';
     faViewpointT: result := 'vpT';
     faViewpoint3: result := 'vp3';
 
-    faShowMemo: result := 'FM';
-    faShowActions: result := 'FA';
-    faShowOptions: result := 'FO';
-    faShowDrawings: result := 'FD';
-    faShowConfig: result := 'FC';
-    faShowTrimmTab: result := 'TT';
-    faShowKreis: result := 'FK';
-    faShowInfo: result := 'FI';
-    faShowSplash: result := 'FS';
+    { RggSalingType }
+    faSalingTypFest: result := 'fs';
+    faSalingTypDrehbar: result := 'ds';
+    faSalingTypOhne: result := 'os';
+    faSalingTypOhneStarr: result := 'oss';
 
-    faShowForce: result := 'sF';
-    faShowDetail: result := 'sD';
-    faShowTabelle: result := 'sT';
-    faShowSaling: result := 'sS';
-    faShowController: result := 'sC';
+    { RggCalcType }
+    faCalcTypQuer: result := 'cQ';
+    faCalcTypKnick: result := 'cK';
+    faCalcTypGemessen: result := 'cM';
 
-    faShowDiagA: result := 'DA';
-    faShowDiagC: result := 'DC';
-    faShowDiagE: result := 'DE';
-    faShowDiagQ: result := 'DQ';
+    { RggAppMode }
+    faDemo: result := 'mod';
+    faMemoryBtn: result := 'M';
+    faMemoryRecallBtn: result := 'MR';
+    faKorrigiertItem: result := 'KI';
+    faSofortBtn: result := 'SB';
+    faGrauBtn: result := 'GB';
+    faBlauBtn: result := 'BB';
+    faMultiBtn: result := 'MB';
 
-    faShowChart: result := 'CF';
-    faShowText: result := 'TA';
+    { RggSuper }
+    faSuperSimple: result := 'gS';
+    faSuperNormal: result := 'gN';
+    faSuperGrau: result := 'gG';
+    faSuperBlau: result := 'gB';
+    faSuperMulti: result := 'gM';
+    faSuperDisplay: result := 'gD';
+    faSuperQuick: result := 'gQ';
 
-    faWheelLeft: result := 'wl';
-    faWheelRight: result := 'wr';
-    faWheelUp: result := 'wu';
-    faWheelDown: result := 'wd';
-
-    faActionPageM: result := 'P-';
-    faActionPageP: result := 'P+';
-    faActionPage1: result := 'HP';
-    faActionPage2: result := 'ap2';
-    faActionPage3: result := 'ap3';
-    faActionPage4: result := 'ap4';
-    faActionPage5: result := 'ap5';
-    faActionPage6: result := 'ap6';
-    faActionPageE: result := 'PE';
-    faActionPageS: result := 'PS';
-    faActionPageX: result := 'LP';
-
-    faToggleAllText: result := 'tat';
-    faToggleTouchFrame: result := 'fra';
-    faToggleSpeedPanel: result := 'SP';
-
-    faCycleColorSchemeM: result := 'c-';
-    faCycleColorSchemeP: result := 'c+';
-
-    faParamValuePlus1: result := '+1';
-    faParamValueMinus1: result := '-1';
-    faParamValuePlus10: result := '+10';
-    faParamValueMinus10: result := '-10';
-
-    faTouchTablet: result := 'tab';
-    faTouchPhone: result := 'pho';
-    faTouchDesk: result := 'dsk';
-
-    faToggleButtonReport: result := 'bfr';
-
-    faToggleHelp: result := 'h';
-    faToggleReport: result := 'r';
-
-    faMemeGotoLandscape: result := '[L]';
-    faMemeGotoSquare: result := '[S]';
-    faMemeGotoPortrait: result := '[P]';
-
-    faMemeFormat0: result := '[0]';
-    faMemeFormat1: result := '[1]';
-    faMemeFormat2: result := '[2]';
-    faMemeFormat3: result := '[3]';
-    faMemeFormat4: result := '[4]';
-    faMemeFormat5: result := '[5]';
-    faMemeFormat6: result := '[6]';
-    faMemeFormat7: result := '[7]';
-    faMemeFormat8: result := '[8]';
-    faMemeFormat9: result := '[9]';
-
-    faChartRect: result := 'c[]';
-    faChartTextRect: result := 'cT';
-    faChartLegend: result := 'cL';
-    faChartGroup: result := 'cG';
-    faChartAP: result := 'cA';
-    faChartBP: result := 'cB';
-
-    faParamCountPlus: result := 'pC+';
-    faParamCountMinus: result := 'pC-';
-
-    faPComboPlus: result := 'cP+';
-    faPComboMinus: result := 'cP-';
-
-    faXComboPlus: result := 'cX+';
-    faXComboMinus: result := 'cX-';
-
-    faYComboPlus: result := 'cY+';
-    faYComboMinus: result := 'cY-';
-
-    faChartReset: result := 'cR';
-
-    faToggleDarkMode: result := 'DM';
-    faToggleButtonSize: result := 'BS';
-
+    { RggReport }
     faReportNone: result := '~N';
     faReportLog: result := '~L';
     faReportJson: result := '~J';
@@ -230,12 +209,41 @@ begin
     faReportDebugReport: result := '~';
     faReportReadme: result := '~R';
 
-    faToggleSandboxed: result := 'SX';
-    faToggleAllProps: result := 'AP';
-    faToggleAllTags: result := 'AT';
+    { RggChart }
+    faChartRect: result := 'c[]';
+    faChartTextRect: result := 'cT';
+    faChartLegend: result := 'cL';
+    faChartAP: result := 'cA';
+    faChartBP: result := 'cB';
+    faChartGroup: result := 'cG';
+    faParamCountPlus: result := 'pC+';
+    faParamCountMinus: result := 'pC-';
+    faPComboPlus: result := 'cP+';
+    faPComboMinus: result := 'cP-';
+    faXComboPlus: result := 'cX+';
+    faXComboMinus: result := 'cX-';
+    faYComboPlus: result := 'cY+';
+    faYComboMinus: result := 'cY-';
+    faChartReset: result := 'cR';
 
+    { RggGraph }
     faToggleLineColor: result := 'LC';
+    faToggleUseDisplayList: result := 'DL';
+    faToggleUseQuickSort: result := 'QS';
+    faToggleShowLegend: result := 'LG';
+    faToggleSortedRota: result := 'S';
+    faRggBogen: result := 'B';
+    faRggKoppel: result := 'Ko';
+    faRggHull: result := 'HL';
+    faRggZoomIn: result := 'Z+';
+    faRggZoomOut: result := 'Z-';
+    faToggleSalingGraph: result := 'SG';
+    faToggleControllerGraph: result := 'CG';
+    faToggleChartGraph: result := 'DG';
+    faToggleKraftGraph: result := 'KG';
+    faToggleMatrixText: result := 'MT';
 
+    { RggSegment }
     faToggleSegmentF: result := '-F';
     faToggleSegmentR: result := '-R';
     faToggleSegmentS: result := '-S';
@@ -245,50 +253,63 @@ begin
     faToggleSegmentC: result := '-C';
     faToggleSegmentA: result := '-A';
 
-    faRggZoomIn: result := 'Z+';
-    faRggZoomOut: result := 'Z-';
+    { RggRenderOptions }
+    faWantRenderH: result := 'rH';
+    faWantRenderP: result := 'rP';
+    faWantRenderF: result := 'rF';
+    faWantRenderE: result := 'rE';
+    faWantRenderS: result := 'rS';
 
-    faToggleUseDisplayList: result := 'DL';
-    faToggleUseQuickSort: result := 'QS';
-    faToggleShowLegend: result := 'LG';
+    { RggTrimms }
+    faTrimm0: result := 'T0';
+    faTrimm1: result := 'T1';
+    faTrimm2: result := 'T2';
+    faTrimm3: result := 'T3';
+    faTrimm4: result := 'T4';
+    faTrimm5: result := 'T5';
+    faTrimm6: result := 'T6';
+    fa420: result := '420';
+    faLogo: result := 'logo';
 
-    faRggBogen: result := 'B';
-    faRggKoppel: result := 'K';
-    faRggHull: result := 'HL';
+    { RggTrimmFile }
+    faCopyTrimmItem: result := 'cti';
+    faPasteTrimmItem: result := 'pti';
+    faCopyAndPaste: result := 'cap';
+    faUpdateTrimm0: result := 'ct0';
+    faReadTrimmFile: result := 'rtf';
+    faSaveTrimmFile: result := 'stf';
+    faCopyTrimmFile: result := 'ctf';
 
-    faToggleSalingGraph: result := 'SG';
-    faToggleControllerGraph: result := 'CG';
-    faToggleChartGraph: result := 'DG';
-    faToggleKraftGraph: result := 'KG';
-    faToggleMatrixText: result := 'MT';
+    { RggTrimmText }
+    faToggleTrimmText: result := 'trim';
+    faToggleDiffText: result := 'diff';
+    faToggleDataText: result := 'data';
+    faToggleDebugText: result := 'log';
+    faUpdateReportText: result := 'rpt';
 
-    faMemoryBtn: result := 'M';
-    faMemoryRecallBtn: result := 'MR';
+    { RggSonstiges }
+    faToggleDarkMode: result := 'DM';
+    faToggleButtonSize: result := 'BS';
+    faToggleSandboxed: result := 'SX';
+    faToggleSpeedPanel: result := 'tsp';
+    faToggleAllProps: result := 'AP';
+    faToggleAllTags: result := 'AT';
 
-    faKorrigiertItem: result := 'KI';
-    faSofortBtn: result := 'SB';
-    faGrauBtn: result := 'GB';
-    faBlauBtn: result := 'BB';
-    faMultiBtn: result := 'MB';
+    { RggInfo }
+    faShowHelpText: result := 'sh';
+    faShowInfoText: result := 'si';
+    faShowNormalKeyInfo: result := 'nki';
+    faShowSpecialKeyInfo: result := 'ski';
+    faShowDebugInfo: result := 'sdi';
+    faShowZOrderInfo: result := 'zoi';
 
-    faSuperSimple: result := 'gS';
-    faSuperNormal: result := 'gN';
-    faSuperGrau: result := 'gG';
-    faSuperBlau: result := 'gB';
-    faSuperMulti: result := 'gM';
-    faSuperDisplay: result := 'gD';
-    faSuperQuick: result := 'gQ';
-
-    faVorstagOS: result := 'vos';
-    faWPowerOS: result := 'wos';
-
+    { BtnLegendTablet }
     faTL01: result := '#1';
     faTL02: result := '#2';
     faTL03: result := '#3';
     faTL04: result := '#4';
     faTL05: result := '#5';
     faTL06: result := '#6';
-
     faTR01: result := '1#';
     faTR02: result := '2#';
     faTR03: result := '3#';
@@ -297,14 +318,6 @@ begin
     faTR06: result := '6#';
     faTR07: result := '7#';
     faTR08: result := '8#';
-
-    faBR01: result := '*1';
-    faBR02: result := '*2';
-    faBR03: result := '*3';
-    faBR04: result := '*4';
-    faBR05: result := '*5';
-    faBR06: result := '*6';
-
     faBL01: result := '1*';
     faBL02: result := '2*';
     faBL03: result := '3*';
@@ -313,7 +326,14 @@ begin
     faBL06: result := '6*';
     faBL07: result := '7*';
     faBL08: result := '8*';
+    faBR01: result := '*1';
+    faBR02: result := '*2';
+    faBR03: result := '*3';
+    faBR04: result := '*4';
+    faBR05: result := '*5';
+    faBR06: result := '*6';
 
+    { BtnLegendPhone }
     faMB01: result := '_1';
     faMB02: result := '_2';
     faMB03: result := '_3';
@@ -323,7 +343,13 @@ begin
     faMB07: result := '_7';
     faMB08: result := '_8';
 
-    faCirclesReset: result := 'R';
+    { TouchBarLegend }
+    faTouchBarTop: result := 'tbT';
+    faTouchBarBottom: result := 'tbB';
+    faTouchBarLeft: result := 'tbL';
+    faTouchBarRight: result := 'tbR';
+
+    { Circles }
     faCirclesSelectC0: result := 'C0';
     faCirclesSelectC1: result := 'C1';
     faCirclesSelectC2: result := 'C2';
@@ -339,62 +365,41 @@ begin
     faLineParamE2: result := 'E2';
     faCircleParamM1Z: result := '1.Z';
     faCircleParamM2Z: result := '2.Z';
+    faCirclesReset: result := 'R';
 
-    faPan: result := 'pan';
+    { MemeFormat }
+    faMemeGotoLandscape: result := '[L]';
+    faMemeGotoSquare: result := '[S]';
+    faMemeGotoPortrait: result := '[P]';
+    faMemeFormat0: result := '[0]';
+    faMemeFormat1: result := '[1]';
+    faMemeFormat2: result := '[2]';
+    faMemeFormat3: result := '[3]';
+    faMemeFormat4: result := '[4]';
+    faMemeFormat5: result := '[5]';
+    faMemeFormat6: result := '[6]';
+    faMemeFormat7: result := '[7]';
+    faMemeFormat8: result := '[8]';
+    faMemeFormat9: result := '[9]';
 
-    faPlusOne: result := 'one';
-    faPlusTen: result := 'ten';
-
-    faParamORX: result := 'orx';
-    faParamORY: result := 'ory';
-    faParamORZ: result := 'orz';
-
-    faParamRX: result := 'rx';
-    faParamRY: result := 'ry';
-    faParamRZ: result := 'rz';
-    faParamCZ: result := 'cz';
-
-    faParamAPW: result := 'apw';
-    faParamEAH: result := 'EAH';
-    faParamEAR: result := 'EAR';
-    faParamEI: result := 'EI';
-
-    faRotaForm1: result := 'RF1';
-    faRotaForm2: result := 'RF2';
-    faRotaForm3: result := 'RF3';
-
+    { Reset }
     faReset: result := 'res';
     faResetPosition: result := 'rpo';
     faResetRotation: result := 'rro';
     faResetZoom: result := 'rzo';
 
-    faShowHelpText: result := 'sh';
-    faShowInfoText: result := 'si';
-    faShowNormalKeyInfo: result := 'nki';
-    faShowSpecialKeyInfo: result := 'ski';
-    faShowDebugInfo: result := 'sdi';
-    faShowZOrderInfo: result := 'zoi';
-
-    faParamT1: result := 't1';
-    faParamT2: result := 't2';
-    faParamT3: result := 't3';
-    faParamT4: result := 't4';
-
-    faTouchBarTop: result := 'tbT';
-    faTouchBarBottom: result := 'tbB';
-    faTouchBarLeft: result := 'tbL';
-    faTouchBarRight: result := 'tbR';
-
-    faToggleSortedRota: result := 'S';
-
+    { ViewType }
     faToggleViewType: result := 'vt';
     faViewTypeOrtho: result := 'vto';
     faViewTypePerspective: result := 'vtp';
 
-    faToggleLanguage: result := 'lan';
-
+    { DropTarget }
     faToggleDropTarget: result := 'tdt';
 
+    { Language }
+    faToggleLanguage: result := 'lan';
+
+    { CopyPaste }
     faSave: result := 'sav';
     faLoad: result := 'loa';
     faOpen: result := 'ope';
@@ -402,27 +407,28 @@ begin
     faPaste: result := '^v';
     faShare: result := 'sha';
 
-{$ifdef WantAll}
-    faToggleMoveMode: result := 'mm';
+    { ViewOptions }
+    faToggleMoveMode: result := 'tmm';
     faLinearMove: result := 'lmm';
     faExpoMove: result := 'emm';
 
+    { HullMesh }
     faHullMesh: result := 'hm';
     faHullMeshOn: result := 'hm1';
     faHullMeshOff: result := 'hm0';
 
+    { BitmapCycle }
     faCycleBitmapM: result := 'b-';
     faCycleBitmapP: result := 'b+';
-
     faRandom: result := 'ran';
     faRandomWhite: result := 'rcw';
     faRandomBlack: result := 'rcb';
-
     faBitmapEscape: result := 'be';
-
     faToggleContour: result := 'ct';
-{$endif}
 
+    { Deprecated }
+    faPlusOne: result := 'one';
+    faPlusTen: result := 'ten';
   end;
 end;
 

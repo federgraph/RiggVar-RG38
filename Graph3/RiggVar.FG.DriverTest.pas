@@ -52,7 +52,7 @@ type
   TContextClass = TCustomDX11Context;
 {$endif}
 
-{$ifdef MACOS}
+{$if defined(MACOS) or defined(Android)}
 uses
   Classes;
 
@@ -228,7 +228,7 @@ end;
 
 {$endif}
 
-{$ifdef MACOS}
+{$if defined(MACOS) or defined(Android)}
 
 procedure TDeviceCheck.GetDeviceReport(ML: TStrings);
 begin

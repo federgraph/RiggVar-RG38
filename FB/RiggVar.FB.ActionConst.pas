@@ -152,9 +152,9 @@ const
   faViewpoint3 = 100;
 
   { RggSalingType }
-  faSalingTypOhne = 101;
+  faSalingTypFest = 101;
   faSalingTypDrehbar = 102;
-  faSalingTypFest = 103;
+  faSalingTypOhne = 103;
   faSalingTypOhneStarr = 104;
 
   { RggCalcType }

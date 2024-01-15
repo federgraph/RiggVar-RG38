@@ -54,9 +54,9 @@ type
     TextCaption: TText;
     TextSearchResult: TText;
     SortBtn: TButton;
-    HideBtn: TButton;
     CaseBtn: TButton;
     ExecuteBtn: TButton;
+    BackBtn: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -69,6 +69,7 @@ type
     procedure HideBtnClick(Sender: TObject);
     procedure CaseBtnClick(Sender: TObject);
     procedure ExecuteBtnClick(Sender: TObject);
+    procedure BackBtnClick(Sender: TObject);
   private
     Margin: Integer;
     ofa, ofg: Integer;
@@ -135,6 +136,9 @@ begin
   Width := 1000;
   Height := 650;
   Margin := 10;
+
+  Edit.Text := '';
+  InsensitiveSearch := True;
 
   TextDetail.AutoSize := True;
   TextCaption.AutoSize := True;
@@ -474,7 +478,14 @@ end;
 
 procedure TFormAction.HideBtnClick(Sender: TObject);
 begin
+{$ifdef MSWINDOWS}
   ClientWidth := Round(ListViewGroups.Position.X);
+{$endif}
+end;
+
+procedure TFormAction.BackBtnClick(Sender: TObject);
+begin
+  Self.Hide;
 end;
 
 procedure TFormAction.CaseBtnClick(Sender: TObject);
@@ -495,13 +506,25 @@ end;
 procedure TFormAction.SetupListView(LV: TListView; Color: TAlphaColor);
 begin
   LV.ItemAppearanceName := 'ListItem';
-  LV.ItemAppearance.ItemHeight := 24;
-  LV.ItemAppearanceObjects.ItemObjects.Accessory.Visible := False;
-  LV.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'Consolas';
-  LV.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
-  LV.ItemAppearanceObjects.ItemObjects.Text.TextColor := Color;
   LV.ItemAppearanceObjects.HeaderObjects.Text.Visible := False;
   LV.ItemAppearanceObjects.FooterObjects.Text.Visible := False;
+  LV.ItemAppearanceObjects.ItemObjects.Accessory.Visible := False;
+{$ifdef MSWINDOWS}
+  LV.ItemAppearance.ItemHeight := 24;
+  LV.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'Consolas';
+  LV.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
+{$endif}
+{$ifdef MACOS}
+  LV.ItemAppearance.ItemHeight := 24;
+//  LV.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'Consolas';
+  LV.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
+{$endif}
+{$ifdef Android}
+  LV.ItemAppearance.ItemHeight := 28;
+//  LV.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'Consolas';
+  LV.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
+{$endif}
+  LV.ItemAppearanceObjects.ItemObjects.Text.TextColor := Color;
 end;
 
 end.

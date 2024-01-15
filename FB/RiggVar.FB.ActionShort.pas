@@ -159,9 +159,9 @@ begin
     faViewpoint3: result := 'vp3';
 
     { RggSalingType }
-    faSalingTypOhne: result := 'os';
-    faSalingTypDrehbar: result := 'ds';
     faSalingTypFest: result := 'fs';
+    faSalingTypDrehbar: result := 'ds';
+    faSalingTypOhne: result := 'os';
     faSalingTypOhneStarr: result := 'oss';
 
     { RggCalcType }

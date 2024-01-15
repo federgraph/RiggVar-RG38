@@ -255,8 +255,8 @@ begin
   end
   else if ssCtrl in Shift then
   begin
-    Offset.X := Offset.X + dx;
-    Offset.Y := Offset.Y + dy;
+    Offset.X := Offset.X + dx / 2;
+    Offset.Y := Offset.Y + dy / 2;
   end
 
   else

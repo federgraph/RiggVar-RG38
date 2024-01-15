@@ -211,6 +211,7 @@ type
     ParamCaption: string;
 
     RefCtrl: TTrimmControls;
+    RefModelInput: TRggModelInput;
 
     InitialFixPoint: TRiggPoint;
 
@@ -301,6 +302,7 @@ type
     procedure CycleToolSet(i: Integer);
     function IsTouchBtnEnabled(ABtn: TTouchBtn): Boolean;
 {$endif}
+    procedure FrameVisibilityChanged;
 
     procedure DoTouchbarLeft(Delta: single);
     procedure DoTouchbarRight(Delta: single);
@@ -407,6 +409,8 @@ type
 {$endif}
 {$ifdef WantFederText}
     property FederText: TFederTouchBase read GetFederText;
+    property FederTextTablet: TFederTouch read FederText1;
+    property FederTextPhone: TFederTouchPhone read FederText2;
     property ActionMapTablet: TActionMap read ActionMap1;
     property ActionMapPhone: TActionMap read ActionMap2;
 {$endif}
@@ -599,13 +603,13 @@ end;
 procedure TRggMain.SetParameter(fa: TFederAction);
 begin
   if FAction = faPan then
-  begin
-    FAction := faNoop;
-    Exit;
-  end;
-
+    FAction := faNoop
+  else
   FAction := fa;
+
   case fa of
+    faNoop: ;
+    faPan: ;
     faController: Param := fpController;
     faWinkel: Param := fpWinkel;
     faVorstag: Param := fpVorstag;
@@ -1002,6 +1006,7 @@ begin
   end;
   StrokeRigg.SalingTyp := Rigg.SalingTyp;
   SetParam(FParam);
+  MainView.HandleAction(fa);
 end;
 
 procedure TRggMain.UpdateColumnC(ML: TStrings);
@@ -1344,7 +1349,9 @@ begin
   else
     ML.Add('Modus = Pro');
 
+{$ifdef MSWINDOWS}
   ML.Add('CounterG = ' + IntToStr(Rigg.GetCounterValue(0)));
+{$endif}
 end;
 
 procedure TRggMain.UpdateJsonText(ML: TStrings);
@@ -1363,6 +1370,7 @@ begin
   Logger.Info('in MemoryBtnClick');
 {$endif}
   RefCtrl := Rigg.Glieder;
+  RefModelInput := ModelInput;
   StrokeRigg.KoordinatenR := Rigg.RiggPoints;
   InternalDraw;
 end;
@@ -1373,7 +1381,12 @@ begin
   Logger.Info('in MemoryRecallBtnClick');
 {$endif}
   Rigg.Glieder := RefCtrl;
+  Rigg.UpdateFactArray(RefModelInput.CurrentParam);
   UpdateGraph(False);
+
+  RggTrackbar.ValueNoChange := CurrentValue;
+  RggSpecialDoOnTrackBarChange;
+  UpdateOnParamValueChanged;
 end;
 
 procedure TRggMain.UpdateEAR(Value: single);
@@ -2477,6 +2490,9 @@ begin
     faActionPage3: FederText.ActionPage := 3;
     faActionPage4: FederText.ActionPage := 4;
     faActionPage5: FederText.ActionPage := 5;
+    faActionPageE: FederText.ActionPage := -1;
+    faActionPageS: FederText.ActionPage := -3;
+    faActionPageX: FederText.ActionPage := -2;
 {$else}
     faToggleTouchFrame: ;
     faActionPageM: ;
@@ -2486,6 +2502,9 @@ begin
     faActionPage3: ;
     faActionPage4: ;
     faActionPage5: ;
+    faActionPageE: ;
+    faActionPageS: ;
+    faActionPageX: ;
 {$endif}
 
     faCycleColorSchemeM: CycleColorSchemeM;
@@ -2508,6 +2527,7 @@ begin
     else if (fa in TrimmsRange) then
       MainView.UpdateItemIndexTrimms;
 
+    MainView.UpdateHintText(fa);
     FederTextCheckState;
   end;
 end;
@@ -2570,6 +2590,8 @@ begin
     fa420: result := Trimm = 7;
     faLogo: result := Trimm = 8;
 
+    faToggleUseDisplayList,
+    faToggleUseQuickSort,
     faRggBogen,
     faRggKoppel,
     faWantRenderH,
@@ -2629,11 +2651,11 @@ end;
 procedure TRggMain.FederTextUpdateParent;
 begin
 {$ifdef WantFederText}
-  if FederText.Parent = nil then
-  begin
+//  if FederText.Parent = nil then
+//  begin
     FederText1.Parent := MainParent;
     FederText2.Parent := MainParent;
-  end;
+//  end;
 {$endif}
 end;
 
@@ -2642,12 +2664,19 @@ begin
 {$ifdef WantFederText}
   if Action = faPan then
   begin
-    FederText.ST00.Text.Text := 'Pan';
+    { use CurrentPageCaption on Tablet and Desktop,
+        see RiggVar.FederModel.TouchBase - UpdatePageBtnText }
+    if IsPhone then
+      FederText.ST00.Text.Text := 'Pan';
+
     FederText.SB00.Text.Text := '';
   end
   else
   begin
-    FederText.ST00.Text.Text := ParamCaption;
+    { use CurrentPageCaption on Tablet and Desktop }
+    if IsPhone then
+      FederText.ST00.Text.Text := ParamCaption;
+
     FederText.SB00.Text.Text := ParamValueString[Param];
   end;
 {$endif}
@@ -2679,5 +2708,10 @@ begin
   result := True;
 end;
 {$endif}
+
+procedure TRggMain.FrameVisibilityChanged;
+begin
+  MainView.UpdateHintText(faNoop);
+end;
 
 end.

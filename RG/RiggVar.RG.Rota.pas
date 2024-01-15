@@ -8,7 +8,9 @@ interface
 {$define WantRotaForm2}
 {$endif}
 
+{$ifndef MinimalRG}
 {.$define WantRotaForm3}
+{$endif}
 
 {$if defined(WantRotaForm1) or defined(WantRotaForm2) }
 {$define UseImage}

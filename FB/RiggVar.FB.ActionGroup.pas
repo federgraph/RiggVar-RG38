@@ -150,9 +150,9 @@ ActionGroupRggTrimms: TActionGroup = [
   faLogo];
 
 ActionGroupRggSalingType: TActionGroup = [
-  faSalingTypOhne,
-  faSalingTypDrehbar,
   faSalingTypFest,
+  faSalingTypDrehbar,
+  faSalingTypOhne,
   faSalingTypOhneStarr];
 
 ActionGroupRggCalcType: TActionGroup = [

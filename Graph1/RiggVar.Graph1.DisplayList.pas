@@ -147,8 +147,8 @@ var
 begin
   w := 100;
   h := 25;
-  x := 1 * 70 + 200; // 2 * Raster + ListboxWidth
-  y := 2 * 70 + 10; // 2 * Raster + Margin
+  x := 1 * 70 + 200 + 700; // 2 * Raster + ListboxWidth + 700
+  y := 2 * 70 + 10; // 2 * Raster + Margin (allow for Button-Frame and Speedbar)
   if IsRod then
     x := x + 20;
   R := TRectF.Create(x, y + j * h, x + w, y + (j + 1) * h);

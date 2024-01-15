@@ -30,6 +30,7 @@ type
     function GetChecked(fa: TFederAction): Boolean;
     function GetCaption(fa: TFederAction): string;
     function GetShortCaption(fa: TFederAction): string;
+    function GetShortcutString(fa: TFederAction): string;
   end;
 
   TFederActionHandlerBase = class(TInterfacedObject, IFederActionHandler)
@@ -39,6 +40,7 @@ type
     function GetChecked(fa: TFederAction): Boolean; virtual;
     function GetCaption(fa: TFederAction): string; virtual;
     function GetShortCaption(fa: TFederAction): string; virtual;
+    function GetShortcutString(fa: TFederAction): string; virtual;
   end;
 
 implementation
@@ -50,6 +52,12 @@ uses
 function TFederActionHandlerBase.GetShortCaption(fa: TFederAction): string;
 begin
   result := GetFederActionShort(fa);
+end;
+
+function TFederActionHandlerBase.GetShortcutString(fa: TFederAction): string;
+begin
+  { virtual, do nothing here }
+  result := '';
 end;
 
 function TFederActionHandlerBase.GetCaption(fa: TFederAction): string;

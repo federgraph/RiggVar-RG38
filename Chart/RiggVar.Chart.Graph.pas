@@ -98,7 +98,7 @@ procedure TChartGraph.SetImage(const Value: TOriginalImage);
 begin
   FImage := Value;
   InitBitmap;
-  Image.OnScreenScaleChanged := ImageScreenScaleChanged;
+  Image.OnSizeChanged := ImageScreenScaleChanged;
 end;
 
 procedure TChartGraph.ImageScreenScaleChanged(Sender: TObject);

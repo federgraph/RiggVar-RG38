@@ -36,6 +36,8 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
+    FScale: single;
+
     OKBtn: TButton;
     CancelBtn: TButton;
 
@@ -100,6 +102,7 @@ type
     procedure InitComponentProps;
     procedure InitTabOrder;
     procedure LayoutComponents;
+    function Scale(Value: Integer): Integer;
   public
     Rigg: IRigg;
     procedure Init(ARigg: IRigg);
@@ -112,11 +115,17 @@ implementation
 
 {$R *.fmx}
 
+uses
+  FrmMain,
+  RiggVar.App.Main;
+
 { TFormTrimmTab }
 
 procedure TFormTrimmTab.FormCreate(Sender: TObject);
 begin
-  Margin := 10;
+  FScale := MainVar.Scale;
+
+  Margin := Scale(10);
 
   FTrimmTabGraph := TTrimmTabGraph.Create;
 
@@ -170,6 +179,11 @@ end;
 procedure TFormTrimmTab.OKBtnClick(Sender: TObject);
 begin
   FTabellenTyp := FTrimmTabelle.TabellenTyp;
+{$if defined(Android) or defined(IOS)}
+  Self.Hide;
+  FormMain.Show;
+  FormMain.UpdateReport;
+{$endif}
 end;
 
 procedure TFormTrimmTab.CancelBtnClick(Sender: TObject);
@@ -185,6 +199,9 @@ begin
     end;
   { restore }
   FTrimmTabelle.TrimmTabDaten := FTrimmTabDaten;
+{$if defined(Android) or defined(IOS)}
+  Self.Hide;
+{$endif}
 end;
 
 procedure TFormTrimmTab.ApplyBtnClick(Sender: TObject);
@@ -285,8 +302,8 @@ begin
   ClientHeight := 400;
   ClientWidth := 600;
 
-  w := 75;
-  h := 17;
+  w := Scale(75);
+  h := Scale(17);
   rbKonstante.Width := w;
   rbKonstante.Height := h;
   rbGerade.Width := w;
@@ -296,17 +313,17 @@ begin
   rbBezier.Width := w;
   rbBezier.Height := h;
 
-  Memo.Width := 130;
-  Memo.Height := 200;
+  Memo.Width := Scale(130);
+  Memo.Height := Scale(200);
 
-  Image.Width := 319;
-  Image.Height := 158;
+  Image.Width := Scale(319);
+  Image.Height := Scale(158);
 
-  MemoLabel.Width := 108;
-  MemoLabel.Height := 13;
+  MemoLabel.Width := Scale(108);
+  MemoLabel.Height := Scale(13);
 
-  w := 25;
-  h := 25;
+  w := Scale(25);
+  h := Scale(25);
   WriteMemoBtn.Width := w;
   WriteMemoBtn.Height := h;
   ReadMemoBtn.Width := w;
@@ -314,8 +331,8 @@ begin
   EvalOptionBtn.Width := w;
   EvalOptionBtn.Height := h;
 
-  w := 20;
-  h := 13;
+  w := Scale(20);
+  h := Scale(13);
   X1Label.Width := w;
   X1Label.Height := h;
   Y1Label.Width := w;
@@ -325,22 +342,22 @@ begin
   Y2Label.Width := w;
   Y2Label.Height := h;
 
-  w := 40;
-  h := 21;
+  w := Scale(40);
+  h := Scale(21);
   W2Edit.Width := w;
   W2Edit.Height := h;
   K2Edit.Width := w;
   K2Edit.Height := h;
 
-  w := 80;
-  h := 21;
+  w := Scale(80);
+  h := Scale(21);
   W1SpinBox.Width := w;
   W1SpinBox.Height := h;
   K1SpinBox.Width := w;
   K1SpinBox.Height := h;
 
-  w := 100;
-  h := 27;
+  w := Scale(100);
+  h := Scale(27);
   OKBtn.Width := w;
   OKBtn.Height := h;
 
@@ -400,7 +417,7 @@ begin
   { Bottom Buttons }
 
   StackV(OKBtn);
-  OKBtn.Position.X := 80;
+  OKBtn.Position.X := Scale(80);
   OKBtn.Position.Y := OKBtn.Position.Y + Margin;
   StackH(CancelBtn);
 
@@ -452,7 +469,7 @@ begin
   EvalOptionBtn.OnClick := EvalOptionBtnClick;
 
   Image.OnMouseDown := ImageMouseDown;
-  Image.OnScreenScaleChanged := ImageScreenScaleChanged;
+  Image.OnSizeChanged := ImageScreenScaleChanged;
 
   W1SpinBox.OnChange := Kraft1EditChange;
   K1SpinBox.OnChange := Kraft1EditChange;
@@ -585,12 +602,16 @@ begin
   K1SpinBox.Value := 100;
 
   OKBtn.Text := 'OK';
+{$if defined(MSWINDOWS) or defined(OSX)}
   OKBtn.ModalResult := 1;
+{$endif}
 
   CancelBtn.Cancel := True;
   CancelBtn.Text := 'Abbrechen';
+{$if defined(MSWINDOWS) or defined(OSX)}
   CancelBtn.Default := True;
   CancelBtn.ModalResult := 2;
+{$endif}
 end;
 
 procedure TFormTrimmTab.ImageScreenScaleChanged(Sender: TObject);
@@ -636,6 +657,11 @@ procedure TFormTrimmTab.AnchorVertical(c: TControl);
 begin
   c.Height := ClientHeight - c.Position.Y - Margin;
   c.Anchors := c.Anchors + [TAnchorKind.akBottom];
+end;
+
+function TFormTrimmTab.Scale(Value: Integer): Integer;
+begin
+  result := Round(Value * FScale);
 end;
 
 end.

@@ -159,9 +159,9 @@ begin
     faViewpoint3: result := 'faViewpoint3';
 
     { RggSalingType }
-    faSalingTypOhne: result := 'faSalingTypOhne';
-    faSalingTypDrehbar: result := 'faSalingTypDrehbar';
     faSalingTypFest: result := 'faSalingTypFest';
+    faSalingTypDrehbar: result := 'faSalingTypDrehbar';
+    faSalingTypOhne: result := 'faSalingTypOhne';
     faSalingTypOhneStarr: result := 'faSalingTypOhneStarr';
 
     { RggCalcType }

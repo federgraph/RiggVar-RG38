@@ -23,9 +23,9 @@ type
     P1Btn: TSpeedButton;
     P10Btn: TSpeedButton;
 
-    SandboxedBtn: TSpeedButton;
-    AllPropsBtn: TSpeedButton;
-    AllTagsBtn: TSpeedButton;
+    MemoryBtn: TSpeedButton;
+    MemoryRecallBtn: TSpeedButton;
+    HomeBtn: TSpeedButton;
   public
     procedure InitSpeedButtons; override;
   end;
@@ -42,48 +42,27 @@ procedure TActionSpeedBarRG01.InitSpeedButtons;
 var
   sb: TSpeedBtn;
 begin
-  { Check Box Buttons }
+  { Memory Buttons }
 
-  BtnColorValue := clvOption;
+  BtnColorValue := clvMemory;
 
-  sb := AddSpeedBtn('SandboxedBtn', BtnGroupSpace);
-  SandboxedBtn := sb;
-  sb.Text := 'SX';
-  if MainConst.MustBeSandboxed then
-  begin
-    sb.Hint := 'Sandboxed (Store)';
-    sb.StaysPressed := True;
-    sb.IsPressed := True;
-    sb.Tag := faNoop;
-    InitSpeedButton(sb);
-    sb.Enabled := False;
-  end
-  else
-  begin
-    sb.Hint := 'Sandboxed';
-    sb.StaysPressed := True;
-    sb.IsPressed := False;
-    sb.Tag := faToggleSandboxed;
-    InitSpeedButton(sb);
-  end;
-
-  BtnColorValue := clvProp;
-
-  sb := AddSpeedBtn('AllPropsBtn');
-  AllPropsBtn := sb;
-  sb.Text := 'AP';
-  sb.Hint := 'All Trimm Props';
-  sb.StaysPressed := True;
-  sb.IsPressed := False;
+  sb := AddSpeedBtn('MemoryBtn', BtnGroupSpace);
+  MemoryBtn := sb;
+  sb.Tag := faMemoryBtn;
   InitSpeedButton(sb);
 
-  sb := AddSpeedBtn('AllTagsBtn');
-  AllTagsBtn := sb;
-  sb.Text := 'AT';
-  sb.Hint := 'All Xml Tags';
-  sb.StaysPressed := True;
-  sb.IsPressed := False;
-  sb.Tag := faToggleAllTags;
+  sb := AddSpeedBtn('MemoryRecallBtn');
+  MemoryRecallBtn := sb;
+  sb.Tag := faMemoryRecallBtn;
+  InitSpeedButton(sb);
+
+  { Home Button }
+
+  BtnColorValue := clvTrimm;
+
+  sb := AddSpeedBtn('HomeBtn', BtnGroupSpace);
+  HomeBtn := sb;
+  sb.Tag := faActionPage1;
   InitSpeedButton(sb);
 
   { Data Buttons }

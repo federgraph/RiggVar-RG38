@@ -20,8 +20,8 @@
 
 
 This is a Delphi FMX project.
-While it is technically a cross platform project, it is intended for Windows only.
-Lighter versions of it should compile for other targets.
+While it is technically a cross platform project, it was originally intended for Windows only.
+But now, using Delphi 12, it can be used on all targets: Windows, Mac, iOS and Android.
 
 ## RiggVar
 
@@ -79,9 +79,7 @@ RotaForm2 for RG38 is based on the documentation drawings.
 ## How to build
 
 The following IDE versions should be good to build the project:
-- IDE 10.3 Rio
-- IDE 10.2 Tokyo
-- IDE 10.1 Berlin (currently used)
+- Delphi 12 (currently used)
 
 Please read my comments on how to [recreate the dproj](doc/How-to-recreate-the-dproj.md) file (Delphi Project File) and how to fix project options in recreated dproj file.
 

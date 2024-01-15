@@ -912,6 +912,7 @@ begin
 {$ifdef WantDisplayList}
   DF.Koordinaten := RPT;
 {$endif}
+
   AchseNT := Transformer.TransformPoint(AchseN);
   AchseXT := Transformer.TransformPoint(AchseX);
   AchseYT := Transformer.TransformPoint(AchseY);

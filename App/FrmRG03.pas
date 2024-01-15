@@ -89,6 +89,7 @@ type
 
     procedure HandleAction(fa: Integer);
     function GetChecked(fa: Integer): Boolean;
+    function GetEnabled(fa: Integer): Boolean;
 
     function GetActionFromKey(Shift: TShiftState; Key: Word): Integer;
     function GetActionFromKeyChar(KeyChar: char): Integer;
@@ -106,6 +107,7 @@ type
     procedure UpdateItemIndexParams;
     procedure UpdateItemIndexReports;
     procedure UpdateItemIndexTrimms;
+    procedure UpdateHintText(fa: Integer);
 
     function GetShowTrimmText: Boolean;
     function GetShowDiffText: Boolean;
@@ -194,7 +196,7 @@ begin
   IsUp := True;
 
   Fill.Kind := TBrushKind.Solid;
-  Fill.Color := claNavy;
+  Fill.Color := StringToAlphaColor('#FF333333');
   TrimmText.Color := claBeige;
 end;
 
@@ -360,6 +362,11 @@ begin
 
 end;
 
+procedure TFormMain.UpdateHintText(fa: Integer);
+begin
+
+end;
+
 procedure TFormMain.UpdateItemIndexParams;
 begin
   UpdateItemIndexParamsCB;
@@ -461,6 +468,11 @@ end;
 function TFormMain.GetChecked(fa: Integer): Boolean;
 begin
   result := False;
+end;
+
+function TFormMain.GetEnabled(fa: Integer): Boolean;
+begin
+  result := True;
 end;
 
 function TFormMain.GetOpenFileName(dn, fn: string): string;
