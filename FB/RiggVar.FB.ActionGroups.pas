@@ -93,7 +93,6 @@ begin
   { View }
   AddSpecial(ActionGroupFederText, 'FederText');
   AddSpecial(ActionGroupViewParams, 'ViewParams');
-  AddSpecial(ActionGroupParamT, 'ParamT');
 
   { RG }
   AddSpecial(ActionGroupRggControls, 'RggControls');
@@ -122,14 +121,8 @@ begin
   AddSpecial(ActionGroupCircles, 'Circles');
   AddSpecial(ActionGroupMemeFormat, 'MemeFormat');
   AddSpecial(ActionGroupReset, 'Reset');
-  AddSpecial(ActionGroupViewType, 'ViewType');
-  AddSpecial(ActionGroupDropTarget, 'DropTarget');
   AddSpecial(ActionGroupLanguage, 'Language');
   AddSpecial(ActionGroupCopyPaste, 'CopyPaste');
-
-  AddSpecial(ActionGroupViewOptions, 'ViewOptions');
-  AddSpecial(ActionGroupHullMesh, 'HullMesh');
-  AddSpecial(ActionGroupBitmapCycle, 'BitmapCycle');
 end;
 
 function TActionGroupList.GetGroup(fa: Integer): Integer;

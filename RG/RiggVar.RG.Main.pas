@@ -436,7 +436,6 @@ const
   tfs = '%-3s %s %8s %6s';
 
   ParamsRange = [
-  faParamT1 .. faParamT2,
   faController .. faParamAPW,
   faParamEAH .. faParamEI];
 

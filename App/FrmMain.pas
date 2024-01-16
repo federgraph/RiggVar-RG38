@@ -31,6 +31,7 @@ interface
 {$define WantFormConfig}
 {.$define WantCombos}
 {$define WantListboxes}
+{$define WantFormat}
 
 uses
   RiggVar.App.Model,
@@ -88,7 +89,9 @@ type
     procedure FormMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; var Handled: Boolean);
   private
     FScale: single;
+{$ifdef WantFormat}
     FWantResizeNormalizing: Boolean;
+{$endif}
     DefaultCaption: string;
     FormShown: Boolean;
     InitTimerCalled: Boolean;
@@ -117,11 +120,13 @@ type
     procedure InitScreenPos;
     procedure InitScreenPos1;
     procedure InitScreenPos2;
+{$ifdef WantFormat}
     procedure UpdateFormat(w, h: Integer);
     procedure GotoLandscape;
     procedure GotoNormal;
     procedure GotoPortrait;
     procedure GotoSquare;
+{$endif}
   protected
     HL: TStringList;
     RL: TStrings;
@@ -719,6 +724,7 @@ begin
   end;
 end;
 
+{$ifdef WantFormat}
 procedure TFormMain.UpdateFormat(w, h: Integer);
 begin
   ClientWidth := w;
@@ -726,6 +732,7 @@ begin
   Flash(Format('%d x %d', [ClientWidth, ClientHeight]));
   DoOnResizeEnd;
 end;
+{$endif}
 
 procedure TFormMain.UpdateHintText(fa: Integer);
 begin
@@ -994,6 +1001,7 @@ begin
   Flash(DefaultCaption);
 end;
 
+{$ifdef WantFormat}
 procedure TFormMain.GotoNormal;
 begin
   if WindowState = TWindowState.wsMaximized then
@@ -1068,6 +1076,7 @@ begin
   Flash('Square');
   DoOnResizeEnd;
 end;
+{$endif}
 
 procedure TFormMain.Flash(s: string);
 begin
@@ -1098,10 +1107,11 @@ begin
         ShowHelpText(faShowHelpText);
     end;
 
+{$ifdef WantFormat}
     faMemeGotoLandscape: GotoLandscape;
     faMemeGotoPortrait: GotoPortrait;
     faMemeGotoSquare: GotoSquare;
-
+{$endif}
     faToggleReport:
     begin
       Flash(HelpCaptionText);
@@ -1110,6 +1120,7 @@ begin
       UpdateReport;
     end;
 
+{$ifdef WantFormat}
     faMemeFormat1: UpdateFormat(1000, 750);
     faMemeFormat2: UpdateFormat(800, 600);
     faMemeFormat3: UpdateFormat(640, 480);
@@ -1124,6 +1135,7 @@ begin
       Top := 0;
       UpdateFormat(750, 1000)
     end;
+{$endif}
 
     faToggleButtonReport:
     begin
@@ -1238,7 +1250,9 @@ function TFormMain.GetActionFromKey(Shift: TShiftState; Key: Word): Integer;
 begin
   result := faNoop;
   case Key of
+{$ifdef WantFormat}
     vkF12: result := faMemeGotoSquare;
+{$endif}
 //    vkC: result := faCopyTrimmItem;
 //    vkV: result := faPasteTrimmItem;
     vkEscape:
@@ -1290,7 +1304,9 @@ begin
     'K': fa := faRggKoppel;
 
     'l': fa := faToggleShowLegend;
+{$ifdef WantFormat}
     'L': fa := faMemeGotoLandscape;
+{$endif}
 
     'm': fa := faMemoryBtn;
     'M': fa := faCopyAndPaste;
@@ -1300,7 +1316,9 @@ begin
     'o': fa := faWoben;
 
     'p': fa := faPan;
+{$ifdef WantFormat}
     'P': fa := faMemeGotoPortrait;
+{$endif}
 
     'q': fa := faToggleAllText;
 
@@ -1308,7 +1326,9 @@ begin
     'R': fa := faReadTrimmFile;
 
     's': fa := faShowSpecialKeyInfo;
+{$ifdef WantFormat}
     'S': fa := faMemeGotoSquare;
+{$endif}
 
     't': fa := faToggleDarkMode;
     'T': fa := faToggleSpeedPanel;
@@ -2162,25 +2182,24 @@ begin
     faWantRenderH,
     faWantRenderP,
     faWantRenderF,
-    faWantRenderS: result := (RotaForm.Current = 3) or ((RotaForm.Current = 1) and RotaForm.UseDisplayList);
+    faWantRenderS: result := RotaForm.Current = 3;
 
     faWantRenderE: result := RotaForm.Current = 3;
 
-    faToggleUseDisplayList,
+    faToggleMatrixText,
+    faToggleUseDisplayList: result := RotaForm.Current = 1;
+
     faToggleUseQuickSort,
-    faToggleShowLegend: result := RotaForm.Current = 2;
-
-    faToggleMatrixText: result := RotaForm.Current = 1;
-
+    faToggleShowLegend,
     faToggleSegmentF,
     faToggleSegmentR,
     faToggleSegmentS,
     faToggleSegmentM,
     faToggleSegmentV,
     faToggleSegmentW,
-    faToggleSegmentA: result := RotaForm.Current = 2;
+    faToggleSegmentA: result := (RotaForm.Current = 1)  and RotaForm.UseDisplayList;
 
-    faToggleSegmentC: result := (RotaForm.Current = 2) and (Main.Param = fpController);
+    faToggleSegmentC: result := (RotaForm.Current = 1) and (Main.Param = fpController) and RotaForm.UseDisplayList;
 
     faGrauBtn,
     faBlauBtn,

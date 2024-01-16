@@ -78,7 +78,8 @@ const
   claAlarm = claCoral;
   claAttention = claPink;
 
-  PageCountRG = 11;
+  PageCountRG = 14;
+  EscapePageCountRG = 11;
 
 constructor TActionMapPhone.Create;
 begin
@@ -248,7 +249,7 @@ begin
       IAC(6, faNoop, cla);
 
       IAC(7, faReportTrimmText, claReport);
-      IAC(8, faReportTrimmText, claReport);
+      IAC(8, faReportDiffText, claReport);
     end;
 
     10:

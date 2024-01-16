@@ -26,8 +26,8 @@ object FormMemo: TFormMemo
     Size.PlatformDefault = False
     StyleLookup = 'memostyle'
     TabOrder = 0
-    Viewport.Width = 239.000000000000000000
-    Viewport.Height = 286.000000000000000000
+    Viewport.Width = 235.000000000000000000
+    Viewport.Height = 282.000000000000000000
   end
   object ToolbarPanel: TPanel
     Align = Top
@@ -36,24 +36,24 @@ object FormMemo: TFormMemo
     Size.PlatformDefault = False
     TabOrder = 1
     object ReadBtn: TButton
-      Position.X = 88.000000000000000000
+      Position.X = 121.000000000000000000
       Position.Y = 8.000000000000000000
-      Size.Width = 81.000000000000000000
-      Size.Height = 44.000000000000000000
+      Size.Width = 312.000000000000000000
+      Size.Height = 49.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'buttonstyle'
       TabOrder = 1
-      Text = 'Read'
+      Text = 'Read Trimm-Item or Trimm-File'
       TextSettings.Trimming = None
       OnClick = ReadBtnClick
     end
     object BackBtn: TButton
       Position.X = 24.000000000000000000
       Position.Y = 8.000000000000000000
-      Size.Width = 44.000000000000000000
-      Size.Height = 44.000000000000000000
+      Size.Width = 89.000000000000000000
+      Size.Height = 49.000000000000000000
       Size.PlatformDefault = False
-      StyleLookup = 'arrowlefttoolbutton'
+      StyleLookup = 'buttonstyle'
       TabOrder = 0
       Text = 'Back'
       TextSettings.Trimming = None

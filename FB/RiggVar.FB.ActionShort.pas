@@ -105,12 +105,6 @@ begin
     faParamRZ: result := 'rz';
     faParamCZ: result := 'cz';
 
-    { ParamT }
-    faParamT1: result := 't1';
-    faParamT2: result := 't2';
-    faParamT3: result := 't3';
-    faParamT4: result := 't4';
-
     { Help }
     faToggleHelp: result := 'th';
     faToggleReport: result := 'tr';
@@ -389,14 +383,6 @@ begin
     faResetRotation: result := 'rro';
     faResetZoom: result := 'rzo';
 
-    { ViewType }
-    faToggleViewType: result := 'vt';
-    faViewTypeOrtho: result := 'vto';
-    faViewTypePerspective: result := 'vtp';
-
-    { DropTarget }
-    faToggleDropTarget: result := 'tdt';
-
     { Language }
     faToggleLanguage: result := 'lan';
 
@@ -407,29 +393,6 @@ begin
     faCopy: result := '^c';
     faPaste: result := '^v';
     faShare: result := 'sha';
-
-    { ViewOptions }
-    faToggleMoveMode: result := 'tmm';
-    faLinearMove: result := 'lmm';
-    faExpoMove: result := 'emm';
-
-    { HullMesh }
-    faHullMesh: result := 'hm';
-    faHullMeshOn: result := 'hm1';
-    faHullMeshOff: result := 'hm0';
-
-    { BitmapCycle }
-    faCycleBitmapM: result := 'b-';
-    faCycleBitmapP: result := 'b+';
-    faRandom: result := 'ran';
-    faRandomWhite: result := 'rcw';
-    faRandomBlack: result := 'rcb';
-    faBitmapEscape: result := 'be';
-    faToggleContour: result := 'ct';
-
-    { Deprecated }
-    faPlusOne: result := 'one';
-    faPlusTen: result := 'ten';
   end;
 end;
 

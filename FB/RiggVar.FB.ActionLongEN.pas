@@ -105,12 +105,6 @@ begin
     faParamRZ: result := 'Model Rotation Z';
     faParamCZ: result := 'Camera Position Z';
 
-    { ParamT }
-    faParamT1: result := 'Param T1';
-    faParamT2: result := 'Param T2';
-    faParamT3: result := 'Param T3';
-    faParamT4: result := 'Param T4';
-
     { Help }
     faToggleHelp: result := 'Toggle Help Text';
     faToggleReport: result := 'Toggle Report';
@@ -389,14 +383,6 @@ begin
     faResetRotation: result := 'Reset Rotation';
     faResetZoom: result := 'Reset Zoom';
 
-    { ViewType }
-    faToggleViewType: result := 'Toggle view type';
-    faViewTypeOrtho: result := 'Set view type to orthographic';
-    faViewTypePerspective: result := 'Set view type to perspective';
-
-    { DropTarget }
-    faToggleDropTarget: result := 'Drop target';
-
     { Language }
     faToggleLanguage: result := 'Toggle Language';
 
@@ -408,28 +394,6 @@ begin
     faPaste: result := 'Paste';
     faShare: result := 'Share';
 
-    { ViewOptions }
-    faToggleMoveMode: result := 'Toggle move mode';
-    faLinearMove: result := 'Linear move';
-    faExpoMove: result := 'Exponential move';
-
-    { HullMesh }
-    faHullMesh: result := 'toggle hull mesh';
-    faHullMeshOn: result := 'hull mesh on';
-    faHullMeshOff: result := 'hull mesh off';
-
-    { BitmapCycle }
-    faCycleBitmapM: result := 'cycle bitmap -';
-   faCycleBitmapP: result := 'cycle bitmap +';
-     faRandom: result := 'Random Param Values';
-    faRandomWhite: result := 'random colors white rings';
-    faRandomBlack: result := 'random colors black rings';
-    faBitmapEscape: result := 'Enter outer cycle';
-    faToggleContour: result := 'Toggle contour rings';
-
-    { Deprecated }
-    faPlusOne: result := 'Plus One';
-    faPlusTen: result := 'Plus Ten';
   end;
 end;
 

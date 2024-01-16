@@ -105,12 +105,6 @@ begin
     faParamRZ: result := 'faParamRZ';
     faParamCZ: result := 'faParamCZ';
 
-    { ParamT }
-    faParamT1: result := 'faParamT1';
-    faParamT2: result := 'faParamT2';
-    faParamT3: result := 'faParamT3';
-    faParamT4: result := 'faParamT4';
-
     { Help }
     faToggleHelp: result := 'faToggleHelp';
     faToggleReport: result := 'faToggleReport';
@@ -389,14 +383,6 @@ begin
     faResetRotation: result := 'faResetRotation';
     faResetZoom: result := 'faResetZoom';
 
-    { ViewType }
-    faToggleViewType: result := 'faToggleViewType';
-    faViewTypeOrtho: result := 'faViewTypeOrtho';
-    faViewTypePerspective: result := 'faViewTypePerspective';
-
-    { DropTarget }
-    faToggleDropTarget: result := 'faToggleDropTarget';
-
     { Language }
     faToggleLanguage: result := 'faToggleLanguage';
 
@@ -407,29 +393,6 @@ begin
     faCopy: result := 'faCopy';
     faPaste: result := 'faPaste';
     faShare: result := 'faShare';
-
-    { ViewOptions }
-    faToggleMoveMode: result := 'faToggleMoveMode';
-    faLinearMove: result := 'faLinearMove';
-    faExpoMove: result := 'faExpoMove';
-
-    { HullMesh }
-    faHullMesh: result := 'faHullMesh';
-    faHullMeshOn: result := 'faHullMeshOn';
-    faHullMeshOff: result := 'faHullMeshOff';
-
-    { BitmapCycle }
-    faCycleBitmapM: result := 'faCycleBitmapM';
-    faCycleBitmapP: result := 'faCycleBitmapP';
-    faRandom: result := 'faRandom';
-    faRandomWhite: result := 'faRandomWhite';
-    faRandomBlack: result := 'faRandomBlack';
-    faBitmapEscape: result := 'faBitmapEscape';
-    faToggleContour: result := 'faToggleContour';
-
-    { Deprecated }
-    faPlusOne: result := 'faPlusOne';
-    faPlusTen: result := 'faPlusTen';
   end;
 end;
 

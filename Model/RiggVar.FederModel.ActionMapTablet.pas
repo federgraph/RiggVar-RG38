@@ -387,8 +387,8 @@ begin
       cla := claReport;
       //InitAC(cl, 1, faActionPageM, claYellow);
       InitAC(cl, 2, faReportLong, cla);
-      InitAC(cl, 2, faReportShort, cla);
-      InitAC(cl, 4, faReportData, cla);
+      InitAC(cl, 3, faReportShort, cla);
+      InitAC(cl, 4, faNoop, cla);
       InitAC(cl, 5, faNoop, cla);
       InitAC(cl, 6, faToggleAllText, claWhite);
 
