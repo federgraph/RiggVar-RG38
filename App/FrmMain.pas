@@ -635,6 +635,8 @@ Application.OnIdle := ApplicationEventsIdle;
 
   TMessageManager.DefaultManager.SubscribeToMessage(TOrientationChangedMessage, DoOrientationChanged);
   RegisterForAppEvents;
+
+  Log('FormCreates2 End;');
 end;
 
 procedure TFormMain.FormDestroy2(Sender: TObject);
@@ -1220,10 +1222,6 @@ begin
     faSalingTypDrehbar,
     faSalingTypOhne,
     faSalingTypOhneStarr: UpdateReport;
-
-{$ifdef WantRotaForm3}
-    faToggleViewType: RotaForm.HandleAction(fa);
-{$endif}
 
     faPan:
     begin
@@ -2204,6 +2202,14 @@ begin
     faGrauBtn,
     faBlauBtn,
     faMultiBtn: result := RotaForm.Current = 1;
+
+    faSuperSimple,
+    faSuperNormal,
+    faSuperGrau,
+    faSuperBlau,
+    faSuperMulti,
+    faSuperDisplay,
+    faSuperQuick: result := (RotaForm.Current = 1);
 
     faRggKoppel: result := RotaForm.Current <> 3;
     faRggHull: result := RotaForm.Current <> 2;

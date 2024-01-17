@@ -381,6 +381,7 @@ procedure TFormDrawing.CreateComponents;
 begin
   DrawingList := TListView.Create(Self);
   DrawingList.Parent := Self;
+  DrawingList.CanSwipeDelete := False;
   DrawingList.ItemAppearanceName := 'ListItem';
   DrawingList.ItemAppearance.ItemHeight := 24;
   DrawingList.ItemAppearanceObjects.ItemObjects.Accessory.Visible := False;
@@ -393,6 +394,7 @@ begin
 
   ElementList := TListView.Create(Self);
   ElementList.Parent := Self;
+  ElementList.CanSwipeDelete := False;
   ElementList.ItemAppearanceName := 'ListItem';
   ElementList.ItemAppearance.ItemHeight := 24;
   ElementList.ItemAppearanceObjects.ItemObjects.Accessory.Visible := False;

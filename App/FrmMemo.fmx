@@ -10,7 +10,7 @@ object FormMemo: TFormMemo
   OnCreate = FormCreate
   OnClose = FormClose
   OnDestroy = FormDestroy
-  DesignerMasterStyle = 0
+  DesignerMasterStyle = 3
   object Memo: TMemo
     Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
     DataDetectorTypes = []
@@ -26,8 +26,8 @@ object FormMemo: TFormMemo
     Size.PlatformDefault = False
     StyleLookup = 'memostyle'
     TabOrder = 0
-    Viewport.Width = 235.000000000000000000
-    Viewport.Height = 282.000000000000000000
+    Viewport.Width = 231.000000000000000000
+    Viewport.Height = 273.000000000000000000
   end
   object ToolbarPanel: TPanel
     Align = Top
@@ -36,9 +36,9 @@ object FormMemo: TFormMemo
     Size.PlatformDefault = False
     TabOrder = 1
     object ReadBtn: TButton
-      Position.X = 121.000000000000000000
+      Position.X = 97.000000000000000000
       Position.Y = 8.000000000000000000
-      Size.Width = 312.000000000000000000
+      Size.Width = 288.000000000000000000
       Size.Height = 49.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'buttonstyle'
@@ -48,9 +48,9 @@ object FormMemo: TFormMemo
       OnClick = ReadBtnClick
     end
     object BackBtn: TButton
-      Position.X = 24.000000000000000000
+      Position.X = 8.000000000000000000
       Position.Y = 8.000000000000000000
-      Size.Width = 89.000000000000000000
+      Size.Width = 81.000000000000000000
       Size.Height = 49.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'buttonstyle'

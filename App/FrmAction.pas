@@ -505,6 +505,7 @@ end;
 
 procedure TFormAction.SetupListView(LV: TListView; Color: TAlphaColor);
 begin
+  LV.CanSwipeDelete := False;
   LV.ItemAppearanceName := 'ListItem';
   LV.ItemAppearanceObjects.HeaderObjects.Text.Visible := False;
   LV.ItemAppearanceObjects.FooterObjects.Text.Visible := False;

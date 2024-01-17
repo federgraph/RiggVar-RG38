@@ -78,14 +78,14 @@ const
   claAlarm = claCoral;
   claAttention = claPink;
 
-  PageCountRG = 14;
-  EscapePageCountRG = 11;
+  PageCountRG = 16;
+  EscapePageCountRG = 12;
 
 constructor TActionMapPhone.Create;
 begin
   inherited;
   FPageCount := PageCountRG;
-  FEscapeIndex := PageCountRG + 1;
+  FEscapeIndex := EscapePageCountRG;
   TestName := 'Phone Page';
 end;
 
@@ -225,7 +225,7 @@ begin
     8:
     begin
       cla := claWhite;
-      IAC(1, faNoop, cla);
+      IAC(1, faUpdateTrimm0, cla);
       IAC(2, faNoop, cla);
       IAC(3, faCopyAndPaste, claData);
 
@@ -270,6 +270,21 @@ begin
     11:
     begin
       cla := claWhite;
+      IAC(1, faParamValueMinus10, claParamValue);
+      IAC(2, faParamValuePlus10, claParamValue);
+      IAC(3, faNoop, cla);
+
+      IAC(4, faParamValueMinus1, claParamValue);
+      IAC(5, faParamValuePlus1, claParamValue);
+      IAC(6, faNoop, cla);
+
+      IAC(7, faActionPage1, claNavigation);
+      IAC(8, faActionPageE, claNavigation);
+    end;
+
+    12:
+    begin
+      cla := claWhite;
       IAC(1, faSuperGrau, claSuperOption);
       IAC(2, faSuperMulti, claSuperOption);
       IAC(3, faSuperDisplay, claSuperOption);
@@ -278,41 +293,41 @@ begin
       IAC(5, faSuperNormal, claSuperOption);
       IAC(6, faSuperBlau, claSuperOption);
 
-      IAC(7, faMemoryBtn, claMemory);
-      IAC(8, faRotaForm1, claRotaForm);
+      IAC(7, faRotaForm1, claRotaForm);
+      IAC(8, faActionPage1, claNavigation);
     end;
 
-    12:
+    13:
+    begin
+      cla := claWhite;
+      IAC(1, faFixpointA, claFixPoint);
+      IAC(2, faFixpointB, claFixPoint);
+      IAC(3, faFixpointC, claFixPoint);
+
+      IAC(4, faFixpointD, claFixPoint);
+      IAC(5, faFixpointD0, claFixPoint);
+      IAC(6, faNoop, cla);
+
+      IAC(7, faRotaForm2, claRotaForm);
+      IAC(8, faActionPage1, claNavigation);
+    end;
+
+    14:
     begin
       cla := claWhite;
       IAC(1, faWantRenderE, claRenderOption);
       IAC(2, faWantRenderH, claRenderOption);
       IAC(3, faWantRenderP, claRenderOption);
 
-      IAC(4, faNoop, cla);
+      IAC(4, faRggHull, claHull);
       IAC(5, faWantRenderS, claRenderOption);
       IAC(6, faWantRenderF, claRenderOption);
 
-      IAC(7, faActionPage1, claNavigation);
-      IAC(8, faRotaForm2, claRotaForm);
+      IAC(7, faRotaForm3, claRotaForm);
+      IAC(8, faActionPage1, claNavigation);
     end;
 
-    13:
-    begin
-      cla := claWhite;
-      IAC(1, faParamValuePlus10, claParamValue);
-      IAC(2, faParamValueMinus10, claParamValue);
-      IAC(3, faNoop, cla);
-
-      IAC(4, faParamValuePlus1, claParamValue);
-      IAC(5, faParamValueMinus1, claParamValue);
-      IAC(6, faNoop, cla);
-
-      IAC(7, faShowActions, claForm);
-      IAC(8, faShowMemo, claForm);
-    end;
-
-    14:
+    15:
     begin
       cla := claWhite;
       IAC(1, faMB01, cla);
@@ -325,6 +340,21 @@ begin
 
       IAC(7, faMB07, cla);
       IAC(8, faMB08, cla);
+    end;
+
+    16:
+    begin
+      cla := claWhite;
+      IAC(1, faParamValuePlus10, claParamValue);
+      IAC(2, faParamValueMinus10, claParamValue);
+      IAC(3, faNoop, cla);
+
+      IAC(4, faParamValuePlus1, claParamValue);
+      IAC(5, faParamValueMinus1, claParamValue);
+      IAC(6, faNoop, cla);
+
+      IAC(7, faShowActions, claForm);
+      IAC(8, faShowMemo, claForm);
     end;
 
   end;

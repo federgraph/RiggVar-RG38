@@ -135,6 +135,7 @@ begin
   Height := 750;
   SL := TStringList.Create;
 
+  ListView.CanSwipeDelete := False;
   ListView.Align := TAlignLayout.Left;
   ListView.StyleLookup := 'listviewstyle';
   ListView.ItemAppearanceName := 'ListItem';

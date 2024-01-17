@@ -10,7 +10,7 @@ object FormAction: TFormAction
   OnCreate = FormCreate
   OnClose = FormClose
   OnDestroy = FormDestroy
-  DesignerMasterStyle = 3
+  DesignerMasterStyle = 0
   object Edit: TEdit
     Touch.InteractiveGestures = [LongTap, DoubleTap]
     StyleLookup = 'editstyle'
@@ -134,9 +134,9 @@ object FormAction: TFormAction
     Text = 'Search Results'
   end
   object SortBtn: TButton
-    Position.X = 640.000000000000000000
-    Position.Y = 64.000000000000000000
-    Size.Width = 137.000000000000000000
+    Position.X = 401.000000000000000000
+    Position.Y = 56.000000000000000000
+    Size.Width = 128.000000000000000000
     Size.Height = 38.000000000000000000
     Size.PlatformDefault = False
     StyleLookup = 'buttonstyle'
@@ -147,9 +147,9 @@ object FormAction: TFormAction
   end
   object CaseBtn: TButton
     StyledSettings = [Family, Size, FontColor]
-    Position.X = 136.000000000000000000
-    Position.Y = 64.000000000000000000
-    Size.Width = 73.000000000000000000
+    Position.X = 217.000000000000000000
+    Position.Y = 56.000000000000000000
+    Size.Width = 60.000000000000000000
     Size.Height = 38.000000000000000000
     Size.PlatformDefault = False
     StyleLookup = 'buttonstyle'
@@ -159,9 +159,9 @@ object FormAction: TFormAction
     OnClick = CaseBtnClick
   end
   object ExecuteBtn: TButton
-    Position.X = 272.000000000000000000
-    Position.Y = 64.000000000000000000
-    Size.Width = 129.000000000000000000
+    Position.X = 285.000000000000000000
+    Position.Y = 56.000000000000000000
+    Size.Width = 108.000000000000000000
     Size.Height = 38.000000000000000000
     Size.PlatformDefault = False
     StyleLookup = 'buttonstyle'
@@ -171,9 +171,9 @@ object FormAction: TFormAction
     OnClick = ExecuteBtnClick
   end
   object BackBtn: TButton
-    Position.X = 489.000000000000000000
-    Position.Y = 64.000000000000000000
-    Size.Width = 95.000000000000000000
+    Position.X = 137.000000000000000000
+    Position.Y = 56.000000000000000000
+    Size.Width = 72.000000000000000000
     Size.Height = 38.000000000000000000
     Size.PlatformDefault = False
     StyleLookup = 'buttonstyle'
