@@ -55,6 +55,7 @@ type
 
   TFederMenu = class(TFederMenuBase)
   private
+    MenuIsUp: Boolean;
     function AddMenu(M: TMainMenu; Caption: string; fas: TFederActions): TMenuItem;
     procedure InitItem(I: TMenuItem; fa: TFederAction);
   public
@@ -98,12 +99,15 @@ begin
         if fmxItem is TMenuItem then
         begin
           mi := fmxItem as TMenuItem;
-//          mi.Text := Main.ActionHandler.GetCaption(mi.Tag);
-          mi.Action := Main.ActionList.GetFederAction(mi.Tag, MainVar.WantLocalizedText, False);
+          if MenuIsUp then
+            mi.Text := Main.ActionHandler.GetCaption(mi.Tag)
+          else
+            mi.Action := Main.ActionList.GetFederAction(mi.Tag, MainVar.WantLocalizedText, False);
         end;
       end;
     end;
   end;
+  MenuIsUp := True;
 end;
 
 function TFederMenu.AddMenu(M: TMainMenu; Caption: string; fas: TFederActions): TMenuItem;
@@ -212,6 +216,7 @@ begin
   fag.Add(faMemoryBtn);
   fag.Add(faMemoryRecallBtn);
   fag.Add(faCopyAndPaste);
+  fag.Add(faUpdateTrimm0);
   AddGroup('Memory', fag);
 
   fag := TFederActionGroup.Create;
@@ -323,16 +328,16 @@ begin
   fag.Add(faMemeGotoLandscape);
   fag.Add(faMemeGotoSquare);
   fag.Add(faMemeGotoPortrait);
-//  fag.Add(faMemeFormat0);
-//  fag.Add(faMemeFormat1);
-//  fag.Add(faMemeFormat2);
-//  fag.Add(faMemeFormat3);
-//  fag.Add(faMemeFormat4);
-//  fag.Add(faMemeFormat5);
-//  fag.Add(faMemeFormat6);
-//  fag.Add(faMemeFormat7);
-//  fag.Add(faMemeFormat8);
-//  fag.Add(faMemeFormat9);
+  fag.Add(faMemeFormat0);
+  fag.Add(faMemeFormat1);
+  fag.Add(faMemeFormat2);
+  fag.Add(faMemeFormat3);
+  fag.Add(faMemeFormat4);
+  fag.Add(faMemeFormat5);
+  fag.Add(faMemeFormat6);
+  fag.Add(faMemeFormat7);
+  fag.Add(faMemeFormat8);
+  fag.Add(faMemeFormat9);
   AddGroup('Format', fag);
 
   fag := TFederActionGroup.Create;

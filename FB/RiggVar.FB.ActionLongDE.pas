@@ -270,7 +270,7 @@ begin
     faCopyTrimmItem: result := 'Copy Trimm-Item';
     faPasteTrimmItem: result := 'Paste Trimm-Item or Trimm-File';
     faCopyAndPaste: result := 'Memory - Copy And Paste';
-    faUpdateTrimm0: result := 'Update Trimm 0';
+    faUpdateTrimm0: result := 'Update Referenz-Trimm 0';
     faReadTrimmFile: result := 'Read Trimm File';
     faSaveTrimmFile: result := 'Save Trimm File';
     faCopyTrimmFile: result := 'Copy Trimm File';
@@ -366,16 +366,16 @@ begin
     faMemeGotoLandscape: result := 'Goto Landscape';
     faMemeGotoSquare: result := 'Goto Square';
     faMemeGotoPortrait: result := 'Goto Portrait';
-    faMemeFormat0: result := 'Format 0';
-    faMemeFormat1: result := 'Format 1';
-    faMemeFormat2: result := 'Format 2';
-    faMemeFormat3: result := 'Format 3';
-    faMemeFormat4: result := 'Format 4';
-    faMemeFormat5: result := 'Format 5';
-    faMemeFormat6: result := 'Format 6';
-    faMemeFormat7: result := 'Format 7';
-    faMemeFormat8: result := 'Format 8';
-    faMemeFormat9: result := 'Format 9';
+    faMemeFormat0: result := 'Format 0 - 600 x 800';
+    faMemeFormat1: result := 'Format 1 - 800 x 600';
+    faMemeFormat2: result := 'Format 2 - 1440 x 900';
+    faMemeFormat3: result := 'Format 3 - iPad Landscape Screen';
+    faMemeFormat4: result := 'Format 4 - iPad Landscape';
+    faMemeFormat5: result := 'Format 5 - iPad Portrait';
+    faMemeFormat6: result := 'Format 6 - iPhone 14 Landscape';
+    faMemeFormat7: result := 'Format 7 - iPhone 14 Portrait';
+    faMemeFormat8: result := 'Format 8 - Pixel 8 Landscape';
+    faMemeFormat9: result := 'Format 9 - Pixel 8 Portrait';
 
     { Reset }
     faReset: result := 'Reset';

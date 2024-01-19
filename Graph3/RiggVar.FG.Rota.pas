@@ -214,9 +214,6 @@ begin
     faResetPosition: ResetPosition;
     faResetRotation: ResetRotation;
     faResetZoom: ResetZoom;
-{$ifdef WantOrtho}
-    faToggleViewType: IsOrthoProjection := not IsOrthoProjection;
-{$endif}
   end;
 end;
 

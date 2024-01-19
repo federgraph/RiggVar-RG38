@@ -13,7 +13,7 @@ type
     function GetEnabled(fa: Integer): Boolean;
 
     function GetActionFromKey(Shift: TShiftState; Key: Word): Integer;
-    function GetActionFromKeyChar(KeyChar: char): Integer;
+    function GetActionFromKeyChar(KeyChar: WideChar): Integer;
 
     procedure ShowTrimm;
     procedure UpdateColorScheme;
@@ -69,7 +69,7 @@ type
     function GetEnabled(fa: Integer): Boolean;
 
     function GetActionFromKey(Shift: TShiftState; Key: Word): Integer;
-    function GetActionFromKeyChar(KeyChar: char): Integer;
+    function GetActionFromKeyChar(KeyChar: WideChar): Integer;
 
     procedure ShowTrimm;
     procedure UpdateColorScheme;
@@ -107,7 +107,7 @@ begin
   result := 0;
 end;
 
-function TDummmyFormMain.GetActionFromKeyChar(KeyChar: char): Integer;
+function TDummmyFormMain.GetActionFromKeyChar(KeyChar: WideChar): Integer;
 begin
   result := 0;
 end;

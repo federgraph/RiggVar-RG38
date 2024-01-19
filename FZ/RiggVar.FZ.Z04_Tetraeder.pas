@@ -133,7 +133,7 @@ function TRggDrawingZ04.GetHelpText: string;
 begin
   ML.Add('Tetreder = Tetrahedron = 3D drawing sample.');
   ML.Add('');
-  ML.Add('Click in white space on image and drag the mouse.');
+  ML.Add('Click on image-background and drag the mouse.');
   ML.Add('Try dragging horizontally with right mouse button down.');
   ML.Add('');
   ML.Add('Select different circles and drag them with mouse.');

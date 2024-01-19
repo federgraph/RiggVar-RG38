@@ -60,7 +60,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure EditKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+    procedure EditKeyUp(Sender: TObject; var Key: Word; var KeyChar: WideChar; Shift: TShiftState);
     procedure ListViewSItemClick(const Sender: TObject; const AItem: TListViewItem);
     procedure ListViewGItemClick(const Sender: TObject; const AItem: TListViewItem);
     procedure ListViewActionsItemClick(const Sender: TObject; const AItem: TListViewItem);
@@ -111,7 +111,7 @@ uses
   RiggVar.FB.ActionLong,
   RiggVar.FB.ActionConst;
 
-procedure TFormAction.EditKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+procedure TFormAction.EditKeyUp(Sender: TObject; var Key: Word; var KeyChar: WideChar; Shift: TShiftState);
 begin
   DoSearch;
 end;

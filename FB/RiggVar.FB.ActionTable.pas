@@ -56,7 +56,7 @@ type
   TShortcutReportHelper = record
   public
     Key: Word;
-    KeyChar: Char;
+    KeyChar: WideChar;
     Shift: TShiftState;
     ML: TStrings;
     Index: Integer;

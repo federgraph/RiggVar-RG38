@@ -48,11 +48,11 @@ type
     KeyMapping: Integer;
     function KeyDownAction(
       var Key: Word;
-      var KeyChar: Char;
+      var KeyChar: WideChar;
       Shift: TShiftState): TFederAction; virtual;
     function KeyUpAction(
       var Key: Word;
-      var KeyChar: Char;
+      var KeyChar: WideChar;
       Shift: TShiftState): TFederAction; virtual;
 
     constructor Create;
@@ -73,12 +73,12 @@ var
 
 { TFederKeyboard }
 
-function TFederKeyboard.KeyDownAction(var Key: Word; var KeyChar: Char; Shift: TShiftState): TFederAction;
+function TFederKeyboard.KeyDownAction(var Key: Word; var KeyChar: WideChar; Shift: TShiftState): TFederAction;
 begin
   result := faNoop;
 end;
 
-function TFederKeyboard.KeyUpAction(var Key: Word; var KeyChar: Char; Shift: TShiftState): TFederAction;
+function TFederKeyboard.KeyUpAction(var Key: Word; var KeyChar: WideChar; Shift: TShiftState): TFederAction;
 begin
   result := faNoop;
 end;

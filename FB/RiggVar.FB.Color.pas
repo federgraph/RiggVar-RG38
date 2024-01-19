@@ -1,5 +1,21 @@
 ﻿unit RiggVar.FB.Color;
 
+(*
+-
+-     F
+-    * * *
+-   *   *   G
+-  *     * *   *
+- E - - - H - - - I
+-  *     * *         *
+-   *   *   *           *
+-    * *     *             *
+-     D-------A---------------B
+-              *
+-              (C) federgraph.de
+-
+*)
+
 interface
 
 { I wanted a custom set of unique color values,

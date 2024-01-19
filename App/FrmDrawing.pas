@@ -68,7 +68,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: WideChar; Shift: TShiftState);
   private
 {$ifdef WantMemo}
     Memo: TMemo;
@@ -553,7 +553,7 @@ begin
 end;
 
 procedure TFormDrawing.FormKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+  var KeyChar: WideChar; Shift: TShiftState);
 begin
   case Key of
     vkEscape: DoReset;

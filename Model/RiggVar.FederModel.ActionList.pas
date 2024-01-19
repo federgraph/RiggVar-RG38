@@ -68,6 +68,7 @@ var
 begin
   cr := TRggAction(Action);
   cr.Checked := Main.GetChecked(cr.Tag);
+  cr.Enabled := Main.GetEnabled(cr.Tag);
   Handled := True;
 end;
 

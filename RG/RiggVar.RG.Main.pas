@@ -292,6 +292,7 @@ type
 
     procedure HandleAction(fa: Integer);
     function GetChecked(fa: TFederAction): Boolean;
+    function GetEnabled(fa: TFederAction): Boolean;
     procedure FederTextCheckState;
     procedure FederTextUpdateParent;
     procedure FederTextUpdateCaption;
@@ -2626,6 +2627,15 @@ begin
     else
       result := MainView.GetChecked(fa);
   end;
+end;
+
+function TRggMain.GetEnabled(fa: TFederAction): Boolean;
+begin
+{$ifdef WantFederAction}
+  result := ActionHandler.GetEnabled(fa);
+{$else}
+  result := True;
+{$endif}
 end;
 
 procedure TRggMain.InitDefaultData;

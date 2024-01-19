@@ -149,9 +149,9 @@ begin
   SL.Add('Taste H : faToggleHelp');
   SL.Add('');
   SL.Add('Taste i : faWheelRight');
-  SL.Add('Taste I : faWheelLeft');
+  SL.Add('Taste I : faWheelUp');
   SL.Add('');
-  SL.Add('Taste j : faWheelUp');
+  SL.Add('Taste j : faWheelLeft');
   SL.Add('Taste J : faWheelDown');
   SL.Add('');
   SL.Add('Taste k : faShowNormalKeyInfo');
@@ -485,7 +485,7 @@ begin
   HL.Add('Change Format of Window:');
   HL.Add('  L, P, S - Landscape, Portrait, Square');
   HL.Add('');
-  HL.Add('Forms, via button on page 1:');
+  HL.Add('Forms:');
   HL.Add('  FA - search in Actions');
   HL.Add('  FM - show Text in Memo');
   HL.Add('  FD - show documentation drawings');

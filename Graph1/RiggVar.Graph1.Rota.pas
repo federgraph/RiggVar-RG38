@@ -550,6 +550,7 @@ begin
   else if not PaintItemChecked or EraseBK then
   begin
 {$ifdef OSX}
+    { RSP-44114 : Canvas.Clear problem on OSX when Canvas.Offset is set }
     temp := TRectF.Empty;
     temp.Width := g.Width;
     temp.Height := g.Height;

@@ -1,5 +1,21 @@
 ﻿unit RiggVar.FD.SchnittKK;
 
+(*
+-
+-     F
+-    * * *
+-   *   *   G
+-  *     * *   *
+- E - - - H - - - I
+-  *     * *         *
+-   *   *   *           *
+-    * *     *             *
+-     D-------A---------------B
+-              *
+-              (C) federgraph.de
+-
+*)
+
 interface
 
 uses
@@ -90,7 +106,7 @@ end;
 function TRggSchnittKK.OuterAngle(P1, P2: TPoint3D): single;
 begin
   result := arctan2((P1.X - P2.X), (P1.Y - P2.Y));
-  result := pi / 2 + result;
+  result := Pi / 2 + result;
 end;
 
 end.

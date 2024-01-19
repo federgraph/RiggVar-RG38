@@ -118,6 +118,7 @@ begin
   Add(B);
 
   WantMemoLines := True;
+  DefaultElement := Param;
 end;
 
 function TRggDrawingZ24.GetHelpText: string;

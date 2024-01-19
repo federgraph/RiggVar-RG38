@@ -28,7 +28,7 @@ type
   TFederKeyboard01 = class(TFederKeyboard)
   public
     constructor Create;
-    function KeyUpAction(var Key: Word; var KeyChar: Char; Shift: TShiftState): TFederAction; override;
+    function KeyUpAction(var Key: Word; var KeyChar: WideChar; Shift: TShiftState): TFederAction; override;
   end;
 
 implementation
@@ -44,7 +44,7 @@ begin
   TestName := 'Keyboard';
 end;
 
-function TFederKeyboard01.KeyUpAction(var Key: Word; var KeyChar: Char; Shift: TShiftState): TFederAction;
+function TFederKeyboard01.KeyUpAction(var Key: Word; var KeyChar: WideChar; Shift: TShiftState): TFederAction;
 var
   fa: Integer;
 begin

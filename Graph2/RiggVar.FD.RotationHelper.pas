@@ -1,5 +1,21 @@
 ﻿unit RiggVar.FD.RotationHelper;
 
+(*
+-
+-     F
+-    * * *
+-   *   *   G
+-  *     * *   *
+- E - - - H - - - I
+-  *     * *         *
+-   *   *   *           *
+-    * *     *             *
+-     D-------A---------------B
+-              *
+-              (C) federgraph.de
+-
+*)
+
 interface
 
 uses
@@ -64,14 +80,14 @@ begin
   begin
     { singularity at north pole }
     heading := 2 * arctan2(q.ImagPart.X, q.RealPart);
-    attitude := PI/2;
+    attitude := Pi / 2;
     bank := 0;
   end
   else if (test < -0.499) then
   begin
     { singularity at south pole }
     heading := -2 * arctan2(q.ImagPart.X, q.RealPart);
-    attitude := - PI/2;
+    attitude := - Pi / 2;
     bank := 0;
   end
   else
@@ -153,14 +169,14 @@ begin
   begin
     { singularity at north pole }
     heading := arctan2(m.m13, m.m33);
-    attitude := PI/2;
+    attitude := Pi / 2;
     bank := 0;
   end
   else if (m.m21 < -0.998) then
   begin
     { singularity at south pole }
     heading := arctan2(m.m13, m.m33);
-    attitude := -PI/2;
+    attitude := -Pi / 2;
     bank := 0;
   end
   else
@@ -239,12 +255,12 @@ begin
     phi := 0;
     if IsEssentiallyZero(rm.m13 + 1) then
     begin
-      the := pi/2;
+      the := Pi / 2;
       psi := arctan2(-rm.m12, rm.m11);
     end
     else
     begin
-      the := -pi/2;
+      the := -Pi / 2;
       psi := arctan2(rm.m12, -rm.m11);
     end;
   end

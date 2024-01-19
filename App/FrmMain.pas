@@ -85,7 +85,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: WideChar; Shift: TShiftState);
     procedure FormMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; var Handled: Boolean);
   private
     FScale: single;
@@ -621,11 +621,11 @@ Application.OnIdle := ApplicationEventsIdle;
   Self.OnResizeEnd := FormResizeEnd;
 {$endif}
 
-{$if defined(MACOS) and (CompilerVersion < 34.0) }
-  { OnKeyUp does not work well on Mac, RSP-2766 }
-  { fixed in Sidney 10.4 }
+{$ifdef OSX}
+  { RSP-2766: OnKeyUp does not work well on Mac }
+  { RSP-44248: FormKeyUp on OSX: KeyChar wrong when [ssShift]-KeyChar follows KeyChar }
   OnKeyUp := nil;
-  { we will use OnKeyDown instead, in Tokyo 10.2 and Rio 10.3 }
+  { we will use OnKeyDown instead }
   OnKeyDown := FormKeyUp;
 {$endif}
 
@@ -636,7 +636,7 @@ Application.OnIdle := ApplicationEventsIdle;
   TMessageManager.DefaultManager.SubscribeToMessage(TOrientationChangedMessage, DoOrientationChanged);
   RegisterForAppEvents;
 
-  Log('FormCreates2 End;');
+  Log('FormCreate2 End;');
 end;
 
 procedure TFormMain.FormDestroy2(Sender: TObject);
@@ -660,7 +660,7 @@ begin
   RotaForm.Free;
 end;
 
-procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: WideChar;  Shift: TShiftState);
 var
   fa: Integer;
 begin
@@ -1123,19 +1123,19 @@ begin
     end;
 
 {$ifdef WantFormat}
-    faMemeFormat1: UpdateFormat(1000, 750);
-    faMemeFormat2: UpdateFormat(800, 600);
-    faMemeFormat3: UpdateFormat(640, 480);
-    faMemeFormat4: UpdateFormat(480, 480);
-    faMemeFormat5: UpdateFormat(512, 512);
-    faMemeFormat6: UpdateFormat(600, 600);
-    faMemeFormat7: UpdateFormat(700, 700);
-    faMemeFormat8: UpdateFormat(800, 800);
-    faMemeFormat9: UpdateFormat(900, 900);
+    faMemeFormat1: UpdateFormat(800, 600);
+    faMemeFormat2: UpdateFormat(1440, 900);
+    faMemeFormat3: UpdateFormat(1024, 768); // iPad Landscape screen (2048 div 2, 1536 div 2)
+    faMemeFormat4: UpdateFormat(1024, 748); // iPad Landscape client area
+    faMemeFormat5: UpdateFormat(768, 1004); // iPad Portrait client area
+    faMemeFormat6: UpdateFormat(844, 390); // iPhone 14 Landscape (2532 div 3, 1170 div 2)
+    faMemeFormat7: UpdateFormat(390, 797); // iPhone 14 Portrait client area
+    faMemeFormat8: UpdateFormat(864, 359); // Pixel 8 Landscape client area
+    faMemeFormat9: UpdateFormat(411, 840); // Pixel 8 Portrait client area
     faMemeFormat0:
     begin
       Top := 0;
-      UpdateFormat(750, 1000)
+      UpdateFormat(600, 800)
     end;
 {$endif}
 
@@ -1293,9 +1293,9 @@ begin
     'H': fa := faToggleHelp;
 
     'i': fa := faWheelRight;
-    'I': fa := faWheelLeft;
+    'I': fa := faWheelUp;
 
-    'j': fa := faWheelUp;
+    'j': fa := faWheelLeft;
     'J': fa := faWheelDown;
 
     'k': ;
