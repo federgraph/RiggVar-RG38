@@ -316,8 +316,8 @@ begin
 {$endif}
   MemoActionList.AddMemoAction('Action Test', ActionTestBtnClick);
   MemoActionList.AddMemoAction('Write Action Const', WriteActionConstBtnClick);
-  MemoActionList.AddMemoAction('Write New Action Const', WriteNewActionConstBtnClick);
-  MemoActionList.AddMemoAction('Write Action Names', WriteActionNamesBtnClick);
+//  MemoActionList.AddMemoAction('Write New Action Const', WriteNewActionConstBtnClick);
+//  MemoActionList.AddMemoAction('Write Action Names', WriteActionNamesBtnClick);
 {$endif}
 end;
 

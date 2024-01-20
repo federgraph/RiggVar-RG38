@@ -158,7 +158,7 @@ type
 
     procedure HandleMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; var Handled: Boolean);
 
-    procedure ViewportKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+    procedure ViewportKeyDown(Sender: TObject; var Key: Word; var KeyChar: WideChar; Shift: TShiftState);
 
     procedure ViewportMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: single);
     procedure ViewportMouseMove(Sender: TObject; Shift: TShiftState; X, Y: single);
@@ -170,7 +170,7 @@ type
     procedure ImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single; RayPos, RayDir: TVector3D);
     procedure ImageClick(Sender: TObject);
 
-    procedure HandleKey(KeyChar: Char);
+    procedure HandleKey(KeyChar: WideChar);
 
     procedure UpdateSize(X, Y: single);
     procedure DoOnIdle;
@@ -983,7 +983,7 @@ begin
 end;
 
 procedure TFederGraph0.ViewportKeyDown(Sender: TObject; var Key: Word;
-var KeyChar: Char; Shift: TShiftState);
+var KeyChar: WideChar; Shift: TShiftState);
 begin
   if Main.CurrentRotaForm <> 3 then
     Exit;
@@ -1270,7 +1270,7 @@ begin
   FWheelBetrag := l;
 end;
 
-procedure TFederGraph0.HandleKey(KeyChar: Char);
+procedure TFederGraph0.HandleKey(KeyChar: WideChar);
 var
   fa: TFederAction;
   Key: Word;

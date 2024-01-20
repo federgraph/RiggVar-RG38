@@ -61,6 +61,7 @@ type
     CounterSPY: Integer;
     CounterZero: Integer;
     NullpunktOffset: TPointF;
+    LegendPosX: single;
     class function CounterSum: Integer;
     class procedure ResetCounter;
     class function Compare(const Left, Right: TDisplayItem): Integer;
@@ -147,7 +148,10 @@ var
 begin
   w := 100;
   h := 25;
-  x := 1 * 70 + 200 + 700; // 2 * Raster + ListboxWidth + 700
+  if LegendPosX = 0 then
+    x := 1 * 70 + 200 + 700 // 2 * Raster + ListboxWidth + 700
+  else
+    x := LegendPosX; // Image.Width - Raster (70) - Margin (10) - w (100) - Indentation (20)
   y := 2 * 70 + 10; // 2 * Raster + Margin (allow for Button-Frame and Speedbar)
   if IsRod then
     x := x + 20;
