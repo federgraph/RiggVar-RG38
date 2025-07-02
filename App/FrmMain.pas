@@ -37,6 +37,7 @@ uses
   RiggVar.App.Model,
   RiggVar.App.Strings,
   RiggVar.RG.View,
+  RiggVar.FB.Def,
   RiggVar.FB.SpeedColor,
   RiggVar.FB.SpeedBar,
   RiggVar.RG.Report,

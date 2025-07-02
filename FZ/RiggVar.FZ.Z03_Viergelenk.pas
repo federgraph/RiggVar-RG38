@@ -111,32 +111,32 @@ begin
   HT := TRggLabel.Create;
   HT.Caption := 'HelpText';
   HT.Text := GetHelpText;
-  HT.StrokeColor := TRggColors.Tomato;
+  HT.StrokeColor := TWebColors.Tomato;
   HT.IsMemoLabel := True;
   HT.Position.Y := 600;
   Add(HT);
 
   A0 := TRggCircle.Create;
   A0.Caption := 'A0';
-  A0.StrokeColor := TRggColors.Orangered;
+  A0.StrokeColor := TWebColors.Orangered;
 
   B0 := TRggCircle.Create;
   B0.Caption := 'B0';
-  B0.StrokeColor := TRggColors.Blue;
+  B0.StrokeColor := TWebColors.Blue;
 
   A := TRggCircle.Create;
   A.Caption := 'A';
-  A.StrokeColor := TRggColors.Orangered;
+  A.StrokeColor := TWebColors.Orangered;
 
   B := TSchnittKKCircle.Create;
   B.Caption := 'B';
-  B.StrokeColor := TRggColors.Blue;
+  B.StrokeColor := TWebColors.Blue;
   B.MP1 := A;
   B.MP2 := B0;
 
   C := TSchnittKKCircle.Create;
   C.Caption := 'C';
-  C.StrokeColor := TRggColors.Lime;
+  C.StrokeColor := TWebColors.Lime;
   C.MP1 := A;
   C.MP2 := B;
 
@@ -144,14 +144,14 @@ begin
 
   A0B0 := TRggLine.Create('A0B0');
   L := A0B0;
-  L.StrokeColor := TRggColors.Gray;
+  L.StrokeColor := TWebColors.Gray;
   L.Point1 := A0;
   L.Point2 := B0;
   Add(L);
 
   A0A := TRggRotaLine.Create('A0A');
   L := A0A;
-  L.StrokeColor := TRggColors.Red;
+  L.StrokeColor := TWebColors.Red;
   L.Point1 := A0;
   L.Point2 := A;
   Add(L);
@@ -180,7 +180,7 @@ begin
   KK := TRggPolyCurve.Create('KK', Count);
   KK.Caption := 'KK';
   KK.StrokeThickness := 3;
-  KK.StrokeColor := TRggColors.Yellow;
+  KK.StrokeColor := TWebColors.Yellow;
   KK.Opacity := 1.0;
   Add(KK);
 

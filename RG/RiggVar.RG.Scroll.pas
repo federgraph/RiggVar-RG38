@@ -20,6 +20,7 @@ interface
 
 uses
   System.Classes,
+  RiggVar.FB.Def,
   RiggVar.RG.Def,
   RiggVar.RG.Types;
 

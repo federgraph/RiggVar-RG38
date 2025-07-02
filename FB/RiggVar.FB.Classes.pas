@@ -23,10 +23,10 @@ uses
   System.Classes,
   System.Math;
 
-const
-  BoolStr: array[Boolean] of string = ('False', 'True');
-  BoolInt: array[Boolean] of Integer = (0, 1);
-  BoolFloat: array[Boolean] of single = (0.0, 1.0);
+//const { now relocated to RiggVar.FB.Def; }
+//  BoolStr: array[Boolean] of string = ('False', 'True');
+//  BoolInt: array[Boolean] of Integer = (0, 1);
+//  BoolFloat: array[Boolean] of single = (0.0, 1.0);
 
 type
   TTokenParser = class

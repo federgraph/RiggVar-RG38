@@ -27,7 +27,7 @@ object FormMemo: TFormMemo
     StyleLookup = 'memostyle'
     TabOrder = 0
     Viewport.Width = 231.000000000000000000
-    Viewport.Height = 273.000000000000000000
+    Viewport.Height = 278.000000000000000000
   end
   object ToolbarPanel: TPanel
     Align = Top

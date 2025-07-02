@@ -517,12 +517,10 @@ begin
 {$endif}
 {$ifdef MACOS}
   LV.ItemAppearance.ItemHeight := 24;
-//  LV.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'Consolas';
   LV.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
 {$endif}
 {$ifdef Android}
   LV.ItemAppearance.ItemHeight := 28;
-//  LV.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'Consolas';
   LV.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
 {$endif}
   LV.ItemAppearanceObjects.ItemObjects.Text.TextColor := Color;

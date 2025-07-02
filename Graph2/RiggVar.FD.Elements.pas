@@ -553,7 +553,7 @@ begin
   Visible := True;
   FOpacity := 1.0;
   FStrokeThickness := 3.0;
-  FStrokeColor := TRggColors.Red;
+  FStrokeColor := TWebColors.Red;
   FStrokeDash := TStrokeDash.Solid;
   TypeName := 'Element';
   TextRadius := DefaultTextRadius;
@@ -600,10 +600,10 @@ begin
   else
     Inc(i);
 
-  if (i > -1) and (i < TRggColorPool.Count) then
+  if (i > -1) and (i < ColorVar.RggColorPool.Count) then
   begin
-    j := TRggColorPool.ColorMap[i].IndexN;
-    FStrokeColor := TRggColorPool.ColorMap[j].Value;
+    j := ColorVar.RggColorPool.ColorMap[i].IndexN;
+    FStrokeColor := ColorVar.RggColorPool.ColorMap[j].Value;
     ColorIndex := i;
   end;
 end;
@@ -616,7 +616,7 @@ end;
 procedure TRggElement.SetStrokeColor(const Value: TAlphaColor);
 begin
   FStrokeColor := Value;
-  ColorIndex := TRggColorPool.GetColorIndex(FStrokeColor);
+  ColorIndex := ColorVar.RggColorPool.GetColorIndex(FStrokeColor);
 end;
 
 procedure TRggElement.SetStrokeDash(const Value: TStrokeDash);
@@ -1329,7 +1329,7 @@ begin
 
   g.Stroke.Join := TStrokeJoin.Round;
   g.Stroke.Cap := TStrokeCap.Round;
-  g.Stroke.Color := TRggColors.Gray;
+  g.Stroke.Color := TWebColors.Gray;
   g.Stroke.Thickness := 3.0;
   g.DrawPolygon(TempP, Opacity);
 
@@ -2050,7 +2050,7 @@ begin
   FPixelValue := FOriginValue;
   StartPoint := TPointF.Create(10, 10);
   StrokeThickness := 2.0;
-  StrokeColor := TRggColors.Gray;
+  StrokeColor := TWebColors.Gray;
   ShowCaption := True;
 end;
 
@@ -2088,12 +2088,12 @@ begin
   EndPoint.X := StartPoint.X + FOriginValue;
 
   g.Stroke.Thickness := 5.0;
-  g.Stroke.Color := TRggColors.Yellow;
+  g.Stroke.Color := TWebColors.Yellow;
   g.DrawLine(StartPoint, EndPoint, Opacity);
 
   EndPoint.X := StartPoint.X + FPixelValue;
   g.Stroke.Thickness := 1.0;
-  g.Stroke.Color := TRggColors.Dodgerblue;
+  g.Stroke.Color := TWebColors.Dodgerblue;
   g.DrawLine(StartPoint, EndPoint, Opacity);
 
   if ShowCaption or GlobalShowCaption then
@@ -2200,6 +2200,8 @@ begin
   g.Stroke.Thickness := StrokeThickness;
   g.Stroke.Color := StrokeColor;
   DrawPoly(g, Poly);
+
+  DrawText(g);
 end;
 
 function TRggFederLine.RotateDegrees(ov: TPoint3D; wi: single): TPoint3D;
@@ -2394,16 +2396,16 @@ end;
 
 procedure TRggColorScheme.GoDark;
 begin
-  TextColor := TRggColors.White;
-  BackgroundColor := TRggColors.BackgroundGray;
-  LabelColor := TRggColors.Antiquewhite;
+  TextColor := TWebColors.White;
+  BackgroundColor := TExtraColors.BackgroundGray;
+  LabelColor := TWebColors.Antiquewhite;
 end;
 
 procedure TRggColorScheme.GoLight;
 begin
-  TextColor := TRggColors.Black;
-  BackgroundColor := TRggColors.White;
-  LabelColor := TRggColors.Plum;
+  TextColor := TWebColors.Black;
+  BackgroundColor := TWebColors.White;
+  LabelColor := TWebColors.Plum;
 end;
 
 { TRggFixpointCircle }
@@ -2428,7 +2430,7 @@ begin
     Temp1.X + FRadius,
     Temp1.Y + FRadius);
 
-  g.Fill.Color := TRggColors.Plum;
+  g.Fill.Color := TWebColors.Plum;
   g.FillEllipse(R, Opacity);
 end;
 

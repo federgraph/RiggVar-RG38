@@ -6,6 +6,7 @@ uses
   RiggVar.App.Strings,
   RiggVar.App.Model,
   RiggVar.FB.ActionConst,
+  RiggVar.FB.Def,
   RiggVar.RG.Types,
   RiggVar.RG.Doc,
   System.SysUtils,

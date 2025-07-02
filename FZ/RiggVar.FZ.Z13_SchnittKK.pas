@@ -86,7 +86,7 @@ begin
   HT := TRggLabel.Create;
   HT.Caption := 'HelpText';
   HT.Text := GetHelpText;
-  HT.StrokeColor := TRggColors.Tomato;
+  HT.StrokeColor := TWebColors.Tomato;
   HT.IsMemoLabel := True;
   HT.Position.Y := 600;
   Add(HT);
@@ -94,17 +94,17 @@ begin
   { Points }
 
   M1 := TRggCircle.Create('M1');
-  M1.StrokeColor := TRggColors.Red;
+  M1.StrokeColor := TWebColors.Red;
 
   M2 := TRggCircle.Create('M2');
-  M2.StrokeColor := TRggColors.Blue;
+  M2.StrokeColor := TWebColors.Blue;
 
   S1 := TRggCircle.Create('S1');
-  S1.StrokeColor := TRggColors.Yellow;
+  S1.StrokeColor := TWebColors.Yellow;
   S1.IsComputed := True;
 
   S2 := TRggCircle.Create('S2');
-  S2.StrokeColor := TRggColors.Lime;
+  S2.StrokeColor := TWebColors.Lime;
   S2.IsComputed := True;
 
   InitDefaultPos;
@@ -116,18 +116,18 @@ begin
   Bem.Text := 'Bemerkung';
   Bem.Position.X := 20;
   Bem.Position.Y := 20;
-  Bem.StrokeColor := TRggColors.Tomato;
+  Bem.StrokeColor := TWebColors.Tomato;
 
   Watch := TRggLabel.Create;
   Watch.Caption := 'Watch';
   Watch.Text := 'Watch';
   Watch.Position.X := 20;
   Watch.Position.Y := 55;
-  Watch.StrokeColor := TRggColors.Tomato;
+  Watch.StrokeColor := TWebColors.Tomato;
 
   C1 := TRggBigCircle.Create('C1');
   C1.StrokeThickness := 1;
-  C1.StrokeColor := TRggColors.Plum;
+  C1.StrokeColor := TWebColors.Plum;
   C1.Radius := Radius;
   C1.IsComputed := True;
   C1.ShowCaption := False;
@@ -135,7 +135,7 @@ begin
 
   C2 := TRggBigCircle.Create('C2');
   C2.StrokeThickness := 1;
-  C2.StrokeColor := TRggColors.Dodgerblue;
+  C2.StrokeColor := TWebColors.Dodgerblue;
   C2.Radius := Radius;
   C2.IsComputed := True;
   C2.ShowCaption := False;

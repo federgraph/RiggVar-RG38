@@ -21,7 +21,6 @@ type
 
     Param: TRggParam;
 
-
     constructor Create;
     procedure InitDefaultPos; override;
     procedure Compute; override;
@@ -79,7 +78,7 @@ begin
 
   Param := TRggParam.Create;
   Param.Caption := 'Test';
-  Param.StrokeColor := TRggColors.Teal;
+  Param.StrokeColor := TWebColors.Teal;
   Param.StartPoint.Y := 50;
   Param.BaseValue := 3;
   Param.Scale := 2 / Param.OriginValue;
@@ -90,7 +89,7 @@ begin
   HT := TRggLabel.Create;
   HT.Caption := 'HelpText';
   HT.Text := GetHelpText;
-  HT.StrokeColor := TRggColors.Tomato;
+  HT.StrokeColor := TWebColors.Tomato;
   HT.IsMemoLabel := True;
   HT.Position.Y := 500;
   Add(HT);
@@ -98,17 +97,17 @@ begin
   { Points }
 
   A := TRggCircle.Create('A');
-  A.StrokeColor := TRggColors.Orangered;
+  A.StrokeColor := TWebColors.Orangered;
 
   B := TRggCircle.Create('B');
-  B.StrokeColor := TRggColors.Blue;
+  B.StrokeColor := TWebColors.Blue;
 
   InitDefaultPos;
 
   { Lines }
 
   L := TRggLine.Create('AB');
-  L.StrokeColor := TRggColors.Lime;
+  L.StrokeColor := TWebColors.Lime;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);

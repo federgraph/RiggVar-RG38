@@ -25,6 +25,7 @@ uses
   System.Math,
   System.Math.Vectors,
   RiggVar.App.Strings,
+  RiggVar.FB.Def,
   RiggVar.RG.Calc,
   RiggVar.RG.Def,
   RiggVar.RG.Data,

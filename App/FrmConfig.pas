@@ -9,6 +9,7 @@ uses
   System.UITypes,
   System.UIConsts,
   RiggVar.App.Strings,
+  RiggVar.FB.Def,
   RiggVar.RG.Scroll,
   RiggVar.RG.Types,
   RiggVar.App.Model,

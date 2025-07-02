@@ -40,6 +40,7 @@ uses
   RiggVar.App.Strings,
   RiggVar.App.Model,
   RiggVar.App.Process,
+  RiggVar.FB.Def,
   RiggVar.FD.Image,
   RiggVar.RG.Model,
   RiggVar.Graph1.Rota,

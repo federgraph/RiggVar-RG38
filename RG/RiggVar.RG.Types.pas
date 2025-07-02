@@ -23,7 +23,8 @@ uses
   System.Classes,
   System.Types,
   System.Math,
-  System.Math.Vectors;
+  System.Math.Vectors,
+  RiggVar.FB.Def;
 
 const
   LineCount = 100;
@@ -38,55 +39,6 @@ var
 
 type
   EFileFormatError = class(Exception);
-
-  TFederParam = (
-    fpController,
-    fpWinkel,
-    fpVorstag,
-    fpWante,
-    fpWoben,
-    fpSalingH,
-    fpSalingA,
-    fpSalingL,
-    fpVorstagOS,
-    fpWPowerOS,
-    fpSalingW,
-    fpMastfallF0C,
-    fpMastfallF0F,
-    fpMastfallVorlauf,
-    fpBiegung,
-    fpD0X,
-    fpAPW,
-    fpEAH,
-    fpEAR,
-    fpEI,
-    fprx,
-    fpry,
-    fprz,
-    fptx,
-    fpty,
-    fpcz,
-    fppx,
-    fppy,
-    fppz,
-    fpva,
-    fpnp,
-    fpfp
-    );
-
-  TFederMessageKind = (
-    fmkNoop,
-    fmkAction,
-    fmkParam,
-    fmkParamValue,
-
-    fmkTX,
-    fmkTY,
-    fmkRX,
-    fmkRY,
-    fmkRZ,
-    fmkCZ
-  );
 
   TGraphRadio = (
     gSimple,

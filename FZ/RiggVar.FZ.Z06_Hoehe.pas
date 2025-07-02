@@ -110,7 +110,7 @@ begin
   HT := TRggLabel.Create;
   HT.Caption := 'HelpText';
   HT.Text := GetHelpText;
-  HT.StrokeColor := TRggColors.Red;
+  HT.StrokeColor := TWebColors.Red;
   HT.IsMemoLabel := True;
   Add(HT);
 
@@ -119,18 +119,18 @@ begin
   DefaultShowCaption := True;
 
   A := TRggCircle.Create('A');
-  A.StrokeColor := TRggColors.Red;
+  A.StrokeColor := TWebColors.Red;
 
   B := TRggCircle.Create('B');
-  B.StrokeColor := TRggColors.Aquamarine;
+  B.StrokeColor := TWebColors.Aquamarine;
 
   C := TRggCircle.Create;
   C.Caption := 'C';
-  C.StrokeColor := TRggColors.Dodgerblue;
+  C.StrokeColor := TWebColors.Dodgerblue;
 
   D := TRggCircle.Create('D');
   D.ShowCaption := False;
-  D.StrokeColor := TRggColors.Yellow;
+  D.StrokeColor := TWebColors.Yellow;
   D.IsComputed := True;
 
   InitDefaultPos;
@@ -141,7 +141,7 @@ begin
 
   L := TRggLine.Create('a');
   L.ShowCaption := False;
-  L.StrokeColor := TRggColors.Red;
+  L.StrokeColor := TWebColors.Red;
   L.StrokeThickness := 1;
   L.Point1 := C;
   L.Point2 := B;
@@ -149,7 +149,7 @@ begin
   SeiteA := L;
 
   L := TRggLine.Create('b');
-  L.StrokeColor := TRggColors.Aquamarine;
+  L.StrokeColor := TWebColors.Aquamarine;
   L.StrokeThickness := 4;
   L.Point1 := C;
   L.Point2 := A;
@@ -157,7 +157,7 @@ begin
   SeiteB := L;
 
   L := TRggLine.Create('c');
-  L.StrokeColor := TRggColors.Dodgerblue;
+  L.StrokeColor := TWebColors.Dodgerblue;
   L.StrokeThickness := 4;
   L.Point1 := B;
   L.Point2 := A;
@@ -169,7 +169,7 @@ begin
   L := TRggLine.Create;
   L.Caption := '(k) * a';
   L.IsComputed := True;
-  L.StrokeColor := TRggColors.Red;
+  L.StrokeColor := TWebColors.Red;
   L.Point1 := C;
   L.Point2 := D;
   Add(L);
@@ -177,7 +177,7 @@ begin
   L := TRggLine.Create;
   L.Caption := '(1-k) * a';
   L.IsComputed := True;
-  L.StrokeColor := TRggColors.Red;
+  L.StrokeColor := TWebColors.Red;
   L.Point1 := D;
   L.Point2 := B;
   Add(L);
@@ -186,7 +186,7 @@ begin
 
   L := TRggLine.Create('h');
   L.IsComputed := True;
-  L.StrokeColor := TRggColors.Black;
+  L.StrokeColor := TWebColors.Black;
   L.Point1 := A;
   L.Point2 := D;
   Add(L);
@@ -207,31 +207,31 @@ end;
 procedure TRggDrawingZ06.GoDark;
 begin
   inherited;
-  A.StrokeColor := TRggColors.Tomato;
-  B.StrokeColor := TRggColors.Lime;
-  C.StrokeColor := TRggColors.Dodgerblue;
+  A.StrokeColor := TWebColors.Tomato;
+  B.StrokeColor := TWebColors.Lime;
+  C.StrokeColor := TWebColors.Dodgerblue;
 
-  SeiteA.StrokeColor := TRggColors.Tomato;
-  SeiteB.StrokeColor := TRggColors.Lime;
-  SeiteC.StrokeColor := TRggColors.Dodgerblue;
+  SeiteA.StrokeColor := TWebColors.Tomato;
+  SeiteB.StrokeColor := TWebColors.Lime;
+  SeiteC.StrokeColor := TWebColors.Dodgerblue;
 
-  D.StrokeColor := TRggColors.Yellow;
-  LineH.StrokeColor := TRggColors.Yellow;
+  D.StrokeColor := TWebColors.Yellow;
+  LineH.StrokeColor := TWebColors.Yellow;
 end;
 
 procedure TRggDrawingZ06.GoLight;
 begin
   inherited;
-  A.StrokeColor := TRggColors.Red;
-  B.StrokeColor := TRggColors.Aquamarine;
-  C.StrokeColor := TRggColors.Dodgerblue;
+  A.StrokeColor := TWebColors.Red;
+  B.StrokeColor := TWebColors.Aquamarine;
+  C.StrokeColor := TWebColors.Dodgerblue;
 
-  SeiteA.StrokeColor := TRggColors.Red;
-  SeiteB.StrokeColor := TRggColors.Aquamarine;
-  SeiteC.StrokeColor := TRggColors.Dodgerblue;
+  SeiteA.StrokeColor := TWebColors.Red;
+  SeiteB.StrokeColor := TWebColors.Aquamarine;
+  SeiteC.StrokeColor := TWebColors.Dodgerblue;
 
-  D.StrokeColor := TRggColors.Orange;
-  LineH.StrokeColor := TRggColors.Black;
+  D.StrokeColor := TWebColors.Orange;
+  LineH.StrokeColor := TWebColors.Black;
 end;
 
 function TRggDrawingZ06.GetHelpText: string;

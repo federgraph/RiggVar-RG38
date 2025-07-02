@@ -5,6 +5,7 @@ interface
 uses
   RiggVar.RG.Types,
   RiggVar.Graph1.DisplayTypes,
+  RiggVar.FB.Def,
   RiggVar.FB.Classes,
   System.SysUtils,
   System.Classes,

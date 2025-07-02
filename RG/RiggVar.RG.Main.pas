@@ -48,6 +48,7 @@ uses
   RiggVar.RG.Doc,
   RiggVar.FB.Classes,
   RiggVar.FB.ActionConst,
+  RiggVar.FB.Def,
 {$ifdef WantFederAction}
   RiggVar.FB.Action,
   RiggVar.FB.ActionGroups,
@@ -65,7 +66,7 @@ uses
   RiggVar.FederModel.Touch,
   RiggVar.FederModel.TouchPhone,
 {$endif}
-  RiggVar.Util.Logger;
+  RiggVar.FB.Logger;
 
 type
   TFederAction = Integer;
@@ -2101,7 +2102,7 @@ end;
 function TRggMain.GetTrimmFilePath: string;
 begin
   result := '';
-{$ifdef MacOS}
+{$ifdef OSX}
   result  := TAppUtils.GetDocumentDirectory;
 {$endif}
 {$ifdef Win32}
@@ -2305,7 +2306,7 @@ var
   ML: TStrings;
 begin
   Inc(ReportCounter);
-  ML := Logger.TL;
+  ML := Logger.ML;
 
   while ML.Count > 24 - 8 do
     ML.Delete(0);
@@ -2329,7 +2330,7 @@ end;
 procedure TRggMain.DoCleanReport;
 begin
   MainVar.ShowDebugData := True;
-  Logger.TL.Clear;
+  Logger.ML.Clear;
   DoReport;
 end;
 

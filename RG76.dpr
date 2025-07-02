@@ -56,7 +56,9 @@ uses
   RiggVar.FB.Equation in 'FB\RiggVar.FB.Equation.pas',
   RiggVar.FB.Formula in 'FB\RiggVar.FB.Formula.pas',
   RiggVar.FB.Classes in 'FB\RiggVar.FB.Classes.pas',
-  RiggVar.FB.ColorGroup in 'FB\RiggVar.FB.ColorGroup.pas';
+  RiggVar.FB.ColorGroup in 'FB\RiggVar.FB.ColorGroup.pas',
+  RiggVar.FB.Def in 'FB\RiggVar.FB.Def.pas',
+  RiggVar.FB.DefConst in 'FB\RiggVar.FB.DefConst.pas';
 
 {$R *.res}
 

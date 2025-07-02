@@ -7,7 +7,6 @@ uses
   FrmAction in 'App\FrmAction.pas' {FormAction},
   FrmMemo in 'App\FrmMemo.pas' {FormMemo},
   RiggVar.Util.AppUtils in 'Util\RiggVar.Util.AppUtils.pas',
-  RiggVar.Util.Logger in 'Util\RiggVar.Util.Logger.pas',
   RiggVar.App.Model in 'App\RiggVar.App.Model.pas',
   RiggVar.App.Strings in 'App\RiggVar.App.Strings.pas',
   RiggVar.RG.Calc in 'RG\RiggVar.RG.Calc.pas',
@@ -86,7 +85,10 @@ uses
   RiggVar.FB.ActionLongEN in 'FB\RiggVar.FB.ActionLongEN.pas',
   RiggVar.FB.ActionShortDE in 'FB\RiggVar.FB.ActionShortDE.pas',
   RiggVar.FB.ActionShortEN in 'FB\RiggVar.FB.ActionShortEN.pas',
-  RiggVar.FB.ColorGroup in 'FB\RiggVar.FB.ColorGroup.pas';
+  RiggVar.FB.ColorGroup in 'FB\RiggVar.FB.ColorGroup.pas',
+  RiggVar.FB.Logger in 'FB\RiggVar.FB.Logger.pas',
+  RiggVar.FB.Def in 'FB\RiggVar.FB.Def.pas',
+  RiggVar.FB.DefConst in 'FB\RiggVar.FB.DefConst.pas';
 
 {$R *.res}
 

@@ -106,18 +106,18 @@ begin
   DefaultShowCaption := True;
 
   A := TRggCircle.Create('A');
-  A.StrokeColor := TRggColors.Red;
+  A.StrokeColor := TWebColors.Red;
 
   B := TRggCircle.Create('B');
-  B.StrokeColor := TRggColors.Lime;
+  B.StrokeColor := TWebColors.Lime;
 
   C := TRggCircle.Create;
   C.Caption := 'C';
-  C.StrokeColor := TRggColors.Aqua;
+  C.StrokeColor := TExtraColors.Aqua;
 
   D := TRggCircle.Create('D');
   D.ShowCaption := False;
-  D.StrokeColor := TRggColors.Yellow;
+  D.StrokeColor := TWebColors.Yellow;
   D.IsComputed := True;
 
   InitDefaultPos;
@@ -128,7 +128,7 @@ begin
 
   L := TRggLine.Create('a');
   L.ShowCaption := False;
-  L.StrokeColor := TRggColors.White;
+  L.StrokeColor := TWebColors.White;
   L.StrokeThickness := 1;
   L.Point1 := C;
   L.Point2 := B;
@@ -136,7 +136,7 @@ begin
   SeiteA := L;
 
   L := TRggLine.Create('b');
-  L.StrokeColor := TRggColors.Lime;
+  L.StrokeColor := TWebColors.Lime;
   L.StrokeThickness := 4;
   L.Point1 := C;
   L.Point2 := A;
@@ -144,7 +144,7 @@ begin
   SeiteB := L;
 
   L := TRggLine.Create('c');
-  L.StrokeColor := TRggColors.Aqua;
+  L.StrokeColor := TWebColors.Cyan;
   L.StrokeThickness := 4;
   L.Point1 := B;
   L.Point2 := A;
@@ -155,14 +155,14 @@ begin
 
   L := TRggLine.Create;
   L.Caption := '(k) * a';
-  L.StrokeColor := TRggColors.Red;
+  L.StrokeColor := TWebColors.Red;
   L.Point1 := C;
   L.Point2 := D;
   Add(L);
 
   L := TRggLine.Create;
   L.Caption := '(1-k) * a';
-  L.StrokeColor := TRggColors.Red;
+  L.StrokeColor := TWebColors.Red;
   L.Point1 := D;
   L.Point2 := B;
   Add(L);
@@ -170,7 +170,7 @@ begin
   { --- }
 
   L := TRggLine.Create('h');
-  L.StrokeColor := TRggColors.Black;
+  L.StrokeColor := TWebColors.Black;
   L.Point1 := A;
   L.Point2 := D;
   Add(L);

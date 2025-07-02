@@ -5,6 +5,7 @@ interface
 { This is a 'runtime' color-list-box component for TRggColors. }
 
 uses
+  RiggVar.FB.Color,
   System.SysUtils,
   System.Classes,
   System.Types,
@@ -17,9 +18,11 @@ uses
 type
   TRggColorListBox = class(TCustomListBox)
   private
-    procedure SetColor(const Value: TAlphaColor);
+    FColorPool: TRggColorPoolBase;
     function GetColor: TAlphaColor;
+    procedure SetColor(const Value: TAlphaColor);
     procedure DoItemApplyStyleLookup(Sender: TObject);
+    procedure SetColorPool(const Value: TRggColorPoolBase);
   protected
     function GetData: TValue; override;
     procedure SetData(const Value: TValue); override;
@@ -28,6 +31,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    property ColorPool: TRggColorPoolBase read FColorPool write SetColorPool;
   published
     property Color: TAlphaColor read GetColor write SetColor default TAlphaColorRec.Null;
     property OnChange;
@@ -35,14 +39,12 @@ type
 
 implementation
 
-uses
-  RiggVar.FB.Color;
-
 { TColorListBox }
 
 constructor TRggColorListBox.Create(AOwner: TComponent);
 begin
   inherited;
+  FColorPool := ColorVar.RggColorPool;
   RebuildList;
   SetAcceptsControls(False);
 end;
@@ -63,7 +65,7 @@ begin
   BeginUpdate;
   SaveIndex := ItemIndex;
   Clear;
-  for I := 0 to TRggColorPool.Count - 1 do
+  for I := 0 to FColorPool.Count - 1 do
   begin
     Item := TListBoxItem.Create(nil);
     Item.Parent := Self;
@@ -71,7 +73,7 @@ begin
     Item.Height := Item.DefaultSize.Height;
     Item.Stored := False;
     Item.Locked := True;
-    Item.Text := TRggColorPool.ColorMap[I].Name;
+    Item.Text := FColorPool.ColorMap[I].Name;
     Item.Tag := I;
     Item.StyleLookup := 'colorlistboxitemstyle';
     Item.OnApplyStyleLookup := DoItemApplyStyleLookup;
@@ -87,18 +89,24 @@ begin
   if Value = TAlphaColorRec.Null then
     ItemIndex := -1
   else
-    for I := 0 to TRggColorPool.Count - 1 do
-      if TRggColorPool.ColorMap[I].Value = Value then
+    for I := 0 to FColorPool.Count - 1 do
+      if FColorPool.ColorMap[I].Value = Value then
       begin
         ItemIndex := I;
         Break;
       end;
 end;
 
+procedure TRggColorListBox.SetColorPool(const Value: TRggColorPoolBase);
+begin
+  FColorPool := Value;
+  RebuildList;
+end;
+
 function TRggColorListBox.GetColor: TAlphaColor;
 begin
   if (ItemIndex >= 0) and (ItemIndex < Count) then
-    Result := TRggColorPool.ColorMap[ItemIndex].Value
+    Result := FColorPool.ColorMap[ItemIndex].Value
   else
     Result := TAlphaColorRec.Null;
 end;
@@ -110,7 +118,7 @@ begin
   else if Value.IsType<TAlphaColor> then
     Color := Value.AsType<TAlphaColor>
   else
-    Color := TRggColorPool.ColorFromName(Value.ToString);
+    Color := FColorPool.ColorFromName(Value.ToString);
 end;
 
 procedure TRggColorListBox.DoItemApplyStyleLookup(Sender: TObject);
@@ -118,7 +126,7 @@ var
   ColorObj: TShape;
 begin
   if TListBoxItem(Sender).FindStyleResource<TShape>('color', ColorObj) then
-    ColorObj.Fill.Color := TRggColorPool.ColorMap[TListBoxItem(Sender).Tag].Value;
+    ColorObj.Fill.Color := FColorPool.ColorMap[TListBoxItem(Sender).Tag].Value;
 end;
 
 function TRggColorListBox.GetData: TValue;

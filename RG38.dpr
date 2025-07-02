@@ -94,7 +94,7 @@ uses
   RiggVar.FG.Rota in 'Graph3\RiggVar.FG.Rota.pas',
   RiggVar.FG.StrokeGraph in 'Graph3\RiggVar.FG.StrokeGraph.pas',
   RiggVar.Util.AppUtils in 'Util\RiggVar.Util.AppUtils.pas',
-  RiggVar.Util.Logger in 'Util\RiggVar.Util.Logger.pas',
+  RiggVar.FB.Logger in 'FB\RiggVar.FB.Logger.pas',
   RiggVar.FD.Chart in 'Graph2\RiggVar.FD.Chart.pas',
   RiggVar.FD.Elements in 'Graph2\RiggVar.FD.Elements.pas',
   RiggVar.FD.Drawings in 'Graph2\RiggVar.FD.Drawings.pas',
@@ -152,7 +152,9 @@ uses
   RiggVar.FB.ActionShortEN in 'FB\RiggVar.FB.ActionShortEN.pas',
   RiggVar.FederModel.Circle in 'Model\RiggVar.FederModel.Circle.pas',
   RiggVar.FB.Equation in 'FB\RiggVar.FB.Equation.pas',
-  RiggVar.FB.Formula in 'FB\RiggVar.FB.Formula.pas';
+  RiggVar.FB.Formula in 'FB\RiggVar.FB.Formula.pas',
+  RiggVar.FB.Def in 'FB\RiggVar.FB.Def.pas',
+  RiggVar.FB.DefConst in 'FB\RiggVar.FB.DefConst.pas';
 
 {$R *.res}
 

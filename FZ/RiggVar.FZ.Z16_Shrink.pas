@@ -98,7 +98,7 @@ begin
     Branch := 1;
     Bem.Text := 'branch = ' + IntToStr(Branch);
     AB.StrokeThickness := 0.5;
-    AB.StrokeColor := TRggColors.Gray;
+    AB.StrokeColor := TWebColors.Gray;
     Exit;
   end;
 
@@ -122,7 +122,7 @@ begin
     phi := arcsin(l / 2 / r);
     Branch := 2;
     AB.StrokeThickness := 2;
-    AB.StrokeColor := TRggColors.Dodgerblue;
+    AB.StrokeColor := TWebColors.Dodgerblue;
   end
   else
   begin
@@ -133,7 +133,7 @@ begin
     phi := arcsin(l / 2 / r);
     Branch := 3;
     AB.StrokeThickness := 1;
-    AB.StrokeColor := TRggColors.Red;
+    AB.StrokeColor := TWebColors.Red;
   end;
 
   deltaPhi := 2 * phi / SegmentCount;
@@ -200,7 +200,7 @@ begin
   HT := TRggLabel.Create;
   HT.Caption := 'HelpText';
   HT.Text := GetHelpText;
-  HT.StrokeColor := TRggColors.Tomato;
+  HT.StrokeColor := TWebColors.Tomato;
   HT.IsMemoLabel := True;
   HT.Position.Y := 500;
   Add(HT);
@@ -208,18 +208,18 @@ begin
   { Points }
 
   A := TRggCircle.Create('A');
-  A.StrokeColor := TRggColors.Black;
+  A.StrokeColor := TWebColors.Black;
 
   B := TRggCircle.Create('B');
-  B.StrokeColor := TRggColors.Red;
+  B.StrokeColor := TWebColors.Red;
 
   T := TRggCircle.Create('T');
-  T.StrokeColor := TRggColors.Aquamarine;
+  T.StrokeColor := TWebColors.Aquamarine;
   T.ShowCaption := False;
   T.IsComputed := True;
 
   M := TRggCircle.Create('M');
-  M.StrokeColor := TRggColors.OrangeRed;
+  M.StrokeColor := TWebColors.OrangeRed;
   M.IsComputed := True;
 
   InitDefaultPos;
@@ -230,7 +230,7 @@ begin
 
   MT := TRggLine.Create('MT');
   MT.StrokeThickness := 0.5;
-  MT.StrokeColor := TRggColors.Red;
+  MT.StrokeColor := TWebColors.Red;
   MT.Point1 := M;
   MT.Point2 := T;
   MT.IsComputed := True;
@@ -238,7 +238,7 @@ begin
 
   AB := TRggPolyLine3D.Create('AB', Count);
   AB.StrokeThickness := 0.8;
-  AB.StrokeColor := TRggColors.Dodgerblue;
+  AB.StrokeColor := TWebColors.Dodgerblue;
   AB.Point1 := A;
   AB.Point2 := B;
   Add(AB);

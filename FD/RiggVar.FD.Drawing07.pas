@@ -46,40 +46,40 @@ begin
 
   A := TRggCircle.Create;
   A.Caption := 'A';
-  A.StrokeColor := TRggColors.Orangered;
+  A.StrokeColor := TWebColors.Orangered;
 
   B := TRggCircle.Create;
   B.Caption := 'B';
-  B.StrokeColor := TRggColors.Dodgerblue;
+  B.StrokeColor := TWebColors.Dodgerblue;
 
   C := TRggCircle.Create;
   C.Caption := 'C';
-  C.StrokeColor := TRggColors.Aquamarine;
+  C.StrokeColor := TWebColors.Aquamarine;
 
   InitDefaultPos;
 
   T := TRggTriangle.Create;
   T.Caption := 'ABC';
-  T.StrokeColor := TRggColors.Aqua;
+  T.StrokeColor := TWebColors.Cyan;
   T.Point1 := A;
   T.Point2 := B;
   T.Point3 := C;
   Add(T);
 
   L := TRggLine.Create('AB');
-  L.StrokeColor := TRggColors.Aquamarine;
+  L.StrokeColor := TWebColors.Aquamarine;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
 
   L := TRggLine.Create('AC');
-  L.StrokeColor := TRggColors.Dodgerblue;
+  L.StrokeColor := TWebColors.Dodgerblue;
   L.Point1 := A;
   L.Point2 := C;
   Add(L);
 
   L := TRggLine.Create('BC');
-  L.StrokeColor := TRggColors.Plum;
+  L.StrokeColor := TWebColors.Plum;
   L.Point1 := B;
   L.Point2 := C;
   Add(L);

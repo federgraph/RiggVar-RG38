@@ -574,7 +574,7 @@ begin
   SetLength(ColorArray, 256);
   for i := 0 to 255 do
   begin
-    ColorArray[i] := TRggColorPool.ColorFromRGB(i, 50, 128);
+    ColorArray[i] := ColorVar.RggColorPool.ColorFromRGB(i, 50, 128);
   end;
 end;
 

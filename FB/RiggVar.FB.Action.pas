@@ -19,6 +19,7 @@
 interface
 
 uses
+  System.SysUtils,
   System.Classes,
   RiggVar.FB.ActionConst;
 
@@ -31,21 +32,29 @@ type
     function GetCaption(fa: TFederAction): string;
     function GetShortCaption(fa: TFederAction): string;
     function GetShortcutString(fa: TFederAction): string;
+    function GetActionName(fa: TFederAction): string;
+    function GetActionGroup(fa: TFederAction): Integer;
   end;
 
   TFederActionHandlerBase = class(TInterfacedObject, IFederActionHandler)
   public
+    procedure CheckForDuplicates(ML: TStringList); virtual;
     procedure Execute(fa: TFederAction); virtual;
     function GetEnabled(fa: TFederAction): Boolean; virtual;
     function GetChecked(fa: TFederAction): Boolean; virtual;
     function GetCaption(fa: TFederAction): string; virtual;
     function GetShortCaption(fa: TFederAction): string; virtual;
     function GetShortcutString(fa: TFederAction): string; virtual;
+    function GetShortcutReport(ML: TStrings): string; virtual;
+
+    function GetActionName(fa: TFederAction): string; virtual;
+    function GetActionGroup(fa: TFederAction): Integer; virtual;
   end;
 
 implementation
 
 uses
+  RiggVar.FB.ActionName,
   RiggVar.FB.ActionShort,
   RiggVar.FB.ActionLong;
 
@@ -58,6 +67,22 @@ function TFederActionHandlerBase.GetShortcutString(fa: TFederAction): string;
 begin
   { virtual, do nothing here }
   result := '';
+end;
+
+function TFederActionHandlerBase.GetShortcutReport(ML: TStrings): string;
+begin
+  { virtual, do nothing here }
+  result := '';
+end;
+
+function TFederActionHandlerBase.GetActionName(fa: TFederAction): string;
+begin
+  result := GetFederActionName(fa);
+end;
+
+function TFederActionHandlerBase.GetActionGroup(fa: TFederAction): Integer;
+begin
+  result := 0;
 end;
 
 function TFederActionHandlerBase.GetCaption(fa: TFederAction): string;
@@ -78,6 +103,11 @@ end;
 procedure TFederActionHandlerBase.Execute(fa: TFederAction);
 begin
   { virtual, do nothing here }
+end;
+
+procedure TFederActionHandlerBase.CheckForDuplicates(ML: TStringList);
+begin
+  { not implemented here }
 end;
 
 end.

@@ -233,7 +233,9 @@ begin
   ActionPage := ActionPage; // call virtual setter --> InitActions
 
   for cb in CornerBtnList do
+  begin
     cb.Opacity := FCornerBtnOpacity;
+  end;
 end;
 
 procedure TFederTouch.SetActionMap(const Value: Integer);

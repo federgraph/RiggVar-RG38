@@ -57,6 +57,7 @@ uses
   Xml.XmlDoc,
   Xml.XmlIntf,
 {$endif}
+  RiggVar.FB.Def,
   RiggVar.RG.Scroll,
   RiggVar.RG.Types;
 

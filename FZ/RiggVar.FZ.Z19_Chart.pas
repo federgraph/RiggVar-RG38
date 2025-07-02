@@ -47,23 +47,23 @@ begin
   HT := TRggLabel.Create;
   HT.Caption := 'HelpText';
   HT.Text := GetHelpText;
-  HT.StrokeColor := TRggColors.Tomato;
+  HT.StrokeColor := TWebColors.Tomato;
   HT.IsMemoLabel := True;
   HT.Position.Y := 500;
   Add(HT);
 
   B0 := TRggCircle.Create('B0');
-  B0.StrokeColor := TRggColors.Blue;
+  B0.StrokeColor := TWebColors.Blue;
 
   A := TRggCircle.Create('A');
-  A.StrokeColor := TRggColors.Orangered;
+  A.StrokeColor := TWebColors.Orangered;
 
   InitDefaultPos;
 
   Chart := TRggChart.Create;
   Chart.Caption := 'Test';
   Chart.StrokeThickness := 1;
-  Chart.StrokeColor := TRggColors.Dodgerblue;
+  Chart.StrokeColor := TWebColors.Dodgerblue;
   Chart.InitDefault;
   Chart.Box.X := 250;
   Chart.Box.Y := 250;
@@ -95,9 +95,9 @@ end;
 procedure TRggDrawingZ19.GoDark;
 begin
   inherited;
-  B0.StrokeColor := TRggColors.Cyan;
-  A.StrokeColor := TRggColors.Orangered;
-  Chart.StrokeColor := TRggColors.Dodgerblue;
+  B0.StrokeColor := TWebColors.Cyan;
+  A.StrokeColor := TWebColors.Orangered;
+  Chart.StrokeColor := TWebColors.Dodgerblue;
 end;
 
 function TRggDrawingZ19.GetHelpText: string;

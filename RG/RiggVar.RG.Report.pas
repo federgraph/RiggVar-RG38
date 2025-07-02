@@ -323,7 +323,7 @@ begin
         ML.Add('Wheel = Small step change of current param value.');
         ML.Add('Shift-Wheel = Big step change of current param value.');
       end;
-      rgLog: ML.Text := Main.Logger.TL.Text;
+      rgLog: ML.Text := Main.Logger.ML.Text;
       rgJson: Main.RggData.WriteJSon(ML);
       rgData: Main.RggData.WriteReport(ML);
       rgAusgabeDetail:
@@ -381,7 +381,7 @@ begin
       rgDebugReport:
       begin
         Main.DoCleanReport;
-        ML.Text := Main.Logger.TL.Text;
+        ML.Text := Main.Logger.ML.Text;
       end;
     end;
   finally

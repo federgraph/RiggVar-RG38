@@ -218,28 +218,28 @@ begin
   StartAngleDefault := 110;
   EndAngleDefault := 85;
 
-  colorStart := TRggColors.Plum;
-  colorEnde := TRggColors.Antiquewhite;
+  colorStart := TWebColors.Plum;
+  colorEnde := TWebColors.Antiquewhite;
 
   P0 := TRggCircle.Create('P0');
-  P0.StrokeColor := TRggColors.Orangered;
+  P0.StrokeColor := TWebColors.Orangered;
 
   P := TRggCircle.Create('P');
-  P.StrokeColor := TRggColors.Orangered;
+  P.StrokeColor := TWebColors.Orangered;
   P.IsComputed := True;
 
   D0 := TRggCircle.Create('D0');
-  D0.StrokeColor := TRggColors.Blue;
+  D0.StrokeColor := TWebColors.Blue;
 
   D := TRggCircle.Create('D');
-  D.StrokeColor := TRggColors.Blue;
+  D.StrokeColor := TWebColors.Blue;
   D.IsComputed := True;
 
   C0 := TRggCircle.Create('C0');
-  C0.StrokeColor := TRggColors.Blue;
+  C0.StrokeColor := TWebColors.Blue;
 
   C := TRggCircle.Create('C');
-  C.StrokeColor := TRggColors.Blue;
+  C.StrokeColor := TWebColors.Blue;
   C.IsComputed := True;
 
   StartC := TRggCircle.Create('StartC');
@@ -322,32 +322,32 @@ begin
   Label6.Text := 'L6';
   Label6.IsMemoLabel := True;
   Label6.Position.Y := 9 * Raster;
-  Label6.StrokeColor := TRggColors.Green;
+  Label6.StrokeColor := TWebColors.Green;
   Add(Label6);
 
   L := TRggLine.Create('P0D0');
-  L.StrokeColor := TRggColors.Gray;
+  L.StrokeColor := TWebColors.Gray;
   L.Point1 := P0;
   L.Point2 := D0;
   Add(L);
   P0D0 := L;
 
   L := TRggLine.Create('P0P');
-  L.StrokeColor := TRggColors.Red;
+  L.StrokeColor := TWebColors.Red;
   L.Point1 := P0;
   L.Point2 := P;
   Add(L);
   P0P := L;
 
   L := TRggRotaLine.Create('D0D');
-  L.StrokeColor := TRggColors.Blue;
+  L.StrokeColor := TWebColors.Blue;
   L.Point1 := D0;
   L.Point2 := D;
   Add(L);
   D0D := L;
 
   L := TRggLine.Create('PD');
-  L.StrokeColor := TRggColors.Lime;
+  L.StrokeColor := TWebColors.Lime;
   L.Point1 := P;
   L.Point2 := D;
   Add(L);
@@ -355,7 +355,7 @@ begin
 
   L := TRggLine.Create('PC');
   L.StrokeThickness := 0.5;
-  L.StrokeColor := TRggColors.Gray;
+  L.StrokeColor := TWebColors.Gray;
   L.Point1 := P;
   L.Point2 := C;
   L.IsComputed := True;
@@ -363,14 +363,14 @@ begin
   PC := L;
 
   L := TRggLine.Create('DC');
-  L.StrokeColor := TRggColors.Lime;
+  L.StrokeColor := TWebColors.Lime;
   L.Point1 := D;
   L.Point2 := C;
   Add(L);
   DC := L;
 
   L := TRggLine.Create('C0C');
-  L.StrokeColor := TRggColors.Lime;
+  L.StrokeColor := TWebColors.Lime;
   L.Point1 := C0;
   L.Point2 := C;
   L.IsComputed := True;
@@ -458,7 +458,7 @@ begin
   Chart := TRggChart.Create;
   Chart.Caption := 'Test';
   Chart.StrokeThickness := 1;
-  Chart.StrokeColor := TRggColors.Dodgerblue;
+  Chart.StrokeColor := TWebColors.Dodgerblue;
   Chart.InitDefault;
   Chart.Box.X := 250;
   Chart.Box.Y := 250;

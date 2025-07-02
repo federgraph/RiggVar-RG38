@@ -174,13 +174,13 @@ begin
   begin
     cr := Self.Items[i];
     l := Length(cr);
-    for j := 0 to l-1 do
+    for j := 0 to l - 1 do
     begin
       SL.Values[IntToStr(cr[j])] := s1;
     end;
   end;
 
-  for i := SL.Count-1 downto 0 do
+  for i := SL.Count - 1 downto 0 do
     if (SL.Values[IntToStr(i)] = '1') then
       SL.Delete(i);
 

@@ -16,9 +16,9 @@
 -
 *)
 
-{$define WantToolBtn}
-
 interface
+
+{$define WantToolBtn}
 
 uses
   System.SysUtils,
@@ -47,6 +47,7 @@ type
     procedure SetColor(const Value: TAlphaColor);
     procedure SetCaption(const Value: string);
     procedure SetFederAction(const Value: TFederAction);
+    function GetColor: TAlphaColor;
   protected
     procedure SetHint(const Value: string); override;
     procedure HandleClick(Sender: TObject);
@@ -75,7 +76,7 @@ type
     property FederAction: TFederAction read FFederAction write SetFederAction;
     property Shape: TShape read FShape;
     property Text: TText read FText;
-    property Color: TAlphaColor write SetColor;
+    property Color: TAlphaColor read GetColor write SetColor;
   end;
 
   TCornerPos = (
@@ -164,6 +165,7 @@ type
       OpacityValue: single;
       OwnerComponent: TComponent;
       ParentObject: TFmxObject;
+      ClickedID: Integer;
 
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -185,7 +187,6 @@ type
     procedure UpdateColorScheme; virtual;
     procedure UpdatePageBtnText;
 
-    property FrameVisible: Boolean read FFrameVisible write SetFrameVisible;
     property OwnsMouse: Boolean read FOwnsMouse write SetOwnsMouse;
 
     property MinCount: Integer read GetMinCount;
@@ -216,10 +217,16 @@ begin
   inherited;
 end;
 
+function TTouchBtn.GetColor: TAlphaColor;
+begin
+  result := FShape.Fill.Color;
+end;
+
 procedure TTouchBtn.HandleClick(Sender: TObject);
 begin
   if Enabled then
   begin
+    TFederTouchBase.ClickedID := ID;
     Main.ActionHandler.Execute(FederAction);
   end;
 end;
@@ -687,8 +694,7 @@ begin
   end;
 end;
 
-procedure TFederTouchBase.OnMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: single);
+procedure TFederTouchBase.OnMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: single);
 begin
   Down := True;
   OldX := X;
@@ -705,8 +711,7 @@ begin
   end;
 end;
 
-procedure TFederTouchBase.OnMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: single);
+procedure TFederTouchBase.OnMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: single);
 begin
   Down := False;
   FOwnsMouse := False;

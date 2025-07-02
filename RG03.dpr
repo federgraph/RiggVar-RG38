@@ -35,7 +35,9 @@ uses
   RiggVar.RG.View in 'RG\RiggVar.RG.View.pas',
   RiggVar.RG.Main in 'RG\RiggVar.RG.Main.pas',
   RiggVar.Util.AppUtils in 'Util\RiggVar.Util.AppUtils.pas',
-  RiggVar.Util.Logger in 'Util\RiggVar.Util.Logger.pas';
+  RiggVar.FB.Logger in 'FB\RiggVar.FB.Logger.pas',
+  RiggVar.FB.Def in 'FB\RiggVar.FB.Def.pas',
+  RiggVar.FB.DefConst in 'FB\RiggVar.FB.DefConst.pas';
 
 {$R *.res}
 

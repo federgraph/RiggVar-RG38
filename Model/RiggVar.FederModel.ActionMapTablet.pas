@@ -118,8 +118,7 @@ begin
   IAC(7, faActionPageP, claYellow);
 end;
 
-procedure TActionMapTablet.InitAC(cl: TCornerLocation; bi,
-  fa: Integer; cla: TAlphaColor);
+procedure TActionMapTablet.InitAC(cl: TCornerLocation; bi, fa: Integer; cla: TAlphaColor);
 var
   j: Integer; // FrameLocation
 begin

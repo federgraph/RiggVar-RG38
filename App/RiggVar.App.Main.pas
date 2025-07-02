@@ -46,7 +46,7 @@ var
 
 type
   MainConst = class
-  const
+  public const
     CanReadIniFile = False;
     ColorSchemeCount = 7;
     DefaultBtnFontSize = 24;
@@ -56,20 +56,23 @@ type
   end;
 
   MainVar = class
-  public
-  class var
+  public class var
     IsSandboxed: Boolean;
     AllProps: Boolean;
     AllTags: Boolean;
-    AppIsClosing: Boolean;
     ShowDebugData: Boolean;
     WantOnResize: Boolean;
+
+    AppIsClosing: Boolean;
+
 {$ifdef WantColorScheme}
     ColorScheme: TColorScheme;
 {$endif}
+
     Raster: Integer;
     ScaledRaster: Integer;
     Scale: single;
+
     ClientWidth: Integer;
     ClientHeight: Integer;
     WantFederText: Boolean;
@@ -81,7 +84,7 @@ type
 
 implementation
 
-{ MainVars }
+{ MainVar }
 
 class constructor MainVar.Create;
 begin
@@ -101,9 +104,9 @@ begin
 {$ifdef WantColorScheme}
   ColorScheme := TColorScheme.Create(5);
 {$endif}
-  Raster := 70;
+
   Scale := 1.0;
+  Raster := 70;
 end;
 
 end.
-

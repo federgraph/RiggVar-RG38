@@ -95,7 +95,7 @@ begin
   HT := TRggLabel.Create;
   HT.Caption := 'HelpText';
   HT.Text := GetHelpText;
-  HT.StrokeColor := TRggColors.Tomato;
+  HT.StrokeColor := TWebColors.Tomato;
   HT.IsMemoLabel := True;
   Add(HT);
 
@@ -103,19 +103,19 @@ begin
 
   AX := TRggCircle.Create;
   AX.Caption := 'X';
-  AX.StrokeColor := TRggColors.Red;
+  AX.StrokeColor := TWebColors.Red;
 
   AY := TRggCircle.Create;
   AY.Caption := 'Y';
-  AY.StrokeColor := TRggColors.Green;
+  AY.StrokeColor := TWebColors.Green;
 
   AZ := TRggCircle.Create;
   AZ.Caption := 'Z';
-  AZ.StrokeColor := TRggColors.Blue;
+  AZ.StrokeColor := TWebColors.Blue;
 
   Origin := TRggCircle.Create;
   Origin.Caption := 'Origin';
-  Origin.StrokeColor := TRggColors.Yellow;
+  Origin.StrokeColor := TWebColors.Yellow;
   Origin.ShowCaption := False;
 
   InitDefaultPos;
@@ -125,21 +125,21 @@ begin
   DefaultShowCaption := False;
 
   L := TRggLine.Create('AX');
-  L.StrokeColor := TRggColors.Red;
+  L.StrokeColor := TWebColors.Red;
   L.Point1 := Origin;
   L.Point2 := AX;
   Add(L);
   LAX := L;
 
   L := TRggLine.Create('AY');
-  L.StrokeColor := TRggColors.Green;
+  L.StrokeColor := TWebColors.Green;
   L.Point1 := Origin;
   L.Point2 := AY;
   Add(L);
   LAY := L;
 
   L := TRggLine.Create('AZ');
-  L.StrokeColor := TRggColors.Blue;
+  L.StrokeColor := TWebColors.Blue;
   L.Point1 := Origin;
   L.Point2 := AZ;
   Add(L);
@@ -348,29 +348,29 @@ end;
 procedure TRggDrawingZ21.GoLight;
 begin
   inherited;
-  AX.StrokeColor := TRggColors.Red;
-  AY.StrokeColor := TRggColors.Green;
-  AZ.StrokeColor := TRggColors.Blue;
+  AX.StrokeColor := TWebColors.Red;
+  AY.StrokeColor := TWebColors.Green;
+  AZ.StrokeColor := TWebColors.Blue;
 
-  Origin.StrokeColor := TRggColors.Orange;
+  Origin.StrokeColor := TWebColors.Orange;
 
-  LAX.StrokeColor := TRggColors.Red;
-  LAY.StrokeColor := TRggColors.Green;
-  LAZ.StrokeColor := TRggColors.Blue;
+  LAX.StrokeColor := TWebColors.Red;
+  LAY.StrokeColor := TWebColors.Green;
+  LAZ.StrokeColor := TWebColors.Blue;
 end;
 
 procedure TRggDrawingZ21.GoDark;
 begin
   inherited;
-  AX.StrokeColor := TRggColors.Orangered;
-  AY.StrokeColor := TRggColors.Seagreen;
-  AZ.StrokeColor := TRggColors.DodgerBlue;
+  AX.StrokeColor := TWebColors.Orangered;
+  AY.StrokeColor := TWebColors.Seagreen;
+  AZ.StrokeColor := TWebColors.DodgerBlue;
 
-  Origin.StrokeColor := TRggColors.Goldenrod;
+  Origin.StrokeColor := TWebColors.Goldenrod;
 
-  LAX.StrokeColor := TRggColors.Orangered;
-  LAY.StrokeColor := TRggColors.Seagreen;
-  LAZ.StrokeColor := TRggColors.Dodgerblue;
+  LAX.StrokeColor := TWebColors.Orangered;
+  LAY.StrokeColor := TWebColors.Seagreen;
+  LAZ.StrokeColor := TWebColors.Dodgerblue;
 end;
 
 procedure TRggDrawingZ21.RotaMat(aRotX, aRotY, aRotZ: single);

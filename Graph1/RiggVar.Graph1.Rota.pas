@@ -912,7 +912,9 @@ end;
 procedure TRotaForm1.LegendBtnClick(Sender: TObject);
 begin
   LegendItemChecked := not LegendItemChecked;
+{$ifdef WantDisplayList}
   TDisplayItem.LegendPosX := Image.Width - 70 - 10 - 120;
+{$endif}
   Draw;
 end;
 

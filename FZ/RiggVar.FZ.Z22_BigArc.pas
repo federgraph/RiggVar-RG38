@@ -54,23 +54,23 @@ begin
 
   A := TRggCircle.Create;
   A.Caption := 'A';
-  A.StrokeColor := TRggColors.Red;
+  A.StrokeColor := TWebColors.Red;
 
   B := TRggCircle.Create;
   B.Caption := 'B';
-  B.StrokeColor := TRggColors.Dodgerblue;
+  B.StrokeColor := TWebColors.Dodgerblue;
 
   AB := TRggLine.Create('AB');
   AB.Point1 := A;
   AB.Point2 := B;
   AB.ShowCaption := False;
   AB.StrokeThickness := 2;
-  AB.StrokeColor := TRggColors.Aquamarine;
+  AB.StrokeColor := TWebColors.Aquamarine;
 
   HT := TRggLabel.Create;
   HT.Caption := 'HelpText';
   HT.Text := GetHelpText;
-  HT.StrokeColor := TRggColors.Tomato;
+  HT.StrokeColor := TWebColors.Tomato;
   HT.IsMemoLabel := True;
   Add(HT);
 
@@ -80,7 +80,7 @@ begin
   Arc.Point1 := A;
   Arc.Point2 := B;
   Arc.StrokeThickness := 1;
-  Arc.StrokeColor := TRggColors.Plum;
+  Arc.StrokeColor := TWebColors.Plum;
   Add(Arc);
 
   Add(A);

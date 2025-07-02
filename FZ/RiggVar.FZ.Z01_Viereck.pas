@@ -57,7 +57,7 @@ begin
   HT := TRggLabel.Create;
   HT.Caption := 'HelpText';
   HT.Text := GetHelpText;
-  HT.StrokeColor := TRggColors.Tomato;
+  HT.StrokeColor := TWebColors.Tomato;
   HT.IsMemoLabel := True;
   HT.Position.Y := 500;
   Add(HT);
@@ -65,41 +65,41 @@ begin
   { Points }
 
   A0 := TRggCircle.Create('A0');
-  A0.StrokeColor := TRggColors.Orangered;
+  A0.StrokeColor := TWebColors.Orangered;
 
   B0 := TRggCircle.Create('B0');
-  B0.StrokeColor := TRggColors.Blue;
+  B0.StrokeColor := TWebColors.Blue;
 
   A := TRggCircle.Create('A');
-  A.StrokeColor := TRggColors.Orangered;
+  A.StrokeColor := TWebColors.Orangered;
 
   B := TRggCircle.Create('B');
-  B.StrokeColor := TRggColors.Blue;
+  B.StrokeColor := TWebColors.Blue;
 
   InitDefaultPos;
 
   { Lines }
 
   L := TRggLine.Create('A0B0');
-  L.StrokeColor := TRggColors.Gray;
+  L.StrokeColor := TWebColors.Gray;
   L.Point1 := A0;
   L.Point2 := B0;
   Add(L);
 
   L := TRggLine.Create('A0A');
-  L.StrokeColor := TRggColors.Red;
+  L.StrokeColor := TWebColors.Red;
   L.Point1 := A0;
   L.Point2 := A;
   Add(L);
 
   L := TRggLine.Create('B0B');
-  L.StrokeColor := TRggColors.Blue;
+  L.StrokeColor := TWebColors.Blue;
   L.Point1 := B0;
   L.Point2 := B;
   Add(L);
 
   L := TRggLine.Create('AB');
-  L.StrokeColor := TRggColors.Lime;
+  L.StrokeColor := TWebColors.Lime;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);

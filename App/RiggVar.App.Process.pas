@@ -5,6 +5,7 @@ interface
 uses
   System.Classes,
   FMX.Types,
+  RiggVar.FB.Def,
   RiggVar.RG.Types;
 
 type

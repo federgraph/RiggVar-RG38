@@ -25,6 +25,7 @@ uses
   RiggVar.App.Strings,
   RiggVar.RG.View,
   RiggVar.FB.Color,
+  RiggVar.FB.Def,
   RiggVar.FB.SpeedColor,
   RiggVar.FB.SpeedBar,
   RiggVar.RG.Report,
@@ -266,7 +267,7 @@ begin
 
   { Background }
   Fill.Kind := TBrushKind.Solid; // because it is still TBrushKind.None
-  Fill.Color := TRggColors.BackgroundGray;
+  Fill.Color := TExtraColors.BackgroundGray;
 
   Caption := HelpCaptionText;
 

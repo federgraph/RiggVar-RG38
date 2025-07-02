@@ -32,20 +32,25 @@ type
     function GetName(Index: Integer): string;
     procedure SetName(Index: Integer; const Value: string);
 
-    function AddColor(const Item: TRggColorListItem): Integer; overload;
+    function AddColorItem(const Item: TRggColorListItem): Integer;
+    function FindColorIndex(const AColor: TRggColor): Integer;
   public
     constructor Create;
     destructor Destroy; override;
 
     procedure Clear;
 
+    function AddColor(const Color: TRggColor): Integer; overload;
     function AddColor(const Color: TRggColor; const ColorName: string): Integer; overload;
 
     procedure AddColorsFromArray(const Arr: TRggColorListArray);
+    procedure AddColorsFromList(const cl: TRggColorList);
 
     procedure AddColorsFromColorArray(const Arr: array of TRggColor);
     procedure AddColorsFromGroup(g: TRggColorGroup);
     procedure AddColorsFromAllGroups;
+
+    function DeleteColor(const AColor: TRggColor): Boolean;
 
     property ColorArray: TRggColorListArray read FArray write FArray;
     property Count: Integer read GetCount;
@@ -79,6 +84,42 @@ begin
   SetLength(FArray, 0);
 end;
 
+function TRggColorList.DeleteColor(const AColor: TRggColor): Boolean;
+var
+  i, j: Integer;
+begin
+  i := FindColorIndex(AColor);
+  result := i >= 0;
+
+  if result then
+  begin
+    for j := i + 1 to Count-1 do
+    begin
+      FArray[j - 1] := FArray[j];
+    end;
+    SetLength(FArray, Count-1);
+  end;
+
+end;
+
+function TRggColorList.FindColorIndex(const AColor: TRggColor): Integer;
+var
+  i: Integer;
+begin
+  result := -1;
+  for i := 0 to High(FArray) do
+    if FArray[i].Color = AColor then
+    begin
+      result := i;
+      break;
+    end;
+end;
+
+function TRggColorList.AddColor(const Color: TRggColor): Integer;
+begin
+  result := AddColor(Color, ColorVar.RggColorPool.ColorToString(Color));
+end;
+
 function TRggColorList.AddColor(const Color: TRggColor; const ColorName: string): Integer;
 begin
   SetLength(FArray, Length(FArray) + 1);
@@ -87,11 +128,24 @@ begin
   Result := High(FArray);
 end;
 
-function TRggColorList.AddColor(const Item: TRggColorListItem): Integer;
+function TRggColorList.AddColorItem(const Item: TRggColorListItem): Integer;
 begin
   SetLength(FArray, Length(FArray) + 1);
   FArray[High(FArray)] := Item;
   Result := High(FArray);
+end;
+
+procedure TRggColorList.AddColorsFromList(const cl: TRggColorList);
+var
+  i: Integer;
+  Item: TRggColorListItem;
+begin
+  for i := 0 to cl.Count - 1 do
+  begin
+    Item.Color := cl.Colors[i];
+    Item.ColorName := cl.Names[i];
+    AddColorItem(Item);
+  end;
 end;
 
 procedure TRggColorList.AddColorsFromArray(const Arr: TRggColorListArray);
@@ -102,7 +156,7 @@ begin
   for i := 0 to High(Arr) do
   begin
     Item := Arr[i];
-    AddColor(Item);
+    AddColorItem(Item);
   end;
 end;
 
@@ -113,7 +167,7 @@ end;
 
 function TRggColorList.GetItem(Index: Integer): TRggColorListItem;
 begin
-  Result := FArray[Index];
+  Result := FArray[Index]; // FArray.Count must be > 0
 end;
 
 function TRggColorList.GetColor(Index: Integer): TRggColor;
@@ -146,7 +200,7 @@ var
   c: TRggColor;
 begin
   for c in Arr do
-    AddColor(c, TRggColorPool.ColorToString(c));
+    AddColor(c, ColorVar.RggColorPool.ColorToString(c));
 end;
 
 procedure TRggColorList.AddColorsFromGroup(g: TRggColorGroup);
@@ -164,7 +218,9 @@ begin
     WhiteGroup: AddColorsFromColorArray(WhiteWebColorArray);
     GrayGroup: AddColorsFromColorArray(GrayWebColorArray);
     CyanGroup: AddColorsFromColorArray(CyanWebColorArray);
-    CustomGroup: AddColorsFromColorArray(CustomColorArray);
+    ExtraGroup: AddColorsFromColorArray(ExtraColorArray);
+    BasicGroup: AddColorsFromColorArray(BasicColorArray);
+    MatteGroup: AddColorsFromColorArray(MatteColorArray);
   end;
 end;
 

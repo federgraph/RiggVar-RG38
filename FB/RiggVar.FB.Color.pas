@@ -18,11 +18,18 @@
 
 interface
 
-{ I wanted a custom set of unique color values,
-    which includes web colors (all) and a few custom colors.
+{ I want a custom set of unique color values which includes
+  - web colors (all)
+  - a few additional colors used in Delphi.
+  - PLA Basic filament colors from Bamblab
+  - PLA Matte filament colors from Bambulab
+
   All colors shall support 'picking by name' in the IDE code editor.
-  https://en.delphipraxis.net/topic/4412-about-medgray-and-windowwhite
-  Special color listbox components serve as 'proof of concept'.
+
+  For more info as to the original problem see
+    https://en.delphipraxis.net/topic/4412-about-medgray-and-windowwhite
+
+  Note: Special color listbox components serve as 'proof of concept'.
   }
 
 uses
@@ -34,18 +41,36 @@ uses
 
 const
   WebColorCount = 141;
-  UniqueWebColorCount = WebColorCount - 2;
-  CustomColorCount = 16;
-  ColorMapCount = UniqueWebColorCount + CustomColorCount;
+  UniqueWebColorCount = WebColorCount - 2;  // 139
+  ExtraColorCount = 16;
+  BasicColorCount = 30;
+  MatteColorCount = 17;
+
+  ColorMapCount =
+    UniqueWebColorCount +
+    ExtraColorCount +
+    BasicColorCount +
+    MatteColorCount;
 
 type
   TRggColor = TAlphaColor;
 
   TRggColorKind = (
     WebColor,
-    CustomColor,
+    ExtraColor,
+    BasicColor,
+    MatteColor,
     Unknown
   );
+
+  TRggColorDistanceInfo = record
+    Count: Integer;
+    Distance: double;
+    Dist: Integer;
+    dr: Integer;
+    dg: Integer;
+    db: Integer;
+  end;
 
   TRggColorGroup = (
     CombinedGroup,
@@ -60,14 +85,15 @@ type
     BlueGroup,
     WhiteGroup,
     GrayGroup,
-    CustomGroup
+    ExtraGroup,
+    BasicGroup,
+    MatteGroup
   );
 
   TWebColorGroupSet = set of TRggColorGroup;
 
-  TRggWebColors = class
-  public
-    const
+  TWebColors = class
+  public const
     Aliceblue = claAliceblue;
     Antiquewhite = claAntiquewhite;
 //    Aqua = claAqua; // duplicate of Cyan
@@ -211,9 +237,8 @@ type
     Yellowgreen = claYellowgreen;
   end;
 
-  TRggCustomColors = class(TRggWebColors)
-  public
-    const
+  TExtraColors = class
+  public const
     Alpha = claBlack;
     Null = claNull;
 
@@ -238,7 +263,8 @@ type
     Sea = TRggColor($FF339966);
     Paleblue = TRggColor($FF99CCFF);
 
-    { Alternative names may be used when assigning a color in code. }
+    { Alternative names may be used when assigning a color in code,
+      but they do not appear in the ColorMap. }
     WindowWhite = Windowgray;
     BtnFace = Windowgray;
     ButtonFace = Windowgray;
@@ -246,15 +272,73 @@ type
     QuickSilver = Mercury;
     MedGray = Mercury;
     MediumGray = Mercury;
-    DarkSilver = TRggWebColors.Darkgray;
-    Dovegray = TRggWebColors.Dimgray;
+    DarkSilver = TWebColors.Darkgray;
+    Dovegray = TWebColors.Dimgray;
 
-    Aqua = TRggWebColors.Cyan;
-    Fuchsia = TRggWebColors.Magenta;
+    Aqua = TWebColors.Cyan;
+    Fuchsia = TWebColors.Magenta;
 
     Gray80 = BackgroundGray;
-    Gray50 = TRggWebColors.Gray;
-    Gray25 = TRggWebColors.Silver;
+    Gray50 = TWebColors.Gray;
+    Gray25 = TWebColors.Silver;
+  end;
+
+  TBasicColors = class
+  public const
+    PLABasic_JadeWhite = $FFFFFFFF;
+    PLABasic_Beige = $FFF7E6DE;
+    PLABasic_Gold = $FFE4BD68;
+    PLABasic_Silver = $FFA6A9AA;
+    PLABasic_Gray = $FF8E9089;
+    PLABasic_Bronze = $FF847D48;
+    PLABasic_Brown = $FF9D432C;
+    PLABasic_CocoaBrown = $FF6F5034;
+    PLABasic_MaroonRed = $FF9D2235;
+    PLABasic_Red = $FFC12E1F;
+
+    PLABasic_Magenta = $FFEC008C;
+    PLABasic_Pink = $FFF55A74;
+    PLABasic_HotPink = $FFF5547C;
+    PLABasic_Orange = $FFFF6A13;
+    PLABasic_Pumpkin = $FFFF9016;
+    PLABasic_SunflowerYellow = $FFFEC600;
+    PLABasic_Yellow = $FFF4EE2A;
+    PLABasic_BrightGreen = $FFBECF00;
+    PLABasic_BambuGreen = $FF00AE42;
+    PLABasic_MistletoeGreen = $FF3F8E43;
+
+    PLABasic_Turquoise= $FF00B1B7;
+    PLABasic_Cyan = $FF0086D6;
+    PLABasic_Blue = $FF0A2989;
+    PLABasic_CobaltBlue = $FFB056B8;
+    PLABasic_Purple = $FF5E43B7;
+    PLABasic_IndigoPurple = $FF482960;
+    PLABasic_BlueGray = $FF5B6579;
+    PLABasic_LightGray = $FFD1D3D5;
+    PLABasic_DarkGray = $FF545454;
+    PLABasic_Black = $FF000000;
+  end;
+
+  TMatteColors = class
+  public const
+    PLAMatte_IvoryWhite = $FFFFFFFF;
+    PLAMatte_LatteBrown = $FFD3B7A7;
+    PLAMatte_DesertTan = $FFE8DBB7;
+    PLAMatte_AshGray = $FF9B9EA0;
+    PLAMatte_LilacPurple = $FFAE96D4;
+    PLAMatte_SakuraPink = $FFE8AFCF;
+    PLAMatte_MandarinOrange = $FFF99963;
+    PLAMatte_LemonYellow = $FFF7D959;
+    PLAMatte_ScarletRed = $FFDE4343;
+    PLAMatte_DarkRed = $FFBB3D43;
+
+    PLAMatte_DarkBrown = $FF7D6556;
+    PLAMatte_DarkGreen =$FF68724D;
+    PLAMatte_GrassGreen = $FF61C680;
+    PLAMatte_IceBlue = $FFA3D8E1;
+    PLAMatte_MarineBlue = $FF0078BF;
+    PLAMatte_DarkBlue = $FF042F56;
+    PLAMatte_Charcoal = $FF000000;
   end;
 
   TRggColorMapEntry = record
@@ -271,171 +355,227 @@ type
   end;
 
 const
-  CustomColors: array [0..CustomColorCount-1] of TRggColorMapEntry = (
-    (Kind: CustomColor; Group: CustomGroup; Value: TRggCustomColors.Windowgray; Name: 'Windowgray'),
-    (Kind: CustomColor; Group: CustomGroup; Value: TRggCustomColors.Porcelain; Name: 'Porcelain'),
-    (Kind: CustomColor; Group: CustomGroup; Value: TRggCustomColors.Mercury; Name: 'Mercury'),
+  BasicColors: array [0..BasicColorCount-1] of TRggColorMapEntry = (
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_JadeWhite; Name: 'PLABasic_JadeWhite'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Beige; Name: 'PLABasic_Beige'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Gold; Name: 'PLABasic_Gold'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Silver; Name: 'PLABasic_Silver'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Gray; Name: 'PLABasic_Gray'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Bronze; Name: 'PLABasic_Bronze'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Brown; Name: 'PLABasic_Brown'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_CocoaBrown; Name: 'PLABasic_CocoaBrown'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_MaroonRed; Name: 'PLABasic_MaroonRed'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Red; Name: 'PLABasic_Red'),
 
-    (Kind: CustomColor; Group: CustomGroup; Value: TRggCustomColors.BackgroundWhite; Name: 'BackgroundWhite'),
-    (Kind: CustomColor; Group: CustomGroup; Value: TRggCustomColors.BackgroundBlue; Name: 'BackgroundBlue'),
-    (Kind: CustomColor; Group: CustomGroup; Value: TRggCustomColors.BackgroundGray; Name: 'BackgroundGray'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Magenta; Name: 'PLABasic_Magenta'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Pink; Name: 'PLABasic_Pink'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_HotPink; Name: 'PLABasic_HotPink'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Orange; Name: 'PLABasic_Orange'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Pumpkin; Name: 'PLABasic_Pumpkin'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_SunflowerYellow; Name: 'PLABasic_SunflowerYellow'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Yellow; Name: 'PLABasic_Yellow'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_BrightGreen; Name: 'PLABasic_BrightGreen'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_BambuGreen; Name: 'PLABasic_BambuGreen'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_MistletoeGreen; Name: 'PLABasic_MistletoeGreen'),
 
-    (Kind: CustomColor; Group: CustomGroup; Value: TRggCustomColors.MoneyGreen; Name: 'MoneyGreen'),
-    (Kind: CustomColor; Group: CustomGroup; Value: TRggCustomColors.LegacySkyBlue; Name: 'LegacySkyBlue'),
-    (Kind: CustomColor; Group: CustomGroup; Value: TRggCustomColors.Cream; Name: 'Cream'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Turquoise; Name: 'PLABasic_Turquoise'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Cyan; Name: 'PLABasic_Cyan'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Blue; Name: 'PLABasic_Blue'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_CobaltBlue; Name: 'PLABasic_CobaltBlue'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Purple; Name: 'PLABasic_Purple'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_IndigoPurple; Name: 'PLABasic_IndigoPurple'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_BlueGray; Name: 'PLABasic_BlueGray'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_LightGray; Name: 'PLABasic_LightGray'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_DarkGray; Name: 'PLABasic_DarkGray'),
+    (Kind: BasicColor; Group: BasicGroup; Value: TBasicColors.PLABasic_Black; Name: 'PLABasic_Black')
+  );
 
-    (Kind: CustomColor; Group: CustomGroup; Value: TRggCustomColors.Gray35; Name: 'Gray35'),
-    (Kind: CustomColor; Group: CustomGroup; Value: TRggCustomColors.Gray15; Name: 'Gray15'),
-    (Kind: CustomColor; Group: CustomGroup; Value: TRggCustomColors.Gray05; Name: 'Gray05'),
+  MatteColors: array [0..MatteColorCount-1] of TRggColorMapEntry = (
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_IvoryWhite; Name: 'PLAMatte_IvoryWhite'),
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_LatteBrown; Name: 'PLAMatte_LatteBrown'),
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_DesertTan; Name: 'PLAMatte_DesertTan'),
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_AshGray; Name: 'PLAMatte_AshGray'),
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_LilacPurple; Name: 'PLAMatte_LilacPurple'),
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_SakuraPink; Name: 'PLAMatte_SakuraPink'),
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_MandarinOrange; Name: 'PLAMatte_MandarinOrange'),
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_LemonYellow; Name: 'PLAMatte_LemonYellow'),
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_ScarletRed; Name: 'PLAMatte_ScarletRed'),
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_DarkRed; Name: 'PLAMatte_DarkRed'),
 
-    (Kind: CustomColor; Group: CustomGroup; Value: TRggCustomColors.Darkbrown; Name: 'Darkbrown'),
-    (Kind: CustomColor; Group: CustomGroup; Value: TRggCustomColors.Lightorange; Name: 'Lightorange'),
-    (Kind: CustomColor; Group: CustomGroup; Value: TRggCustomColors.Sea; Name: 'Sea'),
-    (Kind: CustomColor; Group: CustomGroup; Value: TRggCustomColors.Paleblue; Name: 'Paleblue')
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_DarkBrown; Name: 'PLAMatte_DarkBrown'),
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_DarkGreen; Name: 'PLAMatte_DarkGreen'),
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_GrassGreen; Name: 'PLAMatte_GrassGreen'),
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_IceBlue; Name: 'PLAMatte_IceBlue'),
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_MarineBlue; Name: 'PLAMatte_MarineBlue'),
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_DarkBlue; Name: 'PLAMatte_DarkBlue'),
+    (Kind: MatteColor; Group: MatteGroup; Value: TMatteColors.PLAMatte_Charcoal; Name: 'PLAMatte_Charcoal')
+  );
+
+  ExtraColors: array [0..ExtraColorCount-1] of TRggColorMapEntry = (
+    (Kind: ExtraColor; Group: ExtraGroup; Value: TExtraColors.Windowgray; Name: 'Windowgray'),
+    (Kind: ExtraColor; Group: ExtraGroup; Value: TExtraColors.Porcelain; Name: 'Porcelain'),
+    (Kind: ExtraColor; Group: ExtraGroup; Value: TExtraColors.Mercury; Name: 'Mercury'),
+
+    (Kind: ExtraColor; Group: ExtraGroup; Value: TExtraColors.BackgroundWhite; Name: 'BackgroundWhite'),
+    (Kind: ExtraColor; Group: ExtraGroup; Value: TExtraColors.BackgroundBlue; Name: 'BackgroundBlue'),
+    (Kind: ExtraColor; Group: ExtraGroup; Value: TExtraColors.BackgroundGray; Name: 'BackgroundGray'),
+
+    (Kind: ExtraColor; Group: ExtraGroup; Value: TExtraColors.MoneyGreen; Name: 'MoneyGreen'),
+    (Kind: ExtraColor; Group: ExtraGroup; Value: TExtraColors.LegacySkyBlue; Name: 'LegacySkyBlue'),
+    (Kind: ExtraColor; Group: ExtraGroup; Value: TExtraColors.Cream; Name: 'Cream'),
+
+    (Kind: ExtraColor; Group: ExtraGroup; Value: TExtraColors.Gray35; Name: 'Gray35'),
+    (Kind: ExtraColor; Group: ExtraGroup; Value: TExtraColors.Gray15; Name: 'Gray15'),
+    (Kind: ExtraColor; Group: ExtraGroup; Value: TExtraColors.Gray05; Name: 'Gray05'),
+
+    (Kind: ExtraColor; Group: ExtraGroup; Value: TExtraColors.Darkbrown; Name: 'Darkbrown'),
+    (Kind: ExtraColor; Group: ExtraGroup; Value: TExtraColors.Lightorange; Name: 'Lightorange'),
+    (Kind: ExtraColor; Group: ExtraGroup; Value: TExtraColors.Sea; Name: 'Sea'),
+    (Kind: ExtraColor; Group: ExtraGroup; Value: TExtraColors.Paleblue; Name: 'Paleblue')
   );
 
   WebColors: array [0..UniqueWebColorCount-1] of TRggColorMapEntry = (
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.Aliceblue; Name: 'Aliceblue'),
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.Antiquewhite; Name: 'Antiquewhite'),
-//    (Kind: WebColor; Group: CyanGroup; Value: TRggWebColors.Aqua; Name: 'Aqua'), // see Cyan
-    (Kind: WebColor; Group: CyanGroup; Value: TRggWebColors.Aquamarine; Name: 'Aquamarine'),
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.Azure; Name: 'Azure'),
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.Beige; Name: 'Beige'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Bisque; Name: 'Bisque'),
-    (Kind: WebColor; Group: GrayGroup; Value: TRggWebColors.Black; Name: 'Black'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Blanchedalmond; Name: 'Blanchedalmond'),
-    (Kind: WebColor; Group: BlueGroup; Value: TRggWebColors.Blue; Name: 'Blue'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Blueviolet; Name: 'Blueviolet'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Brown; Name: 'Brown'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Burlywood; Name: 'Burlywood'),
-    (Kind: WebColor; Group: BlueGroup; Value: TRggWebColors.Cadetblue; Name: 'Cadetblue'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Chartreuse; Name: 'Chartreuse'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Chocolate; Name: 'Chocolate'),
-    (Kind: WebColor; Group: OrangeGroup; Value: TRggWebColors.Coral; Name: 'Coral'),
-    (Kind: WebColor; Group: BlueGroup; Value: TRggWebColors.Cornflowerblue; Name: 'Cornflowerblue'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Cornsilk; Name: 'Cornsilk'),
-    (Kind: WebColor; Group: RedGroup; Value: TRggWebColors.Crimson; Name: 'Crimson'),
-    (Kind: WebColor; Group: CyanGroup; Value: TRggWebColors.Cyan; Name: 'Cyan'),
-    (Kind: WebColor; Group: BlueGroup; Value: TRggWebColors.Darkblue; Name: 'Darkblue'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Darkcyan; Name: 'Darkcyan'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Darkgoldenrod; Name: 'Darkgoldenrod'),
-    (Kind: WebColor; Group: GrayGroup; Value: TRggWebColors.Darkgray; Name: 'Darkgray'), // DarkSilver
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Darkgreen; Name: 'Darkgreen'),
-    (Kind: WebColor; Group: YellowGroup; Value: TRggWebColors.Darkkhaki; Name: 'Darkkhaki'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Darkmagenta; Name: 'Darkmagenta'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Darkolivegreen; Name: 'Darkolivegreen'),
-    (Kind: WebColor; Group: OrangeGroup; Value: TRggWebColors.Darkorange; Name: 'Darkorange'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Darkorchid; Name: 'Darkorchid'),
-    (Kind: WebColor; Group: RedGroup; Value: TRggWebColors.Darkred; Name: 'Darkred'),
-    (Kind: WebColor; Group: RedGroup; Value: TRggWebColors.Darksalmon; Name: 'Darksalmon'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Darkseagreen; Name: 'Darkseagreen'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Darkslateblue; Name: 'Darkslateblue'),
-    (Kind: WebColor; Group: GrayGroup; Value: TRggWebColors.Darkslategray; Name: 'Darkslategray'),
-    (Kind: WebColor; Group: CyanGroup; Value: TRggWebColors.Darkturquoise; Name: 'Darkturquoise'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Darkviolet; Name: 'Darkviolet'),
-    (Kind: WebColor; Group: PinkGroup; Value: TRggWebColors.Deeppink; Name: 'Deeppink'),
-    (Kind: WebColor; Group: BlueGroup; Value: TRggWebColors.Deepskyblue; Name: 'Deepskyblue'),
-    (Kind: WebColor; Group: GrayGroup; Value: TRggWebColors.Dimgray; Name: 'Dimgray'), // DoveGray
-    (Kind: WebColor; Group: BlueGroup; Value: TRggWebColors.Dodgerblue; Name: 'Dodgerblue'),
-    (Kind: WebColor; Group: RedGroup; Value: TRggWebColors.Firebrick; Name: 'Firebrick'),
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.Floralwhite; Name: 'Floralwhite'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Forestgreen; Name: 'Forestgreen'),
-//    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Fuchsia; Name: 'Fuchsia'), // see Magenta
-    (Kind: WebColor; Group: GrayGroup; Value: TRggWebColors.Gainsboro; Name: 'Gainsboro'),
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.Ghostwhite; Name: 'Ghostwhite'),
-    (Kind: WebColor; Group: YellowGroup; Value: TRggWebColors.Gold; Name: 'Gold'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Goldenrod; Name: 'Goldenrod'),
-    (Kind: WebColor; Group: GrayGroup; Value: TRggWebColors.Gray; Name: 'Gray'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Green; Name: 'Green'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Greenyellow; Name: 'Greenyellow'),
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.Honeydew; Name: 'Honeydew'),
-    (Kind: WebColor; Group: PinkGroup; Value: TRggWebColors.Hotpink; Name: 'Hotpink'),
-    (Kind: WebColor; Group: RedGroup; Value: TRggWebColors.Indianred; Name: 'Indianred'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Indigo; Name: 'Indigo'),
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.Ivory; Name: 'Ivory'),
-    (Kind: WebColor; Group: YellowGroup; Value: TRggWebColors.Khaki; Name: 'Khaki'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Lavender; Name: 'Lavender'),
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.Lavenderblush; Name: 'Lavenderblush'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Lawngreen; Name: 'Lawngreen'),
-    (Kind: WebColor; Group: YellowGroup; Value: TRggWebColors.Lemonchiffon; Name: 'Lemonchiffon'),
-    (Kind: WebColor; Group: BlueGroup; Value: TRggWebColors.Lightblue; Name: 'Lightblue'),
-    (Kind: WebColor; Group: RedGroup; Value: TRggWebColors.Lightcoral; Name: 'Lightcoral'),
-    (Kind: WebColor; Group: CyanGroup; Value: TRggWebColors.Lightcyan; Name: 'Lightcyan'),
-    (Kind: WebColor; Group: YellowGroup; Value: TRggWebColors.Lightgoldenrodyellow; Name: 'Lightgoldenrodyellow'),
-    (Kind: WebColor; Group: GrayGroup; Value: TRggWebColors.Lightgray; Name: 'Lightgray'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Lightgreen; Name: 'Lightgreen'),
-    (Kind: WebColor; Group: PinkGroup; Value: TRggWebColors.Lightpink; Name: 'Lightpink'),
-    (Kind: WebColor; Group: RedGroup; Value: TRggWebColors.Lightsalmon; Name: 'Lightsalmon'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Lightseagreen; Name: 'Lightseagreen'),
-    (Kind: WebColor; Group: BlueGroup; Value: TRggWebColors.Lightskyblue; Name: 'Lightskyblue'),
-    (Kind: WebColor; Group: GrayGroup; Value: TRggWebColors.Lightslategray; Name: 'Lightslategray'),
-    (Kind: WebColor; Group: BlueGroup; Value: TRggWebColors.Lightsteelblue; Name: 'Lightsteelblue'),
-    (Kind: WebColor; Group: YellowGroup; Value: TRggWebColors.Lightyellow; Name: 'Lightyellow'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Lime; Name: 'Lime'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Limegreen; Name: 'Limegreen'),
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.Linen; Name: 'Linen'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Magenta; Name: 'Magenta'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Maroon; Name: 'Maroon'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Mediumaquamarine; Name: 'Mediumaquamarine'),
-    (Kind: WebColor; Group: BlueGroup; Value: TRggWebColors.Mediumblue; Name: 'Mediumblue'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Mediumorchid; Name: 'Mediumorchid'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Mediumpurple; Name: 'Mediumpurple'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Mediumseagreen; Name: 'Mediumseagreen'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Mediumslateblue; Name: 'Mediumslateblue'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Mediumspringgreen; Name: 'Mediumspringgreen'),
-    (Kind: WebColor; Group: CyanGroup; Value: TRggWebColors.Mediumturquoise; Name: 'Mediumturquoise'),
-    (Kind: WebColor; Group: PinkGroup; Value: TRggWebColors.Mediumvioletred; Name: 'Mediumvioletred'),
-    (Kind: WebColor; Group: BlueGroup; Value: TRggWebColors.Midnightblue; Name: 'Midnightblue'),
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.Mintcream; Name: 'Mintcream'),
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.Mistyrose; Name: 'Mistyrose'),
-    (Kind: WebColor; Group: YellowGroup; Value: TRggWebColors.Moccasin; Name: 'Moccasin'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Navajowhite; Name: 'Navajowhite'),
-    (Kind: WebColor; Group: BlueGroup; Value: TRggWebColors.Navy; Name: 'Navy'),
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.Oldlace; Name: 'Oldlace'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Olive; Name: 'Olive'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Olivedrab; Name: 'Olivedrab'),
-    (Kind: WebColor; Group: OrangeGroup; Value: TRggWebColors.Orange; Name: 'Orange'),
-    (Kind: WebColor; Group: OrangeGroup; Value: TRggWebColors.Orangered; Name: 'Orangered'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Orchid; Name: 'Orchid'),
-    (Kind: WebColor; Group: YellowGroup; Value: TRggWebColors.Palegoldenrod; Name: 'Palegoldenrod'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Palegreen; Name: 'Palegreen'),
-    (Kind: WebColor; Group: CyanGroup; Value: TRggWebColors.Paleturquoise; Name: 'Paleturquoise'),
-    (Kind: WebColor; Group: PinkGroup; Value: TRggWebColors.Palevioletred; Name: 'Palevioletred'),
-    (Kind: WebColor; Group: YellowGroup; Value: TRggWebColors.Papayawhip; Name: 'Papayawhip'),
-    (Kind: WebColor; Group: YellowGroup; Value: TRggWebColors.Peachpuff; Name: 'Peachpuff'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Peru; Name: 'Peru'),
-    (Kind: WebColor; Group: PinkGroup; Value: TRggWebColors.Pink; Name: 'Pink'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Plum; Name: 'Plum'),
-    (Kind: WebColor; Group: BlueGroup; Value: TRggWebColors.Powderblue; Name: 'Powderblue'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Purple; Name: 'Purple'),
-    (Kind: WebColor; Group: RedGroup; Value: TRggWebColors.Red; Name: 'Red'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Rebeccapurple; Name: 'Rebeccapurple'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Rosybrown; Name: 'Rosybrown'),
-    (Kind: WebColor; Group: BlueGroup; Value: TRggWebColors.Royalblue; Name: 'Royalblue'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Saddlebrown; Name: 'Saddlebrown'),
-    (Kind: WebColor; Group: RedGroup; Value: TRggWebColors.Salmon; Name: 'Salmon'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Sandybrown; Name: 'Sandybrown'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Seagreen; Name: 'Seagreen'),
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.Seashell; Name: 'Seashell'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Sienna; Name: 'Sienna'),
-    (Kind: WebColor; Group: GrayGroup; Value: TRggWebColors.Silver; Name: 'Silver'),
-    (Kind: WebColor; Group: BlueGroup; Value: TRggWebColors.Skyblue; Name: 'Skyblue'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Slateblue; Name: 'Slateblue'),
-    (Kind: WebColor; Group: GrayGroup; Value: TRggWebColors.Slategray; Name: 'Slategray'),
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.Snow; Name: 'Snow'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Springgreen; Name: 'Springgreen'),
-    (Kind: WebColor; Group: BlueGroup; Value: TRggWebColors.Steelblue; Name: 'Steelblue'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Tan; Name: 'Tan'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Teal; Name: 'Teal'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Thistle; Name: 'Thistle'),
-    (Kind: WebColor; Group: OrangeGroup; Value: TRggWebColors.Tomato; Name: 'Tomato'),
-    (Kind: WebColor; Group: CyanGroup; Value: TRggWebColors.Turquoise; Name: 'Turquoise'),
-    (Kind: WebColor; Group: PurpleGroup; Value: TRggWebColors.Violet; Name: 'Violet'),
-    (Kind: WebColor; Group: BrownGroup; Value: TRggWebColors.Wheat; Name: 'Wheat'),
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.White; Name: 'White'),
-    (Kind: WebColor; Group: WhiteGroup; Value: TRggWebColors.Whitesmoke; Name: 'Whitesmoke'),
-    (Kind: WebColor; Group: YellowGroup; Value: TRggWebColors.Yellow; Name: 'Yellow'),
-    (Kind: WebColor; Group: GreenGroup; Value: TRggWebColors.Yellowgreen; Name: 'Yellowgreen')
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.Aliceblue; Name: 'Aliceblue'),
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.Antiquewhite; Name: 'Antiquewhite'),
+//    (Kind: WebColor; Group: CyanGroup; Value: TWebColors.Aqua; Name: 'Aqua'), // see Cyan
+    (Kind: WebColor; Group: CyanGroup; Value: TWebColors.Aquamarine; Name: 'Aquamarine'),
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.Azure; Name: 'Azure'),
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.Beige; Name: 'Beige'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Bisque; Name: 'Bisque'),
+    (Kind: WebColor; Group: GrayGroup; Value: TWebColors.Black; Name: 'Black'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Blanchedalmond; Name: 'Blanchedalmond'),
+    (Kind: WebColor; Group: BlueGroup; Value: TWebColors.Blue; Name: 'Blue'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Blueviolet; Name: 'Blueviolet'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Brown; Name: 'Brown'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Burlywood; Name: 'Burlywood'),
+    (Kind: WebColor; Group: BlueGroup; Value: TWebColors.Cadetblue; Name: 'Cadetblue'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Chartreuse; Name: 'Chartreuse'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Chocolate; Name: 'Chocolate'),
+    (Kind: WebColor; Group: OrangeGroup; Value: TWebColors.Coral; Name: 'Coral'),
+    (Kind: WebColor; Group: BlueGroup; Value: TWebColors.Cornflowerblue; Name: 'Cornflowerblue'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Cornsilk; Name: 'Cornsilk'),
+    (Kind: WebColor; Group: RedGroup; Value: TWebColors.Crimson; Name: 'Crimson'),
+    (Kind: WebColor; Group: CyanGroup; Value: TWebColors.Cyan; Name: 'Cyan'),
+    (Kind: WebColor; Group: BlueGroup; Value: TWebColors.Darkblue; Name: 'Darkblue'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Darkcyan; Name: 'Darkcyan'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Darkgoldenrod; Name: 'Darkgoldenrod'),
+    (Kind: WebColor; Group: GrayGroup; Value: TWebColors.Darkgray; Name: 'Darkgray'), // DarkSilver
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Darkgreen; Name: 'Darkgreen'),
+    (Kind: WebColor; Group: YellowGroup; Value: TWebColors.Darkkhaki; Name: 'Darkkhaki'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Darkmagenta; Name: 'Darkmagenta'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Darkolivegreen; Name: 'Darkolivegreen'),
+    (Kind: WebColor; Group: OrangeGroup; Value: TWebColors.Darkorange; Name: 'Darkorange'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Darkorchid; Name: 'Darkorchid'),
+    (Kind: WebColor; Group: RedGroup; Value: TWebColors.Darkred; Name: 'Darkred'),
+    (Kind: WebColor; Group: RedGroup; Value: TWebColors.Darksalmon; Name: 'Darksalmon'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Darkseagreen; Name: 'Darkseagreen'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Darkslateblue; Name: 'Darkslateblue'),
+    (Kind: WebColor; Group: GrayGroup; Value: TWebColors.Darkslategray; Name: 'Darkslategray'),
+    (Kind: WebColor; Group: CyanGroup; Value: TWebColors.Darkturquoise; Name: 'Darkturquoise'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Darkviolet; Name: 'Darkviolet'),
+    (Kind: WebColor; Group: PinkGroup; Value: TWebColors.Deeppink; Name: 'Deeppink'),
+    (Kind: WebColor; Group: BlueGroup; Value: TWebColors.Deepskyblue; Name: 'Deepskyblue'),
+    (Kind: WebColor; Group: GrayGroup; Value: TWebColors.Dimgray; Name: 'Dimgray'), // DoveGray
+    (Kind: WebColor; Group: BlueGroup; Value: TWebColors.Dodgerblue; Name: 'Dodgerblue'),
+    (Kind: WebColor; Group: RedGroup; Value: TWebColors.Firebrick; Name: 'Firebrick'),
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.Floralwhite; Name: 'Floralwhite'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Forestgreen; Name: 'Forestgreen'),
+//    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Fuchsia; Name: 'Fuchsia'), // see Magenta
+    (Kind: WebColor; Group: GrayGroup; Value: TWebColors.Gainsboro; Name: 'Gainsboro'),
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.Ghostwhite; Name: 'Ghostwhite'),
+    (Kind: WebColor; Group: YellowGroup; Value: TWebColors.Gold; Name: 'Gold'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Goldenrod; Name: 'Goldenrod'),
+    (Kind: WebColor; Group: GrayGroup; Value: TWebColors.Gray; Name: 'Gray'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Green; Name: 'Green'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Greenyellow; Name: 'Greenyellow'),
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.Honeydew; Name: 'Honeydew'),
+    (Kind: WebColor; Group: PinkGroup; Value: TWebColors.Hotpink; Name: 'Hotpink'),
+    (Kind: WebColor; Group: RedGroup; Value: TWebColors.Indianred; Name: 'Indianred'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Indigo; Name: 'Indigo'),
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.Ivory; Name: 'Ivory'),
+    (Kind: WebColor; Group: YellowGroup; Value: TWebColors.Khaki; Name: 'Khaki'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Lavender; Name: 'Lavender'),
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.Lavenderblush; Name: 'Lavenderblush'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Lawngreen; Name: 'Lawngreen'),
+    (Kind: WebColor; Group: YellowGroup; Value: TWebColors.Lemonchiffon; Name: 'Lemonchiffon'),
+    (Kind: WebColor; Group: BlueGroup; Value: TWebColors.Lightblue; Name: 'Lightblue'),
+    (Kind: WebColor; Group: RedGroup; Value: TWebColors.Lightcoral; Name: 'Lightcoral'),
+    (Kind: WebColor; Group: CyanGroup; Value: TWebColors.Lightcyan; Name: 'Lightcyan'),
+    (Kind: WebColor; Group: YellowGroup; Value: TWebColors.Lightgoldenrodyellow; Name: 'Lightgoldenrodyellow'),
+    (Kind: WebColor; Group: GrayGroup; Value: TWebColors.Lightgray; Name: 'Lightgray'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Lightgreen; Name: 'Lightgreen'),
+    (Kind: WebColor; Group: PinkGroup; Value: TWebColors.Lightpink; Name: 'Lightpink'),
+    (Kind: WebColor; Group: RedGroup; Value: TWebColors.Lightsalmon; Name: 'Lightsalmon'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Lightseagreen; Name: 'Lightseagreen'),
+    (Kind: WebColor; Group: BlueGroup; Value: TWebColors.Lightskyblue; Name: 'Lightskyblue'),
+    (Kind: WebColor; Group: GrayGroup; Value: TWebColors.Lightslategray; Name: 'Lightslategray'),
+    (Kind: WebColor; Group: BlueGroup; Value: TWebColors.Lightsteelblue; Name: 'Lightsteelblue'),
+    (Kind: WebColor; Group: YellowGroup; Value: TWebColors.Lightyellow; Name: 'Lightyellow'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Lime; Name: 'Lime'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Limegreen; Name: 'Limegreen'),
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.Linen; Name: 'Linen'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Magenta; Name: 'Magenta'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Maroon; Name: 'Maroon'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Mediumaquamarine; Name: 'Mediumaquamarine'),
+    (Kind: WebColor; Group: BlueGroup; Value: TWebColors.Mediumblue; Name: 'Mediumblue'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Mediumorchid; Name: 'Mediumorchid'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Mediumpurple; Name: 'Mediumpurple'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Mediumseagreen; Name: 'Mediumseagreen'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Mediumslateblue; Name: 'Mediumslateblue'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Mediumspringgreen; Name: 'Mediumspringgreen'),
+    (Kind: WebColor; Group: CyanGroup; Value: TWebColors.Mediumturquoise; Name: 'Mediumturquoise'),
+    (Kind: WebColor; Group: PinkGroup; Value: TWebColors.Mediumvioletred; Name: 'Mediumvioletred'),
+    (Kind: WebColor; Group: BlueGroup; Value: TWebColors.Midnightblue; Name: 'Midnightblue'),
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.Mintcream; Name: 'Mintcream'),
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.Mistyrose; Name: 'Mistyrose'),
+    (Kind: WebColor; Group: YellowGroup; Value: TWebColors.Moccasin; Name: 'Moccasin'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Navajowhite; Name: 'Navajowhite'),
+    (Kind: WebColor; Group: BlueGroup; Value: TWebColors.Navy; Name: 'Navy'),
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.Oldlace; Name: 'Oldlace'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Olive; Name: 'Olive'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Olivedrab; Name: 'Olivedrab'),
+    (Kind: WebColor; Group: OrangeGroup; Value: TWebColors.Orange; Name: 'Orange'),
+    (Kind: WebColor; Group: OrangeGroup; Value: TWebColors.Orangered; Name: 'Orangered'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Orchid; Name: 'Orchid'),
+    (Kind: WebColor; Group: YellowGroup; Value: TWebColors.Palegoldenrod; Name: 'Palegoldenrod'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Palegreen; Name: 'Palegreen'),
+    (Kind: WebColor; Group: CyanGroup; Value: TWebColors.Paleturquoise; Name: 'Paleturquoise'),
+    (Kind: WebColor; Group: PinkGroup; Value: TWebColors.Palevioletred; Name: 'Palevioletred'),
+    (Kind: WebColor; Group: YellowGroup; Value: TWebColors.Papayawhip; Name: 'Papayawhip'),
+    (Kind: WebColor; Group: YellowGroup; Value: TWebColors.Peachpuff; Name: 'Peachpuff'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Peru; Name: 'Peru'),
+    (Kind: WebColor; Group: PinkGroup; Value: TWebColors.Pink; Name: 'Pink'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Plum; Name: 'Plum'),
+    (Kind: WebColor; Group: BlueGroup; Value: TWebColors.Powderblue; Name: 'Powderblue'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Purple; Name: 'Purple'),
+    (Kind: WebColor; Group: RedGroup; Value: TWebColors.Red; Name: 'Red'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Rebeccapurple; Name: 'Rebeccapurple'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Rosybrown; Name: 'Rosybrown'),
+    (Kind: WebColor; Group: BlueGroup; Value: TWebColors.Royalblue; Name: 'Royalblue'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Saddlebrown; Name: 'Saddlebrown'),
+    (Kind: WebColor; Group: RedGroup; Value: TWebColors.Salmon; Name: 'Salmon'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Sandybrown; Name: 'Sandybrown'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Seagreen; Name: 'Seagreen'),
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.Seashell; Name: 'Seashell'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Sienna; Name: 'Sienna'),
+    (Kind: WebColor; Group: GrayGroup; Value: TWebColors.Silver; Name: 'Silver'),
+    (Kind: WebColor; Group: BlueGroup; Value: TWebColors.Skyblue; Name: 'Skyblue'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Slateblue; Name: 'Slateblue'),
+    (Kind: WebColor; Group: GrayGroup; Value: TWebColors.Slategray; Name: 'Slategray'),
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.Snow; Name: 'Snow'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Springgreen; Name: 'Springgreen'),
+    (Kind: WebColor; Group: BlueGroup; Value: TWebColors.Steelblue; Name: 'Steelblue'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Tan; Name: 'Tan'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Teal; Name: 'Teal'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Thistle; Name: 'Thistle'),
+    (Kind: WebColor; Group: OrangeGroup; Value: TWebColors.Tomato; Name: 'Tomato'),
+    (Kind: WebColor; Group: CyanGroup; Value: TWebColors.Turquoise; Name: 'Turquoise'),
+    (Kind: WebColor; Group: PurpleGroup; Value: TWebColors.Violet; Name: 'Violet'),
+    (Kind: WebColor; Group: BrownGroup; Value: TWebColors.Wheat; Name: 'Wheat'),
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.White; Name: 'White'),
+    (Kind: WebColor; Group: WhiteGroup; Value: TWebColors.Whitesmoke; Name: 'Whitesmoke'),
+    (Kind: WebColor; Group: YellowGroup; Value: TWebColors.Yellow; Name: 'Yellow'),
+    (Kind: WebColor; Group: GreenGroup; Value: TWebColors.Yellowgreen; Name: 'Yellowgreen')
   );
 
 type
@@ -445,74 +585,124 @@ type
     c: TRggColor;
     const s: string) of object;
 
-  TRggColorIndexCallback = procedure(Value: TRggColor);
+  TRggColorIndexCallback = procedure(Value: TRggColor) of object;
 
-  TRggColorPool = class(TRggCustomColors)
+  TRggColorPoolBase = class
   strict private
-    class var TempIndexN: Integer;
-    class procedure InitColorMap;
-    class function CardinalToIdent(Int: Cardinal; var Ident: string; const Map: array of TRggColorMapEntry): Boolean;
-    class function IdentToCardinal(const Ident: string; var Int: Cardinal; const Map: array of TRggColorMapEntry): Boolean;
-    class function ColorToIdent(Color: Cardinal; var Ident: string): Boolean;
+    var BingoCounter: Integer;
+    var TempIndexN: Integer;
+    function CardinalToIdent(Int: Cardinal; var Ident: string; const Map: array of TRggColorMapEntry): Boolean;
+    function IdentToCardinal(const Ident: string; var Int: Cardinal; const Map: array of TRggColorMapEntry): Boolean;
+    function ColorToIdent(Color: Cardinal; var Ident: string): Boolean;
   private
-    class function GetCount: Integer; static;
-    class procedure ColorIndexCallback(Value: TRggColor); static;
-    class procedure EnumeratePartition(Proc: TRggColorIndexCallback); static;
+    function GetCount: Integer;
+    procedure ColorIndexCallback(Value: TRggColor);
+    procedure EnumeratePartition(Proc: TRggColorIndexCallback);
+    procedure Bingo;
+    procedure Bongo;
   protected
-    class function ColorToMapEntry(Value: TRggColor; var MapEntry: TRggColorMapEntry): Integer;
-    class function GetColorMapEntry(Value: TRggColor): TRggColorMapEntry;
+    procedure InitColorMap; virtual;
+    procedure AddWebColors;
+    procedure AddExtraColors;
+    procedure AddBasicColors;
+    procedure AddMatteColors;
+    function ColorToMapEntry(Value: TRggColor; var MapEntry: TRggColorMapEntry): Integer;
+    function GetColorMapEntry(Value: TRggColor): TRggColorMapEntry;
   public
-    class var ColorMap: array of TRggColorMapEntry;
-    class constructor Create;
+    ColorMap: array of TRggColorMapEntry;
+    constructor Create;
 
-    class function ColorFromRGB(R, G, B: Byte): TRggColor; static;
-    class function ColorFromName(const s: string): TRggColor; static;
+    procedure Clear;
 
-    class procedure EnumerateColors(Proc: TRggGetColorInfoProc); static;
-    class procedure UpdateColorName(c: TRggColor; s: string); static;
+    function ColorFromRGB(R, G, B: Byte): TRggColor;
+    function ColorFromName(const s: string): TRggColor;
 
-    class function ColorToString(Value: TRggColor): string; static;
-    class function ColorToKind(Value: TRggColor): TRggColorKind; static;
-    class function ColorToGroup(Value: TRggColor): TRggColorGroup; static;
-    class function ColorGroupToGroupName(g: TRggColorGroup): string; static;
-    class function ColorToGroupName(Value: TRggColor): string; static;
-    class function ColorToIndexA(Value: TRggColor): Integer; static;
-    class function ColorToIndexN(Value: TRggColor): Integer; static;
-    class function GetColorKindString(Value: TRggColor): string; static;
+    procedure EnumerateColors(Proc: TRggGetColorInfoProc);
+    procedure UpdateColorName(c: TRggColor; s: string);
 
-    class function GetColorIndex(Value: TRggColor): Integer; static;
-    class function LookupRowForIndexN(IdxN: Integer): Integer; static;
+    function ColorToString(Value: TRggColor): string;
+    function ColorToKind(Value: TRggColor): TRggColorKind;
+    function ColorToGroup(Value: TRggColor): TRggColorGroup;
+    function ColorGroupToGroupName(g: TRggColorGroup): string;
+    function ColorToGroupName(Value: TRggColor): string;
+    function ColorToIndexA(Value: TRggColor): Integer;
+    function ColorToIndexN(Value: TRggColor): Integer;
+    function GetColorKindString(Value: TRggColor): string;
 
-    class procedure UpdateIndexN; static;
-    class procedure UpdateColorNames; static;
-    class procedure RevertColorNames; static;
-    class property Count: Integer read GetCount;
+    function GetColorIndex(Value: TRggColor): Integer;
+    function LookupRowForIndexN(IdxN: Integer): Integer;
+    function FindNearest1(Value: TRggColor; out Info: TRggColorDistanceInfo): TRggColor;
+    function FindNearest2(Value: TRggColor; out Info: TRggColorDistanceInfo): TRggColor;
+    function GetColorDistance(cla1, cla2: TAlphaColor): double;
+
+    procedure UpdateIndexN;
+    procedure UpdateColorNames;
+    procedure RevertColorNames;
+    property Count: Integer read GetCount;
   end;
 
-  TRggColors = class(TRggCustomColors);
+  TRggColorPool = class(TRggColorPoolBase)
+  protected
+    procedure InitColorMap; override;
+  end;
+
+  TWebColorPool = class(TRggColorPoolBase)
+  protected
+    procedure InitColorMap; override;
+  end;
+
+  TExtraColorPool = class(TRggColorPoolBase)
+  protected
+    procedure InitColorMap; override;
+  end;
+
+  TPLABasicPool = class(TRggColorPoolBase)
+  protected
+    procedure InitColorMap; override;
+  end;
+
+  TPLAMattePool = class(TRggColorPoolBase)
+  protected
+    procedure InitColorMap; override;
+  end;
+
+  TBambuColorPool = class(TRggColorPoolBase)
+  protected
+    procedure InitColorMap; override;
+  end;
 
   TRggGrayColors = record
   const
-    Whitesmoke = TRggWebColors.Whitesmoke;
-    Windowgray = TRggCustomColors.Windowgray;
-    Porcelain = TRggCustomColors.Porcelain;
-    Gainsboro = TRggWebColors.Gainsboro;
-    Lightgray = TRggWebColors.Lightgray;
-    Silver = TRggWebColors.Silver;
-    DarkSilver = TRggCustomColors.DarkSilver;
-    Mercury = TRggCustomColors.Mercury;
-    Gray = TRggWebColors.Gray;
-    Dovegray = TRggWebColors.Dimgray;
+    Whitesmoke = TWebColors.Whitesmoke;
+    Windowgray = TExtraColors.Windowgray;
+    Porcelain = TExtraColors.Porcelain;
+    Gainsboro = TWebColors.Gainsboro;
+    Lightgray = TWebColors.Lightgray;
+    Silver = TWebColors.Silver;
+    DarkSilver = TExtraColors.DarkSilver;
+    Mercury = TExtraColors.Mercury;
+    Gray = TWebColors.Gray;
+    Dovegray = TWebColors.Dimgray;
   end;
 
   TRggPercentGrayColors = record
   const
-    Gray80 = TRggCustomColors.BackgroundGray; // 33
-    Gray50 = TRggWebColors.Gray; // 80
-    Gray35 = TRggCustomColors.Gray35; // A5
-    Gray25 = TRggWebColors.Silver; // C0
-    Gray15 = TRggCustomColors.Gray15; // D9
-    Gray05 = TRggCustomColors.Gray05; // F2
+    Gray80 = TExtraColors.BackgroundGray; // 33
+    Gray50 = TWebColors.Gray; // 80
+    Gray35 = TExtraColors.Gray35; // A5
+    Gray25 = TWebColors.Silver; // C0
+    Gray15 = TExtraColors.Gray15; // D9
+    Gray05 = TExtraColors.Gray05; // F2
+  end;
+
+  ColorVar = class
+  public class var
+    RggColorPool: TRggColorPool;
+    WebColorPool: TWebColorPool;
+    ExtraColorPool: TExtraColorPool;
+
+    class constructor Create;
+    class destructor Destroy;
   end;
 
 implementation
@@ -534,6 +724,10 @@ end;
 
 class function TRggColorMapEntry.GetEmtpyMapEntry: TRggColorMapEntry;
 begin
+  result.IndexA := 0;
+  result.IndexN := 0;
+  result.Group := TRggColorGroup.CombinedGroup;
+
   result.Name := '-';
   result.Kind := TRggColorKind.Unknown;
   result.Value := 0;
@@ -543,7 +737,9 @@ class function TRggColorMapEntry.ColorKindToChar(Value: TRggColorKind): char;
 begin
   case Value of
     WebColor: result := 'W';
-    CustomColor: result := 'C';
+    ExtraColor: result := 'C';
+    BasicColor: result := 'B';
+    MatteColor: result := 'M';
     Unknown: result := 'U';
     else result := '-';
   end;
@@ -553,30 +749,32 @@ class function TRggColorMapEntry.ColorKindToString(Value: TRggColorKind): string
 begin
   case Value of
     WebColor: result := 'Web';
-    CustomColor: result := 'Custom';
+    ExtraColor: result := 'Extra';
+    BasicColor: result := 'Basic';
+    MatteColor: result := 'Matte';
     Unknown: result := 'Unknown';
     else result := '-';
   end;
 end;
 
-{ TRggColorPool }
+{ TRggColorPoolBase }
 
-class constructor TRggColorPool.Create;
+constructor TRggColorPoolBase.Create;
 begin
   InitColorMap;
 end;
 
-class function TRggColorPool.ColorFromName(const s: string): TRggColor;
+function TRggColorPoolBase.ColorFromName(const s: string): TRggColor;
 var
   i: Cardinal;
 begin
   if IdentToCardinal(s, i, ColorMap) then
     result := TRggColor(i)
   else
-    result := TRggWebColors.White;
+    result := TWebColors.White;
 end;
 
-class function TRggColorPool.ColorFromRGB(R, G, B: Byte): TRggColor;
+function TRggColorPoolBase.ColorFromRGB(R, G, B: Byte): TRggColor;
 var
   acr: TAlphaColorRec;
 begin
@@ -587,26 +785,31 @@ begin
   result := acr.Color;
 end;
 
-class function TRggColorPool.ColorToIdent(Color: Cardinal; var Ident: string): Boolean;
+function TRggColorPoolBase.ColorToIdent(Color: Cardinal; var Ident: string): Boolean;
+var
+  i: Integer;
 begin
   result := CardinalToIdent(Color, Ident, ColorMap);
   if not result then
   begin
-    AlphaColorToIdent(Color, Ident); // return value ignored
+//{$RANGECHECKS OFF}
+    i := Integer(Color);
+//{$RANGECHECKS ON}
+    AlphaColorToIdent(i, Ident); // return value ignored
   end;
 end;
 
-class function TRggColorPool.ColorToString(Value: TRggColor): string;
+function TRggColorPoolBase.ColorToString(Value: TRggColor): string;
 begin
   ColorToIdent(Value, Result);
 end;
 
-class function TRggColorPool.ColorToMapEntry(Value: TRggColor; var MapEntry: TRggColorMapEntry): Integer;
+function TRggColorPoolBase.ColorToMapEntry(Value: TRggColor; var MapEntry: TRggColorMapEntry): Integer;
 var
   I: Integer;
 begin
   result := -1;
-  for I := 0 to Length(ColorMap)-1 do
+  for I := 0 to Length(ColorMap) - 1 do
     if ColorMap[I].Value = Value then
     begin
       MapEntry := ColorMap[i];
@@ -615,12 +818,104 @@ begin
     end;
 end;
 
-class function TRggColorPool.GetColorKindString(Value: TRggColor): string;
+function TRggColorPoolBase.GetColorDistance(cla1, cla2: TAlphaColor): double;
+var
+  acr1, acr2: TAlphaColorRec;
+  rmean: Integer;
+  dr, dg, db: Integer;
+  wr, wg, wb: Integer;
+  t1, t2, t3, t: double;
+begin
+  acr1 := TAlphaColorRec(cla1);
+  acr2 := TAlphaColorRec(cla2);
+
+  rmean := (acr1.R + acr2.R) div 2;
+  dr := (acr1.R - acr2.R);
+  dg := (acr1.G - acr2.G);
+  db := (acr1.B - acr2.B);
+
+  wr := (512 + rmean) shr 8;
+  wg := 4;
+  wb := (767 - rmean) shr 8;
+
+  t1 := wr * dr * dr;
+  t2 := wg * dg *dg;
+  t3 := wb * db *db;
+
+  t := t1 + t2 + t3;
+  result := sqrt(t);
+end;
+
+function TRggColorPoolBase.FindNearest1(Value: TRggColor; out Info: TRggColorDistanceInfo): TRggColor;
+var
+  I: Integer;
+  MapEntry: TRggColorMapEntry;
+  vr, cr: TAlphaColorRec;
+  dr, dg, db: Byte;
+  d, dmin: Integer;
+begin
+  result := claBlack;
+  dmin := MaxInt;
+  vr := TAlphaColorRec(Value);
+  for I := 0 to Length(ColorMap)-1 do
+  begin
+    MapEntry := ColorMap[i];
+    cr := TAlphaColorRec(MapEntry.Value);
+    dr := Abs(cr.R - vr.R);
+    dg := Abs(cr.G - vr.G);
+    db := Abs(cr.B - vr.B);
+    d := dr + dg + db;
+    if d < dmin then
+    begin
+      dmin := d;
+      result := MapEntry.Value;
+      Info.dr := dr;
+      Info.dg := dg;
+      Info.db := db;
+      Info.Count := 0;
+    end;
+    if d = dmin then
+    begin
+      Info.Count := 1;
+    end;
+  end;
+  Info.Distance := dmin;
+  Info.Dist := dmin;
+end;
+
+function TRggColorPoolBase.FindNearest2(Value: TRggColor; out Info: TRggColorDistanceInfo): TRggColor;
+var
+  I: Integer;
+  MapEntry: TRggColorMapEntry;
+  d, dmin: double;
+begin
+  result := claBlack;
+  dmin := 10000000;
+  for I := 0 to Length(ColorMap)-1 do
+  begin
+    MapEntry := ColorMap[i];
+    d := GetColorDistance(Value, MapEntry.Value);
+    if d < dmin then
+    begin
+      dmin := d;
+      result := MapEntry.Value;
+      Info.Count := 0;
+    end;
+    if d = dmin then
+    begin
+      Info.Count := 1;
+    end;
+  end;
+  Info.Distance := dmin;
+  Info.Dist := Round(dmin);
+end;
+
+function TRggColorPoolBase.GetColorKindString(Value: TRggColor): string;
 begin
   result := TRggColorMapEntry.ColorKindToString(GetColorMapEntry(Value).Kind);
 end;
 
-class function TRggColorPool.GetColorMapEntry(Value: TRggColor): TRggColorMapEntry;
+function TRggColorPoolBase.GetColorMapEntry(Value: TRggColor): TRggColorMapEntry;
 var
   I: Integer;
 begin
@@ -633,7 +928,7 @@ begin
   result := TRggColorMapEntry.GetEmtpyMapEntry;
 end;
 
-class function TRggColorPool.ColorToIndexA(Value: TRggColor): Integer;
+function TRggColorPoolBase.ColorToIndexA(Value: TRggColor): Integer;
 var
   I: Integer;
 begin
@@ -647,7 +942,7 @@ begin
   result := -1;
 end;
 
-class function TRggColorPool.ColorToIndexN(Value: TRggColor): Integer;
+function TRggColorPoolBase.ColorToIndexN(Value: TRggColor): Integer;
 var
   I: Integer;
 begin
@@ -660,7 +955,7 @@ begin
   result := -1;
 end;
 
-class function TRggColorPool.LookupRowForIndexN(IdxN: Integer): Integer;
+function TRggColorPoolBase.LookupRowForIndexN(IdxN: Integer): Integer;
 var
   I: Integer;
 begin
@@ -673,17 +968,17 @@ begin
   result := -1;
 end;
 
-class function TRggColorPool.GetColorIndex(Value: TRggColor): Integer;
+function TRggColorPoolBase.GetColorIndex(Value: TRggColor): Integer;
 begin
   result := LookupRowForIndexN(ColorToIndexA(Value));
 end;
 
-class function TRggColorPool.GetCount: Integer;
+function TRggColorPoolBase.GetCount: Integer;
 begin
   result := Length(ColorMap);
 end;
 
-class function TRggColorPool.ColorToKind(Value: TRggColor): TRggColorKind;
+function TRggColorPoolBase.ColorToKind(Value: TRggColor): TRggColorKind;
 var
   cme: TRggColorMapEntry;
 begin
@@ -693,7 +988,7 @@ begin
     result := TRggColorKind.Unknown;
 end;
 
-class procedure TRggColorPool.EnumerateColors(Proc: TRggGetColorInfoProc);
+procedure TRggColorPoolBase.EnumerateColors(Proc: TRggGetColorInfoProc);
 var
   i: Integer;
 begin
@@ -703,7 +998,7 @@ begin
   end;
 end;
 
-class function TRggColorPool.IdentToCardinal(const Ident: string; var Int: Cardinal; const Map: array of TRggColorMapEntry): Boolean;
+function TRggColorPoolBase.IdentToCardinal(const Ident: string; var Int: Cardinal; const Map: array of TRggColorMapEntry): Boolean;
 var
   I: Integer;
 begin
@@ -717,11 +1012,20 @@ begin
   Result := False;
 end;
 
-class function TRggColorPool.CardinalToIdent(Int: Cardinal; var Ident: string; const Map: array of TRggColorMapEntry): Boolean;
+procedure TRggColorPoolBase.InitColorMap;
+begin
+
+end;
+
+function TRggColorPoolBase.CardinalToIdent(Int: Cardinal; var Ident: string; const Map: array of TRggColorMapEntry): Boolean;
 var
   I: Integer;
+  l: Integer;
+  h: Integer;
 begin
-  for I := Low(Map) to High(Map) do
+  l := Low(Map);
+  h := High(Map);
+  for I := l to h do
     if Map[I].Value = Int then
     begin
       Result := True;
@@ -731,38 +1035,103 @@ begin
   Result := False;
 end;
 
-class procedure TRggColorPool.InitColorMap;
-var
-  i: Integer;
-  j: Integer;
-  k: Integer;
+procedure TRggColorPoolBase.Clear;
 begin
-  SetLength(ColorMap, High(WebColors) + High(CustomColors) + 2);
-
-  Assert(Low(WebColors) = 0);
-  Assert(High(WebColors) = UniqueWebColorCount-1);
-  Assert(ColorMapCount >= UniqueWebColorCount);
-
-  { web colors }
-  for i := 0 to High(WebColors) do
-  begin
-    ColorMap[i] := WebColors[i];
-    ColorMap[i].IndexA := i;
-  end;
-
-  { custom colors }
-  k := High(WebColors);
-  for i := 0 to High(CustomColors) do
-  begin
-    j := k + 1 + i;
-    ColorMap[j] := CustomColors[i];
-    ColorMap[j].IndexA := j;
-  end;
-
-  UpdateIndexN;
+  SetLength(ColorMap, 0);
 end;
 
-class procedure TRggColorPool.UpdateColorName(c: TRggColor; s: string);
+procedure TRggColorPoolBase.AddWebColors;
+var
+  l: Integer;
+  c: Integer;
+  k: Integer;
+  i: Integer;
+  j: Integer;
+begin
+  l := High(WebColors);
+  c := Length(ColorMap);
+  k := c;
+  c := c + l + 1;
+  SetLength(ColorMap, c);
+
+  for i := 0 to l do
+  begin
+    j := k + i;
+    ColorMap[j] := WebColors[i];
+    ColorMap[j].IndexA := j;
+  end;
+end;
+
+procedure TRggColorPoolBase.AddExtraColors;
+var
+  l: Integer;
+  c: Integer;
+  k: Integer;
+  i: Integer;
+  j: Integer;
+begin
+  l := High(ExtraColors);
+
+  c := Length(ColorMap);
+  k := c;
+  c := c + l + 1;
+  SetLength(ColorMap, c);
+
+  for i := 0 to l do
+  begin
+    j := k + i;
+    ColorMap[j] := ExtraColors[i];
+    ColorMap[j].IndexA := j;
+  end;
+end;
+
+procedure TRggColorPoolBase.AddBasicColors;
+var
+  l: Integer;
+  c: Integer;
+  k: Integer;
+  i: Integer;
+  j: Integer;
+begin
+  l := High(BasicColors);
+
+  c := Length(ColorMap);
+  k := c;
+  c := c + l + 1;
+  SetLength(ColorMap, c);
+
+  for i := 0 to l do
+  begin
+    j := k + i;
+    ColorMap[j] := BasicColors[i];
+    ColorMap[j].IndexA := j;
+  end;
+end;
+
+procedure TRggColorPoolBase.AddMatteColors;
+var
+  l: Integer;
+  c: Integer;
+  k: Integer;
+  i: Integer;
+  j: Integer;
+begin
+  l := High(MatteColors);
+
+  c := Length(ColorMap);
+  k := c;
+  c := c + l + 1;
+  SetLength(ColorMap, c);
+
+  for i := 0 to l do
+  begin
+    j := k + i;
+    ColorMap[j] := MatteColors[i];
+    ColorMap[j].IndexA := j;
+  end;
+end;
+
+procedure TRggColorPoolBase.UpdateColorName(c: TRggColor; s: string);
 var
   i: Integer;
 begin
@@ -771,30 +1140,30 @@ begin
     ColorMap[i].Name := s;
 end;
 
-class procedure TRggColorPool.UpdateColorNames;
+procedure TRggColorPoolBase.UpdateColorNames;
 begin
   { update ColorMap with custom names }
-  UpdateColorName(Darkgray, 'DarkSilver');
-  UpdateColorName(Dimgray, 'Dovegray');
+  UpdateColorName(TWebColors.Darkgray, 'DarkSilver');
+  UpdateColorName(TWebColors.Dimgray, 'Dovegray');
 
-  UpdateColorName(Windowgray, 'WindowWhite');
-  UpdateColorName(Porcelain, 'RectangleGray');
-  UpdateColorName(Mercury, 'QuickSilver');
+  UpdateColorName(TExtraColors.Windowgray, 'WindowWhite');
+  UpdateColorName(TExtraColors.Porcelain, 'RectangleGray');
+  UpdateColorName(TExtraColors.Mercury, 'QuickSilver');
 end;
 
-class procedure TRggColorPool.RevertColorNames;
+procedure TRggColorPoolBase.RevertColorNames;
 begin
   { revert to original web color names }
-  UpdateColorName(Darkgray, 'Darkgray');
-  UpdateColorName(Dimgray, 'Dimgray');
+  UpdateColorName(TWebColors.Darkgray, 'Darkgray');
+  UpdateColorName(TWebColors.Dimgray, 'Dimgray');
 
   { revert to self chosen 'default' names for custom colors }
-  UpdateColorName(Windowgray, 'Windowgray');
-  UpdateColorName(Porcelain, 'Porcelain');
-  UpdateColorName(Mercury, 'Mercury');
+  UpdateColorName(TExtraColors.Windowgray, 'Windowgray');
+  UpdateColorName(TExtraColors.Porcelain, 'Porcelain');
+  UpdateColorName(TExtraColors.Mercury, 'Mercury');
 end;
 
-class function TRggColorPool.ColorToGroup(Value: TRggColor): TRggColorGroup;
+function TRggColorPoolBase.ColorToGroup(Value: TRggColor): TRggColorGroup;
 var
   I: Integer;
 begin
@@ -807,7 +1176,7 @@ begin
     end;
 end;
 
-class function TRggColorPool.ColorGroupToGroupName(g: TRggColorGroup): string;
+function TRggColorPoolBase.ColorGroupToGroupName(g: TRggColorGroup): string;
 begin
   result := '';
   case g of
@@ -823,12 +1192,14 @@ begin
     BlueGroup: result := 'Blue';
     WhiteGroup: result := 'White';
     GrayGroup: result := 'Gray';
-    CustomGroup: result := 'Custom';
+    ExtraGroup: result := 'Extra';
+    BasicGroup: result := 'Basic';
+    MatteGroup: result := 'Matte';
   end;
   result := result + 'Group';
 end;
 
-class function TRggColorPool.ColorToGroupName(Value: TRggColor): string;
+function TRggColorPoolBase.ColorToGroupName(Value: TRggColor): string;
 var
   g: TRggColorGroup;
 begin
@@ -836,13 +1207,13 @@ begin
   result := ColorGroupToGroupName(g);
 end;
 
-class procedure TRggColorPool.UpdateIndexN;
+procedure TRggColorPoolBase.UpdateIndexN;
 begin
   TempIndexN := 0;
   EnumeratePartition(ColorIndexCallback);
 end;
 
-class procedure TRggColorPool.EnumeratePartition(Proc: TRggColorIndexCallback);
+procedure TRggColorPoolBase.EnumeratePartition(Proc: TRggColorIndexCallback);
 var
   pinkE: TRggPinkWebColorEnum;
   purpleE: TRggPurpleWebColorEnum;
@@ -855,7 +1226,9 @@ var
   blueE: TRggBlueWebColorEnum;
   whiteE: TRggWhiteWebColorEnum;
   grayE: TRggGrayWebColorEnum;
-  customE: TRggCustomColorEnum;
+  extraE: TRggExtraColorEnum;
+  basicE: TBasicEnum;
+  matteE: TMatteEnum;
 begin
   for pinkE := Low(pinkE) to High(pinkE) do
     Proc(PinkWebColorArray[pinkE]);
@@ -890,19 +1263,116 @@ begin
   for grayE := Low(grayE) to High(grayE) do
     Proc(GrayWebColorArray[grayE]);
 
-  for customE := Low(customE) to High(customE) do
-    Proc(CustomColorArray[customE]);
+  for extraE := Low(extraE) to High(extraE) do
+    Proc(ExtraColorArray[extraE]);
+
+  for basicE := Low(basicE) to High(basicE) do
+    Proc(BasicColorArray[basicE]);
+
+  for matteE := Low(matteE) to High(matteE) do
+    Proc(MatteColorArray[matteE]);
 end;
 
-class procedure TRggColorPool.ColorIndexCallback(Value: TRggColor);
+procedure TRggColorPoolBase.ColorIndexCallback(Value: TRggColor);
 var
   cme: TRggColorMapEntry;
+  i: Integer;
+  l: Integer;
 begin
-  if TRggColorPool.ColorToMapEntry(Value, cme) > -1 then
+  i := ColorToMapEntry(Value, cme);
+  l := Length(ColorMap);
+  if i > -1 then
   begin
-    ColorMap[TempIndexN].IndexN := cme.IndexA;
+    { if entry with Value exists in Map, record its IndexA in IndexN }
+    if TempIndexN < l then
+      ColorMap[TempIndexN].IndexN := cme.IndexA
+    else
+      Bongo;
+  end
+  else
+  begin
+    Bingo;
   end;
   Inc(TempIndexN);
+end;
+
+procedure TRggColorPoolBase.Bingo;
+begin
+  Inc(BingoCounter);
+end;
+
+procedure TRggColorPoolBase.Bongo;
+begin
+  Inc(BingoCounter);
+end;
+
+{ TRggColorPool }
+
+procedure TRggColorPool.InitColorMap;
+begin
+  Assert(Low(WebColors) = 0);
+  Assert(High(WebColors) = UniqueWebColorCount-1);
+  Assert(ColorMapCount >= UniqueWebColorCount);
+
+  AddWebColors;
+//  AddExtraColors;
+  AddBasicColors;
+  AddMatteColors;
+
+  UpdateIndexN;
+end;
+
+{ TPLABasicPool }
+
+procedure TPLABasicPool.InitColorMap;
+begin
+  AddBasicColors;
+end;
+
+{ TPLAMattePool }
+
+procedure TPLAMattePool.InitColorMap;
+begin
+  AddMatteColors;
+end;
+
+{ TBambuColorPool }
+
+procedure TBambuColorPool.InitColorMap;
+begin
+  AddBasicColors;
+  AddMatteColors;
+end;
+
+{ TWebColorPool }
+
+procedure TWebColorPool.InitColorMap;
+begin
+  AddWebColors;
+end;
+
+{ TExtraColorPool }
+
+procedure TExtraColorPool.InitColorMap;
+begin
+  AddExtraColors;
+end;
+
+{ ColorVar }
+
+class constructor ColorVar.Create;
+begin
+  RggColorPool := TRggColorPool.Create;
+  WebColorPool := TWebColorPool.Create;
+  ExtraColorPool := TExtraColorPool.Create;
+end;
+
+class destructor ColorVar.Destroy;
+begin
+  RggColorPool.Free;
+  WebColorPool.Free;
+  ExtraColorPool.Free;
+  inherited;
 end;
 
 end.

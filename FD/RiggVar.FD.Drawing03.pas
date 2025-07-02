@@ -113,64 +113,64 @@ begin
 
   A0 := TRggCircle.Create;
   A0.Caption := 'A0';
-  A0.StrokeColor := TRggColors.Orangered;
+  A0.StrokeColor := TWebColors.Orangered;
 
   B0 := TRggCircle.Create;
   B0.Caption := 'B0';
-  B0.StrokeColor := TRggColors.Blue;
+  B0.StrokeColor := TWebColors.Blue;
 
   A := TRggCircle.Create;
   A.Caption := 'A';
-  A.StrokeColor := TRggColors.Orangered;
+  A.StrokeColor := TWebColors.Orangered;
 
   B := TSchnittKKCircleLL.Create;
   B.Caption := 'B';
-  B.StrokeColor := TRggColors.Blue;
+  B.StrokeColor := TWebColors.Blue;
 
   C := TSchnittKKCircleLL.Create;
   C.Caption := 'C';
-  C.StrokeColor := TRggColors.Blue;
+  C.StrokeColor := TWebColors.Blue;
 
   InitDefaultPos;
 
   A0B0 := TRggLine.Create('A0B0');
   L := A0B0;
-  L.StrokeColor := TRggColors.Gray;
+  L.StrokeColor := TWebColors.Gray;
   L.Point1 := A0;
   L.Point2 := B0;
   Add(L);
 
   A0A := TRggRotaLine.Create('A0A');
   L := A0A;
-  L.StrokeColor := TRggColors.Red;
+  L.StrokeColor := TWebColors.Red;
   L.Point1 := A0;
   L.Point2 := A;
   Add(L);
 
   B0B := TRggLine.Create('B0B');
   L := B0B;
-  L.StrokeColor := TRggColors.Blue;
+  L.StrokeColor := TWebColors.Blue;
   L.Point1 := B0;
   L.Point2 := B;
   Add(L);
 
   AB := TRggLine.Create('AB');
   L := AB;
-  L.StrokeColor := TRggColors.Lime;
+  L.StrokeColor := TWebColors.Lime;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
 
   AC := TRggLine.Create('AC');
   L := AC;
-  L.StrokeColor := TRggColors.Lime;
+  L.StrokeColor := TWebColors.Lime;
   L.Point1 := A;
   L.Point2 := C;
   Add(L);
 
   BC := TRggLine.Create('BC');
   L := BC;
-  L.StrokeColor := TRggColors.Lime;
+  L.StrokeColor := TWebColors.Lime;
   L.Point1 := B;
   L.Point2 := C;
   Add(L);
@@ -210,7 +210,7 @@ begin
 
   KK := TRggPolyLine.Create('KK', Count);
   KK.StrokeThickness := 2;
-  KK.StrokeColor := TRggColors.Orangered;
+  KK.StrokeColor := TWebColors.Orangered;
   Add(KK);
 
   Temp := TRggCircle.Create;

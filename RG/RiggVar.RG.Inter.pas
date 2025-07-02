@@ -5,6 +5,7 @@ interface
 uses
   System.Math.Vectors,
   System.Classes,
+  RiggVar.FB.Def,
   RiggVar.RG.Types,
   RiggVar.RG.Scroll,
   RiggVar.RG.Doc,

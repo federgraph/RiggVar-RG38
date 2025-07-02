@@ -101,18 +101,18 @@ begin
   HT := TRggLabel.Create;
   HT.Caption := 'HelpText';
   HT.Text := GetHelpText;
-  HT.StrokeColor := TRggColors.Tomato;
+  HT.StrokeColor := TWebColors.Tomato;
   HT.IsMemoLabel := True;
   HT.Position.Y := 680;
   Add(HT);
 
   A := TRggCircle.Create;
   A.Caption := 'A';
-  A.StrokeColor := TRggColors.Plum;
+  A.StrokeColor := TWebColors.Plum;
 
   B := TRggCircle.Create;
   B.Caption := 'B';
-  B.StrokeColor := TRggColors.Plum;
+  B.StrokeColor := TWebColors.Plum;
 
   InitDefaultPos;
 
@@ -120,34 +120,34 @@ begin
   C.Caption := 'C';
   C.Radius1 := 500;
   C.Radius2 := C.Radius1;
-  C.StrokeColor := TRggColors.Aquamarine;
+  C.StrokeColor := TWebColors.Aquamarine;
 
   D := TRggCircle.Create;
   D.Caption := 'D';
   D.ShowCaption := False;
   D.IsComputed := True;
-  D.StrokeColor := TRggColors.Gray;
+  D.StrokeColor := TWebColors.Gray;
 
   E := TRggCircle.Create;
   E.Caption := 'e';
   E.ShowCaption := False;
   E.IsComputed := True;
-  E.StrokeColor := TRggColors.Gray;
+  E.StrokeColor := TWebColors.Gray;
 
   F := TRggCircle.Create;
   F.Caption := 'f';
   F.ShowCaption := False;
   F.IsComputed := True;
-  F.StrokeColor := TRggColors.Gray;
+  F.StrokeColor := TWebColors.Gray;
 
   F1 := TRggCircle.Create;
   F1.Caption := 'F1';
   F1.IsComputed := True;
-  F1.StrokeColor := TRggColors.Gray;
+  F1.StrokeColor := TWebColors.Gray;
 
   T := TRggTriangle.Create;
   T.Caption := 'F2';
-  T.StrokeColor := TRggColors.Aqua;
+  T.StrokeColor := TWebColors.Cyan;
   T.Point1 := F1;
   T.Point2 := E;
   T.Point3 := F;
@@ -156,7 +156,7 @@ begin
   AB := TRggLine.Create;
   L := AB;
   L.Caption := 'l2';
-  L.StrokeColor := TRggColors.Aquamarine;
+  L.StrokeColor := TWebColors.Aquamarine;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
@@ -165,7 +165,7 @@ begin
   L := AC;
   L.ShowCaption := False;
   L.IsComputed := True;
-  L.StrokeColor := TRggColors.Plum;
+  L.StrokeColor := TWebColors.Plum;
   L.Point1 := A;
   L.Point2 := C;
   Add(L);
@@ -174,7 +174,7 @@ begin
   L := BC;
   L.Caption := 'l1';
   L.IsComputed := True;
-  L.StrokeColor := TRggColors.Plum;
+  L.StrokeColor := TWebColors.Plum;
   L.Point1 := B;
   L.Point2 := C;
   Add(L);
@@ -184,7 +184,7 @@ begin
   L.IsComputed := True;
   L.ShowCaption := False;
   L.StrokeThickness := 1;
-  L.StrokeColor := TRggColors.Gray;
+  L.StrokeColor := TWebColors.Gray;
   L.Point1 := C;
   L.Point2 := D;
   Add(L);
@@ -193,7 +193,7 @@ begin
   L := CF;
   L.IsComputed := True;
   L.StrokeThickness := 4;
-  L.StrokeColor := TRggColors.Dodgerblue;
+  L.StrokeColor := TWebColors.Dodgerblue;
   L.Point1 := C;
   L.Point2 := F;
   Add(L);

@@ -173,6 +173,8 @@ begin
   jv := 150;
   jw := 5;
   InitKoord;
+
+  Reset;
 end;
 
 procedure TFederEquation.Reset;

@@ -23,6 +23,7 @@ uses
   System.Classes,
   System.Math,
   System.Math.Vectors,
+  RiggVar.FB.Def,
   RiggVar.RG.Inter,
   RiggVar.App.Strings,
   RiggVar.RG.Types,

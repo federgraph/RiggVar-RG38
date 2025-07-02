@@ -160,7 +160,7 @@ begin
 
   ParamA := TRggParam.Create;
   ParamA.Caption := 'Abstand';
-  ParamA.StrokeColor := TRggColors.Teal;
+  ParamA.StrokeColor := TWebColors.Teal;
   ParamA.StartPoint.Y := 5 * Raster;
   ParamA.Scale := 0.05;
   ParamA.BaseValue := 2;
@@ -168,7 +168,7 @@ begin
 
   ParamR := TRggParam.Create;
   ParamR.Caption := 'Range';
-  ParamR.StrokeColor := TRggColors.Teal;
+  ParamR.StrokeColor := TWebColors.Teal;
   ParamR.StartPoint.Y := 7 * Raster;
   ParamR.Scale := 0.1;
   ParamR.BaseValue := 10;
@@ -184,17 +184,17 @@ begin
   { Points }
 
   M1 := TRggCircle.Create('M1');
-  M1.StrokeColor := TRggColors.Red;
+  M1.StrokeColor := TWebColors.Red;
 
   M2 := TRggCircle.Create('M2');
-  M2.StrokeColor := TRggColors.Blue;
+  M2.StrokeColor := TWebColors.Blue;
 
   S1 := TRggCircle.Create('S1');
-  S1.StrokeColor := TRggColors.Yellow;
+  S1.StrokeColor := TWebColors.Yellow;
   S1.IsComputed := True;
 
   S2 := TRggCircle.Create('S2');
-  S2.StrokeColor := TRggColors.Lime;
+  S2.StrokeColor := TWebColors.Lime;
   S2.IsComputed := True;
 
   Add(M1);
@@ -209,7 +209,7 @@ begin
   ChartX := TRggChart.Create(IntervalCount);
   ChartX.Caption := 'SP.X Blue';
   ChartX.StrokeThickness := 1;
-  ChartX.StrokeColor := TRggColors.Dodgerblue;
+  ChartX.StrokeColor := TWebColors.Dodgerblue;
   ChartX.InitDefault;
   ChartX.Box.X := 100;
   ChartX.Box.Y := 200;
@@ -222,7 +222,7 @@ begin
   ChartY := TRggChart.Create(IntervalCount);
   ChartY.Caption := 'SP.Y Red';
   ChartY.StrokeThickness := 1;
-  ChartY.StrokeColor := TRggColors.Tomato;
+  ChartY.StrokeColor := TWebColors.Tomato;
   ChartY.InitDefault;
   ChartY.Box.X := 100;
   ChartY.Box.Y := 200;

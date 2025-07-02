@@ -56,7 +56,7 @@ begin
   HT := TRggLabel.Create;
   HT.Caption := 'HelpText';
   HT.Text := GetHelpText;
-  HT.StrokeColor := TRggColors.Tomato;
+  HT.StrokeColor := TWebColors.Tomato;
   HT.IsMemoLabel := True;
   HT.Position.Y := 500;
   Add(HT);
@@ -65,56 +65,56 @@ begin
 
   A0 := TRggCircle.Create;
   A0.Caption := 'A0';
-  A0.StrokeColor := TRggColors.Red;
+  A0.StrokeColor := TWebColors.Red;
 
   B0 := TRggCircle.Create;
   B0.Caption := 'B0';
-  B0.StrokeColor := TRggColors.Green;
+  B0.StrokeColor := TWebColors.Green;
 
   C0 := TRggCircle.Create;
   C0.Caption := 'C0';
-  C0.StrokeColor := TRggColors.Yellow;
+  C0.StrokeColor := TWebColors.Yellow;
 
   D0 := TRggCircle.Create;
   D0.Caption := 'D0';
-  D0.StrokeColor := TRggColors.Blue;
+  D0.StrokeColor := TWebColors.Blue;
 
   InitDefaultPos;
 
   { Lines }
 
   L := TRggLine.Create('A0B0');
-  L.StrokeColor := TRggColors.Dodgerblue;
+  L.StrokeColor := TWebColors.Dodgerblue;
   L.Point1 := A0;
   L.Point2 := B0;
   Add(L);
 
   L := TRggLine.Create('A0C0');
-  L.StrokeColor := TRggColors.Aquamarine;
+  L.StrokeColor := TWebColors.Aquamarine;
   L.Point1 := A0;
   L.Point2 := C0;
   Add(L);
 
   L := TRggLine.Create('B0C0');
-  L.StrokeColor := TRggColors.Antiquewhite;
+  L.StrokeColor := TWebColors.Antiquewhite;
   L.Point1 := B0;
   L.Point2 := C0;
   Add(L);
 
   L := TRggLine.Create('A0D0');
-  L.StrokeColor := TRggColors.Red;
+  L.StrokeColor := TWebColors.Red;
   L.Point1 := A0;
   L.Point2 := D0;
   Add(L);
 
   L := TRggLine.Create('B0D0');
-  L.StrokeColor := TRggColors.Green;
+  L.StrokeColor := TWebColors.Green;
   L.Point1 := B0;
   L.Point2 := D0;
   Add(L);
 
   L := TRggLine.Create('C0D0');
-  L.StrokeColor := TRggColors.Yellow;
+  L.StrokeColor := TWebColors.Yellow;
   L.Point1 := C0;
   L.Point2 := D0;
   Add(L);
@@ -133,7 +133,7 @@ function TRggDrawingZ04.GetHelpText: string;
 begin
   ML.Add('Tetreder = Tetrahedron = 3D drawing sample.');
   ML.Add('');
-  ML.Add('Click on image-background and drag the mouse.');
+  ML.Add('Click in white space on image and drag the mouse.');
   ML.Add('Try dragging horizontally with right mouse button down.');
   ML.Add('');
   ML.Add('Select different circles and drag them with mouse.');

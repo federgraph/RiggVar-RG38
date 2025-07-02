@@ -28,8 +28,8 @@ type
   TFederActionHandler = class(TFederActionHandlerBase)
   public
     procedure Execute(fa: TFederAction); override;
-    function GetEnabled(fa: TFederAction): Boolean; override;
     function GetChecked(fa: TFederAction): Boolean; override;
+    function GetEnabled(fa: TFederAction): Boolean; override;
     function GetCaption(fa: TFederAction): string; override;
     function GetShortCaption(fa: TFederAction): string; override;
     function GetShortcutString(fa: TFederAction): string; override;

@@ -115,42 +115,42 @@ begin
   { Points }
 
   A := TRggCircle.Create('A');
-  A.StrokeColor := TRggColors.Red;
+  A.StrokeColor := TWebColors.Red;
 
   B := TRggCircle.Create('B');
-  B.StrokeColor := TRggColors.Green;
+  B.StrokeColor := TWebColors.Green;
 
   C := TRggCircle.Create('C');
-  C.StrokeColor := TRggColors.Blue;
+  C.StrokeColor := TWebColors.Blue;
 
   D := TRggCircle.Create('D');
-  D.StrokeColor := TRggColors.Dodgerblue;
+  D.StrokeColor := TWebColors.Dodgerblue;
 
   AD := TRggFederLine.Create('AD');
   AD.Point1 := A;
   AD.Point2 := D;
   AD.ShowCaption := False;
   AD.StrokeThickness := 2;
-  AD.StrokeColor := TRggColors.Aquamarine;
+  AD.StrokeColor := TWebColors.Aquamarine;
 
   BD := TRggFederLine.Create('BD');
   BD.Point1 := B;
   BD.Point2 := D;
   BD.ShowCaption := False;
   BD.StrokeThickness := 2;
-  BD.StrokeColor := TRggColors.Aquamarine;
+  BD.StrokeColor := TWebColors.Aquamarine;
 
   CD := TRggFederLine.Create('CD');
   CD.Point1 := C;
   CD.Point2 := D;
   CD.ShowCaption := False;
   CD.StrokeThickness := 2;
-  CD.StrokeColor := TRggColors.Aquamarine;
+  CD.StrokeColor := TWebColors.Aquamarine;
 
   HT := TRggLabel.Create;
   HT.Caption := 'HelpText';
   HT.Text := GetHelpText;
-  HT.StrokeColor := TRggColors.Tomato;
+  HT.StrokeColor := TWebColors.Tomato;
   HT.IsMemoLabel := True;
   Add(HT);
 
@@ -158,7 +158,7 @@ begin
 
   Circle := TRggBigCircle.Create('Path');
   Circle.StrokeThickness := 1;
-  Circle.StrokeColor := TRggColors.Plum;
+  Circle.StrokeColor := TWebColors.Plum;
   Circle.Radius := FederModel.ParamBahnRadius;
   Circle.IsComputed := True;
   Circle.ShowCaption := False;
@@ -166,13 +166,13 @@ begin
 
 {$ifdef WantDiameter}
   D1 := TRggCircle.Create('D1');
-  D1.StrokeColor := TRggColors.Dodgerblue;
+  D1.StrokeColor := TWebColors.Dodgerblue;
   D1.ShowCaption := False;
   D1.IndentItem := True;
   Add(D1);
 
   D2 := TRggCircle.Create('D2');
-  D2.StrokeColor := TRggColors.Dodgerblue;
+  D2.StrokeColor := TWebColors.Dodgerblue;
   D2.ShowCaption := False;
   D2.IndentItem := True;
   Add(D2);
@@ -183,26 +183,26 @@ begin
   Diameter.ShowCaption := False;
   Diameter.IndentItem := True;
   Diameter.StrokeThickness := 1;
-  Diameter.StrokeColor := TRggColors.Dodgerblue;
+  Diameter.StrokeColor := TWebColors.Dodgerblue;
   Add(Diameter);
 {$endif}
 
   Poly := TRggPolyCurve.Create('Poly', Length(FederModel.LC));
   Poly.Caption := 'Poly';
   Poly.StrokeThickness := 3;
-  Poly.StrokeColor := TRggColors.Plum;
+  Poly.StrokeColor := TWebColors.Plum;
   Poly.Opacity := 1.0;
   Add(Poly);
 
   ParamA := TRggParam.Create;
   ParamA.Caption := 'Probe Angle';
-  ParamA.StrokeColor := TRggColors.Teal;
+  ParamA.StrokeColor := TWebColors.Teal;
   ParamA.StartPoint.Y := 3 * Raster;
   Add(ParamA);
 
   ParamR := TRggParam.Create;
   ParamR.Caption := 'Probe Radius';
-  ParamR.StrokeColor := TRggColors.Teal;
+  ParamR.StrokeColor := TWebColors.Teal;
   ParamR.StartPoint.Y := 5 * Raster;
   Add(ParamR);
 

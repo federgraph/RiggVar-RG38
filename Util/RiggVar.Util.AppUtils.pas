@@ -31,7 +31,8 @@ type
 {$ifdef Android}
     class function GetDocumentDirectory: string;
 {$endif}
-{$ifdef MACOS}
+{$ifdef OSX}
+    class function GetAppResourcesPath(fn: string): string;
     class function GetAppDataDir: string;
     class function GetDocumentDirectory: string;
     class function GetUserPicturesDir: string;
@@ -58,6 +59,10 @@ uses
   System.IOUtils,
 {$endif}
 {$ifdef Android}
+  System.IOUtils,
+{$endif}
+{$ifdef OSX}
+  FMX.Skia,
   System.IOUtils,
 {$endif}
 {$ifdef MSWINDOWS}
@@ -164,7 +169,17 @@ begin
 end;
 {$endif}
 
-{$ifdef MACOS}
+{$ifdef OSX}
+class function TAppUtils.GetAppResourcesPath(fn: string): string;
+var
+  appPath:string;
+  dn: string;
+begin
+  appPath := System.IOUtils.TPath.GetDirectoryName(ParamStr(0));
+  dn := System.IOUtils.TPath.Combine(StringReplace(appPath,'/MacOS','',[]),'Resources/Startup/');
+  result := System.IOUtils.TPath.Combine(dn, fn);
+end;
+
 class function TAppUtils.GetDocumentDirectory: string;
 begin
   result := GetHomePath + PathDelim + 'Documents' + PathDelim;
@@ -203,6 +218,9 @@ begin
   result := 'Consolas';
 {$endif}
 {$ifdef OSX}
+  if GlobalUseSkia then
+    result := 'Roboto Mono'
+  else
   result := 'CourierNewPSMT';
 {$endif}
 {$ifdef IOS}
@@ -214,4 +232,3 @@ begin
 end;
 
 end.
-

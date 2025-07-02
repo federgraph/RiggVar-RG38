@@ -12,7 +12,7 @@ uses
   RiggVar.FB.ActionGroups,
   RiggVar.FB.ActionMap,
   RiggVar.FederModel.ActionList,
-  RiggVar.Util.Logger;
+  RiggVar.FB.Logger;
 
 type
   TRggMain = class

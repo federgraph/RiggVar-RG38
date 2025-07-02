@@ -13,7 +13,9 @@ uses
   RiggVar.SK.Main in 'SK\RiggVar.SK.Main.pas',
   RiggVar.SK.Process in 'SK\RiggVar.SK.Process.pas',
   RiggVar.SK.Graph in 'SK\RiggVar.SK.Graph.pas',
-  RiggVar.SK.Graph03 in 'SK\RiggVar.SK.Graph03.pas';
+  RiggVar.SK.Graph03 in 'SK\RiggVar.SK.Graph03.pas',
+  RiggVar.FB.Def in 'FB\RiggVar.FB.Def.pas',
+  RiggVar.FB.DefConst in 'FB\RiggVar.FB.DefConst.pas';
 
 {$R *.res}
 

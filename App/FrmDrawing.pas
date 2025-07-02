@@ -247,7 +247,6 @@ begin
     SelectDrawing(DrawingList.ItemIndex);
     DrawingList.SetFocus;
     WantDrawingList := False;
-    SelectDrawing(TRggDrawingRegistry.DefaultIndex);
   end;
 end;
 
@@ -1517,7 +1516,7 @@ begin
   else
   begin
     Fill.Kind := TBrushKind.Solid;
-    Fill.Color := TRggColors.Windowgray;
+    Fill.Color := TExtraColors.Windowgray;
     InplaceShape.Stroke.Color := claBlack;
 {$ifdef WantMemo}
     SetupMemoBackground(claWhite);

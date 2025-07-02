@@ -65,8 +65,8 @@ type
     ToolbarPanel: TPanel;
     ListView: TListView;
     Memo: TMemo;
-    ReadBtn: TButton;
     BackBtn: TButton;
+    ReadBtn: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -150,17 +150,14 @@ begin
 {$endif}
 {$ifdef OSX}
   ListView.ItemAppearance.ItemHeight := 24;
-//  ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'CourierNewPSMT';
   ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
 {$endif}
 {$ifdef IOS}
   ListView.ItemAppearance.ItemHeight := 24;
-//  ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'Courier';
   ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
 {$endif}
 {$ifdef Android}
   ListView.ItemAppearance.ItemHeight := 28;
-//  ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Family := 'monospace';
   ListView.ItemAppearanceObjects.ItemObjects.Text.Font.Size := 16;
 {$endif}
 
@@ -294,7 +291,7 @@ end;
 procedure TFormMemo.WriteLogBtnClick(Sender: TObject);
 begin
   MemoBeginUpdate;
-  Memo.Lines.Text := Main.Logger.TL.Text;
+  Memo.Lines.Text := Main.Logger.ML.Text;
   MemoEndUpdate;
 end;
 

@@ -58,48 +58,48 @@ begin
   HT := TRggLabel.Create;
   HT.Caption := 'HelpText';
   HT.Text := GetHelpText;
-  HT.StrokeColor := TRggColors.Plum;
+  HT.StrokeColor := TWebColors.Plum;
   HT.IsMemoLabel := True;
   Add(HT);
 
   A := TRggCircle.Create;
   A.Caption := 'A';
-  A.StrokeColor := TRggColors.Red;
+  A.StrokeColor := TWebColors.Red;
 
   B := TRggCircle.Create;
   B.Caption := 'B';
-  B.StrokeColor := TRggColors.Teal;
+  B.StrokeColor := TWebColors.Teal;
 
   C := TRggCircle.Create;
   C.Caption := 'C';
-  C.StrokeColor := TRggColors.Dodgerblue;
+  C.StrokeColor := TWebColors.Dodgerblue;
 
   InitDefaultPos;
 
   T := TRggTriangle.Create;
   T.Caption := 'ABC';
-  T.StrokeColor := TRggColors.Aliceblue;
+  T.StrokeColor := TWebColors.Aliceblue;
   T.Point1 := A;
   T.Point2 := B;
   T.Point3 := C;
   Add(T);
 
   L := TRggLine.Create('AB');
-  L.StrokeColor := TRggColors.Dodgerblue;
+  L.StrokeColor := TWebColors.Dodgerblue;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
   AB := L;
 
   L := TRggLine.Create('AC');
-  L.StrokeColor := TRggColors.Teal;
+  L.StrokeColor := TWebColors.Teal;
   L.Point1 := A;
   L.Point2 := C;
   Add(L);
   AC := L;
 
   L := TRggLine.Create('BC');
-  L.StrokeColor := TRggColors.Red;
+  L.StrokeColor := TWebColors.Red;
   L.Point1 := B;
   L.Point2 := C;
   Add(L);
@@ -115,31 +115,31 @@ end;
 procedure TRggDrawingZ07.GoDark;
 begin
   inherited;
-  A.StrokeColor := TRggColors.Tomato;
-  BC.StrokeColor := TRggColors.Tomato;
+  A.StrokeColor := TWebColors.Tomato;
+  BC.StrokeColor := TWebColors.Tomato;
 
-  B.StrokeColor := TRggColors.Dodgerblue;
-  AC.StrokeColor := TRggColors.Dodgerblue;
+  B.StrokeColor := TWebColors.Dodgerblue;
+  AC.StrokeColor := TWebColors.Dodgerblue;
 
-  C.StrokeColor := TRggColors.Lime;
-  AB.StrokeColor := TRggColors.Lime;
+  C.StrokeColor := TWebColors.Lime;
+  AB.StrokeColor := TWebColors.Lime;
 
-  T.StrokeColor := TRggColors.Gray;
+  T.StrokeColor := TWebColors.Gray;
 end;
 
 procedure TRggDrawingZ07.GoLight;
 begin
   inherited;
-  A.StrokeColor := TRggColors.Red;
-  BC.StrokeColor := TRggColors.Red;
+  A.StrokeColor := TWebColors.Red;
+  BC.StrokeColor := TWebColors.Red;
 
-  B.StrokeColor := TRggColors.Dodgerblue;
-  AC.StrokeColor := TRggColors.Dodgerblue;
+  B.StrokeColor := TWebColors.Dodgerblue;
+  AC.StrokeColor := TWebColors.Dodgerblue;
 
-  C.StrokeColor := TRggColors.Teal;
-  AB.StrokeColor := TRggColors.Teal;
+  C.StrokeColor := TWebColors.Teal;
+  AB.StrokeColor := TWebColors.Teal;
 
-  T.StrokeColor := TRggColors.Aliceblue;
+  T.StrokeColor := TWebColors.Aliceblue;
 end;
 
 function TRggDrawingZ07.GetHelpText: string;

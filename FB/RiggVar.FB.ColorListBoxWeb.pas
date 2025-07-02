@@ -3,7 +3,7 @@
 interface
 
 { This is a very slim FMX 'runtime' color list box component.
-  It can show colors from a group of web colors only, if you want. }
+  It can show colors from a group }
 
 uses
   RiggVar.FB.Color,
@@ -11,8 +11,11 @@ uses
   RiggVar.FB.ColorList,
   System.SysUtils,
   System.Classes,
+  System.Types,
+  System.Rtti,
   System.UITypes,
   FMX.Objects,
+  FMX.Controls,
   FMX.ListBox;
 
 type
@@ -21,9 +24,9 @@ type
     FColorList: TRggColorList;
     FColorGroup: TRggColorGroup;
     function GetColor: TRggColor;
-    procedure DoItemApplyStyleLookup(Sender: TObject);
-    procedure SetColorGroup(const Value: TRggColorGroup);
     procedure SetColor(const Value: TRggColor);
+    procedure SetColorGroup(const Value: TRggColorGroup);
+    procedure DoItemApplyStyleLookup(Sender: TObject);
   protected
     procedure RebuildList;
     function GetDefaultStyleLookupName: string; override;

@@ -1,5 +1,21 @@
 ﻿unit FrmColor;
 
+(*
+-
+-     F
+-    * * *
+-   *   *   G
+-  *     * *   *
+- E - - - H - - - I
+-  *     * *         *
+-   *   *   *           *
+-    * *     *             *
+-     D-------A---------------B
+-              *
+-              (C) federgraph.de
+-
+*)
+
 interface
 
 uses
@@ -29,6 +45,7 @@ type
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
   private
     ML: TStrings;
+    FColorPool: TRggColorPoolBase;
     FColor: TRggColor;
     FColorGroup: TRggColorGroup;
     Text: TText;
@@ -54,7 +71,8 @@ implementation
 procedure TFormColor.FormCreate(Sender: TObject);
 begin
   Margin := 10;
-  FColor := TRggColors.Windowgray;
+  FColorPool := ColorVar.RggColorPool;
+  FColor := TExtraColors.Windowgray;
   FColorGroup := TRggColorGroup.CombinedGroup;
 
   Caption := 'TRggColorListbox Test';
@@ -114,12 +132,12 @@ begin
   c := ColorListBox.Color;
   Rectangle.Fill.Color := c;
 
-  g := TRggColorPool.ColorToGroup(c);
+  g := FColorPool.ColorToGroup(c);
   if g <> CurrentGroup then
   begin
     CurrentGroup := g;
     WebColorListbox.ColorGroup := g;
-    Caption := TRggColorPool.ColorGroupToGroupName(g);
+    Caption := FColorPool.ColorGroupToGroupName(g);
   end;
 
   WebColorListbox.Color := c;
@@ -127,7 +145,7 @@ begin
   FColor := c;
   FColorGroup := g;
   UpdateText;
-  ColorIndex := TRggColorPool.GetColorIndex(FColor);
+  ColorIndex := FColorPool.GetColorIndex(FColor);
 end;
 
 procedure TFormColor.WebColorListBoxChange(Sender: TObject);
@@ -135,7 +153,7 @@ begin
   FColor := WebColorListBox.Color;
   Rectangle.Fill.Color := FColor;
   UpdateText;
-  ColorIndex := TRggColorPool.GetColorIndex(FColor);
+  ColorIndex := FColorPool.GetColorIndex(FColor);
 end;
 
 procedure TFormColor.RectangleMouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; var Handled: Boolean);
@@ -150,10 +168,10 @@ begin
   else
     Dec(i);
 
-  if (i > -1) and (i < TRggColorPool.Count) then
+  if (i > -1) and (i < FColorPool.Count) then
   begin
-    j := TRggColorPool.ColorMap[i].IndexN;
-    FColor := TRggColorPool.ColorMap[j].Value;
+    j := FColorPool.ColorMap[i].IndexN;
+    FColor := FColorPool.ColorMap[j].Value;
     Rectangle.Fill.Color := FColor;
     ColorIndex := i;
     UpdateText;
@@ -189,11 +207,11 @@ begin
 
   ML.Clear;
 
-  ML.Add(Format('Index A = %d', [TRggColorPool.ColorToIndexA(FColor)]));
-  ML.Add(Format('Index N = %d', [TRggColorPool.ColorToIndexN(FColor)]));
-  ML.Add(Format('Name  = %s', [TRggColorPool.ColorToString(FColor)]));
-  ML.Add(Format('Group = %s', [TRggColorPool.ColorGroupToGroupName(FColorGroup)]));
-  ML.Add(Format('Kind  = %s', [TRggColorPool.GetColorKindString(FColor)]));
+  ML.Add(Format('Index A = %d', [FColorPool.ColorToIndexA(FColor)]));
+  ML.Add(Format('Index N = %d', [FColorPool.ColorToIndexN(FColor)]));
+  ML.Add(Format('Name  = %s', [FColorPool.ColorToString(FColor)]));
+  ML.Add(Format('Group = %s', [FColorPool.ColorGroupToGroupName(FColorGroup)]));
+  ML.Add(Format('Kind  = %s', [FColorPool.GetColorKindString(FColor)]));
   ML.Add(Format('Hex   = (%3.2x, %3.2x, %3.2x)', [cr.R, cr.G, cr.B]));
   ML.Add(Format('RBG   = (%3d, %3d, %3d)', [cr.R, cr.G, cr.B]));
 

@@ -107,7 +107,7 @@ begin
   HT := TRggLabel.Create;
   HT.Caption := 'HelpText';
   HT.Text := GetHelpText;
-  HT.StrokeColor := TRggColors.Tomato;
+  HT.StrokeColor := TWebColors.Tomato;
   HT.IsMemoLabel := True;
   HT.Position.Y := 100;
   Add(HT);
@@ -115,15 +115,15 @@ begin
   { Points }
 
   A := TRggCircle.Create('A');
-  A.StrokeColor := TRggColors.Yellow;
+  A.StrokeColor := TWebColors.Yellow;
   A.IsComputed := True;
 
   B := TRggCircle.Create('B');
-  B.StrokeColor := TRggColors.Red;
+  B.StrokeColor := TWebColors.Red;
   B.IsComputed := True;
 
   C := TRggCircle.Create('C');
-  C.StrokeColor := TRggColors.Green;
+  C.StrokeColor := TWebColors.Green;
 
   InitDefaultPos;
 
@@ -132,14 +132,14 @@ begin
   DefaultShowCaption := False;
 
   L := TRggLine.Create('AB');
-  L.StrokeColor := TRggColors.Dodgerblue;
+  L.StrokeColor := TWebColors.Dodgerblue;
   L.Point1 := A;
   L.Point2 := B;
   Add(L);
   AB := L;
 
   L := TRggLine.Create('AC');
-  L.StrokeColor := TRggColors.Dodgerblue;
+  L.StrokeColor := TWebColors.Dodgerblue;
   L.Point1 := A;
   L.Point2 := C;
   L.ShowCaption := True;
@@ -147,7 +147,7 @@ begin
   AC := L;
 
   W := TRggArc.Create('alpha');
-  W.StrokeColor := TRggColors.Aquamarine;
+  W.StrokeColor := TWebColors.Aquamarine;
   W.Point1 := A;
   W.Point2 := B;
   W.Point3 := C;
@@ -160,7 +160,7 @@ begin
   ResultLabel := TRggLabel.Create;
   ResultLabel.Caption := 'RL';
   ResultLabel.Text := FigureString;
-  ResultLabel.StrokeColor := TRggColors.Tomato;
+  ResultLabel.StrokeColor := TWebColors.Tomato;
   Add(ResultLabel);
 
   FixPoint3D := A.Center.C;

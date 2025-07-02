@@ -3,12 +3,15 @@
 interface
 
 { This will enable intellisense in the IDE when assigning a color.
-  Keep it in sync,
+
+  Keep it in sync:
   - the Enum, used to interate over a color group,
   - the Array, used to access a color value with the enum value as index,
   - the Record, used to pick a color in the IDE with 'intellisense'.
-  I have placed enum, array, and record adjacent to each other.
-  You may want to change the order of the colors in a group. }
+
+  Notes:
+  1. I have placed enum, array, and record adjacent to each other.
+  2. You may want to change the order of the colors in a group. }
 
 uses
   RiggVar.FB.Color;
@@ -26,23 +29,23 @@ type
 
 const
   PinkWebColorArray: array[TRggPinkWebColorEnum] of TRggColor = (
-    TRggWebColors.Pink,
-    TRggWebColors.Lightpink,
-    TRggWebColors.Hotpink,
-    TRggWebColors.Deeppink,
-    TRggWebColors.Palevioletred,
-    TRggWebColors.Mediumvioletred
+    TWebColors.Pink,
+    TWebColors.Lightpink,
+    TWebColors.Hotpink,
+    TWebColors.Deeppink,
+    TWebColors.Palevioletred,
+    TWebColors.Mediumvioletred
   );
 
 type
   TRggPinkWebColors = record
   const
-    Pink = TRggWebColors.Pink;
-    LightPink = TRggWebColors.Lightpink;
-    HotPink = TRggWebColors.Hotpink;
-    DeepPink = TRggWebColors.Deeppink;
-    PaleVioletRed = TRggWebColors.Palevioletred;
-    MediumVioletRed = TRggWebColors.Mediumvioletred;
+    Pink = TWebColors.Pink;
+    LightPink = TWebColors.Lightpink;
+    HotPink = TWebColors.Hotpink;
+    DeepPink = TWebColors.Deeppink;
+    PaleVioletRed = TWebColors.Palevioletred;
+    MediumVioletRed = TWebColors.Mediumvioletred;
   end;
 {$endregion}
 
@@ -72,49 +75,49 @@ type
 
 const
   PurpleWebColorArray: array[TRggPurpleWebColorEnum] of TRggColor = (
-    TRggWebColors.Lavender,
-    TRggWebColors.Thistle,
-    TRggWebColors.Plum,
-    TRggWebColors.Orchid,
-    TRggWebColors.Violet,
-//    TRggWebColors.Fuchsia,
-    TRggWebColors.Magenta,
-    TRggWebColors.MediumOrchid,
-    TRggWebColors.DarkOrchid,
-    TRggWebColors.DarkViolet,
-    TRggWebColors.BlueViolet,
-    TRggWebColors.DarkMagenta,
-    TRggWebColors.Purple,
-    TRggWebColors.MediumPurple,
-    TRggWebColors.MediumSlateBlue,
-    TRggWebColors.SlateBlue,
-    TRggWebColors.DarkSlateBlue,
-    TRggWebColors.RebeccaPurple,
-    TRggWebColors.Indigo
+    TWebColors.Lavender,
+    TWebColors.Thistle,
+    TWebColors.Plum,
+    TWebColors.Orchid,
+    TWebColors.Violet,
+//    TWebColors.Fuchsia,
+    TWebColors.Magenta,
+    TWebColors.MediumOrchid,
+    TWebColors.DarkOrchid,
+    TWebColors.DarkViolet,
+    TWebColors.BlueViolet,
+    TWebColors.DarkMagenta,
+    TWebColors.Purple,
+    TWebColors.MediumPurple,
+    TWebColors.MediumSlateBlue,
+    TWebColors.SlateBlue,
+    TWebColors.DarkSlateBlue,
+    TWebColors.RebeccaPurple,
+    TWebColors.Indigo
   );
 
 type
   TRggPurpleWebColors = record
   const
-    Lavender = TRggWebColors.Lavender;
-    Thistle = TRggWebColors.Thistle;
-    Plum = TRggWebColors.Plum;
-    Orchid = TRggWebColors.Orchid;
-    Violet = TRggWebColors.Violet;
-//    Fuchsia = TRggWebColors.Fuchsia;
-    Magenta = TRggWebColors.Magenta;
-    MediumOrchid = TRggWebColors.MediumOrchid;
-    DarkOrchid = TRggWebColors.DarkOrchid;
-    DarkViolet = TRggWebColors.DarkViolet;
-    BlueViolet = TRggWebColors.BlueViolet;
-    DarkMagenta = TRggWebColors.DarkMagenta;
-    Purple = TRggWebColors.Purple;
-    MediumPurple = TRggWebColors.MediumPurple;
-    MediumSlateBlue = TRggWebColors.MediumSlateBlue;
-    SlateBlue = TRggWebColors.SlateBlue;
-    DarkSlateBlue = TRggWebColors.DarkSlateBlue;
-    RebeccaPurple = TRggWebColors.RebeccaPurple;
-    Indigo = TRggWebColors.Indigo;
+    Lavender = TWebColors.Lavender;
+    Thistle = TWebColors.Thistle;
+    Plum = TWebColors.Plum;
+    Orchid = TWebColors.Orchid;
+    Violet = TWebColors.Violet;
+//    Fuchsia = TWebColors.Fuchsia;
+    Magenta = TWebColors.Magenta;
+    MediumOrchid = TWebColors.MediumOrchid;
+    DarkOrchid = TWebColors.DarkOrchid;
+    DarkViolet = TWebColors.DarkViolet;
+    BlueViolet = TWebColors.BlueViolet;
+    DarkMagenta = TWebColors.DarkMagenta;
+    Purple = TWebColors.Purple;
+    MediumPurple = TWebColors.MediumPurple;
+    MediumSlateBlue = TWebColors.MediumSlateBlue;
+    SlateBlue = TWebColors.SlateBlue;
+    DarkSlateBlue = TWebColors.DarkSlateBlue;
+    RebeccaPurple = TWebColors.RebeccaPurple;
+    Indigo = TWebColors.Indigo;
   end;
 {$endregion}
 
@@ -134,29 +137,29 @@ type
 
 const
   RedWebColorArray: array[TRggRedWebColorEnum] of TRggColor = (
-    TRggWebColors.LightSalmon,
-    TRggWebColors.Salmon,
-    TRggWebColors.DarkSalmon,
-    TRggWebColors.LightCoral,
-    TRggWebColors.IndianRed,
-    TRggWebColors.Crimson,
-    TRggWebColors.Red,
-    TRggWebColors.FireBrick,
-    TRggWebColors.DarkRed
+    TWebColors.LightSalmon,
+    TWebColors.Salmon,
+    TWebColors.DarkSalmon,
+    TWebColors.LightCoral,
+    TWebColors.IndianRed,
+    TWebColors.Crimson,
+    TWebColors.Red,
+    TWebColors.FireBrick,
+    TWebColors.DarkRed
   );
 
 type
   TRggRedWebColors = record
   const
-    LightSalmon = TRggWebColors.LightSalmon;
-    Salmon = TRggWebColors.Salmon;
-    DarkSalmon = TRggWebColors.DarkSalmon;
-    LightCoral = TRggWebColors.LightCoral;
-    IndianRed = TRggWebColors.IndianRed;
-    Crimson = TRggWebColors.Crimson;
-    Red = TRggWebColors.Red;
-    FireBrick = TRggWebColors.FireBrick;
-    DarkRed = TRggWebColors.DarkRed;
+    LightSalmon = TWebColors.LightSalmon;
+    Salmon = TWebColors.Salmon;
+    DarkSalmon = TWebColors.DarkSalmon;
+    LightCoral = TWebColors.LightCoral;
+    IndianRed = TWebColors.IndianRed;
+    Crimson = TWebColors.Crimson;
+    Red = TWebColors.Red;
+    FireBrick = TWebColors.FireBrick;
+    DarkRed = TWebColors.DarkRed;
   end;
 {$endregion}
 
@@ -172,21 +175,21 @@ type
 
 const
   OrangeWebColorArray: array[TRggOrangeWebColorEnum] of TRggColor = (
-    TRggWebColors.Orange,
-    TRggWebColors.DarkOrange,
-    TRggWebColors.Coral,
-    TRggWebColors.Tomato,
-    TRggWebColors.OrangeRed
+    TWebColors.Orange,
+    TWebColors.DarkOrange,
+    TWebColors.Coral,
+    TWebColors.Tomato,
+    TWebColors.OrangeRed
   );
 
 type
   TRggOrangeWebColors = record
   const
-    Orange = TRggWebColors.Orange;
-    DarkOrange = TRggWebColors.DarkOrange;
-    Coral = TRggWebColors.Coral;
-    Tomato = TRggWebColors.Tomato;
-    OrangeRed = TRggWebColors.OrangeRed;
+    Orange = TWebColors.Orange;
+    DarkOrange = TWebColors.DarkOrange;
+    Coral = TWebColors.Coral;
+    Tomato = TWebColors.Tomato;
+    OrangeRed = TWebColors.OrangeRed;
   end;
 {$endregion}
 
@@ -208,33 +211,33 @@ type
 
 const
   YellowWebColorArray: array[TRggYellowWebColorEnum] of TRggColor = (
-    TRggWebColors.Gold,
-    TRggWebColors.Yellow,
-    TRggWebColors.LightYellow,
-    TRggWebColors.LemonChiffon,
-    TRggWebColors.LightGoldenRodYellow,
-    TRggWebColors.PapayaWhip,
-    TRggWebColors.Moccasin,
-    TRggWebColors.PeachPuff,
-    TRggWebColors.PaleGoldenRod,
-    TRggWebColors.Khaki,
-    TRggWebColors.DarkKhaki
+    TWebColors.Gold,
+    TWebColors.Yellow,
+    TWebColors.LightYellow,
+    TWebColors.LemonChiffon,
+    TWebColors.LightGoldenRodYellow,
+    TWebColors.PapayaWhip,
+    TWebColors.Moccasin,
+    TWebColors.PeachPuff,
+    TWebColors.PaleGoldenRod,
+    TWebColors.Khaki,
+    TWebColors.DarkKhaki
   );
 
 type
   TRggYellowWebColors = record
   const
-    Gold = TRggWebColors.Gold;
-    Yellow = TRggWebColors.Yellow;
-    LightYellow = TRggWebColors.LightYellow;
-    LemonChiffon = TRggWebColors.LemonChiffon;
-    LightGoldenRodYellow = TRggWebColors.LightGoldenRodYellow;
-    PapayaWhip = TRggWebColors.PapayaWhip;
-    Moccasin = TRggWebColors.Moccasin;
-    PeachPuff = TRggWebColors.PeachPuff;
-    PaleGoldenRod = TRggWebColors.PaleGoldenRod;
-    Khaki = TRggWebColors.Khaki;
-    DarkKhaki = TRggWebColors.DarkKhaki;
+    Gold = TWebColors.Gold;
+    Yellow = TWebColors.Yellow;
+    LightYellow = TWebColors.LightYellow;
+    LemonChiffon = TWebColors.LemonChiffon;
+    LightGoldenRodYellow = TWebColors.LightGoldenRodYellow;
+    PapayaWhip = TWebColors.PapayaWhip;
+    Moccasin = TWebColors.Moccasin;
+    PeachPuff = TWebColors.PeachPuff;
+    PaleGoldenRod = TWebColors.PaleGoldenRod;
+    Khaki = TWebColors.Khaki;
+    DarkKhaki = TWebColors.DarkKhaki;
   end;
 {$endregion}
 
@@ -267,55 +270,55 @@ type
 
 const
   GreenWebColorArray: array[TRggGreenWebColorEnum] of TRggColor = (
-    TRggWebColors.GreenYellow,
-    TRggWebColors.Chartreuse,
-    TRggWebColors.LawnGreen,
-    TRggWebColors.Lime,
-    TRggWebColors.LimeGreen,
-    TRggWebColors.PaleGreen,
-    TRggWebColors.LightGreen,
-    TRggWebColors.MediumSpringGreen,
-    TRggWebColors.SpringGreen,
-    TRggWebColors.MediumSeaGreen,
-    TRggWebColors.SeaGreen,
-    TRggWebColors.ForestGreen,
-    TRggWebColors.Green,
-    TRggWebColors.DarkGreen,
-    TRggWebColors.YellowGreen,
-    TRggWebColors.OliveDrab,
-    TRggWebColors.DarkOliveGreen,
-    TRggWebColors.MediumAquaMarine,
-    TRggWebColors.DarkSeaGreen,
-    TRggWebColors.LightSeaGreen,
-    TRggWebColors.DarkCyan,
-    TRggWebColors.Teal
+    TWebColors.GreenYellow,
+    TWebColors.Chartreuse,
+    TWebColors.LawnGreen,
+    TWebColors.Lime,
+    TWebColors.LimeGreen,
+    TWebColors.PaleGreen,
+    TWebColors.LightGreen,
+    TWebColors.MediumSpringGreen,
+    TWebColors.SpringGreen,
+    TWebColors.MediumSeaGreen,
+    TWebColors.SeaGreen,
+    TWebColors.ForestGreen,
+    TWebColors.Green,
+    TWebColors.DarkGreen,
+    TWebColors.YellowGreen,
+    TWebColors.OliveDrab,
+    TWebColors.DarkOliveGreen,
+    TWebColors.MediumAquaMarine,
+    TWebColors.DarkSeaGreen,
+    TWebColors.LightSeaGreen,
+    TWebColors.DarkCyan,
+    TWebColors.Teal
   );
 
 type
   TRggGreenWebColors = record
   const
-    GreenYellow = TRggWebColors.GreenYellow;
-    Chartreuse = TRggWebColors.Chartreuse;
-    LawnGreen = TRggWebColors.LawnGreen;
-    Lime = TRggWebColors.Lime;
-    LimeGreen = TRggWebColors.LimeGreen;
-    PaleGreen = TRggWebColors.PaleGreen;
-    LightGreen = TRggWebColors.LightGreen;
-    MediumSpringGreen = TRggWebColors.MediumSpringGreen;
-    SpringGreen = TRggWebColors.SpringGreen;
-    MediumSeaGreen = TRggWebColors.MediumSeaGreen;
-    SeaGreen = TRggWebColors.SeaGreen;
-    ForestGreen = TRggWebColors.ForestGreen;
-    Green = TRggWebColors.Green;
-    DarkGreen = TRggWebColors.DarkGreen;
-    YellowGreen = TRggWebColors.YellowGreen;
-    OliveDrab = TRggWebColors.OliveDrab;
-    DarkOliveGreen = TRggWebColors.DarkOliveGreen;
-    MediumAquaMarine = TRggWebColors.MediumAquaMarine;
-    DarkSeaGreen = TRggWebColors.DarkSeaGreen;
-    LightSeaGreen = TRggWebColors.LightSeaGreen;
-    DarkCyan = TRggWebColors.DarkCyan;
-    Teal = TRggWebColors.Teal;
+    GreenYellow = TWebColors.GreenYellow;
+    Chartreuse = TWebColors.Chartreuse;
+    LawnGreen = TWebColors.LawnGreen;
+    Lime = TWebColors.Lime;
+    LimeGreen = TWebColors.LimeGreen;
+    PaleGreen = TWebColors.PaleGreen;
+    LightGreen = TWebColors.LightGreen;
+    MediumSpringGreen = TWebColors.MediumSpringGreen;
+    SpringGreen = TWebColors.SpringGreen;
+    MediumSeaGreen = TWebColors.MediumSeaGreen;
+    SeaGreen = TWebColors.SeaGreen;
+    ForestGreen = TWebColors.ForestGreen;
+    Green = TWebColors.Green;
+    DarkGreen = TWebColors.DarkGreen;
+    YellowGreen = TWebColors.YellowGreen;
+    OliveDrab = TWebColors.OliveDrab;
+    DarkOliveGreen = TWebColors.DarkOliveGreen;
+    MediumAquaMarine = TWebColors.MediumAquaMarine;
+    DarkSeaGreen = TWebColors.DarkSeaGreen;
+    LightSeaGreen = TWebColors.LightSeaGreen;
+    DarkCyan = TWebColors.DarkCyan;
+    Teal = TWebColors.Teal;
   end;
 {$endregion}
 
@@ -334,27 +337,27 @@ type
 
 const
   CyanWebColorArray: array[TRggCyanWebColorEnum] of TRggColor = (
-//    TRggWebColors.Aqua,
-    TRggWebColors.Cyan,
-    TRggWebColors.LightCyan,
-    TRggWebColors.PaleTurquoise,
-    TRggWebColors.Aquamarine,
-    TRggWebColors.Turquoise,
-    TRggWebColors.MediumTurquoise,
-    TRggWebColors.DarkTurquoise
+//    TWebColors.Aqua,
+    TWebColors.Cyan,
+    TWebColors.LightCyan,
+    TWebColors.PaleTurquoise,
+    TWebColors.Aquamarine,
+    TWebColors.Turquoise,
+    TWebColors.MediumTurquoise,
+    TWebColors.DarkTurquoise
   );
 
 type
   TRggCyanWebColors = record
   const
-//      Aqua = TRggWebColors.Aqua;
-    Cyan = TRggWebColors.Cyan;
-    LightCyan = TRggWebColors.LightCyan;
-    PaleTurquoise = TRggWebColors.PaleTurquoise;
-    Aquamarine = TRggWebColors.Aquamarine;
-    Turquoise = TRggWebColors.Turquoise;
-    MediumTurquoise = TRggWebColors.MediumTurquoise;
-    DarkTurquoise = TRggWebColors.DarkTurquoise;
+//      Aqua = TWebColors.Aqua;
+    Cyan = TWebColors.Cyan;
+    LightCyan = TWebColors.LightCyan;
+    PaleTurquoise = TWebColors.PaleTurquoise;
+    Aquamarine = TWebColors.Aquamarine;
+    Turquoise = TWebColors.Turquoise;
+    MediumTurquoise = TWebColors.MediumTurquoise;
+    DarkTurquoise = TWebColors.DarkTurquoise;
   end;
 {$endregion}
 
@@ -381,43 +384,43 @@ type
 
 const
   BlueWebColorArray: array[TRggBlueWebColorEnum] of TRggColor = (
-    TRggWebColors.CadetBlue,
-    TRggWebColors.SteelBlue,
-    TRggWebColors.LightSteelBlue,
-    TRggWebColors.LightBlue,
-    TRggWebColors.PowderBlue,
-    TRggWebColors.LightSkyBlue,
-    TRggWebColors.SkyBlue,
-    TRggWebColors.CornflowerBlue,
-    TRggWebColors.DeepSkyBlue,
-    TRggWebColors.DodgerBlue,
-    TRggWebColors.RoyalBlue,
-    TRggWebColors.Blue,
-    TRggWebColors.MediumBlue,
-    TRggWebColors.DarkBlue,
-    TRggWebColors.Navy,
-    TRggWebColors.MidnightBlue
+    TWebColors.CadetBlue,
+    TWebColors.SteelBlue,
+    TWebColors.LightSteelBlue,
+    TWebColors.LightBlue,
+    TWebColors.PowderBlue,
+    TWebColors.LightSkyBlue,
+    TWebColors.SkyBlue,
+    TWebColors.CornflowerBlue,
+    TWebColors.DeepSkyBlue,
+    TWebColors.DodgerBlue,
+    TWebColors.RoyalBlue,
+    TWebColors.Blue,
+    TWebColors.MediumBlue,
+    TWebColors.DarkBlue,
+    TWebColors.Navy,
+    TWebColors.MidnightBlue
   );
 
 type
   TRggBlueWebColors = record
   const
-    CadetBlue = TRggWebColors.CadetBlue;
-    SteelBlue = TRggWebColors.SteelBlue;
-    LightSteelBlue = TRggWebColors.LightSteelBlue;
-    LightBlue = TRggWebColors.LightBlue;
-    PowderBlue = TRggWebColors.PowderBlue;
-    LightSkyBlue = TRggWebColors.LightSkyBlue;
-    SkyBlue = TRggWebColors.SkyBlue;
-    CornflowerBlue = TRggWebColors.CornflowerBlue;
-    DeepSkyBlue = TRggWebColors.DeepSkyBlue;
-    DodgerBlue = TRggWebColors.DodgerBlue;
-    RoyalBlue = TRggWebColors.RoyalBlue;
-    Blue = TRggWebColors.Blue;
-    MediumBlue = TRggWebColors.MediumBlue;
-    DarkBlue = TRggWebColors.DarkBlue;
-    Navy = TRggWebColors.Navy;
-    MidnightBlue = TRggWebColors.MidnightBlue;
+    CadetBlue = TWebColors.CadetBlue;
+    SteelBlue = TWebColors.SteelBlue;
+    LightSteelBlue = TWebColors.LightSteelBlue;
+    LightBlue = TWebColors.LightBlue;
+    PowderBlue = TWebColors.PowderBlue;
+    LightSkyBlue = TWebColors.LightSkyBlue;
+    SkyBlue = TWebColors.SkyBlue;
+    CornflowerBlue = TWebColors.CornflowerBlue;
+    DeepSkyBlue = TWebColors.DeepSkyBlue;
+    DodgerBlue = TWebColors.DodgerBlue;
+    RoyalBlue = TWebColors.RoyalBlue;
+    Blue = TWebColors.Blue;
+    MediumBlue = TWebColors.MediumBlue;
+    DarkBlue = TWebColors.DarkBlue;
+    Navy = TWebColors.Navy;
+    MidnightBlue = TWebColors.MidnightBlue;
   end;
 {$endregion}
 
@@ -446,47 +449,47 @@ type
 
 const
   BrownWebColorArray: array[TRggBrownWebColorEnum] of TRggColor = (
-    TRggWebColors.Cornsilk,
-    TRggWebColors.BlanchedAlmond,
-    TRggWebColors.Bisque,
-    TRggWebColors.NavajoWhite,
-    TRggWebColors.Wheat,
-    TRggWebColors.BurlyWood,
-    TRggWebColors.Tan,
-    TRggWebColors.RosyBrown,
-    TRggWebColors.SandyBrown,
-    TRggWebColors.GoldenRod,
-    TRggWebColors.DarkGoldenRod,
-    TRggWebColors.Peru,
-    TRggWebColors.Chocolate,
-    TRggWebColors.Olive,
-    TRggWebColors.SaddleBrown,
-    TRggWebColors.Sienna,
-    TRggWebColors.Brown,
-    TRggWebColors.Maroon
+    TWebColors.Cornsilk,
+    TWebColors.BlanchedAlmond,
+    TWebColors.Bisque,
+    TWebColors.NavajoWhite,
+    TWebColors.Wheat,
+    TWebColors.BurlyWood,
+    TWebColors.Tan,
+    TWebColors.RosyBrown,
+    TWebColors.SandyBrown,
+    TWebColors.GoldenRod,
+    TWebColors.DarkGoldenRod,
+    TWebColors.Peru,
+    TWebColors.Chocolate,
+    TWebColors.Olive,
+    TWebColors.SaddleBrown,
+    TWebColors.Sienna,
+    TWebColors.Brown,
+    TWebColors.Maroon
   );
 
 type
   TRggBrownWebColors = record
   const
-    Cornsilk = TRggWebColors.Cornsilk;
-    BlanchedAlmond = TRggWebColors.BlanchedAlmond;
-    Bisque = TRggWebColors.Bisque;
-    NavajoWhite = TRggWebColors.NavajoWhite;
-    Wheat = TRggWebColors.Wheat;
-    BurlyWood = TRggWebColors.BurlyWood;
-    Tan = TRggWebColors.Tan;
-    RosyBrown = TRggWebColors.RosyBrown;
-    SandyBrown = TRggWebColors.SandyBrown;
-    GoldenRod = TRggWebColors.GoldenRod;
-    DarkGoldenRod = TRggWebColors.DarkGoldenRod;
-    Peru = TRggWebColors.Peru;
-    Chocolate = TRggWebColors.Chocolate;
-    Olive = TRggWebColors.Olive;
-    SaddleBrown = TRggWebColors.SaddleBrown;
-    Sienna = TRggWebColors.Sienna;
-    Brown = TRggWebColors.Brown;
-    Maroon = TRggWebColors.Maroon;
+    Cornsilk = TWebColors.Cornsilk;
+    BlanchedAlmond = TWebColors.BlanchedAlmond;
+    Bisque = TWebColors.Bisque;
+    NavajoWhite = TWebColors.NavajoWhite;
+    Wheat = TWebColors.Wheat;
+    BurlyWood = TWebColors.BurlyWood;
+    Tan = TWebColors.Tan;
+    RosyBrown = TWebColors.RosyBrown;
+    SandyBrown = TWebColors.SandyBrown;
+    GoldenRod = TWebColors.GoldenRod;
+    DarkGoldenRod = TWebColors.DarkGoldenRod;
+    Peru = TWebColors.Peru;
+    Chocolate = TWebColors.Chocolate;
+    Olive = TWebColors.Olive;
+    SaddleBrown = TWebColors.SaddleBrown;
+    Sienna = TWebColors.Sienna;
+    Brown = TWebColors.Brown;
+    Maroon = TWebColors.Maroon;
   end;
 {$endregion}
 
@@ -514,45 +517,45 @@ type
 
 const
   WhiteWebColorArray: array[TRggWhiteWebColorEnum] of TRggColor = (
-    TRggWebColors.White,
-    TRggWebColors.Snow,
-    TRggWebColors.HoneyDew,
-    TRggWebColors.MintCream,
-    TRggWebColors.Azure,
-    TRggWebColors.AliceBlue,
-    TRggWebColors.GhostWhite,
-    TRggWebColors.WhiteSmoke,
-    TRggWebColors.SeaShell,
-    TRggWebColors.Beige,
-    TRggWebColors.OldLace,
-    TRggWebColors.FloralWhite,
-    TRggWebColors.Ivory,
-    TRggWebColors.AntiqueWhite,
-    TRggWebColors.Linen,
-    TRggWebColors.LavenderBlush,
-    TRggWebColors.MistyRose
+    TWebColors.White,
+    TWebColors.Snow,
+    TWebColors.HoneyDew,
+    TWebColors.MintCream,
+    TWebColors.Azure,
+    TWebColors.AliceBlue,
+    TWebColors.GhostWhite,
+    TWebColors.WhiteSmoke,
+    TWebColors.SeaShell,
+    TWebColors.Beige,
+    TWebColors.OldLace,
+    TWebColors.FloralWhite,
+    TWebColors.Ivory,
+    TWebColors.AntiqueWhite,
+    TWebColors.Linen,
+    TWebColors.LavenderBlush,
+    TWebColors.MistyRose
   );
 
 type
   TRggWhiteWebColors = record
   const
-    White = TRggWebColors.White;
-    Snow = TRggWebColors.Snow;
-    HoneyDew = TRggWebColors.HoneyDew;
-    MintCream = TRggWebColors.MintCream;
-    Azure = TRggWebColors.Azure;
-    AliceBlue = TRggWebColors.AliceBlue;
-    GhostWhite = TRggWebColors.GhostWhite;
-    WhiteSmoke = TRggWebColors.WhiteSmoke;
-    SeaShell = TRggWebColors.SeaShell;
-    Beige = TRggWebColors.Beige;
-    OldLace = TRggWebColors.OldLace;
-    FloralWhite = TRggWebColors.FloralWhite;
-    Ivory = TRggWebColors.Ivory;
-    AntiqueWhite = TRggWebColors.AntiqueWhite;
-    Linen = TRggWebColors.Linen;
-    LavenderBlush = TRggWebColors.LavenderBlush;
-    MistyRose = TRggWebColors.MistyRose;
+    White = TWebColors.White;
+    Snow = TWebColors.Snow;
+    HoneyDew = TWebColors.HoneyDew;
+    MintCream = TWebColors.MintCream;
+    Azure = TWebColors.Azure;
+    AliceBlue = TWebColors.AliceBlue;
+    GhostWhite = TWebColors.GhostWhite;
+    WhiteSmoke = TWebColors.WhiteSmoke;
+    SeaShell = TWebColors.SeaShell;
+    Beige = TWebColors.Beige;
+    OldLace = TWebColors.OldLace;
+    FloralWhite = TWebColors.FloralWhite;
+    Ivory = TWebColors.Ivory;
+    AntiqueWhite = TWebColors.AntiqueWhite;
+    Linen = TWebColors.Linen;
+    LavenderBlush = TWebColors.LavenderBlush;
+    MistyRose = TWebColors.MistyRose;
   end;
 {$endregion}
 
@@ -573,37 +576,37 @@ type
 
 const
   GrayWebColorArray: array[TRggGrayWebColorEnum] of TRggColor = (
-    TRggWebColors.Gainsboro,
-    TRggWebColors.LightGray,
-    TRggWebColors.Silver,
-    TRggWebColors.DarkGray,
-    TRggWebColors.DimGray,
-    TRggWebColors.Gray,
-    TRggWebColors.LightSlateGray,
-    TRggWebColors.SlateGray,
-    TRggWebColors.DarkSlateGray,
-    TRggWebColors.Black
+    TWebColors.Gainsboro,
+    TWebColors.LightGray,
+    TWebColors.Silver,
+    TWebColors.DarkGray,
+    TWebColors.DimGray,
+    TWebColors.Gray,
+    TWebColors.LightSlateGray,
+    TWebColors.SlateGray,
+    TWebColors.DarkSlateGray,
+    TWebColors.Black
   );
 
 type
   TRggGrayWebColors = record
   const
-    Gainsboro = TRggWebColors.Gainsboro;
-    LightGray = TRggWebColors.LightGray;
-    Silver = TRggWebColors.Silver;
-    DarkGray = TRggWebColors.DarkGray;
-    DimGray = TRggWebColors.DimGray;
-    Gray = TRggWebColors.Gray;
-    LightSlateGray = TRggWebColors.LightSlateGray;
-    SlateGray = TRggWebColors.SlateGray;
-    DarkSlateGray = TRggWebColors.DarkSlateGray;
-    Black = TRggWebColors.Black;
+    Gainsboro = TWebColors.Gainsboro;
+    LightGray = TWebColors.LightGray;
+    Silver = TWebColors.Silver;
+    DarkGray = TWebColors.DarkGray;
+    DimGray = TWebColors.DimGray;
+    Gray = TWebColors.Gray;
+    LightSlateGray = TWebColors.LightSlateGray;
+    SlateGray = TWebColors.SlateGray;
+    DarkSlateGray = TWebColors.DarkSlateGray;
+    Black = TWebColors.Black;
   end;
 {$endregion}
 
 {$region 'Custom'}
 type
-  TRggCustomColorEnum = (
+  TRggExtraColorEnum = (
     BackgroundWhite,
     Windowgray,
     Porcelain,
@@ -623,218 +626,332 @@ type
   );
 
 const
-  CustomColorArray: array[TRggCustomColorEnum] of TRggColor = (
-    TRggCustomColors.BackgroundWhite,
-    TRggCustomColors.Windowgray,
-    TRggCustomColors.Porcelain,
-    TRggCustomColors.Mercury,
-    TRggCustomColors.Gray35,
-    TRggCustomColors.Gray15,
-    TRggCustomColors.Gray05,
-    TRggCustomColors.Cream,
-    TRggCustomColors.Paleblue,
-    TRggCustomColors.LegacySkyBlue,
-    TRggCustomColors.MoneyGreen,
-    TRggCustomColors.Lightorange,
-    TRggCustomColors.Sea,
-    TRggCustomColors.BackgroundBlue,
-    TRggCustomColors.Darkbrown,
-    TRggCustomColors.BackgroundGray
+  ExtraColorArray: array[TRggExtraColorEnum] of TRggColor = (
+    TExtraColors.BackgroundWhite,
+    TExtraColors.Windowgray,
+    TExtraColors.Porcelain,
+    TExtraColors.Mercury,
+    TExtraColors.Gray35,
+    TExtraColors.Gray15,
+    TExtraColors.Gray05,
+    TExtraColors.Cream,
+    TExtraColors.Paleblue,
+    TExtraColors.LegacySkyBlue,
+    TExtraColors.MoneyGreen,
+    TExtraColors.Lightorange,
+    TExtraColors.Sea,
+    TExtraColors.BackgroundBlue,
+    TExtraColors.Darkbrown,
+    TExtraColors.BackgroundGray
   );
-
-  { for TRggCustomColors see unit RiggVar.FB.Color }
 
 {$endregion}
 
+{$region 'PLABasic'}
 type
-  TRggCustomColorPicker = record
+  TBasicEnum = (
+    PLABasic_JadeWhite,
+    PLABasic_Beige,
+    PLABasic_Gold,
+    PLABasic_Silver,
+    PLABasic_Gray,
+    PLABasic_Bronze,
+    PLABasic_Brown,
+    PLABasic_CocoaBrown,
+    PLABasic_MaroonRed,
+    PLABasic_Red,
+    PLABasic_Magenta,
+    PLABasic_Pink,
+    PLABasic_HotPink,
+    PLABasic_Orange,
+    PLABasic_Pumpkin,
+    PLABasic_SunflowerYellow,
+    PLABasic_Yellow,
+    PLABasic_BrightGreen,
+    PLABasic_BambuGreen,
+    PLABasic_MistletoeGreen,
+    PLABasic_Turquoise,
+    PLABasic_Cyan,
+    PLABasic_Blue,
+    PLABasic_CobaltBlue,
+    PLABasic_Purple,
+    PLABasic_IndigoPurple,
+    PLABasic_BlueGray,
+    PLABasic_LightGray,
+    PLABasic_DarkGray,
+    PLABasic_Black
+  );
+
+const
+  BasicColorArray: array[TBasicEnum] of TRggColor = (
+    TBasicColors.PLABasic_JadeWhite,
+    TBasicColors.PLABasic_Beige,
+    TBasicColors.PLABasic_Gold,
+    TBasicColors.PLABasic_Silver,
+    TBasicColors.PLABasic_Gray,
+    TBasicColors.PLABasic_Bronze,
+    TBasicColors.PLABasic_Brown,
+    TBasicColors.PLABasic_CocoaBrown,
+    TBasicColors.PLABasic_MaroonRed,
+    TBasicColors.PLABasic_Red,
+
+    TBasicColors.PLABasic_Magenta,
+    TBasicColors.PLABasic_Pink,
+    TBasicColors.PLABasic_HotPink,
+    TBasicColors.PLABasic_Orange,
+    TBasicColors.PLABasic_Pumpkin,
+    TBasicColors.PLABasic_SunflowerYellow,
+    TBasicColors.PLABasic_Yellow,
+    TBasicColors.PLABasic_BrightGreen,
+    TBasicColors.PLABasic_BambuGreen,
+    TBasicColors.PLABasic_MistletoeGreen,
+
+    TBasicColors.PLABasic_Turquoise,
+    TBasicColors.PLABasic_Cyan,
+    TBasicColors.PLABasic_Blue,
+    TBasicColors.PLABasic_CobaltBlue,
+    TBasicColors.PLABasic_Purple,
+    TBasicColors.PLABasic_IndigoPurple,
+    TBasicColors.PLABasic_BlueGray,
+    TBasicColors.PLABasic_LightGray,
+    TBasicColors.PLABasic_DarkGray,
+    TBasicColors.PLABasic_Black
+  );
+{$endregion}
+
+{$region 'PLAMatte'}
+type
+  TMatteEnum = (
+    PLAMatte_IvoryWhite,
+    PLAMatte_LatteBrown,
+    PLAMatte_DesertTan,
+    PLAMatte_AshGray,
+    PLAMatte_LilacPurple,
+    PLAMatte_SakuraPink,
+    PLAMatte_MandarinOrange,
+    PLAMatte_LemonYellow,
+    PLAMatte_ScarletRed,
+    PLAMatte_DarkRed,
+    PLAMatte_DarkBrown,
+    PLAMatte_DarkGreen,
+    PLAMatte_GrassGreen,
+    PLAMatte_IceBlue,
+    PLAMatte_MarineBlue,
+    PLAMatte_DarkBlue,
+    PLAMatte_Charcoal
+  );
+
+const
+  MatteColorArray: array[TMatteEnum] of TRggColor = (
+    TMatteColors.PLAMatte_IvoryWhite,
+    TMatteColors.PLAMatte_LatteBrown,
+    TMatteColors.PLAMatte_DesertTan,
+    TMatteColors.PLAMatte_AshGray,
+    TMatteColors.PLAMatte_LilacPurple,
+    TMatteColors.PLAMatte_SakuraPink,
+    TMatteColors.PLAMatte_MandarinOrange,
+    TMatteColors.PLAMatte_LemonYellow,
+    TMatteColors.PLAMatte_ScarletRed,
+    TMatteColors.PLAMatte_DarkRed,
+    TMatteColors.PLAMatte_DarkBrown,
+    TMatteColors.PLAMatte_DarkGreen,
+    TMatteColors.PLAMatte_GrassGreen,
+    TMatteColors.PLAMatte_IceBlue,
+    TMatteColors.PLAMatte_MarineBlue,
+    TMatteColors.PLAMatte_DarkBlue,
+    TMatteColors.PLAMatte_Charcoal
+  );
+{$endregion}
+
+type
+  TExtraColorPicker = record
     const
-    Null = TRggCustomColors.Null;
+    Null = TExtraColors.Null;
 
-    Windowgray = TRggCustomColors.Windowgray;
-    Porcelain = TRggCustomColors.Porcelain;
-    Mercury = TRggCustomColors.Mercury;
+    Windowgray = TExtraColors.Windowgray;
+    Porcelain = TExtraColors.Porcelain;
+    Mercury = TExtraColors.Mercury;
 
-    BackgroundWhite = TRggCustomColors.BackgroundWhite;
-    BackgroundBlue = TRggCustomColors.BackgroundBlue;
-    BackgroundGray = TRggCustomColors.BackgroundGray;
+    BackgroundWhite = TExtraColors.BackgroundWhite;
+    BackgroundBlue = TExtraColors.BackgroundBlue;
+    BackgroundGray = TExtraColors.BackgroundGray;
 
-    MoneyGreen = TRggCustomColors.MoneyGreen;
-    LegacySkyBlue = TRggCustomColors.LegacySkyBlue;
-    Cream = TRggCustomColors.Cream;
+    MoneyGreen = TExtraColors.MoneyGreen;
+    LegacySkyBlue = TExtraColors.LegacySkyBlue;
+    Cream = TExtraColors.Cream;
 
-    Darkbrown = TRggCustomColors.Darkbrown;
-    Lightorange = TRggCustomColors.Lightorange;
-    Sea = TRggCustomColors.Sea;
-    Paleblue = TRggCustomColors.PaleBlue;
+    Darkbrown = TExtraColors.Darkbrown;
+    Lightorange = TExtraColors.Lightorange;
+    Sea = TExtraColors.Sea;
+    Paleblue = TExtraColors.Paleblue;
 
     { Alternative names }
-    Alpha = TRggWebColors.Black;
+    Alpha = TWebColors.Black;
 
-    Aqua = TRggCustomColors.Aqua;
-    Fuchsia = TRggCustomColors.Fuchsia;
+    Aqua = TExtraColors.Aqua;
+    Fuchsia = TExtraColors.Fuchsia;
 
-    WindowWhite = TRggCustomColors.WindowWhite;
-    BtnFace = TRggCustomColors.BtnFace;
-    ButtonFace = TRggCustomColors.ButtonFace;
-    RectangleGray = TRggCustomColors.RectangleGray;
-    QuickSilver = TRggCustomColors.QuickSilver;
-    MedGray = TRggCustomColors.MedGray;
-    MediumGray = TRggCustomColors.MediumGray;
-    DarkSilver = TRggCustomColors.DarkSilver;
-    Dovegray = TRggCustomColors.Dovegray;
+    WindowWhite = TExtraColors.WindowWhite;
+    BtnFace = TExtraColors.BtnFace;
+    ButtonFace = TExtraColors.ButtonFace;
+    RectangleGray = TExtraColors.RectangleGray;
+    QuickSilver = TExtraColors.QuickSilver;
+    MedGray = TExtraColors.MedGray;
+    MediumGray = TExtraColors.MediumGray;
+    DarkSilver = TExtraColors.DarkSilver;
+    Dovegray = TExtraColors.Dovegray;
 
-    Gray80 = TRggCustomColors.Gray80;
-    Gray50 = TRggCustomColors.Gray50;
-    Gray35 = TRggCustomColors.Gray35;
-    Gray25 = TRggCustomColors.Gray25;
-    Gray15 = TRggCustomColors.Gray15;
-    Gray05 = TRggCustomColors.Gray05;
+    Gray80 = TExtraColors.Gray80;
+    Gray50 = TExtraColors.Gray50;
+    Gray35 = TExtraColors.Gray35;
+    Gray25 = TExtraColors.Gray25;
+    Gray15 = TExtraColors.Gray15;
+    Gray05 = TExtraColors.Gray05;
   end;
 
-  TRggWebColorPicker = record
+  TWebColorPicker = record
   const
-    Aliceblue = TRggWebColors.Aliceblue;
-    Antiquewhite = TRggWebColors.Antiquewhite;
-//    Aqua = TRggWebColors.Aqua; // duplicate of Cyan
-    Aquamarine = TRggWebColors.Aquamarine;
-    Azure = TRggWebColors.Azure;
-    Beige = TRggWebColors.Beige;
-    Bisque = TRggWebColors.Bisque;
-    Black = TRggWebColors.Black;
-    Blanchedalmond = TRggWebColors.Blanchedalmond;
-    Blue = TRggWebColors.Blue;
-    Blueviolet = TRggWebColors.Blueviolet;
-    Brown = TRggWebColors.Brown;
-    Burlywood = TRggWebColors.Burlywood;
-    Cadetblue = TRggWebColors.Cadetblue;
-    Chartreuse = TRggWebColors.Chartreuse;
-    Chocolate = TRggWebColors.Chocolate;
-    Coral = TRggWebColors.Coral;
-    Cornflowerblue = TRggWebColors.CornflowerBlue;
-    Cornsilk = TRggWebColors.Cornsilk;
-    Crimson = TRggWebColors.Crimson;
-    Cyan = TRggWebColors.Cyan;
-    Darkblue = TRggWebColors.Darkblue;
-    Darkcyan = TRggWebColors.Darkcyan;
-    Darkgoldenrod = TRggWebColors.Darkgoldenrod;
-    Darkgray = TRggWebColors.Darkgray;
-    Darkgreen = TRggWebColors.Darkgreen;
-    Darkkhaki = TRggWebColors.Darkkhaki;
-    Darkmagenta = TRggWebColors.Darkmagenta;
-    Darkolivegreen = TRggWebColors.Darkolivegreen;
-    Darkorange = TRggWebColors.Darkorange;
-    Darkorchid = TRggWebColors.Darkorchid;
-    Darkred = TRggWebColors.Darkred;
-    Darksalmon = TRggWebColors.Darksalmon;
-    Darkseagreen = TRggWebColors.Darkseagreen;
-    Darkslateblue = TRggWebColors.Darkslateblue;
-    Darkslategray = TRggWebColors.Darkslategray;
-    Darkturquoise = TRggWebColors.Darkturquoise;
-    Darkviolet = TRggWebColors.Darkviolet;
-    Deeppink = TRggWebColors.Deeppink;
-    Deepskyblue = TRggWebColors.Deepskyblue;
-    Dimgray = TRggWebColors.Dimgray;
-    Dodgerblue = TRggWebColors.Dodgerblue;
-    Firebrick = TRggWebColors.Firebrick;
-    Floralwhite = TRggWebColors.Floralwhite;
-    Forestgreen = TRggWebColors.Forestgreen;
-//    Fuchsia = TRggWebColors.Fuchsia; // duplicate of Magenta
-    Gainsboro = TRggWebColors.Gainsboro;
-    Ghostwhite = TRggWebColors.Ghostwhite;
-    Gold = TRggWebColors.Gold;
-    Goldenrod = TRggWebColors.Goldenrod;
-    Gray = TRggWebColors.Gray;
-    Green = TRggWebColors.Green;
-    Greenyellow = TRggWebColors.Greenyellow;
-    Honeydew = TRggWebColors.Honeydew;
-    Hotpink = TRggWebColors.Hotpink;
-    Indianred = TRggWebColors.Indianred;
-    Indigo = TRggWebColors.Indigo;
-    Ivory = TRggWebColors.Ivory;
-    Khaki = TRggWebColors.Khaki;
-    Lavender = TRggWebColors.Lavender;
-    Lavenderblush = TRggWebColors.Lavenderblush;
-    Lawngreen = TRggWebColors.Lawngreen;
-    Lemonchiffon = TRggWebColors.Lemonchiffon;
-    Lightblue = TRggWebColors.Lightblue;
-    Lightcoral = TRggWebColors.Lightcoral;
-    Lightcyan = TRggWebColors.Lightcyan;
-    Lightgoldenrodyellow = TRggWebColors.Lightgoldenrodyellow;
-    Lightgray = TRggWebColors.Lightgray;
-    Lightgreen = TRggWebColors.Lightgreen;
-    Lightpink = TRggWebColors.Lightpink;
-    Lightsalmon = TRggWebColors.Lightsalmon;
-    Lightseagreen = TRggWebColors.Lightseagreen;
-    Lightskyblue = TRggWebColors.Lightskyblue;
-    Lightslategray = TRggWebColors.Lightslategray;
-    Lightsteelblue = TRggWebColors.Lightsteelblue;
-    Lightyellow = TRggWebColors.Lightyellow;
-    Lime = TRggWebColors.Lime;
-    Limegreen = TRggWebColors.Limegreen;
-    Linen = TRggWebColors.Linen;
-    Magenta = TRggWebColors.Magenta;
-    Maroon = TRggWebColors.Maroon;
-    Mediumaquamarine = TRggWebColors.Mediumaquamarine;
-    Mediumblue = TRggWebColors.Mediumblue;
-    Mediumorchid = TRggWebColors.Mediumorchid;
-    Mediumpurple = TRggWebColors.Mediumpurple;
-    Mediumseagreen = TRggWebColors.Mediumseagreen;
-    Mediumslateblue = TRggWebColors.Mediumslateblue;
-    Mediumspringgreen = TRggWebColors.Mediumspringgreen;
-    Mediumturquoise = TRggWebColors.Mediumturquoise;
-    Mediumvioletred = TRggWebColors.Mediumvioletred;
-    Midnightblue = TRggWebColors.Midnightblue;
-    Mintcream = TRggWebColors.Mintcream;
-    Mistyrose = TRggWebColors.Mistyrose;
-    Moccasin = TRggWebColors.Moccasin;
-    Navajowhite = TRggWebColors.Navajowhite;
-    Navy = TRggWebColors.Navy;
-    Oldlace = TRggWebColors.Oldlace;
-    Olive = TRggWebColors.Olive;
-    Olivedrab = TRggWebColors.Olivedrab;
-    Orange = TRggWebColors.Orange;
-    Orangered = TRggWebColors.Orangered;
-    Orchid = TRggWebColors.Orchid;
-    Palegoldenrod = TRggWebColors.Palegoldenrod;
-    Palegreen = TRggWebColors.Palegreen;
-    Paleturquoise = TRggWebColors.Paleturquoise;
-    Palevioletred = TRggWebColors.Palevioletred;
-    Papayawhip = TRggWebColors.Papayawhip;
-    Peachpuff = TRggWebColors.Peachpuff;
-    Peru = TRggWebColors.Peru;
-    Pink = TRggWebColors.Pink;
-    Plum = TRggWebColors.Plum;
-    Powderblue = TRggWebColors.Powderblue;
-    Purple = TRggWebColors.Purple;
-    Red = TRggWebColors.Red;
-    Rosybrown = TRggWebColors.Rosybrown;
-    Royalblue = TRggWebColors.Royalblue;
-    Saddlebrown = TRggWebColors.Saddlebrown;
-    Salmon = TRggWebColors.Salmon;
-    Sandybrown = TRggWebColors.Sandybrown;
-    Seagreen = TRggWebColors.Seagreen;
-    Seashell = TRggWebColors.Seashell;
-    Sienna = TRggWebColors.Sienna;
-    Silver = TRggWebColors.Silver;
-    Skyblue = TRggWebColors.Skyblue;
-    Slateblue = TRggWebColors.Slateblue;
-    Slategray = TRggWebColors.Slategray;
-    Snow = TRggWebColors.Snow;
-    Springgreen = TRggWebColors.Springgreen;
-    Steelblue = TRggWebColors.Steelblue;
-    Tan = TRggWebColors.Tan;
-    Teal = TRggWebColors.Teal;
-    Thistle = TRggWebColors.Thistle;
-    Tomato = TRggWebColors.Tomato;
-    Turquoise = TRggWebColors.Turquoise;
-    Violet = TRggWebColors.Violet;
-    Wheat = TRggWebColors.Wheat;
-    White = TRggWebColors.White;
-    Whitesmoke = TRggWebColors.Whitesmoke;
-    Yellow = TRggWebColors.Yellow;
-    Yellowgreen = TRggWebColors.Yellowgreen;
-    RebeccaPurple = TRggWebColors.Rebeccapurple;
+    Aliceblue = TWebColors.Aliceblue;
+    Antiquewhite = TWebColors.Antiquewhite;
+//    Aqua = TWebColors.Aqua; // duplicate of Cyan
+    Aquamarine = TWebColors.Aquamarine;
+    Azure = TWebColors.Azure;
+    Beige = TWebColors.Beige;
+    Bisque = TWebColors.Bisque;
+    Black = TWebColors.Black;
+    Blanchedalmond = TWebColors.Blanchedalmond;
+    Blue = TWebColors.Blue;
+    Blueviolet = TWebColors.Blueviolet;
+    Brown = TWebColors.Brown;
+    Burlywood = TWebColors.Burlywood;
+    Cadetblue = TWebColors.Cadetblue;
+    Chartreuse = TWebColors.Chartreuse;
+    Chocolate = TWebColors.Chocolate;
+    Coral = TWebColors.Coral;
+    Cornflowerblue = TWebColors.CornflowerBlue;
+    Cornsilk = TWebColors.Cornsilk;
+    Crimson = TWebColors.Crimson;
+    Cyan = TWebColors.Cyan;
+    Darkblue = TWebColors.Darkblue;
+    Darkcyan = TWebColors.Darkcyan;
+    Darkgoldenrod = TWebColors.Darkgoldenrod;
+    Darkgray = TWebColors.Darkgray;
+    Darkgreen = TWebColors.Darkgreen;
+    Darkkhaki = TWebColors.Darkkhaki;
+    Darkmagenta = TWebColors.Darkmagenta;
+    Darkolivegreen = TWebColors.Darkolivegreen;
+    Darkorange = TWebColors.Darkorange;
+    Darkorchid = TWebColors.Darkorchid;
+    Darkred = TWebColors.Darkred;
+    Darksalmon = TWebColors.Darksalmon;
+    Darkseagreen = TWebColors.Darkseagreen;
+    Darkslateblue = TWebColors.Darkslateblue;
+    Darkslategray = TWebColors.Darkslategray;
+    Darkturquoise = TWebColors.Darkturquoise;
+    Darkviolet = TWebColors.Darkviolet;
+    Deeppink = TWebColors.Deeppink;
+    Deepskyblue = TWebColors.Deepskyblue;
+    Dimgray = TWebColors.Dimgray;
+    Dodgerblue = TWebColors.Dodgerblue;
+    Firebrick = TWebColors.Firebrick;
+    Floralwhite = TWebColors.Floralwhite;
+    Forestgreen = TWebColors.Forestgreen;
+//    Fuchsia = TWebColors.Fuchsia; // duplicate of Magenta
+    Gainsboro = TWebColors.Gainsboro;
+    Ghostwhite = TWebColors.Ghostwhite;
+    Gold = TWebColors.Gold;
+    Goldenrod = TWebColors.Goldenrod;
+    Gray = TWebColors.Gray;
+    Green = TWebColors.Green;
+    Greenyellow = TWebColors.Greenyellow;
+    Honeydew = TWebColors.Honeydew;
+    Hotpink = TWebColors.Hotpink;
+    Indianred = TWebColors.Indianred;
+    Indigo = TWebColors.Indigo;
+    Ivory = TWebColors.Ivory;
+    Khaki = TWebColors.Khaki;
+    Lavender = TWebColors.Lavender;
+    Lavenderblush = TWebColors.Lavenderblush;
+    Lawngreen = TWebColors.Lawngreen;
+    Lemonchiffon = TWebColors.Lemonchiffon;
+    Lightblue = TWebColors.Lightblue;
+    Lightcoral = TWebColors.Lightcoral;
+    Lightcyan = TWebColors.Lightcyan;
+    Lightgoldenrodyellow = TWebColors.Lightgoldenrodyellow;
+    Lightgray = TWebColors.Lightgray;
+    Lightgreen = TWebColors.Lightgreen;
+    Lightpink = TWebColors.Lightpink;
+    Lightsalmon = TWebColors.Lightsalmon;
+    Lightseagreen = TWebColors.Lightseagreen;
+    Lightskyblue = TWebColors.Lightskyblue;
+    Lightslategray = TWebColors.Lightslategray;
+    Lightsteelblue = TWebColors.Lightsteelblue;
+    Lightyellow = TWebColors.Lightyellow;
+    Lime = TWebColors.Lime;
+    Limegreen = TWebColors.Limegreen;
+    Linen = TWebColors.Linen;
+    Magenta = TWebColors.Magenta;
+    Maroon = TWebColors.Maroon;
+    Mediumaquamarine = TWebColors.Mediumaquamarine;
+    Mediumblue = TWebColors.Mediumblue;
+    Mediumorchid = TWebColors.Mediumorchid;
+    Mediumpurple = TWebColors.Mediumpurple;
+    Mediumseagreen = TWebColors.Mediumseagreen;
+    Mediumslateblue = TWebColors.Mediumslateblue;
+    Mediumspringgreen = TWebColors.Mediumspringgreen;
+    Mediumturquoise = TWebColors.Mediumturquoise;
+    Mediumvioletred = TWebColors.Mediumvioletred;
+    Midnightblue = TWebColors.Midnightblue;
+    Mintcream = TWebColors.Mintcream;
+    Mistyrose = TWebColors.Mistyrose;
+    Moccasin = TWebColors.Moccasin;
+    Navajowhite = TWebColors.Navajowhite;
+    Navy = TWebColors.Navy;
+    Oldlace = TWebColors.Oldlace;
+    Olive = TWebColors.Olive;
+    Olivedrab = TWebColors.Olivedrab;
+    Orange = TWebColors.Orange;
+    Orangered = TWebColors.Orangered;
+    Orchid = TWebColors.Orchid;
+    Palegoldenrod = TWebColors.Palegoldenrod;
+    Palegreen = TWebColors.Palegreen;
+    Paleturquoise = TWebColors.Paleturquoise;
+    Palevioletred = TWebColors.Palevioletred;
+    Papayawhip = TWebColors.Papayawhip;
+    Peachpuff = TWebColors.Peachpuff;
+    Peru = TWebColors.Peru;
+    Pink = TWebColors.Pink;
+    Plum = TWebColors.Plum;
+    Powderblue = TWebColors.Powderblue;
+    Purple = TWebColors.Purple;
+    Red = TWebColors.Red;
+    Rosybrown = TWebColors.Rosybrown;
+    Royalblue = TWebColors.Royalblue;
+    Saddlebrown = TWebColors.Saddlebrown;
+    Salmon = TWebColors.Salmon;
+    Sandybrown = TWebColors.Sandybrown;
+    Seagreen = TWebColors.Seagreen;
+    Seashell = TWebColors.Seashell;
+    Sienna = TWebColors.Sienna;
+    Silver = TWebColors.Silver;
+    Skyblue = TWebColors.Skyblue;
+    Slateblue = TWebColors.Slateblue;
+    Slategray = TWebColors.Slategray;
+    Snow = TWebColors.Snow;
+    Springgreen = TWebColors.Springgreen;
+    Steelblue = TWebColors.Steelblue;
+    Tan = TWebColors.Tan;
+    Teal = TWebColors.Teal;
+    Thistle = TWebColors.Thistle;
+    Tomato = TWebColors.Tomato;
+    Turquoise = TWebColors.Turquoise;
+    Violet = TWebColors.Violet;
+    Wheat = TWebColors.Wheat;
+    White = TWebColors.White;
+    Whitesmoke = TWebColors.Whitesmoke;
+    Yellow = TWebColors.Yellow;
+    Yellowgreen = TWebColors.Yellowgreen;
+    RebeccaPurple = TWebColors.Rebeccapurple;
   end;
 
   TRggColorPicker = class
@@ -851,7 +968,9 @@ type
     BlueColors: TRggBlueWebColors;
     WhiteColors: TRggWhiteWebColors;
     GrayColors: TRggGrayWebColors;
-    CustomColors: TRggCustomColors;
+    WebColors: TWebColors;
+    BasicColors: TBasicColors;
+    MatteColors: TMatteColors;
   end;
 
 implementation
